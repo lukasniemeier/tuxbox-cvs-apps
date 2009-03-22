@@ -1,5 +1,5 @@
 /*
- * $Id: zapittypes.h,v 1.28 2008/03/16 12:20:10 seife Exp $
+ * $Id: zapittypes.h,v 1.29 2009/03/22 22:06:19 rhabarber1848 Exp $
  *
  * zapit's types which are used by the clientlib - d-box2 linux project
  *
@@ -121,13 +121,6 @@ typedef enum {
 	DVB_S,
 	DVB_T
 } delivery_system_t;
-
-/* video display formats (cf. video_displayformat_t in driver/dvb/include/linux/dvb/video.h): */
-typedef enum {
-	ZAPIT_VIDEO_PAN_SCAN,       /* use pan and scan format */
-	ZAPIT_VIDEO_LETTER_BOX,     /* use letterbox format */
-	ZAPIT_VIDEO_CENTER_CUT_OUT  /* use center cut out format */
-} video_display_format_t;
 
 typedef enum {
 	ST_RESERVED,

@@ -10,4 +10,4 @@ else
 libzapost_la_SOURCES = audio.cpp aviaext.cpp dmx.cpp frontend.cpp video.cpp
 endif
 
-AM_CPPFLAGS = -DDEBUG_SEC_TIMING
+# AM_CPPFLAGS = -DDEBUG_SEC_TIMING

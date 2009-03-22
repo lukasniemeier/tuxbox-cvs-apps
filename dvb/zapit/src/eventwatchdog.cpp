@@ -18,15 +18,15 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include <dbox/event.h>
-
 #include <eventserver.h>
 #include <controldclient/controldclient.h>
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
+#include <dbox/event.h>
 #if HAVE_DVB_API_VERSION < 3
+#include <zapit/client/zapitclient.h>
 #include <ost/video.h>
 #define VIDEO_DEVICE	"/dev/dvb/card0/video0"
 #define video_size_t	videoSize_t
@@ -56,11 +56,11 @@ void CEventWatchDog::startThread()
 {
 	pthread_mutex_init( &wd_mutex, NULL );
 
+	bThreadRunning = true;
 	if (pthread_create (&thrSender, NULL, CEventWatchDog::watchdogThread, (void *) this) != 0 )
 	{
 		perror("CWatchdog: Create WatchDogThread failed\n");
 	}
-	bThreadRunning = true;
 }
 
 int CEventWatchDog::getVideoMode()
@@ -68,6 +68,7 @@ int CEventWatchDog::getVideoMode()
 #if HAVE_DVB_API_VERSION < 3
 	char buffer[100];
 	int aspect = 0;
+	int bufsize = 0;
 	static int warned = 0;
 
 	FILE *bitstream=fopen("/proc/bus/bitstream", "rt");
@@ -76,8 +77,10 @@ int CEventWatchDog::getVideoMode()
 		return 0;
 	}
 	while (fgets(buffer, 100, bitstream)) {
-		if (!strncmp(buffer, "A_RATIO: ", 9)) {
+		if (!strncmp(buffer, "A_RATIO: ", 9))
 			aspect=atoi(buffer+9);
+		else if (!strncmp(buffer, "VIDEO_BUF_SIZE: ", 16)) {
+			bufsize = atoi(buffer+16);
 			break;
 		}
 	}
@@ -92,6 +95,9 @@ int CEventWatchDog::getVideoMode()
 		warned = 0;
 	}
 
+	if (bufsize == 1048576)
+		aspect |= 0x100;
+
 	return aspect;
 #else
 	video_size_t size;
@@ -104,9 +110,10 @@ int CEventWatchDog::getVideoMode()
 
 	if (ioctl(fd, VIDEO_GET_SIZE, &size) < 0) {
 		perror("[controld] VIDEO_GET_SIZE");
-		return 0;
+		size.aspect_ratio = (video_format_t)0;
 	}
 
+	close(fd);
 	return size.aspect_ratio;
 #endif
 }
@@ -263,11 +270,25 @@ void *CEventWatchDog::watchdogThread(void *arg)
 			pthread_exit(NULL);
 		}
 
+		CZapitClient zapit;
 		struct pollfd pfd[1];
 		pfd[0].fd = fd_ev;
 		pfd[0].events = POLLIN;
+#if 0
 		int pollret;
-		while ((pollret = poll(pfd, 1, -1)) > 0) {
+		while ((pollret = poll(pfd, 1, 2500)) >= 0) {
+			if (pollret == 0) {
+				if (WatchDog->getVideoMode() & 0x100) {
+					printf("[controld] possible hang of mpeg decoder detected\n");
+					if (zapit.isPlayBackActive()) {
+						zapit.stopPlayBack();
+						usleep(200000); //stopPlayBack is not blocking :-(
+						zapit.startPlayBack();
+					}
+				}
+			}
+#endif
+		while (poll(pfd, 1, -1) >= 0) {
 			if (!(pfd[0].revents & POLLIN))
 				continue;
 			struct event_t event;

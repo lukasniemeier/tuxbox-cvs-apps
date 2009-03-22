@@ -1,5 +1,0 @@
-.libs
-Makefile
-controldclient.lo
-libcontroldclient.la
-controldc

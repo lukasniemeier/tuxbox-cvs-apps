@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/lib/zapitclient.cpp,v 1.123 2009/02/24 19:09:05 seife Exp $ *
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/lib/zapitclient.cpp,v 1.124 2009/03/22 22:06:20 rhabarber1848 Exp $ *
  *
  * Zapit client interface - DBoxII-Project
  *
@@ -897,14 +897,6 @@ bool CZapitClient::isPlayBackActive()
 
 	close_connection();
 	return response.activated;
-}
-
-void CZapitClient::setDisplayFormat(const video_display_format_t format)
-{
-	CZapitMessages::commandInt msg;
-	msg.val = format;
-	send(CZapitMessages::CMD_SET_DISPLAY_FORMAT, (char*)&msg, sizeof(msg));
-	close_connection();
 }
 
 void CZapitClient::setAudioMode(const int mode)

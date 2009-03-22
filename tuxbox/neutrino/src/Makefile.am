@@ -38,7 +38,6 @@ neutrino_LDADD = \
 	driver/libneutrino_driver_netfile.a \
 	system/libneutrino_system.a \
 	gui/libneutrino_gui2.a \
-	$(top_builddir)/lib/controldclient/libcontroldclient.la \
 	$(top_builddir)/lib/sectionsdclient/libsectionsdclient.la \
 	$(top_builddir)/lib/timerdclient/libtimerdclient.la \
 	$(top_builddir)/lib/irsend/libirsend.la \

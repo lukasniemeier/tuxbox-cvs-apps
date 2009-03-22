@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/client/msgtypes.h,v 1.35 2009/02/22 18:45:33 seife Exp $
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/client/msgtypes.h,v 1.36 2009/03/22 22:06:19 rhabarber1848 Exp $
  *
  * types used for clientlib <-> zapit communication - d-box2 linux project
  *
@@ -38,7 +38,7 @@
 class CZapitMessages
 {
  public:
-	static const char ACTVERSION = 7;
+	static const char ACTVERSION = 8;
 
 	enum commands
 		{

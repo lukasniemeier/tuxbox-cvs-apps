@@ -19,7 +19,6 @@ nhttpd_LDADD = \
 	$(top_srcdir)/daemons/nhttpd/tuxboxapi/libnhttpd_tuxboxapi.a \
 	$(top_srcdir)/daemons/nhttpd/yhttpd_mods/libyhttpdmods.a \
 	$(top_srcdir)/daemons/nhttpd/yhttpd_core/libyhttpd.a \
-	$(top_builddir)/lib/controldclient/libcontroldclient.la \
 	$(top_builddir)/lib/sectionsdclient/libsectionsdclient.la \
 	$(top_builddir)/lib/timerdclient/libtimerdclient.la \
 	@LCDDISPLAY_LIBS@ \
@@ -28,9 +27,6 @@ nhttpd_LDADD = \
 	@CONNECTION_LIBS@ \
 	@ZAPIT_LIBS@ \
 	-lpthread
-
-$(top_builddir)/lib/controldclient/libcontroldclient.la:
-	$(MAKE) -C $(top_builddir)/lib/controldclient
 
 $(top_builddir)/lib/timerdclient/libtimerdclient.la:
 	$(MAKE) -C $(top_builddir)/lib/timerdclient

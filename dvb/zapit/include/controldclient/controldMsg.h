@@ -24,10 +24,10 @@
 #ifndef __controldMsg__
 #define __controldMsg__
 
-#include <controldclient/controldtypes.h>
+#include <zapit/controldtypes.h>
 #include <connection/basicmessage.h>
 
-#define CONTROLD_UDS_NAME "/tmp/controld.sock"
+#define CONTROLD_UDS_NAME "/tmp/zapit.sock"
 
 
 class CControldMsg : public CBasicMessage
@@ -35,11 +35,11 @@ class CControldMsg : public CBasicMessage
 
 	public:
 
-		static const CBasicMessage::t_version ACTVERSION = 2;
+		static const CBasicMessage::t_version ACTVERSION = 8;
 
 		enum commands
 		{
-			CMD_SHUTDOWN = 1,
+			CMD_SHUTDOWN = 128 + 1,
 			CMD_SAVECONFIG,
 
 			CMD_SETVOLUME,

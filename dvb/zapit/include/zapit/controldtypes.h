@@ -42,9 +42,14 @@ public:
 	enum volume_type
         {  
 		TYPE_OST=0,
+#ifndef HAVE_DREAMBOX_HARDWARE
+		// this #ifdef catches runtime errors already at compiletime
 		TYPE_AVS=1,
+		// TYPE_LIRC is also not available on dreambox, but this saves
+		// some #ifdef cases in the volumebar code... :-(
+#endif
 		TYPE_LIRC=2,
-		TYPE_UNKNOWN
+		TYPE_UNKNOWN=3
 	};
 
         const static int no_video_formats = 5;

@@ -1,1 +1,1 @@
-SUBDIRS = zapit
+SUBDIRS = zapit controldclient

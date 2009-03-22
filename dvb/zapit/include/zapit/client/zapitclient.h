@@ -477,7 +477,6 @@ class CZapitClient:public CBasicClient
 	void startPlayBack();
 	void stopPlayBack();
 	bool isPlayBackActive();
-	void setDisplayFormat(const video_display_format_t mode);
 	void setAudioMode(int mode);
 	void setVideoSystem_a(int video_system);
 #ifdef HAVE_DBOX_HARDWARE

@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/types.h,v 1.9 2005/04/17 06:56:14 metallica Exp $
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/types.h,v 1.10 2009/03/22 22:06:15 rhabarber1848 Exp $
  *
  * zapit's types - d-box2 linux project
  * these types are used by the clientlib and zapit itself
@@ -27,6 +27,7 @@
 
 
 #include "client/zapittypes.h"
+#include "controldtypes.h"
 
 typedef uint64_t transponder_id_t;
 #define PRINTF_TRANSPONDER_ID_TYPE "%12llx"
@@ -43,5 +44,27 @@ typedef uint16_t frequency_kHz_t;
 #define GET_FREQUENCY_FROM_TRANSPONDER_ID(transponder_id)   ((frequency_kHz_t)(transponder_id >> 48))
 
 #define SATELLITE_POSITION_OF_NON_SATELLITE_SOURCE (360*10)
+
+struct Ssettings
+{
+	int  volume;
+	int  volume_avs;
+	bool mute;
+//	bool mute_avs;
+	bool scale_logarithmic;
+//	bool scale_logarithmic_avs;
+	CControld::video_format vcroutput;
+	CControld::video_format videooutput;
+	int  videoformat;
+	int  csync;
+	CControld::volume_type volume_type;
+	CControld::tuxbox_maker_t boxtype; // not part of the config - set by setBoxType()
+	int  wss;	// use wss or not?
+	int  pin8;	// 0/6/12
+	bool vcr;
+	char aspectRatio_vcr;
+	char aspectRatio_dvb;
+	bool videoOutputDisabled;
+};
 
 #endif /* __zapit__types_h__ */

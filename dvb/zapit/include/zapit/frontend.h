@@ -1,5 +1,5 @@
 /*
- * $Id: frontend.h,v 1.35 2009/03/21 14:29:11 seife Exp $
+ * $Id: frontend.h,v 1.36 2009/03/22 22:06:15 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -57,6 +57,8 @@ class CFrontend
 		fe_modulation_t last_qam;
 		/* selects different software control modes for uncommitted switch */
 		int uncommitted_switch_mode;
+		/* automatically get fec from frontend? (maybe dreambox only) */
+		int auto_fec;
 
 #if HAVE_DVB_API_VERSION >= 3
 		uint32_t			getDiseqcReply(const int timeout_ms) const;
@@ -81,7 +83,7 @@ class CFrontend
 
 
 	public:
-		CFrontend(int _uncomitted_switch_mode = 0);
+		CFrontend(int _uncomitted_switch_mode = 0, int _auto_fec = 0);
 		~CFrontend(void);
 
 		static fe_code_rate_t		getCodeRate(const uint8_t fec_inner);

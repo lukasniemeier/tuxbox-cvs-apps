@@ -85,9 +85,11 @@ main(int argc, char *argv[]) {
 
   if ((argc >= 2) && (argv[1][0] == '-')) {
     switch (argv[1][1]) {
+#ifndef HAVE_DREAMBOX_HARDWARE
     case 'a':
       vt = CControld::TYPE_AVS;
       break;
+#endif
     case 'o':
       vt = CControld::TYPE_OST;
       break;

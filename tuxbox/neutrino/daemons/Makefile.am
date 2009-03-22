@@ -1,1 +1,1 @@
-SUBDIRS = controld nhttpd sectionsd timerd
+SUBDIRS = nhttpd sectionsd timerd

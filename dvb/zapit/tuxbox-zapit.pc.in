@@ -6,5 +6,5 @@ includedir=@includedir@
 Name: tuxbox-zapit
 Description: zapit
 Version: @VERSION@
-Libs: -L${libdir} -lzapitclient
+Libs: -L${libdir} -lzapitclient -lcontroldclient
 Cflags: -I${includedir}/tuxbox
