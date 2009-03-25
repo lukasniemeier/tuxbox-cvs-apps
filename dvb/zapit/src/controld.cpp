@@ -779,7 +779,6 @@ void controld_main(void)
 
 	settings.vcr = false;
 	settings.videoOutputDisabled = false;
-fprintf(stderr, "%s:%d\n", __PRETTY_FUNCTION__, __LINE__);
 }
 
 void controld_end()
