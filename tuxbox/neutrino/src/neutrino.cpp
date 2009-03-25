@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.927 2009/03/22 22:06:42 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.929 2009/03/25 14:08:07 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -284,7 +284,7 @@ typedef struct lcd_setting_t
 	const unsigned int default_value;
 } lcd_setting_struct_t;
 
-const lcd_setting_struct_t lcd_setting[LCD_SETTING_COUNT] =
+const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 {
 	{"lcd_brightness"       , DEFAULT_LCD_BRIGHTNESS       },
 	{"lcd_standbybrightness", DEFAULT_LCD_STANDBYBRIGHTNESS},
@@ -293,7 +293,8 @@ const lcd_setting_struct_t lcd_setting[LCD_SETTING_COUNT] =
 	{"lcd_inverse"          , DEFAULT_LCD_INVERSE          },
 	{"lcd_show_volume"      , DEFAULT_LCD_SHOW_VOLUME      },
 	{"lcd_autodimm"         , DEFAULT_LCD_AUTODIMM         },
-	{"lcd_epgmode"          , DEFAULT_LCD_EPGMODE          }
+	{"lcd_epgmode"          , DEFAULT_LCD_EPGMODE          },
+	{"lcd_bias"             , DEFAULT_LCD_BIAS             },
 };
 
 
@@ -333,8 +334,8 @@ int CNeutrinoApp::loadSetup()
 	g_settings.epg_old_events 	= configfile.getString("epg_old_events", "1");
 	g_settings.epg_max_events 	= configfile.getString("epg_max_events", "6000");
 	g_settings.epg_dir 		= configfile.getString("epg_dir", "");
-    
-    // NTP-Server for sectionsd
+
+	// NTP-Server for sectionsd
 	g_settings.network_ntpserver	= configfile.getString("network_ntpserver", "130.60.7.42");
 	g_settings.network_ntprefresh	= configfile.getString("network_ntprefresh", "30" );
 	g_settings.network_ntpenable 	= configfile.getBool("network_ntpenable", false);
@@ -343,7 +344,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.shutdown_real		= configfile.getBool("shutdown_real"             , true );
 	g_settings.shutdown_real_rcdelay	= configfile.getBool("shutdown_real_rcdelay"     , true );
 	strcpy(g_settings.shutdown_count, configfile.getString("shutdown_count","0").c_str());
-	g_settings.volumebar_disp_pos	= configfile.getInt32("volumebar_disp_pos" , 4 );
+	g_settings.volumebar_disp_pos		= configfile.getInt32("volumebar_disp_pos" , 4 );
 	g_settings.infobar_sat_display		= configfile.getBool("infobar_sat_display"       , true );
 	g_settings.infobar_subchan_disp_pos	= configfile.getInt32("infobar_subchan_disp_pos" , 4 );
 	g_settings.misc_spts			= configfile.getBool("misc_spts"                 , false );
@@ -356,9 +357,8 @@ int CNeutrinoApp::loadSetup()
 	g_settings.channellist_epgtext_align_right		= configfile.getBool("channellist_epgtext_align_right"          , false);
 	g_settings.channellist_extended		= configfile.getBool("channellist_extended"          , false);
 	strcpy( g_settings.infobar_channel_logodir, configfile.getString( "infobar_channel_logodir", "/var/share/tuxbox/neutrino/icons/").c_str()); 
-	g_settings.infobar_show_channellogo		= configfile.getInt32("infobar_show_channellogo"		,0);
+	g_settings.infobar_show_channellogo	= configfile.getInt32("infobar_show_channellogo"		,0);
 	g_settings.infobar_channellogo_background		= configfile.getInt32("infobar_channellogo_background"		,0);
-	
 
 	//audio
 	g_settings.audio_AnalogMode 		= configfile.getInt32( "audio_AnalogMode"        , 0 );
@@ -380,7 +380,7 @@ int CNeutrinoApp::loadSetup()
 	strcpy(g_settings.language, configfile.getString("language", "").c_str());
 
 	//widget settings
-	g_settings.widget_fade           = configfile.getBool("widget_fade"          , true );
+	g_settings.widget_fade           	= configfile.getBool("widget_fade"          , true );
 
 	//colors (neutrino defaultcolors)
 	g_settings.menu_Head_alpha = configfile.getInt32( "menu_Head_alpha", 0x00 );
@@ -528,8 +528,19 @@ int CNeutrinoApp::loadSetup()
 	g_settings.recording_use_fdatasync         = configfile.getBool("recordingmenu.use_fdatasync"        , false);
 	g_settings.recording_audio_pids_default    = configfile.getInt32("recording_audio_pids_default", TIMERD_APIDS_STD );
 	g_settings.recording_stream_vtxt_pid       = configfile.getBool("recordingmenu.stream_vtxt_pid"      , false);
-	g_settings.recording_stream_subtitle_pid        = configfile.getBool("recordingmenu.stream_subtitle_pid"      , false);
-	strcpy( g_settings.recording_ringbuffers, configfile.getString( "recordingmenu.ringbuffers", "20").c_str() );
+	g_settings.recording_stream_subtitle_pid   = configfile.getBool("recordingmenu.stream_subtitle_pid"  , false);
+	g_settings.recording_ringbuffers           = configfile.getInt32("recordingmenu.ringbuffers", 2);
+	// compatibility conversion...
+	if (g_settings.recording_ringbuffers > 4) {
+		/* the "unit" for ringbuffers was 188*362 == 68056, but
+		   the ringbuffer code can only take powers of two */
+		if (g_settings.recording_ringbuffers > 61)
+			g_settings.recording_ringbuffers = 4;	// --> 8MB
+		else if (g_settings.recording_ringbuffers > 30)
+			g_settings.recording_ringbuffers = 3;	// --> 4MB
+		else						// the minimum value was 20
+			g_settings.recording_ringbuffers = 2;	// --> 2MB
+	}
 	g_settings.recording_choose_direct_rec_dir = configfile.getInt32( "recording_choose_direct_rec_dir", 0 );
 	g_settings.recording_epg_for_filename      = configfile.getBool("recording_epg_for_filename"         , true);
 	g_settings.recording_in_spts_mode          = configfile.getBool("recording_in_spts_mode"         , true);
@@ -635,7 +646,7 @@ int CNeutrinoApp::loadSetup()
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
 		g_settings.timing[i] = configfile.getInt32(locale_real_names[timing_setting_name[i]], default_timing[i]);
 
-	for (int i = 0; i < LCD_SETTING_COUNT; i++)
+	for (int i = 0; i < SNeutrinoSettings::LCD_SETTING_COUNT; i++)
 		g_settings.lcd_setting[i] = configfile.getInt32(lcd_setting[i].name, lcd_setting[i].default_value);
 	strcpy(g_settings.lcd_setting_dim_time, configfile.getString("lcd_dim_time","0").c_str());
 	strcpy(g_settings.lcd_setting_dim_brightness, configfile.getString("lcd_dim_brightness","0").c_str());
@@ -723,6 +734,7 @@ int CNeutrinoApp::loadSetup()
 		g_settings.uboot_dbox_duplex	= 0;
 		g_settings.uboot_lcd_inverse	= -1;
 		g_settings.uboot_lcd_contrast	= -1;
+		g_settings.uboot_lcd_bias	= 0;
 
 		FILE* fd = fopen("/var/tuxbox/boot/boot.conf", "r");
 		if(fd)
@@ -756,6 +768,10 @@ int CNeutrinoApp::loadSetup()
 				{
 					g_settings.uboot_lcd_contrast = atoi(&buffer[13]);
 				}
+				else if(strncmp(buffer,"lcd_bias=", 9) == 0)
+				{
+					g_settings.uboot_lcd_bias = atoi(&buffer[9]);
+				}
 				else
 					printf("[neutrino] unknown entry '%s' found in boot.conf\n", buffer);
 			}
@@ -780,6 +796,7 @@ void CNeutrinoApp::saveSetup()
 	if (fromflash &&
 		((g_settings.uboot_console_bak != g_settings.uboot_console ) ||
 		( g_settings.uboot_dbox_duplex_bak != g_settings.uboot_dbox_duplex ) ||
+		( g_settings.uboot_lcd_bias  != g_settings.lcd_setting[SNeutrinoSettings::LCD_BIAS] ) ||
 		( g_settings.uboot_lcd_inverse  != g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE] ) ||
 		( g_settings.uboot_lcd_contrast != g_settings.lcd_setting[SNeutrinoSettings::LCD_CONTRAST] ) ))
 	{
@@ -791,6 +808,7 @@ void CNeutrinoApp::saveSetup()
 			g_settings.uboot_console_bak    = g_settings.uboot_console;
 			g_settings.uboot_lcd_inverse	= g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE];
 			g_settings.uboot_lcd_contrast	= g_settings.lcd_setting[SNeutrinoSettings::LCD_CONTRAST];
+			g_settings.uboot_lcd_bias  	= g_settings.lcd_setting[SNeutrinoSettings::LCD_BIAS];
 			g_settings.uboot_dbox_duplex_bak= g_settings.uboot_dbox_duplex;
 
 			switch(g_settings.uboot_console)
@@ -805,16 +823,19 @@ void CNeutrinoApp::saveSetup()
 				buffer = "null";
 				break;
 			}
+
 			fprintf(fd,	"console=%s\n"
 					"baudrate=%d\n"
 					"dbox_duplex=%d\n"
 					"lcd_inverse=%d\n"
-					"lcd_contrast=%d\n",
+					"lcd_contrast=%d\n"
+					"lcd_bias=%d\n",
 					buffer,
 					g_settings.uboot_baudrate,
 					g_settings.uboot_dbox_duplex,
 					g_settings.uboot_lcd_inverse,
-					g_settings.uboot_lcd_contrast);
+					g_settings.uboot_lcd_contrast,
+					g_settings.uboot_lcd_bias);
 			fclose(fd);
 		}
 		else
@@ -1032,8 +1053,8 @@ void CNeutrinoApp::saveSetup()
 	configfile.setBool  ("recordingmenu.use_fdatasync"        , g_settings.recording_use_fdatasync        );
 	configfile.setInt32 ("recording_audio_pids_default"       , g_settings.recording_audio_pids_default);
 	configfile.setBool  ("recordingmenu.stream_vtxt_pid"      , g_settings.recording_stream_vtxt_pid      );
-	configfile.setBool  ("recordingmenu.stream_subtitle_pid"       , g_settings.recording_stream_subtitle_pid      );
-	configfile.setString("recordingmenu.ringbuffers"          , g_settings.recording_ringbuffers);
+	configfile.setBool  ("recordingmenu.stream_subtitle_pid"  , g_settings.recording_stream_subtitle_pid);
+	configfile.setInt32 ("recordingmenu.ringbuffers"          , g_settings.recording_ringbuffers);
 	configfile.setInt32 ("recording_choose_direct_rec_dir"    , g_settings.recording_choose_direct_rec_dir);
 	configfile.setBool  ("recording_epg_for_filename"         , g_settings.recording_epg_for_filename     );
 	configfile.setBool  ("recording_in_spts_mode"             , g_settings.recording_in_spts_mode         );
@@ -1125,7 +1146,7 @@ void CNeutrinoApp::saveSetup()
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
 		configfile.setInt32(locale_real_names[timing_setting_name[i]], g_settings.timing[i]);
 
-	for (int i = 0; i < LCD_SETTING_COUNT; i++)
+	for (int i = 0; i < SNeutrinoSettings::LCD_SETTING_COUNT; i++)
 		configfile.setInt32(lcd_setting[i].name, g_settings.lcd_setting[i]);
 	configfile.setString("lcd_dim_time", g_settings.lcd_setting_dim_time);
 	configfile.setString("lcd_dim_brightness", g_settings.lcd_setting_dim_brightness);
@@ -1894,7 +1915,7 @@ void CNeutrinoApp::setupRecordingDevice(void)
 	{
 		unsigned int splitsize, ringbuffers;
 		sscanf(g_settings.recording_splitsize, "%u", &splitsize);
-		sscanf(g_settings.recording_ringbuffers, "%u", &ringbuffers);
+		ringbuffers = g_settings.recording_ringbuffers;
 
 		recordingdevice = new CVCRControl::CFileDevice(g_settings.recording_stopplayback, g_settings.recording_stopsectionsd, g_settings.recording_dir[0].c_str(), splitsize, g_settings.recording_use_o_sync, g_settings.recording_use_fdatasync, g_settings.recording_stream_vtxt_pid, g_settings.recording_stream_subtitle_pid, ringbuffers,true);
 
