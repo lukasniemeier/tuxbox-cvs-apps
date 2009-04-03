@@ -160,11 +160,14 @@ void *CEventWatchDog::watchdogThread(void *arg)
 {
 	char *verb_aratio[] = { "4:3", "16:9", "2.21:1" };
 
-	try {
-		CEventWatchDog *WatchDog = (CEventWatchDog *)arg;
-		int fd_ev, fd_video;
+	CEventWatchDog *WatchDog = (CEventWatchDog *)arg;
+	int fd_ev, fd_video;
 
-		if ((fd_ev = open(EVENT_DEVICE, O_RDWR | O_NONBLOCK)) < 0) {
+	while (true)
+	{
+		fd_ev = open(EVENT_DEVICE, O_RDWR|O_NONBLOCK);
+		if (fd_ev < 0)
+		{
 			perror("[controld] " EVENT_DEVICE);
 			pthread_exit(NULL);
 		}
@@ -175,7 +178,9 @@ void *CEventWatchDog::watchdogThread(void *arg)
 			pthread_exit(NULL);
 		}
 
-		if ((fd_video = open(VIDEO_DEVICE, O_RDONLY | O_NONBLOCK)) < 0) {
+		fd_video = open(VIDEO_DEVICE, O_RDONLY|O_NONBLOCK);
+		if (fd_video < 0)
+		{
 			perror("[controld] " VIDEO_DEVICE);
 			close(fd_ev);
 			pthread_exit(NULL);
@@ -198,7 +203,7 @@ void *CEventWatchDog::watchdogThread(void *arg)
 
 							WatchDog->VCRMode = newVCRMode;
 							WatchDog->vcrModeChanged( newVCRMode );
-							
+
 							if(newVCRMode > 0)
 							{
 								//Set Aspect ratio of scart input signal (1->4:3 / 2->16:9)
@@ -214,7 +219,7 @@ void *CEventWatchDog::watchdogThread(void *arg)
 
 			if (pfd[1].revents & POLLPRI) {
 				struct video_event event;
-				
+
 				if (ioctl(fd_video, VIDEO_GET_EVENT, &event) == -1) {
 					perror("[controld] VIDEO_GET_EVENT");
 				}
@@ -235,19 +240,12 @@ void *CEventWatchDog::watchdogThread(void *arg)
 				}
 			}
 		}
+		perror("[CONTROLD] eventwatchdog poll()");
 
 		close(fd_video);
 		close(fd_ev);
+		sleep(1);
 	}
-	catch (std::exception& e)
-	{
-		fprintf(stderr, "[controld] caught std-exception ineventwatchdog %s!\n", e.what());
-	}
-	catch (...)
-	{
-	    fprintf(stderr, "[controld] caught exception in eventwatchdog!\n");
-  	}
-
 	pthread_exit(NULL);
 }
 #else	/* old API -> dreambox */
@@ -255,10 +253,11 @@ void *CEventWatchDog::watchdogThread(void *arg)
 {
 	char *verb_aratio[] = { "4:3", "16:9", "2.21:1" };
 
-	try {
-		CEventWatchDog *WatchDog = (CEventWatchDog *)arg;
-		int fd_ev;
+	CEventWatchDog *WatchDog = (CEventWatchDog *)arg;
+	int fd_ev;
 
+	while (true)
+	{
 		if ((fd_ev = open(EVENT_DEVICE, O_RDWR | O_NONBLOCK)) < 0) {
 			perror("[controld] " EVENT_DEVICE);
 			pthread_exit(NULL);
@@ -325,18 +324,11 @@ void *CEventWatchDog::watchdogThread(void *arg)
 				}
 			}
 		}
+		perror("[CONTROLD] eventwatchdog poll()");
 
 		close(fd_ev);
+		sleep(1);
 	}
-	catch (std::exception& e)
-	{
-		fprintf(stderr, "[controld] caught std-exception ineventwatchdog %s!\n", e.what());
-	}
-	catch (...)
-	{
-	    fprintf(stderr, "[controld] caught exception in eventwatchdog!\n");
-  	}
-
 	pthread_exit(NULL);
 }
 #endif
