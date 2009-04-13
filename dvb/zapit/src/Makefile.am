@@ -57,5 +57,3 @@ install-data-local:
 	install -d $(CONFIGDIR)
 	install -m 644 $(srcdir)/scart.conf $(CONFIGDIR)
 endif
-
-#AM_CPPFLAGS = -DSKIP_CA_STATUS

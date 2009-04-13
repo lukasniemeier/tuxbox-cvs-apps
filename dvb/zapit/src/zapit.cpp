@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.425 2009/03/22 22:06:22 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.426 2009/04/13 10:47:28 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -780,10 +780,8 @@ int zapit(const t_channel_id channel_id, bool in_nvod, transponder_id_t transpon
 		pmt_update_fd = -1;
 	}
 
-#ifndef SKIP_CA_STATUS
 	eventServer->sendEvent(CZapitClient::EVT_ZAP_CA_CLEAR, CEventServer::INITID_ZAPIT);
 //	INFO("Event: CA_CLEAR send");
-#endif
 
 #ifdef HAVE_DREAMBOX_HARDWARE
 	int retry = false;
@@ -2864,7 +2862,7 @@ void signal_handler(int signum)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.425 2009/03/22 22:06:22 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.426 2009/04/13 10:47:28 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
