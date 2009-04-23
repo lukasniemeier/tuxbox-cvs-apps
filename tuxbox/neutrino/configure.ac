@@ -86,7 +86,7 @@ if test "$enable_http_update" = "no"; then
 AC_DEFINE(DISABLE_INTERNET_UPDATE,1,[deactivate http update])
 fi
 
-if test "$BOXTYPE" = "dm500" ; then
+if test "$BOXMODEL" = "dm500" ; then
 	CPPFLAGS="$CPPFLAGS -DHAVE_DREAMBOX_DM500"
 fi
 
