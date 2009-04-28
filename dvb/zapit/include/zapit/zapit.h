@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.h,v 1.74 2009/03/22 22:06:15 rhabarber1848 Exp $
+ * $Id: zapit.h,v 1.75 2009/04/28 06:43:01 rhabarber1848 Exp $
  */
 
 #ifndef __zapit_h__
@@ -32,7 +32,7 @@ void sendAPIDs(int connfd);
 void sendSubPIDs(int connfd);
 void enterStandby(void);
 void leaveStandby(void);
-#ifndef HAVE_DREAMBOX_HARDWARE
+#ifdef HAVE_DBOX_HARDWARE
 void setIec(int);
 void setDemuxMode(int);
 #endif
