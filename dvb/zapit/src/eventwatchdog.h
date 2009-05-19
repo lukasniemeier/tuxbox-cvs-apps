@@ -28,7 +28,9 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#if defined HAVE_DBOX_HARDWARE || defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
 #include <dbox/fp.h>
+#endif
 
 #include <string>
 #include <vector>

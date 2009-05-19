@@ -1,5 +1,5 @@
 /*
- * $Id: audio.h,v 1.15 2009/03/22 22:06:15 rhabarber1848 Exp $
+ * $Id: audio.h,v 1.16 2009/05/19 18:27:53 seife Exp $
  *
  * (C) 2002-2003 by Steffen Hehn 'McClean' &
  *	Andreas Oberritter <obi@tuxbox.org>
@@ -24,8 +24,10 @@
 #define __zapit_audio_h__
 
 #ifndef HAVE_TRIPLEDRAGON
+#if defined HAVE_DBOX_HARDWARE || defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
 #include <dbox/avs_core.h>
 #define AVS_DEVICE "/dev/dbox/avs0"
+#endif
 #if HAVE_DVB_API_VERSION < 3
 #include <ost/audio.h>
 #define audio_stream_source_t	audioStreamSource_t
