@@ -253,6 +253,7 @@ class CZapitClient:public CBasicClient
 	/*****************************/
 	void shutdown();
 
+	void saveSettings();
 
 	/****************************************/
 	/*					*/
@@ -291,6 +292,18 @@ class CZapitClient:public CBasicClient
 	/* get last channel-information */
 	void getLastChannel(unsigned int &channumber, char &mode);
 
+	/* set TV/radio start channels */
+	void setStartChannelRadio(unsigned int channel);
+	void setStartChannelTV(unsigned int channel);
+	unsigned int getStartChannelRadio();
+	unsigned int getStartChannelTV();
+	void setSaveLastChannel(bool save=true);
+	bool getSaveLastChannel();
+	void setSaveAudioPIDs(bool save=false);
+	bool getSaveAudioPIDs();
+	void setRemainingChannelsBouquet(bool save=true);
+	bool getRemainingChannelsBouquet();
+
 	/* audiochan set */
 	void setAudioChannel(const unsigned int channel);
 
@@ -314,6 +327,7 @@ class CZapitClient:public CBasicClient
 
 	/* channel name */
 	std::string getChannelName(const t_channel_id channel_id);
+	std::string getChannelNrName(const unsigned int channel, const channelsMode mode);
 
 	/* is channel a TV channel ? */
 	bool isChannelTVChannel(const t_channel_id channel_id);
