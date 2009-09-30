@@ -1,5 +1,5 @@
 /*
- * $Id: audio.cpp,v 1.15 2009/03/22 22:06:26 rhabarber1848 Exp $
+ * $Id: audio.cpp,v 1.16 2009/09/30 17:50:36 seife Exp $
  *
  * (C) 2002 by Steffen Hehn 'McClean' &
  *	Andreas Oberritter <obi@tuxbox.org>
@@ -63,10 +63,27 @@ void CAudio::closeDevice(void)
 	fd = -1;
 }
 
+#ifndef HAVE_TRIPLEDRAGON
 int CAudio::setBypassMode(int disable)
 {
 	return quiet_fop(ioctl, AUDIO_SET_BYPASS_MODE, disable);
 }
+#else
+int CAudio::setBypassMode(int disable)
+{
+	/* disable = 1 actually means: audio is MPEG, disable = 0 is audio is AC3 */
+	if (disable)
+		return quiet_fop(ioctl, MPEG_AUD_SET_MODE, AUD_MODE_MPEG);
+
+	/* dvb2001 does always set AUD_MODE_DTS before setting AUD_MODE_AC3,
+	   this might be some workaround, so we do the same... */
+	quiet_fop(ioctl, MPEG_AUD_SET_MODE, AUD_MODE_DTS);
+	return quiet_fop(ioctl, MPEG_AUD_SET_MODE, AUD_MODE_AC3);
+
+	/* all those ioctl aways return "invalid argument", but they seem to
+	   work nevertheless, that's why I use quiet_fop here */
+}
+#endif
 
 #ifdef HAVE_DBOX_HARDWARE
 int CAudio::setMute(int enable)
@@ -113,6 +130,7 @@ int CAudio::unmute(void)
 	return setMute(0);
 }
 
+#ifndef HAVE_TRIPLEDRAGON
 int CAudio::setVolume(unsigned char volume, int forcetype)
 {
 	if (settings.volume_type == CControld::TYPE_OST || forcetype == (int)CControld::TYPE_OST)
@@ -142,22 +160,55 @@ int CAudio::setVolume(unsigned char volume, int forcetype)
 #endif
 	return -1;
 }
+#else
+int CAudio::setVolume(const unsigned char volume, int forcetype)
+{
+	int avsfd;
+	int v = (int)map_volume(volume, false);
+	if (settings.volume_type == CControld::TYPE_OST || forcetype == (int)CControld::TYPE_OST)
+	{
+		AUDVOL vol;
+		vol.frontleft  = v;
+		vol.frontright = v;
+		vol.rearleft   = v;
+		vol.rearright  = v;
+		vol.center     = v;
+		vol.lfe        = v;
+		return fop(ioctl, MPEG_AUD_SET_VOL, &vol);
+	}
+	else if (settings.volume_type == CControld::TYPE_AVS || forcetype == (int)CControld::TYPE_AVS)
+	{
+		if ((avsfd = open(AVS_DEVICE, O_RDWR)) < 0)
+			perror("[controld] " AVS_DEVICE);
+		else {
+			if (ioctl(avsfd, IOC_AVS_SET_VOLUME, v))
+				perror("[controld] IOC_AVS_SET_VOLUME");
+			close(avsfd);
+			return 0;
+		}
+	}
+	fprintf(stderr, "CAudio::setVolume: invalid settings.volume_type = %d\n", settings.volume_type);
+	return -1;
+}
+#endif
 
 int CAudio::setSource(audio_stream_source_t source)
 {
-	return fop(ioctl, AUDIO_SELECT_SOURCE, source);
+	return quiet_fop(ioctl, AUDIO_SELECT_SOURCE, source);
 }
 
+#ifndef HAVE_TRIPLEDRAGON
 audio_stream_source_t CAudio::getSource(void)
 {
 	struct audio_status status;
 	fop(ioctl, AUDIO_GET_STATUS, &status);
 	return status.stream_source;
 }
+#endif
 
 int CAudio::start(void)
 {
-	return fop(ioctl, AUDIO_PLAY);
+	return quiet_fop(ioctl, AUDIO_PLAY);
 }
 
 int CAudio::stop(void)
@@ -170,12 +221,14 @@ int CAudio::setChannel(audio_channel_select_t channel)
 	return fop(ioctl, AUDIO_CHANNEL_SELECT, channel);
 }
 
+#ifndef HAVE_TRIPLEDRAGON
 audio_channel_select_t CAudio::getChannel(void)
 {
 	struct audio_status status;
 	fop(ioctl, AUDIO_GET_STATUS, &status);
 	return status.channel_select;
 }
+#endif
 
 // input:   0 (min volume) <=     volume           <= 100 (max volume)
 // output: 63 (min volume) >= map_volume(., true)  >=   0 (max volume)
