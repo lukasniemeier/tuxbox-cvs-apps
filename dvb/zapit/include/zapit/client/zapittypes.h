@@ -1,5 +1,5 @@
 /*
- * $Id: zapittypes.h,v 1.29 2009/03/22 22:06:19 rhabarber1848 Exp $
+ * $Id: zapittypes.h,v 1.30 2009/09/30 17:12:40 seife Exp $
  *
  * zapit's types which are used by the clientlib - d-box2 linux project
  *
@@ -32,7 +32,9 @@
 
 #include <config.h>
 
-#if HAVE_DVB_API_VERSION >= 3
+#ifdef HAVE_TRIPLEDRAGON
+#include <zapit/td-frontend-compat.h>
+#elif HAVE_DVB_API_VERSION >= 3
 #include <linux/dvb/frontend.h>
 #else
 #include <ost/frontend.h>
@@ -107,7 +109,7 @@ typedef enum {
 	DISEQC_1_0,
 	DISEQC_1_1,
 	DISEQC_1_2
-#if HAVE_DVB_API_VERSION >= 3
+#if HAVE_DVB_API_VERSION >= 3 && ! defined(HAVE_TRIPLEDRAGON)
 	,
 	DISEQC_2_0,
 	DISEQC_2_1,
