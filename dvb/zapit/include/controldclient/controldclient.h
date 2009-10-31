@@ -110,9 +110,9 @@ class CControldClient:private CBasicClient
 		char getVideoFormat();
 		/*
 			getAspectRatio : Aktueller Wert aus dem Bitstream
-					2: 4:3
-					3: 16:9
-					4: 2:2.1
+					0: 4:3
+					1: 16:9
+					2: 2:2.1
 		*/
 		char getAspectRatio();
 
