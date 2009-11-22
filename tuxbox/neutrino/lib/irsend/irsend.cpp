@@ -4,44 +4,7 @@
 	Copyright (C) 2002 Sven Traenkle 'Zwen'
 	License: GPL
 
-	Aenderungen: $Log: irsend.cpp,v $
-	Aenderungen: Revision 1.5  2009/02/24 19:27:58  seife
-	Aenderungen: fix compiler warnings (hint: std::string::npos is a negative number ;)
-	Aenderungen:
-	Aenderungen: mod_yparser.cpp:324: warning: comparison is always true due to limited range of data type
-	Aenderungen:
-	Aenderungen: Revision 1.4  2006/09/13 19:30:16  houdini
-	Aenderungen: fixed SEND_ONCE in lirc
-	Aenderungen: see http://forum.tuxbox.org/forum/viewtopic.php?p=312244#312244
-	Aenderungen:
-	Aenderungen: Revision 1.3  2004/02/19 23:07:29  zwen
-	Aenderungen: removed debug printf
-	Aenderungen:
-	Aenderungen: Revision 1.2  2004/02/19 23:00:34  zwen
-	Aenderungen: Improved neutrino volume/mute handling:
-	Aenderungen: - nhttpd now mutes and sets the correct volume (avs,ost & LIRC !)
-	Aenderungen:
-	Aenderungen: Please rebuild neutrino completely:
-	Aenderungen: cd ${cvs}/apps/tuxbox/neutrino
-	Aenderungen: rm Makefile Makefile.in configure config.status
-	Aenderungen: cd ${cvs}/cdk
-	Aenderungen: rm .neutrino
-	Aenderungen: make .neutrino
-	Aenderungen:
-	Aenderungen: Revision 1.1  2004/02/19 22:29:18  zwen
-	Aenderungen: - moved irsend to neutrino libs
-	Aenderungen:
-	Aenderungen: Revision 1.3  2003/09/19 19:25:27  thegoodguy
-	Aenderungen: cleanup
-	Aenderungen:
-	Aenderungen: Revision 1.2  2002/11/26 22:10:00  Zwen
-	Aenderungen: - changed config dir for *.lirc files to /var/tuxbox/config/lirc/
-	Aenderungen: - support for lirc actions on pressing volume +/- (volplus.lirc/volminus.lirc)
-	Aenderungen:   e.g. for sending volume change commands to amplifier via ir
-	Aenderungen:
-	Aenderungen: Revision 1.1  2002/11/24 19:55:56  Zwen
-	Aenderungen: - send ir signals on sleeptimer event (see timer docu)
-	Aenderungen:
+	$Id: irsend.cpp,v 1.6 2009/11/22 15:36:51 rhabarber1848 Exp $
 */
 
 #include <irsend/irsend.h>
