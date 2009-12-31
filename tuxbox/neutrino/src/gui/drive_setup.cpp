@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.16 2009/12/30 13:38:15 dbt Exp $
+	$Id: drive_setup.cpp,v 1.17 2009/12/31 01:19:22 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -764,6 +764,7 @@ void CDriveSetup::showHddSetupSub()
 	//menue partitions: size of current partition
 	unsigned long long ll_cur_part_size[MAXCOUNT_PARTS];  
 	string p_size[MAXCOUNT_PARTS];
+	string s_size[MAXCOUNT_PARTS];
 	CMenuForwarder *partsize[MAXCOUNT_PARTS];
 
 	//sub menue main
@@ -801,9 +802,8 @@ void CDriveSetup::showHddSetupSub()
 
 	//choose mountpoint
 	CMenuForwarder * mp_chooser[MAXCOUNT_PARTS];
-	string mp[MAXCOUNT_PARTS];
 	CDirChooser * mountdir[MAXCOUNT_PARTS];
-	bool entry_activ[MAXCOUNT_PARTS];
+	bool item_activ[MAXCOUNT_PARTS];
 
 	//disable item for add swap if we have already a swap or no free partition or not enough size
 	if ((!haveSwap()) && (add_activate)) 
@@ -872,6 +872,7 @@ void CDriveSetup::showHddSetupSub()
 		//prepare current partsizes
 		ll_cur_part_size[i] = getPartSize(current_device, i);
 		p_size[i] = convertByteString(ll_cur_part_size[i]);
+		s_size[i] = iToString(ll_cur_part_size[i]/1024/1024);
 		partsize[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_SIZE, false, p_size[i].c_str());
 
 		//prepare cylinders
@@ -883,50 +884,60 @@ void CDriveSetup::showHddSetupSub()
 		//enable/disable partition
 		activate[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_ACTIVATE, &d_settings.drive_partition_activ[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, true );
 
-		//select mountpoint, get it primary from system, if available
-		mp[i] = d_settings.drive_partition_mountpoint[current_device][i];
-		entry_activ[i] = true;
-		if (isMountedPartition(partname[i]))
-			d_settings.drive_partition_mountpoint[current_device][i] = getMountInfo(partname[i], MOUNTPOINT);
-		else if (isSwapPartition(partname[i])/* || d_settings.drive_partition_fstype[current_device][i] == "swap"*/) 
-		{	
-			entry_activ[i] = false;
-			d_settings.drive_partition_mountpoint[current_device][i] = "none";
-		}
-		else
-			d_settings.drive_partition_mountpoint[current_device][i] = mp[i];
-		mountdir[i] 	= new CDirChooser(&d_settings.drive_partition_mountpoint[current_device][i]);
-		mp_chooser[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_MOUNTPOINT, entry_activ[i], d_settings.drive_partition_mountpoint[current_device][i], mountdir[i]);
-
-#ifdef ENABLE_NFSSERVER
-		//prepare option host input
-		nfs_host_ip[i] = new CIPInput(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP , d_settings.drive_partition_nfs_host_ip[current_device][i]   , LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
-
-		//prepare option nfs	
-		nfs_host_ip_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP, d_settings.drive_partition_nfs[current_device][i], d_settings.drive_partition_nfs_host_ip[current_device][i], nfs_host_ip[i] );
-
-		//prepare option nfs chooser
-		nfsHostNotifier[i] = new CDriveSetupNFSHostNotifier (nfs_host_ip_fw[i]);
-		nfs_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_NFS, &d_settings.drive_partition_nfs[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, entry_activ[i], nfsHostNotifier[i] );		
-#endif
-
-		//prepare size input, show size // TODO show real current partsize
-		input_part_size[i] = new CStringInput(LOCALE_DRIVE_SETUP_PARTITION_SIZE, d_settings.drive_partition_size[current_device][i], 8, LOCALE_DRIVE_SETUP_PARTITION_SIZE_HELP, LOCALE_DRIVE_SETUP_PARTITION_SIZE_STD, "0123456789 ");
-		input_size[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SIZE, entry_activ[i], d_settings.drive_partition_size[current_device][i], input_part_size[i] );
-
 		//set mountstatus for enable/disable menue items
 		if (isMountedPartition(partname[i]) || isSwapPartition(partname[i]))
 			is_mounted[i] = true;
 		else
 			is_mounted[i] = false ;
 
+		item_activ[i] = is_mounted[i] ? false : true;
+
+ 		if (isMountedPartition(partname[i]))
+		{
+			//get mountpoint primary from system, if available and write it to settings for this partition
+ 			d_settings.drive_partition_mountpoint[current_device][i] = getMountInfo(partname[i], MOUNTPOINT);
+			writeDriveSettings();
+		}
+
+ 		if (isSwapPartition(partname[i]) || (string)d_settings.drive_partition_fstype[current_device][i] == "swap") 
+ 		{	
+ 			item_activ[i] = false;
+			//if found swap, set mountpoint to "none" in settings for this partition
+			d_settings.drive_partition_mountpoint[current_device][i] = "none";
+			writeDriveSettings();
+ 		}
+
+
+		//prepare option mointpoint
+		mountdir[i] 	= new CDirChooser(&d_settings.drive_partition_mountpoint[current_device][i]);
+		mp_chooser[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_MOUNTPOINT, item_activ[i], d_settings.drive_partition_mountpoint[current_device][i], mountdir[i]);
+
+#ifdef ENABLE_NFSSERVER
+		//prepare option host input
+		nfs_host_ip[i] = new CIPInput(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP , d_settings.drive_partition_nfs_host_ip[current_device][i], LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
+
+		//prepare option nfs	
+		nfs_host_ip_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP, d_settings.drive_partition_nfs[current_device][i], d_settings.drive_partition_nfs_host_ip[current_device][i], nfs_host_ip[i] );
+
+		//prepare option nfs chooser
+		nfsHostNotifier[i] = new CDriveSetupNFSHostNotifier (nfs_host_ip_fw[i]);
+		bool nfs_chooser_activ = ((string)d_settings.drive_partition_fstype[current_device][i] == "swap" ? false : true);
+		nfs_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_NFS, &d_settings.drive_partition_nfs[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, nfs_chooser_activ, nfsHostNotifier[i] );		
+#endif
+
+		//prepare size input, show size // TODO show real current partsize
+		strcpy( d_settings.drive_partition_size[current_device][i], s_size[i].c_str() ); //set real size to settings
+		input_part_size[i] = new CStringInput(LOCALE_DRIVE_SETUP_PARTITION_SIZE, d_settings.drive_partition_size[current_device][i], 8, LOCALE_DRIVE_SETUP_PARTITION_SIZE_HELP, LOCALE_DRIVE_SETUP_PARTITION_SIZE_STD, "0123456789 ");
+		input_size[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SIZE, item_activ[i], d_settings.drive_partition_size[current_device][i], input_part_size[i] );
+
 		//select filesystem
 #ifdef ENABLE_NFSSERVER
 		fsNotifier[i] = new CDriveSetupFsNotifier(mp_chooser[i], input_size[i], nfs_chooser[i], nfs_host_ip_fw[i]);
 #else
 		fsNotifier[i] = new CDriveSetupFsNotifier(mp_chooser[i], input_size[i]);
-#endif
-	 	fs_chooser[i] = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_FS, d_settings.drive_partition_fstype[current_device][i],(is_mounted[i] ? false:true), fsNotifier[i]);
+#endif		
+		bool fs_chooser_activ = (string)d_settings.drive_partition_fstype[current_device][i] == "swap" ? false : (is_mounted[i] ? false : true);
+	 	fs_chooser[i] = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_FS, d_settings.drive_partition_fstype[current_device][i],fs_chooser_activ, fsNotifier[i]);
 		for (uint n=0; n < v_fs_modules.size(); n++) 
 		{
 			if ((v_fs_modules[n] != "jbd") && (v_fs_modules[n] != "fat")) 
@@ -3642,7 +3653,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.16 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.17 $");
 }
 
 // returns text for initfile headers
