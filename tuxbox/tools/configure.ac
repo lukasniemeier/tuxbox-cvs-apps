@@ -32,4 +32,6 @@ graphics/Makefile
 kb2rcd/Makefile
 cdkVcInfo/Makefile
 msgbox/Makefile
+getrc/Makefile
+input/Makefile
 ])
