@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.20 2010/01/04 09:36:43 dbt Exp $
+	$Id: drive_setup.cpp,v 1.21 2010/01/04 13:03:27 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -279,7 +279,7 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		{
 			strcpy(d_settings.drive_partition_fstype[current_device][next_part_number], "swap"); 
 			d_settings.drive_partition_mountpoint[current_device][next_part_number] = "none";
-			strcpy(d_settings.drive_partition_size[current_device][next_part_number], "128");
+			strcpy(d_settings.drive_partition_size[current_device][next_part_number], d_settings.drive_swap_size);
 			writeDriveSettings();
 
 			if (formatPartition(current_device, next_part_number)) 
@@ -728,6 +728,17 @@ void CDriveSetup::showHddSetupSub()
 	string add_subhead_txt = dev_name + " >> " + iToString(next_part_number+1) + ". " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION);
 	CMenuSeparator *add_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
 	add_subhead->setString(add_subhead_txt);
+
+	//menue add swap prepare swap size
+	string s_swap_sizes[] = {"64", "128"};
+	//set default swap size to 128 MB
+	if ((string)d_settings.drive_swap_size == "")
+		strcpy(d_settings.drive_swap_size,"128");
+	CMenuOptionStringChooser *add_swap_size = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_SIZE, d_settings.drive_swap_size, true );
+	for (uint i=0; i < (sizeof(s_swap_sizes) / sizeof(s_swap_sizes[0])); i++) 
+	{
+		add_swap_size->addOption(s_swap_sizes[i].c_str());
+	}
 	
 	//menue add_swap: prepare subhead: add swap
 	string add_swap_subhead_txt = dev_name + " >> " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_ADD_SWAP_PARTITION);
@@ -1039,6 +1050,7 @@ void CDriveSetup::showHddSetupSub()
 	sub_add_swap->addItem(GenericMenuSeparatorLine);	//separator
 	//------------------------
 	sub_add_swap->addItem(activate[next_part_number]);	//enable/disable partition
+	sub_add_swap->addItem(add_swap_size);			//swap size
 	//------------------------
 	sub_add_swap->addItem(GenericMenuSeparatorLine);	//separator
 	//------------------------
@@ -3523,6 +3535,7 @@ void CDriveSetup::loadDriveSettings()
 	d_settings.drive_use_fstab = configfile.getInt32("drive_use_fstab", YES);
 	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", YES);
 	d_settings.drive_mount_mtdblock_partitions = configfile.getInt32("drive_mount_mtdblock_partitions", NO);
+	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3591,6 +3604,7 @@ bool CDriveSetup::writeDriveSettings()
 	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
 	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
 	configfile.setInt32	( "drive_mount_mtdblock_partitions", d_settings.drive_mount_mtdblock_partitions );
+	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3664,7 +3678,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.20 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.21 $");
 }
 
 // returns text for initfile headers
