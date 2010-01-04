@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.18 2010/01/03 22:13:34 dbt Exp $
+	$Id: drive_setup.cpp,v 1.19 2010/01/04 08:08:53 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -529,6 +529,9 @@ void CDriveSetup::showHddSetupMain()
 		// show mmc options
 		m->addItem (m7);
 	}
+	else
+		strcpy(d_settings.drive_mmc_module_name, g_Locale->getText(LOCALE_OPTIONS_OFF));
+		
 
 	m->addItem(GenericMenuSeparatorLine);
 
@@ -3660,7 +3663,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.18 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.19 $");
 }
 
 // returns text for initfile headers
