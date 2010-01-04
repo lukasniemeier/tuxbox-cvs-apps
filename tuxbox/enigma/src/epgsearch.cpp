@@ -1,5 +1,5 @@
 /*
- * $Id: epgsearch.cpp,v 1.3 2009/11/14 16:27:47 dbluelle Exp $
+ * $Id: epgsearch.cpp,v 1.4 2010/01/04 11:43:12 dbluelle Exp $
  *
  * (C) 2008 by Dr. Best  <dr.best@dreambox-tools.info>
  *
@@ -137,7 +137,7 @@ void eEPGSearch::init_eEPGSearch(eServiceReference& ref, const eString& CurrentE
 	chkCurrentService = CreateSkinnedCheckbox("CurrentService");
 	CONNECT(chkCurrentService->checked, eEPGSearch::chkCurrentServiceStateChanged);
 	
-	chkAllServices = CreateSkinnedCheckbox("AllServices");
+	chkAllServices = CreateSkinnedCheckbox("AllServices",1);
 	CONNECT(chkAllServices->checked, eEPGSearch::chkAllServicesStateChanged);
 	
 	chkExactMatch = CreateSkinnedCheckbox("ExactMatch");
