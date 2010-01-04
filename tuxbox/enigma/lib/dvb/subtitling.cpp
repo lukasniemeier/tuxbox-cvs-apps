@@ -368,7 +368,7 @@ void eSubtitleWidget::start(int pid, const std::set<int> &ppageids)
 
 static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 {
-	static gRGB def_palette[32];
+	static gRGB def_palette[64];
 	static bool def_palette_initialized;
 
 	gPainter p(*gFBDC::getInstance());
@@ -376,7 +376,7 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 	{
 		if ( !def_palette_initialized )  // fill default palette
 		{
-			for (int i=0; i < 32; ++i)
+			for (int i=0; i < 64; ++i)
 			{
 				if (!i)
 					def_palette[i].a = 0xFF;
@@ -403,7 +403,7 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 			}
 			def_palette_initialized=1;
 		}
-		p.setPalette(def_palette, 224, 32);
+		p.setPalette(def_palette, 192, 64);
 	}
 	else
 	{
@@ -439,7 +439,7 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 			}
 //		eDebug("%d: %d %d %d %d", i, palette[i].r, palette[i].g, palette[i].b, palette[i].a);
 		}
-		p.setPalette(palette, subpal ? 224 : 240, pal->size);
+		p.setPalette(palette, 240- subpal*16, pal->size);
 	}
 //	eDebug("palette changed");
 }
