@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.19 2010/01/04 08:08:53 dbt Exp $
+	$Id: drive_setup.cpp,v 1.20 2010/01/04 09:36:43 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1688,21 +1688,22 @@ string CDriveSetup::getInitModulLoadStr(const string& modul_name)
 		k_name = u.release;
 	
 	string modul_path[] = {	"/var/lib/modules/" + modul_name + M_TYPE, 
-				"lib/modules/" + k_name + "misc/" + modul_name + M_TYPE}; 
+				"lib/modules/" + k_name + "/misc/" + modul_name + M_TYPE,
+				"lib/modules/" + k_name + "/kernel/drivers/ide/" + modul_name + M_TYPE,
+				"lib/modules/" + k_name + "/kernel/fs/" + modul_name + "/" + modul_name + M_TYPE}; 
 
-	string load_str;
+	string load_str = "";
 	for (uint i=0; i<(sizeof(modul_path) / sizeof(modul_path[0])) ; i++)
 	{
  		if (access(modul_path[i].c_str(), R_OK)==0)
 		{
- 			load_str = LOAD + modul_path[i];
+ 			load_str = (i > 1) ? LOAD + modul_name : LOAD + modul_path[i];
 			return load_str;
-		}
-		else
-			load_str = LOAD + modul_name;
-			
+		}		
 	}
 	
+	cerr<<"[drive setup] "<<__FUNCTION__ <<": can't found modul "<<modul_name<<endl;
+
 	return load_str;
 }
 
@@ -3663,7 +3664,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.19 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.20 $");
 }
 
 // returns text for initfile headers
