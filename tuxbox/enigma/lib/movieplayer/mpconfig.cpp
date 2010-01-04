@@ -1,5 +1,5 @@
 /*
- * $Id: mpconfig.cpp,v 1.4 2005/12/23 17:00:07 digi_casi Exp $
+ * $Id: mpconfig.cpp,v 1.5 2010/01/04 13:06:46 dbluelle Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <xmltree.h>
-#include <lib/movieplayer/mpconfig.h>
+#include <lib/movieplayer/movieplayer.h>
 
 eMPConfig::eMPConfig()
 {
@@ -113,6 +113,7 @@ bool eMPConfig::load()
 			eString tmparate = node->GetAttributeValue("Audiorate");
 			eString tmpatrans = node->GetAttributeValue("Audiotranscode");
 			eString tmpfps = node->GetAttributeValue("fps");
+			eString tmpsoutadd = node->GetAttributeValue("soutadd");
 
 			if (!tmpname || !tmpext || !tmpvrate || !tmpvtrans || !tmpvcodec || !tmpvsize || !tmparate || !tmpatrans || !tmpfps)
 			{
@@ -131,6 +132,10 @@ bool eMPConfig::load()
 				a.audioRate = tmparate;
 				a.transcodeAudio = (tmpatrans == "1");
 				a.fps = tmpfps;
+				if(!tmpsoutadd)
+				        a.soutadd = false; // compatibility for old .xml files
+				else
+				        a.soutadd = (tmpsoutadd == "1");
 
 				videoParmList.push_back(a);
 			}
@@ -170,7 +175,7 @@ void eMPConfig::save()
 		for (unsigned int i = 0; i < videoParmList.size(); i++)
 		{
 			struct videoTypeParms a = videoParmList[i];
-			fprintf(f, "   <setup name=\"%s\" ext=\"%s\" Videorate=\"%s\" Videotranscode=\"%d\" Videocodec=\"%s\" Videosize=\"%s\" Audiorate=\"%s\" Audiotranscode=\"%d\" fps=\"%s\" />\n", a.name.c_str(), a.extension.c_str(), a.videoRate.c_str(), a.transcodeVideo, a.videoCodec.c_str(), a.videoRatio.c_str(), a.audioRate.c_str(), a.transcodeAudio, a.fps.c_str());
+			fprintf(f, "   <setup name=\"%s\" ext=\"%s\" Videorate=\"%s\" Videotranscode=\"%d\" Videocodec=\"%s\" Videosize=\"%s\" Audiorate=\"%s\" Audiotranscode=\"%d\" fps=\"%s\" soutadd=\"%d\" />\n", a.name.c_str(), a.extension.c_str(), a.videoRate.c_str(), a.transcodeVideo, a.videoCodec.c_str(), a.videoRatio.c_str(), a.audioRate.c_str(), a.transcodeAudio, a.fps.c_str(), a.soutadd);
 		}
 		fprintf(f, "</vlc>\n");
 		fclose(f);
@@ -194,8 +199,9 @@ struct videoTypeParms eMPConfig::getVideoParms(eString name, eString extension)
 	vparms.transcodeVideo = false;
 	vparms.transcodeAudio = false;
 	vparms.fps = "25";
-	
-	for (unsigned int i = 0; i < videoParmList.size(); i++)
+	vparms.soutadd = false;
+
+	for ( int i = 0; i < videoParmList.size(); i++)
 	{
 		if ((videoParmList[i].extension == extension) && (videoParmList[i].name == name))
 		{

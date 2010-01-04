@@ -1,5 +1,5 @@
 /*
- * $Id: enigma_dyn_movieplayer.cpp,v 1.20 2009/05/29 17:54:31 dbluelle Exp $
+ * $Id: enigma_dyn_movieplayer.cpp,v 1.21 2010/01/04 13:06:46 dbluelle Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -127,6 +127,7 @@ eString setStreamingServerVideoSettings(eString request, eString dirpath, eStrin
 	videoParms.transcodeVideo = (opt["transcodeVideo"] == "on");
 	videoParms.transcodeAudio = (opt["transcodeAudio"] == "on");
 	videoParms.fps = opt["fps"];
+	videoParms.soutadd = (opt["soutadd"] == "on");
 	
 	eMoviePlayer::getInstance()->mpconfig.setVideoParms(videoParms);
 	eMoviePlayer::getInstance()->mpconfig.save();
@@ -212,8 +213,8 @@ eString editStreamingServerVideoSettings(eString request, eString dirpath, eStri
 	}
 	result.strReplace("#VIDEOCODECS#", tmp);
 	tmp = "";
-	static eString videoRatios[] = {"352x288", "352x576", "480x576", "576x576", "704x576"};
-	for (int i = 0; i < 5; i++)
+	static eString videoRatios[] = {"352x288", "352x576", "480x576", "576x576", "704x576", "320x240", "352x240", "352x480", "480x480", "640x480", "704x480"};
+	for (int i = 0; i < 11; i++)
 	{
 		if (videoRatios[i] == videoParms.videoRatio)
 			tmp += "<option selected value=\"" + videoRatios[i] + "\">";
@@ -227,7 +228,8 @@ eString editStreamingServerVideoSettings(eString request, eString dirpath, eStri
 	result.strReplace("#TRANSCODEVIDEO#", (videoParms.transcodeVideo ? "checked" : ""));
 	result.strReplace("#TRANSCODEAUDIO#", (videoParms.transcodeAudio ? "checked" : ""));
 	result.strReplace("#FPS#", videoParms.fps);
-	
+	result.strReplace("#SOUTADD#", (videoParms.soutadd ? "checked" : ""));
+
 	result.strReplace("#CHANGEBUTTON#", button(100, "Change", TOPNAVICOLOR, "javascript:submitSettings()", "#000000"));
 	
 	return result;

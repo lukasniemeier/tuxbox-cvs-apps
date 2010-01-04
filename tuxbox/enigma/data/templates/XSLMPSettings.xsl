@@ -72,6 +72,7 @@
 					<th>Audio Transcode</th>
 					<th>Audio Rate</th>
 					<th>FPS</th>
+					<th>Sub</th>
 					<th>Action</th>
 					
 				</tr>
@@ -105,6 +106,9 @@
 						</td>
 						<td>
 							<xsl:value-of select="@fps"/>
+						</td>
+						<td>
+							<xsl:value-of select="@soutadd"/>
 						</td>
 						<td>
 							<a href="javascript:editStreamingServerVideoSettings('{@name}', '{@ext}')">

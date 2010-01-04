@@ -1,5 +1,5 @@
 /*
- * $Id: movieplayer.h,v 1.19 2009/02/03 18:52:06 dbluelle Exp $
+ * $Id: movieplayer.h,v 1.20 2010/01/04 13:06:46 dbluelle Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -33,7 +33,7 @@
 struct player_value
 {
 	int STAT, BUFFERTIME, JUMPMIN;
-	bool ACTIVE, ACT_AC3, BUFFERFILLED, AVPIDS_FOUND;
+	bool ACTIVE, ACT_AC3, BUFFERFILLED, AVPIDS_FOUND, DVB, PLG, A_SYNC, SUBT, NSF;
 	unsigned short PIDA, PIDV;
 	short AC3;
 };
@@ -55,6 +55,14 @@ class eMoviePlayer: public eMainloop, private eThread, public Object
 			rewind,
 			jump,
 			terminate,
+			async,
+			subtitles,
+			dvbon,
+			dvboff,
+			runplg,
+			endplg,
+			bufsize,
+			nsf,
 			quit
 		};
 		Message(int type = 0, const char *filename = 0)
@@ -83,6 +91,10 @@ public:
 	eString sout(eString mrl);
 	static eMoviePlayer *getInstance() { return instance; }
 	enum {STOPPED, STREAMERROR, PLAY, PAUSE, FORWARD, REWIND, RESYNC, SKIP};
+	int initialBuffer,percBuffer;
+	void stopDVB();
+	void startDVB();
+	void supportPlugin();
 };
 
 #endif
