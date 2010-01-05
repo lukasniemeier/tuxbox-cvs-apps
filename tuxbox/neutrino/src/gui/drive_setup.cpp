@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.21 2010/01/04 13:03:27 dbt Exp $
+	$Id: drive_setup.cpp,v 1.22 2010/01/05 21:48:57 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -621,18 +621,25 @@ string CDriveSetup::getPartEntryString(string& partname)
 	else if ((!isSwapPartition(p_name)) && (isActivePartition(p_name))) 
 	{
 		s_mountpoint 		= getMountInfo(p_name, MOUNTPOINT);
-		long long l_space 	= getDeviceInfo(s_mountpoint.c_str(), KB_AVAILABLE)/1024; //MB
+		long long l_space 	= getDeviceInfo(s_mountpoint.c_str(), KB_AVAILABLE)*1024; //Bytes
 		long long l_hours	= getDeviceInfo(s_mountpoint.c_str(), FREE_HOURS);
 		s_fs 			= getMountInfo(p_name, FS);
 		s_options 		= getMountInfo(p_name, OPTIONS);
-		// convert size to string
-		str_size << l_space;
-		string s_space(str_size.str());
 
-		str_hours << l_hours;
-		string s_hours(str_hours.str());
+		//convert bytes
+		string s_space = convertByteString(l_space);
 
-		s_size 	= s_space + " MB (ca. " + s_hours + "h)";
+		string hours_left;
+		if (l_hours > 1) 
+		{
+			str_hours << l_hours;
+			string s_hours(str_hours.str());
+			hours_left = "(ca. " + s_hours + "h)";
+		}	
+		else
+			hours_left = "(< 1h)";
+
+		s_size 	= s_space + char(32) + hours_left;
 	}
 
 	string 	s_entry = s_mountpoint;
@@ -892,7 +899,7 @@ void CDriveSetup::showHddSetupSub()
 		//prepare cylinders
 		start_cyl[i] = getPartData(current_device, i, START_CYL, NO_REFRESH);
 		end_cyl[i] = getPartData(current_device, i, END_CYL, NO_REFRESH);
-		ed_cylinders[i] = iToString(start_cyl[i]) + " <-> " + iToString(end_cyl[i]);
+		ed_cylinders[i] = iToString(start_cyl[i]) + " / " + iToString(end_cyl[i]);
 		fw_cylinders[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_CYLINDERS, false, ed_cylinders[i].c_str());
 
 		//enable/disable partition
@@ -3678,7 +3685,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.21 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.22 $");
 }
 
 // returns text for initfile headers
