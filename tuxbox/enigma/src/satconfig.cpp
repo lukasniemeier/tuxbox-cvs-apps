@@ -1139,7 +1139,10 @@ void eDiSEqCPage::init_eDiSEqCPage( eWidget *parent, eSatellite *sat)
 	new eListBoxEntryText( *DiSEqCParam, "None", (void*)eDiSEqC::SENDNO, 0, _("sends no committed DiSEqC cmd") );
 	i = 0;
 	while (i < 16)
-		new eListBoxEntryText( *DiSEqCParam, eString().sprintf(_("%d"),i+1), (void*)(0xF0+i), 0, eString().sprintf(_("sends switch cmd %d"),++i) );
+	{
+		new eListBoxEntryText( *DiSEqCParam, eString().sprintf(_("%d"),i+1), (void*)(0xF0+i), 0, eString().sprintf(_("sends switch cmd %d"),i+1) );
+		i++;
+	}
 
 	lDiSEqCRepeats = CreateSkinnedLabel("lDiSEqCRepeats");
 	DiSEqCRepeats = CreateSkinnedComboBox("DiSEqCRepeats", 4, lDiSEqCRepeats );
@@ -1154,7 +1157,10 @@ void eDiSEqCPage::init_eDiSEqCPage( eWidget *parent, eSatellite *sat)
 	new eListBoxEntryText( *ucInput, _("None"), (void*)0, 0, _("sends no uncommitted switch command") );
 	i = 0;
 	while (i < 16)
-		new eListBoxEntryText( *ucInput, eString().sprintf(_("Input %d"),i+1), (void*)(240+i), 0, eString().sprintf(_("select uncommitted switch Input %d"),++i) );
+	{
+		new eListBoxEntryText( *ucInput, eString().sprintf(_("Input %d"),i+1), (void*)(240+i), 0, eString().sprintf(_("select uncommitted switch Input %d"),i+1) );
+		i++;
+	}
 
 	SeqRepeat = CreateSkinnedCheckbox("SeqRepeat");
 
