@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.22 2010/01/05 21:48:57 dbt Exp $
+	$Id: drive_setup.cpp,v 1.23 2010/01/07 07:26:56 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3230,8 +3230,11 @@ bool CDriveSetup::mkExports()
 
 	else
 	{
-		if (unlink(exports.c_str()) != 0)
-			cerr << "[drive setup] "<<__FUNCTION__ <<": delete "<<exports<<" ..." << strerror(errno)<<endl;
+		if (access(exports.c_str(), R_OK) == 0)
+		{
+			if (unlink(exports.c_str()) != 0)
+				cerr << "[drive setup] "<<__FUNCTION__ <<": delete "<<exports<<" ..." << strerror(errno)<<endl;
+		}	
 	}
 
 	return true;
@@ -3685,7 +3688,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.22 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.23 $");
 }
 
 // returns text for initfile headers
