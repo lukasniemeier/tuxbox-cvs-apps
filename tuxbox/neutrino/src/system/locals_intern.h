@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.157 2009/12/30 13:38:16 dbt Exp $
+ * $Id: locals_intern.h,v 1.158 2010/01/07 22:39:12 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -334,6 +334,13 @@ const char * locale_real_names[] =
 	"drive_setup.model_unknown",
 	"drive_setup.mount_mtdblock_partitions",
 	"drive_setup.msg_error_disctool_not_found",
+	"drive_setup.msg_error_load_mmc_driver_failed",
+	"drive_setup.msg_error_save_cannot_activate_interface",
+	"drive_setup.msg_error_save_cannot_hdparm",
+	"drive_setup.msg_error_save_cannot_make_exports",
+	"drive_setup.msg_error_save_cannot_make_fstab",
+	"drive_setup.msg_error_save_cannot_mount_drives",
+	"drive_setup.msg_error_save_configfile_failed",
 	"drive_setup.msg_error_save_failed",
 	"drive_setup.msg_partition_check",
 	"drive_setup.msg_partition_check_failed",

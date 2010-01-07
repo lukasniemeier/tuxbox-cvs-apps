@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.24 2010/01/07 08:05:21 dbt Exp $
+	$Id: drive_setup.cpp,v 1.25 2010/01/07 22:39:11 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -121,6 +121,7 @@ TODO:
 #define HDDTEMP		"hddtemp "
 #define MOUNT		"mount "
 #define UMOUNT		"umount "
+#define HDPARM		"hdparm "
 
 #define DEVNULL 	" 2>/dev/null "
 
@@ -427,7 +428,7 @@ void CDriveSetup::hide()
 // init menue
 void CDriveSetup::Init()
 {
-	cout<<getDriveSetupVersion()<<endl;
+	cout<<"[drive_setup] " << getDriveSetupVersion()<<endl;
 	
 	CProgressBar pb;
 
@@ -549,14 +550,12 @@ void CDriveSetup::showHddSetupMain()
 		// extended settings:fstab settings
 		bool active_item = d_settings.drive_use_fstab;
 		CMenuOptionChooser *oj_auto_fs = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE_AUTO_FS, &d_settings.drive_use_fstab_auto_fs, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, active_item);
-		CMenuOptionChooser *oj_use_mtd = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_MOUNT_MTDBLOCK_PARTITIONS, &d_settings.drive_mount_mtdblock_partitions, OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, active_item);
 		CDriveSetupFstabNotifier *fstabNotifier;
-		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs, oj_use_mtd);
+		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs);
 		CMenuOptionChooser *oj_fstab = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE, &d_settings.drive_use_fstab, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true, fstabNotifier);
 	
 		extsettings->addItem (oj_fstab);	
 		extsettings->addItem (oj_auto_fs);
-		extsettings->addItem (oj_use_mtd);
 		// --------------------------------
 
 
@@ -1585,10 +1584,14 @@ bool CDriveSetup::initMmcDriver()
 
 	string modul_name = (string)d_settings.drive_mmc_module_name;
 
+	if (modul_name == g_Locale->getText(LOCALE_OPTIONS_OFF))
+		return true;
+
 	// exec command
 	if (!initModul(modul_name)) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": loading "<<modul_name<< " failed..."<<endl;
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_LOAD_MMC_DRIVER_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
 		return false;
 	}
 
@@ -1716,7 +1719,7 @@ string CDriveSetup::getInitModulLoadStr(const string& modul_name)
 	{
  		if (access(modul_path[i].c_str(), R_OK)==0)
 		{
- 			load_str = (i > 1) ? LOAD + modul_name : LOAD + modul_path[i];
+ 			load_str = (i > 0) ? LOAD + modul_name : LOAD + modul_path[i];
 			return load_str;
 		}		
 	}
@@ -1793,14 +1796,13 @@ bool CDriveSetup::unloadModul(const string& modulname)
 // saves settings: load/unload modules and writes init file
 bool CDriveSetup::saveHddSetup()
 {
-	bool res = true;
 	bool ide_disabled = true;
 	
 	if (!writeDriveSettings())
-		res = false;
+		return false;
 
 	if (!unmountAll())
-		res = false;
+		return false;
 
 	//ide
 	if (d_settings.drive_activate_ide == IDE_ACTIVE) 
@@ -1812,79 +1814,73 @@ bool CDriveSetup::saveHddSetup()
 	if (d_settings.drive_activate_ide == IDE_OFF) 
 		ide_disabled = unloadIdeDrivers();
 
+	//check ide status
+	if (d_settings.drive_activate_ide != IDE_OFF && !isIdeInterfaceActive()) 
+	{
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_ACTIVATE_INTERFACE, width, msg_timeout, NEUTRINO_ICON_ERROR);
+		return false;
+	}
 
 	// hdparm
 	if (ide_disabled)
 	{
 		if (!loadHddParams(true/*reset*/))
-			res = false;
+			return false;
 	}
 	else 
 	{
 		if (!loadHddParams(false))
-			res = false;
+			return false;
 	}
-
-	if (!ide_disabled)
-		res = true;
 
 	// mmc stuff
 	if (isMmcEnabled())
 	{ 
 		if (!initMmcDriver()) 
-			res = false;
-	}
-	else 
-	{
-		if (!unloadMmcDrivers())
-			res = false;
+			return false;
 	}
 
 	//fs modules
 	if (ide_disabled || !isMmcEnabled())
 	{
 		if (!unloadFsDrivers())
-			res = false;
+			return false;
 	}
 	else
 	{
 		if (!initFsDrivers())
-			res = false;
+			return false;
 	}
 	
 	//mount all parts
-	mkMounts();
+	if (!mkMounts())
+	{
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MOUNT_DRIVES, width, msg_timeout, NEUTRINO_ICON_ERROR);
+		return false;
+	}
 
 	// fstab
 	if (d_settings.drive_use_fstab) 
 	{
 		if (!mkFstab())
-			res = false;
+		{
+			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_FSTAB, width, msg_timeout, NEUTRINO_ICON_ERROR);
+			return false;
+		}
 	}
 	
 
 #ifdef ENABLE_NFSSERVER
 	// exports
-	cout << "[drive setup] "<<__FUNCTION__ <<":  preparing exports..."<<endl;
-	if (!CNeutrinoApp::getInstance()->execute_start_file(NFS_STOP_SCRIPT, true ,true)) //first stop server
+	if (!mkExports())
 	{
-		cerr << "[drive setup] "<<__FUNCTION__ <<":  error while executing "<<NFS_STOP_SCRIPT<<"..."<<endl;
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_EXPORTS, width, msg_timeout, NEUTRINO_ICON_ERROR);
+		return false;
 	}
-	else
-	{
-		if (mkExports())
-		{
-			if (!CNeutrinoApp::getInstance()->execute_start_file(NFS_START_SCRIPT, true ,true))//start server
-				cerr << "[drive setup] "<<__FUNCTION__ <<":  error while executing "<<NFS_START_SCRIPT<<"..."<<endl;
-		}
-		else
-			res = false;		
-	}
-					
 #endif
 
 	// write and linking init files
-	if ((res) && (writeInitFile(ide_disabled)) && (linkInitFiles())) 
+	if ((writeInitFile(ide_disabled)) && (linkInitFiles())) 
 	{
 		writeDriveSettings();
 
@@ -1902,10 +1898,10 @@ bool CDriveSetup::saveHddSetup()
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
 		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
-		res = false;
+		return false;
 	}
 
-	return res;
+	return true;
 }
 
 // writes init files from line collection, parameter clear==true will remove command entries, == disabled interface
@@ -1914,8 +1910,6 @@ bool CDriveSetup::writeInitFile(const bool clear)
 	bool ret = true;
 	
 	string init_file [INIT_FILE_TYPE_NUM_COUNT] = {getInitIdeFilePath(), getInitMountFilePath()};
-
-	string 	sys_mounts = getDefaultSysMounts();
 
 	ofstream initfile[INIT_FILE_TYPE_NUM_COUNT] ;
 
@@ -1937,8 +1931,7 @@ bool CDriveSetup::writeInitFile(const bool clear)
 	{ // interface is disabled 
 		initfile[INIT_FILE_MODULES] << "echo "<<char(34)<<"ide-interface/mmc disabled"<<char(34)<<endl; // write disable tag
 
- 		if (!d_settings.drive_use_fstab)
-			initfile[INIT_FILE_MOUNTS] <<(sys_mounts)<<endl;
+
 	}
 	else 
 	{
@@ -1949,9 +1942,6 @@ bool CDriveSetup::writeInitFile(const bool clear)
 		// write mount entries
 		string 	m_txt =  getInitFileMountEntries();
 		initfile[INIT_FILE_MOUNTS] <<(m_txt)<<endl;
-
-		// write sys mount entries, if available (optional)
-		initfile[INIT_FILE_MOUNTS] <<(sys_mounts)<<endl;	
 	}
 
 
@@ -2101,7 +2091,8 @@ string CDriveSetup::getHddTemp(const int& device_num)
 
 	if (cmd_res!=0)
 	{
-		string cerr_content = "[drive setup] getHddTemp: reading temperature from hdd failed...";
+		string cerr_content = "[drive setup] " + (string)__FUNCTION__ + ": executing " +  cmdtemp + " ...failed! ";
+		
 		if (cmd_res == 127) 
 			cerr<<cerr_content<<HDDTEMP" not installed"<<endl;
 		else
@@ -2128,28 +2119,37 @@ string CDriveSetup::getHddTemp(const int& device_num)
 // set/apply/testing hdparm commands and returns true on sucess, parameter "reset = true" sets no commands
 bool CDriveSetup::loadHddParams(const bool do_reset)
 {
-	char opt_hdparm[2/*MASTER, SLAVE*/][15];
-	sprintf(opt_hdparm[MASTER]," -S%d -W%d -c1 ", atoi(d_settings.drive_spindown[MASTER])/5, d_settings.drive_write_cache[MASTER]);
-	sprintf(opt_hdparm[SLAVE]," -S%d -W%d -c1 ", atoi(d_settings.drive_spindown[SLAVE])/5, d_settings.drive_write_cache[SLAVE]);
+	string str_hdparm_cmd[2/*MASTER, SLAVE*/];
 
-	const string str_hdparm_cmd[2] = {	((device_isActive[MASTER]) ? "hdparm" + (string)opt_hdparm[MASTER]  + drives[MASTER].device : ""	),
-						((device_isActive[SLAVE]) ? "hdparm" + (string)opt_hdparm[SLAVE] + drives[SLAVE].device : ""		)};
-	
-	// test/define all commands
 	// do nothing on reset
 	if (!do_reset)
 	{
+		char opt_hdparm[2/*MASTER, SLAVE*/][15];
 		int i = 0;
-		while (i < MAXCOUNT_DRIVE) 
+
+		//test/define all commands
+		while ( i == MASTER || i == SLAVE) 
 		{
+			sprintf(opt_hdparm[i],"-S%d -W%d -c1 ", atoi(d_settings.drive_spindown[i])/5, d_settings.drive_write_cache[i]);
+			str_hdparm_cmd[i] =((device_isActive[i]) ? HDPARM + (string)opt_hdparm[i]  + drives[i].device : "");
+
 			if (device_isActive[i])
- 			{
-				if (CNeutrinoApp::getInstance()->execute_sys_command(str_hdparm_cmd[i].c_str())!=0)
+			{
+				int cmd_res = CNeutrinoApp::getInstance()->execute_sys_command(str_hdparm_cmd[i].c_str());
+				
+				if (cmd_res !=0)
 				{ 
-					cerr<<"[drive setup] "<<__FUNCTION__ <<": executing "<< str_hdparm_cmd[i]<<" ...failed"<<endl;
- 					return false;
+					string cerr_content = "[drive setup] " + (string)__FUNCTION__  + ": executing " + str_hdparm_cmd[i] + " ...failed! ";
+	
+					if (cmd_res == 127) 
+						cerr<<cerr_content<<HDPARM" not installed"<<endl;
+					else
+						cerr<<cerr_content<<endl;
+
+ 					ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_HDPARM, width, msg_timeout, NEUTRINO_ICON_ERROR);
+					return false;
 				}
- 			}
+			}
 		i++;
 		}
 	}
@@ -2203,31 +2203,15 @@ bool CDriveSetup::isActivePartition(const string& partname)
 	return (( loc != string::npos ) ? true : false);
 }
 
-// generate fstab file, returns true on success
+// generate fstab file, returns true on success NOTE: All partitions must be mounted!
 bool CDriveSetup::mkFstab(bool write_defaults_only)
 {
-	string cur_mmc = getUsedMmcModulName();
-	bool mmc_in_use = (!cur_mmc.empty()) ? true : false;
-
-	if ((d_settings.drive_activate_ide != IDE_OFF) || (mmc_in_use)) 
-	{// first mounting all hdd partitions if ide interface is activ
-		mountAll();
-	}
-	else 
-	{ // or  mounting all hdd partitions if ide interface is not activ
-		unmountAll();
-	}
-
 	// set fstab path
 	string fstab = getFstabFilePath();
 	string timestamp = getTimeStamp();
 
 	vector<string> v_fstab_entries;
 	v_fstab_entries.push_back("# " + fstab + " generated from neutrino ide/mmc/hdd drive-setup\n #" +  getDriveSetupVersion() + " " +  timestamp );
-
-	if ((fstab == FSTAB) || (write_defaults_only))
-		v_fstab_entries.push_back(getDefaultFstabEntries()); // set default fstab entries
-
 
 	if (!write_defaults_only) 
 	{
@@ -2279,16 +2263,27 @@ bool CDriveSetup::mkFstab(bool write_defaults_only)
 }
 
 //mount all devices, if any device activated
-void CDriveSetup::mkMounts()
-{	
+bool CDriveSetup::mkMounts()
+{
+
 	if (d_settings.drive_activate_ide != IDE_OFF || isMmcActive()) 
 	{//first mounting all hdd partitions if ide interface is activ or mount mmc if any device activated
-		mountAll();
+		if (!mountAll())
+		{
+			cout<<"[drive setup] "<<__FUNCTION__ <<": error while mounting partitions...ok"<<endl;
+			return false;
+		}
 	}
 	else 
 	{//or mounting all devices if nothing activated
-		unmountAll();
+		if (!unmountAll())
+		{
+			cout<<"[drive setup] "<<__FUNCTION__ <<": error while unmounting partitions...ok"<<endl;
+			return false;
+		}
 	}
+	
+	return true;
 }
 
 // collects spported and available filsystem modules, writes to vector v_fs_modules
@@ -3182,6 +3177,12 @@ string CDriveSetup::getExportsFilePath()
 // generate exports file, returns true on success
 bool CDriveSetup::mkExports()
 {
+	//stop nfs
+	if (!CNeutrinoApp::getInstance()->execute_start_file(NFS_STOP_SCRIPT, true ,true)) //first stop server
+	{
+		cerr << "[drive setup] "<<__FUNCTION__ <<":  error while executing "<<NFS_STOP_SCRIPT<<"..."<<endl;
+	}
+	
 	// set exports path
 	string exports = getExportsFilePath();
 	string timestamp = getTimeStamp();
@@ -3237,6 +3238,12 @@ bool CDriveSetup::mkExports()
 			if (unlink(exports.c_str()) != 0)
 				cerr << "[drive setup] "<<__FUNCTION__ <<": delete "<<exports<<" ..." << strerror(errno)<<endl;
 		}	
+	}
+
+	//start nfs
+	if (!CNeutrinoApp::getInstance()->execute_start_file(NFS_START_SCRIPT, true ,true))
+	{
+		cerr << "[drive setup] "<<__FUNCTION__ <<":  error while executing "<<NFS_START_SCRIPT<<"..."<<endl;
 	}
 
 	return true;
@@ -3469,48 +3476,6 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 	return ret;
 }
 
-// returns default mount entries depends from filesystem
-string CDriveSetup::getDefaultSysMounts()
-{
-	//TODO make it usable for other imagetypes/boxtypes
-	string ret = "";
-
-	if (d_settings.drive_mount_mtdblock_partitions)
-	{
-		long int fsnum = getDeviceInfo(ETC_DIR, FILESYSTEM);
-			ret =  "/bin/mount -n -t proc proc /proc\n";
-			ret += "/bin/mount -n -t tmpfs tmpfs /tmp\n";
-	
-		if ((fsnum == 0x28cd3d45 /*cramfs*/) || (fsnum == 0x073717368 /*squashfs*/)) 
-		{
-	;		ret += "/bin/mount -t jffs2 /dev/mtdblock/3 /var";
-		}
-		else if (fsnum == 0x6969 /*nfs (yadd)*/) 
-		{
-			ret += "#/bin/mount -t jffs2 /dev/mtdblock/3 /var";
-		}
-	}
-
-	return ret;
-}
-
-// returns default fstab mount entries
-string CDriveSetup::getDefaultFstabEntries()
-{
-	//TODO make it usable for other imagetypes/boxtypes
-	string 	ret = "";
-
-	if (d_settings.drive_mount_mtdblock_partitions)
-	{
-		ret = 	"proc /proc proc defaults 0 0\n";
-		ret += 	"tmpfs /tmp tmpfs defaults 0 0\n";
-		ret += 	"sysfs /sys sysfs noauto 0 0\n";
-		ret += 	"devpts /dev/pts devpts noauto 0 0";
-	}
-
-	return ret;
-}
-
 // returns status of mmc, returns true if is active
 bool CDriveSetup::isMmcActive()
 {
@@ -3523,7 +3488,8 @@ bool CDriveSetup::isMmcActive()
 //return true if mmc is enabled
 bool CDriveSetup::isMmcEnabled()
 {
-	return ((string)d_settings.drive_mmc_module_name != g_Locale->getText(LOCALE_OPTIONS_OFF));
+	if ((string)d_settings.drive_mmc_module_name != g_Locale->getText(LOCALE_OPTIONS_OFF));
+		return true;
 }
 
 // returns status of ide interface, returns true if is active
@@ -3552,7 +3518,6 @@ void CDriveSetup::loadDriveSettings()
 	strcpy(d_settings.drive_mmc_module_name, configfile.getString("drive_mmc_module_name", "").c_str());
 	d_settings.drive_use_fstab = configfile.getInt32("drive_use_fstab", YES);
 	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", YES);
-	d_settings.drive_mount_mtdblock_partitions = configfile.getInt32("drive_mount_mtdblock_partitions", NO);
 	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
 
 	char mountpoint_opt[31];
@@ -3614,14 +3579,11 @@ void CDriveSetup::loadDriveSettings()
 // saving settings
 bool CDriveSetup::writeDriveSettings()
 {
-	bool ret = true;
-
 	// drivesetup
 	configfile.setInt32	( "drive_activate_ide", d_settings.drive_activate_ide);
 	configfile.setString	( "drive_mmc_module_name", d_settings.drive_mmc_module_name );
 	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
 	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
-	configfile.setInt32	( "drive_mount_mtdblock_partitions", d_settings.drive_mount_mtdblock_partitions );
 	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
 
 	char mountpoint_opt[31];
@@ -3676,10 +3638,11 @@ bool CDriveSetup::writeDriveSettings()
 	if (!configfile.saveConfig(DRV_CONFIGFILE)) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while writing "<<DRV_CONFIGFILE<<endl;
-		ret = false;
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CONFIGFILE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
+		return false;
 	}
 
-	return ret;
+	return true;
 }
 
 // returns current time string
@@ -3696,7 +3659,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.24 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.25 $");
 }
 
 // returns text for initfile headers
@@ -4062,20 +4025,16 @@ bool CDriveSetupNFSHostNotifier::changeNotify(const neutrino_locale_t, void * Da
 
 // class CDriveSetupFstabNotifier
 //enable disable entry for fstab options 
-CDriveSetupFstabNotifier::CDriveSetupFstabNotifier( CMenuOptionChooser* oj1, CMenuOptionChooser* oj2)
+CDriveSetupFstabNotifier::CDriveSetupFstabNotifier( CMenuOptionChooser* oj1)
 {
-	toDisable[0] = oj1;
-	toDisable[1] = oj2;
+	toDisable = oj1;
 }
 bool CDriveSetupFstabNotifier::changeNotify(const neutrino_locale_t, void * Data)
 {
-	for (uint i = 0; i < 2; i++)
-	{
-		if (*((int *)Data) == 0)
-		 	toDisable[i]->setActive(false);
-		else
-			toDisable[i]->setActive(true);
-	}
+	if (*((int *)Data) == 0)
+		toDisable->setActive(false);
+	else
+		toDisable->setActive(true);
 
 	return true;
 }

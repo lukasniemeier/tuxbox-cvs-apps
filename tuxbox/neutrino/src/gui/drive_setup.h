@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.11 2010/01/07 08:05:21 dbt Exp $
+	$Id: drive_setup.h,v 1.12 2010/01/07 22:39:11 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -56,7 +56,6 @@ struct SDriveSettings
 
 	int 	drive_use_fstab;
 	int	drive_use_fstab_auto_fs;
-	int	drive_mount_mtdblock_partitions;
 
 	int 	drive_activate_ide;
 	int 	drive_write_cache[MAXCOUNT_DRIVE];
@@ -266,6 +265,7 @@ class CDriveSetup : public CMenuTarget
 		bool unloadIdeDrivers();
 		bool unloadModul(const std::string& modulname);
 		bool writeInitFile(const bool clear = false);
+		bool mkMounts();
 		bool mkFstab(bool write_defaults_only = false);
 #ifdef ENABLE_NFSSERVER
 		bool mkExports();
@@ -299,7 +299,6 @@ class CDriveSetup : public CMenuTarget
 		void loadPartlist(const int& device_num = -1);
 		void loadFdiskData();
 		void loadDriveTemps();
-		void mkMounts();
 		void mkDefaultMountpoints();
 						
 		void showHddSetupMain();
@@ -426,9 +425,9 @@ class CDriveSetupNFSHostNotifier : public CChangeObserver
 class CDriveSetupFstabNotifier : public CChangeObserver
 {
 	private:
-		CMenuOptionChooser* toDisable[2];
+		CMenuOptionChooser* toDisable;
 	public:
-		CDriveSetupFstabNotifier( CMenuOptionChooser*, CMenuOptionChooser*);
+		CDriveSetupFstabNotifier( CMenuOptionChooser* );
 		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 

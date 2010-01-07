@@ -303,10 +303,17 @@ drive_setup.head IDE-Interface / HDD / MMC
 drive_setup.ide_activate IDE-Interface
 drive_setup.ide_activate_irq6 activ with IRQ6
 drive_setup.ide_activate_on activ with default IRQ
-drive_setup.mmc MMC
+drive_setup.mmc MMC/SD
 drive_setup.model_unknown unknown model
 drive_setup.mount_mtdblock_partitions mount including mtd partitions
 drive_setup.msg_error_disctool_not_found not found!\nCan't execute setup.
+drive_setup.msg_error_load_mmc_driver_failed Can't load MMC/SD-drivers!
+drive_setup.msg_error_save_cannot_activate_interface Can't activating ide-inteface!
+drive_setup.msg_error_save_cannot_hdparm Error while setting hdd-parameters!
+drive_setup.msg_error_save_cannot_make_exports Error while creating exports!
+drive_setup.msg_error_save_cannot_make_fstab Error while creating fstab!
+drive_setup.msg_error_save_cannot_mount_drives Can't mount drives!
+drive_setup.msg_error_save_configfile_failed Can't save settings!
 drive_setup.msg_error_save_failed Error while saving settings!
 drive_setup.msg_partition_check Start fs-check? This may take some time.
 drive_setup.msg_partition_check_failed Check was failed!
