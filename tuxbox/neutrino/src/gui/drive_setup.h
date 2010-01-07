@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.10 2010/01/04 13:03:27 dbt Exp $
+	$Id: drive_setup.h,v 1.11 2010/01/07 08:05:21 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -272,6 +272,7 @@ class CDriveSetup : public CMenuTarget
 #endif
 		bool haveSwap();
 		bool isMmcActive();
+		bool isMmcEnabled();
 		bool isIdeInterfaceActive();
 		bool linkInitFiles();
 		bool haveActiveParts(const int& device_num);
