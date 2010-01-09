@@ -313,6 +313,7 @@ drive_setup.msg_error_save_cannot_hdparm Error while setting hdd-parameters!
 drive_setup.msg_error_save_cannot_make_exports Error while creating exports!
 drive_setup.msg_error_save_cannot_make_fstab Error while creating fstab!
 drive_setup.msg_error_save_cannot_mount_drives Can't mount drives!
+drive_setup.msg_error_save_cannot_unmount_drives Can't unmount any drive!
 drive_setup.msg_error_save_configfile_failed Can't save settings!
 drive_setup.msg_error_save_failed Error while saving settings!
 drive_setup.msg_partition_check Start fs-check? This may take some time.

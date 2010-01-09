@@ -313,6 +313,7 @@ drive_setup.msg_error_save_cannot_hdparm Fehler beim Setzen von HDD-Parametern!
 drive_setup.msg_error_save_cannot_make_exports Fehler beim Erstellen von exports!
 drive_setup.msg_error_save_cannot_make_fstab Fehler beim Erstellen von fstab!
 drive_setup.msg_error_save_cannot_mount_drives Laufwerke können nicht eingehängt werden!
+drive_setup.msg_error_save_cannot_unmount_drives Ein oder mehrere Laufwerke können nicht ausgehängt werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
 drive_setup.msg_partition_check Soll die Partition jetzt geprüft werden?\nDies kann einige Zeit in Anspruch nehmen.

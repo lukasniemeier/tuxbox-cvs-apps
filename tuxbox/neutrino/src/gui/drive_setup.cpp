@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.25 2010/01/07 22:39:11 dbt Exp $
+	$Id: drive_setup.cpp,v 1.26 2010/01/09 11:24:47 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1801,8 +1801,12 @@ bool CDriveSetup::saveHddSetup()
 	if (!writeDriveSettings())
 		return false;
 
+	//unmount first
 	if (!unmountAll())
+	{
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_UNMOUNT_DRIVES, width, msg_timeout, NEUTRINO_ICON_ERROR);
 		return false;
+	}
 
 	//ide
 	if (d_settings.drive_activate_ide == IDE_ACTIVE) 
@@ -1841,7 +1845,7 @@ bool CDriveSetup::saveHddSetup()
 	}
 
 	//fs modules
-	if (ide_disabled || !isMmcEnabled())
+	if (ide_disabled && !isMmcEnabled())
 	{
 		if (!unloadFsDrivers())
 			return false;
@@ -3659,7 +3663,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.25 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.26 $");
 }
 
 // returns text for initfile headers
