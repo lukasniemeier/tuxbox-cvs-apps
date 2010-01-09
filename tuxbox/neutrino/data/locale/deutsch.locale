@@ -312,8 +312,8 @@ drive_setup.msg_error_save_cannot_activate_interface IDE-Interface kann nicht ak
 drive_setup.msg_error_save_cannot_hdparm Fehler beim Setzen von HDD-Parametern!
 drive_setup.msg_error_save_cannot_make_exports Fehler beim Erstellen von exports!
 drive_setup.msg_error_save_cannot_make_fstab Fehler beim Erstellen von fstab!
-drive_setup.msg_error_save_cannot_mount_drives Laufwerke können nicht eingehängt werden!
-drive_setup.msg_error_save_cannot_unmount_drives Ein oder mehrere Laufwerke können nicht ausgehängt werden!
+drive_setup.msg_error_save_cannot_mount_drives Laufwerke können nicht eingehangen werden!
+drive_setup.msg_error_save_cannot_unmount_drives Ein oder mehrere Laufwerke können\nnicht ausgehangen werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
 drive_setup.msg_partition_check Soll die Partition jetzt geprüft werden?\nDies kann einige Zeit in Anspruch nehmen.
@@ -326,7 +326,7 @@ drive_setup.msg_partition_create_success Partition wurde erfolgreich erzeugt!
 drive_setup.msg_partition_delete Alle Daten dieser Partition gehen verloren!\nPartion jetzt löschen!
 drive_setup.msg_partition_delete_failed Löschen der Partition fehlgeschlagen!
 drive_setup.msg_partition_delete_ok Partition wurde erfolgreich gelöscht.
-drive_setup.msg_partition_not_mounted_please_activate Partition wurde angelegt, aber nicht eingehängt.\nPartition muss dafür vorher aktiviert werden!
+drive_setup.msg_partition_not_mounted_please_activate Partition wurde angelegt, aber nicht eingehangen.\nPartition muss dafür vorher aktiviert werden!
 drive_setup.msg_reboot_requiered Diese Aktion wird erst nach einem Neustart Ihres\nReceivers wirksam.\nJetzt neu booten?
 drive_setup.msg_saved Einstellungen wurden erfolgreich\nübernommen!
 drive_setup.msg_saved_disabled Gerät(e) wurden deaktiviert.
@@ -347,7 +347,7 @@ drive_setup.partition_mount_now_device Alle einhängen
 drive_setup.partition_mountpoint Einhängen nach
 drive_setup.partition_nfs Für NFS-Server freigeben
 drive_setup.partition_nfs_host_ip NFS-Client Host-IP
-drive_setup.partition_not_active Partition nicht eingehängt
+drive_setup.partition_not_active Partition nicht eingehangen
 drive_setup.partition_not_created nicht angelegt
 drive_setup.partition_number Partitions-Nr.:
 drive_setup.partition_size Zugewiesene Partitionsgröße in MB
