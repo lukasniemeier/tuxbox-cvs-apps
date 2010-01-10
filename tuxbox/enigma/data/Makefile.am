@@ -8,7 +8,7 @@ SUBDIRS = \
 	lirc
 
 if TARGET_CDK
-if !TARGETRULESET_UCLIBC
+if !ENABLE_UCLIBC
 SUBDIRS += \
 	sysconfig
 endif 

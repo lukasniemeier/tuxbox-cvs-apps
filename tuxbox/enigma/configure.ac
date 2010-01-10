@@ -14,7 +14,7 @@ AC_PROG_RANLIB
 AC_ARG_ENABLE(uclibc,
 	AS_HELP_STRING(--enable-uclibc,	enable rules for creating uclibc linked targets),
 	,[enable_uclibc=no])
-AM_CONDITIONAL(TARGETRULESET_UCLIBC,test "$enable_uclibc" = "yes")
+AM_CONDITIONAL(ENABLE_UCLIBC,test "$enable_uclibc" = "yes")
 
 AC_ARG_WITH(webif,
 	[  --with-webif=NAME webif type [[standard,expert,...]]],
