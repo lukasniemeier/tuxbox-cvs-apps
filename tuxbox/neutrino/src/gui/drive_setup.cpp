@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.26 2010/01/09 11:24:47 dbt Exp $
+	$Id: drive_setup.cpp,v 1.27 2010/01/10 22:18:34 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -237,27 +237,23 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 
 	if (actionKey=="apply")
 	{
-		if (saveHddSetup()) 
+		if (!saveHddSetup()) 
 		{
-			Init();
-			return menu_return::RETURN_EXIT;
+			cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
+			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
 		}
-		return res;
+		Init();
+		return menu_return::RETURN_EXIT;
 	}
 	else if (actionKey == "mount_device_partitions")
  	{
 
-		if (mountDevice(current_device)) 
-		{
-			showHddSetupSub();
-			return menu_return::RETURN_EXIT;
-		}
-		else 
+		if (!mountDevice(current_device)) 
 		{
 			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_PARTITION_MOUNT_ERROR, width, msg_timeout, NEUTRINO_ICON_ERROR);
-			showHddSetupSub();
-			return menu_return::RETURN_EXIT;
 		}
+		showHddSetupSub();
+		return menu_return::RETURN_EXIT;
  	}
 	else if (actionKey == "unmount_device_partitions")
  	{
@@ -1886,8 +1882,6 @@ bool CDriveSetup::saveHddSetup()
 	// write and linking init files
 	if ((writeInitFile(ide_disabled)) && (linkInitFiles())) 
 	{
-		writeDriveSettings();
-
 		neutrino_locale_t msg_locale;
 
 		if (ide_disabled && !isMmcActive())
@@ -1895,13 +1889,11 @@ bool CDriveSetup::saveHddSetup()
 		else
 			msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED;
 
-		//neutrino_locale_t msg_locale = (!ide_disabled) ? LOCALE_DRIVE_SETUP_MSG_SAVED : LOCALE_DRIVE_SETUP_MSG_SAVED_DISABLED;
 		ShowLocalizedHint(LOCALE_DRIVE_SETUP_HEAD, msg_locale, width, msg_timeout, NEUTRINO_ICON_INFO);
 	}
 	else 
 	{
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
+
 		return false;
 	}
 
@@ -2274,7 +2266,7 @@ bool CDriveSetup::mkMounts()
 	{//first mounting all hdd partitions if ide interface is activ or mount mmc if any device activated
 		if (!mountAll())
 		{
-			cout<<"[drive setup] "<<__FUNCTION__ <<": error while mounting partitions...ok"<<endl;
+			cerr<<"[drive setup] "<<__FUNCTION__ <<": error while mounting partitions!"<<endl;
 			return false;
 		}
 	}
@@ -2282,7 +2274,7 @@ bool CDriveSetup::mkMounts()
 	{//or mounting all devices if nothing activated
 		if (!unmountAll())
 		{
-			cout<<"[drive setup] "<<__FUNCTION__ <<": error while unmounting partitions...ok"<<endl;
+			cerr<<"[drive setup] "<<__FUNCTION__ <<": error while unmounting partitions!"<<endl;
 			return false;
 		}
 	}
@@ -3663,7 +3655,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.26 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.27 $");
 }
 
 // returns text for initfile headers
