@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.28 2010/01/11 21:33:57 dbt Exp $
+	$Id: drive_setup.cpp,v 1.29 2010/01/11 21:59:50 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -553,8 +553,8 @@ void CDriveSetup::showHddSetupMain()
 		// extended settings:load options
 		CMenuSeparator * sep_load_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
 		sep_load_options->setString(LOAD);
-		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_load_options, 20, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- ");
-		CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_load_options, input_load_options);
+		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_command_load_options, 20, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- ");
+		CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_command_load_options, input_load_options);
 	
 		extsettings->addItem (oj_fstab);	
 		extsettings->addItem (oj_auto_fs);
@@ -1717,7 +1717,7 @@ string CDriveSetup::getInitModulLoadStr(const string& modul_name)
 				"lib/modules/" + k_name + "/kernel/drivers/ide/" + modul_name + M_TYPE,
 				"lib/modules/" + k_name + "/kernel/fs/" + modul_name + "/" + modul_name + M_TYPE}; 
 
-	string cmd = LOAD + d_settings.drive_advanced_modul_load_options + char(32);
+	string cmd = LOAD + d_settings.drive_advanced_modul_command_load_options + char(32);
 
 	string load_str = "";
 	for (uint i=0; i<(sizeof(modul_path) / sizeof(modul_path[0])) ; i++)
@@ -3524,7 +3524,7 @@ void CDriveSetup::loadDriveSettings()
 	d_settings.drive_use_fstab = configfile.getInt32("drive_use_fstab", YES);
 	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", YES);
 	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
-	d_settings.drive_advanced_modul_load_options = configfile.getString("drive_advanced_modul_load_options", "");
+	d_settings.drive_advanced_modul_command_load_options = configfile.getString("drive_advanced_modul_command_load_options", "");
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3591,7 +3591,7 @@ bool CDriveSetup::writeDriveSettings()
 	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
 	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
 	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
-	configfile.setString	( "drive_advanced_modul_load_options", d_settings.drive_advanced_modul_load_options);
+	configfile.setString	( "drive_advanced_modul_command_load_options", d_settings.drive_advanced_modul_command_load_options);
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3666,7 +3666,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.28 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.29 $");
 }
 
 // returns text for initfile headers

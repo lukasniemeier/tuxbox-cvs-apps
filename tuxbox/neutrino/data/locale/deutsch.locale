@@ -280,6 +280,7 @@ date.Wed  Mi
 drive_setup.advanced_settings Erweiterte Einstellungen
 drive_setup.advanced_settings_modul_loadcmd_options_entry Optionen
 drive_setup.advanced_settings_modul_loadcmd_options_input Eingabe
+drive_setup.advanced_settings_modul_loadcmd_options_input_l1 Bitte Kommando-Optionen eingeben!
 drive_setup.fstab fstab
 drive_setup.fstab_use Verwende fstab
 drive_setup.fstab_use_auto_fs Dateisysteme automatisch zuweisen

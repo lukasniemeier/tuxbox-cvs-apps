@@ -280,8 +280,9 @@ date.Wed  Wed
 drive_setup.advanced_settings Advanced settings
 drive_setup.advanced_settings_modul_loadcmd_options_entry Options
 drive_setup.advanced_settings_modul_loadcmd_options_input Input
+drive_setup.advanced_settings_modul_loadcmd_options_input_l1 Please enter options for load commands!
 drive_setup.fstab fstab
-drive_setup.fstab_use use fstab
+drive_setup.fstab_use Use fstab
 drive_setup.fstab_use_auto_fs Filesystem auto detect
 drive_setup.hdd_add_partition Add partition
 drive_setup.hdd_add_swap_partition Add swap partition
@@ -292,15 +293,15 @@ drive_setup.hdd_edit_partition Edit Partition
 drive_setup.hdd_format_partition Apply and format partition
 drive_setup.hdd_format_set_partition ...apply partitions
 drive_setup.hdd_format_start Start format, please wait...
-drive_setup.hdd_free_gb free diskpace
-drive_setup.hdd_free_hours free time
+drive_setup.hdd_free_gb Free diskpace
+drive_setup.hdd_free_hours Free time
 drive_setup.hdd_master hda (Master)
 drive_setup.hdd_not_found not found
 drive_setup.hdd_slave hdb (Slave)
 drive_setup.hdd_sleep Spindown timeout (seconds))
 drive_setup.hdd_sleep_help Values as seconds
 drive_setup.hdd_sleep_std 0 = no Timeout (default)
-drive_setup.hdd_temp Temperatur
+drive_setup.hdd_temp Temperature
 drive_setup.head IDE-Interface / HDD / MMC
 drive_setup.ide_activate IDE-Interface
 drive_setup.ide_activate_irq6 activ with IRQ6
