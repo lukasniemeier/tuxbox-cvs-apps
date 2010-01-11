@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.159 2010/01/09 16:52:59 dbt Exp $
+ * $Id: locals_intern.h,v 1.160 2010/01/11 21:33:58 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -305,6 +305,8 @@ const char * locale_real_names[] =
 	"date.Tue",
 	"date.Wed",
 	"drive_setup.advanced_settings",
+	"drive_setup.advanced_settings_modul_loadcmd_options_entry",
+	"drive_setup.advanced_settings_modul_loadcmd_options_input",
 	"drive_setup.fstab",
 	"drive_setup.fstab_use",
 	"drive_setup.fstab_use_auto_fs",

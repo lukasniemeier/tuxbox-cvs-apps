@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.27 2010/01/10 22:18:34 dbt Exp $
+	$Id: drive_setup.cpp,v 1.28 2010/01/11 21:33:57 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -549,11 +549,18 @@ void CDriveSetup::showHddSetupMain()
 		CDriveSetupFstabNotifier *fstabNotifier;
 		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs);
 		CMenuOptionChooser *oj_fstab = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE, &d_settings.drive_use_fstab, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true, fstabNotifier);
+
+		// extended settings:load options
+		CMenuSeparator * sep_load_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
+		sep_load_options->setString(LOAD);
+		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_load_options, 20, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- ");
+		CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_load_options, input_load_options);
 	
 		extsettings->addItem (oj_fstab);	
 		extsettings->addItem (oj_auto_fs);
 		// --------------------------------
-
+		extsettings->addItem (sep_load_options);
+		extsettings->addItem (fw_input_load_options);
 
 	// show select separator, only visible if any device activ
 	if (hdd_count>0 || foundMmc()) 
@@ -1710,12 +1717,14 @@ string CDriveSetup::getInitModulLoadStr(const string& modul_name)
 				"lib/modules/" + k_name + "/kernel/drivers/ide/" + modul_name + M_TYPE,
 				"lib/modules/" + k_name + "/kernel/fs/" + modul_name + "/" + modul_name + M_TYPE}; 
 
+	string cmd = LOAD + d_settings.drive_advanced_modul_load_options + char(32);
+
 	string load_str = "";
 	for (uint i=0; i<(sizeof(modul_path) / sizeof(modul_path[0])) ; i++)
 	{
  		if (access(modul_path[i].c_str(), R_OK)==0)
 		{
- 			load_str = (i > 0) ? LOAD + modul_name : LOAD + modul_path[i];
+ 			load_str = (i > 0) ? cmd + modul_name : cmd + modul_path[i];
 			return load_str;
 		}		
 	}
@@ -3515,6 +3524,7 @@ void CDriveSetup::loadDriveSettings()
 	d_settings.drive_use_fstab = configfile.getInt32("drive_use_fstab", YES);
 	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", YES);
 	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
+	d_settings.drive_advanced_modul_load_options = configfile.getString("drive_advanced_modul_load_options", "");
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3581,6 +3591,7 @@ bool CDriveSetup::writeDriveSettings()
 	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
 	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
 	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
+	configfile.setString	( "drive_advanced_modul_load_options", d_settings.drive_advanced_modul_load_options);
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3655,7 +3666,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.27 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.28 $");
 }
 
 // returns text for initfile headers

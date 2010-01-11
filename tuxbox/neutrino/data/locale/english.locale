@@ -278,6 +278,8 @@ date.Thu  Thu
 date.Tue  Tue
 date.Wed  Wed
 drive_setup.advanced_settings Advanced settings
+drive_setup.advanced_settings_modul_loadcmd_options_entry Options
+drive_setup.advanced_settings_modul_loadcmd_options_input Input
 drive_setup.fstab fstab
 drive_setup.fstab_use use fstab
 drive_setup.fstab_use_auto_fs Filesystem auto detect
