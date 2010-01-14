@@ -278,6 +278,8 @@ date.Thu  Do
 date.Tue  Di
 date.Wed  Mi
 drive_setup.advanced_settings Erweiterte Einstellungen
+drive_setup.advanced_settings_custom_moduldir Benutzerdef. Ordner
+drive_setup.advanced_settings_modul Modul
 drive_setup.advanced_settings_modul_loadcmd_options_entry Optionen
 drive_setup.advanced_settings_modul_loadcmd_options_input Eingabe
 drive_setup.advanced_settings_modul_loadcmd_options_input_l1 Bitte Kommando-Optionen eingeben!

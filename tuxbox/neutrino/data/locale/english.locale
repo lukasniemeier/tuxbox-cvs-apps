@@ -278,6 +278,8 @@ date.Thu  Thu
 date.Tue  Tue
 date.Wed  Wed
 drive_setup.advanced_settings Advanced settings
+drive_setup.advanced_settings_custom_moduldir Custom directory
+drive_setup.advanced_settings_modul Modul
 drive_setup.advanced_settings_modul_loadcmd_options_entry Options
 drive_setup.advanced_settings_modul_loadcmd_options_input Input
 drive_setup.advanced_settings_modul_loadcmd_options_input_l1 Please enter options for load commands!

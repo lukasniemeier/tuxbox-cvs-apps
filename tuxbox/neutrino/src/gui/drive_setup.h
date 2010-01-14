@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.14 2010/01/11 21:59:50 dbt Exp $
+	$Id: drive_setup.h,v 1.15 2010/01/14 22:40:05 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -54,6 +54,7 @@ struct SDriveSettings
 {
 	std::string 	drive_partition_mountpoint[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 	std::string 	drive_advanced_modul_command_load_options;
+	std::string 	drive_modul_dir;
 
 	int 	drive_use_fstab;
 	int	drive_use_fstab_auto_fs;

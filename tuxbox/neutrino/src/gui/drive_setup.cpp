@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.29 2010/01/11 21:59:50 dbt Exp $
+	$Id: drive_setup.cpp,v 1.30 2010/01/14 22:40:05 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -135,6 +135,9 @@ TODO:
 #define M_MMC		"mmc"
 #define M_MMC2		"mmc2"
 #define M_MMCCOMBO	"mmccombo"
+
+// default custom modul path
+#define VAR_MOUDULDIR	"/var/lib/modules"
 
 // proc devices
 #define IDE0HDA		"/proc/ide/ide0/hda"
@@ -536,31 +539,40 @@ void CDriveSetup::showHddSetupMain()
 	CMenuWidget 	*extsettings = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
 	m->addItem (new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS, true, NULL, extsettings, NULL, CRCInput::RC_1));
 
-		extsettings->addItem (new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS));
+		CMenuSeparator * subhead_extsettings = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS);
+		CMenuSeparator * sep_fstab = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_FSTAB);
 	
-		// extended settings:intro entries
-		extsettings->addItem(GenericMenuSeparator);
-		extsettings->addItem(GenericMenuBack);
-		extsettings->addItem (new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_FSTAB));
-	
-		// extended settings:fstab settings
+		// extended settings: fstab settings
 		bool active_item = d_settings.drive_use_fstab;
 		CMenuOptionChooser *oj_auto_fs = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE_AUTO_FS, &d_settings.drive_use_fstab_auto_fs, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, active_item);
 		CDriveSetupFstabNotifier *fstabNotifier;
 		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs);
 		CMenuOptionChooser *oj_fstab = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE, &d_settings.drive_use_fstab, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true, fstabNotifier);
 
-		// extended settings:load options
+		// extended settings: load options
 		CMenuSeparator * sep_load_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
 		sep_load_options->setString(LOAD);
 		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_command_load_options, 20, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- ");
 		CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_command_load_options, input_load_options);
-	
-		extsettings->addItem (oj_fstab);	
-		extsettings->addItem (oj_auto_fs);
-		// --------------------------------
-		extsettings->addItem (sep_load_options);
-		extsettings->addItem (fw_input_load_options);
+
+		// extended settings: custom modul dir
+		CMenuSeparator * sep_modules = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL);
+		CDirChooser * dirchooser_moduldir = new CDirChooser(&d_settings.drive_modul_dir);
+		CMenuForwarder * fw_moduldir = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_CUSTOM_MODULDIR, true, d_settings.drive_modul_dir, dirchooser_moduldir);
+
+		// extended settings: paint items 
+		extsettings->addItem(subhead_extsettings);	//menue subhead
+		extsettings->addItem(GenericMenuSeparator);	//empty intro separator
+		extsettings->addItem(GenericMenuBack);		//back
+		// -----------------------------------------
+		extsettings->addItem (sep_fstab);		//separator fstab
+		extsettings->addItem (oj_fstab);		//option fstab on/off
+		extsettings->addItem (oj_auto_fs);		//option auto fs on/off
+		// -----------------------------------------
+		extsettings->addItem (sep_load_options);	//separator insmod/modprobe
+		extsettings->addItem (fw_input_load_options);	//input options
+		extsettings->addItem (sep_modules);		//separator modul
+		extsettings->addItem (fw_moduldir);		//select prefered modul directory
 
 	// show select separator, only visible if any device activ
 	if (hdd_count>0 || foundMmc()) 
@@ -1712,7 +1724,7 @@ string CDriveSetup::getInitModulLoadStr(const string& modul_name)
 	if (!uname(&u))
 		k_name = u.release;
 	
-	string modul_path[] = {	"/var/lib/modules/" + modul_name + M_TYPE, 
+	string modul_path[] = {	d_settings.drive_modul_dir + "/" +  modul_name + M_TYPE, 
 				"lib/modules/" + k_name + "/misc/" + modul_name + M_TYPE,
 				"lib/modules/" + k_name + "/kernel/drivers/ide/" + modul_name + M_TYPE,
 				"lib/modules/" + k_name + "/kernel/fs/" + modul_name + "/" + modul_name + M_TYPE}; 
@@ -3525,6 +3537,7 @@ void CDriveSetup::loadDriveSettings()
 	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", YES);
 	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
 	d_settings.drive_advanced_modul_command_load_options = configfile.getString("drive_advanced_modul_command_load_options", "");
+	d_settings.drive_modul_dir = configfile.getString("drive_modul_dir", VAR_MOUDULDIR);
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3592,6 +3605,7 @@ bool CDriveSetup::writeDriveSettings()
 	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
 	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
 	configfile.setString	( "drive_advanced_modul_command_load_options", d_settings.drive_advanced_modul_command_load_options);
+	configfile.setString	( "drive_modul_dir", d_settings.drive_modul_dir);
 
 	char mountpoint_opt[31];
 	char spindown_opt[17];
@@ -3666,7 +3680,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.29 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.30 $");
 }
 
 // returns text for initfile headers
