@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.30 2010/01/14 22:40:05 dbt Exp $
+	$Id: drive_setup.cpp,v 1.31 2010/01/15 13:33:42 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3306,7 +3306,7 @@ bool CDriveSetup::chkFs(const int& device_num /*MASTER||SLAVE*/, const int& part
 	else if (fs_name=="vfat")
 		chkfs_cmd = "fsck.vfat -y ";
 	else if (fs_name=="xfs")
-		chkfs_cmd = "xfs_repair -v";
+		chkfs_cmd = "fsck.xfs -v";
 	else if (fs_name=="swap")
 		return true; // skip swap check
 
@@ -3680,7 +3680,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.30 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.31 $");
 }
 
 // returns text for initfile headers
