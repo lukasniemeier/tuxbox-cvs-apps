@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.31 2010/01/15 13:33:42 dbt Exp $
+	$Id: drive_setup.cpp,v 1.32 2010/01/15 21:11:42 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -117,6 +117,8 @@ TODO:
 #define SWAPON		"swapon "
 #define SWAPOFF		"swapoff "
 #define MKSWAP		"mkswap "
+#define MKFSPREFIX	"mkfs."
+#define CKFSPREFIX	"fsck."
 #define DISCTOOL	"fdisk "
 #define HDDTEMP		"hddtemp "
 #define MOUNT		"mount "
@@ -3086,13 +3088,34 @@ string CDriveSetup::getFstabFilePath()
 	
 }
 
+
+// possible supported fstypes for mkfs.X and fsck.x
+#define MAXCOUNT_FSTYPES 7
+
+typedef struct fstype_t
+{
+	const string fsname;
+	const string mkfs_options;
+	const string fsck_options;
+} fstype_struct_t;
+
+const fstype_struct_t fstype[MAXCOUNT_FSTYPES] =
+{
+	{"ext2", 	"-T largefile -m0 -q", 	"-y -v"},
+	{"ext3",	"-T largefile -m0 -q", 	"-y -v"},
+	{"msdos", 	"", 			"-y"},
+	{"vfat", 	"", 			"-y"},
+	{"reiserfs", 	"-f", 			"-f -y "},
+	{"xfs", 	"-l version=2 -f -q", 	"-v"},
+	{"swap", 	"", 			""},
+};
+
 // formats a partition, 1st parameter "device_num" is MASTER, SLAVE..., 3rd parameter "filesystem" means a name of filesystem as string eg, ext3...
 bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_number,  const std::string& fs_name)
 {
 	// get partition name (dev/hda1...4)
 	string partname = getPartName(device_num, part_number);
 
-	//TODO: check user input for mountpoint, cancel if not allowed or no mointpoint is definied
 	if (isActivePartition(partname))
 	{	
 		if (fs_name.empty())
@@ -3112,30 +3135,19 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 		return false;
 	}
 
-	string extfs_opts = " -T largefile -m0 -q";
+	for (uint i = 0; i < MAXCOUNT_FSTYPES; i++)
+	{
+		if (fs_name==fstype[i].fsname) 
+ 		{
+			string opts = char(32) + fstype[i].mkfs_options + char(32);
 
-	if (fs_name=="ext2") 
-	{
-		mkfs_cmd = "mkfs.ext2";
-		mkfs_cmd += extfs_opts;
+			if (fs_name == "swap")
+				mkfs_cmd = MKSWAP + opts;
+			else
+ 				mkfs_cmd = MKFSPREFIX + fstype[i].fsname + opts;
+		}	
 	}
-	else if (fs_name=="ext3") 
-	{
-		mkfs_cmd = "mkfs.ext3";
-		mkfs_cmd += extfs_opts;
-	}
-	else if (fs_name=="msdos")
-		mkfs_cmd = "mkfs.msdos ";
-	else if (fs_name=="reiserfs")
-		mkfs_cmd = "mkfs.reiserfs -f ";
-	else if (fs_name=="vfat")
-		mkfs_cmd = "mkfs.vfat ";
-	else if (fs_name=="xfs")
-		mkfs_cmd = "mkfs.xfs -l version=2 -f -q ";
-	else if (fs_name=="swap")
-		mkfs_cmd = "mkswap ";
- 
-	
+
 	bool is_active = isActivePartition(partname);
 	
 	if (is_active) 
@@ -3156,9 +3168,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 		}
 		else // make filesystem
 		{
-			cmdformat  = mkfs_cmd;
-			cmdformat += " ";
-			cmdformat += partname;
+			cmdformat  = mkfs_cmd + char(32) + partname;;
 			//cmdformat += DEVNULL;
 
 			if (CNeutrinoApp::getInstance()->execute_sys_command(cmdformat.c_str())!=0) 
@@ -3167,7 +3177,6 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 				return false;
 			}
 		}
-
 	}
 	else 
 	{
@@ -3179,6 +3188,78 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 	return true;
 }
 
+// check fs of a partition, 1st parameter "device_num" is MASTER, SLAVE..., 3rd parameter "filesystem" means a name of filesystem as string eg, ext3...
+bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const std::string& fs_name)
+{
+	bool ret = true;
+	//TODO show correct progress or message
+	CProgressBar pb;
+
+	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_CHKFS_START_SCRIPT);
+	
+	// get partition name (dev/hda1...4)
+	string partname = getPartName(device_num, part_number);
+
+
+	if (!unmountPartition(device_num, part_number)) 
+	{
+		cerr<<"[drive setup] "<<__FUNCTION__ <<": umounting of: "<<partname<< " failed"<<endl;
+		return false;
+	}
+	
+	string chkfs_cmd;
+
+	for (uint i = 0; i < MAXCOUNT_FSTYPES; i++)
+	{
+		if (fs_name==fstype[i].fsname) 
+ 		{
+			string opts = char(32) + fstype[i].fsck_options + char(32);
+
+			if (fs_name == "swap")
+				return true;
+			else
+ 				chkfs_cmd = CKFSPREFIX + fstype[i].fsname + opts;
+		}	
+	}
+
+	fb_pixel_t * pixbuf = new fb_pixel_t[pb_w * pb_h];
+	if (pixbuf != NULL)
+		frameBuffer->SaveScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
+
+	showStatus(50, "checking Filesystem...", 100);
+	
+	bool is_active = isActivePartition(partname);
+	string 	cmd_check;
+	
+	if (is_active) 
+	{
+		// check filesystem
+		{
+			cmd_check  = chkfs_cmd + char(32) + partname;
+
+			if (CNeutrinoApp::getInstance()->execute_sys_command(cmd_check.c_str())!=0) 
+			{
+				cerr<<"[drive setup] "<<__FUNCTION__ <<": checked filesystem with: "<<cmd_check<< "...with errors"<<endl;
+			}
+		}
+	}
+	else 
+	{
+		// partition is not active
+		cerr<<"[drive setup] "<<__FUNCTION__ <<": checking filesystem with: "<<cmd_check<<" failed,\n"<< partname<<" is not active!"<<endl;
+		ret = false;
+	}
+
+	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_CHKFS_END_SCRIPT);
+
+	if (pixbuf != NULL) 
+	{
+		frameBuffer->RestoreScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
+		delete[] pixbuf;
+	}
+
+	return ret;
+}
 
 #ifdef ENABLE_NFSSERVER
 // gets the path of exports file
@@ -3266,92 +3347,6 @@ bool CDriveSetup::mkExports()
 	return true;
 }
 #endif	
-
-// check fs of a partition, 1st parameter "device_num" is MASTER, SLAVE..., 3rd parameter "filesystem" means a name of filesystem as string eg, ext3...
-bool CDriveSetup::chkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_number,  const std::string& fs_name)
-{
-	bool ret = true;
-	CProgressBar pb;
-
-	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_CHKFS_START_SCRIPT);
-	
-	// get partition name (dev/hda1...4)
-	string partname = getPartName(device_num, part_number);
-
-
-	if (!unmountPartition(device_num, part_number)) 
-	{
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": umounting of: "<<partname<< " failed"<<endl;
-		return false;
-	}
-	
-
-	string chkfs_cmd;
-	string extfs_opts = " -y -v";
-
-	if (fs_name=="ext2") 
-	{
-		chkfs_cmd = "fsck.ext2 ";
-		chkfs_cmd += extfs_opts;
-	}
-	else if (fs_name=="ext3") 
-	{
-		chkfs_cmd = "fsck.ext3 ";
-		chkfs_cmd += extfs_opts;
-	}	
-	else if (fs_name=="msdos")
-		chkfs_cmd = "fsck.msdos -y ";
-	else if (fs_name=="reiserfs")
-		chkfs_cmd = "fsck.reiserfs -f -y ";
-	else if (fs_name=="vfat")
-		chkfs_cmd = "fsck.vfat -y ";
-	else if (fs_name=="xfs")
-		chkfs_cmd = "fsck.xfs -v";
-	else if (fs_name=="swap")
-		return true; // skip swap check
-
-	fb_pixel_t * pixbuf = new fb_pixel_t[pb_w * pb_h];
-	if (pixbuf != NULL)
-		frameBuffer->SaveScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
-
-	showStatus(50, "checking Filesystem...", 100);
-	
-	bool is_active = isActivePartition(partname);
-	string 	cmd_check;
-	
-	if (is_active) 
-	{
-		// check filesystem
-		{
-			cmd_check  = chkfs_cmd;
-			cmd_check += " ";
-			cmd_check += partname;
-
-			if (CNeutrinoApp::getInstance()->execute_sys_command(cmd_check.c_str())!=0) 
-			{
-				cerr<<"[drive setup] "<<__FUNCTION__ <<": checked filesystem with: "<<cmd_check<< "...with errors"<<endl;
-			}
-
-		}
-
-	}
-	else 
-	{
-		// partition is not active
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": checking filesystem with: "<<cmd_check<<" failed,\n"<< partname<<" is not active!"<<endl;
-		ret = false;
-	}
-
-	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_CHKFS_END_SCRIPT);
-
-	if (pixbuf != NULL) 
-	{
-		frameBuffer->RestoreScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
-		delete[] pixbuf;
-	}
-
-	return ret;
-}
 
 // mounts all available partitions for all devices 
 bool CDriveSetup::mountAll()
@@ -3680,7 +3675,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.31 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.32 $");
 }
 
 // returns text for initfile headers
