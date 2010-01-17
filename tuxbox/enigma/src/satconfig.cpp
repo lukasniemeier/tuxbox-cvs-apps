@@ -44,7 +44,8 @@ void eSatelliteConfigurationManager::init_eSatelliteConfigurationManager()
 	button_erase->hide();
 	CONNECT(button_erase->selected, eSatelliteConfigurationManager::erasePressed);
 
-	buttonWidget=CreateSkinnedButton("buttons");
+	buttonWidget=new eWidget(this);
+	buttonWidget->setName("buttons");
 
 	combo_type=CreateSkinnedComboBox("type", 7);
 	CONNECT(combo_type->selchanged, eSatelliteConfigurationManager::typeChanged);
