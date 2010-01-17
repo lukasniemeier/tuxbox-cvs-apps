@@ -1,5 +1,5 @@
 /*
- * $Id: stream2file.cpp,v 1.35 2009/10/31 10:29:42 seife Exp $
+ * $Id: stream2file.cpp,v 1.36 2010/01/17 16:30:55 rhabarber1848 Exp $
  * 
  * streaming to file/disc
  * 
@@ -459,12 +459,14 @@ void * DMXThread(void * v_arg)
 						todo -= r;
 					}
 				}
+#ifdef HAVE_TRIPLEDRAGON
 				if (r < 0 && errno != EAGAIN)
 				{
 					perror("[stream2file] read DMX");
 					exit_flag = STREAM2FILE_STATUS_READ_FAILURE;
 					break;
 				}
+#endif
 			}
 			else if (!pres){
 				printf ("[stream2file]: timeout reading from demux\n");
