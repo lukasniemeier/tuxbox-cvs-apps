@@ -1,5 +1,5 @@
 /*
- * $Id: sysinfo.c,v 1.4 2009/12/28 12:35:44 dbluelle Exp $
+ * $Id: sysinfo.c,v 1.5 2010/01/18 19:20:32 rhabarber1848 Exp $
  *
  * sysinfo - d-box2 linux project
  *
@@ -18,6 +18,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
 */
+
+#include "config.h"
 
 #include <string.h>
 #include <stdio.h>

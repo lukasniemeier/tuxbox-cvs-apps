@@ -1,5 +1,5 @@
 /*
- * $Id: io.h,v 1.1 2009/12/31 14:52:03 rhabarber1848 Exp $
+ * $Id: io.h,v 1.2 2010/01/18 19:20:32 rhabarber1848 Exp $
  *
  * input - d-box2 linux project
  *
@@ -20,6 +20,8 @@
 */
 
 #ifndef __IO_H__
+
+#include "config.h"
 
 #define __IO_H__
 
