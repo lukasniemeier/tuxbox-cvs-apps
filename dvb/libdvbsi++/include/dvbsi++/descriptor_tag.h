@@ -1,5 +1,5 @@
 /*
- * $Id: descriptor_tag.h,v 1.9 2009/06/30 12:03:02 mws Exp $
+ * $Id: descriptor_tag.h,v 1.10 2010/01/25 16:16:39 pieterg Exp $
  *
  * Copyright (C) 2002-2005 Andreas Oberritter <obi@saftware.de>
  *
@@ -99,6 +99,8 @@ enum SiDescriptorTag {
 	FTA_CONTENT_MANAGEMENT_DESCRIPTOR		= 0x7E,
 	EXTENSION_DESCRIPTOR				= 0x7F,
 	/* 0x80 - 0xFE: User defined */
+	LOGICAL_CHANNEL_DESCRIPTOR				= 0x83,	/* IEC 62216-1 */
+	HD_SIMULCAST_LOGICAL_CHANNEL_DESCRIPTOR		= 0x88,	/* DIGITALEUROPE (former EICTA) extension to IEC 62216-1 */
 	/* 0xFF: Forbidden */
 	FORBIDDEN_DESCRIPTOR				= 0xFF
 };

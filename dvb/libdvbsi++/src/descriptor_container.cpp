@@ -1,5 +1,5 @@
 /*
- * $Id: descriptor_container.cpp,v 1.16 2009/06/30 12:03:03 mws Exp $
+ * $Id: descriptor_container.cpp,v 1.17 2010/01/25 16:16:41 pieterg Exp $
  *
  * Copyright (C) 2002-2005 Andreas Oberritter <obi@saftware.de>
  *
@@ -70,6 +70,7 @@
 #include <dvbsi++/linkage_descriptor.h>
 #include <dvbsi++/local_time_offset_descriptor.h>
 #include <dvbsi++/location_descriptor.h>
+#include <dvbsi++/logical_channel_descriptor.h>
 #include <dvbsi++/module_link_descriptor.h>
 #include <dvbsi++/mosaic_descriptor.h>
 #include <dvbsi++/multilingual_bouquet_name_descriptor.h>
@@ -321,6 +322,10 @@ Descriptor *DescriptorContainer::descriptorSi(const uint8_t * const buffer, bool
 		return new FtaContentManagementDescriptor(buffer);
 	case EXTENSION_DESCRIPTOR:
 		return descriptorSiExtended(buffer);
+	case LOGICAL_CHANNEL_DESCRIPTOR:
+		return new LogicalChannelDescriptor(buffer);
+	case HD_SIMULCAST_LOGICAL_CHANNEL_DESCRIPTOR:
+		return new LogicalChannelDescriptor(buffer);
 	default:
 		return new Descriptor(buffer);
 	}
