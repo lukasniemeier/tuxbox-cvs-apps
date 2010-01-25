@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.15 2010/01/14 22:40:05 dbt Exp $
+	$Id: drive_setup.h,v 1.16 2010/01/25 09:33:29 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -48,6 +48,8 @@
 #define MAXCOUNT_DRIVE 3
 // possible count of partitions per device
 #define MAXCOUNT_PARTS 4
+// maximal count of possible supported mmc driver modules
+#define MAXCOUNT_MMC_MODULES 3
 
 // drive settings
 struct SDriveSettings
@@ -55,6 +57,7 @@ struct SDriveSettings
 	std::string 	drive_partition_mountpoint[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 	std::string 	drive_advanced_modul_command_load_options;
 	std::string 	drive_modul_dir;
+	std::string 	drive_mmc_modul_parameter[MAXCOUNT_MMC_MODULES];
 
 	int 	drive_use_fstab;
 	int	drive_use_fstab_auto_fs;
@@ -206,6 +209,7 @@ class CDriveSetup : public CMenuTarget
 		std::string check_partition[MAXCOUNT_PARTS]; //action key strings for check_partition_$
 		std::string sel_device_num_actionkey[MAXCOUNT_DRIVE]; //"sel_device_0 ... sel_device_n""
 		std::string s_init_mmc_cmd; // system load command for mmc modul
+		std::string mmc_modules[MAXCOUNT_MMC_MODULES]; //all supported mmc modules
 
 		int current_device; 	//MASTER || SLAVE || MMCARD, current edit device
 		int hdd_count; 		// count of hdd drives
@@ -219,21 +223,19 @@ class CDriveSetup : public CMenuTarget
 		void setStartCylinder();
 
 		bool device_isActive[MAXCOUNT_DRIVE /*MASTER || SLAVE || MMCARD*/];
+		bool have_mmc_modul[MAXCOUNT_MMC_MODULES];	//collection of mmc modules state true=available false=not available 
 
+		std::vector<std::string> v_mmc_modules;		//collection of available mmc modules
+		std::vector<std::string> v_mmc_modules_opts;	//collection of available mmc module options, must be synchronized with v_mmc_modules !!!
 		std::vector<std::string> v_model_name;		//collection of names of models
 		std::vector<std::string> v_fs_modules;		//collection of available fs modules
-		std::vector<std::string> v_mmc_modules;		//collection of available mmc modules
 		std::vector<std::string> v_init_ide_L_cmds; 	//collection of ide load commands
 		std::vector<std::string> v_init_fs_L_cmds; 	//collection of fs load commands
 		std::vector<std::string> v_init_fs_U_cmds; 	//collection of fs unload commands
  		std::vector<std::string> v_partname; 		//collection of all partition names, 4 per device
 		std::vector<std::string> v_device_temp;  	//collection of temperature of devices
-// 		std::vector<std::string> v_mount_entries;	//collection of available mount entries
 		std::vector<std::string> v_hdparm_cmds;		//collection of available hdparm commands
 
-// 		unsigned long long device_size[MAXCOUNT_DRIVE]; // contains sizes of all devices
-// 		unsigned long long device_cylinders[MAXCOUNT_DRIVE]; // contains count of devices for all devices
-// 		unsigned long long device_cyl_size[MAXCOUNT_DRIVE]; // contains bytes of one cylinder for all devices in bytes
 		std::vector<unsigned long long> v_device_size; 	// contains sizes of all devices
 		std::vector<unsigned long long> v_device_cylcount; 	// contains count of devices for all devices
 		std::vector<unsigned long long> v_device_cyl_size; 	// contains bytes of one cylinder for all devices in bytes
@@ -253,7 +255,7 @@ class CDriveSetup : public CMenuTarget
 		bool loadHddParams(const bool do_reset = false);
 		bool initIdeDrivers(const bool irq6 = false);
 		bool initModulDeps(const std::string& modulname);
-		bool initModul(const std::string& modul_name, bool do_unload_first = true);
+		bool initModul(const std::string& modul_name, bool do_unload_first = true, const std::string& options = "");
 		bool mountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint);
 		bool mountDevice(const int& device_num);
 		bool mountAll();
@@ -309,7 +311,6 @@ class CDriveSetup : public CMenuTarget
 		bool writeDriveSettings();
 		void loadDriveSettings();
 
-
 		unsigned long long getFreeDiskspace(const char *mountpoint);
 		unsigned long long getUnpartedDeviceSize(const int& device_num /*MASTER || SLAVE || MMCARD*/);
 		unsigned long long getFileEntryLong(const char* filename, const std::string& filter_entry, const int& column_num);
@@ -361,6 +362,13 @@ class CDriveSetup : public CMenuTarget
 			MMCARD
 		};
 		
+		enum MMC_NUM	
+		{
+			MMC,
+			MMC2,
+			MMCCOMBO
+		};
+
 		#define DEVICE_INFO_COUNT 5
 		enum DEVICE_INFO	
 		{
@@ -430,6 +438,15 @@ class CDriveSetupFstabNotifier : public CChangeObserver
 		CMenuOptionChooser* toDisable;
 	public:
 		CDriveSetupFstabNotifier( CMenuOptionChooser* );
+		bool changeNotify(const neutrino_locale_t, void * Data);
+};
+
+class CDriveSetupMmcNotifier : public CChangeObserver
+{
+	private:
+		CMenuForwarder* toModifi;
+	public:
+		CDriveSetupMmcNotifier( CMenuForwarder* f1);
 		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 

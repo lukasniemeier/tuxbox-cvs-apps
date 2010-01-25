@@ -278,11 +278,12 @@ date.Thu  Do
 date.Tue  Di
 date.Wed  Mi
 drive_setup.advanced_settings Erweiterte Einstellungen
-drive_setup.advanced_settings_custom_moduldir Benutzerdef. Ordner
-drive_setup.advanced_settings_modul Modul
+drive_setup.advanced_settings_custom_moduldir Bevorzugt suchen in ...
+drive_setup.advanced_settings_modul Treiber-Module
 drive_setup.advanced_settings_modul_loadcmd_options_entry Optionen
 drive_setup.advanced_settings_modul_loadcmd_options_input Eingabe
 drive_setup.advanced_settings_modul_loadcmd_options_input_l1 Bitte Kommando-Optionen eingeben!
+drive_setup.advanced_settings_modul_mmc_options_input_l1 Bitte MMC-Treiber-Parameter eingeben!
 drive_setup.fstab fstab
 drive_setup.fstab_use Verwende fstab
 drive_setup.fstab_use_auto_fs Dateisysteme automatisch zuweisen
@@ -304,14 +305,18 @@ drive_setup.hdd_sleep Ausschalten nach (Sekunden)
 drive_setup.hdd_sleep_help Angaben in Sekunden
 drive_setup.hdd_sleep_std 0 = kein Timeout (standard)
 drive_setup.hdd_temp Temperatur
-drive_setup.head IDE-Interface / HDD / MMC
+drive_setup.head IDE-Interface HDD/MMC/SD
 drive_setup.ide_activate IDE-Interface
 drive_setup.ide_activate_irq6 aktiv mit IRQ6
 drive_setup.ide_activate_on aktiv mit Standard IRQ
 drive_setup.mmc MMC/SD
+drive_setup.mmc_modul_not_installed (nicht installiert)
+drive_setup.mmc_modul_parameters Lade-Parameter
+drive_setup.mmc_used_driver Verwendeter MMC-Treiber
 drive_setup.model_unknown Modell unbekannt
 drive_setup.mount_mtdblock_partitions mtd Partitionen einbeziehen
 drive_setup.msg_error_disctool_not_found wurde nicht gefunden!\nSetup kann nicht ausgeführt werden.
+drive_setup.msg_error_fatal hat einen schweren Fehler verursacht!\nEs ist ratsam die Startskripte zurückzusetzen,\nSetup zu beenden, neu zu booten,\nund Setup erneut auszuführen!\nSollte dies wieder passieren, bitte den Fehler melden!\nStartskripte jetzt zurücksetzen?
 drive_setup.msg_error_load_mmc_driver_failed MMC/SD-Treiber können nicht geladen werden!
 drive_setup.msg_error_save_cannot_activate_interface IDE-Interface kann nicht aktiviert werden!
 drive_setup.msg_error_save_cannot_hdparm Fehler beim Setzen von HDD-Parametern!
@@ -349,7 +354,7 @@ drive_setup.partition_mount_error Während des Mount/Unmount-Vorgangs sind\nFehl
 drive_setup.partition_mount_no_mountpoint Kein korrektes Einhängeverzeichnis angegeben!
 drive_setup.partition_mount_now Einhängen
 drive_setup.partition_mount_now_device Alle einhängen
-drive_setup.partition_mountpoint Einhängen nach
+drive_setup.partition_mountpoint Einhängen nach ...
 drive_setup.partition_nfs Für NFS-Server freigeben
 drive_setup.partition_nfs_host_ip NFS-Client Host-IP
 drive_setup.partition_not_active Partition nicht eingehangen

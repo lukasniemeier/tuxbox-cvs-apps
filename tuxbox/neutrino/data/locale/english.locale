@@ -278,11 +278,12 @@ date.Thu  Thu
 date.Tue  Tue
 date.Wed  Wed
 drive_setup.advanced_settings Advanced settings
-drive_setup.advanced_settings_custom_moduldir Custom directory
-drive_setup.advanced_settings_modul Modul
+drive_setup.advanced_settings_custom_moduldir Preferred search in ...
+drive_setup.advanced_settings_modul Driver modules
 drive_setup.advanced_settings_modul_loadcmd_options_entry Options
 drive_setup.advanced_settings_modul_loadcmd_options_input Input
 drive_setup.advanced_settings_modul_loadcmd_options_input_l1 Please enter options for load commands!
+drive_setup.advanced_settings_modul_mmc_options_input_l1 Please enter mmc driver parameter!
 drive_setup.fstab fstab
 drive_setup.fstab_use Use fstab
 drive_setup.fstab_use_auto_fs Filesystem auto detect
@@ -304,14 +305,18 @@ drive_setup.hdd_sleep Spindown timeout (seconds))
 drive_setup.hdd_sleep_help Values as seconds
 drive_setup.hdd_sleep_std 0 = no Timeout (default)
 drive_setup.hdd_temp Temperature
-drive_setup.head IDE-Interface / HDD / MMC
+drive_setup.head IDE-Interface HDD/MMC/SD
 drive_setup.ide_activate IDE-Interface
 drive_setup.ide_activate_irq6 activ with IRQ6
 drive_setup.ide_activate_on activ with default IRQ
 drive_setup.mmc MMC/SD
+drive_setup.mmc_modul_not_installed (not installed)
+drive_setup.mmc_modul_parameters Parameters
+drive_setup.mmc_used_driver Used mmc-driver
 drive_setup.model_unknown unknown model
 drive_setup.mount_mtdblock_partitions mount including mtd partitions
 drive_setup.msg_error_disctool_not_found not found!\nCan't execute setup.
+drive_setup.msg_error_fatal caused a serious error!\nIt's recommended to reset the boot scripts,\nexit drive setup and reboot,\nthen make settings again!\nIf this happens again,\nplease report!\n Now reset start scripts?
 drive_setup.msg_error_load_mmc_driver_failed Can't load MMC/SD-drivers!
 drive_setup.msg_error_save_cannot_activate_interface Can't activating ide-inteface!
 drive_setup.msg_error_save_cannot_hdparm Error while setting hdd-parameters!

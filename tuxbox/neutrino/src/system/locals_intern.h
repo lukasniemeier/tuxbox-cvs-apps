@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.162 2010/01/14 22:40:06 dbt Exp $
+ * $Id: locals_intern.h,v 1.163 2010/01/25 09:33:29 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -310,6 +310,7 @@ const char * locale_real_names[] =
 	"drive_setup.advanced_settings_modul_loadcmd_options_entry",
 	"drive_setup.advanced_settings_modul_loadcmd_options_input",
 	"drive_setup.advanced_settings_modul_loadcmd_options_input_l1",
+	"drive_setup.advanced_settings_modul_mmc_options_input_l1",
 	"drive_setup.fstab",
 	"drive_setup.fstab_use",
 	"drive_setup.fstab_use_auto_fs",
@@ -336,9 +337,13 @@ const char * locale_real_names[] =
 	"drive_setup.ide_activate_irq6",
 	"drive_setup.ide_activate_on",
 	"drive_setup.mmc",
+	"drive_setup.mmc_modul_not_installed",
+	"drive_setup.mmc_modul_parameters",
+	"drive_setup.mmc_used_driver",
 	"drive_setup.model_unknown",
 	"drive_setup.mount_mtdblock_partitions",
 	"drive_setup.msg_error_disctool_not_found",
+	"drive_setup.msg_error_fatal",
 	"drive_setup.msg_error_load_mmc_driver_failed",
 	"drive_setup.msg_error_save_cannot_activate_interface",
 	"drive_setup.msg_error_save_cannot_hdparm",
