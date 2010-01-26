@@ -1,5 +1,5 @@
 /*
- * $Id: stream2file.cpp,v 1.36 2010/01/17 16:30:55 rhabarber1848 Exp $
+ * $Id: stream2file.cpp,v 1.37 2010/01/26 08:38:53 seife Exp $
  * 
  * streaming to file/disc
  * 
@@ -459,14 +459,15 @@ void * DMXThread(void * v_arg)
 						todo -= r;
 					}
 				}
-#ifdef HAVE_TRIPLEDRAGON
 				if (r < 0 && errno != EAGAIN)
 				{
-					perror("[stream2file] read DMX");
+					fprintf(stderr, "[stream2file] read DMX: %m (%d)", errno);
+#ifdef HAVE_TRIPLEDRAGON
+/* at least the dbox seems to return errors that we can safely ignore. The TD doesn't */
 					exit_flag = STREAM2FILE_STATUS_READ_FAILURE;
 					break;
-				}
 #endif
+				}
 			}
 			else if (!pres){
 				printf ("[stream2file]: timeout reading from demux\n");
