@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.33 2010/01/25 09:33:29 dbt Exp $
+	$Id: drive_setup.cpp,v 1.34 2010/01/26 07:49:47 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3200,8 +3200,8 @@ typedef struct fstype_t
 
 const fstype_struct_t fstype[MAXCOUNT_FSTYPES] =
 {
-	{"ext2", 	"-T largefile -m0 -q", 	"-y -v"},
-	{"ext3",	"-T largefile -m0 -q", 	"-y -v"},
+	{"ext2", 	"-T largefile -m0 -q -I 128", 	"-y -v"},
+	{"ext3",	"-T largefile -m0 -q -I 128", 	"-y -v"},
 	{"msdos", 	"", 			"-y"},
 	{"vfat", 	"", 			"-y"},
 	{"reiserfs", 	"-f", 			"-f -y "},
@@ -3795,7 +3795,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.33 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.34 $");
 }
 
 // returns text for initfile headers
