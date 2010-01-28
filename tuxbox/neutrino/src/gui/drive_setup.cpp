@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.35 2010/01/28 08:05:53 dbt Exp $
+	$Id: drive_setup.cpp,v 1.36 2010/01/28 08:16:49 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3091,6 +3091,11 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 			prepare <<part_n<<endl;
 			prepare <<start_cyl<<endl;
 			prepare <<end_cyl<<endl;
+			if ((string)d_settings.drive_partition_fstype[device_num][part_number] == "swap") //setting system id
+			{
+				prepare <<"t"<<endl;
+				prepare <<"82"<<endl;
+			}
 			break;
 		case DELETE:
 			if (!unmountPartition(device_num, part_number))
@@ -3804,7 +3809,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.35 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.36 $");
 }
 
 // returns text for initfile headers
