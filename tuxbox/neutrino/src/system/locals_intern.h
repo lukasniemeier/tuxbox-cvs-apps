@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.164 2010/01/28 08:43:06 dbt Exp $
+ * $Id: locals_intern.h,v 1.165 2010/01/29 21:18:49 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -323,8 +323,10 @@ const char * locale_real_names[] =
 	"drive_setup.hdd_format_start",
 	"drive_setup.hdd_free_gb",
 	"drive_setup.hdd_free_hours",
+	"drive_setup.hdd_jobs",
 	"drive_setup.hdd_master",
 	"drive_setup.hdd_not_found",
+	"drive_setup.hdd_parameters",
 	"drive_setup.hdd_slave",
 	"drive_setup.hdd_sleep",
 	"drive_setup.hdd_sleep_help",
@@ -375,6 +377,7 @@ const char * locale_real_names[] =
 	"drive_setup.partition_delete",
 	"drive_setup.partition_free_size",
 	"drive_setup.partition_fs",
+	"drive_setup.partition_info",
 	"drive_setup.partition_mount_error",
 	"drive_setup.partition_mount_no_mountpoint",
 	"drive_setup.partition_mount_now",
@@ -385,6 +388,7 @@ const char * locale_real_names[] =
 	"drive_setup.partition_not_active",
 	"drive_setup.partition_not_created",
 	"drive_setup.partition_number",
+	"drive_setup.partition_settings",
 	"drive_setup.partition_size",
 	"drive_setup.partition_size_help",
 	"drive_setup.partition_size_std",

@@ -296,8 +296,10 @@ drive_setup.hdd_format_set_partition ...apply partitions
 drive_setup.hdd_format_start Start format, please wait...
 drive_setup.hdd_free_gb Free diskpace
 drive_setup.hdd_free_hours Free time
+drive_setup.hdd_jobs Jobs
 drive_setup.hdd_master hda (Master)
 drive_setup.hdd_not_found not found
+drive_setup.hdd_parameters HDD-parameters
 drive_setup.hdd_slave hdb (Slave)
 drive_setup.hdd_sleep Spindown timeout (seconds))
 drive_setup.hdd_sleep_help Values as seconds
@@ -348,6 +350,7 @@ drive_setup.partition_current_size Current size of partition
 drive_setup.partition_delete delete!
 drive_setup.partition_free_size Still available disk space 
 drive_setup.partition_fs Filesystem
+drive_setup.partition_info Informations
 drive_setup.partition_mount_error Errors occurred during the mount/unmount operations!
 drive_setup.partition_mount_no_mountpoint Missing or not allowed mountpoint!
 drive_setup.partition_mount_now Mount
@@ -358,6 +361,7 @@ drive_setup.partition_nfs_host_ip NFS-client host-ip
 drive_setup.partition_not_active partition not mounted
 drive_setup.partition_not_created not created
 drive_setup.partition_number Number of partition:
+drive_setup.partition_settings Settings
 drive_setup.partition_size Assigned partition size in MB
 drive_setup.partition_size_help Please enter size of partition in MB!
 drive_setup.partition_size_std No input or 0 = complete size or alvailable size

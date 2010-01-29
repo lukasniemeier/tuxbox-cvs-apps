@@ -296,8 +296,10 @@ drive_setup.hdd_format_set_partition ...richte Partitionen ein
 drive_setup.hdd_format_start Starte Formatierung, bitte warten...
 drive_setup.hdd_free_gb Freier Speicher
 drive_setup.hdd_free_hours Verbleibende Zeit
+drive_setup.hdd_jobs Aufgaben
 drive_setup.hdd_master hda (Master)
 drive_setup.hdd_not_found nicht vorhanden
+drive_setup.hdd_parameters HDD-Parameter
 drive_setup.hdd_slave hdb (Slave)
 drive_setup.hdd_sleep Ausschalten nach (Sekunden)
 drive_setup.hdd_sleep_help Angaben in Sekunden
@@ -348,6 +350,7 @@ drive_setup.partition_current_size Aktuelle Partitionsgröße
 drive_setup.partition_delete Löschen
 drive_setup.partition_free_size Noch partitionierbarer Speicherplatz
 drive_setup.partition_fs Dateisystem
+drive_setup.partition_info Partitions-Daten
 drive_setup.partition_mount_error Während des Mount/Unmount-Vorgangs sind\nFehler aufgetreten!
 drive_setup.partition_mount_no_mountpoint Kein korrektes Einhängeverzeichnis angegeben!
 drive_setup.partition_mount_now Einhängen
@@ -358,6 +361,7 @@ drive_setup.partition_nfs_host_ip NFS-Client Host-IP
 drive_setup.partition_not_active Partition nicht eingehangen
 drive_setup.partition_not_created nicht angelegt
 drive_setup.partition_number Partitions-Nr.:
+drive_setup.partition_settings Einstellungen
 drive_setup.partition_size Zugewiesene Partitionsgröße in MB
 drive_setup.partition_size_help Bitte Partitionsgröße in MB angeben!
 drive_setup.partition_size_std Keine Eingabe oder 0 = Gesamtgröße oder verfügbare Größe

@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.36 2010/01/28 08:16:49 dbt Exp $
+	$Id: drive_setup.cpp,v 1.37 2010/01/29 21:18:48 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -763,12 +763,14 @@ void CDriveSetup::showHddSetupSub()
 	string dev_name = g_Locale->getText(mn_data[current_device].entry_locale);
 	CMenuSeparator *subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, mn_data[current_device].entry_locale);
 
-
 	//menue sub: show settings for spindown and writecache only for hdd, these device numbers are < 2 (MMCARD)
+	CMenuSeparator *sep_hdparm = NULL;
 	CMenuForwarder *spindown = NULL;
 	CMenuOptionChooser *w_cache = NULL;
 	if (current_device < MMCARD) 
 	{ 
+		//menue sub: prepare separator: hdparms
+		sep_hdparm = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_PARAMETERS);
 		//menue sub: prepare spindown settings
 		CStringInput *hdd_sleep = new CStringInput(LOCALE_DRIVE_SETUP_HDD_SLEEP, d_settings.drive_spindown[current_device], 3, LOCALE_DRIVE_SETUP_HDD_SLEEP_STD, LOCALE_DRIVE_SETUP_HDD_SLEEP_HELP, "0123456789 ");
 		spindown = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_SLEEP, true, d_settings.drive_spindown[current_device], hdd_sleep );
@@ -800,6 +802,8 @@ void CDriveSetup::showHddSetupSub()
 		add_activate = false;
 	}
 	next_part_number = getFirstUnusedPart(current_device); //also used from swap_add
+	//menue sub: prepare separator: hdparms
+	CMenuSeparator *sep_jobs = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_JOBS);
  	CMenuForwarder *part_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION, add_activate, NULL, sub_add, NULL/*"add_partition"*/, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 
 	//menue sub: prepare item: add swap
@@ -869,18 +873,20 @@ void CDriveSetup::showHddSetupSub()
 	CMenuForwarder *partsize[MAXCOUNT_PARTS];
 
 	//sub menue main
-	sub->addItem(subhead);		//subhead
+	sub->addItem(subhead);		//subhead 
 	//------------------------
 	sub->addItem(GenericMenuSeparator);
 	sub->addItem(GenericMenuBack);	//back
-	sub->addItem(GenericMenuSeparatorLine);
 	//------------------------
 	if (current_device != MMCARD) 	//not for mmc!
 	{
+		sub->addItem(sep_hdparm);//separator
 		sub->addItem(spindown); //spindown
 		sub->addItem(w_cache); 	//writecache
-		sub->addItem(GenericMenuSeparatorLine);
-	}	
+		sub->addItem(sep_jobs); //separator jobs
+	}
+	else
+		sub->addItem(sep_jobs); 	//separator jobs
 	//------------------------
 	sub->addItem(part_add); 	//add partition
 	sub->addItem(swap_add); 	//add swap
@@ -895,8 +901,14 @@ void CDriveSetup::showHddSetupSub()
 	// end cylinder
 	unsigned long long end_cyl[MAXCOUNT_PARTS];
 
+	//menue partitions: prepare separator: info
+	CMenuSeparator *sep_info = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_PARTITION_INFO);
+
 	// cylinders
 	CMenuForwarder *fw_cylinders[MAXCOUNT_PARTS];
+
+	//menue partitions: prepare separator: settings
+	CMenuSeparator *sep_settings = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_PARTITION_SETTINGS);
 
 	//choose aktivate/deactivate partition
 	CMenuOptionChooser *activate[MAXCOUNT_PARTS];
@@ -1070,13 +1082,14 @@ void CDriveSetup::showHddSetupSub()
 		//------------------------
 		part[i]->addItem(GenericMenuSeparator); 	//separator
 		part[i]->addItem(GenericMenuBack);		//back
-		part[i]->addItem(GenericMenuSeparatorLine);	//separator
+		//------------------------
+		part[i]->addItem(sep_info);			//separator information
 		//------------------------
 		part[i]->addItem(freesize);			//freesize
 		part[i]->addItem(partsize[i]);			//partsize
 		part[i]->addItem(fw_cylinders[i]);		//cylinders
 		//------------------------
-		part[i]->addItem(GenericMenuSeparatorLine);	//separator
+		part[i]->addItem(sep_settings);			//separator settings
 		//------------------------
 		part[i]->addItem(activate[i]);			//enable/disable partition
 		part[i]->addItem(fs_chooser[i]);		//select filesystem
@@ -1089,7 +1102,7 @@ void CDriveSetup::showHddSetupSub()
 		part[i]->addItem(nfs_host_ip_fw[i]);		//nfs host ip input
 		//------------------------
 #endif
-		part[i]->addItem(GenericMenuSeparatorLine);	//separator
+		part[i]->addItem(sep_jobs);			//separator jobs
 		//------------------------
 		part[i]->addItem(mount[i]);			//mount partition
 		part[i]->addItem(unmount[i]);			//unmount partition
@@ -3809,7 +3822,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.36 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.37 $");
 }
 
 // returns text for initfile headers
