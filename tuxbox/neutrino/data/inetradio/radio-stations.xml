@@ -10,8 +10,13 @@
 		/>
 
 	<station
-		url="http://www.dradio.de/streaming/dlr.m3u"
+		url="http://www.dradio.de/streaming/dkultur.m3u"
 		name="DeutschlandRadio Kultur"
+		/>
+
+	<station
+		url="http://www.dradio.de/streaming/dradiowissen.m3u"
+		name="DRadio Wissen"
 		/>
 
 	<station
