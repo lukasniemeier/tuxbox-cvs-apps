@@ -62,6 +62,9 @@ extern "C" int  tuxtxt_start(int tpid);
 extern "C" void tuxtxt_close();
 #endif
 
+#define SCAN_START_SCRIPT CONFIGDIR "/scan.start"
+#define SCAN_END_SCRIPT CONFIGDIR "/scan.end"
+
 CScanTs::CScanTs()
 {
 	frameBuffer = CFrameBuffer::getInstance();
@@ -137,6 +140,10 @@ printf("[neutrino] TP_scan %d TP_freq %s TP_rate %s TP_fec %d TP_pol %d TP_mod %
 	if(g_settings.video_Format != g_settings.video_backgroundFormat)
 		g_Controld->setVideoFormat(g_settings.video_backgroundFormat);
 
+	puts("[scan.cpp] executing " SCAN_START_SCRIPT ".");
+	if (system(SCAN_START_SCRIPT) != 0)
+		perror("Datei " SCAN_START_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " SCAN_START_SCRIPT " not found. Please create if needed.\n");
+
 	g_Sectionsd->Restart();
 	g_Sectionsd->RegisterNeutrino();
 
@@ -200,6 +207,10 @@ printf("[neutrino] TP_scan %d TP_freq %s TP_rate %s TP_fec %d TP_pol %d TP_mod %
 		ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, success ? LOCALE_SCANTS_FINISHED : LOCALE_SCANTS_FAILED, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 
 	hide();
+
+	puts("[scan.cpp] executing " SCAN_END_SCRIPT ".");
+	if (system(SCAN_END_SCRIPT) != 0)
+		perror("Datei " SCAN_END_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " SCAN_END_SCRIPT " not found. Please create if needed.\n");
 
 	g_Sectionsd->setPauseScanning(false);
 
