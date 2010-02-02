@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.38 2010/02/02 21:34:06 dbt Exp $
+	$Id: drive_setup.cpp,v 1.39 2010/02/02 22:33:39 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -157,12 +157,6 @@ TODO:
 #define MMC_PARTS 	"/dev/mmc/disc0/part"
 
 #define NO_REFRESH	0 /*false*/
-
-// user scripts
-#define NEUTRINO_FORMAT_START_SCRIPT 	CONFIGDIR "/formating.start"
-#define NEUTRINO_FORMAT_END_SCRIPT 	CONFIGDIR "/formating.end"
-#define NEUTRINO_CHKFS_START_SCRIPT 	CONFIGDIR "/checkfs.start"
-#define NEUTRINO_CHKFS_END_SCRIPT 	CONFIGDIR "/checkfs.end"
 
 // actionkey patterns
 #define MAKE_PARTITION 		"make_partition_"
@@ -1185,8 +1179,6 @@ void CDriveSetup::showStatus(const int& progress_val, const string& msg, const i
 bool CDriveSetup::formatPartition(const int& device_num, const int& part_number)
 // make all steps to create, formating and mount partitions
 {
-	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_FORMAT_START_SCRIPT);
-
 	bool ret = true;
 	unsigned long long raw_size = atol(d_settings.drive_partition_size[device_num][part_number]);
 	if (raw_size > 0)
@@ -1254,7 +1246,6 @@ bool CDriveSetup::formatPartition(const int& device_num, const int& part_number)
 	else
 		ret = false;
 
-	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_FORMAT_END_SCRIPT);
 
 	if (pixbuf != NULL) 
 	{
@@ -1417,6 +1408,11 @@ bool CDriveSetup::unmountDevice(const int& device_num)
 bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD*/, const int& part_number)
 {
 	string partname = getPartName(device_num, part_number);
+
+	//executing user script if available before unmounting
+	char user_script[21];
+	sprintf(user_script, "%s/before_unmount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	CNeutrinoApp::getInstance()->execute_start_file(user_script);
 
 	if((access(partname.c_str(), R_OK) !=0) || (!isActivePartition(partname))) // exit if no available
 	{ 
@@ -3320,8 +3316,6 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 	//TODO show correct progress or message
 	CProgressBar pb;
 
-	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_CHKFS_START_SCRIPT);
-	
 	// get partition name (dev/hda1...4)
 	string partname = getPartName(device_num, part_number);
 
@@ -3374,8 +3368,6 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": checking filesystem with: "<<cmd_check<<" failed,\n"<< partname<<" is not active!"<<endl;
 		ret = false;
 	}
-
-	CNeutrinoApp::getInstance()->execute_start_file(NEUTRINO_CHKFS_END_SCRIPT);
 
 	if (pixbuf != NULL) 
 	{
@@ -3609,6 +3601,11 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			}
 		}
 	}
+
+	//executing user script if available after mounting
+	char user_script[18];
+	sprintf(user_script, "%s/after_mount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	CNeutrinoApp::getInstance()->execute_start_file(user_script);
 	
 	return ret;
 }
@@ -3821,7 +3818,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.38 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.39 $");
 }
 
 // returns text for initfile headers
