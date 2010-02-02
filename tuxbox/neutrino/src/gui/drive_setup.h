@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.16 2010/01/25 09:33:29 dbt Exp $
+	$Id: drive_setup.h,v 1.17 2010/02/02 21:34:06 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -303,7 +303,6 @@ class CDriveSetup : public CMenuTarget
 		void loadPartlist(const int& device_num = -1);
 		void loadFdiskData();
 		void loadDriveTemps();
-		void mkDefaultMountpoints();
 						
 		void showHddSetupMain();
 		void showHddSetupSub();

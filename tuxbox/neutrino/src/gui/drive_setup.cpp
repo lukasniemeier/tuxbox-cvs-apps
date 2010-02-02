@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.37 2010/01/29 21:18:48 dbt Exp $
+	$Id: drive_setup.cpp,v 1.38 2010/02/02 21:34:06 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -428,7 +428,7 @@ void CDriveSetup::hide()
 }
 
 // init members
-#define COUNT_INIT_MEMBERS 10
+#define COUNT_INIT_MEMBERS 9
 
 // init menue
 void CDriveSetup::Init()
@@ -445,7 +445,6 @@ void CDriveSetup::Init()
 									&CDriveSetup::loadHddCount,
 									&CDriveSetup::loadHddModels,
 									&CDriveSetup::calPartCount,
-									&CDriveSetup::mkDefaultMountpoints,
 									&CDriveSetup::loadFsModulList,
 									&CDriveSetup::loadMmcModulList,
 									&CDriveSetup::loadFdiskData,
@@ -3822,7 +3821,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.37 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.38 $");
 }
 
 // returns text for initfile headers
@@ -3904,38 +3903,6 @@ string CDriveSetup::getInitFileMountEntries()
 	return m_txt;
 }
 
-//generates directories for default mountpoints hdd1, hdd2 depends of available drives
-void CDriveSetup::mkDefaultMountpoints()
-{
-	long int fsnum = getDeviceInfo("/", FILESYSTEM);
-
-	string root = "";
-
-	if ((fsnum == 0x28cd3d45 /*cramfs*/) || (fsnum == 0x073717368 /*squashfs*/))
-		root = "/var";
-
-	string dir_pattern[2] 	= {root +"/hdd", root + "/mmc"};
-
-	for (int i=0; i<hdd_count; i++) //hdd
-	{
-		char folder[16];
-		sprintf(folder, "%s%d", dir_pattern[0].c_str(), i+1);  
-		if ( access(folder, F_OK) != 0 ) 
-		{ 
-			if (mkdir(folder, 0777) !=0) 
-				cerr<<"[drive setup] "<<__FUNCTION__ <<":  error while creating "<< folder << " " <<strerror(errno)<<endl;
-		}
-	}
-
-	if (isMmcActive()) //mmc
-	{
-		if ( access(dir_pattern[1].c_str(), F_OK) != 0 )
-		{
-			if (mkdir(dir_pattern[1].c_str(), 0777) !=0) 
-				cerr<<"[drive setup] "<<__FUNCTION__ <<":  error while creating "<< dir_pattern[1] << " " <<strerror(errno)<<endl;
-		}
-	}	
-}
 
 // returns commands for modul init file
 string CDriveSetup::getInitFileModulEntries(bool with_unload_entries)
