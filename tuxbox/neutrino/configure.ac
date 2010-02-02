@@ -110,6 +110,11 @@ AC_ARG_ENABLE(drive-gui,
 	,[enable_drive_gui=no])
 AM_CONDITIONAL(ENABLE_DRIVE_GUI,test "$enable_drive_gui" = "yes")
 
+AC_ARG_ENABLE(rtc,
+	AS_HELP_STRING(--disable-rtc, disable rtc support),
+	,[enable_rtc=yes])
+AM_CONDITIONAL(ENABLE_RTC,test "$enable_rtc" = "yes")
+
 AC_ARG_ENABLE(nfsserver,
 	AS_HELP_STRING(--enable-nfsserver,include nfsserver support),
 	,[enable_nfsserver=yes])
@@ -173,6 +178,10 @@ fi
 
 if test "$enable_drive_gui" = "yes"; then
 AC_DEFINE(ENABLE_DRIVE_GUI,1,[enable neutrino drive-setup])
+fi
+
+if test "$enable_rtc" = "yes"; then
+AC_DEFINE(ENABLE_RTC,1,[enable rtc support])
 fi
 
 if test "$enable_nfsserver" = "yes"; then

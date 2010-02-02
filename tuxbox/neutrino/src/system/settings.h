@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.221 2009/12/29 18:44:07 striper Exp $
+  $Id: settings.h,v 1.222 2010/02/02 20:27:10 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -398,11 +398,19 @@ struct SNeutrinoSettings
 
 #ifdef HAVE_DBOX_HARDWARE
 #if HAVE_DVB_API_VERSION == 1
+#ifdef ENABLE_RTC
 #define DRIVER_SETTING_FILES_COUNT 9
-#else
+#else /* ENABLE_RTC */
 #define DRIVER_SETTING_FILES_COUNT 8
-#endif
-#else /* not dbox */
+#endif /* ENABLE_RTC */
+#else /* HAVE_DVB_API_VERSION == 1 */
+#ifdef ENABLE_RTC
+#define DRIVER_SETTING_FILES_COUNT 8
+#else /* ENABLE_RTC */
+#define DRIVER_SETTING_FILES_COUNT 7
+#endif /* ENABLE_RTC */
+#endif /* HAVE_DVB_API_VERSION == 1 */
+#else /* HAVE_DBOX_HARDWARE */
 #define DRIVER_SETTING_FILES_COUNT 2
 #endif
 
