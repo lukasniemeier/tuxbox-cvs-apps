@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.316 2009/12/07 20:59:11 seife Exp $
+//  $Id: sectionsd.cpp,v 1.317 2010/02/03 19:10:32 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -775,8 +775,10 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 				if ((c1->componentType != c2->componentType) ||
 					(c1->componentTag != c2->componentTag) ||
 					(c1->streamContent != c2->streamContent) ||
-					(strcmp(c1->component.c_str(),c2->component.c_str()) != 0))
+					(strcmp(c1->component.c_str(),c2->component.c_str()) != 0)) {
 					already_exists = false;
+					break;
+				}
 				c1++;
 				c2++;
 			}
@@ -793,8 +795,10 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 					(si->second->linkage_descs[i].transportStreamId !=
 						evt.linkage_descs[i].transportStreamId) ||
 					(strcmp(si->second->linkage_descs[i].name.c_str(),
-						evt.linkage_descs[i].name.c_str()) != 0))
+						evt.linkage_descs[i].name.c_str()) != 0)) {
 					already_exists = false;
+					break;
+				}
 			}
 		}
 
@@ -805,8 +809,10 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 			SIparentalRatings::iterator p2 = evt.ratings.begin();
 			while ((p1 != si->second->ratings.end()) && (p2 != evt.ratings.end())) {
 				if ((p1->rating != p2->rating) ||
-					(strcmp(p1->countryCode.c_str(),p2->countryCode.c_str()) != 0))
+					(strcmp(p1->countryCode.c_str(),p2->countryCode.c_str()) != 0)) {
 					already_exists = false;
+					break;
+				}
 				p1++;
 				p2++;
 			}
@@ -819,8 +825,10 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 			SItimes::iterator t2 = evt.times.begin();
 			while ((t1 != si->second->times.end()) && (t2 != evt.times.end())) {
 				if ((t1->startzeit != t2->startzeit) ||
-					(t1->dauer != t2->dauer))
+					(t1->dauer != t2->dauer)) {
 					already_exists = false;
+					break;
+				}
 				t1++;
 				t2++;
 			}
@@ -2553,7 +2561,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.316 2009/12/07 20:59:11 seife Exp $\n"
+		"$Id: sectionsd.cpp,v 1.317 2010/02/03 19:10:32 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8475,7 +8483,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.316 2009/12/07 20:59:11 seife Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.317 2010/02/03 19:10:32 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
