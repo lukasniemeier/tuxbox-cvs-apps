@@ -84,6 +84,10 @@ AC_ARG_ENABLE(ipkg,
 	,[enable_ipkg=no])
 AM_CONDITIONAL(ENABLE_IPKG,test "$enable_ipkg" = "yes")
 
+AC_ARG_ENABLE(lirc,
+	AS_HELP_STRING(--disable-lirc,exclude lirc support),
+	,[enable_lirc=yes])
+
 TUXBOX_APPS_DVB
 TUXBOX_APPS_DRIVER
 
@@ -106,6 +110,9 @@ if test "$BOXTYPE" = "dbox2" ; then
 	TUXBOX_APPS_LIB_PKGCONFIG(TUXBOX,tuxbox)
 	TUXBOX_APPS_LIB_PKGCONFIG(CONFIGFILE,tuxbox-configfile)
 	CPPFLAGS="$CPPFLAGS -fno-exceptions -fno-rtti -D_REENTRANT -DDISABLE_DREAMBOX_RC -DDISABLE_CI -DENABLE_FLASHTOOL -DENABLE_PRIVATE_EPG"
+	if test "$enable_lirc" = "no" ; then
+		CPPFLAGS="$CPPFLAGS -DDISABLE_LIRC"
+	fi
 else
 	if test "$WEBIF" = "expert" ; then
 		TUXBOX_APPS_LIB_PKGCONFIG(CONFIGFILE,tuxbox-configfile)
