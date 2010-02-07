@@ -881,6 +881,7 @@ int eSatelliteConfigurationManager::eventHandler(const eWidgetEvent &event)
 		w_buttons->setLCD( LCDTitle, LCDElement );
 	break;
 #endif
+/*
 	case eWidgetEvent::evtAction:
 		if (event.action == &i_focusActions->left)
 			focusNext(eWidget::focusDirW);
@@ -893,6 +894,7 @@ int eSatelliteConfigurationManager::eventHandler(const eWidgetEvent &event)
 		else
 			return eWindow::eventHandler(event);
 		break;
+*/
 	default:
 		return eWindow::eventHandler(event);
 		break;
