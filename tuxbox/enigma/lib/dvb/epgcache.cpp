@@ -168,6 +168,7 @@ __u8* eventData::DecodeFreesat(__u8* descr,int descr_len)
 			event_name = freesat_huffman_to_string((const char*)data+ptr, len);
 		else
 			event_name = eString((const char*)data+ptr, len);
+		event_name = convertUTF8DVB(event_name);
 		ptr+=len;
 		len=data[ptr++];
 		if (*((unsigned char*)data+ptr) < 0x06 && *((unsigned char*)data+ptr+1) == 0x1f)
@@ -176,6 +177,7 @@ __u8* eventData::DecodeFreesat(__u8* descr,int descr_len)
 			event_text  = freesat_huffman_to_string((const char*)data+ptr, len);
 		else
 			event_text = eString((const char*)data+ptr, len);
+		event_text = convertUTF8DVB(event_text);
 		name_len = event_name.size();
 		text_len = event_text.size();
 //eDebug("[EPGC] Data decoded:%s",event_name.c_str());
