@@ -54,7 +54,8 @@ class CMessageBox : public CHintBoxExt
 			mbrYes    = 0,
 			mbrNo     = 1,
 			mbrCancel = 2,
-			mbrBack   = 3
+			mbrBack   = 3,
+			mbrContinue   = 4
 		} result;
 	
 	enum buttons_
@@ -63,7 +64,8 @@ class CMessageBox : public CHintBoxExt
 			mbNo = 0x02,
 			mbCancel = 0x04,
 			mbAll = 0x07,
-			mbBack = 0x08
+			mbBack = 0x08,
+			mbContinue = 0x10
 		} buttons;
 	
 	// Text & Caption are always UTF-8 encoded
@@ -81,5 +83,6 @@ int ShowMsgUTF(const neutrino_locale_t Caption, const char * const Text, const C
 int ShowMsgUTF(const neutrino_locale_t Caption, const std::string & Text, const CMessageBox::result_ Default, const uint ShowButtons, const char * const Icon = NULL, const int Width = 450, const int timeout = -1, bool returnDefaultOnTimeout = false); // UTF-8
 
 void DisplayErrorMessage(const char * const ErrorMsg); // UTF-8
+void DisplayInfoMessage(const char * const InfoMsg); // UTF-8
 
 #endif

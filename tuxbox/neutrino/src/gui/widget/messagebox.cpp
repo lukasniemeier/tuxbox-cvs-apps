@@ -128,7 +128,7 @@ void CMessageBox::paintButtons()
 
 	xpos += ButtonWidth + ButtonSpacing;
 
-	if (showbuttons & (mbCancel | mbBack))
+	if (showbuttons & (mbCancel | mbBack | mbContinue))
 	{
 		if (result >= mbrCancel)
 		{
@@ -143,7 +143,16 @@ void CMessageBox::paintButtons()
 
 		m_window->paintBoxRel(xpos, m_height-m_fheight-20, ButtonWidth, m_fheight, (CFBWindow::color_t)bgcolor, CORNER_RADIUS_SMALL, b_corner);
 		m_window->paintIcon(NEUTRINO_ICON_BUTTON_HOME, xpos+10, m_height-m_fheight-19);
-		m_window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], xpos + 43, m_height-m_fheight+4, ButtonWidth- 53, g_Locale->getText((showbuttons & mbCancel) ? LOCALE_MESSAGEBOX_CANCEL : LOCALE_MESSAGEBOX_BACK), (CFBWindow::color_t)color, 0, true); // UTF-8
+	
+		neutrino_locale_t btn_locale;
+		if (showbuttons & mbCancel)
+			btn_locale = LOCALE_MESSAGEBOX_CANCEL;
+		else if (showbuttons & mbBack)
+			btn_locale = LOCALE_MESSAGEBOX_BACK;
+		else
+			btn_locale = LOCALE_MESSAGEBOX_CONTINUE;		
+
+		m_window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], xpos + 43, m_height-m_fheight+4, ButtonWidth- 53, g_Locale->getText(btn_locale), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 }
 
@@ -180,9 +189,15 @@ int CMessageBox::exec(int timeout)
 		}
 		else if (((msg == CRCInput::RC_timeout) ||
 			  (msg == g_settings.key_channelList_cancel)) &&
-			 (showbuttons & (mbCancel | mbBack)))
+			 (showbuttons & (mbCancel | mbBack | mbContinue)))
 		{
-			result = (showbuttons & mbCancel) ? mbrCancel : mbrBack;
+			if (showbuttons & mbCancel)
+				result = mbrCancel;
+			else if (showbuttons & mbBack)
+				result = mbrBack;
+			else
+				result = mbrContinue;
+
 			loop   = false;
 		}
 		else if ((msg == CRCInput::RC_green) && (showbuttons & mbNo))
@@ -267,5 +282,10 @@ int ShowMsgUTF(const neutrino_locale_t Caption, const std::string & Text, const 
 
 void DisplayErrorMessage(const char * const ErrorMsg)
 {
-	ShowMsgUTF(LOCALE_MESSAGEBOX_ERROR, ErrorMsg, CMessageBox::mbrCancel, CMessageBox::mbCancel, "error.raw");
+	ShowMsgUTF(LOCALE_MESSAGEBOX_ERROR, ErrorMsg, CMessageBox::mbrCancel, CMessageBox::mbCancel, NEUTRINO_ICON_ERROR);
+}
+
+void DisplayInfoMessage(const char * const ErrorMsg)
+{
+	ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, ErrorMsg, CMessageBox::mbrContinue, CMessageBox::mbContinue, NEUTRINO_ICON_INFO);
 }
