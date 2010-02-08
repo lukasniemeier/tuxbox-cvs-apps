@@ -343,6 +343,7 @@ drive_setup.msg_partition_delete_ok Partition wurde erfolgreich gelöscht.
 drive_setup.msg_partition_mount_warning Das festgelegte Einhängeverzeichnis\n%s\nbefindet sich in einem %s-Bereich. Dies kann nach\nMountfehlern und nachfolgenden Datenverkehr das\nFlash-Image dauerhaft beschädigen!\nTrotzdem jetzt einhängen?
 drive_setup.msg_partition_not_mounted_please_activate Partition wurde angelegt, aber nicht eingehangen.\nPartition muss dafür vorher aktiviert werden!
 drive_setup.msg_reboot_requiered Diese Aktion wird erst nach einem Neustart Ihres\nReceivers wirksam.\nJetzt neu booten?
+drive_setup.msg_reset_now Jetzt zurücksetzten?
 drive_setup.msg_saved Einstellungen wurden erfolgreich\nübertragen!
 drive_setup.msg_saved_disabled Gerät(e) wurden deaktiviert.
 drive_setup.partition_activate Partition aktivieren
@@ -372,6 +373,7 @@ drive_setup.partition_size_std Keine Eingabe oder 0 = Gesamtgröße oder verfüg
 drive_setup.partition_start_cylinder Start-Zylinder
 drive_setup.partition_unmount_now Aushängen
 drive_setup.partition_unmount_now_device Alle aushängen
+drive_setup.reset Zurücksetzen
 drive_setup.savesettings Übernehmen
 drive_setup.select Laufwerk auswählen
 driversettings.bootinfo Infos beim Booten anzeigen

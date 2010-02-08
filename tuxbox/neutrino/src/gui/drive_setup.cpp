@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.40 2010/02/08 12:49:09 dbt Exp $
+	$Id: drive_setup.cpp,v 1.41 2010/02/08 22:53:04 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -289,6 +289,33 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		
 		return res;
  	}
+	else if (actionKey == "reset_drive_setup")
+ 	{
+		bool do_reset = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_RESET, LOCALE_DRIVE_SETUP_MSG_RESET_NOW, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, width, 5) == CMessageBox::mbrYes);
+
+		if (do_reset)
+		{		
+			string init_files[] = {	getInitIdeFilePath(),
+						getInitMountFilePath(), 
+						DRV_CONFIGFILE, getFstabFilePath(), getExportsFilePath()};
+			
+			for (unsigned int i = 0; i < (sizeof(init_files) / sizeof(init_files[0])); i++)
+				unlink(init_files[i].c_str());
+			
+			bool (CDriveSetup::*pMember[4])(void) = {	&CDriveSetup::unmountAll,
+									&CDriveSetup::unloadFsDrivers,
+									&CDriveSetup::unloadMmcDrivers,
+									&CDriveSetup::unloadIdeDrivers};
+	
+			for (unsigned int i = 0; i < 4; i++) 
+				(*this.*pMember[i])();
+	
+			Init();
+	
+			return menu_return::RETURN_EXIT_ALL;
+		}
+		return res;
+	}
 	//using generated actionkeys for...
 	for (int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
@@ -599,6 +626,9 @@ void CDriveSetup::showHddSetupMain()
 		CDirChooser * dirchooser_moduldir = new CDirChooser(&d_settings.drive_modul_dir);
 		CMenuForwarder * fw_moduldir = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_CUSTOM_MODULDIR, true, d_settings.drive_modul_dir, dirchooser_moduldir);
 
+		//extended settings: reset settings
+		CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_spkr, NEUTRINO_ICON_BUTTON_MUTE_SMALL);
+
 		//extended settings: paint items 
 		extsettings->addItem(subhead_extsettings);	//menue subhead
 		extsettings->addItem(GenericMenuSeparator);	//empty intro separator
@@ -612,6 +642,9 @@ void CDriveSetup::showHddSetupMain()
 		extsettings->addItem (fw_input_load_options);	//input options
 		extsettings->addItem (sep_modules);		//separator modul
 		extsettings->addItem (fw_moduldir);		//select prefered modul directory
+		// -----------------------------------------
+		extsettings->addItem(GenericMenuSeparatorLine);	//separator
+		extsettings->addItem (fw_reset);		//reset
 
 	//drives:
 	//show select separator, only visible if any device activ
@@ -3732,7 +3765,7 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 				uint i = v_fs_modules.size()-1;
 				bool ret = false;
 				//...then mount with other available filesystems, exit on success and correcting user settings
-				while (i >= 0)
+				while (i != 0)
 				{
 					if (mount(partname.c_str(),  mp.c_str() , v_fs_modules[i].c_str(), 16 , NULL)==0)
 					{
@@ -4016,7 +4049,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.40 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.41 $");
 }
 
 // returns text for initfile headers

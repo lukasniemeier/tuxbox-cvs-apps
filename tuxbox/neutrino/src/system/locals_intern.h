@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.166 2010/02/08 12:49:09 dbt Exp $
+ * $Id: locals_intern.h,v 1.167 2010/02/08 22:53:05 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -370,6 +370,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_partition_mount_warning",
 	"drive_setup.msg_partition_not_mounted_please_activate",
 	"drive_setup.msg_reboot_requiered",
+	"drive_setup.msg_reset_now",
 	"drive_setup.msg_saved",
 	"drive_setup.msg_saved_disabled",
 	"drive_setup.partition_activate",
@@ -399,6 +400,7 @@ const char * locale_real_names[] =
 	"drive_setup.partition_start_cylinder",
 	"drive_setup.partition_unmount_now",
 	"drive_setup.partition_unmount_now_device",
+	"drive_setup.reset",
 	"drive_setup.savesettings",
 	"drive_setup.select",
 	"driversettings.bootinfo",

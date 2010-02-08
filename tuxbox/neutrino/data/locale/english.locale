@@ -342,6 +342,7 @@ drive_setup.msg_partition_delete_failed Error while deleting partition!
 drive_setup.msg_partition_delete_ok Partition deleted.
 drive_setup.msg_partition_mount_warning The mount directory %s\ncontains a %s-filesystem. Your flash image can be\npermanently damaged after mount errors and\nfollowing data traffic!\nDo you really want to mount now?
 drive_setup.msg_partition_not_mounted_please_activate Partition was created, but is not mounted yet.\nPlease enable before!
+drive_setup.msg_reset_now Now reset?
 drive_setup.msg_reboot_requiered This action is expected after a reboot of your\nreceiver effectively.\nNow reboot?
 drive_setup.msg_saved Settings sucessfully applied!
 drive_setup.msg_saved_disabled Interface disabled
@@ -372,6 +373,7 @@ drive_setup.partition_size_std No input or 0 = complete size or alvailable size
 drive_setup.partition_start_cylinder Start cylinder
 drive_setup.partition_unmount_now Unmount
 drive_setup.partition_unmount_now_device Unmount all
+drive_setup.reset Reset
 drive_setup.savesettings Apply
 drive_setup.select Select drive
 driversettings.bootinfo Show Boot Info
