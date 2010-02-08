@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.17 2010/02/02 21:34:06 dbt Exp $
+	$Id: drive_setup.h,v 1.18 2010/02/08 12:49:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -211,6 +211,35 @@ class CDriveSetup : public CMenuTarget
 		std::string s_init_mmc_cmd; // system load command for mmc modul
 		std::string mmc_modules[MAXCOUNT_MMC_MODULES]; //all supported mmc modules
 
+		//error messages
+		#define ERROR_DESCRIPTIONS_NUM_COUNT 22 
+		enum ERROR_DESCRIPTIONS_NUM	
+		{
+			ERR_CHKFS,
+			ERR_FORMAT_PARTITION,
+			ERR_HDPARM,
+			ERR_INIT_FSDRIVERS,
+			ERR_INIT_MMCDRIVER,
+			ERR_INIT_MODUL,
+			ERR_MK_PARTITION,
+			ERR_MK_EXPORTS,
+			ERR_MK_FS,
+			ERR_MK_FSTAB,
+			ERR_MK_MOUNTS,
+			ERR_MOUNT_ALL,
+			ERR_MOUNT_PARTITION,
+			ERR_MOUNT_DEVICE,
+			ERR_SAVE_DRIVE_SETUP,
+			ERR_UNLOAD_FSDRIVERS,
+			ERR_UNLOAD_MMC_DRIVERS,
+			ERR_UNLOAD_MODUL,
+			ERR_UNMOUNT_ALL,
+			ERR_UNMOUNT_PARTITION,
+			ERR_UNMOUNT_DEVICE,
+			ERR_WRITE_SETTINGS
+		};
+		std::string err[ERROR_DESCRIPTIONS_NUM_COUNT]; //error descriptions
+		
 		int current_device; 	//MASTER || SLAVE || MMCARD, current edit device
 		int hdd_count; 		// count of hdd drives
  		int part_count[MAXCOUNT_DRIVE /*MASTER || SLAVE || MMCARD*/]; //count of partitions at device
@@ -256,8 +285,8 @@ class CDriveSetup : public CMenuTarget
 		bool initIdeDrivers(const bool irq6 = false);
 		bool initModulDeps(const std::string& modulname);
 		bool initModul(const std::string& modul_name, bool do_unload_first = true, const std::string& options = "");
-		bool mountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint);
-		bool mountDevice(const int& device_num);
+		bool mountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint, const bool force_mount = true);
+		bool mountDevice(const int& device_num, const bool force_mount = true);
 		bool mountAll();
 		bool unmountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number);
 		bool unmountDevice(const int& device_num);
@@ -346,6 +375,7 @@ class CDriveSetup : public CMenuTarget
 		std::string getInitFileModulEntries(bool with_unload_entries = false);
 		std::string getInitModulLoadStr(const std::string& modul_name);
 		std::string getPartEntryString(std::string& partname);
+		std::string getMountPoint(const int& device_num, const int& part_number);
 
 		//helper
 		std::string iToString(int int_val);

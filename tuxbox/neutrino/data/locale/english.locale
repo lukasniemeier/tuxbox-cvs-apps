@@ -276,7 +276,7 @@ date.Thu  Thu
 date.Tue  Tue
 date.Wed  Wed
 drive_setup.advanced_settings Advanced settings
-drive_setup.advanced_settings_custom_moduldir Preferred search in ...
+drive_setup.advanced_settings_custom_moduldir Preferred search in...
 drive_setup.advanced_settings_modul Driver modules
 drive_setup.advanced_settings_modul_loadcmd_options_entry Options
 drive_setup.advanced_settings_modul_loadcmd_options_input Input
@@ -310,20 +310,24 @@ drive_setup.ide_activate IDE-Interface
 drive_setup.ide_activate_irq6 activ with IRQ6
 drive_setup.ide_activate_on activ with default IRQ
 drive_setup.mmc MMC/SD
-drive_setup.mmc_modul_not_installed (not installed)
+drive_setup.mmc_modul_not_installed not installed
 drive_setup.mmc_modul_parameters Parameters
 drive_setup.mmc_used_driver Used mmc-driver
 drive_setup.model_unknown unknown model
 drive_setup.mount_mtdblock_partitions mount including mtd partitions
 drive_setup.msg_error_disctool_not_found not found!\nCan't execute setup.
 drive_setup.msg_error_fatal caused a serious error!\nIt's recommended to reset the boot scripts,\nexit drive setup and reboot,\nthen make settings again!\nIf this happens again,\nplease report!\n Now reset start scripts?
+drive_setup.msg_error_hdparm_not_compatible Hdparm has found errors while setting\nparameters. It's possible, that it's \nnot be able to use all functions or\nsome parameters have no effects!
 drive_setup.msg_error_load_mmc_driver_failed Can't load MMC/SD-drivers!
 drive_setup.msg_error_save_cannot_activate_interface Can't activating ide-inteface!
 drive_setup.msg_error_save_cannot_hdparm Error while setting hdd-parameters!
 drive_setup.msg_error_save_cannot_make_exports Error while creating exports!
 drive_setup.msg_error_save_cannot_make_fstab Error while creating fstab!
-drive_setup.msg_error_save_cannot_mount_drives Can't mount drives!
-drive_setup.msg_error_save_cannot_unmount_drives Can't unmount any drive!
+drive_setup.msg_error_save_cannot_mount_device Can't mount:
+drive_setup.msg_error_save_cannot_mount_partition Can't mount partition!\nFilesystem correct?
+drive_setup.msg_error_save_cannot_unmount_device can't unmount!
+drive_setup.msg_error_save_cannot_unmount_partition Can't unmount partition!
+drive_setup.msg_error_save_cannot_unmount_swap Can't unmount swap-partition!
 drive_setup.msg_error_save_configfile_failed Can't save settings!
 drive_setup.msg_error_save_failed Error while saving settings!
 drive_setup.msg_partition_check Start fs-check? This may take some time.
@@ -336,6 +340,7 @@ drive_setup.msg_partition_create_success Partition was successfully created!
 drive_setup.msg_partition_delete All data of this partition will be lost!\nDelete partition!
 drive_setup.msg_partition_delete_failed Error while deleting partition!
 drive_setup.msg_partition_delete_ok Partition deleted.
+drive_setup.msg_partition_mount_warning The mount directory %s\ncontains a %s-filesystem. Your flash image can be\npermanently damaged after mount errors and\nfollowing data traffic!\nDo you really want to mount now?
 drive_setup.msg_partition_not_mounted_please_activate Partition was created, but is not mounted yet.\nPlease enable before!
 drive_setup.msg_reboot_requiered This action is expected after a reboot of your\nreceiver effectively.\nNow reboot?
 drive_setup.msg_saved Settings sucessfully applied!
@@ -351,7 +356,6 @@ drive_setup.partition_delete delete!
 drive_setup.partition_free_size Still available disk space 
 drive_setup.partition_fs Filesystem
 drive_setup.partition_info Informations
-drive_setup.partition_mount_error Errors occurred during the mount/unmount operations!
 drive_setup.partition_mount_no_mountpoint Missing or not allowed mountpoint!
 drive_setup.partition_mount_now Mount
 drive_setup.partition_mount_now_device Mount all
@@ -698,10 +702,12 @@ mediaplayersettings.general Mediaplayer
 menu.back back
 messagebox.back Back
 messagebox.cancel Cancel
+messagebox.continue Continue
 messagebox.discard Discard changes?
 messagebox.error Error
 messagebox.info Information
 messagebox.no No
+messagebox.warning Warning!
 messagebox.yes Yes
 miscsettings.channellist Channellist
 miscsettings.channellist_epgtext_align Programtext Align

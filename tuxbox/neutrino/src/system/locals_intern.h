@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.165 2010/01/29 21:18:49 dbt Exp $
+ * $Id: locals_intern.h,v 1.166 2010/02/08 12:49:09 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -344,13 +344,17 @@ const char * locale_real_names[] =
 	"drive_setup.mount_mtdblock_partitions",
 	"drive_setup.msg_error_disctool_not_found",
 	"drive_setup.msg_error_fatal",
+	"drive_setup.msg_error_hdparm_not_compatible",
 	"drive_setup.msg_error_load_mmc_driver_failed",
 	"drive_setup.msg_error_save_cannot_activate_interface",
 	"drive_setup.msg_error_save_cannot_hdparm",
 	"drive_setup.msg_error_save_cannot_make_exports",
 	"drive_setup.msg_error_save_cannot_make_fstab",
-	"drive_setup.msg_error_save_cannot_mount_drives",
-	"drive_setup.msg_error_save_cannot_unmount_drives",
+	"drive_setup.msg_error_save_cannot_mount_device",
+	"drive_setup.msg_error_save_cannot_mount_partition",
+	"drive_setup.msg_error_save_cannot_unmount_device",
+	"drive_setup.msg_error_save_cannot_unmount_partition",
+	"drive_setup.msg_error_save_cannot_unmount_swap",
 	"drive_setup.msg_error_save_configfile_failed",
 	"drive_setup.msg_error_save_failed",
 	"drive_setup.msg_partition_check",
@@ -363,6 +367,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_partition_delete",
 	"drive_setup.msg_partition_delete_failed",
 	"drive_setup.msg_partition_delete_ok",
+	"drive_setup.msg_partition_mount_warning",
 	"drive_setup.msg_partition_not_mounted_please_activate",
 	"drive_setup.msg_reboot_requiered",
 	"drive_setup.msg_saved",
@@ -378,7 +383,6 @@ const char * locale_real_names[] =
 	"drive_setup.partition_free_size",
 	"drive_setup.partition_fs",
 	"drive_setup.partition_info",
-	"drive_setup.partition_mount_error",
 	"drive_setup.partition_mount_no_mountpoint",
 	"drive_setup.partition_mount_now",
 	"drive_setup.partition_mount_now_device",
@@ -725,10 +729,12 @@ const char * locale_real_names[] =
 	"menu.back",
 	"messagebox.back",
 	"messagebox.cancel",
+	"messagebox.continue",
 	"messagebox.discard",
 	"messagebox.error",
 	"messagebox.info",
 	"messagebox.no",
+	"messagebox.warning",
 	"messagebox.yes",
 	"miscsettings.channellist",
 	"miscsettings.channellist_epgtext_align",

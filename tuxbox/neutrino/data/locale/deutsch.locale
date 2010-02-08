@@ -276,7 +276,7 @@ date.Thu  Do
 date.Tue  Di
 date.Wed  Mi
 drive_setup.advanced_settings Erweiterte Einstellungen
-drive_setup.advanced_settings_custom_moduldir Bevorzugt suchen in ...
+drive_setup.advanced_settings_custom_moduldir Bevorzugt suchen in...
 drive_setup.advanced_settings_modul Treiber-Module
 drive_setup.advanced_settings_modul_loadcmd_options_entry Optionen
 drive_setup.advanced_settings_modul_loadcmd_options_input Eingabe
@@ -310,20 +310,24 @@ drive_setup.ide_activate IDE-Interface
 drive_setup.ide_activate_irq6 aktiv mit IRQ6
 drive_setup.ide_activate_on aktiv mit Standard IRQ
 drive_setup.mmc MMC/SD
-drive_setup.mmc_modul_not_installed (nicht installiert)
+drive_setup.mmc_modul_not_installed nicht installiert
 drive_setup.mmc_modul_parameters Lade-Parameter
 drive_setup.mmc_used_driver Verwendeter MMC-Treiber
 drive_setup.model_unknown Modell unbekannt
 drive_setup.mount_mtdblock_partitions mtd Partitionen einbeziehen
 drive_setup.msg_error_disctool_not_found wurde nicht gefunden!\nSetup kann nicht ausgeführt werden.
 drive_setup.msg_error_fatal hat einen schweren Fehler verursacht!\nEs ist ratsam die Startskripte zurückzusetzen,\nSetup zu beenden, neu zu booten,\nund Setup erneut auszuführen!\nSollte dies wieder passieren, bitte den Fehler melden!\nStartskripte jetzt zurücksetzen?
+drive_setup.msg_error_hdparm_not_compatible Hdparm hat Fehler beim zuweisen von\nParametern festgestellt. Es konnten möglicherweise\nnicht alle Parameter gesetzt werden\noder sind unwirksam!
 drive_setup.msg_error_load_mmc_driver_failed MMC/SD-Treiber können nicht geladen werden!
 drive_setup.msg_error_save_cannot_activate_interface IDE-Interface kann nicht aktiviert werden!
 drive_setup.msg_error_save_cannot_hdparm Fehler beim Setzen von HDD-Parametern!
 drive_setup.msg_error_save_cannot_make_exports Fehler beim Erstellen von exports!
 drive_setup.msg_error_save_cannot_make_fstab Fehler beim Erstellen von fstab!
-drive_setup.msg_error_save_cannot_mount_drives Laufwerke können nicht eingehangen werden!
-drive_setup.msg_error_save_cannot_unmount_drives Ein oder mehrere Laufwerke können\nnicht ausgehangen werden!
+drive_setup.msg_error_save_cannot_mount_device Einhängen nicht möglich für:
+drive_setup.msg_error_save_cannot_mount_partition Kann Partition nicht einhängen!\nKorrektes Dateisystem angegeben?
+drive_setup.msg_error_save_cannot_unmount_device Kann nicht ausgehangen werden!
+drive_setup.msg_error_save_cannot_unmount_partition Partition kann nicht ausgehangen werden!
+drive_setup.msg_error_save_cannot_unmount_swap Swap-Partition kann nicht ausgehangen werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
 drive_setup.msg_partition_check Soll die Partition jetzt geprüft werden?\nDies kann einige Zeit in Anspruch nehmen.
@@ -336,6 +340,7 @@ drive_setup.msg_partition_create_success Partition wurde erfolgreich erzeugt!
 drive_setup.msg_partition_delete Alle Daten dieser Partition gehen verloren!\nPartition jetzt löschen!
 drive_setup.msg_partition_delete_failed Löschen der Partition fehlgeschlagen!
 drive_setup.msg_partition_delete_ok Partition wurde erfolgreich gelöscht.
+drive_setup.msg_partition_mount_warning Das festgelegte Einhängeverzeichnis\n%s\nbefindet sich in einem %s-Bereich. Dies kann nach\nMountfehlern und nachfolgenden Datenverkehr das\nFlash-Image dauerhaft beschädigen!\nTrotzdem jetzt einhängen?
 drive_setup.msg_partition_not_mounted_please_activate Partition wurde angelegt, aber nicht eingehangen.\nPartition muss dafür vorher aktiviert werden!
 drive_setup.msg_reboot_requiered Diese Aktion wird erst nach einem Neustart Ihres\nReceivers wirksam.\nJetzt neu booten?
 drive_setup.msg_saved Einstellungen wurden erfolgreich\nübertragen!
@@ -351,11 +356,10 @@ drive_setup.partition_delete Löschen
 drive_setup.partition_free_size Noch partitionierbarer Speicherplatz
 drive_setup.partition_fs Dateisystem
 drive_setup.partition_info Partitions-Daten
-drive_setup.partition_mount_error Während des Mount/Unmount-Vorgangs sind\nFehler aufgetreten!
 drive_setup.partition_mount_no_mountpoint Kein korrektes Einhängeverzeichnis angegeben!
 drive_setup.partition_mount_now Einhängen
 drive_setup.partition_mount_now_device Alle einhängen
-drive_setup.partition_mountpoint Einhängen nach ...
+drive_setup.partition_mountpoint Einhängen nach...
 drive_setup.partition_nfs Für NFS-Server freigeben
 drive_setup.partition_nfs_host_ip NFS-Client Host-IP
 drive_setup.partition_not_active Partition nicht eingehangen
@@ -698,10 +702,12 @@ mediaplayersettings.general Medienwiedergabe
 menu.back Zurück
 messagebox.back Zurück
 messagebox.cancel Abbruch
+messagebox.continue Weiter
 messagebox.discard Wollen Sie die Änderungen verwerfen?
 messagebox.error Fehler
 messagebox.info Information
 messagebox.no Nein
+messagebox.warning Warnung!
 messagebox.yes Ja
 miscsettings.channellist Kanalliste
 miscsettings.channellist_epgtext_align Ausrichtung des Programmtextes

@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.39 2010/02/02 22:33:39 dbt Exp $
+	$Id: drive_setup.cpp,v 1.40 2010/02/08 12:49:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -100,7 +100,6 @@ TODO:
 #define TEMP_SCRIPT			"/tmp/drive_setup"
 #define PREPARE_SCRIPT_FILE		"/tmp/prepare_opt"
 #define PART_TABLE			"/tmp/part_table"
-#define ERRLOG				"/tmp/drive_setup_err.log" //contains error codes for system commands
 #define DRV_CONFIGFILE			CONFIGDIR "/drivesetup.conf"
 
 #define PROC 				"/proc"
@@ -243,7 +242,9 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		if (!saveHddSetup()) 
 		{
 			cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
-			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
+			string 	err_msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED);
+				err_msg += "\n" + err[ERR_SAVE_DRIVE_SETUP];
+			DisplayErrorMessage(err_msg.c_str());
 		}
 		Init();
 		return menu_return::RETURN_EXIT;
@@ -253,23 +254,21 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 
 		if (!mountDevice(current_device)) 
 		{
-			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_PARTITION_MOUNT_ERROR, width, msg_timeout, NEUTRINO_ICON_ERROR);
+			DisplayErrorMessage(err[ERR_MOUNT_DEVICE].c_str());
+			return res;
 		}
 		showHddSetupSub();
 		return menu_return::RETURN_EXIT;
  	}
 	else if (actionKey == "unmount_device_partitions")
  	{
-		if (unmountDevice(current_device)) 
+		if (!unmountDevice(current_device)) 
 		{
-			showHddSetupSub();
-			return menu_return::RETURN_EXIT;
-		}
-		else 
-		{
-			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_PARTITION_MOUNT_ERROR, width, msg_timeout, NEUTRINO_ICON_ERROR);
+			DisplayErrorMessage(err[ERR_UNMOUNT_DEVICE].c_str());
 			return res;
 		}
+			showHddSetupSub();
+			return menu_return::RETURN_EXIT;
  	}
 	else if (actionKey == "make_swap")
  	{
@@ -282,14 +281,10 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 			strcpy(d_settings.drive_partition_size[current_device][next_part_number], d_settings.drive_swap_size);
 			writeDriveSettings();
 
-			if (formatPartition(current_device, next_part_number)) 
-			{ // success
+			if (!formatPartition(current_device, next_part_number))
+				DisplayErrorMessage(err[ERR_FORMAT_PARTITION].c_str());
+			else // success
 				return menu_return::RETURN_EXIT_ALL;
-			}
-			else 
-			{// formating failed
-				ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
-			}
 		}
 		
 		return res;
@@ -316,12 +311,9 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 					{ // success
 						calPartCount(); //refresh part counter
 						return menu_return::RETURN_EXIT_ALL;
-						
 					}
-					else 
-					{// formating failed
-						ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
-					}
+					else // formating failed
+						DisplayErrorMessage(err[ERR_FORMAT_PARTITION].c_str());
 				}
 				return res;
 			}
@@ -334,7 +326,7 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 				}
 				else 
 				{
-					ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_PARTITION_MOUNT_ERROR, width, msg_timeout, NEUTRINO_ICON_ERROR);
+					DisplayErrorMessage(err[ERR_MOUNT_PARTITION].c_str());
 					return menu_return::RETURN_EXIT_ALL; 
 				}
 			}
@@ -347,7 +339,7 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 				}
 				else 
 				{
-					ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_PARTITION_MOUNT_ERROR, width, msg_timeout, NEUTRINO_ICON_ERROR);
+					DisplayErrorMessage(err[ERR_UNMOUNT_PARTITION].c_str());
 					return menu_return::RETURN_EXIT_ALL; 
 				}
 			}
@@ -357,20 +349,14 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		
 				if (delete_part) 
 				{
-					neutrino_locale_t msg_locale;
-					const char* del_msg_icon;
 					if (!mkPartition(current_device, DELETE_CLEAN, ii))
 					{ // delete is failed
-						msg_locale = 	LOCALE_DRIVE_SETUP_MSG_PARTITION_DELETE_FAILED;
-						del_msg_icon = 	NEUTRINO_ICON_ERROR;
-						ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, msg_locale, width, msg_timeout, del_msg_icon);
+						DisplayErrorMessage(err[ERR_MK_PARTITION].c_str());
 						return res;
 					}
 					else 
 					{ // delete was successfull
-						msg_locale = 	LOCALE_DRIVE_SETUP_MSG_PARTITION_DELETE_OK;
-						del_msg_icon =	NEUTRINO_ICON_INFO;
-						ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, msg_locale, width, msg_timeout, del_msg_icon);
+						ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_DRIVE_SETUP_MSG_PARTITION_DELETE_OK, width, msg_timeout, NEUTRINO_ICON_INFO);
 						showHddSetupSub();
 						return menu_return::RETURN_EXIT_ALL;
 					}
@@ -384,30 +370,25 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		
 				if (check_part) 
 				{
-					neutrino_locale_t chk_msg_locale;
-					const char* chk_msg_icon;
 					if (unmountPartition(current_device, ii)) 
 					{
 						string fstype = d_settings.drive_partition_fstype[current_device][ii];
 						if (!chkFs(current_device, ii, fstype)){ // check is failed
-							chk_msg_locale = 	LOCALE_DRIVE_SETUP_MSG_PARTITION_CHECK_FAILED;
-							chk_msg_icon = 	NEUTRINO_ICON_ERROR;
-							ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, chk_msg_locale, width, msg_timeout, chk_msg_icon);
+							DisplayErrorMessage(err[ERR_CHKFS].c_str());
 							return res;
 						}
 						else 
 						{ // check was successfull
-							chk_msg_locale = 	LOCALE_DRIVE_SETUP_MSG_PARTITION_CHECK_OK;
-							chk_msg_icon =	NEUTRINO_ICON_INFO;
-							ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, chk_msg_locale, width, msg_timeout, chk_msg_icon);
-							mountPartition(current_device, ii, fstype,d_settings.drive_partition_mountpoint[current_device][ii] ); // TODO Error handling
+							//after check, mounting!
+							if (!mountPartition(current_device, ii, fstype,d_settings.drive_partition_mountpoint[current_device][ii], true ))
+								 DisplayErrorMessage(err[ERR_MOUNT_PARTITION].c_str());
+							ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_DRIVE_SETUP_MSG_PARTITION_CHECK_OK, width, msg_timeout, NEUTRINO_ICON_INFO);
 							return menu_return::RETURN_EXIT;
 						}
 					}
 				}
 				else
 					return res;
-		
 			}
 		}
 	}
@@ -1235,16 +1216,28 @@ bool CDriveSetup::formatPartition(const int& device_num, const int& part_number)
 					ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_SUCCESS, width, msg_timeout, NEUTRINO_ICON_PARTITION);
 				}
 				else 
-					ret = false;		
+				{
+					err[ERR_FORMAT_PARTITION] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED);
+					ret = false;
+				}		
 			}
 			else
-				ret = false; 
+			{
+				err[ERR_FORMAT_PARTITION] = err[ERR_CHKFS];
+				ret = false;
+			} 
  		}
  		else
+		{
+			err[ERR_FORMAT_PARTITION] = err[ERR_MK_FS];
  			ret = false;
+		}
 	}
 	else
+	{
+		err[ERR_FORMAT_PARTITION] = err[ERR_MK_PARTITION];
 		ret = false;
+	}
 
 
 	if (pixbuf != NULL) 
@@ -1275,33 +1268,37 @@ void CDriveSetup::loadFdiskData()
 		// disc
 		device = drives[i].device;
 
-		// generate fdisk part table
-		if (loadFdiskPartTable(i))
+		if(access(device.c_str(), R_OK) ==0) 
 		{
-			// device size
-			v_device_size.push_back(getFileEntryLong(PART_TABLE, device, 4));
-
-			// count of cylinders
-			v_device_cylcount.push_back(getFileEntryLong(PART_TABLE, "heads", 4));
-
-			// count of heads
-			v_device_heads_count.push_back(getFileEntryLong(PART_TABLE, "heads", 0));
-
-			// count of sectors
-			v_device_sectors_count.push_back(getFileEntryLong(PART_TABLE, "sectors", 2));
-
-			// sizes of cylinder
-			v_device_cyl_size.push_back(getFileEntryLong(PART_TABLE, "Units", 8));	
+			// generate fdisk part table
+			if (loadFdiskPartTable(i))
+			{
+				// device size
+				v_device_size.push_back(getFileEntryLong(PART_TABLE, device, 4));
+	
+				// count of cylinders
+				v_device_cylcount.push_back(getFileEntryLong(PART_TABLE, "heads", 4));
+	
+				// count of heads
+				v_device_heads_count.push_back(getFileEntryLong(PART_TABLE, "heads", 0));
+	
+				// count of sectors
+				v_device_sectors_count.push_back(getFileEntryLong(PART_TABLE, "sectors", 2));
+	
+				// sizes of cylinder
+				v_device_cyl_size.push_back(getFileEntryLong(PART_TABLE, "Units", 8));	
+			}
+			else 
+			{
+				v_device_size.push_back(0);
+				v_device_cylcount.push_back(0);
+				v_device_heads_count.push_back(0);
+				v_device_sectors_count.push_back(0);
+				v_device_cyl_size.push_back(0);
+			}
+		
+			unlink(PART_TABLE);
 		}
-		else 
-		{
-			v_device_size.push_back(0);
-			v_device_cylcount.push_back(0);
-			v_device_heads_count.push_back(0);
-			v_device_sectors_count.push_back(0);
-			v_device_cyl_size.push_back(0);
-		}
-		unlink(PART_TABLE);
 	}
 
 }
@@ -1379,12 +1376,20 @@ void CDriveSetup::loadPartlist(const int& device_num)
 bool CDriveSetup::unmountAll()
 {
 	bool ret = true;
+	string 	err_msg;
 
 	for (unsigned int i=0; i < MAXCOUNT_DRIVE; i++) 
 	{
 		if(!unmountDevice(i /*MASTER||SLAVE||MMCARD*/))
+		{
+			err_msg += "\n";
+			err_msg	+= err[ERR_UNMOUNT_DEVICE];
 			ret = false;
+		}
 	}
+
+	if (!ret)
+		err[ERR_UNMOUNT_ALL] = err_msg;
 
 	return ret;
 }
@@ -1394,12 +1399,23 @@ bool CDriveSetup::unmountDevice(const int& device_num)
 {
 	bool ret = true;
 	int i = device_num;
+	string err_msg;
 
 	for (unsigned int ii=0; ii < MAXCOUNT_PARTS; ii++) 
 	{
 		if(!unmountPartition(i, ii))
+		{
+			err_msg += g_Locale->getText(mn_data[i].entry_locale);
+			err_msg += + "/Partition: "; 
+			err_msg += iToString(ii); 
+			err_msg += "\n";
+			err_msg += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_UNMOUNT_DEVICE);
 			ret = false;
+		}
 	}
+
+	if (!ret)
+		err[ERR_UNMOUNT_DEVICE] = err_msg;
 
 	return ret;
 }
@@ -1412,11 +1428,11 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 	//executing user script if available before unmounting
 	char user_script[21];
 	sprintf(user_script, "%s/before_unmount_%d_%d.sh", CONFIGDIR, device_num, part_number);
-	CNeutrinoApp::getInstance()->execute_start_file(user_script);
+	if((access(user_script, F_OK) ==0))
+		CNeutrinoApp::getInstance()->execute_start_file(user_script);
 
 	if((access(partname.c_str(), R_OK) !=0) || (!isActivePartition(partname))) // exit if no available
 	{ 
-// 		cout<<"[drive setup] unmount "<<partname<< ", nothing to do...ok"<< endl;
  		return true;
 	}
 	else 
@@ -1428,6 +1444,7 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 			if (swapoff(partname.c_str()) !=0) 
 			{
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": error while swapoff "<<partname<<" "<< strerror(errno)<< endl;
+				err[ERR_UNMOUNT_PARTITION] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_UNMOUNT_SWAP);
 				return false;
 			}
 			else 
@@ -1440,6 +1457,7 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 			if (umount(getMountInfo(partname, MOUNTPOINT).c_str()) !=0) 
 			{
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": error while unmount "<<partname<<" "<< strerror(errno)<< endl;
+				err[ERR_UNMOUNT_PARTITION] = iToString(part_number +1) + ". " + g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_UNMOUNT_PARTITION);
 				return false;
 			}
 			else 
@@ -1601,6 +1619,7 @@ bool CDriveSetup::initFsDrivers(bool do_unload_first)
 
 	bool ret = true;
 	unsigned int modul_count = v_fs_modules.size();
+	string err_msg;
 
 	// exec commands
 	for (unsigned int i = 0; i < modul_count; i++)
@@ -1626,7 +1645,11 @@ bool CDriveSetup::initFsDrivers(bool do_unload_first)
 			v_init_fs_L_cmds.push_back(getInitModulLoadStr(v_fs_modules[i]));
 		}
 		else
+		{
+			err_msg += "\n";
+			err_msg += err[ERR_INIT_MODUL];
 			ret = false;
+		}
 
 		// show load progress on screen
 		string 	screen_msg = "load ";
@@ -1641,6 +1664,9 @@ bool CDriveSetup::initFsDrivers(bool do_unload_first)
 		delete[] pixbuf;
 	}
 
+	if (!ret)
+		err[ERR_INIT_FSDRIVERS] = err_msg;
+
 	return ret;
 }
 
@@ -1653,7 +1679,10 @@ bool CDriveSetup::unloadMmcDrivers()
 		if (isModulLoaded(v_mmc_modules[i])) 
 		{
 			if (!unloadModul(v_mmc_modules[i]))
+			{
+				err[ERR_UNLOAD_MMC_DRIVERS] = err[ERR_UNLOAD_MODUL];
 				return false;
+			}
 		}
 		i++;
 	}
@@ -1694,7 +1723,7 @@ bool CDriveSetup::initMmcDriver()
 	if (!initModul(modul_name, false, opts)) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": loading "<<modul_name<<opts<< " failed..."<<endl;
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_LOAD_MMC_DRIVER_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
+		err[ERR_INIT_MMCDRIVER] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_LOAD_MMC_DRIVER_FAILED);
 		return false;
 	}
 
@@ -1712,6 +1741,7 @@ bool CDriveSetup::unloadFsDrivers()
 
 	bool ret = true;
 	unsigned int modul_count = v_fs_modules.size();
+	string err_msg;
 
 	// exec commands
 	for (unsigned int i = 0; i < modul_count; i++)
@@ -1723,7 +1753,11 @@ bool CDriveSetup::unloadFsDrivers()
 			unloadModul("vfat");
 				
 		if (!unloadModul(v_fs_modules[i]))
+		{
+			err_msg += "\n";
+			err_msg += err[ERR_UNLOAD_MODUL];
 			ret = false;
+		}
 
 		// show unload progress on screen
 		string 	screen_msg = "unload ";
@@ -1737,6 +1771,9 @@ bool CDriveSetup::unloadFsDrivers()
 		frameBuffer->RestoreScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
 		delete[] pixbuf;
 	}
+
+	if (!ret)
+		err[ERR_UNLOAD_FSDRIVERS] = err_msg;	
 
 	return ret;
 }
@@ -1847,12 +1884,14 @@ bool CDriveSetup::initModul(const string& modul_name, bool do_unload_first, cons
 			{
 				if (CNeutrinoApp::getInstance()->execute_sys_command(load_cmd.c_str()) !=0) 
 				{
-					cerr<<"[drive setup] "<<__FUNCTION__ <<": load "<<modul_name<< "...failed "<<strerror(errno)<<endl;
+					cerr<<"[drive setup] "<<__FUNCTION__ <<": load "<<modul_name<< "...failed "<<endl;
+					err[ERR_INIT_MODUL] = "Can't load " + modul_name;
 				}
 			}
 			if (!isModulLoaded(modul_name)) 
 			{ // check loaded modules
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": modul "<<modul_name<< " not loaded"<<endl;
+				err[ERR_INIT_MODUL] = "Can't load " + modul_name;
 				return false;
 			}
 		}
@@ -1863,12 +1902,13 @@ bool CDriveSetup::initModul(const string& modul_name, bool do_unload_first, cons
 		{
 			if (CNeutrinoApp::getInstance()->execute_sys_command(load_cmd.c_str()) !=0) 
 			{
-				cerr<<"[drive setup] "<<__FUNCTION__ <<": load "<<modul_name<< "...failed "<<strerror(errno)<<endl;
+				cerr<<"[drive setup] "<<__FUNCTION__ <<": load "<<modul_name<< "...failed "<<endl;
 			}
 		}
 			if (!isModulLoaded(modul_name)) 
 			{ // check loaded modules
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": modul "<<modul_name<< " not loaded"<<endl;
+				err[ERR_INIT_MODUL] = "Can't load " + modul_name;
 				return false;
 			}
 	}
@@ -1901,6 +1941,7 @@ bool CDriveSetup::unloadModul(const string& modulname)
 					unlink(getInitMountFilePath().c_str());
 				}
 			}
+			err[ERR_UNLOAD_MODUL] = "Can't unload " + modulname;
 			return false;
 		}
 		else
@@ -1914,15 +1955,21 @@ bool CDriveSetup::unloadModul(const string& modulname)
 bool CDriveSetup::saveHddSetup()
 {
 	bool ide_disabled = true;
+	bool ret = true;
+	vector<string> v_errors;
 	
+	//save settings
 	if (!writeDriveSettings())
-		return false;
+	{
+		v_errors.push_back(err[ERR_WRITE_SETTINGS]);
+		ret = false;
+	}
 
 	//unmount first
 	if (!unmountAll())
 	{
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_UNMOUNT_DRIVES, width, msg_timeout, NEUTRINO_ICON_ERROR);
-		return false;
+		v_errors.push_back(err[ERR_UNMOUNT_ALL]);
+		ret = false;
 	}
 
 	//ide
@@ -1938,83 +1985,116 @@ bool CDriveSetup::saveHddSetup()
 	//check ide status
 	if (d_settings.drive_activate_ide != IDE_OFF && !isIdeInterfaceActive()) 
 	{
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_ACTIVATE_INTERFACE, width, msg_timeout, NEUTRINO_ICON_ERROR);
-		return false;
+		v_errors.push_back(g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_ACTIVATE_INTERFACE));
+		ret = false;
 	}
 
-	// hdparm
+	// hdparm: show error messages, but without effect for settings
 	if (ide_disabled)
 	{
-		if (!loadHddParams(true/*reset*/))
-			return false;
+		loadHddParams(true); //reset hdparm parameters
 	}
 	else 
 	{
 		if (!loadHddParams(false))
-			return false;
+			DisplayInfoMessage(err[ERR_HDPARM].c_str());
 	}
 
 	// mmc stuff
 	if (isMmcEnabled())
 	{ 
-		if (!initMmcDriver()) 
-			return false;
+		if (!initMmcDriver())
+		{ 
+			v_errors.push_back(err[ERR_INIT_MMCDRIVER]),
+			ret = false;
+		}
+	}
+	else
+	{
+		if (!unloadMmcDrivers())
+		{
+			v_errors.push_back(err[ERR_UNLOAD_MMC_DRIVERS]),
+			ret = false;
+		}
 	}
 
 	//fs modules
 	if (ide_disabled && !isMmcEnabled())
 	{
 		if (!unloadFsDrivers())
-			return false;
+		{
+			v_errors.push_back(err[ERR_UNLOAD_FSDRIVERS]);
+			ret = false;
+		}
 	}
 	else
 	{
 		if (!initFsDrivers())
-			return false;
+		{
+			v_errors.push_back(err[ERR_INIT_FSDRIVERS]);
+			ret = false;
+		}
 	}
 	
 	//mount all parts
 	if (!mkMounts())
 	{
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MOUNT_DRIVES, width, msg_timeout, NEUTRINO_ICON_ERROR);
-		return false;
+		v_errors.push_back(err[ERR_MK_MOUNTS]);
+		ret = false;
 	}
 
-	// fstab
-	if (d_settings.drive_use_fstab) 
+	//fstab
+	if (ret && d_settings.drive_use_fstab) 
 	{
 		if (!mkFstab())
 		{
-			ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_FSTAB, width, msg_timeout, NEUTRINO_ICON_ERROR);
-			return false;
+			v_errors.push_back(err[ERR_MK_FSTAB]);
+			ret = false;
 		}
 	}
 	
 
 #ifdef ENABLE_NFSSERVER
 	// exports
-	if (!mkExports())
+	if (ret)
 	{
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_EXPORTS, width, msg_timeout, NEUTRINO_ICON_ERROR);
-		return false;
+		if (!mkExports())
+		{
+			v_errors.push_back(err[ERR_MK_EXPORTS]);
+			return false;
+		}
 	}
 #endif
 
 	// write and linking init files
-	if ((writeInitFile(ide_disabled)) && (linkInitFiles())) 
+	if (ret)
 	{
-		neutrino_locale_t msg_locale;
-
-		if (ide_disabled && !isMmcActive())
-			msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED_DISABLED;
-		else
-			msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED;
-
-		ShowLocalizedHint(LOCALE_DRIVE_SETUP_HEAD, msg_locale, width, msg_timeout, NEUTRINO_ICON_INFO);
+		if ((writeInitFile(ide_disabled)) && (linkInitFiles())) 
+		{
+			neutrino_locale_t msg_locale;
+	
+			if (ide_disabled && !isMmcActive())
+				msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED_DISABLED;
+			else
+				msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED;
+	
+			if (ret)
+				ShowLocalizedHint(LOCALE_DRIVE_SETUP_HEAD, msg_locale, width, msg_timeout, NEUTRINO_ICON_INFO);
+		}
+		else 
+		{
+	
+			ret = false;
+		}
 	}
-	else 
-	{
 
+	//create summary error message
+	if (!ret) 
+	{
+		for (uint i=0; i<(v_errors.size()) ; i++)
+		{
+			err[ERR_SAVE_DRIVE_SETUP] = v_errors[i] + "\n";
+		}
 		return false;
 	}
 
@@ -2236,16 +2316,17 @@ string CDriveSetup::getHddTemp(const int& device_num)
 // set/apply/testing hdparm commands and returns true on sucess, parameter "reset = true" sets no commands
 bool CDriveSetup::loadHddParams(const bool do_reset)
 {
-	string str_hdparm_cmd[2/*MASTER, SLAVE*/];
+	string str_hdparm_cmd[hdd_count/*MASTER, SLAVE*/];
+	v_hdparm_cmds.clear();
+	bool ret = true;
 
 	// do nothing on reset
 	if (!do_reset)
 	{
-		char opt_hdparm[2/*MASTER, SLAVE*/][15];
-		int i = 0;
+		char opt_hdparm[hdd_count/*MASTER, SLAVE*/][15];
 
 		//test/define all commands
-		while ( i == MASTER || i == SLAVE) 
+		for (int i = 0; i < hdd_count; i++)
 		{
 			sprintf(opt_hdparm[i],"-S%d -W%d -c1 ", atoi(d_settings.drive_spindown[i])/5, d_settings.drive_write_cache[i]);
 			str_hdparm_cmd[i] =((device_isActive[i]) ? HDPARM + (string)opt_hdparm[i]  + drives[i].device : "");
@@ -2253,18 +2334,24 @@ bool CDriveSetup::loadHddParams(const bool do_reset)
 			if (device_isActive[i])
 			{
 				int cmd_res = CNeutrinoApp::getInstance()->execute_sys_command(str_hdparm_cmd[i].c_str());
-				
+								
 				if (cmd_res !=0)
 				{ 
 					string cerr_content = "[drive setup] " + (string)__FUNCTION__  + ": executing " + str_hdparm_cmd[i] + " ...failed! ";
 					string 	err_msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_HDPARM);
-						err_msg += "\nError: ";
-	
+						err_msg += "\nProblem: ";	
+
 					if (cmd_res == 127)
 					{ 
 						cerr<<cerr_content<<HDPARM" not installed"<<endl;
 						err_msg += HDPARM;
 						err_msg += g_Locale->getText(LOCALE_DRIVE_SETUP_MMC_MODUL_NOT_INSTALLED);
+					}
+					else if (cmd_res == 5)
+					{
+						err_msg += g_Locale->getText(mn_data[i].entry_locale);
+						err_msg += "\n";
+						err_msg += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_HDPARM_NOT_COMPATIBLE);
 					}
 					else
 					{
@@ -2272,22 +2359,16 @@ bool CDriveSetup::loadHddParams(const bool do_reset)
 						err_msg += iToString(cmd_res);
 					}
 
-					DisplayErrorMessage(err_msg.c_str());
-					return false;
+					err[ERR_HDPARM] = err_msg;
+					ret = false;
 				}
 			}
-		i++;
+			// add to collection
+			v_hdparm_cmds.push_back(str_hdparm_cmd[i]);
 		}
 	}
 
-	// add to collection
-	v_hdparm_cmds.clear();
-	for (unsigned int i = 0; i < 2; i++) 
-	{
-		v_hdparm_cmds.push_back(str_hdparm_cmd[i]);
-	}
-
-	return true;
+	return ret;
 }
 
 /* returns mode of partitions, true=active, false=not active, usage: bool partActive = isActivePartition("/dev/hda1") */
@@ -2372,6 +2453,7 @@ bool CDriveSetup::mkFstab(bool write_defaults_only)
  	if (!str_fstab) 
 	{ // Error while open
        		cerr << "[drive setup] "<<__FUNCTION__ <<": write error "<<fstab<<", please check permissions..." << strerror(errno)<<endl;
+		err[ERR_MK_FSTAB] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_FSTAB);
 		return false;
 	}
 	else 
@@ -2397,6 +2479,7 @@ bool CDriveSetup::mkMounts()
 		if (!mountAll())
 		{
 			cerr<<"[drive setup] "<<__FUNCTION__ <<": error while mounting partitions!"<<endl;
+			err[ERR_MK_MOUNTS] = err[ERR_MOUNT_ALL];
 			return false;
 		}
 	}
@@ -2405,6 +2488,7 @@ bool CDriveSetup::mkMounts()
 		if (!unmountAll())
 		{
 			cerr<<"[drive setup] "<<__FUNCTION__ <<": error while unmounting partitions!"<<endl;
+			err[ERR_MK_MOUNTS] = err[ERR_UNMOUNT_ALL];
 			return false;
 		}
 	}
@@ -3081,6 +3165,8 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 	if (!prepare) 
 	{ // Error while open
 		cerr <<"[drive setup] "<<__FUNCTION__ <<": error while preparing "<< PREPARE_SCRIPT_FILE<<" "<< strerror(errno)<<endl;
+		err[ERR_MK_PARTITION] = "Error while preparing ";
+		err[ERR_MK_PARTITION] +=  PREPARE_SCRIPT_FILE;
 		return false;
 	}
 
@@ -3107,13 +3193,21 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 			break;
 		case DELETE:
 			if (!unmountPartition(device_num, part_number))
+			{
+				err[ERR_MK_PARTITION] = err[ERR_UNMOUNT_PARTITION]+ "\n";
+				err[ERR_MK_PARTITION] += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_DELETE_FAILED);
 				return false;
+			}
 			prepare <<"d"<<endl;
 			prepare <<part_n<<endl;
 			break;
 		case DELETE_CLEAN:
 			if (!unmountPartition(device_num, part_number))
+			{
+				err[ERR_MK_PARTITION] = err[ERR_UNMOUNT_PARTITION]+ "\n";
+				err[ERR_MK_PARTITION] += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_DELETE_FAILED);
 				return false;
+			}
 			prepare <<"d"<<endl;
 			prepare <<part_n<<endl;
 			//reset settings
@@ -3132,6 +3226,8 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 	if (chmod(PREPARE_SCRIPT_FILE, S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) !=0 ) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while setting permissions for "<<PREPARE_SCRIPT_FILE<<" "<< strerror(errno)<<endl;
+		err[ERR_MK_PARTITION] = "Error while setting permissions for ";
+		err[ERR_MK_PARTITION] +=  PREPARE_SCRIPT_FILE;
 		return false;
 	}
 
@@ -3140,6 +3236,8 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 		if (CNeutrinoApp::getInstance()->execute_sys_command(PREPARE_SCRIPT_FILE)!=0) 
 		{
 			cerr<<"[drive setup] "<<__FUNCTION__ <<": error while executing "<<PREPARE_SCRIPT_FILE<<endl;
+			err[ERR_MK_PARTITION] = "Error while executing ";
+			err[ERR_MK_PARTITION] +=  PREPARE_SCRIPT_FILE;
 			ret = false;
 		}
 
@@ -3147,7 +3245,7 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 		{
 			if (isActivePartition(partname)) 
 			{ // partition was deleted but part table is not current, reboot is requiered
-				bool reboot = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION, LOCALE_DRIVE_SETUP_MSG_REBOOT_REQUIERED, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, width, 5) == CMessageBox::mbrYes);
+				bool reboot = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION, LOCALE_DRIVE_SETUP_MSG_REBOOT_REQUIERED, CMessageBox::mbrContinue, CMessageBox::mbYes | CMessageBox::mbContinue, NEUTRINO_ICON_INFO, width) == CMessageBox::mbrYes);
 				if (reboot) 
 				{	
 					writeDriveSettings();
@@ -3160,6 +3258,7 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const int
 	else 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while unmounting " <<partname<<endl;
+		err[ERR_MK_PARTITION] = err[ERR_UNMOUNT_PARTITION];
 		ret = false;
 	}
 
@@ -3241,8 +3340,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 	{	
 		if (fs_name.empty())
 		{
-			string  msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED_NO_FS_DEFINIED);
-			ShowHintUTF(LOCALE_MESSAGEBOX_ERROR, msg.c_str(), width, msg_timeout, NEUTRINO_ICON_ERROR);
+			err[ERR_MK_FS] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED_NO_FS_DEFINIED);
 			return false;
 		}
 	}
@@ -3253,6 +3351,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 	if (!initFsDrivers(false)) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": formating partition failed..."<<endl;
+		err[ERR_MK_FS] = "mkfs "+ partname + " failed\n" + err[ERR_INIT_FSDRIVERS];
 		return false;
 	}
 
@@ -3284,6 +3383,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 			if (CNeutrinoApp::getInstance()->execute_sys_command(cmdformat.c_str())!=0) 
 			{
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": mkswap at "<<partname<< " failed..."<<endl;
+				err[ERR_MK_FS] = "mkswap for "+ partname + " failed";
 				return false;
 			}
 		}
@@ -3295,6 +3395,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 			if (CNeutrinoApp::getInstance()->execute_sys_command(cmdformat.c_str())!=0) 
 			{
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": make filesystem "<<fs_name<< " for "<<partname<< " failed..."<<endl;
+				err[ERR_MK_FS] = "mkfs for "+ partname + " failed";
 				return false;
 			}
 		}
@@ -3303,6 +3404,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 	{
 		// partition is not active
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": make filesystem failed "<<partname<< " is not active!..."<<endl;
+		err[ERR_MK_FS] = "Can't make filesytem at "+ partname;
 		return false;
 	}
 
@@ -3323,6 +3425,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 	if (!unmountPartition(device_num, part_number)) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": umounting of: "<<partname<< " failed"<<endl;
+		err[ERR_CHKFS] = err[ERR_UNMOUNT_PARTITION];
 		return false;
 	}
 	
@@ -3359,6 +3462,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 			if (CNeutrinoApp::getInstance()->execute_sys_command(cmd_check.c_str())!=0) 
 			{
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": checked filesystem with: "<<cmd_check<< "...with errors"<<endl;
+				err[ERR_CHKFS] = "Checked filesystem with errors!";
 			}
 		}
 	}
@@ -3366,6 +3470,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 	{
 		// partition is not active
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": checking filesystem with: "<<cmd_check<<" failed,\n"<< partname<<" is not active!"<<endl;
+		err[ERR_CHKFS] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_CHECK_FAILED);
 		ret = false;
 	}
 
@@ -3431,6 +3536,7 @@ bool CDriveSetup::mkExports()
 		if (!str_exports) 
 		{ // Error while open
 			cerr << "[drive setup] "<<__FUNCTION__ <<": write error "<<exports<<", please check permissions..." << strerror(errno)<<endl;
+			err[ERR_MK_EXPORTS] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_EXPORTS);
 			return false;
 		}
 		else 
@@ -3469,21 +3575,30 @@ bool CDriveSetup::mkExports()
 bool CDriveSetup::mountAll()
 {
 	bool ret = true;
+	string err_msg;
 
 	for (unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
-		if (!mountDevice(i))
+		if (!mountDevice(i, false))
+		{
+			err_msg += "\n";
+			err_msg += err[ERR_MOUNT_DEVICE];
 			ret = false;
+		}
 	}			
+
+	if (!ret)
+		err[ERR_MOUNT_ALL] = err_msg;
 
 	return ret;
 }
 
 // mounts all available partitions on device
-bool CDriveSetup::mountDevice(const int& device_num)
+bool CDriveSetup::mountDevice(const int& device_num, const bool force_mount)
 {
 	bool ret = true;
 	int i = device_num;
+	string err_msg;
 
 	for (unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
 	{
@@ -3492,122 +3607,203 @@ bool CDriveSetup::mountDevice(const int& device_num)
 		{// mount only if option is set to activ
 			if (isActivePartition(partname))
 			{
-				if (!mountPartition(i, ii, d_settings.drive_partition_fstype[i][ii], d_settings.drive_partition_mountpoint[i][ii]))
+				if (!mountPartition(i, ii, d_settings.drive_partition_fstype[i][ii], d_settings.drive_partition_mountpoint[i][ii], force_mount))
+				{
+					err_msg += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MOUNT_DEVICE);
+					err_msg += "\n";
+					err_msg += g_Locale->getText(mn_data[i].entry_locale);
+					err_msg += + " / Partition: "; 
+					err_msg += iToString(ii+1); 
+					
 					ret = false;
+				}
 			}
 		}
 	}			
 	
+	if (!ret)
+		err[ERR_MOUNT_DEVICE] = err_msg;
+
 	return ret;
 }
 
-// mounting partitions, returns true on success
-bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint)
+
+// mounting partitions, returns true on success, use force_mount if it's usefull to mount also a disabled partition 
+bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint, const bool force_mount)
 {
-	bool ret = true;
-	int ret_num = 0 ;
+	string mp = mountpoint;
+
+	// return true and exit if settings force_mount = false
+	if (!d_settings.drive_partition_activ[device_num][part_number] && !force_mount)
+		return true;
 
 	// get partition name (dev/hda1...4)
 	string partname = getPartName(device_num, part_number);
 
-	//genarate usefull details for error messages 
-	string 	details = "\nDevice: ";
-		details += g_Locale->getText(mn_data[device_num].entry_locale);
-		details += "\nPartition: " + iToString(part_number+1);
-
-	// exit if no available or not set to activ
-	if((access(partname.c_str(), R_OK) !=0) || (!d_settings.drive_partition_activ[device_num][part_number])) 	
+	// exit if no available
+	if((access(partname.c_str(), R_OK) !=0)) 	
 	{
 		cout<<"[drive setup] "<<__FUNCTION__ <<":  "<<partname<< " partition not activ, nothing to do...ok"<< endl;
- 		return ret;
+ 		return true;
 	}
 
-	// check user input for mountpoint and filesystem
+	// do mount or swapon
 	if (isActivePartition(partname))
 	{
-		//check mountpoint, if invalid or no mountpoint definied, show message
-		DIR   *mpCheck;
-		mpCheck = opendir(mountpoint.c_str());
-		if (mountpoint.empty() || mountpoint == "/" || mountpoint == "/root" || mpCheck == NULL)
+		//exit if it's already mounted
+		if (isSwapPartition(partname) || isMountedPartition(partname))
 		{
-			//no filesystem definied
-			if (fs_name.empty() || mountpoint.empty() || mpCheck == NULL)
-			{
-				// it could be a swap partition, do mount, if it fails, show message
-				if (!isSwapPartition(partname))
-					ret_num = swapon(partname.c_str(), 0/*SWAPFLAGS=0*/);
+			cout<<"[drive setup] "<<__FUNCTION__ <<":  "<<partname<< " partition already mounted, nothing to do...ok"<< endl;
+ 			return true;
+		}
 
-				if (ret_num!=0) 
-				{
-					cerr<<"[drive setup] "<<__FUNCTION__ <<":  swapon: "<<strerror(errno)<< " " << partname<<endl;
-					neutrino_locale_t l_msg = fs_name.empty() ? LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED_NO_FS_DEFINIED : LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NO_MOUNTPOINT;
-					string  msg = g_Locale->getText(l_msg);
-						msg += details;
-					ShowHintUTF(LOCALE_MESSAGEBOX_ERROR, msg.c_str(), width, msg_timeout, NEUTRINO_ICON_ERROR);
-					return false;
-				}
-				else
-				{
-					//swapon was successfully, set fsname to swap and commit to settings
-					strcpy(d_settings.drive_partition_fstype[device_num][part_number], "swap");
-					d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
-					loadFsModulList(); 
-					return true;
-				}
+		//swapon	
+		//swapon first with normal setting
+		if (fs_name == "swap")
+		{
+			if (swapon(partname.c_str(), 0/*SWAPFLAGS=0*/) != 0)
+			{ 
+				cerr<<"[drive setup] "<<__FUNCTION__ <<":  swapon: "<<strerror(errno)<< " " << partname<<endl;
+				err[ERR_MOUNT_PARTITION] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MOUNT_PARTITION);
+				return false;
 			}
+			else
+				return true;
+		}
+
+		//swapon without settings like with force
+		if (fs_name.empty() || fs_name != "swap" || mp.empty())
+		{
+			if (swapon(partname.c_str(), 0/*SWAPFLAGS=0*/) == 0)
+			{
+				strcpy(d_settings.drive_partition_fstype[device_num][part_number], "swap");
+				return true;
+			}
+		}
+		
+		//have not mounted swap, then we must mount with mountpoints		
+		if (mp.empty())
+		{
+			//default mountpoints for empty settings
+			//get possible mountpoint
+			mp = getMountPoint(device_num, part_number);
+		}	
 			
-			string  msg = g_Locale->getText(LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NO_MOUNTPOINT) + details;
-			ShowHintUTF(LOCALE_MESSAGEBOX_ERROR, msg.c_str(), width, msg_timeout, NEUTRINO_ICON_ERROR);
+		//check mountpoint, if invalid or no mountpoint definied then generate an error message
+		DIR   *mpCheck;
+		mpCheck = opendir(mp.c_str());
+		//exit on invalid mountpoint
+		if (mpCheck == NULL)
+		{
+			cerr<<"[drive setup] "<<__FUNCTION__ <<":  invalid mountpoint: "<<strerror(errno)<< " " << mp<<endl;
+			err[ERR_MOUNT_PARTITION] = mp + " " + g_Locale->getText(LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NO_MOUNTPOINT);
 			return false;
 		}
-		closedir( mpCheck );
-				
-		// mounting
-		if (fs_name != "swap")
-		{ 
-			if (isMountedPartition(partname)) 
-			{
-	// 			cout<<"[drive setup] mount "<<partname<< " allready mounted...ok"<< endl;
-				ret = true;
-			}
-			else 
-			{ 
-				if (initModul(fs_name, false)) //load first the fs modul
-				{ 
-					if (mount(partname.c_str(),  mountpoint.c_str() , fs_name.c_str(), 16 , NULL)!=0) //mount partition
-					{
-						cerr<<"[drive setup] "<<__FUNCTION__ <<":  error while mount: " << partname<<" "<<strerror(errno)<<endl;
-						ret = false;
-					}
-				// TODO screen message on error
-				}
-			}
-	
-		}
 		else
-		{ // swapon
-			if (isSwapPartition(partname)) 
+		{
+			closedir( mpCheck );
+			//checking mountpoint of selected mountpoint, it's dangoures
+			long l_fs = getDeviceInfo(mp.c_str(), FILESYSTEM);
+			if (l_fs == 0x72b6 /*jffs2*/ && access(mp.c_str(), W_OK) ==0)
 			{
-				ret = true;
-			}
-			else 
+				//create warn message
+				string s_fs = getFsTypeStr(l_fs);
+				char warn_msg[255];
+				sprintf(warn_msg,g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_MOUNT_WARNING), mp.c_str(), s_fs.c_str());
+				if ((ShowMsgUTF(LOCALE_MESSAGEBOX_WARNING, warn_msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_ERROR, width, -1))) // UTF-8
+					return true;
+			}	
+		}
+
+		//check filesystem
+		if(fs_name.empty() && force_mount)
+		{
+			err[ERR_MOUNT_PARTITION] =  g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_CREATE_FAILED_NO_FS_DEFINIED);
+			return false;
+		}
+
+		//mounting
+		if (initModul(fs_name, false) || !force_mount) //load first the fs modul
+		{
+			//TODO mount options 
+			//mount first with user settings, if it fails... 
+			if (mount(partname.c_str(),  mp.c_str() , fs_name.c_str(), 16 , NULL)!=0) 
 			{
-				ret_num = swapon(partname.c_str(), 0/*SWAPFLAGS=0*/);
-				if (ret_num!=0) 
+				uint i = v_fs_modules.size()-1;
+				bool ret = false;
+				//...then mount with other available filesystems, exit on success and correcting user settings
+				while (i >= 0)
 				{
-					cerr<<"[drive setup] "<<__FUNCTION__ <<":  swapon: "<<strerror(errno)<< " " << partname<<endl;
-					ret = false;
+					if (mount(partname.c_str(),  mp.c_str() , v_fs_modules[i].c_str(), 16 , NULL)==0)
+					{
+						//save fs and mountpoint!
+						strcpy(d_settings.drive_partition_fstype[device_num][part_number], v_fs_modules[i].c_str());
+						d_settings.drive_partition_mountpoint[device_num][part_number] = mp;
+						writeDriveSettings();
+						ret = true;
+						break;
+					}
+					i--;
+				}
+				
+				//if we have no success, generate an error message and return false.
+				if (!ret)
+				{
+					cerr<<"[drive setup] "<<__FUNCTION__ <<":  error["<<errno<< "] while mount: " << partname<<" "<<strerror(errno)<<endl;
+					err[ERR_MOUNT_PARTITION] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MOUNT_PARTITION);
+					return false;
 				}
 			}
 		}
-	}
+
+ 	}
 
 	//executing user script if available after mounting
 	char user_script[18];
 	sprintf(user_script, "%s/after_mount_%d_%d.sh", CONFIGDIR, device_num, part_number);
-	CNeutrinoApp::getInstance()->execute_start_file(user_script);
+	if((access(user_script, F_OK) ==0)) 
+		CNeutrinoApp::getInstance()->execute_start_file(user_script);
 	
-	return ret;
+	return true;
+}
+
+//returns a free mountpoint 
+string CDriveSetup::getMountPoint(const int& device_num, const int& part_number)
+{
+	string ret;
+	int dev = device_num;
+	int p_num = part_number;
+	
+	string partname = getPartName(dev, (p_num > 0 ? p_num-1 : p_num));
+	string mnt_dir = "/mnt";
+
+	string mnt_name[MAXCOUNT_DRIVE] = { mnt_dir + "/hdd1", mnt_dir + "/hdd2", mnt_dir + "/mmc"};
+
+	if (isSwapPartition(partname) || p_num == 0)
+		ret = mnt_name[dev];
+	else
+		ret = mnt_name[dev] + "_" + iToString(p_num+1);
+
+	DIR   *mp;
+	mp = opendir(ret.c_str());
+
+	if (mp)
+	{
+		closedir(mp);
+		return ret;
+	}
+	else
+	{
+		if (getDeviceInfo(mnt_dir.c_str(), FILESYSTEM) != 0x72b6 /*jffs2*/)
+			mnt_dir = "/var" + ret;
+		else
+			mnt_dir = ret;
+
+		mkdir(mnt_dir.c_str(), 0555);
+		ret = mnt_dir;
+	}
+
+ 	return ret;
 }
 
 // returns status of mmc, returns true if is active
@@ -3622,8 +3818,10 @@ bool CDriveSetup::isMmcActive()
 //return true if mmc is enabled
 bool CDriveSetup::isMmcEnabled()
 {
-	if ((string)d_settings.drive_mmc_module_name != g_Locale->getText(LOCALE_OPTIONS_OFF));
+	if ((string)d_settings.drive_mmc_module_name != g_Locale->getText(LOCALE_OPTIONS_OFF))
 		return true;
+	else
+		return false;
 }
 
 // returns status of ide interface, returns true if is active
@@ -3794,7 +3992,7 @@ bool CDriveSetup::writeDriveSettings()
 	if (!configfile.saveConfig(DRV_CONFIGFILE)) 
 	{
 		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while writing "<<DRV_CONFIGFILE<<endl;
-		ShowLocalizedHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CONFIGFILE_FAILED, width, msg_timeout, NEUTRINO_ICON_ERROR);
+		err[ERR_WRITE_SETTINGS] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CONFIGFILE_FAILED);
 		return false;
 	}
 
@@ -3818,7 +4016,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.39 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.40 $");
 }
 
 // returns text for initfile headers
