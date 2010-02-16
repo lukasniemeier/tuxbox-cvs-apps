@@ -1,5 +1,5 @@
 /*
- * $Id: clock.h,v 1.1 2009/12/30 22:33:29 rhabarber1848 Exp $
+ * $Id: clock.h,v 1.2 2010/02/16 21:05:00 rhabarber1848 Exp $
  *
  * clock - d-box2 linux project
  *
@@ -19,9 +19,9 @@
  *
 */
 
-#ifndef __icqwatch_H__
+#ifndef __clock__
 
-#define __icqwatch_H__
+#define __clock__
 
 #include "config.h"
 
@@ -43,6 +43,10 @@
 #include FT_FREETYPE_H
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
+
+#define COL_TRANSP	0
+#define COL_BLACK	1
+#define COL_WHITE	2
 
 /* tested with freetype 2.3.9, and 2.1.4 */
 #if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
