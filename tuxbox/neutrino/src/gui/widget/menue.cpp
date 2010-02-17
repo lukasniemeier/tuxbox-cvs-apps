@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.160 2010/02/09 12:19:28 dbt Exp $
+	$Id: menue.cpp,v 1.161 2010/02/17 21:30:01 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -608,16 +608,6 @@ int CMenuOptionChooser::paint( bool selected )
 		}
 	}
 
-	if (!(iconName.empty()))
-	{
-		frameBuffer->paintIcon(iconName, x + 10, y + ((height - 20) >> 1));
-	}
-	else if (CRCInput::isNumeric(directKey))
-	{
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x + 15, y+ height, height, CRCInput::getKeyName(directKey), color, height);
-	}
-
-
 	const char * l_option = g_Locale->getText(option);
 
 	int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_option, true); // UTF-8
@@ -626,6 +616,16 @@ int CMenuOptionChooser::paint( bool selected )
 
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), optionNameString.c_str(), color, 0, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), l_option, color, 0, true); // UTF-8
+
+	if (!iconName.empty() && active)
+	{
+		int icon_x = (x+(stringstartposName-x)/2) - (frameBuffer->getIconWidth(iconName.c_str())/2);
+		frameBuffer->paintIcon(iconName, icon_x, y+ ((height/2- frameBuffer->getIconHeight(iconName.c_str())/2)) );
+	}
+	else if (CRCInput::isNumeric(directKey))
+	{
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x + 15, y+ height, height, CRCInput::getKeyName(directKey), color, height);
+	}
 
 	if (selected)
 	{
