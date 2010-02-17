@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.167 2010/02/08 22:53:05 dbt Exp $
+ * $Id: locals_intern.h,v 1.168 2010/02/17 10:13:41 seife Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -47,6 +47,9 @@ const char * locale_real_names[] =
 	"EPGPlus.font_style_bold",
 	"EPGPlus.font_style_italic",
 	"EPGPlus.font_style_regular",
+	"EPGPlus.fontsize",
+	"EPGPlus.fontsize_big",
+	"EPGPlus.fontsize_small",
 	"EPGPlus.footer_fontbouquetchannelname",
 	"EPGPlus.footer_fontbuttons",
 	"EPGPlus.footer_fonteventdescription",

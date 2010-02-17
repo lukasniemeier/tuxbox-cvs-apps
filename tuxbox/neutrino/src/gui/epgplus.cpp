@@ -1,5 +1,5 @@
 /*
-	$Id: epgplus.cpp,v 1.57 2009/12/27 22:25:35 seife Exp $
+	$Id: epgplus.cpp,v 1.58 2010/02/17 10:13:40 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -56,10 +56,12 @@
 
 extern CBouquetList* bouquetList;
 
-EpgPlus::Settings EpgPlus::settings(true);
 EpgPlus::Fonts  EpgPlus::fonts;
 EpgPlus::Colors EpgPlus::colors;
 EpgPlus::Sizes  EpgPlus::sizes;
+
+static int bigfont = 0; // int, because of menuoptionchooser...
+static int switch_bigfont = bigfont; // ugly...
 
 time_t EpgPlus::duration = 0;
 
@@ -131,6 +133,8 @@ static EpgPlus::SizeSetting sizeSettingDefaultTable[] =
 EpgPlus::Settings::~Settings()
 {
 	delete[] fontSettings;
+	delete[] colorSettings;
+	delete[] sizeSettings;
 }
 
 EpgPlus::Settings::Settings(bool doInit)
@@ -142,8 +146,11 @@ EpgPlus::Settings::Settings(bool doInit)
 	if (doInit)
 	{
 		for (size_t i = 0; i < NumberOfFontSettings; ++i)
+		{
 			fontSettings[i] = fontSettingDefaultTable[i];
-
+			if (bigfont && (fontSettings[i].settingID == EpgPlus::EPGPlus_channelentry_font || fontSettings[i].settingID == EpgPlus::EPGPlus_channelevententry_font))
+				fontSettings[i].size = fontSettingDefaultTable[i].size * 3 / 2;
+		}
 		for (size_t i = 0; i < NumberOfColorSettings; ++i)
 			colorSettings[i] = colorSettingDefaultTable[i];
 
@@ -608,6 +615,7 @@ EpgPlus::EpgPlus()
 	usableScreenWidth  = w_max(g_settings.screen_EndX, 4);
 	usableScreenHeight = h_max(g_settings.screen_EndY, 4);
 
+	selectedChannelEntry = NULL;
 	init();
 }
 
@@ -767,9 +775,11 @@ void EpgPlus::createChannelEntries(int selectedChannelEntryIndex)
 
 void EpgPlus::init()
 {
+	settings = new EpgPlus::Settings(true);
+
 	for (size_t i = 0; i < NumberOfFontSettings; ++i)
 	{
-		FontSetting* fontSetting = &settings.fontSettings[i];
+		FontSetting* fontSetting = &settings->fontSettings[i];
 		std::string FileName;
 		FileName += std::string(FONTDIR);
 		FileName += "/";
@@ -787,13 +797,13 @@ void EpgPlus::init()
 
 	for (size_t i = 0; i < NumberOfColorSettings; ++i)
 	{
-		ColorSetting* colorSetting = &settings.colorSettings[i];
+		ColorSetting* colorSetting = &settings->colorSettings[i];
 		colors[colorSetting->settingID] = colorSetting->color;
 	}
 
 	for (size_t i = 0; i < NumberOfSizeSettings; ++i)
 	{
-		SizeSetting* sizeSetting = &settings.sizeSettings[i];
+		SizeSetting* sizeSetting = &settings->sizeSettings[i];
 		sizes[sizeSetting->settingID] = sizeSetting->size;
 	}
 
@@ -802,8 +812,6 @@ void EpgPlus::init()
 	ChannelEntry::init();
 	ChannelEventEntry::init();
 	Footer::init();
-
-	selectedChannelEntry = NULL;
 
 	channelsTableWidth = sizes[EPGPlus_channelentry_width];
 	sliderWidth        = sizes[EPGPlus_slider_width];
@@ -825,6 +833,9 @@ void EpgPlus::init()
 	int timeLineHeight = TimeLine::getUsedHeight();
 	entryHeight        = ChannelEntry::getUsedHeight();
 	int footerHeight   = Footer::getUsedHeight();
+
+	usableScreenWidth  = w_max(g_settings.screen_EndX, 4);
+	usableScreenHeight = h_max(g_settings.screen_EndY, 4);
 
 	maxNumberOfDisplayableEntries = (usableScreenHeight - headerHeight - timeLineHeight - horGap1Height - horGap2Height - footerHeight) / entryHeight;
 
@@ -875,7 +886,7 @@ void EpgPlus::init()
 
 	channelListStartIndex = 0;
 	startTime = 0;
-	duration = settings.durationSetting; // 2h
+	duration = settings->durationSetting; // 2h
 
 	refreshAll = false;
 	currentViewMode = ViewMode_Scroll;
@@ -894,6 +905,8 @@ void EpgPlus::free()
 
 	for (Fonts::iterator It = fonts.begin(); It != fonts.end(); ++It)
 		delete It->second;
+
+	delete settings;
 }
 
 int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquetList* _bouquetList)
@@ -951,6 +964,15 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 			if (msg <= CRCInput::RC_MaxRC)
 				timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
 
+			if (msg == CRCInput::RC_epg)
+			{
+				hide();
+				bigfont = !bigfont;
+				free();
+				init();
+				refreshAll = true;
+				break;
+			}
 			if (msg == g_settings.key_channelList_pagedown || msg == CRCInput::RC_yellow)
 			{
 				if (channelList->getSize() > 0)
@@ -1081,13 +1103,23 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 			{
 				fb_pixel_t savedScreen[usableScreenWidth * usableScreenHeight * sizeof(fb_pixel_t)];
 				frameBuffer->SaveScreen(usableScreenX, usableScreenY, usableScreenWidth, usableScreenHeight, savedScreen);
+				switch_bigfont = bigfont;
 
 				CMenuWidget menuWidgetOptions(LOCALE_EPGPLUS_OPTIONS, NEUTRINO_ICON_FEATURES, 500);
 				menuWidgetOptions.addItem(new MenuOptionChooserSwitchSwapMode(this));
 				menuWidgetOptions.addItem(new MenuOptionChooserSwitchViewMode(this));
+				menuWidgetOptions.addItem(new MenuOptionChooserSwitchFontsize());
 
 				int result = menuWidgetOptions.exec(NULL, "");
-				if (result == menu_return::RETURN_REPAINT)
+				if (switch_bigfont != bigfont)
+				{
+					hide();
+					bigfont = switch_bigfont;
+					free();
+					init();
+					refreshAll = true;
+				}
+				else if (result == menu_return::RETURN_REPAINT)
 				{
 					frameBuffer->RestoreScreen(usableScreenX, usableScreenY, usableScreenWidth, usableScreenHeight, savedScreen);
 				}
@@ -1783,7 +1815,7 @@ EpgPlus::MenuOptionChooserSwitchViewMode::MenuOptionChooserSwitchViewMode(EpgPlu
 	: CMenuOptionChooser(LOCALE_EPGPLUS_VIEW_MODE, (int*)(int)&epgPlus->currentViewMode,
 			     menuOptionChooserSwitchViewModes,
 			     sizeof(menuOptionChooserSwitchViewModes) / sizeof(CMenuOptionChooser::keyval),
-			     true, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE)
+			     true, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN)
 {
 	oldTimingMenuSettings = g_settings.timing[SNeutrinoSettings::TIMING_MENU];
 }
@@ -1802,6 +1834,34 @@ int EpgPlus::MenuOptionChooserSwitchViewMode::exec(CMenuTarget* parent)
 
 	return menu_return::RETURN_REPAINT;
 }
+
+struct CMenuOptionChooser::keyval menuOptionChooserSwitchFontsize[] =
+{
+	{ 0,	LOCALE_EPGPLUS_FONTSIZE_SMALL },
+	{ 1,	LOCALE_EPGPLUS_FONTSIZE_BIG }
+};
+
+EpgPlus::MenuOptionChooserSwitchFontsize::MenuOptionChooserSwitchFontsize()
+	: CMenuOptionChooser(LOCALE_EPGPLUS_FONTSIZE, &switch_bigfont, menuOptionChooserSwitchFontsize,
+			     sizeof(menuOptionChooserSwitchFontsize) / sizeof(CMenuOptionChooser::keyval),
+			     true, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE)
+{
+	oldTimingMenuSettings = g_settings.timing[SNeutrinoSettings::TIMING_MENU];
+};
+
+EpgPlus::MenuOptionChooserSwitchFontsize::~MenuOptionChooserSwitchFontsize()
+{
+	g_settings.timing[SNeutrinoSettings::TIMING_MENU] = oldTimingMenuSettings;
+};
+
+int EpgPlus::MenuOptionChooserSwitchFontsize::exec(CMenuTarget* parent)
+{
+	// change time out settings temporary
+	g_settings.timing[SNeutrinoSettings::TIMING_MENU] = 1;
+	CMenuOptionChooser::exec(parent);
+	return menu_return::RETURN_REPAINT;
+}
+
 /*
 EpgPlus::MenuTargetSettings::MenuTargetSettings
   ( EpgPlus* epgPlus

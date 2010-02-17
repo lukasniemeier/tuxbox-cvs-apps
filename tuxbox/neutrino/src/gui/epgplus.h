@@ -505,6 +505,16 @@ public:
       int oldTimingMenuSettings;
   };
 
+	class MenuOptionChooserSwitchFontsize : public CMenuOptionChooser
+	{
+		public:
+			MenuOptionChooserSwitchFontsize();
+			virtual ~MenuOptionChooserSwitchFontsize();
+			int exec(CMenuTarget *parent);
+		private:
+			int oldTimingMenuSettings;
+	};
+
 	class MenuTargetSettings : public CMenuTarget
 	{
 		public:
@@ -938,7 +948,7 @@ private:
   bool            refreshFooterButtons;
   bool            is_visible;
 
-  static Settings settings;
+  Settings *settings;
   static Fonts    fonts;
   static Colors   colors;
   static Sizes    sizes;

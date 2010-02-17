@@ -20,6 +20,9 @@ EPGPlus.event_info Event Info
 EPGPlus.font_style_bold bold
 EPGPlus.font_style_italic italic
 EPGPlus.font_style_regular regular
+EPGPlus.fontsize Font Size
+EPGPlus.fontsize_big big
+EPGPlus.fontsize_small small
 EPGPlus.footer_fontbouquetchannelname Selected bouquet-/channel name
 EPGPlus.footer_fontbuttons Buttons
 EPGPlus.footer_fonteventdescription Title 1 selected Prog.

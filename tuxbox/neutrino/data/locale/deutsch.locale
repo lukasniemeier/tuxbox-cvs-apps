@@ -20,6 +20,9 @@ EPGPlus.event_info Eventinfo
 EPGPlus.font_style_bold Fett
 EPGPlus.font_style_italic Kursiv
 EPGPlus.font_style_regular Normal
+EPGPlus.fontsize Schriftgröße
+EPGPlus.fontsize_big groß
+EPGPlus.fontsize_small klein
 EPGPlus.footer_fontbouquetchannelname Selektierter Bouquet~/Kanalname
 EPGPlus.footer_fontbuttons Buttons
 EPGPlus.footer_fonteventdescription Titel 1 selekt. Sendung
