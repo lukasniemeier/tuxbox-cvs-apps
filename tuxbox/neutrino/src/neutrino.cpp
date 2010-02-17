@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1012 2010/01/17 13:18:19 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1013 2010/02/17 11:06:58 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2508,6 +2508,11 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 			{
 				//numeric zap
 				channelList->numericZap( msg );
+			}
+			else if (msg == CRCInput::RC_epg)
+			{
+				CEventListHandler elist;
+				elist.exec(NULL, "");
 			}
 			else
 			{     // turn on LCD display by kicking it
