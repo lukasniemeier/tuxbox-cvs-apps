@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1013 2010/02/17 11:06:58 seife Exp $
+	$Id: neutrino.cpp,v 1.1014 2010/02/17 11:45:31 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1985,6 +1985,12 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	prepareEnviroment();
 	current_muted = false;
+
+	/* if zapit is in standby, loadSetup() will already get wrong info
+	   (box type etc) */
+	if (g_Zapit->getMode() == CZapitClient::MODE_STANDBY)
+		g_Zapit->setStandby(false);
+
 	int loadSettingsErg = loadSetup();
 	
 	/* load locales before setting up any fonts to determine whether we need a true unicode font */
