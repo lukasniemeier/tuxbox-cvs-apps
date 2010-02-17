@@ -136,10 +136,7 @@ avs_vendor_settings current_avs_settings;
 // bool vcr;
 // bool videoOutputDisabled;
 
-#if defined HAVE_DBOX_HARDWARE || defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
 void routeVideo();
-#endif
-
 void sig_catch(int);
 
 #include "avs_settings.cpp"
@@ -516,6 +513,7 @@ void setvideooutput(CControld::video_format format, bool bSaveSettings)
 	//fprintf(stderr, "%s:%d CControld::video_format: %d arg %d\n",__FUNCTION__,__LINE__, format, arg);
 	if (videoDecoder)
 		videoDecoder->setVideoOutput(arg);
+	routeVideo();
 }
 #endif
 
@@ -676,6 +674,7 @@ void routeVideo()
 void routeVideo()
 {
 	int fd;
+	unsigned char fblk;
 	printf("[controld] %s VCR SCART\n", settings.vcr?"enabling":"disabling");
 
 	fd = open(AVS_DEVICE, O_RDWR);
@@ -700,6 +699,19 @@ void routeVideo()
 	}
 	else
 	{
+		switch (settings.videooutput)
+		{
+			case CControld::FORMAT_CVBS:
+			case CControld::FORMAT_SVIDEO:
+				fblk = 0;
+				break;
+			default:
+				fblk = 1;
+				break;
+		}
+		printf("[controld] setting FASTBLANK to %d\n", fblk);
+		if (ioctl(fd, IOC_AVS_FASTBLANK_SET, fblk) < 0)
+			perror("IOC_AVS_FASTBLANK_SET, fblk");
 		printf("[controld] routing TV encoder to TV SCART\n");
 		if (ioctl(fd, IOC_AVS_ROUTE_ENC2TV) < 0)
 			perror("IOC_AVS_ROUTE_ENC2TV");
