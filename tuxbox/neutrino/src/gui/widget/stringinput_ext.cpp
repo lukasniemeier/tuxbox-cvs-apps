@@ -153,12 +153,13 @@ int CExtendedInput::exec( CMenuTarget* parent, const std::string & )
 
 		if (msg_repeatok == CRCInput::RC_left)
 		{
-			if(selectedChar>0)
 			{
 				bool found = false;
 				int oldSelectedChar = selectedChar;
-				for(int i=selectedChar-1; i>=0;i--)
+				for(int i=selectedChar-1;!found;i--)
 				{
+					if(i < 0)
+						i = inputFields.size()-1;
 					if ((!found) && (inputFields[i]->isSelectable()))
 					{
 						found = true;
@@ -175,12 +176,13 @@ int CExtendedInput::exec( CMenuTarget* parent, const std::string & )
 		}
 		else if (msg_repeatok == CRCInput::RC_right)
 		{
-			if(selectedChar< (int) inputFields.size()-1)
 			{
 				bool found = false;
 				int oldSelectedChar = selectedChar;
-				for(unsigned int i=selectedChar+1; i<inputFields.size();i++)
+				for(unsigned int i=selectedChar+1;!found;i++)
 				{
+					if(i >= inputFields.size())
+						i = 0;
 					if ((!found) && (inputFields[i]->isSelectable()))
 					{
 						found = true;

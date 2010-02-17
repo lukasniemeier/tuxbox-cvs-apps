@@ -223,20 +223,26 @@ void CStringInput::keyDownPressed()
 
 void CStringInput::keyLeftPressed()
 {
-	if(selected>0)
+	if(selected >= 0)
 	{
+		int osel=selected;
 		selected--;
-		paintChar(selected+1);
+		if(selected < 0)
+			selected=size-1;
+		paintChar(osel);
 		paintChar(selected);
 	}
 }
 
 void CStringInput::keyRightPressed()
 {
-	if (selected < (size - 1))
+	if(selected < size)
 	{
+		int osel=selected;
 		selected++;
-		paintChar(selected-1);
+		if(selected >= size)
+			selected=0;
+		paintChar(osel);
 		paintChar(selected);
 	}
 }
