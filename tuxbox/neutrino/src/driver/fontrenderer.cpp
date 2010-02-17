@@ -138,11 +138,22 @@ FTC_FaceID FBFontRenderClass::getFaceID(const char * const family, const char * 
 			return (FTC_FaceID)f;
 	}
 	if (strncmp(style, "Bold ", 5) == 0)
+	{
 		for (fontListEntry *f=font; f; f=f->next)
 		{
 			if ((!strcmp(f->family, family)) && (!strcmp(f->style, &(style[5]))))
 				return (FTC_FaceID)f;
 		}
+	}
+	for (fontListEntry *f = font; f; f = f->next)
+	{
+		if (!strcmp(f->family, family))
+		{
+			if (f->next) // the first font always seems to be italic, skip if possible
+				continue;
+			return (FTC_FaceID)f;
+		}
+	}
 	return 0;
 }
 
