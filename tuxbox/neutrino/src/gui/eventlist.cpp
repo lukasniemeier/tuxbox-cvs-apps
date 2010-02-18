@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.132 2010/02/17 11:06:57 seife Exp $
+	$Id: eventlist.cpp,v 1.133 2010/02/18 18:55:45 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -606,24 +606,28 @@ void EventList::paintItem(unsigned int pos)
 	int ypos = y+ theight+0 + pos*fheight;
 	std::string datetime1_str, datetime2_str, duration_str;
 	unsigned int curpos = liststart + pos;
+	int c_rad_mid;
 
 	if (curpos == selected)
 	{
 		color   = COL_MENUCONTENTSELECTED;
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
+		c_rad_mid = RADIUS_MID;
 	}
 	else if (curpos == current_event)
 	{
 		color   = COL_MENUCONTENT + 1;
 		bgcolor = COL_MENUCONTENT_PLUS_1;
+		c_rad_mid = RADIUS_MID;
 	}
 	else
 	{
 		color   = COL_MENUCONTENT;
 		bgcolor = COL_MENUCONTENT_PLUS_0;
+		c_rad_mid = 0;
 	}
 
-	frameBuffer->paintBoxRel(x, ypos, width- 15, fheight, bgcolor);
+	frameBuffer->paintBoxRel(x, ypos, width- 15, fheight, bgcolor, c_rad_mid);
 
 	if (curpos < evtlist.size())
 	{
@@ -702,24 +706,26 @@ void EventList::paintHead()
 
 void EventList::paint()
 {
+	int ypos = y+ theight;
+	int sb = fheight* listmaxshow;
+	int sbc= ((evtlist.size()- 1)/ listmaxshow)+ 1;
+	int sbs= (selected/listmaxshow);
+	
 	liststart = (selected/listmaxshow)*listmaxshow;
 
 	if (evtlist[0].eventID != 0)
 		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x+ width- 30, y+ 5 );
+
+	// paint background, so no transparent corners beside selected item at first paint
+	frameBuffer->paintBoxRel(x, ypos, width- 15, sb, COL_MENUCONTENT_PLUS_0);
 
 	for(unsigned int count=0;count<listmaxshow;count++)
 	{
 		paintItem(count);
 	}
 
-	int ypos = y+ theight;
-	int sb = fheight* listmaxshow;
-	int sbc= ((evtlist.size()- 1)/ listmaxshow)+ 1;
-	int sbs= (selected/listmaxshow);
-
 	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
-
 }
 
 //
