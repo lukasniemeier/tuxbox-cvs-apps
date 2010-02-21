@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.318 2010/02/03 19:11:35 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.319 2010/02/21 10:14:15 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -764,8 +764,12 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 	MySIeventsOrderUniqueKey::iterator si = mySIeventsOrderUniqueKey.find(evt.uniqueKey());
 	bool already_exists = (si != mySIeventsOrderUniqueKey.end());
 
-	if (already_exists) {
+	/* Check size of some descriptors of the new event before comparing
+	   them with the old ones, because the same event can be complete
+	   on one German Sky channel and incomplete on another one. So we
+	   make sure to keep the complete event, if applicable. */
 
+	if ((already_exists) && (evt.components.size() > 0)) {
 		if (si->second->components.size() != evt.components.size())
 			already_exists = false;
 		else {
@@ -783,7 +787,9 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 				c2++;
 			}
 		}
+	}
 
+	if ((already_exists) && (evt.linkage_descs.size() > 0)) {
 		if (si->second->linkage_descs.size() != evt.linkage_descs.size())
 			already_exists = false;
 		else {
@@ -801,7 +807,9 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 				}
 			}
 		}
+	}
 
+	if ((already_exists) && (evt.ratings.size() > 0)) {
 		if (si->second->ratings.size() != evt.ratings.size())
 			already_exists = false;
 		else {
@@ -817,7 +825,9 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 				p2++;
 			}
 		}
+	}
 
+	if (already_exists) {
 		if (si->second->times.size() != evt.times.size())
 			already_exists = false;
 		else {
@@ -859,11 +869,6 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 		}
 
 		SIeventPtr e(eptr);
-
-		// If new extended event descriptor is empty use old one, if applicable
-		if ((e->getExtendedText().length() == 0) && (si != mySIeventsOrderUniqueKey.end()) &&
-		   (SIlanguage::getMode() == CSectionsdClient::LANGUAGE_MODE_OFF))
-			e->setExtendedText("OFF",si->second->getExtendedText());
 	
 		//Strip ExtendedDescription if too far in the future
 		if ((e->times.begin()->startzeit > zeit + secondsExtendedTextCache) &&
@@ -2566,7 +2571,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.318 2010/02/03 19:11:35 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.319 2010/02/21 10:14:15 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8488,7 +8493,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.318 2010/02/03 19:11:35 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.319 2010/02/21 10:14:15 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
