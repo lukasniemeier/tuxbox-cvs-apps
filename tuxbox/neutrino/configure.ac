@@ -117,7 +117,7 @@ AM_CONDITIONAL(ENABLE_RTC,test "$enable_rtc" = "yes")
 
 AC_ARG_ENABLE(nfsserver,
 	AS_HELP_STRING(--enable-nfsserver,include nfsserver support),
-	,[enable_nfsserver=yes])
+	,[enable_nfsserver=no])
 AM_CONDITIONAL(ENABLE_NFSSERVER,test "$enable_nfsserver" = "yes")
 
 ########################
