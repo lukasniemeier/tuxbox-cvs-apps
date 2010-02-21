@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.c,v 1.3 2009/12/27 12:08:02 rhabarber1848 Exp $
+ * $Id: shellexec.c,v 1.4 2010/02/21 10:19:06 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -347,7 +347,7 @@ int res=1;
 	{
 		res=!system(dep);	
 		ClearKeys();
-//		res=ExistFile(dep);
+		res|=ExistFile(dep);
 	}
 	if(cmd && res)
 	{
