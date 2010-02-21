@@ -1,5 +1,5 @@
 /*
- * $Id: io.h,v 1.1 2009/12/30 22:33:29 rhabarber1848 Exp $
+ * $Id: io.h,v 1.2 2010/02/21 10:24:13 rhabarber1848 Exp $
  *
  * clock - d-box2 linux project
  *
@@ -24,7 +24,7 @@
 #define __IO_H__
 
 //rc codes
-
+/*
 #define	RC_0		0x00
 #define	RC_1		0x01
 #define	RC_2		0x02
@@ -51,10 +51,11 @@
 #define	RC_HELP		0x17
 #define	RC_DBOX		0x18
 #define	RC_HOME		0x1F
+*/
 
 int InitRC(void);
 int CloseRC(void);
 int RCKeyPressed(void);
-int GetRCCode(void);
+//int GetRCCode(void);
 
 #endif

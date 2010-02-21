@@ -1,5 +1,5 @@
 /*
- * $Id: io.c,v 1.1 2009/12/30 22:33:29 rhabarber1848 Exp $
+ * $Id: io.c,v 1.2 2010/02/21 10:24:13 rhabarber1848 Exp $
  *
  * clock - d-box2 linux project
  *
@@ -35,9 +35,9 @@
 #define RC_DEVICE	"/dev/input/event0"
 
 static struct input_event ev;
-static unsigned short rccode;
+//static unsigned short rccode;
 static int rc;
-static __u16 rc_last_key = KEY_RESERVED;
+//static __u16 rc_last_key = KEY_RESERVED;
 
 int InitRC(void)
 {
@@ -62,7 +62,7 @@ int rval=0;
 	}
 	return rval;
 }
-
+/*
 int GetRCCode()
 {
 	if(!RCKeyPressed())
@@ -165,4 +165,4 @@ int GetRCCode()
 
 	return rccode;
 }
-
+*/
