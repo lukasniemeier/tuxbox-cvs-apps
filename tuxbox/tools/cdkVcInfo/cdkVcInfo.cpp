@@ -1,7 +1,7 @@
 /*
  * Tool for printing some image information during bootup.
  *
- * $Id: cdkVcInfo.cpp,v 1.6 2010/01/31 12:51:05 rhabarber1848 Exp $
+ * $Id: cdkVcInfo.cpp,v 1.7 2010/02/21 10:36:03 rhabarber1848 Exp $
  *
  * cdkVcInfo - d-box2 linux project
  *
@@ -28,15 +28,16 @@
 
 #define CONSOLE "/dev/vc/0"
 #define VERSION_FILE "/.version"
+#define VERSION_FILE2 "/proc/version"
 #define INTERFACES_FILE "/etc/network/interfaces"
 #define NAMENSSERVER_FILE "/etc/resolv.conf"
+#define MOUNTS_FILE "/proc/mounts"
 #define BUFFERSIZE 255
 #define BIGBUFFERSIZE 2000
-#define DEFAULT_DELAY 500
 #define MAXOSD 2
 
-enum {VERSION, TYPE, DATE, TIME, CREATOR, NAME, WWW, NETW, DHCP, IP, NETM, BROAD, GATEWAY, DNS, HEADLINE,
-		UNKNOWN, ENABLED, DISABLED, LOAD };
+enum {VERSION, TYPE, DATE, TIME, CREATOR, NAME, WWW, NETW, DHCP, ROOT, IP, NETM, BROAD, GATEWAY, DNS, HEADLINE,
+		UNKNOWN, ENABLED, DISABLED, INTERN, LINUX, GCC, UPC, LOAD };
 
 char *info[][MAXOSD] = {
 	{ "Image Version   :"	, "Image Version   :" },
@@ -48,6 +49,7 @@ char *info[][MAXOSD] = {
 	{ "Homepage        :"	, "Homepage        :" },
 	{ "Netzwerk Status :"	, "Network State   :" },
 	{ "DHCP Status     :"	, "DHCP State      :" },
+	{ "Root-Server     :"	, "Root-Server     :" },
 	{ "IP Adresse      :"	, "IP Address      :" },
 	{ "Netzmaske       :"	, "Subnet Mask     :" },
 	{ "Broadcast       :"	, "Broadcast       :" },
@@ -57,6 +59,10 @@ char *info[][MAXOSD] = {
 	{ "-- unbekannt --"		, "-- unknown --" },
 	{ "aktiviert"	, "enabled"		},
 	{ "deaktiviert"	, "disabled"	},
+	{ "intern"	, "intern"	},
+	{ "Linux Version"	, "Linux Version"	},
+	{ "gcc Version"	, "gcc Version"	},
+	{ "Erstellt mit dem Computer"	, "Built with the computer"	},
 	{ "Lade"		, "Loading"		}
 };
 
@@ -78,7 +84,7 @@ int main (int argc, char **argv)
 	}
 
 	unsigned int id = 1;
-	int opt = -1;
+	int opt = -2;
 	char buf[BUFFERSIZE] = "";
 	int release_type = -1;
 	int imageversion = 0;
@@ -90,13 +96,17 @@ int main (int argc, char **argv)
 	int hour = 99;
 	int minute = 99;
 	bool delay = false;
-	int delay_usec = -1;
 	int dhcp = 0;
 	int nic_on = 0;
+	char* imagetyp = "squashfs";
+	char linuxversion[24] = "";
+	char gccversion[24] = "";
+	char userpc[24];
 	char ladename[BUFFERSIZE] = "System";
 	char creator[BUFFERSIZE];
 	char imagename[BUFFERSIZE];
 	char homepage[BUFFERSIZE];
+	char root[BUFFERSIZE];	
 	char address[BUFFERSIZE];
 	char broadcast[BUFFERSIZE];
 	char netmask[BUFFERSIZE];
@@ -104,10 +114,10 @@ int main (int argc, char **argv)
 	char gateway[BUFFERSIZE];
 	char null[BUFFERSIZE] = "";
 	char versioninfo[20];
-	char cvs_revision[] = "$Revision: 1.6 $";
+	char cvs_revision[] = "$Revision: 1.7 $";
 	sscanf(cvs_revision, "%*s %s", versioninfo);
 
-	while ((opt = getopt(argc, argv, "hgd:n:")) != -1)
+	while ((opt = getopt(argc, argv, "hgdn:")) != -1)
 	{
 		switch (opt)
 		{
@@ -115,11 +125,11 @@ int main (int argc, char **argv)
 					if (argc < 3)
 					{
 						printf("cdkVcInfo - bootinfo on screen, v%s\n", versioninfo);
-						printf("Usage: cdkVcInfo [-d n] [-g] [-n name] [-h]\n");
+						printf("Usage: cdkVcInfo [-d] [-g] [-n name] [-h]\n");
 						printf("\nPossible options:\n");
 						printf("\t-h\t\tprint this usage information\n");
 						printf("\t-g\t\tprint bootinfo in german\n");
-						printf("\t-d n\t\tdelay in microseconds >500 (e.g. -d 2000)\n");
+						printf("\t-d\t\tdelay on\n");
 						printf("\t-n name\t\tspecial output (e.g. -n Neutrino)\n");
 						exit(0);
 					}
@@ -128,13 +138,7 @@ int main (int argc, char **argv)
 					id = 0;
 					break;
 			case 'd':
-					delay_usec = atoi(optarg);
-					if (delay_usec > 0)
-					{
-						if (delay_usec < DEFAULT_DELAY)
-							delay_usec = DEFAULT_DELAY;
 						delay = true;
-					}
 					break;
 			case 'n':
 					strcpy(ladename, optarg);
@@ -147,6 +151,7 @@ int main (int argc, char **argv)
 	strcpy(creator, info[UNKNOWN][id]);
 	strcpy(imagename, info[UNKNOWN][id]);
 	strcpy(homepage, info[UNKNOWN][id]);
+	strcpy(root, info[INTERN][id]);	
 	strcpy(address, info[UNKNOWN][id]);
 	strcpy(broadcast, info[UNKNOWN][id]);
 	strcpy(netmask, info[UNKNOWN][id]);
@@ -214,6 +219,28 @@ int main (int argc, char **argv)
 		fclose(fv5);
 	}
 
+  FILE* fv6 = fopen(MOUNTS_FILE, "r"); //Root-Server IP ermitteln, falls yadd
+  if (fv6) {
+    while (fgets(buf, BUFFERSIZE, fv1)!=NULL) {
+      sscanf(buf, "/dev/root / nfs rw,v2,rsize=4096,wsize=4096,hard,udp,nolock,addr= %s", (char *) &root);
+    }
+    fclose(fv6);
+  }
+  
+  FILE* fv7 = fopen(VERSION_FILE2, "r"); //Versionsdatei (/proc/version) auswerten
+  if (fv7) {
+    while (fgets(buf, BUFFERSIZE, fv2)!=NULL) {
+      sscanf(buf, "Linux version %s%s%s%s%s", (char *) &linuxversion, (char *) &userpc, (char *) &gccversion, (char *) &gccversion, (char *) &gccversion);
+    }
+    fclose(fv7);
+  }
+  
+  FILE* fv8 = fopen(VERSION_FILE, "a"); //Versionsdatei (/.version) beschreibbar, dann jffs2
+  if (fv8) {
+  fclose(fv8);
+  imagetyp = "jffs2";
+  }
+
 	char message2[BUFFERSIZE];
 	strcpy(message2, "");
 	if (delay)
@@ -229,16 +256,19 @@ int main (int argc, char **argv)
 		"\t\t    %s %02d.%02d.%d\n"					//Date
 		"\t\t    %s %d:%02d\n"						//Time
 		"\t\t    %s %s\n"							//Creator
-		"\t\t    %s %s\n"							//Image Name
+		"\t\t    %s %s-%s\n"						//Image Name
 		"\t\t    %s %s\n\n"							//Homepage
 		"\t\t    %s\n\n"
 		"\t\t    %s %s\n"							//Network state
-		"\t\t    %s %s\n\n"							//DHCP state
+		"\t\t    %s %s\n"						//DHCP state
+		"\t\t    %s %s\n"						//Root-Server		
 		"\t\t    %s %s\n"							//IP Adress
 		"\t\t    %s %s\n"							//Subnet
 		"\t\t    %s %s\n"							//Broadcast
 		"\t\t    %s %s\n"							//Gateway
-		"\t\t    %s %s\n\n\n"						//Nameserver
+		"\t\t    %s %s\n\n"						//Nameserver
+		"\t\t    %s (%s, %s %s\n "					//Linux Version, gcc Version
+		"\t\t    %s %s\n\n"						//User, PC			
 		"\t\t\t\t%s",
 		info[VERSION][id], imageversion, imagesubver, imagesubver2, 
 		info[TYPE][id], release_type == 0 ? "Release" 
@@ -248,16 +278,20 @@ int main (int argc, char **argv)
 		info[DATE][id], day, month, year,
 		info[TIME][id], hour, minute,
 		info[CREATOR][id], creator,
-		info[NAME][id], imagename,
+		info[NAME][id], imagename, imagetyp,
 		info[WWW][id], homepage,
 		info[HEADLINE][id],
 		info[NETW][id], nic_on == 0 ? info[DISABLED][id] : nic_on == 1 ? info[ENABLED][id] : info[UNKNOWN][id],
 		info[DHCP][id], dhcp == 1 ? info[DISABLED][id] : dhcp == 2 ? info[ENABLED][id] : info[UNKNOWN][id],
+		info[ROOT][id], root,
 		info[IP][id], address,
 		info[NETM][id], netmask,
 		info[BROAD][id], broadcast,
 		info[GATEWAY][id], gateway,
 		info[DNS][id], nameserver,
+		info[LINUX][id], linuxversion,
+		info[GCC][id], gccversion,
+		info[UPC][id], userpc,
 		message2);
 
 	FILE *fb = fopen(CONSOLE, "w");
@@ -271,7 +305,6 @@ int main (int argc, char **argv)
 		for (unsigned int i = 0; i < strlen(message); i++) {
 			fputc(message[i], fb);
 			fflush(fb);
-			usleep(delay_usec);
 		}
 	}
 	else
