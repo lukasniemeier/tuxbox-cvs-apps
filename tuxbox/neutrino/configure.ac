@@ -110,6 +110,16 @@ AC_ARG_ENABLE(drive-gui,
 	,[enable_drive_gui=no])
 AM_CONDITIONAL(ENABLE_DRIVE_GUI,test "$enable_drive_gui" = "yes")
 
+AC_ARG_ENABLE(ide,
+	AS_HELP_STRING(--enable-ide, enable neutrino ide support),
+	,[enable_ide=no])
+AM_CONDITIONAL(ENABLE_IDE,test "$enable_ide" = "yes")
+
+AC_ARG_ENABLE(sambaserver,
+	AS_HELP_STRING(--enable-sambaserver,include sambaserver support),
+	,[enable_sambaserver=no])
+AM_CONDITIONAL(ENABLE_SAMBASERVER,test "$enable_sambaserver" = "yes")
+
 AC_ARG_ENABLE(rtc,
 	AS_HELP_STRING(--disable-rtc, disable rtc support),
 	,[enable_rtc=yes])
@@ -178,6 +188,14 @@ fi
 
 if test "$enable_drive_gui" = "yes"; then
 AC_DEFINE(ENABLE_DRIVE_GUI,1,[enable neutrino drive-setup])
+fi
+
+if test "$enable_ide" = "yes"; then
+AC_DEFINE(ENABLE_IDE,1,[enable ide support])
+fi
+
+if test "$enable_sambaserver" = "yes"; then
+AC_DEFINE(ENABLE_SAMBASERVER,1,[enable sambaserver support])
 fi
 
 if test "$enable_rtc" = "yes"; then
