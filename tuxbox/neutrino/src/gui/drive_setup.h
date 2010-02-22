@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.18 2010/02/08 12:49:09 dbt Exp $
+	$Id: drive_setup.h,v 1.19 2010/02/22 11:17:29 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -207,18 +207,22 @@ class CDriveSetup : public CMenuTarget
 		std::string unmount_partition[MAXCOUNT_PARTS]; //action key strings for unmount_partition_$
 		std::string delete_partition[MAXCOUNT_PARTS]; //action key strings for delete_partition_$
 		std::string check_partition[MAXCOUNT_PARTS]; //action key strings for check_partition_$
+		std::string format_partition[MAXCOUNT_PARTS]; //action key strings for format_partition_$
 		std::string sel_device_num_actionkey[MAXCOUNT_DRIVE]; //"sel_device_0 ... sel_device_n""
 		std::string s_init_mmc_cmd; // system load command for mmc modul
 		std::string mmc_modules[MAXCOUNT_MMC_MODULES]; //all supported mmc modules
+		std::string moduldir[4]; //possible dirs of modules
+		std::string k_name; //kernel name
 
 		//error messages
-		#define ERROR_DESCRIPTIONS_NUM_COUNT 22 
+		#define ERROR_DESCRIPTIONS_NUM_COUNT 24 
 		enum ERROR_DESCRIPTIONS_NUM	
 		{
 			ERR_CHKFS,
 			ERR_FORMAT_PARTITION,
 			ERR_HDPARM,
 			ERR_INIT_FSDRIVERS,
+			ERR_INIT_IDEDRIVERS,
 			ERR_INIT_MMCDRIVER,
 			ERR_INIT_MODUL,
 			ERR_MK_PARTITION,
@@ -231,6 +235,7 @@ class CDriveSetup : public CMenuTarget
 			ERR_MOUNT_DEVICE,
 			ERR_SAVE_DRIVE_SETUP,
 			ERR_UNLOAD_FSDRIVERS,
+			ERR_UNLOAD_IDEDRIVERS,
 			ERR_UNLOAD_MMC_DRIVERS,
 			ERR_UNLOAD_MODUL,
 			ERR_UNMOUNT_ALL,
@@ -332,6 +337,7 @@ class CDriveSetup : public CMenuTarget
 		void loadPartlist(const int& device_num = -1);
 		void loadFdiskData();
 		void loadDriveTemps();
+		void loadModulDirs();
 						
 		void showHddSetupMain();
 		void showHddSetupSub();
@@ -379,7 +385,7 @@ class CDriveSetup : public CMenuTarget
 
 		//helper
 		std::string iToString(int int_val);
-
+		int getPid(std::string& proc_name);
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 
