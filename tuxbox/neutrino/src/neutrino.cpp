@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1014 2010/02/17 11:45:31 seife Exp $
+	$Id: neutrino.cpp,v 1.1015 2010/02/22 10:55:50 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -511,6 +511,9 @@ int CNeutrinoApp::loadSetup()
 		strcpy( g_settings.network_nfs_mac[i], configfile.getString( cfg_key, "11:22:33:44:55:66").c_str() );
 	}
 	g_settings.filesystem_is_utf8              = configfile.getBool("filesystem_is_utf8"                 , true );
+#ifdef ENABLE_SAMBASERVER
+	g_settings.network_samba = configfile.getInt32("network_samba", 0); // OFF
+#endif
 
 	// Personalization
 	g_settings.personalize_pinstatus = configfile.getInt32("personalize_pinstatus", CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED);
@@ -1066,6 +1069,9 @@ void CNeutrinoApp::saveSetup()
 		configfile.setString( cfg_key, g_settings.network_nfs_mac[i]);
 	}
 	configfile.setBool  ( "filesystem_is_utf8" , g_settings.filesystem_is_utf8);
+#ifdef ENABLE_SAMBASERVER
+	configfile.setInt32( "network_samba", g_settings.network_samba );
+#endif
 
 	// Personalization
 	configfile.setInt32 ( "personalize_pinstatus", g_settings.personalize_pinstatus );

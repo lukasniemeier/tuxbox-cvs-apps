@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.5 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.6 2010/02/22 10:55:50 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -35,7 +35,15 @@
 
 #include "gui/network_setup.h"
 
+#ifndef DISABLE_INTERNET_UPDATE
+#ifndef HAVE_DREAMBOX_HARDWARE
+#include "gui/proxyserver_setup.h"
+#endif /*HAVE_DREAMBOX_HARDWARE*/
+#endif /*DISABLE_INTERNET_UPDATE*/
+
+#ifdef ENABLE_GUI_MOUNT
 #include "gui/nfs.h"
+#endif /*ENABLE_GUI_MOUNT*/
 
 #include <global.h>
 #include <neutrino.h>
@@ -50,7 +58,6 @@
 #include <system/debug.h>
 
 
-
 CNetworkSetup::CNetworkSetup()
 {
 	frameBuffer = CFrameBuffer::getInstance();
@@ -60,8 +67,8 @@ CNetworkSetup::CNetworkSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x	= getScreenStartX (width);
+	y	= getScreenStartY (height);
 
 	network_automatic_start = networkConfig->automatic_start;
 	network_dhcp 		= networkConfig->inet_static ? NETWORK_DHCP_OFF : NETWORK_DHCP_ON;
@@ -206,14 +213,15 @@ void CNetworkSetup::showNetworkSetup()
 		networkSettings->addItem(GenericMenuSeparatorLine);
 		networkSettings->addItem( m4);
 		networkSettings->addItem( m5);
-	
+		networkSettings->addItem(GenericMenuSeparatorLine);
+		
 		//ntp
 		//prepare ntp input
 		CSectionsdConfigNotifier* sectionsdConfigNotifier = new CSectionsdConfigNotifier;
 		CStringInputSMS * networkSettings_NtpServer = new CStringInputSMS(LOCALE_NETWORKMENU_NTPSERVER, &g_settings.network_ntpserver, 30, LOCALE_NETWORKMENU_NTPSERVER_HINT1, LOCALE_NETWORKMENU_NTPSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-. ", sectionsdConfigNotifier);
 	
 		CStringInput * networkSettings_NtpRefresh = new CStringInput(LOCALE_NETWORKMENU_NTPREFRESH, &g_settings.network_ntprefresh, 3,LOCALE_NETWORKMENU_NTPREFRESH_HINT1, LOCALE_NETWORKMENU_NTPREFRESH_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-		networkSettings->addItem(GenericMenuSeparatorLine);
+
 		CMenuWidget* ntp = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_NTPTITLE, true, NULL, ntp, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 		ntp->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_NETWORKMENU_NTPTITLE));
@@ -228,6 +236,7 @@ void CNetworkSetup::showNetworkSetup()
 		ntp->addItem( ntp2);
 		ntp->addItem( ntp3);
 	
+
 	#ifdef ENABLE_GUI_MOUNT
 		CMenuWidget* networkmounts = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, networkmounts, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
@@ -238,6 +247,19 @@ void CNetworkSetup::showNetworkSetup()
 		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, new CNFSMountGui(), NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_UMOUNT, true, NULL, new CNFSUmountGui(), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 	#endif
+
+	#ifndef DISABLE_INTERNET_UPDATE
+	#ifndef HAVE_DREAMBOX_HARDWARE
+		//proxyserver
+		networkSettings->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, new CProxySetup(LOCALE_MAINSETTINGS_NETWORK), NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0));
+ 	#endif 
+	#endif
+
+	#ifdef ENABLE_SAMBASERVER
+		//sambaserver
+  		networkSettings->addItem(new CMenuOptionChooser(LOCALE_NETWORKMENU_SAMBA, &g_settings.network_samba, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CTouchFileNotifier("/var/etc/.sambaserver"), CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
+	#endif
+
 		networkSettings->exec(NULL, "");
 		networkSettings->hide();
 		delete networkSettings;
