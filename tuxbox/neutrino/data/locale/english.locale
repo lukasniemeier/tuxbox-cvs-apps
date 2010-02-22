@@ -328,6 +328,7 @@ drive_setup.msg_error_save_cannot_make_exports Error while creating exports!
 drive_setup.msg_error_save_cannot_make_fstab Error while creating fstab!
 drive_setup.msg_error_save_cannot_mount_device Can't mount:
 drive_setup.msg_error_save_cannot_mount_partition Can't mount partition!\nFilesystem correct?
+drive_setup.msg_error_save_cannot_mount_swap Can't mount swap!\nFilesystem correct?
 drive_setup.msg_error_save_cannot_unmount_device can't unmount!
 drive_setup.msg_error_save_cannot_unmount_partition Can't unmount partition!
 drive_setup.msg_error_save_cannot_unmount_swap Can't unmount swap-partition!
@@ -339,14 +340,16 @@ drive_setup.msg_partition_check_ok Check was successfully!
 drive_setup.msg_partition_create All data will be lost! Partition now create and format!
 drive_setup.msg_partition_create_failed Error while creating partition! 
 drive_setup.msg_partition_create_failed_no_fs_definied No filesystem definied!
+drive_setup.msg_partition_create_fs Now create %s on that partition?\nAll data will be lost!
 drive_setup.msg_partition_create_success Partition was successfully created!
 drive_setup.msg_partition_delete All data of this partition will be lost!\nDelete partition!
 drive_setup.msg_partition_delete_failed Error while deleting partition!
 drive_setup.msg_partition_delete_ok Partition deleted.
+drive_setup.msg_partition_format_ok Filesystem successfully created!
 drive_setup.msg_partition_mount_warning The mount directory %s\ncontains a %s-filesystem. Your flash image can be\npermanently damaged after mount errors and\nfollowing data traffic!\nDo you really want to mount now?
 drive_setup.msg_partition_not_mounted_please_activate Partition was created, but is not mounted yet.\nPlease enable before!
-drive_setup.msg_reset_now Now reset?
 drive_setup.msg_reboot_requiered This action is expected after a reboot of your\nreceiver effectively.\nNow reboot?
+drive_setup.msg_reset_now Now reset?
 drive_setup.msg_saved Settings sucessfully applied!
 drive_setup.msg_saved_disabled Interface disabled
 drive_setup.partition_activate Partition enable
@@ -357,6 +360,7 @@ drive_setup.partition_create Partition create and format
 drive_setup.partition_current_cylinders Start/End-Cylinder
 drive_setup.partition_current_size Current size of partition
 drive_setup.partition_delete delete!
+drive_setup.partition_format Formatieren
 drive_setup.partition_free_size Still available disk space 
 drive_setup.partition_fs Filesystem
 drive_setup.partition_info Informations
@@ -992,6 +996,7 @@ networkmenu.ntpserver_hint1 NTP-Server example: ntp1.ptb.de
 networkmenu.ntpserver_hint2 need reboot or epg-reset
 networkmenu.ntptitle Time-Syncronisation
 networkmenu.reset_settings_now Do you want restore the previous settings?
+networkmenu.samba Start sambaserver
 networkmenu.setupnow Start/Restart Network Now
 networkmenu.setuponstartup Start Network on Boot
 networkmenu.setupsaved Changes were already saved, but not yet applied\n.This will take effect only after reboot!

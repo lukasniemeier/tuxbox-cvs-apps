@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.168 2010/02/17 10:13:41 seife Exp $
+ * $Id: locals_intern.h,v 1.169 2010/02/22 11:07:28 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -355,6 +355,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_error_save_cannot_make_fstab",
 	"drive_setup.msg_error_save_cannot_mount_device",
 	"drive_setup.msg_error_save_cannot_mount_partition",
+	"drive_setup.msg_error_save_cannot_mount_swap",
 	"drive_setup.msg_error_save_cannot_unmount_device",
 	"drive_setup.msg_error_save_cannot_unmount_partition",
 	"drive_setup.msg_error_save_cannot_unmount_swap",
@@ -366,10 +367,12 @@ const char * locale_real_names[] =
 	"drive_setup.msg_partition_create",
 	"drive_setup.msg_partition_create_failed",
 	"drive_setup.msg_partition_create_failed_no_fs_definied",
+	"drive_setup.msg_partition_create_fs",
 	"drive_setup.msg_partition_create_success",
 	"drive_setup.msg_partition_delete",
 	"drive_setup.msg_partition_delete_failed",
 	"drive_setup.msg_partition_delete_ok",
+	"drive_setup.msg_partition_format_ok",
 	"drive_setup.msg_partition_mount_warning",
 	"drive_setup.msg_partition_not_mounted_please_activate",
 	"drive_setup.msg_reboot_requiered",
@@ -384,6 +387,7 @@ const char * locale_real_names[] =
 	"drive_setup.partition_current_cylinders",
 	"drive_setup.partition_current_size",
 	"drive_setup.partition_delete",
+	"drive_setup.partition_format",
 	"drive_setup.partition_free_size",
 	"drive_setup.partition_fs",
 	"drive_setup.partition_info",
@@ -1019,6 +1023,7 @@ const char * locale_real_names[] =
 	"networkmenu.ntpserver_hint2",
 	"networkmenu.ntptitle",
 	"networkmenu.reset_settings_now",
+	"networkmenu.samba",
 	"networkmenu.setupnow",
 	"networkmenu.setuponstartup",
 	"networkmenu.setupsaved",

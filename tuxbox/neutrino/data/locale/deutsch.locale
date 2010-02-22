@@ -328,6 +328,7 @@ drive_setup.msg_error_save_cannot_make_exports Fehler beim Erstellen von exports
 drive_setup.msg_error_save_cannot_make_fstab Fehler beim Erstellen von fstab!
 drive_setup.msg_error_save_cannot_mount_device Einhängen nicht möglich für:
 drive_setup.msg_error_save_cannot_mount_partition Kann Partition nicht einhängen!\nKorrektes Dateisystem angegeben?
+drive_setup.msg_error_save_cannot_mount_swap Kann Swap nicht einhängen!\nKorrektes Dateisystem angegeben?
 drive_setup.msg_error_save_cannot_unmount_device Kann nicht ausgehangen werden!
 drive_setup.msg_error_save_cannot_unmount_partition Partition kann nicht ausgehangen werden!
 drive_setup.msg_error_save_cannot_unmount_swap Swap-Partition kann nicht ausgehangen werden!
@@ -339,10 +340,12 @@ drive_setup.msg_partition_check_ok Die Prüfung wurde erfolgreich durchgeführt.
 drive_setup.msg_partition_create Alle Daten gehen verloren!\nPartition jetzt anlegen und formatieren!
 drive_setup.msg_partition_create_failed Beim Einrichten der Partition sind Fehler aufgetreten! 
 drive_setup.msg_partition_create_failed_no_fs_definied Kein Dateisystem festgelegt!
+drive_setup.msg_partition_create_fs Soll jetzt auf dieser Partition %s erstellt werden?\nAlle daten gehen verloren!
 drive_setup.msg_partition_create_success Partition wurde erfolgreich erzeugt!
 drive_setup.msg_partition_delete Alle Daten dieser Partition gehen verloren!\nPartition jetzt löschen!
 drive_setup.msg_partition_delete_failed Löschen der Partition fehlgeschlagen!
 drive_setup.msg_partition_delete_ok Partition wurde erfolgreich gelöscht.
+drive_setup.msg_partition_format_ok Dateisystem wurde erfolgreich erzeugt!
 drive_setup.msg_partition_mount_warning Das festgelegte Einhängeverzeichnis\n%s\nbefindet sich in einem %s-Bereich. Dies kann nach\nMountfehlern und nachfolgenden Datenverkehr das\nFlash-Image dauerhaft beschädigen!\nTrotzdem jetzt einhängen?
 drive_setup.msg_partition_not_mounted_please_activate Partition wurde angelegt, aber nicht eingehangen.\nPartition muss dafür vorher aktiviert werden!
 drive_setup.msg_reboot_requiered Diese Aktion wird erst nach einem Neustart Ihres\nReceivers wirksam.\nJetzt neu booten?
@@ -357,6 +360,7 @@ drive_setup.partition_create Partition anlegen und formatieren
 drive_setup.partition_current_cylinders Start/End-Zylinder
 drive_setup.partition_current_size Aktuelle Partitionsgröße
 drive_setup.partition_delete Löschen
+drive_setup.partition_format Formatieren
 drive_setup.partition_free_size Noch partitionierbarer Speicherplatz
 drive_setup.partition_fs Dateisystem
 drive_setup.partition_info Partitions-Daten
@@ -992,6 +996,7 @@ networkmenu.ntpserver_hint1 NTP-Server z.b: ntp1.ptb.de
 networkmenu.ntpserver_hint2 Neustart / EPG-Reset erforderlich
 networkmenu.ntptitle Zeitsynchronisation
 networkmenu.reset_settings_now Sollen die vorherigen Einstellungen \nwieder hergestellt werden?
+networkmenu.samba Sambaserver starten
 networkmenu.setupnow Netzwerkeinstellungen jetzt zuweisen
 networkmenu.setuponstartup Beim Starten Netzwerk setzen
 networkmenu.setupsaved Änderungen wurden gespeichert, aber noch \nnicht zugewiesen. Diese werden erst \nnach einem Neustart wirksam!
