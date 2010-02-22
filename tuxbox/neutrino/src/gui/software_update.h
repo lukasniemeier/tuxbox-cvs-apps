@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.h,v 1.3 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: software_update.h,v 1.4 2010/02/22 10:54:11 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -47,7 +47,7 @@ class CSoftwareUpdate : public CMenuTarget
 		void showSoftwareUpdate();
 		void showSoftwareUpdateExpert();
 		void showSoftwareUpdateImageinfo(CMenuWidget * entry);
-		void showSoftwareUpdateProxySetup(CMenuWidget * entry);
+// 		void showSoftwareUpdateProxySetup(CMenuWidget * entry);
 	
 	public:	
 		CSoftwareUpdate();

@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: software_update.cpp,v 1.3 2010/02/22 10:54:11 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,6 +41,7 @@
 
 #include "gui/update.h"
 #include "gui/imageinfo.h"
+#include "gui/proxyserver_setup.h"
 
 #include "gui/widget/stringinput.h"
 #include <gui/widget/icons.h>
@@ -59,8 +60,8 @@ CSoftwareUpdate::CSoftwareUpdate()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x	= getScreenStartX (width);
+	y	= getScreenStartY (height);
 }
 
 CSoftwareUpdate::~CSoftwareUpdate()
@@ -123,12 +124,14 @@ void CSoftwareUpdate::showSoftwareUpdate()
 
 #ifndef DISABLE_INTERNET_UPDATE
 #ifndef HAVE_DREAMBOX_HARDWARE
-	showSoftwareUpdateProxySetup(softUpdate);
+	//showSoftwareUpdateProxySetup(softUpdate);
+	softUpdate->addItem(GenericMenuSeparatorLine);
+	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, new CProxySetup(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 #endif
 #endif
 	// update check
 	softUpdate->addItem(GenericMenuSeparatorLine);
-	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, new CFlashUpdate(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, new CFlashUpdate(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 
 	softUpdate->exec (NULL, "");
 	softUpdate->hide ();
@@ -190,22 +193,22 @@ void CSoftwareUpdate::showSoftwareUpdateImageinfo(CMenuWidget * entry)
 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CURRENTVERSIONSNAPSHOT, false, versionInfo.getType()));
 }
 
-#ifndef DISABLE_INTERNET_UPDATE
-#ifndef HAVE_DREAMBOX_HARDWARE
-void CSoftwareUpdate::showSoftwareUpdateProxySetup(CMenuWidget * entry)
-/* shows entries for proxy settings */
-{
-
-	entry->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_PROXYSERVER_SEP));
-
-	CStringInputSMS * softUpdate_proxy = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYSERVER, g_settings.softupdate_proxyserver, 23, LOCALE_FLASHUPDATE_PROXYSERVER_HINT1, LOCALE_FLASHUPDATE_PROXYSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-.: ");
-	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER, true, g_settings.softupdate_proxyserver, softUpdate_proxy));
-
-	CStringInputSMS * softUpdate_proxyuser = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYUSERNAME, g_settings.softupdate_proxyusername, 23, LOCALE_FLASHUPDATE_PROXYUSERNAME_HINT1, LOCALE_FLASHUPDATE_PROXYUSERNAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
-	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYUSERNAME, true, g_settings.softupdate_proxyusername, softUpdate_proxyuser));
-
-	CStringInputSMS * softUpdate_proxypass = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYPASSWORD, g_settings.softupdate_proxypassword, 20, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT1, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
-	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYPASSWORD, true, g_settings.softupdate_proxypassword, softUpdate_proxypass));
-}
-#endif /*HAVE_DREAMBOX_HARDWARE*/
-#endif /*DISABLE_INTERNET_UPDATE*/
+// #ifndef DISABLE_INTERNET_UPDATE
+// #ifndef HAVE_DREAMBOX_HARDWARE
+// void CSoftwareUpdate::showSoftwareUpdateProxySetup(CMenuWidget * entry)
+// /* shows entries for proxy settings */
+// {
+// 
+// 	entry->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_PROXYSERVER_SEP));
+// 
+// 	CStringInputSMS * softUpdate_proxy = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYSERVER, g_settings.softupdate_proxyserver, 23, LOCALE_FLASHUPDATE_PROXYSERVER_HINT1, LOCALE_FLASHUPDATE_PROXYSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-.: ");
+// 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER, true, g_settings.softupdate_proxyserver, softUpdate_proxy));
+// 
+// 	CStringInputSMS * softUpdate_proxyuser = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYUSERNAME, g_settings.softupdate_proxyusername, 23, LOCALE_FLASHUPDATE_PROXYUSERNAME_HINT1, LOCALE_FLASHUPDATE_PROXYUSERNAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
+// 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYUSERNAME, true, g_settings.softupdate_proxyusername, softUpdate_proxyuser));
+// 
+// 	CStringInputSMS * softUpdate_proxypass = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYPASSWORD, g_settings.softupdate_proxypassword, 20, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT1, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
+// 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYPASSWORD, true, g_settings.softupdate_proxypassword, softUpdate_proxypass));
+// }
+// #endif /*HAVE_DREAMBOX_HARDWARE*/
+// #endif /*DISABLE_INTERNET_UPDATE*/
