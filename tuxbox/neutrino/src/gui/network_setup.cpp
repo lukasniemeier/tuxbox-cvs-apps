@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.6 2010/02/22 10:55:50 dbt Exp $
+	$Id: network_setup.cpp,v 1.7 2010/02/23 10:46:01 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -255,10 +255,10 @@ void CNetworkSetup::showNetworkSetup()
  	#endif 
 	#endif
 
-	#ifdef ENABLE_SAMBASERVER
-		//sambaserver
-  		networkSettings->addItem(new CMenuOptionChooser(LOCALE_NETWORKMENU_SAMBA, &g_settings.network_samba, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CTouchFileNotifier("/var/etc/.sambaserver"), CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
-	#endif
+// 	#ifdef ENABLE_SAMBASERVER
+// 		//sambaserver
+//   		networkSettings->addItem(new CMenuOptionChooser(LOCALE_NETWORKMENU_SAMBA, &g_settings.network_samba, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CTouchFileNotifier("/var/etc/.sambaserver"), CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
+// 	#endif
 
 		networkSettings->exec(NULL, "");
 		networkSettings->hide();
