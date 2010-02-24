@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.169 2010/02/22 11:07:28 dbt Exp $
+ * $Id: locals_intern.h,v 1.170 2010/02/24 09:45:49 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -358,6 +358,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_error_save_cannot_mount_swap",
 	"drive_setup.msg_error_save_cannot_unmount_device",
 	"drive_setup.msg_error_save_cannot_unmount_partition",
+	"drive_setup.msg_error_save_cannot_unmount_partition_busy",
 	"drive_setup.msg_error_save_cannot_unmount_swap",
 	"drive_setup.msg_error_save_configfile_failed",
 	"drive_setup.msg_error_save_failed",

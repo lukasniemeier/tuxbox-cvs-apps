@@ -331,6 +331,7 @@ drive_setup.msg_error_save_cannot_mount_partition Can't mount partition!\nFilesy
 drive_setup.msg_error_save_cannot_mount_swap Can't mount swap!\nFilesystem correct?
 drive_setup.msg_error_save_cannot_unmount_device can't unmount!
 drive_setup.msg_error_save_cannot_unmount_partition Can't unmount partition!
+drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition: Can't unmount!\nPlease check possible client-connections!
 drive_setup.msg_error_save_cannot_unmount_swap Can't unmount swap-partition!
 drive_setup.msg_error_save_configfile_failed Can't save settings!
 drive_setup.msg_error_save_failed Error while saving settings!

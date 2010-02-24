@@ -331,6 +331,7 @@ drive_setup.msg_error_save_cannot_mount_partition Kann Partition nicht einhänge
 drive_setup.msg_error_save_cannot_mount_swap Kann Swap nicht einhängen!\nKorrektes Dateisystem angegeben?
 drive_setup.msg_error_save_cannot_unmount_device Kann nicht ausgehangen werden!
 drive_setup.msg_error_save_cannot_unmount_partition Partition kann nicht ausgehangen werden!
+drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition kann nicht ausgehangen werden!\nEs besteht möglicherweise eine Client-Verbindung!
 drive_setup.msg_error_save_cannot_unmount_swap Swap-Partition kann nicht ausgehangen werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
