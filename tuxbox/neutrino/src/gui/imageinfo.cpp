@@ -1,5 +1,5 @@
 /*
-	$Id: imageinfo.cpp,v 1.35 2009/12/15 09:51:23 dbt Exp $
+	$Id: imageinfo.cpp,v 1.36 2010/02/26 17:59:55 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -181,7 +181,7 @@ void CImageInfo::hide()
 
 void CImageInfo::clearContentBox()
 {
-	frameBuffer->paintBoxRel(xpos, iheight*10+6, width-10, endY-(iheight*10+6)-32, COL_MENUCONTENT_PLUS_0 );
+	frameBuffer->paintBoxRel(startX, y+pigh, width, startY+height-ssheight-(y+pigh), COL_MENUCONTENT_PLUS_0);
 }
 
 void CImageInfo::paint_pig(int xPig, int yPig, int w, int h)
@@ -318,7 +318,7 @@ void CImageInfo::paintRevisionInfos(int y_startposition)
 	
 	y_startposition += iheight;
 	paintContent(font_info, xpos, y_startposition, "Imageinfo:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, getModulVersion("","$Revision: 1.35 $").c_str());
+	paintContent(font_info, xpos+x_offset_large, y_startposition, getModulVersion("","$Revision: 1.36 $").c_str());
 	
 #ifdef ENABLE_MOVIEBROWSER
 	y_startposition += iheight;
@@ -628,16 +628,16 @@ void CImageInfo::paint()
 
 /* 	usefull stuff for version informations * getModulVersion()
  * 	returns a numeric version string for better version handling from any module without 	
- * 	special characters like "$" or the complete string "Revision" ->> eg: "$Revision: 1.35 $" becomes "1.xx", 
+ * 	special characters like "$" or the complete string "Revision" ->> eg: "$Revision: 1.36 $" becomes "1.xx", 
  * 	argument prefix can be empty or a replacement for "Revision"-string eg. "Version: " or "v." as required,
  * 	argument ID_string must be a CVS-keyword like "$ Revision $", used and changed by 
  * 	cvs-committs or a version data string eg: "1.xxx" by yourself
  * 	Note for imagemakers: Keywords will working only with CVS without local -kx options,
  *	if you are using an other CMS like Git or so..., you must change these entries manually
  * 	some examples:
- * 	getModulVersion("Version: ","$Revision: 1.35 $")	 returns "Version: 1.x"	
- * 	getModulVersion("v.","$Revision: 1.35 $")			 returns "v.1.x"
- *  	getModulVersion("","$Revision: 1.35 $")		 		 returns "1.x"
+ * 	getModulVersion("Version: ","$Revision: 1.36 $")	 returns "Version: 1.x"	
+ * 	getModulVersion("v.","$Revision: 1.36 $")			 returns "v.1.x"
+ *  	getModulVersion("","$Revision: 1.36 $")		 		 returns "1.x"
  */
 std::string CImageInfo::getModulVersion(const std::string &prefix_string, std::string ID_string)
 {
