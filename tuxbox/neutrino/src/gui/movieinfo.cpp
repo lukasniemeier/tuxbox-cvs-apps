@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.20 2009/10/01 20:02:17 seife Exp $
+	$Id: movieinfo.cpp,v 1.21 2010/02/27 20:54:48 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -527,6 +527,7 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
 	     	print_buffer += movie_info.audioPids[i].epgAudioPidName; 
 	     	print_buffer += ", ";
 	    }
+		print_buffer.erase(print_buffer.size()-2);
      }
      
     print_buffer += "\n\n"; 
