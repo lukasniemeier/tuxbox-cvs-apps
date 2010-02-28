@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.84 2009/10/22 20:07:48 seife Exp $
+	$Id: lcdd.cpp,v 1.86 2010/02/28 08:48:40 rhabarber1848 Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -394,7 +394,7 @@ static std::string splitString(const std::string & text, const int maxwidth, Lcd
 /* display "big" and "small" text.
    TODO: right now, "big" is hardcoded as utf-8, small is not (for EPG)
  */
-void CLCD::showTextScreen(const std::string & big, const std::string & small, const int showmode, const bool perform_wakeup, const bool centered)
+void CLCD::showTextScreen(const std::string & big, const std::string & small, const int showmode, const bool perform_wakeup)
 {
 	/* the "showmode" variable is a bit map:
 		0x01	show "big" string
@@ -470,7 +470,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	int x = 1;
 	for (int i = 0; i < namelines; i++) {
 		y += 14;
-		if (centered)
+		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN] == 1)  // centered
 		{
 			int w = fonts.channelname->getRenderWidth(cname[i].c_str(), big_utf8);
 			x = (LCD_COLS - w) / 2;
@@ -487,7 +487,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	{
 		for (int i = 0; i < eventlines; i++) {
 			y += 10;
-			if (centered)
+			if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN] == 1)  // centered
 			{
 				int w = fonts.menu->getRenderWidth(event[i].c_str(), small_utf8);
 				x = (LCD_COLS - w) / 2;
@@ -519,7 +519,7 @@ void CLCD::showServicename(const std::string name, const bool perform_wakeup)
 	if (mode != MODE_TVRADIO)
 		return;
 
-	showTextScreen(servicename, epg_title, showmode, perform_wakeup, true);
+	showTextScreen(servicename, epg_title, showmode, perform_wakeup);
 	return;
 }
 
@@ -534,7 +534,7 @@ void CLCD::setEPGTitle(const std::string title)
 	showServicename("", false);
 }
 
-void CLCD::setMovieInfo(const AUDIOMODES playmode, const std::string big, const std::string small, const bool centered)
+void CLCD::setMovieInfo(const AUDIOMODES playmode, const std::string big, const std::string small)
 {
 	int showmode = g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE];
 	showmode |= 3; // take only the separator line from the config
@@ -542,13 +542,12 @@ void CLCD::setMovieInfo(const AUDIOMODES playmode, const std::string big, const 
 	movie_playmode = playmode;
 	movie_big = big;
 	movie_small = small;
-	movie_centered = centered;
 
 	if (mode != MODE_MOVIE)
 		return;
 
 	showAudioPlayMode(movie_playmode);
-	showTextScreen(movie_big, movie_small, showmode, true, movie_centered);
+	showTextScreen(movie_big, movie_small, showmode, true);
 }
 
 void CLCD::setMovieAudio(const bool is_ac3)
@@ -692,7 +691,7 @@ void CLCD::showPercentOver(const unsigned char perc, const bool perform_update, 
 
 				const char * icon;
 				if (is_ac3)
-					icon = DATADIR "/lcdd/icons/dd.raw";
+					icon = DATADIR "/lcdd/icons/" NEUTRINO_ICON_DD;
 				else
 					icon = DATADIR "/lcdd/icons/stereo.raw";
 
@@ -873,7 +872,7 @@ void CLCD::setMode(const MODES m, const char * const title)
 			showServicename(servicename);
 		else
 		{
-			setMovieInfo(movie_playmode, movie_big, movie_small, movie_centered);
+			setMovieInfo(movie_playmode, movie_big, movie_small);
 			setMovieAudio(movie_is_ac3);
 		}
 		showclock = true;

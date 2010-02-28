@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.170 2010/02/24 09:45:49 dbt Exp $
+ * $Id: locals_intern.h,v 1.171 2010/02/28 08:48:55 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -689,6 +689,9 @@ const char * locale_real_names[] =
 	"lcdmenu.epg.nameshort.sepline.title",
 	"lcdmenu.epg.nameshort.title",
 	"lcdmenu.epg.title",
+	"lcdmenu.epgalign",
+	"lcdmenu.epgalign_center",
+	"lcdmenu.epgalign_left",
 	"lcdmenu.head",
 	"lcdmenu.inverse",
 	"lcdmenu.lcdcontroler",

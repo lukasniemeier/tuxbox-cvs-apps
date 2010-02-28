@@ -662,6 +662,9 @@ lcdmenu.epg.name.title Kanal / Sendung
 lcdmenu.epg.nameshort.sepline.title Kanal (kurz) / Trennl. / Sendung
 lcdmenu.epg.nameshort.title Kanal (kurz) / Sendung
 lcdmenu.epg.title Sendung
+lcdmenu.epgalign Ausrichtung der EPG-Anzeige
+lcdmenu.epgalign_center mittig
+lcdmenu.epgalign_left links
 lcdmenu.head LCD Einstellungen
 lcdmenu.inverse Invertieren
 lcdmenu.lcdcontroler Kontrast / Helligkeit

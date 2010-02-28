@@ -2432,7 +2432,7 @@ void updateLcd(const std::string &s)
 		break;
 	}
 	StrSearchReplace(lcd,"_", " ");
-	CLCD::getInstance()->setMovieInfo(playmode, "", lcd, false);
+	CLCD::getInstance()->setMovieInfo(playmode, "", lcd);
 }
 
 //== seek to pos with sync to next proper TS packet ==
@@ -3454,7 +3454,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("Movieplayer2 ","$Revision: 1.67 $");
+	return imageinfo.getModulVersion("Movieplayer2 ","$Revision: 1.68 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()

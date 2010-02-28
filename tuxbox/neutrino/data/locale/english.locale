@@ -662,6 +662,9 @@ lcdmenu.epg.name.title Channel / Title
 lcdmenu.epg.nameshort.sepline.title Channel (short) / Sep.-Line / Title
 lcdmenu.epg.nameshort.title Channel (short) / Title
 lcdmenu.epg.title Title
+lcdmenu.epgalign LCD EPG Align
+lcdmenu.epgalign_center center
+lcdmenu.epgalign_left left
 lcdmenu.head LCD Settings
 lcdmenu.inverse Invert
 lcdmenu.lcdcontroler Contrast / Brightness

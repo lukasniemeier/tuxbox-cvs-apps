@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.183 2009/12/29 18:44:08 striper Exp $
+  $Id: movieplayer.cpp,v 1.184 2010/02/28 08:48:46 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -1316,7 +1316,7 @@ PlayStreamThread (void *mrl)
 
 //== updateLcd ==
 //===============
-void updateLcd(const std::string & big, const std::string & small, const bool centered)
+void updateLcd(const std::string & big, const std::string & small)
 {
 	static int   l_playstate = -1;
 	std::string  lcd_small = small;
@@ -1343,7 +1343,7 @@ void updateLcd(const std::string & big, const std::string & small, const bool ce
 			break;
 	}
 	StrSearchReplace(lcd_small, "_", " ");
-	CLCD::getInstance()->setMovieInfo(playmode, big, lcd_small, centered);
+	CLCD::getInstance()->setMovieInfo(playmode, big, lcd_small);
 }
 
 // GMO snip start ...
@@ -3465,9 +3465,9 @@ void CMoviePlayerGui::PlayFile (int parental)
 		{
 			update_lcd = false;
 			if(title == "not available" || title.empty())
-				updateLcd("", sel_filename, false);
+				updateLcd("", sel_filename);
 			else
-				updateLcd(title, subtitle, true);
+				updateLcd(title, subtitle);
 		}
 
 		//-- start threaded playback --
@@ -4196,9 +4196,9 @@ CMoviePlayerGui::PlayStream (int streamtype)
 		{
 			update_info = false;
 			if(title.empty())
-				updateLcd("", sel_filename, false);
+				updateLcd("", sel_filename);
 			else
-				updateLcd(title, "", true);
+				updateLcd(title, "");
 		}
 
 		if(start_play)
@@ -4513,7 +4513,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("Movieplayer1 ","$Revision: 1.183 $");
+	return imageinfo.getModulVersion("Movieplayer1 ","$Revision: 1.184 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.99 2010/02/02 20:27:10 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.100 2010/02/28 08:48:46 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1103,6 +1103,13 @@ const CMenuOptionChooser::keyval LCDMENU_EPG_OPTIONS[LCDMENU_EPG_OPTION_COUNT] =
 	{ 11, LOCALE_LCDMENU_EPG_NAMESHORT_TITLE },
 	{ 15, LOCALE_LCDMENU_EPG_NAMESHORT_SEPLINE_TITLE }
 };
+
+#define LCDMENU_EPGALIGN_OPTION_COUNT 2
+const CMenuOptionChooser::keyval LCDMENU_EPGALIGN_OPTIONS[LCDMENU_EPGALIGN_OPTION_COUNT] =
+{
+	{ 0, LOCALE_LCDMENU_EPGALIGN_LEFT   },
+	{ 1, LOCALE_LCDMENU_EPGALIGN_CENTER	}
+};
   
 /* lcd settings menu*/
 void CNeutrinoApp::InitLcdSettings(CMenuWidget &lcdSettings)
@@ -1150,6 +1157,8 @@ void CNeutrinoApp::InitLcdSettings(CMenuWidget &lcdSettings)
 	//lcd_epg
 	lcdSettings.addItem(GenericMenuSeparatorLine);
 	oj = new CMenuOptionChooser(LOCALE_LCDMENU_EPG, &g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE], LCDMENU_EPG_OPTIONS, LCDMENU_EPG_OPTION_COUNT, true);
+	lcdSettings.addItem(oj);
+	oj = new CMenuOptionChooser(LOCALE_LCDMENU_EPGALIGN, &g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN], LCDMENU_EPGALIGN_OPTIONS, LCDMENU_EPGALIGN_OPTION_COUNT, true);
 	lcdSettings.addItem(oj);
 }
  
