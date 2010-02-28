@@ -409,6 +409,10 @@ epglist.error_no_recorddir_msg Timer can not be saved. \nNo record directory def
 epglist.head Event-list - %s
 epglist.noevents EPG is not available...
 epgviewer.More_Screenings More Screenings on this Channel
+epgviewer.age_rating Age rating
+epgviewer.audio Audio
+epgviewer.genre Genre
+epgviewer.length Length (min.)
 epgviewer.nodetailed No detailed informations available
 epgviewer.notfound no epg found
 esound.info press Home to end to Esound soundserver

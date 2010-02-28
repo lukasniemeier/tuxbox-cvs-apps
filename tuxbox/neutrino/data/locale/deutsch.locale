@@ -409,6 +409,10 @@ epglist.error_no_recorddir_msg Aufnahme kann nicht vorgemerkt werden! \nKein Auf
 epglist.head Vorschau - %s
 epglist.noevents Keine EPG-Information verfügbar.
 epgviewer.More_Screenings Weitere Termine auf diesem Kanal
+epgviewer.age_rating Altersfreigabe
+epgviewer.audio Audio
+epgviewer.genre Genre
+epgviewer.length Spieldauer (Min.)
 epgviewer.nodetailed Keine ausführlichen Informationen verfügbar
 epgviewer.notfound keine Programminformationen (EPG) gefunden
 esound.info Drücke Home um den Esound Soundserver zu beenden
