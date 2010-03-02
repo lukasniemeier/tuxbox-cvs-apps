@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.cpp,v 1.1 2010/02/22 10:52:34 dbt Exp $
+	$Id: proxyserver_setup.cpp,v 1.2 2010/03/02 20:11:42 dbt Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -48,7 +48,7 @@ CProxySetup::CProxySetup(const neutrino_locale_t title, const char * const IconN
 {
 	frameBuffer = CFrameBuffer::getInstance();
 
-	menue_title = title;
+	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_FLASHUPDATE_PROXYSERVER_SEP;
 	menue_icon = IconName != NEUTRINO_ICON_SETTINGS ? IconName : NEUTRINO_ICON_SETTINGS;
 
 	width = w_max (500, 100);
@@ -89,7 +89,7 @@ void CProxySetup::hide()
 void CProxySetup::showProxySetup()
 {
 	//init
-	CMenuWidget * mn = new CMenuWidget((menue_title != NONEXISTANT_LOCALE ? menue_title : LOCALE_FLASHUPDATE_PROXYSERVER_SEP), menue_icon, width);
+	CMenuWidget * mn = new CMenuWidget(menue_title, menue_icon, width);
 
 	if (menue_title != NONEXISTANT_LOCALE)
 	{
