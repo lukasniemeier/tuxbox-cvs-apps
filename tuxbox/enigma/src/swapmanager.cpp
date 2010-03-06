@@ -87,7 +87,7 @@ void eSwapManager::init_eSwapManager()
 
 	cb_size=CreateSkinnedComboBox("filesize", 4);
 	for (int i = 0; i < 9; i++)
-		new eListBoxEntryText( *cb_size, eString().sprintf("%d MB",(4<<i)&0xf8).c_str(), (void*)((4<<i)&0xf8), 0, eString().sprintf(_("Filesize: %d MB"),(4<<i)&0xf8).c_str());
+		new eListBoxEntryText( *cb_size, eString().sprintf("%d MB",(4<<i)).c_str(), (void*)((4<<i)), 0, eString().sprintf(_("Filesize: %d MB"),(4<<i)).c_str());
 
 	bt_delswap = CreateSkinnedButton("delete");
 	bt_stswap = CreateSkinnedButton("stop");
