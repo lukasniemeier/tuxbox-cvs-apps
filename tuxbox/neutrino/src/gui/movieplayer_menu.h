@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.h,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: movieplayer_menu.h,v 1.3 2010/03/06 19:54:00 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -36,9 +36,6 @@
 #include <driver/framebuffer.h>
 
 #include "movieplayer.h"
-#ifdef ENABLE_MOVIEBROWSER
-#include "moviebrowser.h"
-#endif
 
 #include <string>
 
@@ -53,9 +50,6 @@ class CMoviePlayerMenue : public CMenuTarget
 		void showMoviePlayerMenue();
 
 		CMenuTarget* 			moviePlayerGui;
-#ifdef ENABLE_MOVIEBROWSER
-		CMenuTarget*			movieBrowser;
-#endif
 
 	public:	
 		CMoviePlayerMenue();

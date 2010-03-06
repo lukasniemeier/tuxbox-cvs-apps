@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: movieplayer_menu.cpp,v 1.3 2010/03/06 19:54:00 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -55,9 +55,6 @@ CMoviePlayerMenue::CMoviePlayerMenue()
 	frameBuffer = CFrameBuffer::getInstance();
 
 	moviePlayerGui = NULL;
-#ifdef ENABLE_MOVIEBROWSER
-	movieBrowser = NULL;
-#endif
 
 	width = w_max (500, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
@@ -71,9 +68,6 @@ CMoviePlayerMenue::CMoviePlayerMenue()
 CMoviePlayerMenue::~CMoviePlayerMenue()
 {
 	delete moviePlayerGui;
-#ifdef ENABLE_MOVIEBROWSER
-	delete movieBrowser;
-#endif
 }
 
 int CMoviePlayerMenue::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
@@ -100,9 +94,7 @@ void CMoviePlayerMenue::hide()
 void CMoviePlayerMenue::showMoviePlayerMenue()
 {
 	moviePlayerGui = new CMoviePlayerGui();
-#ifdef ENABLE_MOVIEBROWSER
-	movieBrowser = new CMovieBrowser();
-#endif
+
 	//init
 	CMenuWidget * mpmenue = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_EPGINFO, width);
 
@@ -122,7 +114,7 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this->moviePlayerGui, "tsmoviebrowser", CRCInput::RC_2));
 #else
 	//moviebrowser init
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this->movieBrowser, "run", CRCInput::RC_2));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, g_MovieBrowser, "run", CRCInput::RC_2));
 #endif /* ENABLE_MOVIEPLAYER2 */
 	rc_msg = CRCInput::RC_3;
 #else

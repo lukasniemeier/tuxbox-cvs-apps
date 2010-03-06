@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1016 2010/02/28 08:48:37 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1017 2010/03/06 19:53:59 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -91,7 +91,9 @@
 #include "gui/audioplayer.h"
 #endif
 #include "gui/bouquetlist.h"
+#ifdef ENABLE_MOVIEPLAYER
 #include "gui/movieplayer.h"
+#endif
 #ifdef ENABLE_GUI_MOUNT
 #include "gui/nfs.h"
 #endif
@@ -158,7 +160,9 @@ static void initGlobals(void)
 	g_EpgData       = NULL;
 	g_InfoViewer    = NULL;
 	g_EventList     = NULL;
-
+#ifdef ENABLE_MOVIEBROWSER
+	g_MovieBrowser  = NULL;
+#endif
 #ifdef ENABLE_RADIOTEXT
 	g_Radiotext     = NULL;
 #endif
@@ -2056,6 +2060,9 @@ int CNeutrinoApp::run(int argc, char **argv)
 	g_EpgData 	= new CEpgData;
 	g_InfoViewer 	= new CInfoViewer;
 	g_EventList 	= new EventList;
+#ifdef ENABLE_MOVIEBROWSER
+	g_MovieBrowser 	= new CMovieBrowser;
+#endif
 	g_PluginList 	= new CPlugins;
 	g_PluginList->setPluginDir(PLUGINDIR);
 

@@ -87,10 +87,6 @@ class CMoviePlayerGui : public CMenuTarget
     std::string Path_vlc_settings;
 
     CFileBrowser * filebrowser;
-#ifdef ENABLE_MOVIEBROWSER
-    CMovieBrowser* moviebrowser;
-#endif /* ENABLE_MOVIEBROWSER */
-
     CBookmarkManager * bookmarkmanager;
 
     void PlayStream(int streamtype);
@@ -107,7 +103,7 @@ class CMoviePlayerGui : public CMenuTarget
     ~CMoviePlayerGui();
     int exec(CMenuTarget* parent, const std::string & actionKey);
 #ifdef ENABLE_MOVIEBROWSER
-    void fileInfoStale(){if(moviebrowser != NULL)moviebrowser->fileInfoStale();};
+    void fileInfoStale(){g_MovieBrowser->fileInfoStale();};
 #endif
     std::string getMoviePlayerVersion(void);
 };

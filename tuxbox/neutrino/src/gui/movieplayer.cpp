@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.184 2010/02/28 08:48:46 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.185 2010/03/06 19:54:00 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -141,7 +141,6 @@ static bool isTS, isPES, isBookmark;
 
 #ifdef ENABLE_MOVIEBROWSER
 static bool isMovieBrowser = false;
-static bool movieBrowserDelOnExit = false;
 #endif /* ENABLE_MOVIEBROWSER */
 
 #ifndef __USE_FILE_OFFSET64
@@ -315,10 +314,6 @@ CMoviePlayerGui::CMoviePlayerGui()
 
 	filebrowser->Dirs_Selectable = false;
 
-#ifdef ENABLE_MOVIEBROWSER
-	moviebrowser = NULL;
-#endif /* ENABLE_MOVIEBROWSER */
-
 	tsfilefilter.addFilter ("ts");
 	vlcfilefilter.addFilter ("mpg");
 	vlcfilefilter.addFilter ("mpeg");
@@ -337,12 +332,6 @@ CMoviePlayerGui::CMoviePlayerGui()
 CMoviePlayerGui::~CMoviePlayerGui ()
 {
 	delete filebrowser;
-#ifdef ENABLE_MOVIEBROWSER
-	if(moviebrowser != NULL)
-	{	
-		delete moviebrowser;
-	}
-#endif /* ENABLE_MOVIEBROWSER */
 	if(bookmarkmanager)
 		delete bookmarkmanager;
 	CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
@@ -472,21 +461,9 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 #ifdef ENABLE_MOVIEBROWSER
 	else if(actionKey=="tsmoviebrowser")
 	{
-		if(moviebrowser == NULL)
-		{
-			TRACE("[mp] new MovieBrowser");
-			moviebrowser= new CMovieBrowser();
-		}
-		if(moviebrowser != NULL)
-		{
-			isMovieBrowser = true;
-			isTS = true;
-			PlayFile();
-		}
-		else
-		{
-			TRACE("[mp] error: cannot create MovieBrowser");
-		}
+		isMovieBrowser = true;
+		isTS = true;
+		PlayFile();
 	}
 #endif /* ENABLE_MOVIEBROWSER */
 	else if(actionKey=="tsplayback_pc")
@@ -563,14 +540,6 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 		bookmarkmanager=0;
 	}
 	
-	if(moviebrowser != NULL && movieBrowserDelOnExit == true)
-	{
-		//moviebrowser->fileInfoStale();
-		TRACE("[mp] delete MovieBrowser");
-		delete moviebrowser;
-		moviebrowser = NULL;
-	}
-		
 	return menu_return::RETURN_REPAINT;
 }
 
@@ -3350,13 +3319,13 @@ void CMoviePlayerGui::PlayFile (int parental)
 			if(isMovieBrowser == true)
 			{
 				// start the moviebrowser instead of the filebrowser
-				if(moviebrowser->exec(Path_local.c_str()))
+				if(g_MovieBrowser->exec(Path_local.c_str()))
 				{
 					// get the current path and file name 
-					Path_local = moviebrowser->getCurrentDir(); 
+					Path_local = g_MovieBrowser->getCurrentDir(); 
 					CFile *file;					
 	
-					if((file = moviebrowser->getSelectedFile()) != NULL)
+					if((file = g_MovieBrowser->getSelectedFile()) != NULL)
 					{
 						if (g_settings.streaming_show_tv_in_browser == true &&
 						    g_ZapitsetStandbyState == false)
@@ -3371,7 +3340,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 						start_play   = true;
 
 						// get the movie info handle (to be used for e.g. bookmark handling)
-						p_movie_info = moviebrowser->getCurrentMovieInfo();
+						p_movie_info = g_MovieBrowser->getCurrentMovieInfo();
 
 						title       = p_movie_info->epgTitle;
 						subtitle    = p_movie_info->epgInfo1;
@@ -3379,8 +3348,8 @@ void CMoviePlayerGui::PlayFile (int parental)
 
 						// get the start position for the movie
 						off_t secondSize = (g_settings.streaming_use_reclength && p_movie_info->rec_length) ? ((file->Size / p_movie_info->rec_length) / SIZE_TS_PKT) * SIZE_TS_PKT : SECONDOFFSET;
-						g_startposition  = moviebrowser->getCurrentStartPos() * secondSize;
-						TRACE("[mp] start pos %llu, %d s Name: %s\r\n", g_startposition, moviebrowser->getCurrentStartPos(), filename);
+						g_startposition  = g_MovieBrowser->getCurrentStartPos() * secondSize;
+						TRACE("[mp] start pos %llu, %d s Name: %s\r\n", g_startposition, g_MovieBrowser->getCurrentStartPos(), filename);
 
 						if(FileTime.IsVisible()) // update time if visible
 							FileTime.show(g_startposition / secondSize);
@@ -4513,7 +4482,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("Movieplayer1 ","$Revision: 1.184 $");
+	return imageinfo.getModulVersion("Movieplayer1 ","$Revision: 1.185 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
