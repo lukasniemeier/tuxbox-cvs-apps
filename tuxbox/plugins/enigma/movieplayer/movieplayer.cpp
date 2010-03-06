@@ -1,5 +1,5 @@
 /*
- * $Id: movieplayer.cpp,v 1.18 2010/01/04 13:06:46 dbluelle Exp $
+ * $Id: movieplayer.cpp,v 1.19 2010/03/06 17:08:58 dbluelle Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *          based on vlc plugin by mechatron
@@ -1052,7 +1052,7 @@ eSCGuiConfig::eSCGuiConfig(): eWindow()  // Config window
 {
 	cmove(ePoint(120, 80));
 	setText(_("Options"));
-	resize(eSize( 450, 460));
+	resize(eSize( 450, 480));
 	int yPos = 10;
 	int fd = eSkin::getActive ()->queryValue ("fontsize", 16) + 8;	
 	
