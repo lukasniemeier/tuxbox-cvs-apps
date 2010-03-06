@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.217 2009/10/31 10:39:36 seife Exp $
+	$Id: channellist.cpp,v 1.218 2010/03/06 19:50:00 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -70,6 +70,8 @@ int info_height = 0;
 #ifndef TUXTXT_CFG_STANDALONE
 extern "C" int  tuxtxt_stop();
 #endif
+
+#define ConnectLineBox_Width	16
 
 CChannelList::CChannel::CChannel(const int _key, const int _number, const std::string& _name, const t_satellite_position _satellitePosition, const t_channel_id ids)
 {
@@ -1012,8 +1014,9 @@ void CChannelList::paintDetails(unsigned int index)
 	}
 	else
 	{
-		frameBuffer->paintHLineRel(x, width, y + height, COL_INFOBAR_SHADOW_PLUS_0);
-		frameBuffer->paintBoxRel(x, y + height + 1, width, info_height - 1, COL_MENUCONTENTDARK_PLUS_0);
+		frameBuffer->paintBoxRel(x - 4, y + height,        20, info_height, COL_MENUCONTENT_PLUS_1, RADIUS_MID);
+		frameBuffer->paintBoxRel(x - 3, y + height, width + 3, info_height, COL_MENUCONTENT_PLUS_6, RADIUS_MID);
+		frameBuffer->paintBoxRel(x + 2, y + height + 2, width - 4, info_height - 4, COL_MENUCONTENTDARK_PLUS_0, RADIUS_MID);
 
 		char cNoch[50]; // UTF-8
 		char cSeit[50]; // UTF-8
@@ -1084,7 +1087,6 @@ void CChannelList::clearItem2DetailsLine ()
 
 void CChannelList::paintItem2DetailsLine (int pos,unsigned  int ch_index)
 {
-	#define ConnectLineBox_Width	16
 	int xpos  = x - ConnectLineBox_Width;
 	int ypos1 = y + theight+0 + pos*fheight;
 	int ypos2 = y + height;
@@ -1092,7 +1094,6 @@ void CChannelList::paintItem2DetailsLine (int pos,unsigned  int ch_index)
 	int ypos2a = ypos2 + (info_height/2)-2;
 	fb_pixel_t col1 = COL_MENUCONTENT_PLUS_6;
 	fb_pixel_t col2 = COL_MENUCONTENT_PLUS_1;
-	int c_rad_small = RADIUS_SMALL;
 
 	CChannelEvent *p_event;
 	if (displayNext) {
@@ -1102,35 +1103,25 @@ void CChannelList::paintItem2DetailsLine (int pos,unsigned  int ch_index)
 	}
 
 	// Clear
-	frameBuffer->paintBackgroundBoxRel(xpos,y, ConnectLineBox_Width, height+info_height);
+	frameBuffer->paintBackgroundBoxRel(xpos,y, ConnectLineBox_Width, height+ ((pos == -1 || p_event->description == "") ? info_height : 0));
 
 	// paint Line if detail info (and not valid list pos)
 	if (pos >= 0 &&  ch_index < chanlist.size() && p_event->description != "")
 	{
 		// 1. col thick line
-		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-4, ypos1, 4,fheight, col2, c_rad_small, CORNER_LEFT); // item marker
-		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-3, ypos1, 8,fheight, col1, c_rad_small, CORNER_LEFT); 
-	
-		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-4, ypos2, 4,info_height, col1);
+		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-4, ypos1, 4,fheight, col2, RADIUS_SMALL, CORNER_LEFT); // item marker
+		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-3, ypos1, 8,fheight, col1, RADIUS_SMALL, CORNER_LEFT);
 
 		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos1a, 4,ypos2a-ypos1a, col1);
 
-		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos1a, 12,4, col1);
-		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos2a, 12,4, col1);
+		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos1a, 12,4, col1); //upper small hor. line
+		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos2a, 12,4, col1); //lower 
 
 		// 2. col small line		
-		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-4, ypos2, 1,info_height, col2);
-
 		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos1a, 1,ypos2a-ypos1a+4, col2);
 
 		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-16, ypos1a, 12,1, col2);
 		frameBuffer->paintBoxRel(xpos+ConnectLineBox_Width-12, ypos2a, 8,1, col2);
-		
-		// -- small Frame around infobox
-		frameBuffer->paintBoxRel(x,         ypos2, 			2,		info_height, 	col1);
-		frameBuffer->paintBoxRel(x+width-2, ypos2, 			2,		info_height, 	col1);
-		frameBuffer->paintBoxRel(x        , ypos2, 			width-2,	2,     		col1);
-		frameBuffer->paintBoxRel(x        , ypos2+info_height-2, 	width-2,	2, 		col1);
 	}
 }
 
@@ -1356,7 +1347,7 @@ void CChannelList::paintFoot()
 		CChannelListButtons[3].button = NEUTRINO_ICON_BUTTON_DBOX;
 	}
 		
-	frameBuffer->paintBoxRel(x, y + (height - buttonHeight), width, buttonHeight - 1, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	frameBuffer->paintBoxRel(x, y + (height - buttonHeight), width, buttonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + (height - buttonHeight), ButtonWidth, sizeof(CChannelListButtons)/sizeof(CChannelListButtons[0]), CChannelListButtons, width);
 }
 
@@ -1364,6 +1355,12 @@ void CChannelList::paint()
 {
 	liststart = (selected/listmaxshow)*listmaxshow;
 	int lastnum =  chanlist[liststart]->number + listmaxshow;
+
+	int ypos = y+ theight;
+	int sb = fheight* listmaxshow;
+	frameBuffer->paintBoxRel(x, ypos, width, sb, COL_MENUCONTENT_PLUS_0); //mainframe
+	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb, COL_MENUCONTENT_PLUS_1); //scrollbar
+
 	updateEvents();
 
 	if(lastnum<10)
@@ -1381,10 +1378,6 @@ void CChannelList::paint()
 	{
 		paintItem(count);
 	}
-	//scrollbar
-	int ypos = y+ theight;
-	int sb = fheight* listmaxshow;
-	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 
 	int sbc= ((chanlist.size()- 1)/ listmaxshow)+ 1;
 	int sbs= (selected/listmaxshow);

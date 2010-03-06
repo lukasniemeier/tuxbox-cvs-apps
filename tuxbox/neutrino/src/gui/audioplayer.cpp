@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.81 2009/10/30 22:06:05 seife Exp $
+  $Id: audioplayer.cpp,v 1.83 2010/03/06 19:50:00 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -281,7 +281,7 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 	if (usedBackground)
 		m_frameBuffer->saveBackgroundImage();
 	m_frameBuffer->loadPal("radiomode.pal", 18, COL_MAXFREE);
-	m_frameBuffer->useBackground(m_frameBuffer->loadBackground("radiomode.raw"));// set useBackground true or false
+	m_frameBuffer->useBackground(m_frameBuffer->loadBackground(NEUTRINO_ICON_RADIOMODE));// set useBackground true or false
 	m_frameBuffer->paintBackground();
 
 #if defined HAVE_DBOX_HARDWARE || defined HAVE_TRIPLEDRAGON
@@ -669,7 +669,7 @@ int CAudioPlayerGui::show()
 			{
 				if (m_inetmode) {
 					char cnt[5];
-					CMenuWidget InputSelector(LOCALE_AUDIOPLAYER_LOAD_RADIO_STATIONS, "audio.raw", 400);
+					CMenuWidget InputSelector(LOCALE_AUDIOPLAYER_LOAD_RADIO_STATIONS, NEUTRINO_ICON_AUDIO, 400);
 					int count = 0;
 					int select = -1;
 					CMenuSelectorTarget *InetRadioInputChanger = new CMenuSelectorTarget(&select);
@@ -1527,6 +1527,11 @@ void CAudioPlayerGui::paintItem(int pos)
 		}
 		c_rad_small = 0;
 	}
+	if (pos == 0 && m_playlist.size() == 0) // starts always at pos 0, ensure no transp corners
+		m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_fheight, COL_MENUCONTENT_PLUS_0);
+	else if (pos == 0)
+		m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_fheight, COL_MENUCONTENT_PLUS_0, c_rad_small, CORNER_LEFT);
+	
 
 	m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_fheight, bgcolor, c_rad_small);
 
@@ -1582,7 +1587,7 @@ void CAudioPlayerGui::paintHead()
 	else 
 		strCaption = g_Locale->getText(LOCALE_AUDIOPLAYER_HEAD);
 	m_frameBuffer->paintBoxRel(m_x, m_y + m_title_height, m_width, m_theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	m_frameBuffer->paintIcon("mp3.raw",m_x + 7, m_y + m_title_height + 10);
+	m_frameBuffer->paintIcon(NEUTRINO_ICON_MP3,m_x + 7, m_y + m_title_height + 10);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 35, m_y + m_theight + m_title_height + 0,
 									m_width - 45, strCaption, COL_MENUHEAD, 0, true); // UTF-8
 	int ypos = m_y + m_title_height;
@@ -1834,8 +1839,9 @@ void CAudioPlayerGui::paint()
 
 		int sbc = ((m_playlist.size() - 1) / m_listmaxshow) + 1;
 		int sbs = (m_selected / m_listmaxshow);
-
-		m_frameBuffer->paintBoxRel(m_x + m_width - 13, ypos + 2 + sbs*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
+	
+		if (m_playlist.size())
+			m_frameBuffer->paintBoxRel(m_x + m_width - 13, ypos + 2 + sbs*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
 	}
 
 	paintFoot();
@@ -1861,8 +1867,7 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 	int ypos2a = ypos2 + (m_info_height / 2) - 2;
 	fb_pixel_t col1 = COL_MENUCONTENT_PLUS_6;
 	fb_pixel_t col2 = COL_MENUCONTENT_PLUS_1;
-	int c_rad_small = RADIUS_SMALL;
-
+	fb_pixel_t col3 = COL_MENUCONTENTDARK_PLUS_0;
 
 	// Clear
 	m_frameBuffer->paintBackgroundBoxRel(xpos - 1, m_y + m_title_height, ConnectLineBox_Width + 1, 
@@ -1871,11 +1876,14 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 	// paint Line if detail info (and not valid list pos)
 	if (!m_playlist.empty() && (pos >= 0))
 	{
-		// 1. col thick line
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos1, 4, m_fheight, col2, c_rad_small, CORNER_LEFT);
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 3, ypos1, 8, m_fheight, col1, c_rad_small, CORNER_LEFT); // item marker
+		// paint id3 infobox
+		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2, 20, m_info_height, col2, RADIUS_MID);
+		m_frameBuffer->paintBoxRel(m_x - 3, ypos2     , m_width + 3, m_info_height, col1, RADIUS_MID);
+		m_frameBuffer->paintBoxRel(m_x + 2, ypos2 + 2 , m_width - 4, m_info_height - 4, col3, RADIUS_MID);
 
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2, 4, m_info_height, col1);
+		// 1. col thick line
+		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos1, 4, m_fheight, col2, RADIUS_SMALL, CORNER_LEFT);
+		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 3, ypos1, 8, m_fheight, col1, RADIUS_SMALL, CORNER_LEFT); // item marker
 
 		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 4, ypos2a - ypos1a, col1);
 
@@ -1883,22 +1891,11 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos2a, 12, 4, col1);
 
 		// 2. col small line
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2, 1, m_info_height, col2);
-
 		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 1, ypos2a - ypos1a + 4, col2);
 
 		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 12, 1, col2);
 		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 12, ypos2a,  8, 1, col2);
 
-		// -- small Frame around infobox
-		m_frameBuffer->paintBoxRel(m_x,			ypos2			, 2	 	, m_info_height	, col1);
-		m_frameBuffer->paintBoxRel(m_x + m_width - 2,	ypos2			, 2		, m_info_height	, col1);
-		m_frameBuffer->paintBoxRel(m_x,			ypos2			, m_width -2	, 2		, col1);
-		m_frameBuffer->paintBoxRel(m_x,			ypos2 + m_info_height -2, m_width -2	, 2		, col1);
-		//		m_frameBuffer->paintBoxRel(m_x, ypos2, m_width, m_info_height, col1);
-
-		// paint id3 infobox 
-		m_frameBuffer->paintBoxRel(m_x + 2, ypos2 + 2 , m_width - 4, m_info_height - 4, COL_MENUCONTENTDARK_PLUS_0);
 		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(m_x + 10, ypos2 + 2 + 1*m_fheight, m_width- 80,
 				m_playlist[m_selected].MetaData.title, COL_MENUCONTENTDARK, 0, true); // UTF-8
 		std::string tmp;
@@ -2278,7 +2275,7 @@ void CAudioPlayerGui::screensaver(bool on)
 	{
 		m_screensaver = false;
 		m_frameBuffer->loadPal("radiomode.pal", 18, COL_MAXFREE);
-		m_frameBuffer->useBackground(m_frameBuffer->loadBackground("radiomode.raw"));// set useBackground true or false
+		m_frameBuffer->useBackground(m_frameBuffer->loadBackground(NEUTRINO_ICON_RADIOMODE));// set useBackground true or false
 		m_frameBuffer->paintBackground();
 		paint();
 		m_idletime = time(NULL);

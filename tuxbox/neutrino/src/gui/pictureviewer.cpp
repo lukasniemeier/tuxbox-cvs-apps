@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 	
-	$Id: pictureviewer.cpp,v 1.73 2009/10/13 19:42:34 dbt Exp $
+	$Id: pictureviewer.cpp,v 1.75 2010/03/06 19:50:00 rhabarber1848 Exp $
 
 	MP3Player by Dirch
 	
@@ -554,7 +554,7 @@ void CPictureViewerGui::paintItem(int pos)
 {
 //	printf("paintItem{\n");
 	int ypos = y+ theight + 0 + pos*fheight;
-	int c_rad_small;
+	int c_rad_small = 0;
 
 	uint8_t    color;
 	fb_pixel_t bgcolor;
@@ -563,13 +563,12 @@ void CPictureViewerGui::paintItem(int pos)
 	{
 		color   = COL_MENUCONTENTDARK;
 		bgcolor = COL_MENUCONTENTDARK_PLUS_0;
-		c_rad_small = RADIUS_SMALL;
+		
 	}
 	else
 	{
 		color	= COL_MENUCONTENT;
 		bgcolor = COL_MENUCONTENT_PLUS_0;
-		c_rad_small =0;
 	}
 
 	if (liststart+pos == selected)
@@ -602,7 +601,7 @@ void CPictureViewerGui::paintHead()
 //	printf("paintHead{\n");
 	std::string strCaption = g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD);
 	frameBuffer->paintBoxRel(x,y, width,theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	frameBuffer->paintIcon("mp3.raw",x+7,y+10);
+	frameBuffer->paintIcon(NEUTRINO_ICON_MP3,x+7,y+10);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+35,y+theight+0, width- 45, strCaption, COL_MENUHEAD, 0, true); // UTF-8
 	int ypos=y+0;
 	if(theight > 26)
@@ -628,13 +627,16 @@ void CPictureViewerGui::paintFoot()
 //	printf("paintFoot{\n");
 	int ButtonWidth = (width-20) / 4;
 	int ButtonWidth2 = (width-50) / 2;
-	frameBuffer->paintBoxRel(x,y+(height-2*buttonHeight), width,2*buttonHeight, COL_INFOBAR_SHADOW_PLUS_1, c_rad_mid, CORNER_BOTTOM);
+	uint8_t color = COL_INFOBAR_SHADOW + 1;
+	fb_pixel_t bgcol =  COL_INFOBAR_SHADOW_PLUS_1;
+	
+	frameBuffer->paintBoxRel(x,y+(height-2*buttonHeight), width,2*buttonHeight, bgcol, c_rad_mid, CORNER_BOTTOM);
 	frameBuffer->paintHLine(x, x+width,  y+(height-2*buttonHeight), COL_INFOBAR_SHADOW_PLUS_0);
 
 	if (!playlist.empty())
 	{
 		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x + 1* ButtonWidth2 + 25, y+(height-buttonHeight)-3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 1 * ButtonWidth2 + 53 , y+(height-buttonHeight)+24 - 4, ButtonWidth2- 28, g_Locale->getText(LOCALE_PICTUREVIEWER_SHOW), COL_INFOBAR, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 1 * ButtonWidth2 + 53 , y+(height-buttonHeight)+24 - 4, ButtonWidth2- 28, g_Locale->getText(LOCALE_PICTUREVIEWER_SHOW), color, 0, true); // UTF-8
 
 		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_5, x+ 0* ButtonWidth2 + 25, y+(height-buttonHeight)-3);
 		std::string tmp = g_Locale->getText(LOCALE_PICTUREVIEWER_SORTORDER);
@@ -643,8 +645,8 @@ void CPictureViewerGui::paintFoot()
 			tmp += g_Locale->getText(LOCALE_PICTUREVIEWER_SORTORDER_DATE);
 		else if(m_sort==DATE)
 			tmp += g_Locale->getText(LOCALE_PICTUREVIEWER_SORTORDER_FILENAME);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+ 0* ButtonWidth2 +53 , y+(height-buttonHeight)+24 - 4, ButtonWidth2- 28, tmp, COL_INFOBAR, 0, true); // UTF-8
 
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+ 0* ButtonWidth2 +53 , y+(height-buttonHeight)+24 - 4, ButtonWidth2- 28, tmp, color, 0, true); // UTF-8
 
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + (height - 2 * buttonHeight) + 4, ButtonWidth, 4, PictureViewerButtons);
 	}
@@ -663,18 +665,19 @@ void CPictureViewerGui::paint()
 	liststart = (selected/listmaxshow)*listmaxshow;
 
 	paintHead();
+
+	int ypos = y+ theight;
+	int sb = fheight* listmaxshow;
+	frameBuffer->paintBoxRel(x, ypos, width, sb, COL_MENUCONTENT_PLUS_0); //mainframe
+	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1); //scrollbar
+
 	for(unsigned int count=0;count<listmaxshow;count++)
 	{
 		paintItem(count);
 	}
 
-	int ypos = y+ theight;
-	int sb = fheight* listmaxshow;
-	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
-
 	int sbc= ((playlist.size()- 1)/ listmaxshow)+ 1;
 	int sbs= (selected/listmaxshow);
-
 	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs*(sb-4)/sbc, 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
 
 	paintFoot();
@@ -732,7 +735,7 @@ void CPictureViewerGui::endView()
 std::string CPictureViewerGui::getPictureViewerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.73 $");
+	return imageinfo.getModulVersion("","$Revision: 1.75 $");
 }
 
 void CPictureViewerGui::showHelp()

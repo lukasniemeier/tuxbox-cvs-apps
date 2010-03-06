@@ -298,6 +298,7 @@ void CPluginList::paintHead()
 
 	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 	frameBuffer->paintBoxRel(x, y, width + sb_width, theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
+	frameBuffer->paintBoxRel(x, y + theight, width, height- theight - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), COL_MENUCONTENT_PLUS_0);
 
 	if(pluginlisttype == CPlugins::P_TYPE_GAME)
 	{
@@ -328,7 +329,7 @@ void CPluginList::paint()
 	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
 	
    liststart = (selected/listmaxshow)*listmaxshow;
-	
+
 	paintHead();
 	paintItems();
 }

@@ -386,6 +386,11 @@ void CBouquetList::paint()
 {
 	liststart = (selected/listmaxshow)*listmaxshow;
 	int lastnum =  liststart + listmaxshow;
+	int ypos = y+ theight;
+	int sb = fheight* listmaxshow;
+
+	frameBuffer->paintBoxRel(x, ypos, width, sb, COL_MENUCONTENT_PLUS_0); //mainframe
+	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb, COL_MENUCONTENT_PLUS_1); //scrollbar
 
 	if(lastnum<10)
 		numwidth = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getRenderWidth("0");
@@ -402,10 +407,6 @@ void CBouquetList::paint()
 	{
 		paintItem(count);
 	}
-
-	int ypos = y+ theight;
-	int sb = fheight* listmaxshow;
-	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 
 	int sbc= ((Bouquets.size()- 1)/ listmaxshow)+ 1;
 	int sbs= (selected/listmaxshow);
