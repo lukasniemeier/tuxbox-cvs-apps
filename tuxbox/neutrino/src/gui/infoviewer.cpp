@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.288 2009/12/15 09:49:31 dbt Exp $
+	$Id: infoviewer.cpp,v 1.289 2010/03/06 20:00:22 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -319,6 +319,8 @@ void CInfoViewer::showMovieTitle(const int playstate, const std::string &title, 
 
 	paintTime(false, true);
 	showInfoFile();
+
+	sec_timer_id = g_RCInput->addTimer(1000000, false); //need for blinking dot in time
 
 	frameBuffer->paintBoxRel(ChanInfoX, BoxEndY + BOTTOM_BAR_OFFSET,
 				 BoxEndX - ChanInfoX, InfoHeightY_Info - BOTTOM_BAR_OFFSET,
