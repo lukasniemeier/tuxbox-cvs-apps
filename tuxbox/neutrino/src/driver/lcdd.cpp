@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.86 2010/02/28 08:48:40 rhabarber1848 Exp $
+	$Id: lcdd.cpp,v 1.87 2010/03/07 19:41:22 rhabarber1848 Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -575,7 +575,7 @@ void CLCD::showTime()
 		{
 			display.draw_fill_rect(-1, -1, LCD_COLS, 64, CLCDDisplay::PIXEL_OFF); // clear lcd
 
-			ShowNewClock(&display, t->tm_hour, t->tm_min, t->tm_sec, t->tm_wday, t->tm_mday, t->tm_mon);
+			ShowNewClock(&display, t->tm_hour, t->tm_min, t->tm_sec, t->tm_wday, t->tm_mday, t->tm_mon, CNeutrinoApp::getInstance()->recordingstatus);
 		}
 		else
 		{

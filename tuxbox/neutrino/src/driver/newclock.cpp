@@ -197,12 +197,15 @@ void RenderMonth(CLCDDisplay* const display, int month)
 	}
 }
 
-void ShowNewClock(CLCDDisplay* display, int hour, int minute, int second, int day, int date, int month)
+void ShowNewClock(CLCDDisplay* display, int hour, int minute, int second, int day, int date, int month, bool is_recording)
 {
-	RenderTimeDigit(display, hour/10, 5);
-	RenderTimeDigit(display, hour%10, 32);
-	RenderTimeDigit(display, minute/10, 64);
-	RenderTimeDigit(display, minute%10, 91);
+	if (!is_recording || (second % 2 == 0))
+	{
+		RenderTimeDigit(display, hour/10, 5);
+		RenderTimeDigit(display, hour%10, 32);
+		RenderTimeDigit(display, minute/10, 64);
+		RenderTimeDigit(display, minute%10, 91);
+	}
 
 	RenderDay(display, day);
 
@@ -214,9 +217,9 @@ void ShowNewClock(CLCDDisplay* display, int hour, int minute, int second, int da
 	RenderSign(display, 1, 31, 57);
 	RenderSign(display, 2, 78, 56);
 
-	if (second % 2 == 0)
+	if (is_recording || (second % 2 == 0))
 	{
-	RenderSign(display, 0, 58, 15);
-	RenderSign(display, 0, 58, 23);
+		RenderSign(display, 0, 58, 15);
+		RenderSign(display, 0, 58, 23);
 	}
 }
