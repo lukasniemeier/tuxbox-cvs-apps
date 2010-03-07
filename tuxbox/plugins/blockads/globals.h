@@ -1,5 +1,5 @@
 /*
- * $Id: globals.h,v 1.1 2010/03/03 20:47:03 rhabarber1848 Exp $
+ * $Id: globals.h,v 1.2 2010/03/07 15:22:04 rhabarber1848 Exp $
  *
  * blockads - d-box2 linux project
  *
@@ -31,7 +31,7 @@
 #define FLG_FILE	"/tmp/blockads.flg"
 #define MSG_FILE	"/tmp/blockads.msg"
 #define STS_FILE	"/tmp/blockads.sts"
-#define CFG_FILE	"/var/plugins/blockads/blockads.conf"
+#define CFG_FILE	"/var/tuxbox/config/blockads.conf"
 #define NCF_FILE 	"/var/tuxbox/config/neutrino.conf"
 #define NUM_CHANNELS 12
 
