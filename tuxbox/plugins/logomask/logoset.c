@@ -1,5 +1,5 @@
 /*
- * $Id: logoset.c,v 1.1 2010/03/03 20:28:45 rhabarber1848 Exp $
+ * $Id: logoset.c,v 1.2 2010/03/07 18:00:49 rhabarber1848 Exp $
  *
  * logomask - d-box2 linux project
  *
@@ -712,6 +712,6 @@ int main (int argc, char **argv)
 		CloseRC();
 		remove("/tmp/.logomask_kill");
 		remove("/tmp/logomaskset.*");
-		system("/var/plugins/logomask &");
+		system("/bin/logomask &");
 		return 0;
 }
