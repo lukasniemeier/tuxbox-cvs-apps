@@ -117,7 +117,7 @@ THandleStatus CmodCache::Hook_ReadConfig(CConfigFile *Config, CStringList &Confi
 //-------------------------------------------------------------------------
 // Build and Add a cache item
 //-------------------------------------------------------------------------
-void CmodCache::AddToCache(CyhookHandler *hh, std::string url, std::string content, std::string mime_type, std::string category)
+void CmodCache::AddToCache(CyhookHandler */*hh*/, std::string url, std::string content, std::string mime_type, std::string category)
 {
 	FILE *fd = NULL;
 	pthread_mutex_lock(&mutex); 

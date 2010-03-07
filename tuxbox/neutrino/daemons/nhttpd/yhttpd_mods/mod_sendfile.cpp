@@ -187,7 +187,7 @@ std::string CmodSendfile::GetFileName(CyhookHandler *hh, std::string path, std::
 //-----------------------------------------------------------------------------
 // Send File: Open File and check file type
 //-----------------------------------------------------------------------------
-int CmodSendfile::OpenFile(CyhookHandler *hh, std::string fullfilename)
+int CmodSendfile::OpenFile(CyhookHandler */*hh*/, std::string fullfilename)
 {
 	int  fd= -1;
 	std::string tmpstring;

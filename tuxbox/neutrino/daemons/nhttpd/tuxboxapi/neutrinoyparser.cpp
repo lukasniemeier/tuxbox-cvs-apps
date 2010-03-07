@@ -141,7 +141,7 @@ std::string  CNeutrinoYParser::YWeb_cgi_func(CyhookHandler *hh, std::string ycmd
 //-------------------------------------------------------------------------
 // y-func : mount_get_list
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_mount_get_list(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_mount_get_list(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	CConfigFile *Config = new CConfigFile(',');
 	std::string ysel, ytype, yip, ylocal_dir, ydir, ynr, yresult;
@@ -170,7 +170,7 @@ std::string  CNeutrinoYParser::func_mount_get_list(CyhookHandler *hh, std::strin
 //-------------------------------------------------------------------------
 // y-func : mount_set_values
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_mount_set_values(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_mount_set_values(CyhookHandler *hh, std::string /*para*/)
 {
 	CConfigFile *Config = new CConfigFile(',');
 	std::string ynr, yresult;
@@ -195,7 +195,7 @@ std::string  CNeutrinoYParser::func_mount_set_values(CyhookHandler *hh, std::str
 //-------------------------------------------------------------------------
 // y-func : get_bouquets_as_dropdown [<bouquet>] <doshowhidden>
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_bouquets_as_dropdown(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_bouquets_as_dropdown(CyhookHandler */*hh*/, std::string para)
 {
 	std::string ynr, yresult, sel, nr_str, do_show_hidden;
 	unsigned int nr=1;
@@ -217,7 +217,7 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_dropdown(CyhookHandler *hh, 
 // y-func : get_bouquets_as_templatelist <tempalte> [~<do_show_hidden>]
 // TODO: select actual Bouquet
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_bouquets_as_templatelist(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_bouquets_as_templatelist(CyhookHandler */*hh*/, std::string para)
 {
 	std::string yresult, ytemplate, do_show_hidden;
 	
@@ -236,7 +236,7 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_templatelist(CyhookHandler *
 //-------------------------------------------------------------------------
 // y-func : get_actual_bouquet_number
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_actual_bouquet_number(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_actual_bouquet_number(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	CZapitClient::BouquetChannelList *bouquet;
 	int actual=0;
@@ -258,7 +258,7 @@ std::string  CNeutrinoYParser::func_get_actual_bouquet_number(CyhookHandler *hh,
 //-------------------------------------------------------------------------
 // y-func : get_channel_dropdown [<bouquet_nr> [<channel_id>]]
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_channels_as_dropdown(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_channels_as_dropdown(CyhookHandler */*hh*/, std::string para)
 {
 	CZapitClient::BouquetChannelList *bouquet;
 	CZapitClient::BouquetList blist;
@@ -452,14 +452,14 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 //-------------------------------------------------------------------------
 // y-func : get_actual_channel_id
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_actual_channel_id(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_actual_channel_id(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	return string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS,NeutrinoAPI->Zapit->getCurrentServiceID());	
 }
 //-------------------------------------------------------------------------
 // y-func : get_mode (returns tv|radio|unknown)
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_mode(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_mode(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	std::string yresult;
 	int mode = NeutrinoAPI->Zapit->getMode();
@@ -476,7 +476,7 @@ std::string  CNeutrinoYParser::func_get_mode(CyhookHandler *hh, std::string para
 //-------------------------------------------------------------------------
 // y-func : get_video_pids (para=audio channel, returns: 0x0000,0x0000,0x0000)
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler */*hh*/, std::string para)
 {
 	CZapitClient::responseGetPIDs pids;
 	int apid=0,apid_no=0,apid_idx=0;
@@ -495,7 +495,7 @@ std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler *hh, std::strin
 //-------------------------------------------------------------------------
 // y-func : get_radio_pids (returns: 0x0000)
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_radio_pid(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_radio_pid(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	CZapitClient::responseGetPIDs pids;
 	int apid=0;
@@ -511,7 +511,7 @@ std::string  CNeutrinoYParser::func_get_radio_pid(CyhookHandler *hh, std::string
 // y-func : get_audio_pids_as_dropdown (from controlapi)
 // prara: [apid] option value = apid-Value. Default apid-Index
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler */*hh*/, std::string para)
 {
 	std::string yresult;
 	static bool init_iso=true;
@@ -584,7 +584,7 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler *hh
 //-------------------------------------------------------------------------
 // y-func : build umount list
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_unmount_get_list(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_unmount_get_list(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	std::string ysel, ymount, ylocal_dir, yfstype, ynr, yresult, mounts;
 	
@@ -612,7 +612,7 @@ std::string  CNeutrinoYParser::func_unmount_get_list(CyhookHandler *hh, std::str
 //-------------------------------------------------------------------------
 // y-func : build partition list
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_partition_list(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_partition_list(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	std::string ysel, ymtd, yname, dummy, yresult;
 	char ytmp[200];
@@ -639,14 +639,14 @@ std::string  CNeutrinoYParser::func_get_partition_list(CyhookHandler *hh, std::s
 //-------------------------------------------------------------------------
 // y-func : get boxtypetext (Nokia, Philips, Sagem)
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_boxtype(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_boxtype(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	return NeutrinoAPI->Dbox_Hersteller[NeutrinoAPI->Controld->getBoxType()];
 }
 //-------------------------------------------------------------------------
 // y-func : get stream info
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, std::string /*para*/)
 {
 	int bitInfo[10];
 	CZapitClient::CCurrentServiceInfo serviceinfo;
@@ -705,7 +705,7 @@ std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, s
 // Template 1:classname, 2:zAlarmTime, 3: zStopTime, 4:zRep, 5:zRepCouunt
 //		6:zType, 7:sAddData, 8:timer->eventID, 9:timer->eventID
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_get_timer_list(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_get_timer_list(CyhookHandler */*hh*/, std::string para)
 {
 	std::string yresult;
 	CTimerd::TimerList timerlist;				// List of bouquets
@@ -1034,7 +1034,7 @@ std::string  CNeutrinoYParser::func_bouquet_editor_main(CyhookHandler *hh, std::
 //-------------------------------------------------------------------------
 // func: Bouquet Edit
 //-------------------------------------------------------------------------
-std::string  CNeutrinoYParser::func_set_bouquet_edit_form(CyhookHandler *hh, std::string para)
+std::string  CNeutrinoYParser::func_set_bouquet_edit_form(CyhookHandler *hh, std::string /*para*/)
 {
 	if (!(hh->ParamList["selected"].empty()))
 	{

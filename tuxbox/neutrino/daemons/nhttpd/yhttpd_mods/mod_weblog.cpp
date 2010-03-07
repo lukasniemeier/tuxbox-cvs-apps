@@ -56,7 +56,7 @@ THandleStatus CmWebLog::Hook_EndConnection(CyhookHandler *hh)
 // HOOK: Hook_ReadConfig 
 // This hook ist called from ReadConfig
 //-----------------------------------------------------------------------------
-THandleStatus CmWebLog::Hook_ReadConfig(CConfigFile *Config, CStringList &ConfigList)
+THandleStatus CmWebLog::Hook_ReadConfig(CConfigFile *Config, CStringList &/*ConfigList*/)
 {
 	LogFormat	= Config->getString("mod_weblog.log_format", LOG_FORMAT);
 	WebLogFilename	= Config->getString("mod_weblog.logfile", LOG_FILE);

@@ -540,7 +540,7 @@ std::string  CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd)
 // Get Value from ini/conf-file (filename) for var (varname)
 // yaccess = open | cache
 //-------------------------------------------------------------------------
-std::string  CyParser::YWeb_cgi_get_ini(CyhookHandler *hh, std::string filename, std::string varname, std::string yaccess)
+std::string  CyParser::YWeb_cgi_get_ini(CyhookHandler */*hh*/, std::string filename, std::string varname, std::string yaccess)
 {
 	std::string result;
 	if((yaccess == "open") || (yaccess == ""))
@@ -556,7 +556,7 @@ std::string  CyParser::YWeb_cgi_get_ini(CyhookHandler *hh, std::string filename,
 // set Value from ini/conf-file (filename) for var (varname)
 // yaccess = open | cache | save
 //-------------------------------------------------------------------------
-void  CyParser::YWeb_cgi_set_ini(CyhookHandler *hh, std::string filename, std::string varname, std::string varvalue, std::string yaccess)
+void  CyParser::YWeb_cgi_set_ini(CyhookHandler */*hh*/, std::string filename, std::string varname, std::string varvalue, std::string yaccess)
 {
 	std::string result;
 	if((yaccess == "open") || (yaccess == ""))
@@ -637,7 +637,7 @@ std::string  CyParser::YWeb_cgi_include_block(std::string filename, std::string 
 
 //-------------------------------------------------------------------------
 
-std::string CyParser::YexecuteScript(CyhookHandler *hh, std::string cmd)
+std::string CyParser::YexecuteScript(CyhookHandler */*hh*/, std::string cmd)
 {
 	std::string script, para, result;
 	bool found = false;
@@ -755,7 +755,7 @@ std::string  CyParser::func_get_config_data(CyhookHandler *hh, std::string para)
 //-------------------------------------------------------------------------
 // y-func : Reload the httpd.conf
 //-------------------------------------------------------------------------
-std::string  CyParser::func_do_reload_httpd_config(CyhookHandler *hh, std::string para)
+std::string  CyParser::func_do_reload_httpd_config(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	log_level_printf(1,"func_do_reload_httpd_config: raise USR1 !!!\n");
 	raise(SIGUSR1); // Send HUP-Signal to Reload Settings

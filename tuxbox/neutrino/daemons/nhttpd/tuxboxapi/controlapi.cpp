@@ -1755,7 +1755,7 @@ void CControlAPI::YWeb_SendRadioStreamingPid(CyhookHandler *hh)
 }
 
 //-----------------------------------------------------------------------------
-std::string CControlAPI::YexecuteScript(CyhookHandler *hh, std::string cmd)
+std::string CControlAPI::YexecuteScript(CyhookHandler */*hh*/, std::string cmd)
 {
 	std::string script, para, result;
 	bool found = false;
