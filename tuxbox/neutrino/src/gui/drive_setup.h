@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.19 2010/02/22 11:17:29 dbt Exp $
+	$Id: drive_setup.h,v 1.20 2010/03/11 08:35:35 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -385,7 +385,7 @@ class CDriveSetup : public CMenuTarget
 
 		//helper
 		std::string iToString(int int_val);
-		int getPid(std::string& proc_name);
+
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 
