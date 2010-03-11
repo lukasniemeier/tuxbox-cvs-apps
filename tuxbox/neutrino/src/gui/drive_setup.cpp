@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.45 2010/02/24 09:45:49 dbt Exp $
+	$Id: drive_setup.cpp,v 1.46 2010/03/11 08:29:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -860,7 +860,7 @@ void CDriveSetup::showHddSetupSub()
 	next_part_number = getFirstUnusedPart(current_device); //also used from swap_add
 	//menue sub: prepare separator: hdparms
 	CMenuSeparator *sep_jobs = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_JOBS);
- 	CMenuForwarder *part_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION, add_activate, NULL, sub_add, NULL/*"add_partition"*/, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+ 	CMenuForwarder *part_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION, add_activate, NULL, sub_add, NULL/*"add_partition"*/, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 
 	//menue sub: prepare item: add swap
 	bool add_swap_active;
@@ -869,7 +869,7 @@ void CDriveSetup::showHddSetupSub()
 	else 
 		add_swap_active = false;
 	
-	CMenuForwarder *swap_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_SWAP_PARTITION, add_swap_active, NULL, sub_add_swap, NULL/*"add_swap_partition"*/, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuForwarder *swap_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_SWAP_PARTITION, add_swap_active, NULL, sub_add_swap, NULL/*"add_swap_partition"*/, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 
 	//menue add: prepare subhead: add part
 	string add_subhead_txt = dev_name + " >> " + iToString(next_part_number+1) + ". " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION);
@@ -944,8 +944,8 @@ void CDriveSetup::showHddSetupSub()
 	else
 		sub->addItem(sep_jobs); 	//separator jobs
 	//------------------------
-	sub->addItem(part_add); 	//add partition
 	sub->addItem(swap_add); 	//add swap
+	sub->addItem(part_add); 	//add partition
 	sub->addItem(mount_all); 	//mount
 	sub->addItem(ummount_all); 	//unmount
 	//------------------------
@@ -4157,7 +4157,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.45 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.46 $");
 }
 
 // returns text for initfile headers
