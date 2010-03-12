@@ -41,7 +41,9 @@
 
 #include <gui/eventlist.h>
 #include <gui/infoviewer.h>
+#ifdef ENABLE_EPGPLUS
 #include <gui/epgplus.h>
+#endif
 #include <gui/streaminfo2.h>
 
 
@@ -71,12 +73,14 @@ int CEPGMenuHandler::exec(CMenuTarget* parent, const std::string &)
 int CEPGMenuHandler::doMenu ()
 {
 
-	CMenuWidget EPGSelector(LOCALE_EPGMENU_HEAD, "features.raw", 350);
+	CMenuWidget EPGSelector(LOCALE_EPGMENU_HEAD, NEUTRINO_ICON_FEATURES, 350);
 
 	// EPGSelector.addItem(GenericMenuSeparator);
 
 	EPGSelector.addItem(new CMenuForwarder(LOCALE_EPGMENU_EVENTLIST , true, NULL, new CEventListHandler(), NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
+#ifdef ENABLE_EPGPLUS
 	EPGSelector.addItem(new CMenuForwarder(LOCALE_EPGMENU_EPGPLUS   , true, NULL, new CEPGplusHandler()  , NULL, CRCInput::RC_green , NEUTRINO_ICON_BUTTON_GREEN ), false);
+#endif
 	EPGSelector.addItem(new CMenuForwarder(LOCALE_EPGMENU_EVENTINFO , true, NULL, new CEPGDataHandler()  , NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
 	EPGSelector.addItem(new CMenuForwarder(LOCALE_EPGMENU_STREAMINFO, true, NULL, new CStreamInfo2Handler()     , NULL, CRCInput::RC_blue  , NEUTRINO_ICON_BUTTON_BLUE  ), false);
 

@@ -26,7 +26,6 @@ libneutrino_gui_a_SOURCES = \
 	channellist.cpp \
 	color.cpp \
 	epg_menu.cpp \
-	epgplus.cpp \
 	epgview.cpp \
 	eventlist.cpp \
 	favorites.cpp \
@@ -82,6 +81,11 @@ else
 libneutrino_gui_a_SOURCES += \
 	movieplayer.cpp
 endif
+endif
+
+if ENABLE_EPGPLUS
+libneutrino_gui_a_SOURCES += \
+	epgplus.cpp
 endif
 
 if !ENABLE_KERNEL26

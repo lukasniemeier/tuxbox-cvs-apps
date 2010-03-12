@@ -104,6 +104,11 @@ AC_ARG_ENABLE(pictureviewer,
 	,[enable_pictureviewer=yes])
 AM_CONDITIONAL(ENABLE_PICTUREVIEWER,test "$enable_pictureviewer" = "yes")
 
+AC_ARG_ENABLE(epgplus,
+	AS_HELP_STRING(--disable-epgplus,include Neutrino epgplus),
+	,[enable_epgplus=yes])
+AM_CONDITIONAL(ENABLE_EPGPLUS,test "$enable_epgplus" = "yes")
+
 #### ide/hdd/mmc stuff###
 AC_ARG_ENABLE(drive-gui,
 	AS_HELP_STRING(--enable-drive-gui, enable neutrino drive gui),
@@ -184,6 +189,10 @@ fi
 
 if test "$enable_radiotext" = "yes"; then
 AC_DEFINE(ENABLE_RADIOTEXT,1,[include Radiotext support])
+fi
+
+if test "$enable_epgplus" = "yes"; then
+AC_DEFINE(ENABLE_EPGPLUS,1,[include EPG plus])
 fi
 
 if test "$enable_drive_gui" = "yes"; then

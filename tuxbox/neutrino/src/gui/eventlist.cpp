@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.133 2010/02/18 18:55:45 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.134 2010/03/12 22:51:50 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -537,6 +537,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		{
 			loop= false;
 		}
+#ifdef ENABLE_EPGPLUS
 		else if (msg == CRCInput::RC_epg)
 		{
 			hide();
@@ -544,6 +545,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 			eplus.exec(NULL, "");
 			loop = false;
 		}
+#endif
 		else if (msg==CRCInput::RC_help || msg==CRCInput::RC_right || msg==CRCInput::RC_ok)
 		{
 			if ( evtlist[selected].eventID != 0 )

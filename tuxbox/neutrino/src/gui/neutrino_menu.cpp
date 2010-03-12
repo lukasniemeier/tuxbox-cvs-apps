@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.101 2010/03/06 19:54:00 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.102 2010/03/12 22:51:50 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -69,7 +69,9 @@
 #ifdef ENABLE_ESD
 #include "gui/esound.h"
 #endif
+#ifdef ENABLE_EPGPLUS
 #include "gui/epgplus.h"
+#endif
 #include "gui/favorites.h"
 #include "gui/imageinfo.h"
 #include "gui/keyhelper.h"
@@ -1331,7 +1333,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 	CMenuWidget* tmpNVODSelector				= NULL;
 	CStreamInfo2Handler*	tmpStreamInfo2Handler 		= NULL;
 	CEventListHandler* tmpEventListHandler			= NULL;
+#ifdef ENABLE_EPGPLUS
 	CEPGplusHandler* tmpEPGplusHandler			= NULL;
+#endif
 	CEPGDataHandler* tmpEPGDataHandler			= NULL;
 	
 	std::string txt = g_settings.usermenu_text[button];
@@ -1472,6 +1476,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 				menu->addItem(menu_item, false);
 				break;
 
+#ifdef ENABLE_EPGPLUS
 			case SNeutrinoSettings::ITEM_EPG_SUPER: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_EPG_SUPER;
@@ -1480,6 +1485,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 				menu_item = new CMenuForwarder(LOCALE_EPGMENU_EPGPLUS   , true, NULL, tmpEPGplusHandler  ,  "-1", key, icon);
 				menu->addItem(menu_item, false);
 				break;
+#endif
 
 			case SNeutrinoSettings::ITEM_EPG_LIST: 
 				menu_items++;
@@ -1602,7 +1608,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 	if(tmpNVODSelector)		delete tmpNVODSelector;
 	if(tmpStreamInfo2Handler)	delete tmpStreamInfo2Handler;
 	if(tmpEventListHandler)		delete tmpEventListHandler;
+#ifdef ENABLE_EPGPLUS
 	if(tmpEPGplusHandler)		delete tmpEPGplusHandler;
+#endif
 	if(tmpEPGDataHandler)		delete tmpEPGDataHandler;
 	return true;
 }
