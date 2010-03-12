@@ -1,5 +1,5 @@
 /*
- * $Id: udpstreamts.c,v 1.2 2005/02/04 17:27:56 ghostrider Exp $
+ * $Id: udpstreamts.c,v 1.3 2010/03/12 22:44:24 rhabarber1848 Exp $
  *
  * a lightweight videolan server replacement
  *
@@ -47,7 +47,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/signal.h>
 #include <unistd.h>
+#include <errno.h>
 
 #if HAVE_DVB_API_VERSION < 3
 	#include <ost/dmx.h>
@@ -70,6 +72,13 @@
 #define TS_PACKET_SIZE (188)
 #define UDP_PACKET_SIZE (TS_PACKET_SIZE * 7)
 #define READ_BUFFER_SIZE (UDP_PACKET_SIZE * 32)
+#define MAX_RETRIES 10
+
+#undef UDPSTREAMTS_DEBUG
+#undef USE_SEND_RETRY
+
+
+char exiting = 0;
 
 static int
 dmx_pid_filter_start(unsigned short pid)
@@ -117,6 +126,10 @@ write_packets(int fd, unsigned char *buf, int count, unsigned char *writebuf, in
         unsigned char *bp;
         ssize_t written;
 
+	#ifdef USE_SEND_RETRY
+	unsigned int retries=0;
+	#endif
+
 	if (buf[0] != TS_SYNC_BYTE) {
 		/*
 		 * What happen?
@@ -160,12 +173,28 @@ write_packets(int fd, unsigned char *buf, int count, unsigned char *writebuf, in
                  */
                 written = write(fd, bp, UDP_PACKET_SIZE);
 
+		#ifdef USE_SEND_RETRY
+		/*
+		* retry to send
+		*/
+                retries = 0;
+		while((written == -1) && (retries < MAX_RETRIES)){
+			retries++;
+			fprintf(stderr,"Error writing to socket, still trying..(%i/%i);",retries,MAX_RETRIES);
+			perror(" Reason");
+			written = write(fd, bp, UDP_PACKET_SIZE);
+		}
+		#endif
+
+
                 /*
                  * exit on error
                  */
                 if (written == -1) {
-			perror("write");
+
+			perror("Error writing to socket, giving up");
                         return -1;
+
 		}
 
                 /*
@@ -224,6 +253,18 @@ sync_byte_offset(char *buf, size_t len)
 	return -1;
 }
 
+void
+sig_handler(int sig) /* signal handler */
+{
+	switch(sig)
+	{
+		case SIGTERM:
+		/* do the cleanup */
+		printf("Got kill signal. Cleaning and bailing out...\n");
+		exiting = 1;
+		break;
+	}
+}
 
 int
 main (int argc, char **argv)
@@ -234,20 +275,79 @@ main (int argc, char **argv)
 	int dmx[argc - 3];
 	int dvr;
 
-	int i;
+	int i,j;
+
+	int argp = 1, retries=0;
+
+	#ifdef UDPSTREAMTS_DEBUG
+	int min_read = READ_BUFFER_SIZE+1, max_read = -1;
+	#endif
 
 	char readbuf[READ_BUFFER_SIZE];
 	char writebuf[UDP_PACKET_SIZE];
 	ssize_t rsize = 0;
 	ssize_t wsize = 0;
 
+	#ifdef UDPSTREAMTS_DEBUG
+		printf("udpstreamts (compiled in debug mode) starting... \n");
+		printf("Size of readbuffer: %d bytes\n", READ_BUFFER_SIZE);
+		printf("Size of writebuffer: %d bytes\n", UDP_PACKET_SIZE);
+		printf("\n");
+	#else
+		printf("udpstreamts starting... \n");
+		printf("\n");		
+	#endif
+
 	if (argc < 4) {
 		/*
 		 * Main screen turn on
 		 */
-		fprintf(stderr, "usage: %s <ip> <port> <pid> [<pid> ...]\n", argv[0]);
+		fprintf(stderr, "usage: %s [-b <logfile>] <ip> <port> <pid> [<pid> ...]\n", argv[0]);
 		return EXIT_FAILURE;
 	}
+
+	/* inserted A.Wacker 19.07.2007 for starting udpstreamts in background */
+	if (!strncmp(argv[1],"-b",2)) {
+        	printf("Daemonizing %s and logging to %s...\n", argv[0], argv[2]);
+		fflush(stdout);
+        	
+		/* daemonize */
+		j=fork();
+		if (j<0) exit(1); /* fork error */
+		if (j>0) exit(0); /* parent exits */
+		/* child daemon continous */
+		
+		setsid(); /* obtain a new process group */
+
+		for (j=getdtablesize();j>=0;--j) close(j); /* close all descriptors */
+
+		j = open(argv[2], O_RDWR|O_CREAT|O_TRUNC); /*open stdin */
+		dup(j); /* stdout */
+		dup(j); /* stderr */
+
+		if (j == -1)
+        	{
+			perror("Cannot open logfile for writing");
+        	}
+		
+		chdir ("/");
+
+		signal(SIGCHLD,SIG_IGN); /* ignore child terminate signal */
+		signal(SIGTERM,sig_handler); /* termination signal from kill */
+		
+		
+		/* check again if there are enough arguments */
+		if (argc < 6) {
+			fprintf(stderr, "usage: %s [-b <logfile>] <ip> <port> <pid> [<pid> ...]\n", argv[0]);
+		return EXIT_FAILURE;
+	}
+
+		/* finally shift the remaining arguments, so that the rest of the code remains untouched */
+		argp = 3;
+	}
+	printf("Preparing to send the transport stream to %s:%s ...\n",argv[argp],argv[argp+1]);
+    	/* end changes 19.07.2007 */
+
 
 	/*
 	 * It's You!!
@@ -258,8 +358,8 @@ main (int argc, char **argv)
 	}
 
 	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = inet_addr(argv[1]);
-	sin.sin_port = htons(strtoul(argv[2], NULL, 0));
+	sin.sin_addr.s_addr = inet_addr(argv[argp]);
+	sin.sin_port = htons(strtoul(argv[argp+1], NULL, 0));
 
 	/*
 	 * How are you gentlemen!!
@@ -277,8 +377,12 @@ main (int argc, char **argv)
 	/*
 	 * All your base are belong to us
 	 */
-	for (i = 0; i < argc - 3; i++)
-		dmx[i] = dmx_pid_filter_start(strtoul(argv[i + 3], NULL, 0));
+	for (i = 0; i < (argc - (argp+2)); i++)
+	{
+		printf("Preparing demuxer for streaming PID %i: %s ...\n",i ,argv[i + (argp + 2)]);
+		dmx[i] = dmx_pid_filter_start(strtoul(argv[i + (argp + 2)], NULL, 0));
+	}
+	fflush(stdout);
 
 	rsize = read(dvr, readbuf, TS_PACKET_SIZE);
 
@@ -286,7 +390,7 @@ main (int argc, char **argv)
 		/*
 		 * You are on the way to destruction
 		 */
-		perror("read");
+		perror("Error reading from dvr");
 	}
 
 	else {
@@ -307,8 +411,23 @@ main (int argc, char **argv)
 			 */
 			rsize = read(dvr, readbuf + read_offset, sizeof(readbuf) - read_offset - size_offset);
 
+
+			/*
+			* retry to read
+			*/
+			retries = 0;
+			while((rsize == -1) && (retries < MAX_RETRIES) && (errno==EOVERFLOW)){
+				retries++;
+				#ifdef UDPSTREAMTS_DEBUG
+				fprintf(stderr,"Error reading from dvr, still trying..(%i/%i)",retries,MAX_RETRIES);
+				perror("; Reason");
+				#endif
+				rsize = read(dvr, readbuf + read_offset, sizeof(readbuf) - read_offset - size_offset);
+			}
+
+
 			if (rsize == -1) {
-				perror("read");
+				perror("Error reading from dvr. Giving up");
 				break;
 			}
 
@@ -326,12 +445,33 @@ main (int argc, char **argv)
 			 */
 			read_offset = sync_byte_offset(readbuf, rsize - TS_PACKET_SIZE);
 
+
+			#ifdef UDPSTREAMTS_DEBUG
+			/* just for debugging*/
+			if(rsize>max_read)
+			{
+				max_read = rsize;
+				printf("New max read size: %d\n",max_read);
+			}
+			if(rsize<min_read)
+			{
+				min_read = rsize;
+				printf("New min read size: %d\n",min_read);
+			}
+			if ((rsize!=max_read) && (rsize!=min_read))
+			{
+				printf("Current read size: %d\n",rsize);
+			}
+			#endif
+
+
 			if (!read_offset) {
 				/*
 				 * All your TS are belong to us
 				 */
 				wsize = write_packets(udp_socket, readbuf, rsize, writebuf, wsize);
 				size_offset = 0;
+
 			}
 
 			else if (read_offset == -1) {
@@ -362,13 +502,23 @@ main (int argc, char **argv)
 				read_offset = 0;
 			}
 
-		} while (wsize >= 0);
+		} while (wsize >= 0 && !exiting);
 	}
 
-	for (i = 0; i < argc - 3; i++)
+	printf("Prepare for shutdown ");
+
+	for (i = 0; i < (argc - (argp+2)); i++)
+	{
+		fprintf(stdout,".");
 		dmx_pid_filter_stop(dmx[i]);
+	}
 
 	close(dvr);
+
+	/* just to be sure, that everything is closed */
+	for (j=getdtablesize();j>=3;--j) close(j); /* close all descriptors, except std dscr. */
+
+	printf(" done. Goodby!\n");
 
 	/*
 	 * For great justice
