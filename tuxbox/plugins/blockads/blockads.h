@@ -1,5 +1,5 @@
 /*
- * $Id: blockads.h,v 1.1 2010/03/03 20:47:03 rhabarber1848 Exp $
+ * $Id: blockads.h,v 1.2 2010/03/13 09:52:03 rhabarber1848 Exp $
  *
  * blockads - d-box2 linux project
  *
@@ -137,7 +137,11 @@ FT_Library		library;
 FTC_Manager		manager;
 FTC_SBitCache		cache;
 FTC_SBit		sbit;
+#if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
+FTC_Image_Desc		desc;
+#else
 FTC_ImageTypeRec	desc;
+#endif
 FT_Face			face;
 FT_UInt			prev_glyphindex;
 FT_Bool			use_kerning;
