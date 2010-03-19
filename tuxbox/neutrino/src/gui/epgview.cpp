@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.152 2010/02/28 17:54:09 rhabarber1848 Exp $
+	$Id: epgview.cpp,v 1.153 2010/03/19 21:25:28 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -434,7 +434,6 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		evtlist = g_Sectionsd->getEventsServiceKey(channel_id);
 		// Houdini added for Private Premiere EPG start sorted by start date/time
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
-		frameBuffer->paintBackgroundBoxRel(g_settings.screen_StartX, g_settings.screen_StartY, 50, height+5);
 	}
 
 	if (epgData.title.empty()) /* no epg info found */
