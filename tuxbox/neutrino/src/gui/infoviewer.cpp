@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.289 2010/03/06 20:00:22 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.290 2010/03/20 18:10:25 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -427,12 +427,15 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 #endif
 	}
 
-	int col_NumBoxText;
-	int col_NumBox;
+	int col_NumBoxText = COL_INFOBAR;
+	int col_NumBox = COL_INFOBAR_PLUS_0;
 	if (virtual_zap_mode)
 	{
-		col_NumBoxText = COL_MENUHEAD;
-		col_NumBox = COL_MENUHEAD_PLUS_0;
+		if (g_RemoteControl->current_channel_id != new_channel_id)
+		{
+			col_NumBoxText = COL_MENUHEAD;
+			col_NumBox = COL_MENUHEAD_PLUS_0;
+		}
 		if ((channel_id != new_channel_id) || (evtlist.empty()))
 		{
 			evtlist.clear();
@@ -441,11 +444,6 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 				sort(evtlist.begin(),evtlist.end(), sortByDateTime);
 			new_chan = true;
 		}
-	}
-	else
-	{
-		col_NumBoxText = COL_INFOBAR;
-		col_NumBox = COL_INFOBAR_PLUS_0;
 	}
 
 	// get channel-id
