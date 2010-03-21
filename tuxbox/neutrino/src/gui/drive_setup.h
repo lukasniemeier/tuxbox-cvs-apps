@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.20 2010/03/11 08:35:35 dbt Exp $
+	$Id: drive_setup.h,v 1.21 2010/03/21 00:35:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -213,6 +213,7 @@ class CDriveSetup : public CMenuTarget
 		std::string mmc_modules[MAXCOUNT_MMC_MODULES]; //all supported mmc modules
 		std::string moduldir[4]; //possible dirs of modules
 		std::string k_name; //kernel name
+		std::string partitions[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 
 		//error messages
 		#define ERROR_DESCRIPTIONS_NUM_COUNT 24 
@@ -266,15 +267,14 @@ class CDriveSetup : public CMenuTarget
 		std::vector<std::string> v_init_ide_L_cmds; 	//collection of ide load commands
 		std::vector<std::string> v_init_fs_L_cmds; 	//collection of fs load commands
 		std::vector<std::string> v_init_fs_U_cmds; 	//collection of fs unload commands
- 		std::vector<std::string> v_partname; 		//collection of all partition names, 4 per device
 		std::vector<std::string> v_device_temp;  	//collection of temperature of devices
 		std::vector<std::string> v_hdparm_cmds;		//collection of available hdparm commands
 
-		std::vector<unsigned long long> v_device_size; 	// contains sizes of all devices
-		std::vector<unsigned long long> v_device_cylcount; 	// contains count of devices for all devices
-		std::vector<unsigned long long> v_device_cyl_size; 	// contains bytes of one cylinder for all devices in bytes
-		std::vector<unsigned long long> v_device_heads_count; // contains count of heads
-		std::vector<unsigned long long> v_device_sectors_count; // contains count of sectors
+		unsigned long long device_size[MAXCOUNT_DRIVE];		// contains sizes of all devices
+		unsigned long long device_cylcount[MAXCOUNT_DRIVE]; 	// contains count of devices for all devices
+		unsigned long long device_cyl_size[MAXCOUNT_DRIVE]; 	// contains bytes of one cylinder for all devices in bytes
+		unsigned long long device_heads_count[MAXCOUNT_DRIVE];	 // contains count of heads
+		unsigned long long device_sectors_count[MAXCOUNT_DRIVE]; // contains count of sectors
 
 		const char *getFsTypeStr(long &fs_type_const);
 
@@ -334,7 +334,7 @@ class CDriveSetup : public CMenuTarget
 		void loadHddModels();
 		void loadFsModulList();
 		void loadMmcModulList();
-		void loadPartlist(const int& device_num = -1);
+		void loadPartitions();
 		void loadFdiskData();
 		void loadDriveTemps();
 		void loadModulDirs();
@@ -363,10 +363,10 @@ class CDriveSetup : public CMenuTarget
 		
 		std::string getMountInfo(const std::string& partname /*HDA1...HDB4*/, const int& mtab_info_num /*MTAB_INFO_NUM*/);
 		std::string getSwapInfo(const std::string& partname /*HDA1...HDB4*/, const int& swap_info_num  /*SWAP_INFO_NUM*/);
-		std::string getPartName(const int& device_num/*MASTER || SLAVE || MMCARD*/, const int& part_num /*0...3*/);
 		std::string getFileEntryString(const char* filename, const std::string& filter_entry, const int& column_num);
 		std::string convertByteString(const unsigned long long& byte_size);
 		std::string getUsedMmcModulName();
+		std::string getFilePath(const char* main_file, const char* default_file);
 		std::string getInitIdeFilePath();
 		std::string getInitMountFilePath();
 		std::string getFstabFilePath();
