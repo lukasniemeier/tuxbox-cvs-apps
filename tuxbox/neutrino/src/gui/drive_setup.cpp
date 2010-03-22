@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.47 2010/03/21 00:35:15 dbt Exp $
+	$Id: drive_setup.cpp,v 1.48 2010/03/22 07:27:17 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -479,9 +479,6 @@ void CDriveSetup::hide()
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
-// init members
-#define COUNT_INIT_MEMBERS 11
-
 // init menue
 void CDriveSetup::Init()
 {
@@ -507,9 +504,11 @@ void CDriveSetup::Init()
 
 	frameBuffer->paintBoxRel(pb_x, pb_y, pb_w, pb_h, COL_MENUCONTENT_PLUS_0, RADIUS_MID);
 
-	for (unsigned int i = 0; i < COUNT_INIT_MEMBERS; i++) 
+	int max_members = (sizeof(pMember) / sizeof(pMember[0]));
+
+	for (unsigned int i = 0; i < max_members; i++) 
 	{
-		pb.paintProgressBar(pb_x+10, pb_y+pb_h-20-SHADOW_OFFSET, pb_w-20, 16, i, COUNT_INIT_MEMBERS, 0, 0, COL_SILVER, COL_INFOBAR_SHADOW, "loading menue...", COL_MENUCONTENT);
+		pb.paintProgressBar(pb_x+10, pb_y+pb_h-20-SHADOW_OFFSET, pb_w-20, 16, i, max_members, 0, 0, COL_SILVER, COL_INFOBAR_SHADOW, "loading menue...", COL_MENUCONTENT);
 		(*this.*pMember[i])();
 	}
 
@@ -4093,7 +4092,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.47 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.48 $");
 }
 
 // returns text for initfile headers
