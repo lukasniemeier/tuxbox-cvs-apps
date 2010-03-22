@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.49 2010/03/22 09:13:24 dbt Exp $
+	$Id: drive_setup.cpp,v 1.50 2010/03/22 11:11:25 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -504,7 +504,7 @@ void CDriveSetup::Init()
 
 	frameBuffer->paintBoxRel(pb_x, pb_y, pb_w, pb_h, COL_MENUCONTENT_PLUS_0, RADIUS_MID);
 
-	int max_members = (sizeof(pMember) / sizeof(pMember[0]));
+	unsigned int max_members = (sizeof(pMember) / sizeof(pMember[0]));
 
 	for (unsigned int i = 0; i < max_members; i++) 
 	{
@@ -4092,7 +4092,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.49 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.50 $");
 }
 
 // returns text for initfile headers
