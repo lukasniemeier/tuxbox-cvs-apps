@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.48 2010/03/22 07:27:17 dbt Exp $
+	$Id: drive_setup.cpp,v 1.49 2010/03/22 09:13:24 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -490,17 +490,17 @@ void CDriveSetup::Init()
 	if (pixbuf != NULL)
 		frameBuffer->SaveScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
 
- 	void (CDriveSetup::*pMember[COUNT_INIT_MEMBERS])(void) = {	&CDriveSetup::loadPartitions,
-									&CDriveSetup::loadDriveSettings,
-									&CDriveSetup::loadModulDirs,
-									&CDriveSetup::loadHddCount,
-									&CDriveSetup::loadHddModels,
-									&CDriveSetup::calPartCount,
-									&CDriveSetup::loadFsModulList,
-									&CDriveSetup::loadMmcModulList,
-									&CDriveSetup::loadFdiskData,
-									&CDriveSetup::loadDriveTemps,
-									&CDriveSetup::showHddSetupMain};
+ 	void (CDriveSetup::*pMember[])(void) = {	&CDriveSetup::loadPartitions,
+							&CDriveSetup::loadDriveSettings,
+							&CDriveSetup::loadModulDirs,
+							&CDriveSetup::loadHddCount,
+							&CDriveSetup::loadHddModels,
+							&CDriveSetup::calPartCount,
+							&CDriveSetup::loadFsModulList,
+							&CDriveSetup::loadMmcModulList,
+							&CDriveSetup::loadFdiskData,
+							&CDriveSetup::loadDriveTemps,
+							&CDriveSetup::showHddSetupMain};
 
 	frameBuffer->paintBoxRel(pb_x, pb_y, pb_w, pb_h, COL_MENUCONTENT_PLUS_0, RADIUS_MID);
 
@@ -4092,7 +4092,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.48 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.49 $");
 }
 
 // returns text for initfile headers
