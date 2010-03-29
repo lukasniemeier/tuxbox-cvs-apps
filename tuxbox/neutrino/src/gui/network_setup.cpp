@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.7 2010/02/23 10:46:01 dbt Exp $
+	$Id: network_setup.cpp,v 1.8 2010/03/29 19:14:27 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -44,6 +44,10 @@
 #ifdef ENABLE_GUI_MOUNT
 #include "gui/nfs.h"
 #endif /*ENABLE_GUI_MOUNT*/
+
+#if defined ENABLE_DRIVE_GUI && defined ENABLE_SAMBASERVER
+#include "gui/sambaserver_setup.h"
+#endif /*ENABLE_DRIVE_GUI && defined ENABLE_SAMBASERVER*/
 
 #include <global.h>
 #include <neutrino.h>
@@ -255,10 +259,10 @@ void CNetworkSetup::showNetworkSetup()
  	#endif 
 	#endif
 
-// 	#ifdef ENABLE_SAMBASERVER
-// 		//sambaserver
-//   		networkSettings->addItem(new CMenuOptionChooser(LOCALE_NETWORKMENU_SAMBA, &g_settings.network_samba, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CTouchFileNotifier("/var/etc/.sambaserver"), CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
-// 	#endif
+	#if defined ENABLE_DRIVE_GUI && defined ENABLE_SAMBASERVER
+		//sambaserver
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SAMBA, true, NULL, new CSambaSetup(LOCALE_MAINSETTINGS_NETWORK), NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
+	#endif
 
 		networkSettings->exec(NULL, "");
 		networkSettings->hide();
