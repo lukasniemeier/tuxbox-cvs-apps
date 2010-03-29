@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.185 2009/12/15 12:58:37 dbt Exp $
+	$Id: setting_helpers.cpp,v 1.186 2010/03/29 19:16:21 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,11 +41,15 @@
 #include "libnet.h"
 
 #include <sstream>
+#include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <linux/if.h>
+#include <dirent.h>
+#include <errno.h>
 
 #include <libucodes.h>
 
@@ -68,6 +72,8 @@ extern "C" void tuxtxt_close();
 extern "C" int  tuxtxt_init();
 extern "C" int  tuxtxt_start(int tpid);
 #endif
+
+#define PROCDIR "/proc"
 
 bool CSatDiseqcNotifier::changeNotify(const neutrino_locale_t, void * Data)
 {
@@ -924,6 +930,107 @@ unsigned long long getcurrenttime()
 	struct timeval tv;
 	gettimeofday( &tv, NULL );
 	return (unsigned long long) tv.tv_usec + (unsigned long long)((unsigned long long) tv.tv_sec * (unsigned long long) 1000000);
+}
+
+//helper: returns a selectable tab entry from file 
+std::string getFileEntryString(const char* filename, const std::string& filter_entry, const int& column_num)
+{
+	std::string ret = "";
+	char line[256];
+	std::ifstream in (filename, std::ios::in);
+
+	if (!in) 
+	{
+		std::cerr<<__FUNCTION__ <<": error while open "<<filename<<" "<< strerror(errno)<<std::endl;
+		return ret;
+	}
+
+	while (in.getline (line, 256))
+	{
+		std::string tab_line = (std::string)line, str_res;
+		std::string::size_type loc = tab_line.find( filter_entry, 0 );
+
+		if ( loc != std::string::npos ) 
+		{
+			std::stringstream stream(tab_line);
+
+			for(int i = 0; i <= 10; i++)
+			{
+				stream >> str_res;
+				if (i==column_num) 
+				{
+					ret = str_res;
+					in.close();
+					return ret;
+				}
+
+			}
+		}
+	}
+	in.close();
+	return ret;
+}
+
+//helper, returns pid of process name as string, if no pid found returns an empty string
+std::string getPidof(const std::string& process_name)
+{
+	std::string ret = "";
+	std::string p_filter = process_name;
+	std::string p_name;
+	DIR *dir;
+	struct dirent *entry;
+	
+	dir = opendir(PROCDIR);
+	if (dir)
+	{
+		do
+		{
+			entry = readdir(dir);
+			if (entry)
+			{
+				std::string dir_x = entry->d_name;
+
+				char filename[255];
+				sprintf(filename,"%s/%s/status", PROCDIR, dir_x.c_str());
+
+				if(access(filename, R_OK) ==0)
+				{
+					p_name = getFileEntryString(filename, "Name:", 2);
+					if (p_name == p_filter)
+					{
+						closedir(dir);
+						return dir_x;
+					}
+				}
+			}
+		}
+        	while (entry);
+	}
+	closedir(dir);
+
+	return ret;
+}
+
+//returns interface
+std::string getInterface()
+{
+	char ret[19];
+	char ip[3][16];
+	char our_ip[3][16];
+
+	CNetworkConfig  *network = CNetworkConfig::getInstance();
+	
+	if (network->inet_static)
+	{
+		sprintf(ip[0], "%s", network->address.c_str());
+		strcpy(our_ip[0], ip[0]);
+	}
+	else 	//Note: netGetIP returns also mask and broadcast, but not needed here 
+		netGetIP("eth0", our_ip[0]/*IP*/, our_ip[1]/*MASK*/, our_ip[2]/*BROADCAST*/);
+
+	sprintf(ret, "%s/24", our_ip[0]);
+	
+	return ret;
 }
 
 // USERMENU
