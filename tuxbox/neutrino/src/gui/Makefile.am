@@ -98,6 +98,10 @@ if !DISABLE_INTERNET_UPDATE
 libneutrino_gui_a_SOURCES += proxyserver_setup.cpp
 endif
 
+if ENABLE_SAMBASERVER
+libneutrino_gui_a_SOURCES += sambaserver_setup.cpp
+endif
+
 #	experimental_menu.cpp
 #	ch_mosaic.cpp
 
