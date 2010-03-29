@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1017 2010/03/06 19:53:59 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1018 2010/03/29 19:22:16 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -101,6 +101,9 @@
 #include "gui/screensetup.h"
 #include "gui/esound.h"
 #include "gui/personalize.h"
+#ifdef ENABLE_SAMBASERVER
+#include "gui/sambaserver_setup.h"
+#endif
 
 #include <system/setting_helpers.h>
 #include <system/settings.h>
@@ -516,8 +519,14 @@ int CNeutrinoApp::loadSetup()
 		strcpy( g_settings.network_nfs_mac[i], configfile.getString( cfg_key, "11:22:33:44:55:66").c_str() );
 	}
 	g_settings.filesystem_is_utf8              = configfile.getBool("filesystem_is_utf8"                 , true );
+
 #ifdef ENABLE_SAMBASERVER
-	g_settings.network_samba = configfile.getInt32("network_samba", 0); // OFF
+	// samba
+	g_settings.smb_setup_samba_on_off = configfile.getInt32("smb_setup_samba_on_off", CSambaSetup::OFF); // OFF
+
+	g_settings.smb_setup_samba_installdir = configfile.getString( "smb_setup_samba_installdir", "/bin" );
+	g_settings.smb_setup_samba_conf_path = configfile.getString( "smb_setup_samba_conf_path", "/etc/smb.conf" );
+	g_settings.smb_setup_samba_workgroup = configfile.getString( "smb_setup_samba_workgroup", "WORKGROUP" );
 #endif
 
 	// Personalization
@@ -1075,7 +1084,13 @@ void CNeutrinoApp::saveSetup()
 	}
 	configfile.setBool  ( "filesystem_is_utf8" , g_settings.filesystem_is_utf8);
 #ifdef ENABLE_SAMBASERVER
-	configfile.setInt32( "network_samba", g_settings.network_samba );
+	//samba
+	configfile.setInt32( "smb_setup_samba_on_off", g_settings.smb_setup_samba_on_off );
+
+	configfile.setString ( "smb_setup_samba_installdir", g_settings.smb_setup_samba_installdir);
+	configfile.setString ( "smb_setup_samba_conf_path", g_settings.smb_setup_samba_conf_path);
+	configfile.setString ( "smb_setup_samba_workgroup", g_settings.smb_setup_samba_workgroup);
+
 #endif
 
 	// Personalization
