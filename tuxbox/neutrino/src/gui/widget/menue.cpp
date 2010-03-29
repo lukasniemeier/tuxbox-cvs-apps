@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.161 2010/02/17 21:30:01 dbt Exp $
+	$Id: menue.cpp,v 1.162 2010/03/29 19:11:14 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -54,7 +54,7 @@
 /* the following generic menu items are integrated into multiple menus at the same time */
 CMenuSeparator CGenericMenuSeparator;
 CMenuSeparator CGenericMenuSeparatorLine(CMenuSeparator::LINE);
-CMenuForwarder CGenericMenuBack(LOCALE_MENU_BACK);
+CMenuForwarder CGenericMenuBack(LOCALE_MENU_BACK, true, NULL, NULL, NULL, CRCInput::RC_nokey, NEUTRINO_ICON_BUTTON_LEFT);
 CMenuSeparator * const GenericMenuSeparator = &CGenericMenuSeparator;
 CMenuSeparator * const GenericMenuSeparatorLine = &CGenericMenuSeparatorLine;
 CMenuForwarder * const GenericMenuBack = &CGenericMenuBack;
