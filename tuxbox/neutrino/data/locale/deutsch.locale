@@ -278,7 +278,7 @@ date.Sun  So
 date.Thu  Do
 date.Tue  Di
 date.Wed  Mi
-drive_setup.advanced_settings Erweiterte Einstellungen
+drive_setup.advanced_settings Erweitert
 drive_setup.advanced_settings_custom_moduldir Bevorzugt suchen in...
 drive_setup.advanced_settings_modul Treiber-Module
 drive_setup.advanced_settings_modul_loadcmd_options_entry Optionen
@@ -374,6 +374,8 @@ drive_setup.partition_nfs_host_ip NFS-Client Host-IP
 drive_setup.partition_not_active Partition nicht eingehangen
 drive_setup.partition_not_created nicht angelegt
 drive_setup.partition_number Partitions-Nr.:
+drive_setup.partition_samba Für Samba-Server freigeben
+drive_setup.partition_server_share Serverfreigabe einrichten
 drive_setup.partition_settings Einstellungen
 drive_setup.partition_size Zugewiesene Partitionsgröße in MB
 drive_setup.partition_size_help Bitte Partitionsgröße in MB angeben!
@@ -1004,7 +1006,7 @@ networkmenu.ntpserver_hint1 NTP-Server z.b: ntp1.ptb.de
 networkmenu.ntpserver_hint2 Neustart / EPG-Reset erforderlich
 networkmenu.ntptitle Zeitsynchronisation
 networkmenu.reset_settings_now Sollen die vorherigen Einstellungen \nwieder hergestellt werden?
-networkmenu.samba Sambaserver starten
+networkmenu.samba Sambaserver
 networkmenu.setupnow Netzwerkeinstellungen jetzt zuweisen
 networkmenu.setuponstartup Beim Starten Netzwerk setzen
 networkmenu.setupsaved Änderungen wurden gespeichert, aber noch \nnicht zugewiesen. Diese werden erst \nnach einem Neustart wirksam!
@@ -1184,6 +1186,27 @@ recordingmenu.zap_on_announce Umschalten bei Ankündigung
 recordtimer.announce Die Aufnahme beginnt in wenigen Minuten.
 repeatblocker.hint_1 Mindestzeit (in ms) zwischen 2 Tastendrücken
 repeatblocker.hint_2 0 schaltet den Blocker aus (Rot ist " ")
+sambaserver.setup Globale Samba-Einstellungen
+sambaserver.setup_configfile_path Konfigurationsdatei
+sambaserver.setup_configfile_path_hint1 Bitte Pfad zur Samba-Konfigurationsdatei eingeben!
+sambaserver.setup_configfile_path_hint2 Vorgabe ist /etc/smb.conf...
+sambaserver.setup_install_dir Installationsverzeichnis
+sambaserver.setup_interface Interface
+sambaserver.setup_msg_save Einstellungen jetzt speichern?
+sambaserver.setup_shares Freigaben
+sambaserver.setup_shares_comment Anmerkung
+sambaserver.setup_shares_name Freigabe Name
+sambaserver.setup_shares_name_hint1 Bitte Freigabenamen angeben!
+sambaserver.setup_shares_name_hint2 Vorgabe ist Share_[LAUFWERK]_[PARTITION]
+sambaserver.setup_shares_path Pfad
+sambaserver.setup_shares_public Öffentlich
+sambaserver.setup_shares_ro Nur lesen
+sambaserver.setup_stat Server aktivieren
+sambaserver.setup_stat_running ja und läuft
+sambaserver.setup_stat_stopped nein und angehalten
+sambaserver.setup_workgroup Arbeitsgruppe/Domainname
+sambaserver.setup_workgroup_hint1 Bitte Arbeitsgruppe/Domainnamen eingeben
+sambaserver.setup_workgroup_hint2 Vorgabe ist WORKGROUP 
 satsetup.diseqc DiSEqC
 satsetup.diseqc10 DiSEqC 1.0
 satsetup.diseqc11 DiSEqC 1.1
@@ -1265,6 +1288,8 @@ servicemenu.scants Kanalsuche
 servicemenu.ucodecheck UCodes überprüfen
 servicemenu.update Software-Aktualisierung
 settings.help Hilfe
+settings.help_bugs Melden Sie Fehler an:
+settings.help_general Ausführliche Hilfe finden Sie online unter:
 settings.missingoptionsconffile Die Neutrino-Einstellungen wurden erweitert.\nDie neuen Werte werden auf Standard gesetzt.
 settings.noconffile Die Neutrino-Einstellungen wurden nicht\ngefunden. Es werden Standardwerte benutzt.
 settings.pos_bottom_left unten links

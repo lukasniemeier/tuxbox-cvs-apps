@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.21 2010/03/21 00:35:15 dbt Exp $
+	$Id: drive_setup.h,v 1.22 2010/03/29 19:48:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -75,6 +75,15 @@ struct SDriveSettings
 	std::string 	drive_partition_nfs_host_ip[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 	int 	drive_partition_nfs[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 #endif /*ENABLE_NFSSERVER*/
+
+#ifdef ENABLE_SAMBASERVER
+	std::string 	drive_partition_samba_share_name[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
+	std::string 	drive_partition_samba_share_comment[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
+	int 	drive_partition_samba[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
+ 	int 	drive_partition_samba_ro[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
+ 	int 	drive_partition_samba_public[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
+#endif /*ENABLE_SAMBASERVER*/
+
 };
 
 
@@ -127,17 +136,17 @@ class CDriveSetup : public CMenuTarget
 {
 	private:
 		
-		enum PREPARE_PARTITION_MODE_NUM	
+		typedef enum 	
 		{
 			ADD,
 			DELETE,
 			DELETE_CLEAN
-		};
+		} action_int_t;
 
 		// set nums for commands collection, used in v_init_ide_L_cmds, this is also the order of commands in the init file
 		// commands count for enum INIT_COMMANDS collection
 		#define INIT_COMMANDS_COUNT 6
-		enum INIT_COMMANDS	
+		typedef enum 	
 		{
 			LOAD_IDE_CORE,
 			LOAD_DBOXIDE,
@@ -145,27 +154,27 @@ class CDriveSetup : public CMenuTarget
 			LOAD_IDE_DISK,
 			SET_MASTER_HDPARM_OPTIONS,
 			SET_SLAVE_HDPARM_OPTIONS
-		};
+		} INIT_COMMANDS;
 
-		enum MTAB_INFO_NUM	
+		typedef enum 	
 		{
 			DEVICE,
 			MOUNTPOINT,
 			FS,
 			OPTIONS
-		};
+		} MTAB_INFO_NUM;
 		
 		#define SWAP_INFO_NUM_COUNT 5
-		enum SWAP_INFO_NUM	
+		typedef enum 	
 		{
 			FILENAME,
 			TYPE,
 			SIZE,
 			USED,
 			PRIORITY
-		};
+		} SWAP_INFO_NUM;
 
-		enum PARTINFO_TYPE_NUM	
+		typedef enum 	
 		{
 			START_CYL,
 			END_CYL,
@@ -174,22 +183,22 @@ class CDriveSetup : public CMenuTarget
 			SIZE_CYL,
 			COUNT_CYL,
 			PART_SIZE
-		};
+		} PARTINFO_TYPE_NUM;
 
-		enum FDISK_INFO_COLUMN_NUM  //column numbers	
+		typedef enum   //column numbers	
 		{
 			FDISK_INFO_START_CYL	= 1,
 			FDISK_INFO_END_CYL	= 2,
 			FDISK_INFO_SIZE_BLOCKS	= 3,
 			FDISK_INFO_ID		= 4
-		};
+		} fdisk_info_uint_t;
 
 		#define INIT_FILE_TYPE_NUM_COUNT 2
-		enum INIT_FILE_TYPE_NUM	
+		typedef enum 	
 		{
 			INIT_FILE_MODULES,
 			INIT_FILE_MOUNTS
-		};
+		} INIT_FILE_TYPE_NUM;
 
 		CFrameBuffer 	*frameBuffer;
 		CConfigFile	configfile;
@@ -216,8 +225,8 @@ class CDriveSetup : public CMenuTarget
 		std::string partitions[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 
 		//error messages
-		#define ERROR_DESCRIPTIONS_NUM_COUNT 24 
-		enum ERROR_DESCRIPTIONS_NUM	
+		#define ERROR_DESCRIPTIONS_NUM_COUNT 26 
+		typedef enum 	
 		{
 			ERR_CHKFS,
 			ERR_FORMAT_PARTITION,
@@ -231,6 +240,8 @@ class CDriveSetup : public CMenuTarget
 			ERR_MK_FS,
 			ERR_MK_FSTAB,
 			ERR_MK_MOUNTS,
+			ERR_MK_SMBCONF,
+			ERR_MK_SMBINITFILE,
 			ERR_MOUNT_ALL,
 			ERR_MOUNT_PARTITION,
 			ERR_MOUNT_DEVICE,
@@ -243,8 +254,8 @@ class CDriveSetup : public CMenuTarget
 			ERR_UNMOUNT_PARTITION,
 			ERR_UNMOUNT_DEVICE,
 			ERR_WRITE_SETTINGS
-		};
-		std::string err[ERROR_DESCRIPTIONS_NUM_COUNT]; //error descriptions
+		} errnum_uint_t;
+		std::string err[ERROR_DESCRIPTIONS_NUM_COUNT];
 		
 		int current_device; 	//MASTER || SLAVE || MMCARD, current edit device
 		int hdd_count; 		// count of hdd drives
@@ -305,9 +316,14 @@ class CDriveSetup : public CMenuTarget
 		bool writeInitFile(const bool clear = false);
 		bool mkMounts();
 		bool mkFstab(bool write_defaults_only = false);
-#ifdef ENABLE_NFSSERVER
+	#ifdef ENABLE_NFSSERVER
 		bool mkExports();
-#endif
+	#endif
+	#ifdef ENABLE_SAMBASERVER
+		bool mkSmbConf();
+		bool mkSambaInitFile();
+		std::string getInitSmbFilePath();
+	#endif
 		bool haveSwap();
 		bool isMmcActive();
 		bool isMmcEnabled();
@@ -316,7 +332,7 @@ class CDriveSetup : public CMenuTarget
 		bool haveActiveParts(const int& device_num);
 		bool haveMounts(const int& device_num, bool without_swaps = false);
 		
-		bool mkPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& action, const int& part_number, const unsigned long long& start_cyl = 0, const unsigned long long& size = 0);
+		bool mkPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const action_int_t& action, const int& part_number, const unsigned long long& start_cyl = 0, const unsigned long long& size = 0);
 		bool mkFs(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name);
 		bool chkFs(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name);
 		bool formatPartition(const int& device_num, const int& part_number);
@@ -341,6 +357,7 @@ class CDriveSetup : public CMenuTarget
 						
 		void showHddSetupMain();
 		void showHddSetupSub();
+		void showHelp();
 
 		bool writeDriveSettings();
 		void loadDriveSettings();
@@ -370,9 +387,9 @@ class CDriveSetup : public CMenuTarget
 		std::string getInitIdeFilePath();
 		std::string getInitMountFilePath();
 		std::string getFstabFilePath();
-#ifdef ENABLE_NFSSERVER
+	#ifdef ENABLE_NFSSERVER
 		std::string getExportsFilePath();
-#endif
+	#endif
 		std::string getDefaultSysMounts();
 		std::string getDefaultFstabEntries();
 		std::string getTimeStamp();
@@ -386,8 +403,29 @@ class CDriveSetup : public CMenuTarget
 		//helper
 		std::string iToString(int int_val);
 
-
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+
+		//settings	
+		char mmc_parm[27];
+		char mountpoint_opt[31];
+		char spindown_opt[17];
+		char partsize_opt[25];
+		char fstype_opt[27];
+		char write_cache_opt[20];
+		char partition_activ_opt[26];
+	
+	#ifdef ENABLE_NFSSERVER
+		char partition_nfs_opt[24];
+		char partition_nfs_host_ip_opt[32];
+	#endif /*ENABLE_NFSSERVER*/
+
+	#ifdef ENABLE_SAMBASERVER
+		char partition_samba_opt[26];
+		char partition_samba_opt_ro[29];
+		char partition_samba_opt_public[35];
+		char partition_samba_share_name[35];
+		char partition_samba_share_comment[40];
+	#endif /*ENABLE_SAMBASERVER*/
 
 	public:
 		enum DRIVE_NUM	
@@ -435,18 +473,16 @@ class CDriveSetupFsNotifier : public CChangeObserver
 {
 	private:
 
-#ifdef ENABLE_NFSSERVER
+	#ifdef ENABLE_NFSSERVER
 		CMenuForwarder* toDisable[3];
-		CMenuOptionChooser* toDisableOj;
-#else
+	#else
 		CMenuForwarder* toDisable[2];
-#endif
+	#endif
 	public:
 		CDriveSetupFsNotifier( 	
 					#ifdef ENABLE_NFSSERVER
 						CMenuForwarder*, 
 						CMenuForwarder*, 
-						CMenuOptionChooser*,
 						CMenuForwarder*);
 					#else
 						
@@ -466,6 +502,18 @@ class CDriveSetupNFSHostNotifier : public CChangeObserver
 		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 #endif /*ENABLE_NFSSERVER*/
+
+#ifdef ENABLE_SAMBASERVER
+class CDriveSetupSambaNotifier : public CChangeObserver
+{
+	private:
+		CMenuForwarder* toDisablefw[2];
+		CMenuOptionChooser* toDisableoj[2];
+	public:
+		CDriveSetupSambaNotifier(CMenuForwarder*, CMenuForwarder*, CMenuOptionChooser*, CMenuOptionChooser*);
+		bool changeNotify(const neutrino_locale_t, void * Data);
+};
+#endif /*ENABLE_SAMBASERVER*/
 
 class CDriveSetupFstabNotifier : public CChangeObserver
 {

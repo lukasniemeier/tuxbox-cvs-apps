@@ -278,7 +278,7 @@ date.Sun  Sun
 date.Thu  Thu
 date.Tue  Tue
 date.Wed  Wed
-drive_setup.advanced_settings Advanced settings
+drive_setup.advanced_settings Advanced
 drive_setup.advanced_settings_custom_moduldir Preferred search in...
 drive_setup.advanced_settings_modul Driver modules
 drive_setup.advanced_settings_modul_loadcmd_options_entry Options
@@ -374,6 +374,8 @@ drive_setup.partition_nfs_host_ip NFS-client host-ip
 drive_setup.partition_not_active partition not mounted
 drive_setup.partition_not_created not created
 drive_setup.partition_number Number of partition:
+drive_setup.partition_samba Use for Sambaserver
+drive_setup.partition_server_share Create share for server 
 drive_setup.partition_settings Settings
 drive_setup.partition_size Assigned partition size in MB
 drive_setup.partition_size_help Please enter size of partition in MB!
@@ -1004,7 +1006,7 @@ networkmenu.ntpserver_hint1 NTP-Server example: ntp1.ptb.de
 networkmenu.ntpserver_hint2 need reboot or epg-reset
 networkmenu.ntptitle Time-Syncronisation
 networkmenu.reset_settings_now Do you want restore the previous settings?
-networkmenu.samba Start sambaserver
+networkmenu.samba Sambaserver
 networkmenu.setupnow Start/Restart Network Now
 networkmenu.setuponstartup Start Network on Boot
 networkmenu.setupsaved Changes were already saved, but not yet applied\n.This will take effect only after reboot!
@@ -1184,6 +1186,27 @@ recordingmenu.zap_on_announce Announce zap
 recordtimer.announce Recording starts in a few minutes
 repeatblocker.hint_1 Shortest time (in ms) to recognize 2 keystrokes
 repeatblocker.hint_2 Enter 0 to switch of the blocker (red is space)
+sambaserver.setup Global Samba-settings
+sambaserver.setup_configfile_path Configfile
+sambaserver.setup_configfile_path_hint1 Please enter path for samba config file!
+sambaserver.setup_configfile_path_hint2 Default path is /etc/smb.conf...
+sambaserver.setup_install_dir Installation directory
+sambaserver.setup_interface Interface
+sambaserver.setup_msg_save Save settings now??
+sambaserver.setup_shares Shares
+sambaserver.setup_shares_comment Comment
+sambaserver.setup_shares_name Sharename
+sambaserver.setup_shares_name_hint1 Pleas enter sharename!
+sambaserver.setup_shares_name_hint2 Default is Share_[DRIVE]_[PARTITION]
+sambaserver.setup_shares_path Path
+sambaserver.setup_shares_public Public
+sambaserver.setup_shares_ro Read only
+sambaserver.setup_stat Enable Server
+sambaserver.setup_stat_running yes and is running
+sambaserver.setup_stat_stopped no and stopped
+sambaserver.setup_workgroup Workgroup or domainname
+sambaserver.setup_workgroup_hint1 Enter workgroup/domainname
+sambaserver.setup_workgroup_hint2 Default is WORKGROUP
 satsetup.diseqc DiSEqC
 satsetup.diseqc10 DiSEqC 1.0
 satsetup.diseqc11 DiSEqC 1.1
@@ -1265,6 +1288,8 @@ servicemenu.scants Service Scan
 servicemenu.ucodecheck Check ucodes
 servicemenu.update Image Upgrade / Backup
 settings.help Help
+settings.help_bugs Please report bugs to:
+settings.help_general Detailed help you can find online at:
 settings.missingoptionsconffile The neutrino-settings have been updated.\nNew Options will be set to default.
 settings.noconffile No neutrino-settings found.\nUsing defaults.
 settings.pos_bottom_left bottom left

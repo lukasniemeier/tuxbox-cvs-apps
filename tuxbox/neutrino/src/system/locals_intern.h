@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.172 2010/02/28 17:54:12 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.173 2010/03/29 19:48:15 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -401,6 +401,8 @@ const char * locale_real_names[] =
 	"drive_setup.partition_not_active",
 	"drive_setup.partition_not_created",
 	"drive_setup.partition_number",
+	"drive_setup.partition_samba",
+	"drive_setup.partition_server_share",
 	"drive_setup.partition_settings",
 	"drive_setup.partition_size",
 	"drive_setup.partition_size_help",
@@ -1211,6 +1213,27 @@ const char * locale_real_names[] =
 	"recordtimer.announce",
 	"repeatblocker.hint_1",
 	"repeatblocker.hint_2",
+	"sambaserver.setup",
+	"sambaserver.setup_configfile_path",
+	"sambaserver.setup_configfile_path_hint1",
+	"sambaserver.setup_configfile_path_hint2",
+	"sambaserver.setup_install_dir",
+	"sambaserver.setup_interface",
+	"sambaserver.setup_msg_save",
+	"sambaserver.setup_shares",
+	"sambaserver.setup_shares_comment",
+	"sambaserver.setup_shares_name",
+	"sambaserver.setup_shares_name_hint1",
+	"sambaserver.setup_shares_name_hint2",
+	"sambaserver.setup_shares_path",
+	"sambaserver.setup_shares_public",
+	"sambaserver.setup_shares_ro",
+	"sambaserver.setup_stat",
+	"sambaserver.setup_stat_running",
+	"sambaserver.setup_stat_stopped",
+	"sambaserver.setup_workgroup",
+	"sambaserver.setup_workgroup_hint1",
+	"sambaserver.setup_workgroup_hint2",
 	"satsetup.diseqc",
 	"satsetup.diseqc10",
 	"satsetup.diseqc11",
@@ -1292,6 +1315,8 @@ const char * locale_real_names[] =
 	"servicemenu.ucodecheck",
 	"servicemenu.update",
 	"settings.help",
+	"settings.help_bugs",
+	"settings.help_general",
 	"settings.missingoptionsconffile",
 	"settings.noconffile",
 	"settings.pos_bottom_left",
