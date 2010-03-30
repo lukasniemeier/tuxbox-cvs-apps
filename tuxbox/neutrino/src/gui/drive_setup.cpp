@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.52 2010/03/30 15:29:34 dbt Exp $
+	$Id: drive_setup.cpp,v 1.53 2010/03/30 20:07:30 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -541,6 +541,17 @@ void CDriveSetup::Init()
 	{
 		frameBuffer->RestoreScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
 		delete[] pixbuf;
+	}
+
+	//unload unused modules on left menu
+	for (unsigned int i = 0; i < v_fs_modules.size(); i++) 
+	{
+		if (getFileEntryString(PROC_MODULES, v_fs_modules[i], 4)== "(unused)")
+			if (!unloadModul(v_fs_modules[i]))
+			{
+				cerr<<"[drive setup] "<<__FUNCTION__ <<": "<<err[ERR_UNLOAD_MODUL]<<endl;
+				DisplayErrorMessage(err[ERR_UNLOAD_MODUL].c_str());
+			}
 	}
 
 }
@@ -4460,7 +4471,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.52 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.53 $");
 }
 
 // returns text for initfile headers
