@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.51 2010/03/29 19:48:15 dbt Exp $
+	$Id: drive_setup.cpp,v 1.52 2010/03/30 15:29:34 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2322,7 +2322,7 @@ bool CDriveSetup::saveHddSetup()
 		if (!mkExports())
 		{
 			v_errors.push_back(err[ERR_MK_EXPORTS]);
-			return false;
+			ret = false;
 		}
 	}
 #endif
@@ -2334,12 +2334,12 @@ bool CDriveSetup::saveHddSetup()
 		if (!mkSmbConf())
 		{
 			v_errors.push_back(err[ERR_MK_SMBCONF]);
-			return false;
+			ret = false;
 		}
 		if (!mkSambaInitFile())
 		{
 			v_errors.push_back(err[ERR_MK_SMBINITFILE]);
-			return false;
+			ret = false;
 		}
 	}
 #endif
@@ -4460,7 +4460,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.51 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.52 $");
 }
 
 // returns text for initfile headers
