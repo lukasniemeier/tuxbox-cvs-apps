@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.1 2010/03/29 19:13:17 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.2 2010/04/01 19:29:12 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -132,7 +132,7 @@ void CSambaSetup::showSambaSetup()
 	CMenuForwarder * sh_fw_inst_path = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_INSTALL_DIR, true, g_settings.smb_setup_samba_installdir, sh_ch_inst_path, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
  
  	//samba config file path
-	CStringInputSMS * sh_input_conf_path = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH, & g_settings.smb_setup_samba_conf_path, 20, LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH_HINT1, LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
+	CStringInputSMS * sh_input_conf_path = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH, & g_settings.smb_setup_samba_conf_path, 25, LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH_HINT1, LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
 	CMenuForwarder * sh_fw_conf_path = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH, true, g_settings.smb_setup_samba_conf_path, sh_input_conf_path, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 
 	//start/stop sambaserver, set real server status
