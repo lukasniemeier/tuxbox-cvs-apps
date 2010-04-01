@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.53 2010/03/30 20:07:30 dbt Exp $
+	$Id: drive_setup.cpp,v 1.54 2010/04/01 19:31:56 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -312,11 +312,21 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 	else if (actionKey == "reset_drive_setup")
  	{
 		bool do_reset = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_RESET, LOCALE_DRIVE_SETUP_MSG_RESET_NOW, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, width, 5) == CMessageBox::mbrYes);
+		
+		string init_ide_path = getInitIdeFilePath();
+		string init_mount_path = getInitMountFilePath();
+	#ifdef ENABLE_SAMBASERVER 
+		string init_smb_path = getInitSmbFilePath();
+	#endif
 
 		if (do_reset)
 		{		
-			string init_files[] = {	getInitIdeFilePath(),
-						getInitMountFilePath(), 
+			string init_files[] = {	init_ide_path,
+						getInitIdeFilePath().insert(init_ide_path.rfind("/")+1, "S"),
+						getInitIdeFilePath().insert(init_ide_path.rfind("/")+1, "K"),
+						init_mount_path, 
+						getInitMountFilePath().insert(init_mount_path.rfind("/")+1, "S"),
+						getInitMountFilePath().insert(init_mount_path.rfind("/")+1, "K"),
 						DRV_CONFIGFILE, 
 						getFstabFilePath()
 					#ifdef ENABLE_NFSSERVER 
@@ -324,13 +334,16 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 					#endif
 					#ifdef ENABLE_SAMBASERVER 
 						,g_settings.smb_setup_samba_conf_path
-						,getInitSmbFilePath()
+						,init_smb_path
+						,getInitSmbFilePath().insert(init_smb_path.rfind("/")+1, "S")
+						,getInitSmbFilePath().insert(init_smb_path.rfind("/")+1, "K")
 						,SAMBA_MARKER
-					#endif
+					#endif /*ENABLE_SAMBASERVER*/
 						};
 			
+			//removing init and configfiles
 			for (unsigned int i = 0; i < (sizeof(init_files) / sizeof(init_files[0])); i++)
-				unlink(init_files[i].c_str());
+				remove(init_files[i].c_str());
 			
 			bool (CDriveSetup::*pMember[4])(void) = {	&CDriveSetup::unmountAll,
 									&CDriveSetup::unloadFsDrivers,
@@ -4471,7 +4484,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.53 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.54 $");
 }
 
 // returns text for initfile headers
