@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.22 2010/03/29 19:48:15 dbt Exp $
+	$Id: drive_setup.h,v 1.23 2010/04/01 21:01:04 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -473,14 +473,14 @@ class CDriveSetupFsNotifier : public CChangeObserver
 {
 	private:
 
-	#ifdef ENABLE_NFSSERVER
+	#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 		CMenuForwarder* toDisable[3];
 	#else
 		CMenuForwarder* toDisable[2];
 	#endif
 	public:
 		CDriveSetupFsNotifier( 	
-					#ifdef ENABLE_NFSSERVER
+					#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 						CMenuForwarder*, 
 						CMenuForwarder*, 
 						CMenuForwarder*);
