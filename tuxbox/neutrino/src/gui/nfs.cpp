@@ -176,7 +176,7 @@ int CNFSMountGui::exec( CMenuTarget* parent, const std::string & actionKey )
 
 int CNFSMountGui::menu()
 {
-	CMenuWidget mountMenuW(LOCALE_NFS_MOUNT, "network.raw", 720);
+	CMenuWidget mountMenuW(LOCALE_NFS_MOUNT, NEUTRINO_ICON_STREAMING, 720);
 	mountMenuW.addItem(GenericMenuSeparator);
 	mountMenuW.addItem(GenericMenuBack);
 	mountMenuW.addItem(GenericMenuSeparatorLine);
@@ -200,7 +200,6 @@ int CNFSMountGui::menu()
 	return ret;
 }
 
-#warning MESSAGEBOX_NO_YES_XXX is defined in neutrino.cpp, too!
 #define MESSAGEBOX_NO_YES_OPTION_COUNT 2
 const CMenuOptionChooser::keyval MESSAGEBOX_NO_YES_OPTIONS[MESSAGEBOX_NO_YES_OPTION_COUNT] =
 {
@@ -256,7 +255,7 @@ int CNFSMountGui::menuEntry(int nr)
 	   (m_lufs_sup != CFSMounter::FS_UNSUPPORTED && *type != (int)CFSMounter::LUFS) ||
 	   (m_smbfs_sup != CFSMounter::FS_UNSUPPORTED && *type != (int)CFSMounter::SMBFS);
 
-	CMenuWidget mountMenuEntryW(LOCALE_NFS_MOUNT, "network.raw",720);
+	CMenuWidget mountMenuEntryW(LOCALE_NFS_MOUNT, NEUTRINO_ICON_STREAMING,720);
 	mountMenuEntryW.addItem(GenericMenuSeparator);
 	mountMenuEntryW.addItem(GenericMenuBack);
 	mountMenuEntryW.addItem(GenericMenuSeparatorLine);
@@ -316,7 +315,7 @@ int CNFSUmountGui::menu()
 {
 	int count = 0;
 	CFSMounter::MountInfos infos;
-	CMenuWidget umountMenu(LOCALE_NFS_UMOUNT, "network.raw",720);
+	CMenuWidget umountMenu(LOCALE_NFS_UMOUNT, NEUTRINO_ICON_STREAMING,720);
 	umountMenu.addItem(GenericMenuSeparator);
 	umountMenu.addItem(GenericMenuBack);
 	umountMenu.addItem(GenericMenuSeparatorLine);
@@ -349,7 +348,7 @@ int CNFSSmallMenu::exec( CMenuTarget* parent, const std::string & actionKey )
 {
 	if (actionKey.empty())
 	{
-		CMenuWidget menu(LOCALE_NETWORKMENU_MOUNT, "network.raw");
+		CMenuWidget menu(LOCALE_NETWORKMENU_MOUNT, NEUTRINO_ICON_STREAMING);
 		CNFSMountGui mountGui;
 		CNFSUmountGui umountGui;
 		menu.addItem(GenericMenuSeparator);
