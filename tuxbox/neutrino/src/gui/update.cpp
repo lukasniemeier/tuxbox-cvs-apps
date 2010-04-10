@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.140 2009/09/28 07:55:56 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.142 2010/04/10 20:18:35 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -154,7 +154,7 @@ bool CFlashUpdate::selectHttpImage(void)
 	httpTool.setStatusViewer(this);
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_GETINFOFILE)); // UTF-8
 
-	CMenuWidget SelectionWidget(LOCALE_FLASHUPDATE_SELECTIMAGE, "softupdate.raw", listWidth);
+	CMenuWidget SelectionWidget(LOCALE_FLASHUPDATE_SELECTIMAGE, NEUTRINO_ICON_UPDATE, listWidth);
 	SelectionWidget.addItem(GenericMenuSeparator);
 	SelectionWidget.addItem(GenericMenuBack);
 
@@ -374,7 +374,7 @@ bool CFlashUpdate::checkVersion4Update()
 	}
 
 	if ((strcmp("Release", versionInfo->getType()) != 0) &&
-	    (ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_EXPERIMENTALIMAGE, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, "softupdate.raw") != CMessageBox::mbrYes))
+	    (ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_EXPERIMENTALIMAGE, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_UPDATE) != CMessageBox::mbrYes))
 	{
 		delete versionInfo;
 		return false;
@@ -382,7 +382,7 @@ bool CFlashUpdate::checkVersion4Update()
 
 	delete versionInfo;
 
-	return (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, "softupdate.raw") == CMessageBox::mbrYes); // UTF-8
+	return (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_UPDATE) == CMessageBox::mbrYes); // UTF-8
 }
 
 int CFlashUpdate::exec(CMenuTarget* parent, const std::string &)
@@ -585,6 +585,7 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 	const char* mtdtarget = CMTDInfo::getInstance()->getMTDName(mtdNumber).c_str();
 	const char* imagefile = FILESYSTEM_ENCODING_TO_UTF8_STRING(filename).c_str();	
 
+#ifdef HAVE_DBOX_HARDWARE
 	if (mtdNumber >3) 
 	{
 		sprintf(message,
@@ -593,13 +594,14 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 		imagefile, mtdtarget);
 	}
 	else
+#endif
 	{	
 		sprintf(message,
 		g_Locale->getText(LOCALE_FLASHUPDATE_REALLYFLASHMTD),
 		imagefile, mtdtarget);
 	}	
 		
-	if (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, message, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, "softupdate.raw") != CMessageBox::mbrYes) // UTF-8
+	if (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, message, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_UPDATE) != CMessageBox::mbrYes) // UTF-8
 		return;
 
 #ifdef LCD_UPDATE
@@ -660,7 +662,7 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 void CFlashExpert::showMTDSelector(const std::string & actionkey)
 {
 	//mtd-selector erzeugen
-	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_MTDSELECTOR, "softupdate.raw");
+	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_MTDSELECTOR, NEUTRINO_ICON_UPDATE);
 	mtdselector->addItem(GenericMenuSeparator);
 	mtdselector->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL));
 	mtdselector->addItem(GenericMenuSeparatorLine);
@@ -677,7 +679,7 @@ void CFlashExpert::showMTDSelector(const std::string & actionkey)
 
 void CFlashExpert::showFileSelector(const std::string & actionkey)
 {
-	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_FILESELECTOR, "softupdate.raw");
+	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_FILESELECTOR, NEUTRINO_ICON_UPDATE);
 	fileselector->addItem(GenericMenuSeparator);
 	fileselector->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL));
 	fileselector->addItem(GenericMenuSeparatorLine);
