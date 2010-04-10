@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.173 2010/03/29 19:48:15 dbt Exp $
+ * $Id: locals_intern.h,v 1.174 2010/04/10 20:16:03 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -249,6 +249,7 @@ const char * locale_real_names[] =
 	"channellist.epgtext_align_right",
 	"channellist.extended",
 	"channellist.head",
+	"channellist.history",
 	"channellist.nonefound",
 	"channellist.since",
 	"channellist.start",

@@ -2,7 +2,7 @@
 #define __locals__
 
 /*
- * $Id: locals.h,v 1.173 2010/03/29 19:48:15 dbt Exp $
+ * $Id: locals.h,v 1.174 2010/04/10 20:16:03 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -249,6 +249,7 @@ typedef enum
 	LOCALE_CHANNELLIST_EPGTEXT_ALIGN_RIGHT,
 	LOCALE_CHANNELLIST_EXTENDED,
 	LOCALE_CHANNELLIST_HEAD,
+	LOCALE_CHANNELLIST_HISTORY,
 	LOCALE_CHANNELLIST_NONEFOUND,
 	LOCALE_CHANNELLIST_SINCE,
 	LOCALE_CHANNELLIST_START,

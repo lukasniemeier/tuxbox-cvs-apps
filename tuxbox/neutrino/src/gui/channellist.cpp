@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.218 2010/03/06 19:50:00 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.219 2010/04/10 20:16:03 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -697,7 +697,7 @@ int CChannelList::numericZap(neutrino_msg_t key)
 	if (key == g_settings.key_zaphistory) {
 
 		if (this->lastChList.size() > 1) {
-			CChannelList channelList("Channel history", true);
+			CChannelList channelList(g_Locale->getText(LOCALE_CHANNELLIST_HISTORY), true);
 
 			for ( unsigned int i = 1 ; i < this->lastChList.size() ; ++i) {
 				int channelnr = this->lastChList.getlast(i);

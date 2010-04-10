@@ -222,6 +222,7 @@ channellist.epgtext_align_left links
 channellist.epgtext_align_right rechts
 channellist.extended erweiterte Kanalliste
 channellist.head Alle Kanäle
+channellist.history Programmverlauf
 channellist.nonefound Es wurden keine Kanäle gefunden!\nFühren Sie bitte eine Kanalsuche durch\n(dbox-Taste -> Service)
 channellist.since seit %02d:%02d
 channellist.start ab %02d:%02d
