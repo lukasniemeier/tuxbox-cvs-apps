@@ -39,11 +39,6 @@ install_DATA += \
 	upnp.raw
 endif
 
-if ENABLE_MOVIEPLAYER
-install_DATA += \
-	movieplayer.raw
-endif
-
 if ENABLE_DRIVE_GUI
 install_DATA += \
 	partition.raw
