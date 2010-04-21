@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.225 2010/03/29 19:22:16 dbt Exp $
+  $Id: settings.h,v 1.226 2010/04/21 21:45:11 dbt Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -91,8 +91,6 @@ struct SNeutrinoSettings
 #ifdef ENABLE_SAMBASERVER
 	// samba
 	int smb_setup_samba_on_off;
-	std::string smb_setup_samba_installdir;
-	std::string smb_setup_samba_conf_path;
 	std::string smb_setup_samba_workgroup;
 #endif
 

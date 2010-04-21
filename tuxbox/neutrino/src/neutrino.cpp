@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1019 2010/03/30 16:12:13 dbt Exp $
+	$Id: neutrino.cpp,v 1.1020 2010/04/21 21:45:03 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -523,9 +523,6 @@ int CNeutrinoApp::loadSetup()
 #ifdef ENABLE_SAMBASERVER
 	// samba
 	g_settings.smb_setup_samba_on_off = configfile.getInt32("smb_setup_samba_on_off", CSambaSetup::OFF); // OFF
-
-	g_settings.smb_setup_samba_installdir = configfile.getString( "smb_setup_samba_installdir", "/bin" );
-	g_settings.smb_setup_samba_conf_path = configfile.getString( "smb_setup_samba_conf_path", (access("/etc/smb.conf", W_OK) ==0) ? "/etc/smb.conf" : "/var/etc/smb.conf"); 
 	g_settings.smb_setup_samba_workgroup = configfile.getString( "smb_setup_samba_workgroup", "WORKGROUP" );
 #endif
 
@@ -1086,11 +1083,7 @@ void CNeutrinoApp::saveSetup()
 #ifdef ENABLE_SAMBASERVER
 	//samba
 	configfile.setInt32( "smb_setup_samba_on_off", g_settings.smb_setup_samba_on_off );
-
-	configfile.setString ( "smb_setup_samba_installdir", g_settings.smb_setup_samba_installdir);
-	configfile.setString ( "smb_setup_samba_conf_path", g_settings.smb_setup_samba_conf_path);
 	configfile.setString ( "smb_setup_samba_workgroup", g_settings.smb_setup_samba_workgroup);
-
 #endif
 
 	// Personalization
