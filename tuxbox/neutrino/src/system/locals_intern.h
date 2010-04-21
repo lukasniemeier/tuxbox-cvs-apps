@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.174 2010/04/10 20:16:03 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.175 2010/04/21 21:49:33 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -354,6 +354,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_error_save_cannot_hdparm",
 	"drive_setup.msg_error_save_cannot_make_exports",
 	"drive_setup.msg_error_save_cannot_make_fstab",
+	"drive_setup.msg_error_save_cannot_make_smbconf",
 	"drive_setup.msg_error_save_cannot_mount_device",
 	"drive_setup.msg_error_save_cannot_mount_partition",
 	"drive_setup.msg_error_save_cannot_mount_swap",
@@ -1220,7 +1221,10 @@ const char * locale_real_names[] =
 	"sambaserver.setup_configfile_path_hint2",
 	"sambaserver.setup_install_dir",
 	"sambaserver.setup_interface",
+	"sambaserver.setup_msg_missing_smbconf",
 	"sambaserver.setup_msg_save",
+	"sambaserver.setup_server_off",
+	"sambaserver.setup_server_on",
 	"sambaserver.setup_shares",
 	"sambaserver.setup_shares_comment",
 	"sambaserver.setup_shares_name",

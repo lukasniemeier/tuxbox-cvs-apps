@@ -327,12 +327,13 @@ drive_setup.msg_error_save_cannot_activate_interface IDE-Interface kann nicht ak
 drive_setup.msg_error_save_cannot_hdparm Fehler beim Setzen von HDD-Parametern!
 drive_setup.msg_error_save_cannot_make_exports Fehler beim Erstellen von exports!
 drive_setup.msg_error_save_cannot_make_fstab Fehler beim Erstellen von fstab!
+drive_setup.msg_error_save_cannot_make_smbconf Fehler beim Erstellen von smb.conf!
 drive_setup.msg_error_save_cannot_mount_device Einhängen nicht möglich für:
 drive_setup.msg_error_save_cannot_mount_partition Kann Partition nicht einhängen!\nKorrektes Dateisystem angegeben?
 drive_setup.msg_error_save_cannot_mount_swap Kann Swap nicht einhängen!\nKorrektes Dateisystem angegeben?
 drive_setup.msg_error_save_cannot_unmount_device Kann nicht ausgehangen werden!
 drive_setup.msg_error_save_cannot_unmount_partition Partition kann nicht ausgehangen werden!
-drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition kann nicht ausgehangen werden!\nEs besteht möglicherweise eine Client-Verbindung!
+drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition kann nicht ausgehangen werden!\nMöglicherweise wird diese gerade verwendet!\n
 drive_setup.msg_error_save_cannot_unmount_swap Swap-Partition kann nicht ausgehangen werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
@@ -1193,7 +1194,10 @@ sambaserver.setup_configfile_path_hint1 Bitte Pfad zur Samba-Konfigurationsdatei
 sambaserver.setup_configfile_path_hint2 Vorgabe ist /etc/smb.conf...
 sambaserver.setup_install_dir Installationsverzeichnis
 sambaserver.setup_interface Interface
+sambaserver.setup_msg_missing_smbconf Samba-Konfiguration nicht gefunden!\nBitte erst Freigaben festlegen und Übernehemen!\n
 sambaserver.setup_msg_save Einstellungen jetzt speichern?
+sambaserver.setup_server_off Aus
+sambaserver.setup_server_on Ein
 sambaserver.setup_shares Freigaben
 sambaserver.setup_shares_comment Anmerkung
 sambaserver.setup_shares_name Freigabe Name
@@ -1203,8 +1207,8 @@ sambaserver.setup_shares_path Pfad
 sambaserver.setup_shares_public Öffentlich
 sambaserver.setup_shares_ro Nur lesen
 sambaserver.setup_stat Server aktivieren
-sambaserver.setup_stat_running ja und läuft
-sambaserver.setup_stat_stopped nein und angehalten
+sambaserver.setup_stat_running Server läuft!
+sambaserver.setup_stat_stopped Server angehalten!
 sambaserver.setup_workgroup Arbeitsgruppe/Domainname
 sambaserver.setup_workgroup_hint1 Bitte Arbeitsgruppe/Domainnamen eingeben
 sambaserver.setup_workgroup_hint2 Vorgabe ist WORKGROUP 

@@ -327,12 +327,13 @@ drive_setup.msg_error_save_cannot_activate_interface Can't activating ide-intefa
 drive_setup.msg_error_save_cannot_hdparm Error while setting hdd-parameters!
 drive_setup.msg_error_save_cannot_make_exports Error while creating exports!
 drive_setup.msg_error_save_cannot_make_fstab Error while creating fstab!
+drive_setup.msg_error_save_cannot_make_smbconf Error while creating smb.conf!
 drive_setup.msg_error_save_cannot_mount_device Can't mount:
 drive_setup.msg_error_save_cannot_mount_partition Can't mount partition!\nFilesystem correct?
 drive_setup.msg_error_save_cannot_mount_swap Can't mount swap!\nFilesystem correct?
 drive_setup.msg_error_save_cannot_unmount_device can't unmount!
 drive_setup.msg_error_save_cannot_unmount_partition Can't unmount partition!
-drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition: Can't unmount!\nPlease check possible client-connections!
+drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition: Can't unmount!\nMaybe this partition could be in use!\n
 drive_setup.msg_error_save_cannot_unmount_swap Can't unmount swap-partition!
 drive_setup.msg_error_save_configfile_failed Can't save settings!
 drive_setup.msg_error_save_failed Error while saving settings!
@@ -1193,7 +1194,10 @@ sambaserver.setup_configfile_path_hint1 Please enter path for samba config file!
 sambaserver.setup_configfile_path_hint2 Default path is /etc/smb.conf...
 sambaserver.setup_install_dir Installation directory
 sambaserver.setup_interface Interface
+sambaserver.setup_msg_missing_smbconf No configuration for samba found!\nPlease setup shares first and apply!\n
 sambaserver.setup_msg_save Save settings now??
+sambaserver.setup_server_off Off
+sambaserver.setup_server_on On
 sambaserver.setup_shares Shares
 sambaserver.setup_shares_comment Comment
 sambaserver.setup_shares_name Sharename
@@ -1203,8 +1207,8 @@ sambaserver.setup_shares_path Path
 sambaserver.setup_shares_public Public
 sambaserver.setup_shares_ro Read only
 sambaserver.setup_stat Enable Server
-sambaserver.setup_stat_running yes and is running
-sambaserver.setup_stat_stopped no and stopped
+sambaserver.setup_stat_running Server is running!
+sambaserver.setup_stat_stopped Server stopped!
 sambaserver.setup_workgroup Workgroup or domainname
 sambaserver.setup_workgroup_hint1 Enter workgroup/domainname
 sambaserver.setup_workgroup_hint2 Default is WORKGROUP
