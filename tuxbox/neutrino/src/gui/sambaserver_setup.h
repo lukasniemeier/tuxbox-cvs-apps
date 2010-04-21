@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.h,v 1.1 2010/03/29 19:13:17 dbt Exp $
+	$Id: sambaserver_setup.h,v 1.2 2010/04/21 21:40:47 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -42,31 +42,12 @@
 
 #define NMBD		"nmbd"
 #define SMBD		"smbd"
-#define SAMBA_MARKER	"/var/etc/.sambaserver"
+#define SAMBA_MARKER	VAR_ETC_DIR "/.sambaserver"
+#define SMB_PRIVAT_DIR	ETC_DIR	"/samba/private"
 
 class CSambaSetup : public CMenuTarget
 {
 	private:
-
-		enum SMB_GLOBAL_SETTINGS_NUM
-		{
-			G_INTERFACES,
-			G_WORKGROUP,
-		};
-
-		enum SMB_SETTINGS_NUM	
-		{
-			SET_GLOBAL,
-			SET_SHARE
-		};
-
-		enum SMB_SHARE_SETTINGS_NUM	
-		{
-			SHARE_COMMENT,
-			SHARE_PATH,
-			SHARE_RO,
-			SHARE_PUBLIC	
-		};
 
 		CFrameBuffer *frameBuffer;
 
@@ -75,6 +56,7 @@ class CSambaSetup : public CMenuTarget
 		neutrino_locale_t menue_title;
 		std::string menue_icon;
 		std::string interface;
+		std::string err_msg;
 
 		//helper
 		std::string upperString(const std::string& to_upper_str);
@@ -87,11 +69,6 @@ class CSambaSetup : public CMenuTarget
 		CSambaSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CSambaSetup();
 
-		enum SMB_SERVER_STATUS_NUM
-		{
-			SMB_STOPPED,
-			SMB_RUNNING,
-		};
 		enum SMB_ON_OFF_NUM	
 		{
 			OFF,
@@ -99,11 +76,21 @@ class CSambaSetup : public CMenuTarget
 		};
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+
+		bool haveSambaSupport();
+		bool haveSambaConf();
+		bool startSamba();
+		bool killSamba();
+
+		std::string getErrMsg() {return err_msg;};
+
 };
 
 class CSambaOnOffNotifier : public CChangeObserver
 {
-	const char * filename;
+	private:
+		const char * filename;
+		std::string err_msg;
 
 	public:
 		inline CSambaOnOffNotifier(const char * file_to_modify)

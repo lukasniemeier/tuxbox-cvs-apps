@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.2 2010/04/01 19:29:12 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.3 2010/04/21 21:40:47 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -33,6 +33,7 @@
 #endif
 
 #include "gui/sambaserver_setup.h"
+#include "gui/drive_setup.h"
 
 #include <global.h>
 #include <neutrino.h>
@@ -51,6 +52,9 @@
 #include <libnet.h>
 #include <signal.h>
 #include <sys/vfs.h> // statfs
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 using namespace std;
 
@@ -102,18 +106,12 @@ void CSambaSetup::Init()
 	showSambaSetup();
 }
 
-#define SMB_ON_OFF_OPTION_COUNT 2
-const CMenuOptionChooser::keyval SMB_ON_OFF_OPTIONS[SMB_ON_OFF_OPTION_COUNT] =
-{
-	{ CSambaSetup::SMB_STOPPED, LOCALE_SAMBASERVER_SETUP_STAT_STOPPED  },
-	{ CSambaSetup::SMB_RUNNING, LOCALE_SAMBASERVER_SETUP_STAT_RUNNING }
-};
 
 #define SMB_YES_NO_OPTION_COUNT 2
 const CMenuOptionChooser::keyval SMB_YES_NO_OPTIONS[SMB_YES_NO_OPTION_COUNT] =
 {
-	{ CSambaSetup::OFF, LOCALE_MESSAGEBOX_NO  },
-	{ CSambaSetup::ON, LOCALE_MESSAGEBOX_YES }
+	{ CSambaSetup::OFF, LOCALE_SAMBASERVER_SETUP_SERVER_OFF  },
+	{ CSambaSetup::ON, LOCALE_SAMBASERVER_SETUP_SERVER_ON }
 };
 
 /* shows entries for samba settings */
@@ -127,29 +125,21 @@ void CSambaSetup::showSambaSetup()
 		sm->addItem(sm_subhead);
 	}
 
-	//samba binaries install path
-	CDirChooser * sh_ch_inst_path = new CDirChooser(&g_settings.smb_setup_samba_installdir);
-	CMenuForwarder * sh_fw_inst_path = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_INSTALL_DIR, true, g_settings.smb_setup_samba_installdir, sh_ch_inst_path, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
- 
- 	//samba config file path
-	CStringInputSMS * sh_input_conf_path = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH, & g_settings.smb_setup_samba_conf_path, 25, LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH_HINT1, LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
-	CMenuForwarder * sh_fw_conf_path = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_CONFIGFILE_PATH, true, g_settings.smb_setup_samba_conf_path, sh_input_conf_path, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
-
 	//start/stop sambaserver, set real server status
 	if (getPidof(NMBD).empty() || getPidof(SMBD).empty())
 	{
-		g_settings.smb_setup_samba_on_off = SMB_STOPPED;
+		g_settings.smb_setup_samba_on_off = OFF;
 		remove(SAMBA_MARKER);
 	}
 	else
-		g_settings.smb_setup_samba_on_off = SMB_RUNNING;
+		g_settings.smb_setup_samba_on_off = ON;
 
 	CSambaOnOffNotifier * smb_notifier = new CSambaOnOffNotifier(SAMBA_MARKER);
-	CMenuOptionChooser * sm_start = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_STAT, &g_settings.smb_setup_samba_on_off, SMB_ON_OFF_OPTIONS, SMB_ON_OFF_OPTION_COUNT, true, smb_notifier, CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER);
+	CMenuOptionChooser * sm_start = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_STAT, &g_settings.smb_setup_samba_on_off, SMB_YES_NO_OPTIONS, SMB_YES_NO_OPTION_COUNT, true, smb_notifier, CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER);
 
  	//workroup, domainname
 	CStringInputSMS * sm_input_domain = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_WORKGROUP, &g_settings.smb_setup_samba_workgroup,15, LOCALE_SAMBASERVER_SETUP_WORKGROUP_HINT1, LOCALE_SAMBASERVER_SETUP_WORKGROUP_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789_ ");
-	CMenuForwarder * sm_fw_domain = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_WORKGROUP, true, g_settings.smb_setup_samba_workgroup, sm_input_domain, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+	CMenuForwarder * sm_fw_domain = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_WORKGROUP, true, g_settings.smb_setup_samba_workgroup, sm_input_domain, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 
 	//address,interface
 	CMenuForwarder * sm_fw_interface = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_INTERFACE, false, interface);
@@ -162,10 +152,6 @@ void CSambaSetup::showSambaSetup()
  	sm->addItem(sm_start);			//server stat
 	sm->addItem(GenericMenuSeparatorLine);
 	//-----------------------------------
- 	sm->addItem(sh_fw_inst_path);		//install dir
- 	sm->addItem(sh_fw_conf_path);		//config file path
- 	sm->addItem(GenericMenuSeparatorLine);
- 	//-----------------------------------
  	sm->addItem(sm_fw_domain);		//workgroup/domain input
 	sm->addItem(sm_fw_interface);		//interface
 
@@ -173,6 +159,7 @@ void CSambaSetup::showSambaSetup()
 	sm->hide();
 	delete sm;
 }
+
 
 //helper: uppercase string
 string CSambaSetup::upperString(const string& to_upper_str)
@@ -191,6 +178,8 @@ string CSambaSetup::upperString(const string& to_upper_str)
 	return s;
 }
 
+
+
 //notfier for samba switching
 #define SAMBA_COMMANDS_COUNT 2
 typedef struct smb_cmd_t
@@ -202,84 +191,175 @@ typedef struct smb_cmd_t
 const smb_cmd_struct_t smb_cmd[SAMBA_COMMANDS_COUNT] =
 {
 	{NMBD, " -D"},
-	{SMBD, (string)" -D -a -s "},
+	{SMBD, " -D -a -s "},
 };
+
+//helper check if nmbd and smbd are available
+bool CSambaSetup::haveSambaSupport()
+{
+	bool ret = true;
+
+	//check private dir
+	DIR   *dirCheck;
+      	dirCheck = opendir(SMB_PRIVAT_DIR);
+
+	if ( dirCheck == NULL )
+	{
+		if(mkdir(SMB_PRIVAT_DIR, 0755) !=0) // generate private dir, if not exists
+			ret = false;
+	}
+	else 
+		closedir( dirCheck );
+
+	//check available samba binaries smbd, nmbd
+	for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
+	{
+		string smb_bin = "/bin/" + smb_cmd[i].bin;
+		string smb_def_bin = "/var/bin/" + smb_cmd[i].bin;
+		
+		if(access(smb_bin.c_str(), R_OK) !=0 && access(smb_def_bin.c_str(), R_OK) !=0) 
+		{
+			cerr << "[samba setup] "<<__FUNCTION__ <<":  can't found "<<smb_cmd[i].bin<<endl;
+			return false;
+		}
+	}
+
+	return ret;
+}
+
+//helper check if smb.conf is available
+bool CSambaSetup::haveSambaConf()
+{
+	if((access( SMBCONF_VAR , R_OK) !=0) && (access( SMBCONF , W_OK) !=0))
+			return false;
+
+	return true;
+}
+
+// kills samba 
+bool CSambaSetup::killSamba()
+{
+	bool ret = true;
+	string pid;
+
+	for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
+	{
+		while (!(pid = getPidof(smb_cmd[i].bin)).empty())
+		{
+			stringstream Str;
+			Str << pid;
+			int i_pid;
+			Str >> i_pid;
+			
+			if (!pid.empty())
+			{	
+				if (kill(i_pid, SIGKILL) !=0)
+				{
+					cerr << "[samba setup] "<<__FUNCTION__ <<":  error while terminating: "<<smb_cmd[i].bin <<" "<< strerror(errno)<<endl;
+					ret = false;
+				}
+				else
+					cout << "[samba setup] killed "<< smb_cmd[i].bin << " pid: "<<pid<<endl;
+			}
+		}
+		
+		char pid_file[9];
+		sprintf( pid_file, "/tmp/%s.pid", smb_cmd[i].bin.c_str()); 
+		if (ret)
+			remove(pid_file);
+		
+	}
+
+	if(ret)
+		remove("/tmp/smbd-smb.conf.pid");
+
+	return ret;
+}
+
+// starts samba 
+bool CSambaSetup::startSamba()
+{
+	bool ret = true;
+	
+	if (!haveSambaConf())
+	{
+		err_msg += g_Locale->getText(LOCALE_SAMBASERVER_SETUP_MSG_MISSING_SMBCONF);
+		return false;
+	}
+
+	
+	for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
+	{
+		if (getPidof(smb_cmd[i].bin).empty())
+		{
+			string options = smb_cmd[i].option + " " +  (smb_cmd[i].bin == SMBD ? SMBCONF : "");
+			string cmd = smb_cmd[i].bin + options;
+
+			int result = CNeutrinoApp::getInstance()->execute_sys_command(cmd.c_str());
+
+			if (result !=0)
+			{
+				cerr<<"[samba setup] "<<__FUNCTION__ <<": error while executing " <<smb_cmd[i].bin<<endl;
+				if (result == 127)
+					err_msg += smb_cmd[i].bin + " not found!\n";
+				else if (result == 126)
+					err_msg += smb_cmd[i].bin + " is not executable! Plaese check permissions!\n";
+				else if (result == 139)
+					err_msg += smb_cmd[i].bin + " Fatal error! Segfault\n" ;
+				else
+					err_msg += cmd + "\n" + strerror(result);
+
+				killSamba();
+
+				ret = false;
+
+			}
+			else
+				cout << "[samba setup] started "<< smb_cmd[i].bin << " (PID: "<<getPidof(smb_cmd[i].bin)<< ") with options:" << options<<endl;
+		}
+
+	}
+
+	return ret;
+}
+
 
 bool CSambaOnOffNotifier::changeNotify(const neutrino_locale_t, void * data)
 {
 	bool ret = true;
-	string err_msg;
-
+	CSambaSetup smb;
+	CDriveSetup drivesetup;
+	bool have_shares = drivesetup.haveMountedSmbShares();
+	
 	if ((*(int *)data) != 0)
 	{
-		for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
+		if (have_shares)
 		{
-			string pid = getPidof(smb_cmd[i].bin);
-
-			if (pid.empty())
-			{
-				string cmd = g_settings.smb_setup_samba_installdir + "/" + smb_cmd[i].bin + smb_cmd[i].option + " " +  g_settings.smb_setup_samba_conf_path;
-
-				int result = CNeutrinoApp::getInstance()->execute_sys_command(cmd.c_str());
-				if (result !=0)
-				{
-					err_msg = "Error while start samba server!\n";
-					cerr<<"[samba setup] "<<__FUNCTION__ <<": error while executing " <<smb_cmd[i].bin<<endl;
-					if (result == 127)
-						err_msg += smb_cmd[i].bin + " not found!\n";
-					else if (result == 1)
-						err_msg += "Please check path of samba config file!\n";
-					else
-						err_msg += cmd + "\n" + strerror(result);
-					ret = false;
-				}
-				else
-					cout << "[samba setup] started "<< smb_cmd[i].bin << " with options:" << smb_cmd[i].option<<endl;
-			}
-
-		}		
+			ret = smb.startSamba();
 		
-		if (ret)
-		{
-			FILE * fd = fopen(filename, "w");
-			if (fd)
-				fclose(fd);
+			if (!ret)
+				DisplayErrorMessage(smb.getErrMsg().c_str());
 			else
-				return false;
+				DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_STAT_RUNNING));
 		}
+			
+		//write markerfile
+		FILE * fd = fopen(filename, "w");
+		if (fd)
+			fclose(fd);
+		else
+			return false;
 	}
 	else
 	{
-		string pid;
-		for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
-		{
-			while (!(pid = getPidof(smb_cmd[i].bin)).empty())
-			{
-				stringstream Str;
-				Str << pid;
-				int i_pid;
-				Str >> i_pid;
-				
-				if (!pid.empty())
-				{	
-					if (kill(i_pid, SIGKILL) !=0)
-					{
-						cerr << "[samba setup] "<<__FUNCTION__ <<":  error while terminating: "<<smb_cmd[i].bin <<" "<< strerror(errno)<<endl;
-						ret = false;
-					}
-					else
-						cout << "[samba setup] killed "<< smb_cmd[i].bin << " pid: "<<pid<<endl;
-				}
-			}
-		}
-		remove(filename);
+		if (smb.killSamba())
+			DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_STAT_STOPPED));
+		else
+			ret = false;
+
+  		remove(filename); //remove markerfile
 	}
 
-	if (!ret)
-	{
-		DisplayInfoMessage(err_msg.c_str());
-		g_settings.smb_setup_samba_on_off = ret;
-	}
 
 	return ret;
 }
