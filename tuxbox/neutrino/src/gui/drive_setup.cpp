@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.54 2010/04/01 19:31:56 dbt Exp $
+	$Id: drive_setup.cpp,v 1.55 2010/04/21 21:51:00 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -44,7 +44,6 @@ TODO:
 #include <config.h>
 #endif
 
-
 #include "gui/drive_setup.h"
 #include "gui/imageinfo.h"
 
@@ -58,9 +57,6 @@ TODO:
 #include <gui/widget/stringinput_ext.h>
 #include <gui/widget/progressbar.h>
 #include <gui/widget/helpbox.h>
-#ifdef ENABLE_SAMBASERVER
-#include <gui/sambaserver_setup.h>
-#endif
 
 #include <driver/screen_max.h>
 
@@ -84,8 +80,6 @@ TODO:
 #include <errno.h>
 
 // Paths of system and init files
-#define ETC_DIR				"/etc"
-#define VAR_ETC_DIR 			"/var/etc"
 #define INIT_D_DIR 			ETC_DIR "/init.d"
 #define INIT_D_VAR_DIR 			VAR_ETC_DIR "/init.d"
 #define INIT_IDE_SCRIPT_NAME 		"06hdd"
@@ -99,15 +93,6 @@ TODO:
 #define EXPORTS 			ETC_DIR "/exports"
 #define EXPORTS_VAR 			VAR_ETC_DIR "/exports"
 #endif /*ENABLE_NFSSERVER*/
-
-#ifdef ENABLE_SAMBASERVER
-#define INIT_SAMBA_SCRIPT_NAME 		"31sambaserver"
-#define INIT_SAMBA_SCRIPT_FILE 		INIT_D_DIR  "/"  INIT_SAMBA_SCRIPT_NAME
-#define INIT_SAMBA_VAR_SCRIPT_FILE 	INIT_D_VAR_DIR "/" INIT_SAMBA_SCRIPT_NAME
-
-#define SMBCONF 			ETC_DIR "/smb.conf"
-#define SMBCONF_VAR 			VAR_ETC_DIR "/smb.conf"
-#endif /*ENABLE_SAMBASERVER*/
 
 #define TEMP_SCRIPT			"/tmp/drive_setup"
 #define PREPARE_SCRIPT_FILE		"/tmp/prepare_opt"
@@ -242,6 +227,18 @@ CDriveSetup::CDriveSetup():configfile('\t')
 	struct utsname u;
 	if (!uname(&u))
 		k_name = u.release;
+
+	//partition names
+	string part_pattern[MAXCOUNT_DRIVE] ={	HDA_PARTS,	//MASTER
+						HDB_PARTS,	//SLAVE
+ 						MMC_PARTS};	//MMCARD
+	for (uint i=0; i < MAXCOUNT_DRIVE; i++) 
+	{
+		for (uint j=0; j < MAXCOUNT_PARTS; j++) 
+		{
+			partitions[i][j] = part_pattern[i] + iToString(j+1);
+		}
+	}
 }
 
 CDriveSetup::~CDriveSetup()
@@ -311,54 +308,14 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
  	}
 	else if (actionKey == "reset_drive_setup")
  	{
-		bool do_reset = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_RESET, LOCALE_DRIVE_SETUP_MSG_RESET_NOW, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, width, 5) == CMessageBox::mbrYes);
-		
-		string init_ide_path = getInitIdeFilePath();
-		string init_mount_path = getInitMountFilePath();
-	#ifdef ENABLE_SAMBASERVER 
-		string init_smb_path = getInitSmbFilePath();
-	#endif
-
-		if (do_reset)
-		{		
-			string init_files[] = {	init_ide_path,
-						getInitIdeFilePath().insert(init_ide_path.rfind("/")+1, "S"),
-						getInitIdeFilePath().insert(init_ide_path.rfind("/")+1, "K"),
-						init_mount_path, 
-						getInitMountFilePath().insert(init_mount_path.rfind("/")+1, "S"),
-						getInitMountFilePath().insert(init_mount_path.rfind("/")+1, "K"),
-						DRV_CONFIGFILE, 
-						getFstabFilePath()
-					#ifdef ENABLE_NFSSERVER 
-						,getExportsFilePath()
-					#endif
-					#ifdef ENABLE_SAMBASERVER 
-						,g_settings.smb_setup_samba_conf_path
-						,init_smb_path
-						,getInitSmbFilePath().insert(init_smb_path.rfind("/")+1, "S")
-						,getInitSmbFilePath().insert(init_smb_path.rfind("/")+1, "K")
-						,SAMBA_MARKER
-					#endif /*ENABLE_SAMBASERVER*/
-						};
-			
-			//removing init and configfiles
-			for (unsigned int i = 0; i < (sizeof(init_files) / sizeof(init_files[0])); i++)
-				remove(init_files[i].c_str());
-			
-			bool (CDriveSetup::*pMember[4])(void) = {	&CDriveSetup::unmountAll,
-									&CDriveSetup::unloadFsDrivers,
-									&CDriveSetup::unloadMmcDrivers,
-									&CDriveSetup::unloadIdeDrivers};
-	
-			for (unsigned int i = 0; i < 4; i++) 
-				(*this.*pMember[i])();
-
-			configfile.clear();
-	
+		if (Reset())
+		{
 			Init();
-	
 			return menu_return::RETURN_EXIT_ALL;
 		}
+		else
+			DisplayErrorMessage(err[ERR_RESET].c_str());
+
 		return res;
 	}
 	//using generated actionkeys for...
@@ -528,8 +485,7 @@ void CDriveSetup::Init()
 	if (pixbuf != NULL)
 		frameBuffer->SaveScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
 
- 	void (CDriveSetup::*pMember[])(void) = {&CDriveSetup::loadPartitions,
-						&CDriveSetup::loadDriveSettings,
+ 	void (CDriveSetup::*pMember[])(void) = {&CDriveSetup::loadDriveSettings,
 						&CDriveSetup::loadModulDirs,
 						&CDriveSetup::loadHddCount,
 						&CDriveSetup::loadHddModels,
@@ -1222,8 +1178,10 @@ void CDriveSetup::showHddSetupSub()
 			smb_public_chooser[i] = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_SHARES_PUBLIC, &d_settings.drive_partition_samba_public[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, d_settings.drive_partition_samba[current_device][i], NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4 );
 
 			//prepare on off use
+			//only active if samba binaries are available
+			CSambaSetup smb;
 			sambaNotifier[i] = new CDriveSetupSambaNotifier (srv_smb_globals[i], smb_share_name_fw[i], smb_ro_chooser[i], smb_public_chooser[i]);
-			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, true, sambaNotifier[i], CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN );
+			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, smb.haveSambaSupport(), sambaNotifier[i], CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN );
 		#endif /*ENABLE_SAMBASERVER*/
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
 
@@ -1276,7 +1234,7 @@ void CDriveSetup::showHddSetupSub()
 		ak_check_partition[i] = CHECK_PARTITION + iToString(i);
 		check_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CHECK, true, NULL, this, ak_check_partition[i].c_str(), CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
 
-		//edit
+		//edit partition
 		part[i]->addItem(p_subhead[i]);			//subhead
 		//------------------------
 		part[i]->addItem(GenericMenuSeparator); 	//separator
@@ -1295,6 +1253,12 @@ void CDriveSetup::showHddSetupSub()
 		part[i]->addItem(mp_chooser[i]);		//select mountpoint
 		part[i]->addItem(input_size[i]);		//input part size
 		//------------------------
+		part[i]->addItem(sep_jobs);			//separator jobs
+		//------------------------
+		part[i]->addItem(format_part[i]);		//format partition
+		part[i]->addItem(mount_umount[i]);		//mount/unmount partition
+		part[i]->addItem(delete_part[i]);		//delete partition
+		part[i]->addItem(check_part[i]);		//check partition
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 		part[i]->addItem(GenericMenuSeparatorLine);	//separator
 		part[i]->addItem(part_srv_fw[i]);		//sub menue server shares
@@ -1319,19 +1283,13 @@ void CDriveSetup::showHddSetupSub()
 			part_srv_shares[i]->addItem(srv_smb_globals[i]);	//samba globals
 			//------------------------
 			part_srv_shares[i]->addItem(GenericMenuSeparatorLine);	//separator
-			part_srv_shares[i]->addItem(smb_share_name_fw[i]);	//samba share name
 			part_srv_shares[i]->addItem(smb_share_comment_fw[i]);	//samba share comment
+			part_srv_shares[i]->addItem(smb_share_name_fw[i]);	//samba share name
 			part_srv_shares[i]->addItem(smb_ro_chooser[i]);		//samba readonly
 			part_srv_shares[i]->addItem(smb_public_chooser[i]);	//samba guest ok
 			//------------------------
 		#endif
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
-		part[i]->addItem(sep_jobs);			//separator jobs
-		//------------------------
-		part[i]->addItem(format_part[i]);		//format partition
-		part[i]->addItem(mount_umount[i]);		//mount/unmount partition
-		part[i]->addItem(delete_part[i]);		//delete partition
-		part[i]->addItem(check_part[i]);		//check partition
 	
 	}
 	
@@ -1351,6 +1309,9 @@ void CDriveSetup::showHddSetupSub()
 	sub_add->addItem(mp_chooser[next_part_number]);	//select mountpoint
 	sub_add->addItem(input_size[next_part_number]);	//input part size
 	//------------------------
+	sub_add->addItem(GenericMenuSeparatorLine);	//separator
+	//------------------------
+	sub_add->addItem(mkpart[next_part_number]);	//make partition
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 	sub_add->addItem(GenericMenuSeparatorLine);	//separator
 	sub_add->addItem(part_srv_fw[next_part_number]);//sub menue server shares
@@ -1375,16 +1336,13 @@ void CDriveSetup::showHddSetupSub()
 		sub_add_share->addItem(srv_smb_globals[next_part_number]);	//samba globals
 		sub_add_share->addItem(GenericMenuSeparatorLine);		//separator
 		//------------------------
-		sub_add_share->addItem(smb_share_name_fw[next_part_number]);	//samba share name
 		sub_add_share->addItem(smb_share_comment_fw[next_part_number]);	//samba share comment
+		sub_add_share->addItem(smb_share_name_fw[next_part_number]);	//samba share name
 		sub_add_share->addItem(smb_ro_chooser[next_part_number]);	//samba readonly
 		sub_add_share->addItem(smb_public_chooser[next_part_number]);	//samba guest ok
 		//------------------------
 	#endif
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
-	sub_add->addItem(GenericMenuSeparatorLine);	//separator
-	//------------------------
-	sub_add->addItem(mkpart[next_part_number]);	//make partition
 
 
 	//add swap
@@ -1575,23 +1533,6 @@ unsigned int CDriveSetup::getFirstUnusedPart(const int& device_num)
 	return ret;
 }
 
-
-// writes partition names to vector collection v_partname
-void CDriveSetup::loadPartitions()
-{
-	string part_pattern[MAXCOUNT_DRIVE] ={	HDA_PARTS,	//MASTER
-						HDB_PARTS,	//SLAVE
- 						MMC_PARTS};	//MMCARD
-
-	for (uint i=0; i < MAXCOUNT_DRIVE; i++) 
-	{
-		for (uint j=0; j < MAXCOUNT_PARTS; j++) 
-		{
-			partitions[i][j] = part_pattern[i] + iToString(j+1);
-		}
-	}
-}
-
 // unmount all mounted partition or swaps
 bool CDriveSetup::unmountAll()
 {
@@ -1685,6 +1626,15 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 		}
 		else if (isMountedPartition(partname)) 
 		{ // unmount partition
+
+		#ifdef ENABLE_SAMBASERVER
+			// stop samba if it's necessary 
+			if (d_settings.drive_partition_samba[device_num][part_number])
+			{	CSambaSetup smb;
+				smb.killSamba();
+			}
+		#endif
+		
 			string mp = getMountInfo(partname, MOUNTPOINT);
 
 			if (umount(mp.c_str()) !=0)
@@ -1717,41 +1667,6 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 	return true;
 }
 
-// returns mount stat of device, isMountedPartition("HDA1") = true=mounted, false=not mounted
-bool CDriveSetup::isMountedPartition(const string& partname)
-{
-	string mounts;
-	string partx = partname;
-
-	if(access(partx.c_str(), R_OK) !=0) 
-	{// exit if no available
-		return false;
-	}
-
-	if(access(PROC_MOUNTS, R_OK) !=0) 
-	{// exit if no available
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": "<<PROC_MOUNTS<<" not found..."<< endl;
-		return false;
-	}
-
-	// get mounts
-	ifstream f(PROC_MOUNTS);
-	if (!f)	
-	{
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while open "<<PROC_MOUNTS<<" "<< strerror(errno)<< endl;
-		return false;
-	}
-	char ch;
-	while(f.get(ch)) 
-	{
-		mounts += ch;
-	}
-	f.close();
-
-	//search matching entries and return result
-	string::size_type loc = mounts.find( partx, 0 );
-	return (( loc != string::npos ) ? true : false);
-}
 
 // returns true if modul/driver is loaded, false if unloaded e.g: isModulLoaded("dboxide")
 bool CDriveSetup::isModulLoaded(const string& modulname)
@@ -2320,6 +2235,7 @@ bool CDriveSetup::saveHddSetup()
 			ret = false;
 		}
 	}
+
 	
 	//mount all parts
 	if (!mkMounts())
@@ -2328,16 +2244,68 @@ bool CDriveSetup::saveHddSetup()
 		ret = false;
 	}
 
+
 	//fstab
-	if (ret && d_settings.drive_use_fstab) 
+	if (ret) 
 	{
-		if (!mkFstab())
+		bool defaults = (!d_settings.drive_use_fstab ? true:false);
+		if (!mkFstab(defaults))
 		{
 			v_errors.push_back(err[ERR_MK_FSTAB]);
 			ret = false;
 		}
 	}
 	
+
+	// write and linking init and config files
+#ifdef ENABLE_SAMBASERVER
+	
+	setSambaMode();	
+
+	// write samba files
+	if (ret)
+	{
+		//smb.conf
+		if (!mkSmbConf())
+		{
+			v_errors.push_back(err[ERR_MK_SMBCONF]);
+			ret = false;
+		}
+		//31sambaserver
+		if (!mkSambaInitFile())
+		{
+			v_errors.push_back(err[ERR_MK_SMBINITFILE]);
+			ret = false;
+		}
+		// unlink old symlinks to 31sambaserver
+		if (!unlinkSmbInitLinks())
+		{
+			v_errors.push_back(err[ERR_UNLINK_SMBINITLINKS]);
+			ret = false;
+		}
+		//create new links
+		if (!linkSmbInitFiles())
+		{
+			v_errors.push_back(err[ERR_LINK_SMBINITFILES]);
+			ret = false;
+		}
+
+	}
+
+	// start samba if it's enabled
+	if (ret)
+	{
+		if (g_settings.smb_setup_samba_on_off && haveMountedSmbShares())
+		{
+			CSambaSetup smb;
+			if (!smb.startSamba())
+			{
+				v_errors.push_back(smb.getErrMsg());
+				ret = false;
+			}
+		}
+	}
+#endif
 
 #ifdef ENABLE_NFSSERVER
 	// exports
@@ -2351,47 +2319,39 @@ bool CDriveSetup::saveHddSetup()
 	}
 #endif
 
-#ifdef ENABLE_SAMBASERVER
-	// smb.conf
+	// initfiles for ide, fs, mmc, and mounts
 	if (ret)
 	{
-		if (!mkSmbConf())
+		if (!writeInitFile(ide_disabled))
 		{
-			v_errors.push_back(err[ERR_MK_SMBCONF]);
+			v_errors.push_back(err[ERR_WRITE_INITFILES]);
 			ret = false;
-		}
-		if (!mkSambaInitFile())
-		{
-			v_errors.push_back(err[ERR_MK_SMBINITFILE]);
-			ret = false;
-		}
+		}	
 	}
-#endif
 
-	// write and linking init files
+	// linking initfiles
 	if (ret)
 	{
-		if ((writeInitFile(ide_disabled)) && (linkInitFiles())) 
+		if (!linkInitFiles())
 		{
-			neutrino_locale_t msg_locale;
-	
-			if (ide_disabled && !isMmcActive())
-				msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED_DISABLED;
-			else
-				msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED;
-	
-			if (ret)
-				ShowLocalizedHint(LOCALE_DRIVE_SETUP_HEAD, msg_locale, width, msg_timeout, NEUTRINO_ICON_INFO);
-		}
-		else 
-		{
-	
+			v_errors.push_back(err[ERR_LINK_INITFILES]);
 			ret = false;
-		}
+		}	
 	}
 
-	//create summary error message
-	if (!ret) 
+	// create result message
+	if (ret)
+	{
+		neutrino_locale_t msg_locale;
+	
+		if (ide_disabled && !isMmcActive())
+			msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED_DISABLED;
+		else
+			msg_locale = LOCALE_DRIVE_SETUP_MSG_SAVED;
+	
+			ShowLocalizedHint(LOCALE_DRIVE_SETUP_HEAD, msg_locale, width, msg_timeout, NEUTRINO_ICON_INFO);
+	}
+	else 	//create summary error message
 	{
 		for (uint i=0; i<(v_errors.size()) ; i++)
 		{
@@ -2407,7 +2367,8 @@ bool CDriveSetup::saveHddSetup()
 bool CDriveSetup::writeInitFile(const bool clear)
 {
 	bool ret = true;
-	
+	err[ERR_WRITE_INITFILES] = "Error while writing initfiles:\n";
+
 	string init_file [INIT_FILE_TYPE_NUM_COUNT] = {getInitIdeFilePath(), getInitMountFilePath()};
 
 	ofstream initfile[INIT_FILE_TYPE_NUM_COUNT] ;
@@ -2419,6 +2380,7 @@ bool CDriveSetup::writeInitFile(const bool clear)
 
 		if (!initfile[i]) 
 		{ // Error while open
+			err[ERR_WRITE_INITFILES] += init_file[i] + "\n" + strerror(errno) + "\n";
        			cerr << "[drive setup] "<<__FUNCTION__ <<":  write error "<<init_file[i]<<", please check permissions..."<< strerror(errno)<<endl;
 			return false;
 		}
@@ -2453,6 +2415,7 @@ bool CDriveSetup::writeInitFile(const bool clear)
 
 		if ( chmod_ret !=0 )
 		{
+			err[ERR_WRITE_INITFILES] += init_file[i] + "\n" + strerror(chmod_ret) + "\n";
 			cerr<<"[drive setup] "<<__FUNCTION__ <<": Error while setting permissions for "<<init_file[i]<<" "<<strerror(chmod_ret)<<endl;
 			ret = false;
 		}
@@ -3196,40 +3159,38 @@ string CDriveSetup::getFileEntryString(const char* filename, const std::string& 
 	return ret;
 }
 
+
+// returns mount stat of device, isMountedPartition("HDA1") = true=mounted, false=not mounted
+bool CDriveSetup::isMountedPartition(const string& partname)
+{
+	string partx = partname;
+
+	if(access(partx.c_str(), R_OK) !=0 || access(PROC_MOUNTS, R_OK) !=0) 
+	{// exit if no available
+		return false;
+	}
+
+	if (!getFileEntryString(PROC_MOUNTS, partname, 1).empty())
+		return true;
+	else
+		return false;
+
+}
+
 // returns mode of swap partitions, true=is swap, false=no swap, usage: bool part_is_swap = isSwapPartition("/dev/hda1") 
 bool CDriveSetup::isSwapPartition(const string& partname)
 {
- 	string swap_tab;
 	string partx = partname;
 
-	if(access(partx.c_str(), R_OK) !=0) 
+	if(access(partx.c_str(), R_OK) !=0 || access(PROC_SWAPS, R_OK) !=0) 
 	{// exit if no available
-// 		cerr<<"[drive setup] "<<partname<<" not found..."<< endl;
 		return false;
 	}
 
-	if(access(PROC_SWAPS, R_OK) !=0) // exit if no available
+	if (!getFileEntryString(PROC_SWAPS, partname, 1).empty())
+		return true;
+	else
 		return false;
-
-	// get swap table
-	ifstream f(PROC_SWAPS);
-	if (!f)	
-	{
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while open "<<PROC_SWAPS<< " "<< strerror(errno)<<endl;
-		return false;
-	}
-
-	char ch;
-	while(f.get(ch)) 
-	{
-		swap_tab += ch;
-	}
-	f.close();
-
-	//search matching entries and return result
-	string::size_type loc = swap_tab.find( partx, 0 );
-	return (( loc != string::npos ) ? true : false);
-
 }
 
 // returns true if already exists an active swap partition
@@ -3604,6 +3565,12 @@ string CDriveSetup::getInitSmbFilePath()
 {
 	return getFilePath(INIT_SAMBA_VAR_SCRIPT_FILE, INIT_SAMBA_SCRIPT_FILE);
 }
+
+// gets a writable path of smb.conf
+string CDriveSetup::getSmbConfFilePath()
+{
+	return getFilePath(SMBCONF_VAR, SMBCONF);
+}
 #endif
 
 // possible supported fstypes for mkfs.X and fsck.x
@@ -3786,6 +3753,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 // generate exports file, returns true on success
 bool CDriveSetup::mkExports()
 {
+	err[ERR_MK_EXPORTS] = "";
 	// set exports path
 	string exports = getExportsFilePath();
 	string timestamp = getTimeStamp();
@@ -3853,16 +3821,37 @@ bool CDriveSetup::mkExports()
 // generate samba config file, returns true on success
 bool CDriveSetup::mkSmbConf()
 {
-	// set config file path
-	string smbconf = g_settings.smb_setup_samba_conf_path;
+	err[ERR_MK_SMBCONF] = "";
 
+	// get a writeable path to smb.conf
+	string smbconf = getSmbConfFilePath();
+
+	// next: removing old samba configfile
+	if ( access(smbconf.c_str(), R_OK) ==0 )
+	{
+		int res = remove(smbconf.c_str());
+		if (res !=0)
+		{	string  err_msg = "Error while deleting\n";
+				err_msg += smbconf + "\n";
+				err_msg += strerror(res);
+			cerr << "[drive setup] "<<__FUNCTION__ <<": "<<err_msg<<endl;
+			err[ERR_MK_SMBCONF] = err_msg;
+			return false; 
+		}
+	}
+
+	// check if samba feature is enabled and exit on OFF and return true, otherwise goto next
+	if (g_settings.smb_setup_samba_on_off == CSambaSetup::OFF)
+		return true;
+
+	// genearting usefull informations for global samba configurations file 
 	static CImageInfo imaginfo;
 
-	//generate head entries 
+	// head entries 
   	string smb_head = "; " + smbconf + " generated by neutrino ide/mmc/hdd drive-setup, do not edit!\n; " +  getDriveSetupVersion() + " " +  getTimeStamp();
 	
-	//globals
-	//note! settings for network-interface and server string will be generated automaticly, workgroup is changable from user in samba menue 
+	// globals
+	// note! settings for network-interface and server string will be generated automaticly, workgroup is changable from user in samba menue 
 	string  smb_auto = "interfaces = ";
 		smb_auto += getInterface() + "\n";
 		smb_auto += "workgroup = ";
@@ -3870,7 +3859,7 @@ bool CDriveSetup::mkSmbConf()
 		smb_auto += "server string = Samba@";
 		smb_auto += imaginfo.getImageInfo(IMAGENAME);
 
-	//names and default values of global settings, 
+	// names and default values of global settings, 
 	string smb_globals[] = {  smb_head,
  				 "[global]",
 				  smb_auto,
@@ -3886,7 +3875,7 @@ bool CDriveSetup::mkSmbConf()
 				 "preserve case = yes",
 				 "short preserve case = yes",
 				 "character set = iso8859-1"};
-	//collect global entries
+	// collect global entries
 	string smb_entries;
 	for (uint j = 0; j < (sizeof(smb_globals) / sizeof(smb_globals[0])); j++)
 	{
@@ -3913,30 +3902,131 @@ bool CDriveSetup::mkSmbConf()
  		}
  	}
 
- 	// write smb
+ 	// writing smb.conf
+	// NOTE: do only write smb.conf file to a writable directotry /etc or for squashfs to /var/etc!
+	// if /etc/smb.conf file is not writeable, it must be a link to /var/etc/smb.conf! 
 	ofstream str_smb(smbconf.c_str());
 	if (!str_smb) 
 	{ // Error while open
 		cerr << "[drive setup] "<<__FUNCTION__ <<": write error "<<smbconf<<", please check permissions..." << strerror(errno)<<endl;
-		err[ERR_MK_SMBCONF] += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_EXPORTS);
+		err[ERR_MK_SMBCONF] += g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_SMBCONF);
 		return false;
 	}
 	else 
 		str_smb << smb_entries <<endl;
 
 	str_smb.close();
+
+ 	
+// 	if ( access(smbconf.c_str(), W_OK) ==0 ) 
+// 	{
+// 		if (symlink(SMBCONF, SMBCONF_VAR) !=0)
+// 		{
+// 			cerr<<"[drive setup] "<<__FUNCTION__ <<":  error while creating symlink"<<SMBCONF_VAR<< " " <<strerror(errno)<<endl;
+// 			err[ERR_MK_SMBCONF] += "Error while creating\n";
+// 			err[ERR_MK_SMBCONF] +=  SMBCONF_VAR;
+// 			err[ERR_MK_SMBCONF] +=  "\n";
+// 			err[ERR_MK_SMBCONF] +=	strerror(errno);
+// 			return false;
+// 		}
+// 		else
+// 			cout<<"[drive setup] linking "<<smbconf<<"-->"<<SMBCONF_VAR<< " ...ok"<<endl;
+// 	}
+
+
 	cout<<"[drive setup] "<<__FUNCTION__ <<": writing "<<smbconf<< "...ok"<<endl;
  
 	return true;
 }
 
+//unlink samba server initfiles 
+bool CDriveSetup::unlinkSmbInitLinks()
+{
+	err[ERR_UNLINK_SMBINITLINKS] = "Error while unlink ";
+	bool ret = true;
+
+	string if_path = getInitSmbFilePath(); //init file path
+
+	string symlinks[] = {	getInitSmbFilePath().insert(if_path.rfind("/")+1, "S"), 
+				getInitSmbFilePath().insert(if_path.rfind("/")+1, "K")};
+
+	// unlinking old symlinks
+	for (uint i=0; i<(sizeof(symlinks) / sizeof(symlinks[0])) ; ++i)
+	{
+		if ( access(symlinks[i].c_str(), R_OK) ==0 )
+		{
+			if (unlink(symlinks[i].c_str()) !=0)
+			{
+				err[ERR_UNLINK_SMBINITLINKS] += symlinks[i] + "\n" + strerror(errno) + "\n";
+				cerr<<"[drive setup] "<<__FUNCTION__ <<":  "<<err[ERR_UNLINK_SMBINITLINKS]<<endl;
+				ret = false;
+			}
+			else
+				cout<<"[drive setup] unlink of "<<symlinks[i]<< " ...ok"<<endl;
+		}
+	}
+	
+	return ret;
+}
+
+//linking sambaserver initfiles
+bool CDriveSetup::linkSmbInitFiles()
+{
+	err[ERR_LINK_SMBINITFILES] = "Error while linking samba initfiles\n";
+	bool ret = true;
+
+	string if_path = getInitSmbFilePath(); //init file path
+
+	string symlinks[] = {	getInitSmbFilePath().insert(if_path.rfind("/")+1, "S"), 
+				getInitSmbFilePath().insert(if_path.rfind("/")+1, "K")};	
+
+	
+	for (uint i=0; i<(sizeof(symlinks) / sizeof(symlinks[0])) ; ++i)
+	{
+		// create symmlink
+		if ( access(symlinks[i].c_str(), R_OK) !=0 )
+		{
+			if (symlink(if_path.c_str(),symlinks[i].c_str()) !=0)
+			{
+				err[ERR_LINK_SMBINITFILES] += symlinks[i] + "\n" + strerror(errno) + "\n";
+				cerr<<"[drive setup] "<<__FUNCTION__ <<":  "<<err[ERR_LINK_SMBINITFILES]<<endl;
+				ret = false;
+			}
+			else
+				cout<<"[drive setup] linking "<<if_path<<"-->"<<symlinks[i]<< " ...ok"<<endl;
+		}
+	}
+	
+	return ret;
+}
+
 //writes sambaserver initfile
 bool CDriveSetup::mkSambaInitFile()
 {
+	err[ERR_MK_SMBINITFILE] = "";
 	bool ret = true;
-	string if_path = getInitSmbFilePath();
+	string if_path = getInitSmbFilePath(); //init file path
 	string timestamp = getTimeStamp();
 	string head = "# " + if_path + " generated from neutrino ide/mmc/hdd drive-setup\n# " +  getDriveSetupVersion() + " " +  timestamp + "\n";
+	string samba_conf_file = SMBCONF;
+
+	// remove old samba startscript
+	if ( access(if_path.c_str(), R_OK) ==0 )
+	{
+		int res = remove(if_path.c_str());
+		if (res !=0)
+		{	string  err_msg = "Error while deleting\n";
+				err_msg += if_path + "\n";
+				err_msg += strerror(res);
+			cerr << "[drive setup] "<<__FUNCTION__ <<": "<<err_msg<<endl;
+			err[ERR_MK_SMBINITFILE] = err_msg;
+			return false; 
+		}
+	}
+
+	// exit if samba is disabled
+	if (g_settings.smb_setup_samba_on_off != CSambaSetup::ON)
+		return true;
 
 	ofstream out;
 	out.open(if_path.c_str());
@@ -3951,9 +4041,9 @@ bool CDriveSetup::mkSambaInitFile()
 	out << head <<endl;
 	out << "case $1 in"<<endl;
 	out << "	start)"<<endl;
-	out << "		if [ -e "<<SAMBA_MARKER<<" -a -e "<<g_settings.smb_setup_samba_conf_path<<" ]; then"<<endl;
-	out << " 			"<< g_settings.smb_setup_samba_installdir<<"/"<<NMBD<<" -D"<<endl;
-	out << " 			"<< g_settings.smb_setup_samba_installdir<<"/"<<SMBD<<" -D -a -s "<<g_settings.smb_setup_samba_conf_path<<endl;
+	out << "		if [ -e "<<SAMBA_MARKER<<" -a -e "<<samba_conf_file<<" ]; then"<<endl;
+	out << " 			"<<NMBD<<" -D"<<endl;
+	out << " 			"<<SMBD<<" -D -a -s "<<samba_conf_file<<endl;
 	out << " 		fi"<<endl;
 	out << "		;;"<<endl;
 	out << " 	stop)"<<endl;
@@ -3974,27 +4064,6 @@ bool CDriveSetup::mkSambaInitFile()
 		err[ERR_MK_SMBINITFILE] += "Error while setting permissions for " + if_path + "\n" + strerror(errno);
 		ret = false;
 	}
-
-	//linking
-	string symlinks[] = {	getInitSmbFilePath().insert(if_path.rfind("/")+1, "S"), 
-				getInitSmbFilePath().insert(if_path.rfind("/")+1, "K")}; 
-
-	for (uint i=0; i<(sizeof(symlinks) / sizeof(symlinks[0])) ; ++i)
-	{
-		if ( access(symlinks[i].c_str(), R_OK) ==0 )
-		{
-			if (unlink(symlinks[i].c_str()) !=0)
-				cerr<<"[samba setup] "<<__FUNCTION__ <<":  error while unlink "<< symlinks[i] << " " <<strerror(errno)<<endl;
-		}
-		if (symlink(if_path.c_str(),symlinks[i].c_str()) !=0)
-		{
-			cerr<<"[samba setup] "<<__FUNCTION__ <<":  error while creating "<< symlinks[i] << " " <<strerror(errno)<<endl;
-			err[ERR_MK_SMBINITFILE] += "Error while creating " + symlinks[i] + "\n" + strerror(errno);
-			return false;
-		}
-			cout<<"[samba setup] linking "<<if_path<<"-->"<<symlinks[i]<< " ...ok"<<endl;
-	}
-
 
 	return ret;
 }
@@ -4330,11 +4399,11 @@ void CDriveSetup::loadDriveSettings()
 
 			// d_settings.drive_partition_activ
 			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
-			d_settings.drive_partition_activ[i][ii] = configfile.getBool(partition_activ_opt, true);
+			d_settings.drive_partition_activ[i][ii] = configfile.getBool(partition_activ_opt, YES);
 #ifdef ENABLE_NFSSERVER
 			// d_settings.drive_partition_nfs
 			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
-			d_settings.drive_partition_nfs[i][ii] = configfile.getBool(partition_nfs_opt, false);
+			d_settings.drive_partition_nfs[i][ii] = configfile.getBool(partition_nfs_opt, OFF);
 
 			// d_settings.drive_partition_nfs_host_ip
 			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
@@ -4344,15 +4413,15 @@ void CDriveSetup::loadDriveSettings()
 #ifdef ENABLE_SAMBASERVER
 			// d_settings.drive_partition_samba
 			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
-			d_settings.drive_partition_samba[i][ii] = configfile.getBool(partition_samba_opt, false);
+			d_settings.drive_partition_samba[i][ii] = configfile.getBool(partition_samba_opt, OFF);
 
 			// d_settings.drive_partition_samba_ro
 			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
-			d_settings.drive_partition_samba_ro[i][ii] = configfile.getBool(partition_samba_opt_ro, false);
+			d_settings.drive_partition_samba_ro[i][ii] = configfile.getBool(partition_samba_opt_ro, OFF);
 
 			// d_settings.drive_partition_samba_public
 			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
-			d_settings.drive_partition_samba_public[i][ii] = configfile.getBool(partition_samba_opt_public, true);
+			d_settings.drive_partition_samba_public[i][ii] = configfile.getBool(partition_samba_opt_public, ON);
 
 			// drive_partition_samba_share_name
 			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
@@ -4484,7 +4553,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.54 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.55 $");
 }
 
 // returns text for initfile headers
@@ -4655,6 +4724,8 @@ string CDriveSetup::getInitFileModulEntries(bool with_unload_entries)
 // linking initfiles and returns true on success
 bool CDriveSetup::linkInitFiles()
 {
+	err[ERR_LINK_INITFILES] = "Error while linking initfiles:\n";
+
 	string init_dir;
 	string init_hdd_file = getInitIdeFilePath();
 	string init_mount_file = getInitMountFilePath();
@@ -4679,12 +4750,14 @@ bool CDriveSetup::linkInitFiles()
 			{
 				if (unlink(symlinks[i][ii].c_str()) !=0)
 				{
-					cerr<<"[drive setup] "<<__FUNCTION__ <<":  error while unlink "<< symlinks[i][ii] << " " <<strerror(errno)<<endl;
+					err[ERR_LINK_INITFILES] += "Error while unlink\n" + symlinks[i][ii] + "\n" + strerror(errno);
+					cerr<<"[drive setup] "<<__FUNCTION__ <<":  "<<err[ERR_LINK_INITFILES]<<endl;
 				}
 			}
 			if (symlink(scripts[i].c_str(),symlinks[i][ii].c_str()) !=0)
 			{
-				cerr<<"[drive setup] "<<__FUNCTION__ <<":  error while creating symlink "<< symlinks[i][ii] << " " <<strerror(errno)<<endl;
+				err[ERR_LINK_INITFILES] += "Error while link\n" + symlinks[i][ii] + "\n" + strerror(errno);
+				cerr<<"[drive setup] "<<__FUNCTION__ <<":  "<<err[ERR_LINK_INITFILES]<<endl;
 				return false;
 			}
 				cout<<"[drive setup] linking "<<scripts[i]<<"-->"<<symlinks[i][ii]<< " ...ok"<<endl;
@@ -4712,22 +4785,77 @@ bool CDriveSetup::haveActiveParts(const int& device_num)
 }
 
 //returns true if any partition is mounted at device
-bool CDriveSetup::haveMounts(const int& device_num, bool without_swaps)
+bool CDriveSetup::haveMounts(const int& device_num, mount_stat_uint_t mount_stat)
 {
 	int i = device_num;
+	bool is_mounted[MAXCOUNT_PARTS], is_swap[MAXCOUNT_PARTS], is_shared[MAXCOUNT_PARTS];
 
 	for (unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
 	{
-		string partname = partitions[i][ii];
-		if (!without_swaps)
-			if (isMountedPartition(partname) || isSwapPartition(partname)) 
-				return true;
-			else 
-				return isMountedPartition(partname);								
-	}			
+		is_mounted[ii] 	= isMountedPartition(partitions[i][ii]);
+		is_swap[ii] 	= isSwapPartition(partitions[i][ii]);
+		is_shared[ii] 	= d_settings.drive_partition_samba[i][ii];
+
+		switch (mount_stat)
+		{
+			#ifdef ENABLE_SAMBASERVER
+			case MOUNT_STAT_MOUNT_AND_SHARE: // return true if the partition is mounted and a samba share
+				if (!is_swap[ii])
+				{
+					if (is_shared[ii] && is_mounted[ii])
+						return true;
+				}
+				break;
+			#endif
+			case MOUNT_STAT_MOUNT_ONLY:
+				if (is_mounted[ii] && !is_swap[ii])
+					return true;
+				break;
+			default: /*MOUNT_STAT_MOUNT_AND_SWAP:*/
+				if (is_mounted[ii] || is_swap[ii])
+					return true;
+				break;
+		}
+	}
+
+	return false;
+}
+
+#ifdef ENABLE_SAMBASERVER
+// get settings mode for samba servermode depends of available shares 
+void CDriveSetup::setSambaMode()
+{
+	// set samba on/off mode to off...
+	g_settings.smb_setup_samba_on_off = CSambaSetup::OFF;	
+
+	// ...then set samba on/off mode to off, if no share was definied, otherwise set to on and exit loop
+	for (uint i = 0; i <  MAXCOUNT_DRIVE; i++)
+	{
+		for (uint j = 0; j <  MAXCOUNT_PARTS; j++)
+		{
+			if (d_settings.drive_partition_samba[i][j])
+			{
+				g_settings.smb_setup_samba_on_off = CSambaSetup::ON;
+				return;
+			}
+		}	
+	}
+}
+
+
+// returns true if is any sambashare available
+bool CDriveSetup::haveMountedSmbShares()
+{
+	for (uint i = 0; i <  MAXCOUNT_DRIVE; i++)
+	{
+		if (haveMounts(i, MOUNT_STAT_MOUNT_AND_SHARE))
+			return true;
+	}
 	
 	return false;
 }
+#endif /*ENABLE_SAMBASERVER*/
+
 
 //helper, converts int to string
 string CDriveSetup::iToString(int int_val)
@@ -4755,6 +4883,92 @@ void CDriveSetup::showHelp()
 
 	hide();
 	helpbox.show(LOCALE_SETTINGS_HELP);
+}
+
+bool CDriveSetup::Reset()
+{
+	bool ret = true;
+	err[ERR_RESET] = "";
+
+	bool do_reset = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_RESET, LOCALE_DRIVE_SETUP_MSG_RESET_NOW, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, width, 5) == CMessageBox::mbrYes);
+		
+		string init_ide_path = getInitIdeFilePath();
+		string init_mount_path = getInitMountFilePath();
+	#ifdef ENABLE_SAMBASERVER 
+		string init_smb_path = getInitSmbFilePath();
+	#endif
+
+		if (do_reset)
+		{		
+			string init_files[] = {	init_ide_path,
+						getInitIdeFilePath().insert(init_ide_path.rfind("/")+1, "S"),
+						getInitIdeFilePath().insert(init_ide_path.rfind("/")+1, "K"),
+						init_mount_path, 
+						getInitMountFilePath().insert(init_mount_path.rfind("/")+1, "S"),
+						getInitMountFilePath().insert(init_mount_path.rfind("/")+1, "K"),
+						DRV_CONFIGFILE, 
+						getFstabFilePath()
+					#ifdef ENABLE_NFSSERVER 
+						,getExportsFilePath()
+					#endif
+					#ifdef ENABLE_SAMBASERVER
+						,init_smb_path
+						,getInitSmbFilePath().insert(init_smb_path.rfind("/")+1, "S")
+						,getInitSmbFilePath().insert(init_smb_path.rfind("/")+1, "K")
+						,getSmbConfFilePath()
+						,SAMBA_MARKER
+					#endif /*ENABLE_SAMBASERVER*/
+						};
+			
+			//removing init and configfiles
+			for (unsigned int i = 0; i < (sizeof(init_files) / sizeof(init_files[0])); i++)
+			{
+				if(access(init_files[i].c_str(), R_OK) ==0)
+				{
+					if (remove(init_files[i].c_str()) !=0)
+					{
+						cerr << "[drive_setup] "<<__FUNCTION__ <<":  error while removing: "<<init_files[i] <<" "<< strerror(errno)<<endl;
+						err[ERR_RESET] += "Can't remove " + init_files[i];
+						err[ERR_RESET] += "\n";
+						err[ERR_RESET] += strerror(errno);
+						err[ERR_RESET] += "\n";
+						
+						ret = false;
+					}
+				}
+			}
+			
+			bool (CDriveSetup::*pMember[])(void) = {	&CDriveSetup::unmountAll,
+									&CDriveSetup::unloadFsDrivers,
+									&CDriveSetup::unloadMmcDrivers,
+									&CDriveSetup::unloadIdeDrivers};
+	
+			for (unsigned int i = 0; i < (sizeof(pMember) / sizeof(pMember[0])); i++)
+			{ 
+				if (!(*this.*pMember[i])())
+					ret = false;
+			}
+
+			configfile.clear();
+		#ifdef ENABLE_SAMBASERVER
+			//reset samba options
+			g_settings.smb_setup_samba_on_off = CSambaSetup::OFF;
+			g_settings.smb_setup_samba_workgroup = "WORKGROUP";
+		#endif
+		}
+
+		if (!ret)
+		{
+			err[ERR_RESET] += err[ERR_UNMOUNT_ALL];
+			err[ERR_RESET] += "\n";
+			err[ERR_RESET] += err[ERR_UNLOAD_FSDRIVERS];
+			err[ERR_RESET] += "\n";
+			err[ERR_RESET] += err[ERR_UNLOAD_MMC_DRIVERS];
+			err[ERR_RESET] += "\n";
+			err[ERR_RESET] += err[ERR_UNLOAD_IDEDRIVERS];
+		}
+
+	return ret;
 }
 
 

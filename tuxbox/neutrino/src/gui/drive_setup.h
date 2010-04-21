@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.23 2010/04/01 21:01:04 rhabarber1848 Exp $
+	$Id: drive_setup.h,v 1.24 2010/04/21 21:51:00 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -37,6 +37,24 @@
 
 #include <gui/widget/menue.h>
 #include <gui/widget/dirchooser.h>
+
+#define ETC_DIR				"/etc"
+#define VAR_ETC_DIR 			"/var/etc"
+
+#ifdef ENABLE_SAMBASERVER
+#include "gui/sambaserver_setup.h"
+
+#define INIT_SAMBA_SCRIPT_NAME 		"31sambaserver"
+#define INIT_SAMBA_SCRIPT_FILE 		INIT_D_DIR  "/"  INIT_SAMBA_SCRIPT_NAME
+#define INIT_SAMBA_VAR_SCRIPT_FILE 	INIT_D_VAR_DIR "/" INIT_SAMBA_SCRIPT_NAME
+
+#define SMBCONFDIR			ETC_DIR 
+#define SMBCONFDIR_VAR			VAR_ETC_DIR 
+
+#define SMBCONF 			SMBCONFDIR "/smb.conf"
+#define SMBCONF_VAR 			SMBCONFDIR_VAR "/smb.conf"
+#endif /*ENABLE_SAMBASERVER*/
+
 
 #include <driver/framebuffer.h>
 #include <system/settings.h>
@@ -200,6 +218,13 @@ class CDriveSetup : public CMenuTarget
 			INIT_FILE_MOUNTS
 		} INIT_FILE_TYPE_NUM;
 
+		typedef enum   //mount types	
+		{
+			MOUNT_STAT_MOUNT_AND_SWAP	= 0,
+			MOUNT_STAT_MOUNT_ONLY 		= 1,
+			MOUNT_STAT_MOUNT_AND_SHARE 	= 2
+		} mount_stat_uint_t;
+
 		CFrameBuffer 	*frameBuffer;
 		CConfigFile	configfile;
 		SDriveSettings	d_settings;
@@ -225,7 +250,7 @@ class CDriveSetup : public CMenuTarget
 		std::string partitions[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
 
 		//error messages
-		#define ERROR_DESCRIPTIONS_NUM_COUNT 26 
+		#define ERROR_DESCRIPTIONS_NUM_COUNT 31 
 		typedef enum 	
 		{
 			ERR_CHKFS,
@@ -235,6 +260,8 @@ class CDriveSetup : public CMenuTarget
 			ERR_INIT_IDEDRIVERS,
 			ERR_INIT_MMCDRIVER,
 			ERR_INIT_MODUL,
+			ERR_LINK_INITFILES,
+			ERR_LINK_SMBINITFILES,
 			ERR_MK_PARTITION,
 			ERR_MK_EXPORTS,
 			ERR_MK_FS,
@@ -245,7 +272,9 @@ class CDriveSetup : public CMenuTarget
 			ERR_MOUNT_ALL,
 			ERR_MOUNT_PARTITION,
 			ERR_MOUNT_DEVICE,
+			ERR_RESET,
 			ERR_SAVE_DRIVE_SETUP,
+			ERR_UNLINK_SMBINITLINKS,
 			ERR_UNLOAD_FSDRIVERS,
 			ERR_UNLOAD_IDEDRIVERS,
 			ERR_UNLOAD_MMC_DRIVERS,
@@ -253,6 +282,7 @@ class CDriveSetup : public CMenuTarget
 			ERR_UNMOUNT_ALL,
 			ERR_UNMOUNT_PARTITION,
 			ERR_UNMOUNT_DEVICE,
+			ERR_WRITE_INITFILES,
 			ERR_WRITE_SETTINGS
 		} errnum_uint_t;
 		std::string err[ERROR_DESCRIPTIONS_NUM_COUNT];
@@ -322,15 +352,19 @@ class CDriveSetup : public CMenuTarget
 	#ifdef ENABLE_SAMBASERVER
 		bool mkSmbConf();
 		bool mkSambaInitFile();
+		bool unlinkSmbInitLinks();
+		bool linkSmbInitFiles();
 		std::string getInitSmbFilePath();
+		void setSambaMode();
 	#endif
 		bool haveSwap();
+		bool haveMounts(const int& device_num, mount_stat_uint_t moun_stat = MOUNT_STAT_MOUNT_AND_SWAP);
 		bool isMmcActive();
 		bool isMmcEnabled();
 		bool isIdeInterfaceActive();
 		bool linkInitFiles();
 		bool haveActiveParts(const int& device_num);
-		bool haveMounts(const int& device_num, bool without_swaps = false);
+		bool Reset();
 		
 		bool mkPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const action_int_t& action, const int& part_number, const unsigned long long& start_cyl = 0, const unsigned long long& size = 0);
 		bool mkFs(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name);
@@ -350,7 +384,6 @@ class CDriveSetup : public CMenuTarget
 		void loadHddModels();
 		void loadFsModulList();
 		void loadMmcModulList();
-		void loadPartitions();
 		void loadFdiskData();
 		void loadDriveTemps();
 		void loadModulDirs();
@@ -466,6 +499,10 @@ class CDriveSetup : public CMenuTarget
 		std::string getHddTemp(const int& device_num /*MASTER || SLAVE || MMCARD*/); //hdd temperature
 		std::string getModelName(const std::string& mountpoint);
 		std::string getDriveSetupVersion();
+	#ifdef ENABLE_SAMBASERVER
+		std::string getSmbConfFilePath();
+		bool haveMountedSmbShares();
+	#endif
 
 };
 
