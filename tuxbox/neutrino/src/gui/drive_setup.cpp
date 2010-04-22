@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.55 2010/04/21 21:51:00 dbt Exp $
+	$Id: drive_setup.cpp,v 1.56 2010/04/22 07:56:35 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4553,7 +4553,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.55 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.56 $");
 }
 
 // returns text for initfile headers
@@ -4788,13 +4788,18 @@ bool CDriveSetup::haveActiveParts(const int& device_num)
 bool CDriveSetup::haveMounts(const int& device_num, mount_stat_uint_t mount_stat)
 {
 	int i = device_num;
-	bool is_mounted[MAXCOUNT_PARTS], is_swap[MAXCOUNT_PARTS], is_shared[MAXCOUNT_PARTS];
+	bool is_mounted[MAXCOUNT_PARTS], is_swap[MAXCOUNT_PARTS];
+#ifdef ENABLE_SAMBASERVER
+	bool is_shared[MAXCOUNT_PARTS];
+#endif
 
 	for (unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
 	{
 		is_mounted[ii] 	= isMountedPartition(partitions[i][ii]);
 		is_swap[ii] 	= isSwapPartition(partitions[i][ii]);
+#ifdef ENABLE_SAMBASERVER
 		is_shared[ii] 	= d_settings.drive_partition_samba[i][ii];
+#endif
 
 		switch (mount_stat)
 		{
