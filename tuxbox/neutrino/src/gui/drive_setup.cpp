@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.56 2010/04/22 07:56:35 dbt Exp $
+	$Id: drive_setup.cpp,v 1.57 2010/04/23 09:03:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -512,15 +512,14 @@ void CDriveSetup::Init()
 		delete[] pixbuf;
 	}
 
-	//unload unused modules on left menu
+	//unload unused fs modules on left menu
 	for (unsigned int i = 0; i < v_fs_modules.size(); i++) 
 	{
-		if (getFileEntryString(PROC_MODULES, v_fs_modules[i], 4)== "(unused)")
+		if (!isUsedFsModul(v_fs_modules[i]))
+		{
 			if (!unloadModul(v_fs_modules[i]))
-			{
 				cerr<<"[drive setup] "<<__FUNCTION__ <<": "<<err[ERR_UNLOAD_MODUL]<<endl;
-				DisplayErrorMessage(err[ERR_UNLOAD_MODUL].c_str());
-			}
+		}
 	}
 
 }
@@ -1767,7 +1766,6 @@ bool CDriveSetup::initIdeDrivers(const bool irq6)
 // load/apply/testing modules and returns true on sucess
 bool CDriveSetup::initFsDrivers(bool do_unload_first)
 {
-
 	err[ERR_INIT_FSDRIVERS] = "";
 
 	// reset
@@ -1786,32 +1784,35 @@ bool CDriveSetup::initFsDrivers(bool do_unload_first)
 	// exec commands
 	for (unsigned int i = 0; i < modul_count; i++)
 	{
-		if (v_fs_modules[i]=="swap") break; // skip this
+		// exit for, if we use swap
+		if (v_fs_modules[i]=="swap")
+			 break; 
 
-		string depend_modules[2] = {"jbd", "fat"};
-
-		if (do_unload_first) 
-		{
-			if (v_fs_modules[i]==depend_modules[0]) // unloading depends modules first
-				unloadModul("ext3");
-			if (v_fs_modules[i]==depend_modules[1])
-				unloadModul("vfat");
-		}
-
-		if (initModul(v_fs_modules[i], do_unload_first)) 
-		{
-			if (v_fs_modules[i]=="ext3") // loading depends modules first
-				v_init_fs_L_cmds.push_back(getInitModulLoadStr(depend_modules[0]));
-			if (v_fs_modules[i]=="vfat")
-				v_init_fs_L_cmds.push_back(getInitModulLoadStr(depend_modules[1]));
-			v_init_fs_L_cmds.push_back(getInitModulLoadStr(v_fs_modules[i]));
-		}
-		else
+		// testing init command / init modul
+		if (!initModul(v_fs_modules[i], do_unload_first)) 
 		{
 			err_msg += "\n";
 			err_msg += err[ERR_INIT_MODUL];
 			ret = false;
 		}
+		else
+		{
+			// add fs modules to init list only if needed
+			if (isUsedFsModul(v_fs_modules[i]))
+			{
+				// add dependent modul first and push_back to command list
+				if (v_fs_modules[i]=="ext3")
+					v_init_fs_L_cmds.push_back(getInitModulLoadStr("jbd"));
+		
+				if (v_fs_modules[i]=="vfat")
+					v_init_fs_L_cmds.push_back(getInitModulLoadStr("fat"));
+		
+				// add modul to vector
+				v_init_fs_L_cmds.push_back(getInitModulLoadStr(v_fs_modules[i]));
+			}
+		}
+
+
 
 		// show load progress on screen
 		string 	screen_msg = "load ";
@@ -1913,12 +1914,6 @@ bool CDriveSetup::unloadFsDrivers()
 	// exec commands
 	for (unsigned int i = 0; i < modul_count; i++)
 	{
-		if (v_fs_modules[i]=="jbd")
-			unloadModul("ext3");
-
-		if (v_fs_modules[i]=="fat")
-			unloadModul("vfat");
-				
 		if (!unloadModul(v_fs_modules[i]))
 		{
 			err_msg += "\n";
@@ -1987,27 +1982,6 @@ bool CDriveSetup::unloadIdeDrivers()
 	return ret;
 }
 
-//init required modules eg: jbd for ext3 or fat for vfat
-bool CDriveSetup::initModulDeps(const string& modulname)
-{
-	bool ret = true;
-	// loading depend modules
-	if (modulname == "ext3")
-	{
-		if (!initModul("jbd", false))
-			return false;	
-	}
-	else if (modulname == "vfat")
-	{
-		if (!initModul("fat", false))
-			return false;
-	}
-	else
-		return ret;
-
-	return ret;
-}
-
 //creates possible module paths
 void CDriveSetup::loadModulDirs()
 {
@@ -2059,8 +2033,13 @@ bool CDriveSetup::initModul(const string& modul_name, bool do_unload_first, cons
 {
 	err[ERR_INIT_MODUL] = "";
 
-	if (!initModulDeps(modul_name))
-		return false;
+	// load any dependent modules
+	if (modul_name == "ext3")
+		initModul("jbd", false);
+
+	if (modul_name == "vfat")
+		initModul("fat", false);
+
 	
 	string 	load_cmd =  getInitModulLoadStr(modul_name) + options;
 
@@ -2113,7 +2092,14 @@ bool CDriveSetup::unloadModul(const string& modulname)
 
 	if (isModulLoaded(modulname))
 	{
-		retval = CNeutrinoApp::getInstance()->execute_sys_command(unload_cmd.c_str());
+		//unload any dependent modules first
+		if (modulname=="jbd")
+			unloadModul("ext3");
+		if (modulname=="fat")
+			unloadModul("vfat");
+		
+		retval = CNeutrinoApp::getInstance()->execute_sys_command(unload_cmd.c_str());		
+
 		if (retval !=0)
 		{
 			cerr<<"[drive setup] "<<__FUNCTION__ <<": unload "<<modulname<< "...failed "<<endl;
@@ -2138,6 +2124,22 @@ bool CDriveSetup::unloadModul(const string& modulname)
 	}
 	else
 		return true;
+}
+
+// returns true if fs module is needed
+bool CDriveSetup::isUsedFsModul(const string& fs_name)
+{
+	for (unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
+	{
+		for (unsigned int j = 0; j < MAXCOUNT_PARTS; j++)
+		{ 
+			string fs = d_settings.drive_partition_fstype[i][j];
+			if (fs == fs_name && !fs.empty() && (d_settings.drive_partition_activ[i][j]))
+				return true;
+		}	
+	}
+	
+	return false;
 }
 
 // saves settings: load/unload modules and writes init file
@@ -4553,7 +4555,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.56 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.57 $");
 }
 
 // returns text for initfile headers

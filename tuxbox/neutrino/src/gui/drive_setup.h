@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.24 2010/04/21 21:51:00 dbt Exp $
+	$Id: drive_setup.h,v 1.25 2010/04/23 09:03:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -326,10 +326,10 @@ class CDriveSetup : public CMenuTarget
 		bool isModulLoaded(const std::string& modulname);
 		bool isMountedPartition(const std::string& partname);
 		bool isSwapPartition(const std::string& partname);
+		bool isUsedFsModul(const std::string& fs_name);
 		bool initFsDrivers(bool do_unload_first = true);
 		bool loadHddParams(const bool do_reset = false);
 		bool initIdeDrivers(const bool irq6 = false);
-		bool initModulDeps(const std::string& modulname);
 		bool initModul(const std::string& modul_name, bool do_unload_first = true, const std::string& options = "");
 		bool mountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint, const bool force_mount = true);
 		bool mountDevice(const int& device_num, const bool force_mount = true);
