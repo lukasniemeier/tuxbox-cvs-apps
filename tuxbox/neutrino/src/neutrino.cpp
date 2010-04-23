@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1020 2010/04/21 21:45:03 dbt Exp $
+	$Id: neutrino.cpp,v 1.1021 2010/04/23 18:57:58 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2009,6 +2009,9 @@ int CNeutrinoApp::run(int argc, char **argv)
 	   (box type etc) */
 	if (g_Zapit->getMode() == CZapitClient::MODE_STANDBY)
 		g_Zapit->setStandby(false);
+
+	/* unpause sectionsd, needed if Neutrino restarts after segfault */
+	g_Sectionsd->setPauseScanning(false);
 
 	int loadSettingsErg = loadSetup();
 	
