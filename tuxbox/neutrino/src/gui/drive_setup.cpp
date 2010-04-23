@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.57 2010/04/23 09:03:19 dbt Exp $
+	$Id: drive_setup.cpp,v 1.58 2010/04/23 09:55:18 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3955,7 +3955,7 @@ bool CDriveSetup::unlinkSmbInitLinks()
 	// unlinking old symlinks
 	for (uint i=0; i<(sizeof(symlinks) / sizeof(symlinks[0])) ; ++i)
 	{
-		if ( access(symlinks[i].c_str(), R_OK) ==0 )
+		if ( access(symlinks[i].c_str(), W_OK) ==0 )
 		{
 			if (unlink(symlinks[i].c_str()) !=0)
 			{
@@ -3977,7 +3977,19 @@ bool CDriveSetup::linkSmbInitFiles()
 	err[ERR_LINK_SMBINITFILES] = "Error while linking samba initfiles\n";
 	bool ret = true;
 
+	// exit if samba is disabled
+	if (g_settings.smb_setup_samba_on_off == CSambaSetup::OFF)
+		return true; 
+
 	string if_path = getInitSmbFilePath(); //init file path
+
+	if ( access(if_path.c_str(), R_OK) !=0 )
+	{
+		err[ERR_LINK_SMBINITFILES] += if_path + " " + "not found" + "\n";
+		cerr<<"[drive setup] "<<__FUNCTION__ <<":  "<<err[ERR_LINK_SMBINITFILES]<<endl;
+		return false;
+	}
+		 
 
 	string symlinks[] = {	getInitSmbFilePath().insert(if_path.rfind("/")+1, "S"), 
 				getInitSmbFilePath().insert(if_path.rfind("/")+1, "K")};	
@@ -4555,7 +4567,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.57 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.58 $");
 }
 
 // returns text for initfile headers
