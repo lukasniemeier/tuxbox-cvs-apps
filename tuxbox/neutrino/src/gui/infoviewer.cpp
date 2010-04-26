@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.290 2010/03/20 18:10:25 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.291 2010/04/26 19:45:10 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -391,7 +391,6 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 	showButtonBar = !calledFromNumZap;
 	ChannelName = Channel;
 	bool new_chan = false;
-	bool subChannelNameIsUTF = true;
 	
 	bool fadeIn = (g_info.box_Type != CControld::TUXBOX_MAKER_NOKIA) && // dreambox and eNX only 
 		g_settings.widget_fade &&
@@ -451,8 +450,7 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 	if (! calledFromNumZap && !(g_RemoteControl->subChannels.empty()) && (g_RemoteControl->selected_subchannel > 0)) 
 	{
 		channel_id = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].getChannelID();
-		ChannelName = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].subservice_name;
-		subChannelNameIsUTF = false;
+		ChannelName += ": " + ZapitTools::Latin1_to_UTF8(g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].subservice_name.c_str());
 	}
 	else // ...channel is selected
 	{
@@ -498,7 +496,7 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 	ChanNameW = BoxEndX- (ChanNameX+ 20)- time_width- 15; // set channel name width
 
 	// ... with channel name 
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME]->RenderString(ChanNameX + 10, ChanNameY+ time_height, BoxEndX- (ChanNameX+ 20)- time_width- 15, ChannelName, COL_INFOBAR, 0, subChannelNameIsUTF); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME]->RenderString(ChanNameX + 10, ChanNameY+ time_height, BoxEndX- (ChanNameX+ 20)- time_width- 15, ChannelName, COL_INFOBAR, 0, true); // UTF-8
 /* paint channel number, channelname or/and channellogo */
 
 	paintTime( false, true );
