@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.21 2010/02/27 20:54:48 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.22 2010/04/26 19:46:49 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -501,20 +501,20 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
     	print_buffer += date_char; 
  		print_buffer += " Jahre"; 
     }
-     if(movie_info.length != 0 )
+    if(movie_info.rec_length != 0 )
     {
     	print_buffer += "\n"; 
    		print_buffer += g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_LENGTH);
       	print_buffer += ": "; 
- 	 	snprintf(date_char, 12,"%3d",movie_info.length);
+ 	 	snprintf(date_char, 12, "%3d:%02d", movie_info.rec_length / 60, movie_info.rec_length % 60);
     	print_buffer += date_char; 
     }
-     if(movie_info.rec_length != 0 )
+    else if(movie_info.length != 0 )
     {
     	print_buffer += "\n"; 
    		print_buffer += g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_LENGTH);
-      	print_buffer += " rec: "; 
-		snprintf(date_char, 12,"%3d:%02d",movie_info.rec_length / 60, movie_info.rec_length % 60);
+      	print_buffer += ": "; 
+		snprintf(date_char, 12, "%3d", movie_info.length);
     	print_buffer += date_char; 
     }
     if(movie_info.audioPids.size() != 0 )
