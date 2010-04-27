@@ -4,6 +4,7 @@
 		<transponder frequency="73000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
 		<transponder frequency="113000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
 		<transponder frequency="121000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
+		<transponder frequency="322000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
 		<transponder frequency="330000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
 		<transponder frequency="338000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
 		<transponder frequency="346000000" symbol_rate="6900000" fec_inner="9" modulation="6"/>
