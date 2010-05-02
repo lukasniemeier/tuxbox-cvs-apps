@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.291 2010/04/26 19:45:10 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.292 2010/05/02 13:03:48 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -836,7 +836,7 @@ void CInfoViewer::showSubchan()
 	else if (g_RemoteControl->current_PIDs.APIDs.size()>1 && g_settings.audiochannel_up_down_enable)
 	{
 		// get info for audio channel
-		subchannel = g_RemoteControl->current_PIDs.PIDs.selected_apid;
+		subchannel = g_RemoteControl->current_PIDs.PIDs.selected_apid + 1;
 		subChannelName = g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].desc;
 		subChannelNameIsUTF = true;
 	}
@@ -844,7 +844,7 @@ void CInfoViewer::showSubchan()
 	if (!(subChannelName.empty()))
 	{
 		char text[100];
-		if(subchannel == 0 && !g_RemoteControl->subChannels.empty())
+		if (subchannel == 0)
 			sprintf( text, "%s - %s", "  ", subChannelName.c_str() );
 		else
 			sprintf( text, "%d - %s", subchannel, subChannelName.c_str() );
@@ -907,7 +907,7 @@ void CInfoViewer::showSubchan()
 			{			
 			// show default small infobar for subchannel
 			frameBuffer->paintBoxRel(x, y, dx, dy, COL_MENUCONTENT_PLUS_0, RADIUS_SMALL);
-			if (subchannel == 0 && !g_RemoteControl->subChannels.empty())
+			if (subchannel == 0)
 				frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_BLUE, x+ 8, y+ 8 );
 			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(x+10, y+ 30, dx-20, text, COL_MENUCONTENT, 0, subChannelNameIsUTF); // UTF-8
 			
