@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.h,v 1.2 2010/04/21 21:40:47 dbt Exp $
+	$Id: sambaserver_setup.h,v 1.3 2010/05/03 09:40:59 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -44,6 +44,7 @@
 #define SMBD		"smbd"
 #define SAMBA_MARKER	VAR_ETC_DIR "/.sambaserver"
 #define SMB_PRIVAT_DIR	ETC_DIR	"/samba/private"
+
 
 class CSambaSetup : public CMenuTarget
 {
@@ -93,10 +94,7 @@ class CSambaOnOffNotifier : public CChangeObserver
 		std::string err_msg;
 
 	public:
-		inline CSambaOnOffNotifier(const char * file_to_modify)
-		{
-			filename = file_to_modify;
-		};
+		inline CSambaOnOffNotifier(const char * file_to_modify);
 		bool changeNotify(const neutrino_locale_t, void * data);
 };
 

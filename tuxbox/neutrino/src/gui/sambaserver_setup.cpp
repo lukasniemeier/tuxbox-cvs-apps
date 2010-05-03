@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.5 2010/04/24 07:12:54 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.6 2010/05/03 09:40:59 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -58,7 +58,7 @@
 
 using namespace std;
 
-CSambaSetup::CSambaSetup(const neutrino_locale_t title, const char * const IconName )
+CSambaSetup::CSambaSetup(const neutrino_locale_t title, const char * const IconName)
 {
 	frameBuffer = CFrameBuffer::getInstance();
 
@@ -280,14 +280,14 @@ bool CSambaSetup::killSamba()
 // starts samba 
 bool CSambaSetup::startSamba()
 {
-	bool ret = true;
-	
-	if (!haveSambaConf())
+	bool ret = true;	
+
+	if (!CDriveSetup::getInstance()->mkSmbConf() || !haveSambaConf())
 	{
+		err_msg += CDriveSetup::getInstance()->getErrMsg();
 		err_msg += g_Locale->getText(LOCALE_SAMBASERVER_SETUP_MSG_MISSING_SMBCONF);
 		return false;
 	}
-
 	
 	for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
 	{
@@ -324,6 +324,10 @@ bool CSambaSetup::startSamba()
 	return ret;
 }
 
+CSambaOnOffNotifier::CSambaOnOffNotifier( const char * file_to_modify)
+{
+	filename = file_to_modify;
+}
 
 bool CSambaOnOffNotifier::changeNotify(const neutrino_locale_t, void * data)
 {
@@ -339,7 +343,9 @@ bool CSambaOnOffNotifier::changeNotify(const neutrino_locale_t, void * data)
 			ret = smb.startSamba();
 		
 			if (!ret)
+			{
 				DisplayErrorMessage(smb.getErrMsg().c_str());
+			}
 			else
 				DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_STAT_RUNNING));
 		}
