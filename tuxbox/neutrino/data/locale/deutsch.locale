@@ -337,6 +337,7 @@ drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition kann nicht 
 drive_setup.msg_error_save_cannot_unmount_swap Swap-Partition kann nicht ausgehangen werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
+drive_setup.msg_error_save_no_smb_share_definied Es wurden keine Sambafreigaben festgelegt! 
 drive_setup.msg_partition_check Soll die Partition jetzt geprüft werden?\nDies kann einige Zeit in Anspruch nehmen.
 drive_setup.msg_partition_check_failed Die Prüfung ist fehlgeschlagen.
 drive_setup.msg_partition_check_ok Die Prüfung wurde erfolgreich durchgeführt.
@@ -1194,7 +1195,7 @@ sambaserver.setup_configfile_path_hint1 Bitte Pfad zur Samba-Konfigurationsdatei
 sambaserver.setup_configfile_path_hint2 Vorgabe ist /etc/smb.conf...
 sambaserver.setup_install_dir Installationsverzeichnis
 sambaserver.setup_interface Interface
-sambaserver.setup_msg_missing_smbconf Samba-Konfiguration nicht gefunden!\nBitte erst Freigaben festlegen und Übernehemen!\n
+sambaserver.setup_msg_missing_smbconf Samba-Konfiguration nicht gefunden!\nBitte im Partitionsmenü erst Freigaben festlegen\nund anschließend übernehmen!
 sambaserver.setup_msg_save Einstellungen jetzt speichern?
 sambaserver.setup_server_off Aus
 sambaserver.setup_server_on Ein
