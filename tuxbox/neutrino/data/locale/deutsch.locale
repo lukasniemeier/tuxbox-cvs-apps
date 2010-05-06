@@ -1161,6 +1161,7 @@ recordingmenu.help Aufnahmegeräte:\n-----------------------\nServer:\nauf PC mi
 recordingmenu.no_scart Unterdrücke Scart-Umschaltung
 recordingmenu.off aus
 recordingmenu.record_in_spts_mode in SPTS-Modus aufnehmen
+recordingmenu.record_is_running Aufnahme läuft gerade!
 recordingmenu.recording_type Aufnahme Gerät
 recordingmenu.ringbuffers Grösse Ringpuffer
 recordingmenu.ringbuffers_05M 512 KB

@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.3 2010/05/06 21:15:18 dbt Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -57,8 +57,8 @@ CRecordSetup::CRecordSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x	= getScreenStartX (width);
+	y	= getScreenStartY (height);
 }
 
 CRecordSetup::~CRecordSetup()
@@ -92,8 +92,10 @@ int CRecordSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return res;
 	}
 
-
-	showRecordSetup();
+	if (!CNeutrinoApp::getInstance()->recordingstatus)
+		showRecordSetup();
+	else
+		DisplayInfoMessage(g_Locale->getText(LOCALE_RECORDINGMENU_RECORD_IS_RUNNING));
 	
 	return res;
 }
@@ -333,7 +335,6 @@ void CRecordSetup::showRecordSetup()
 	recordingSettings->hide();
 	delete recordingSettings;
 
-	CNeutrinoApp::getInstance()->recordingstatus = 0;
 }
 
 

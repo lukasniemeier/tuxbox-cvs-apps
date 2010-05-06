@@ -1161,6 +1161,7 @@ recordingmenu.help Recording devices:\n--------------------------\nserver:\nusin
 recordingmenu.no_scart Switch to SCART
 recordingmenu.off off
 recordingmenu.record_in_spts_mode Use spts mode
+recordingmenu.record_is_running Recording is in progress!
 recordingmenu.recording_type Recording Device
 recordingmenu.ringbuffers Ringbuffer Size
 recordingmenu.ringbuffers_05M 512 KB
