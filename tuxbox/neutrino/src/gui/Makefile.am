@@ -88,15 +88,12 @@ libneutrino_gui_a_SOURCES += \
 	epgplus.cpp
 endif
 
-if !ENABLE_KERNEL26
-
+#TODO: k26 support for ENABLE_DRIVE_GUI, it's disabled with -enable-kernel26 yet
 if ENABLE_DRIVE_GUI
 libneutrino_gui_a_SOURCES += drive_setup.cpp
-endif
 if ENABLE_SAMBASERVER
 libneutrino_gui_a_SOURCES += sambaserver_setup.cpp
 endif
-
 endif
 
 if !DISABLE_INTERNET_UPDATE

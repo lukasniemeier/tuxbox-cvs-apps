@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.102 2010/03/12 22:51:50 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.103 2010/05/07 20:35:18 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -112,11 +112,11 @@
 #include "gui/experimental_menu.h"
 #endif
 
-#ifndef ENABLE_KERNEL26 //TODO: k26 support
+// TODO: k26 support for ENABLE_DRIVE_GUI, it's disabled with -enable-kernel26 yet
 #if ENABLE_DRIVE_GUI
 #include "gui/drive_setup.h"
 #endif /*ENABLE_DRIVE_GUI*/
-#endif /*ENABLE_KERNEL26*/
+
 
 static CTimingSettingsNotifier timingsettingsnotifier;
 
