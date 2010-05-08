@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.11 2010/05/07 20:35:18 dbt Exp $
+	$Id: network_setup.cpp,v 1.12 2010/05/08 19:41:25 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -260,12 +260,10 @@ void CNetworkSetup::showNetworkSetup()
  	#endif 
 	#endif
 
-	#ifndef ENABLE_KERNEL26
 	#if defined ENABLE_DRIVE_GUI && defined ENABLE_SAMBASERVER
 		//sambaserver, only active if samba binaries are available
 		CSambaSetup smb;
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SAMBA, smb.haveSambaSupport(), NULL, new CSambaSetup(LOCALE_MAINSETTINGS_NETWORK), NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
-	#endif
 	#endif
 
 		networkSettings->exec(NULL, "");
