@@ -64,6 +64,7 @@ class CFlashExpert : public CProgressWindow
 {
 	private:
 		int selectedMTD;
+		int width;
 
 		void showMTDSelector(const std::string & actionkey);
 		void showFileSelector(const std::string & actionkey);

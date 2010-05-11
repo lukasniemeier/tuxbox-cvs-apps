@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.142 2010/04/10 20:18:35 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.143 2010/05/11 19:53:46 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -538,6 +538,7 @@ CFlashExpert::CFlashExpert()
 	:CProgressWindow()
 {
 	selectedMTD = -1;
+	width = w_max (500, 100);
 }
 
 void CFlashExpert::readmtd(int mtd)
@@ -662,16 +663,16 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 void CFlashExpert::showMTDSelector(const std::string & actionkey)
 {
 	//mtd-selector erzeugen
-	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_MTDSELECTOR, NEUTRINO_ICON_UPDATE);
+	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_MTDSELECTOR, NEUTRINO_ICON_UPDATE, width);
 	mtdselector->addItem(GenericMenuSeparator);
-	mtdselector->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL));
+	mtdselector->addItem(GenericMenuBack);
 	mtdselector->addItem(GenericMenuSeparatorLine);
 	CMTDInfo* mtdInfo =CMTDInfo::getInstance();
 	for (int i = 0; i < mtdInfo->getMTDCount(); i++)
 	{
 		char sActionKey[20];
 		sprintf(sActionKey, "%s%d", actionkey.c_str(), i);
-		mtdselector->addItem(new CMenuForwarderNonLocalized(mtdInfo->getMTDName(i).c_str(), true, NULL, this, sActionKey));
+		mtdselector->addItem(new CMenuForwarderNonLocalized(mtdInfo->getMTDName(i).c_str(), true, NULL, this, sActionKey, CRCInput::convertDigitToKey(i+1)));
 	}
 	mtdselector->exec(NULL,"");
 	delete mtdselector;
@@ -679,9 +680,9 @@ void CFlashExpert::showMTDSelector(const std::string & actionkey)
 
 void CFlashExpert::showFileSelector(const std::string & actionkey)
 {
-	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_FILESELECTOR, NEUTRINO_ICON_UPDATE);
+	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_FILESELECTOR, NEUTRINO_ICON_UPDATE, width);
 	fileselector->addItem(GenericMenuSeparator);
-	fileselector->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL));
+	fileselector->addItem(GenericMenuBack);
 	fileselector->addItem(GenericMenuSeparatorLine);
 	struct dirent **namelist;
 	int n = scandir("/tmp", &namelist, 0, alphasort);
