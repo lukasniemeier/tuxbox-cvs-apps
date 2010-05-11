@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.103 2009/10/03 10:09:30 seife Exp $
+	$Id: timerlist.cpp,v 1.105 2010/05/11 19:02:54 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -45,6 +45,7 @@
 #include <driver/encoding.h>
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 #include <gui/eventlist.h>
@@ -75,7 +76,7 @@
 #include <string.h>
 #include <algorithm>
 
-#define info_height 60
+#define INFO_HEIGHT 60
 
 
 class CTimerListNewNotifier : public CChangeObserver
@@ -242,15 +243,12 @@ CTimerList::CTimerList()
 	frameBuffer = CFrameBuffer::getInstance();
 	visible = false;
 	selected = 0;
-	// Max
-	width = 720;
-	if(g_settings.screen_EndX-g_settings.screen_StartX < width)
-		width=g_settings.screen_EndX-g_settings.screen_StartX-10;
+	width 	= w_max (600, 50);
 	buttonHeight = 25;
 	theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-( height+ info_height) ) / 2) + g_settings.screen_StartY;
+	x	= getScreenStartX (width);
+	y	= getScreenStartX (height+INFO_HEIGHT);
 	liststart = 0;
 	Timer = new CTimerdClient();
 	skipEventID=0;
@@ -409,7 +407,7 @@ void CTimerList::updateEvents(void)
 	}
 	sort(timerlist.begin(), timerlist.end());
 
-	height = (g_settings.screen_EndY-g_settings.screen_StartY)-(info_height+50);
+	height = (g_settings.screen_EndY-g_settings.screen_StartY)-(INFO_HEIGHT+50);
 	listmaxshow = (height-theight-0)/(fheight*2);
 	height = theight+0+listmaxshow*fheight*2;	// recalc height
 	if(timerlist.size() < listmaxshow)
@@ -422,8 +420,9 @@ void CTimerList::updateEvents(void)
 		selected=timerlist.size()-1;
 		liststart = (selected/listmaxshow)*listmaxshow;
 	}
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-( height+ info_height) ) / 2) + g_settings.screen_StartY;
+
+	x	= getScreenStartX (width);
+	y	= getScreenStartX (height+INFO_HEIGHT);
 }
 
 
@@ -575,7 +574,7 @@ void CTimerList::hide()
 {
 	if(visible)
 	{
-		frameBuffer->paintBackgroundBoxRel(x, y, width, height+ info_height+ 5);
+		frameBuffer->paintBackgroundBoxRel(x, y, width, height+ INFO_HEIGHT+ 5);
 		visible = false;
 	}
 }
@@ -747,7 +746,7 @@ void CTimerList::paintHead()
 {
 	int c_rad_mid = RADIUS_MID;
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	frameBuffer->paintIcon("timer.raw", x + 5, y + 6);
+	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, y + 6);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight + 2, width - 45, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, y + 6 );
@@ -922,7 +921,7 @@ const CMenuOptionChooser::keyval MESSAGEBOX_NO_YES_OPTIONS[MESSAGEBOX_NO_YES_OPT
 int CTimerList::modifyTimer()
 {
 	CTimerd::responseGetTimer* timer=&timerlist[selected];
-	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUMODIFY, NEUTRINO_ICON_SETTINGS);
+	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUMODIFY, NEUTRINO_ICON_SETTINGS, width);
 	timerSettings.addItem(GenericMenuSeparator);
 	timerSettings.addItem(GenericMenuBack);
 	timerSettings.addItem(GenericMenuSeparatorLine);
@@ -967,7 +966,7 @@ int CTimerList::modifyTimer()
 	timerSettings.addItem(GenericMenuSeparatorLine);
 	timerSettings.addItem(m6);
 
-	CMenuWidget timerSettings_apids(LOCALE_TIMERLIST_APIDS, NEUTRINO_ICON_SETTINGS);
+	CMenuWidget timerSettings_apids(LOCALE_TIMERLIST_APIDS, NEUTRINO_ICON_SETTINGS, width);
 	CTimerListApidNotifier apid_notifier(&timer_apids_dflt, &timer_apids_std, &timer_apids_ac3, &timer_apids_alt);
 	timer_apids_dflt = (timer->apids == 0) ? 1 : 0 ;
 	timer_apids_std = (timer->apids & TIMERD_APIDS_STD) ? 1 : 0 ;
@@ -1008,7 +1007,7 @@ int CTimerList::newTimer()
 	strncpy(timerNew.recordingDir,g_settings.recording_dir[0].c_str(),sizeof(timerNew.recordingDir));
 
 
-	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUNEW, NEUTRINO_ICON_SETTINGS);
+	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUNEW, NEUTRINO_ICON_SETTINGS, width);
 	timerSettings.addItem(GenericMenuSeparator);
 	timerSettings.addItem(GenericMenuBack);
 	timerSettings.addItem(GenericMenuSeparatorLine);
@@ -1035,13 +1034,13 @@ int CTimerList::newTimer()
 	CZapitClient::BouquetList bouquetlist;
 	zapit.getBouquets(bouquetlist, false, true, CZapitClient::MODE_ALL); // UTF-8
 	CZapitClient::BouquetList::iterator bouquet = bouquetlist.begin();
-	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS);
-	CMenuWidget mcradio(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS);
+	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget mcradio(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
 	for(; bouquet != bouquetlist.end();bouquet++)
 	{
-		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS);
+		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width);
 		toDelete.push_back(mwtv);
-		CMenuWidget* mwradio = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS);
+		CMenuWidget* mwradio = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width);
 		toDelete.push_back(mwradio);
 		CZapitClient::BouquetChannelList subchannellist;
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_TV, true); // UTF-8
@@ -1074,7 +1073,7 @@ int CTimerList::newTimer()
 		if (!subchannellist.empty())
 			mcradio.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwradio));
 	}
-	CMenuWidget mm(LOCALE_TIMERLIST_MODESELECT, NEUTRINO_ICON_SETTINGS);
+	CMenuWidget mm(LOCALE_TIMERLIST_MODESELECT, NEUTRINO_ICON_SETTINGS, width);
 	mm.addItem(new CMenuForwarder(LOCALE_TIMERLIST_MODETV, true, NULL, &mctv));
 	mm.addItem(new CMenuForwarder(LOCALE_TIMERLIST_MODERADIO, true, NULL, &mcradio));
 	strcpy(timerNew_channel_name,"---");
