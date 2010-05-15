@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.104 2010/05/08 19:36:41 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.105 2010/05/15 12:50:39 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -353,7 +353,7 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 #endif
 
 #ifdef ENABLE_DRIVE_GUI 
- 	service.addItem(new CMenuForwarder(LOCALE_DRIVE_SETUP_HEAD, true, NULL, new CDriveSetup(), NULL, CRCInput::convertDigitToKey(shortcut3++)));
+ 	service.addItem(new CMenuForwarder(LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance(), NULL, CRCInput::convertDigitToKey(shortcut3++)));
 #endif /*ENABLE_DRIVE_GUI*/
 
 	// epg status
