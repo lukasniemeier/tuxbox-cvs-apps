@@ -1,7 +1,7 @@
 /*
  * Tool for printing some image information during bootup.
  *
- * $Id: cdkVcInfo.cpp,v 1.7 2010/02/21 10:36:03 rhabarber1848 Exp $
+ * $Id: cdkVcInfo.cpp,v 1.8 2010/05/15 18:03:44 rhabarber1848 Exp $
  *
  * cdkVcInfo - d-box2 linux project
  *
@@ -114,7 +114,7 @@ int main (int argc, char **argv)
 	char gateway[BUFFERSIZE];
 	char null[BUFFERSIZE] = "";
 	char versioninfo[20];
-	char cvs_revision[] = "$Revision: 1.7 $";
+	char cvs_revision[] = "$Revision: 1.8 $";
 	sscanf(cvs_revision, "%*s %s", versioninfo);
 
 	while ((opt = getopt(argc, argv, "hgdn:")) != -1)
@@ -221,7 +221,7 @@ int main (int argc, char **argv)
 
   FILE* fv6 = fopen(MOUNTS_FILE, "r"); //Root-Server IP ermitteln, falls yadd
   if (fv6) {
-    while (fgets(buf, BUFFERSIZE, fv1)!=NULL) {
+    while (fgets(buf, BUFFERSIZE, fv6)!=NULL) {
       sscanf(buf, "/dev/root / nfs rw,v2,rsize=4096,wsize=4096,hard,udp,nolock,addr= %s", (char *) &root);
     }
     fclose(fv6);
@@ -229,7 +229,7 @@ int main (int argc, char **argv)
   
   FILE* fv7 = fopen(VERSION_FILE2, "r"); //Versionsdatei (/proc/version) auswerten
   if (fv7) {
-    while (fgets(buf, BUFFERSIZE, fv2)!=NULL) {
+    while (fgets(buf, BUFFERSIZE, fv7)!=NULL) {
       sscanf(buf, "Linux version %s%s%s%s%s", (char *) &linuxversion, (char *) &userpc, (char *) &gccversion, (char *) &gccversion, (char *) &gccversion);
     }
     fclose(fv7);
