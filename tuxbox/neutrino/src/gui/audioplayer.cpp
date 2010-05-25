@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.83 2010/03/06 19:50:00 rhabarber1848 Exp $
+  $Id: audioplayer.cpp,v 1.84 2010/05/25 18:30:58 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -184,6 +184,7 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 	m_inetmode = inetmode;
 	m_visible = false;
 	m_selected = 0;
+	m_alreadyPainted = false;
 	m_metainfo.clear();
 
 	m_select_title_by_name = g_settings.audioplayer_select_title_by_name==1;
@@ -1495,6 +1496,7 @@ void CAudioPlayerGui::paintItem(int pos)
 			bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		}
 		paintItemID3DetailsLine(pos);
+		m_alreadyPainted = true;
 		c_rad_small = RADIUS_SMALL;
 	}
 	else
@@ -1870,15 +1872,19 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 	fb_pixel_t col3 = COL_MENUCONTENTDARK_PLUS_0;
 
 	// Clear
-	m_frameBuffer->paintBackgroundBoxRel(xpos - 1, m_y + m_title_height, ConnectLineBox_Width + 1, 
-						m_height - m_title_height);
+		m_frameBuffer->paintBackgroundBoxRel(xpos - 1, m_y + m_title_height, ConnectLineBox_Width + 1, 
+						m_height - m_title_height - m_info_height);
 
 	// paint Line if detail info (and not valid list pos)
 	if (!m_playlist.empty() && (pos >= 0))
 	{
 		// paint id3 infobox
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2, 20, m_info_height, col2, RADIUS_MID);
-		m_frameBuffer->paintBoxRel(m_x - 3, ypos2     , m_width + 3, m_info_height, col1, RADIUS_MID);
+
+		if(!m_alreadyPainted) //reduce flickering of infobox
+		{
+			m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2, 20, m_info_height, col2, RADIUS_MID);
+			m_frameBuffer->paintBoxRel(m_x - 3, ypos2, m_width + 3, m_info_height, col1, RADIUS_MID);
+		}
 		m_frameBuffer->paintBoxRel(m_x + 2, ypos2 + 2 , m_width - 4, m_info_height - 4, col3, RADIUS_MID);
 
 		// 1. col thick line
@@ -1925,6 +1931,7 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 	else
 	{
 		m_frameBuffer->paintBackgroundBoxRel(m_x, ypos2, m_width, m_info_height);
+		m_alreadyPainted = false;
 	}
 }
 //------------------------------------------------------------------------

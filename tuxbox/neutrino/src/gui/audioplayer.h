@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.h,v 1.24 2009/10/03 10:36:29 seife Exp $
+  $Id: audioplayer.h,v 1.25 2010/05/25 18:30:58 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   Copyright (C) 2001 Steffen Hehn 'McClean'
@@ -120,6 +120,7 @@ class CAudioPlayerGui : public CMenuTarget
 	bool           m_show_playlist;
 
 	bool           m_playlistHasChanged;
+	bool           m_alreadyPainted;
 
 	CAudioPlayList      m_playlist;
 	CTitle2Pos     m_title2Pos;
