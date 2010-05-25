@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.60 2010/05/25 19:22:00 dbt Exp $
+	$Id: drive_setup.cpp,v 1.61 2010/05/25 19:30:20 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4413,7 +4413,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.60 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.61 $");
 }
 
 // returns text for initfile headers
@@ -5103,8 +5103,6 @@ void  CDriveSetup::handleSetting(int *setting)
 //handle/collects old char settings, Note: it's not necessary to observe partsize and fstype, this values come from system 
 void CDriveSetup::handleCharSettings()
 {
-	uint c = 0;
-
 	//mmc modul name
 	v_old_char_settings.push_back(static_cast <string> (d_settings.drive_mmc_module_name));
 	
