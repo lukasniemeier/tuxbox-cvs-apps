@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1022 2010/04/23 21:01:06 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1023 2010/05/25 18:25:25 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1992,7 +1992,7 @@ void CNeutrinoApp::prepareEnviroment()
 
 int CNeutrinoApp::run(int argc, char **argv)
 {
-	/* Obey startmode setting for no longer than 180s uptime */
+	/* Obey startmode setting for no longer than 120s uptime */
 	struct sysinfo info;
 	long uptime;
 	sysinfo(&info);
