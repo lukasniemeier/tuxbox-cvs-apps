@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.26 2010/05/03 09:39:22 dbt Exp $
+	$Id: drive_setup.h,v 1.27 2010/05/25 19:22:00 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -225,6 +225,7 @@ class CDriveSetup : public CMenuTarget
 			MOUNT_STAT_MOUNT_AND_SHARE 	= 2
 		} mount_stat_uint_t;
 
+
 		CFrameBuffer 	*frameBuffer;
 		CConfigFile	configfile;
 		SDriveSettings	d_settings;
@@ -232,8 +233,31 @@ class CDriveSetup : public CMenuTarget
 		int x, y, width, height, hheight, mheight;
 		int pb_x, pb_y, pb_w, pb_h;
 		int msg_timeout; 	// timeout for messages
-	
 
+
+		//stuff for settings handlers
+		typedef struct settings_int_t
+		{
+			int old_val;
+			int *p_val;
+		};
+		std::vector<settings_int_t> v_int_settings;
+		
+		typedef struct settings_string_t
+		{
+			std::string old_val;
+			std::string *p_val;
+		};
+		std::vector<settings_string_t> v_string_settings;
+
+		void 	handleSetting(int *setting);
+		void 	handleSetting(std::string *setting);
+		std::vector<std::string> v_old_char_settings;
+		void 	handleCharSettings();
+		void 	restoreSettings();
+		bool  	haveChangedSettings();
+
+	
 		const char* msg_icon; 	// icon for all hdd setup windows
 		char part_num_actionkey[MAXCOUNT_PARTS][17];
 		std::string make_part_actionkey[MAXCOUNT_PARTS]; //action key strings for make_partition_$
@@ -364,6 +388,7 @@ class CDriveSetup : public CMenuTarget
 		bool linkInitFiles();
 		bool haveActiveParts(const int& device_num);
 		bool Reset();
+		bool ApplySetup();
 		
 		bool mkPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const action_int_t& action, const int& part_number, const unsigned long long& start_cyl = 0, const unsigned long long& size = 0);
 		bool mkFs(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name);
@@ -377,7 +402,7 @@ class CDriveSetup : public CMenuTarget
 	
 		void hide();
 		void Init();
-
+		
 		void calPartCount();
 		void loadHddCount();
 		void loadHddModels();

@@ -356,6 +356,7 @@ drive_setup.msg_reboot_requiered Diese Aktion wird erst nach einem Neustart Ihre
 drive_setup.msg_reset_now Jetzt zurücksetzten?
 drive_setup.msg_saved Einstellungen wurden erfolgreich\nübertragen!
 drive_setup.msg_saved_disabled Gerät(e) wurden deaktiviert.
+drive_setup.msg_savesettings_found_changes Änderungen jetzt übernehmen?
 drive_setup.partition_activate Partition aktivieren
 drive_setup.partition_activate_no nein
 drive_setup.partition_activate_yes ja

@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.177 2010/05/06 21:15:18 dbt Exp $
+ * $Id: locals_intern.h,v 1.178 2010/05/25 19:22:00 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -383,6 +383,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_reset_now",
 	"drive_setup.msg_saved",
 	"drive_setup.msg_saved_disabled",
+	"drive_setup.msg_savesettings_found_changes",
 	"drive_setup.partition_activate",
 	"drive_setup.partition_activate_no",
 	"drive_setup.partition_activate_yes",

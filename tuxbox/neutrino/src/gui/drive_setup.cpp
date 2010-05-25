@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.59 2010/05/03 09:39:22 dbt Exp $
+	$Id: drive_setup.cpp,v 1.60 2010/05/25 19:22:00 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -269,15 +269,13 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 
 	if (actionKey=="apply")
 	{
-		if (!saveHddSetup()) 
+		if (haveChangedSettings())
 		{
-			cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
-			string 	err_msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED);
-				err_msg += "\n" + err[ERR_SAVE_DRIVE_SETUP];
-			DisplayErrorMessage(err_msg.c_str());
+			ApplySetup();
+			Init();
+			return menu_return::RETURN_EXIT;
 		}
-		Init();
-		return menu_return::RETURN_EXIT;
+		return res;		
 	}
 	else if (actionKey == "mount_device_partitions")
  	{
@@ -309,7 +307,6 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 			strcpy(d_settings.drive_partition_fstype[current_device][next_part_number], "swap"); 
 			d_settings.drive_partition_mountpoint[current_device][next_part_number] = "none";
 			strcpy(d_settings.drive_partition_size[current_device][next_part_number], d_settings.drive_swap_size);
-			writeDriveSettings();
 
 			if (!formatPartition(current_device, next_part_number))
 				DisplayErrorMessage(err[ERR_FORMAT_PARTITION].c_str());
@@ -348,7 +345,6 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 	
 				if (do_format) 
 				{
-					writeDriveSettings();
 					if (formatPartition(current_device, ii)) 
 					{ // success
 						calPartCount(); //refresh part counter
@@ -479,6 +475,17 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 	}
 
 	Init();
+	if (haveChangedSettings())
+	{
+		if (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_SAVESETTINGS, LOCALE_DRIVE_SETUP_MSG_SAVESETTINGS_FOUND_CHANGES, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_QUESTION, width, 5) == CMessageBox::mbrYes)
+		{
+			if (!ApplySetup())
+				Init();
+		}
+		else
+			restoreSettings();
+	}
+
 	return res;
 }
 
@@ -535,6 +542,20 @@ void CDriveSetup::Init()
 		}
 	}
 
+}
+
+bool CDriveSetup::ApplySetup()
+{
+	if (!saveHddSetup()) 
+	{
+		cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
+		string 	err_msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED);
+			err_msg += "\n" + err[ERR_SAVE_DRIVE_SETUP];
+		DisplayErrorMessage(err_msg.c_str());
+		return false;
+	}
+	
+	return true;
 }
 
 typedef struct mn_data_t
@@ -2162,13 +2183,6 @@ bool CDriveSetup::saveHddSetup()
 	bool ret = true;
 	vector<string> v_errors;
 	err[ERR_SAVE_DRIVE_SETUP] = "";
-	
-	//save settings
-	if (!writeDriveSettings())
-	{
-		v_errors.push_back(err[ERR_WRITE_SETTINGS]);
-		ret = false;
-	}
 
 	//unmount first
 	if (!unmountAll())
@@ -2352,6 +2366,16 @@ bool CDriveSetup::saveHddSetup()
 			v_errors.push_back(err[ERR_LINK_INITFILES]);
 			ret = false;
 		}	
+	}
+
+	//save settings
+	if (ret)
+	{
+		if (!writeDriveSettings())
+		{
+			v_errors.push_back(err[ERR_WRITE_SETTINGS]);
+			ret = false;
+		}
 	}
 
 	// create result message
@@ -3473,7 +3497,6 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const act
 			strcpy(d_settings.drive_partition_fstype[device_num][part_number],"");
 			d_settings.drive_partition_mountpoint[device_num][part_number] = "";
 			strcpy(d_settings.drive_partition_size[device_num][part_number],"");
-			writeDriveSettings();
 			break;
 	}
 
@@ -3517,7 +3540,6 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const act
 				bool reboot = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION, LOCALE_DRIVE_SETUP_MSG_REBOOT_REQUIERED, CMessageBox::mbrContinue, CMessageBox::mbYes | CMessageBox::mbContinue, NEUTRINO_ICON_INFO, width) == CMessageBox::mbrYes);
 				if (reboot) 
 				{	
-					writeDriveSettings();
 					CNeutrinoApp::getInstance()->exec(NULL, "reboot");
 				}
 				ret = true; //return success
@@ -4204,7 +4226,11 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 					err[ERR_MOUNT_PARTITION] += "\nError while remounting /tmp!";
 				}
 				else 
+				{
+					strcpy(d_settings.drive_partition_fstype[device_num][part_number], "swap");
+					d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
 					return true;
+				}
 			}
 		}
 
@@ -4246,7 +4272,11 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 				char warn_msg[255];
 				sprintf(warn_msg,g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_MOUNT_WARNING), mp.c_str(), s_fs.c_str());
 				if ((ShowMsgUTF(LOCALE_MESSAGEBOX_WARNING, warn_msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_ERROR, width, -1))) // UTF-8
+				{	
+					d_settings.drive_partition_mountpoint[device_num][part_number] = mp;
+					strcpy(d_settings.drive_partition_fstype[device_num][part_number],  s_fs.c_str());
 					return true;
+				}
 			}	
 		}
 
@@ -4277,7 +4307,6 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 					//save fs and mountpoint!
 					strcpy(d_settings.drive_partition_fstype[device_num][part_number], v_fs_modules[i].c_str());
 					d_settings.drive_partition_mountpoint[device_num][part_number] = mp;
-					writeDriveSettings();
 					ret = true;
 					break;
 				}
@@ -4369,200 +4398,6 @@ bool CDriveSetup::isIdeInterfaceActive()
 		return false;
 }
 
-// load settings from configfile
-void CDriveSetup::loadDriveSettings()
-{
-	bool have_no_conf = false;
-
-	if(!configfile.loadConfig(DRV_CONFIGFILE)) 
-	{
-		have_no_conf = true;
-	}
-	
-	cout<<"[drive setup] "<<__FUNCTION__ <<": load settings from "<<DRV_CONFIGFILE<<endl;
-	
-	// drivesetup
-	d_settings.drive_activate_ide = configfile.getInt32("drive_activate_ide", IDE_OFF);
-	strcpy(d_settings.drive_mmc_module_name, configfile.getString("drive_mmc_module_name", "").c_str());
-	d_settings.drive_use_fstab = configfile.getInt32("drive_use_fstab", YES);
-	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", NO);
-	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
-	d_settings.drive_advanced_modul_command_load_options = configfile.getString("drive_advanced_modul_command_load_options", "");
-	d_settings.drive_modul_dir = configfile.getString("drive_modul_dir", VAR_MOUDULDIR);
-
-	// mmc modul load parameter
-	// d_settings.drive_mmc_modul_parameter
-	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
-	{	
-		sprintf(mmc_parm, "drive_mmc_%d_modul_parameter", i);
-		d_settings.drive_mmc_modul_parameter[i] = (string)configfile.getString(mmc_parm, "");
-	}
-	
-	for(unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
-	{
-		// d_settings.drive_spindown
-		sprintf(spindown_opt, "drive_%d_spindown", i);
-		strcpy(d_settings.drive_spindown[i], configfile.getString(spindown_opt,"0").c_str());
-
-		//d_settings.drive_write_cache
-		sprintf(write_cache_opt, "drive_%d_write_cache", i);
-		d_settings.drive_write_cache[i] = configfile.getInt32(write_cache_opt, OFF);
-
-		for(unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
-		{
-			// d_settings.drive_partition_size
-			sprintf(partsize_opt, "drive_%d_partition_%d_size", i, ii);
-			strcpy(d_settings.drive_partition_size[i][ii], configfile.getString(partsize_opt, "0").c_str());
-
-			// d_settings.drive_partition_fstype
-			sprintf(fstype_opt, "drive_%d_partition_%d_fstype", i, ii);
-			strcpy(d_settings.drive_partition_fstype[i][ii], configfile.getString(fstype_opt, "").c_str());
-
-			// d_settings.drive_partition_mountpoint
-			sprintf(mountpoint_opt, "drive_%d_partition_%d_mountpoint", i, ii);
-			d_settings.drive_partition_mountpoint[i][ii] = (string)configfile.getString(mountpoint_opt, "");
-
-			// d_settings.drive_partition_activ
-			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
-			d_settings.drive_partition_activ[i][ii] = configfile.getBool(partition_activ_opt, YES);
-#ifdef ENABLE_NFSSERVER
-			// d_settings.drive_partition_nfs
-			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
-			d_settings.drive_partition_nfs[i][ii] = configfile.getBool(partition_nfs_opt, OFF);
-
-			// d_settings.drive_partition_nfs_host_ip
-			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
-			d_settings.drive_partition_nfs_host_ip[i][ii] = (string)configfile.getString(partition_nfs_host_ip_opt, "");
-#endif /*ENABLE_NFSSERVER*/
-
-#ifdef ENABLE_SAMBASERVER
-			// d_settings.drive_partition_samba
-			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
-			d_settings.drive_partition_samba[i][ii] = configfile.getBool(partition_samba_opt, OFF);
-
-			// d_settings.drive_partition_samba_ro
-			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
-			d_settings.drive_partition_samba_ro[i][ii] = configfile.getBool(partition_samba_opt_ro, OFF);
-
-			// d_settings.drive_partition_samba_public
-			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
-			d_settings.drive_partition_samba_public[i][ii] = configfile.getBool(partition_samba_opt_public, ON);
-
-			// drive_partition_samba_share_name
-			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
-			char def_name[9];
-			sprintf(def_name, "Share_%d_%d", i+1, ii+1);
-			d_settings.drive_partition_samba_share_name[i][ii] = (string)configfile.getString(partition_samba_share_name, def_name );
-
-			// drive_partition_samba_share_comment
-			sprintf(partition_samba_share_comment, "drive_%d_partition_%d_samba_share_comment", i, ii);
-			d_settings.drive_partition_samba_share_comment[i][ii] = (string)configfile.getString(partition_samba_share_comment, "" );
-#endif /*ENABLE_SAMBASERVER*/
-		}
-	}
-
-	if (have_no_conf)
-	{
-		if (writeDriveSettings())
-			cout<<"[drive setup] "<<__FUNCTION__ <<": found no "<<DRV_CONFIGFILE<< " defaults used..."<<endl;
-	}
-}
-
-// saving settings
-bool CDriveSetup::writeDriveSettings()
-{
-	err[ERR_WRITE_SETTINGS] = "";
-
-	// drivesetup
-	configfile.setInt32	( "drive_activate_ide", d_settings.drive_activate_ide);
-	configfile.setString	( "drive_mmc_module_name", d_settings.drive_mmc_module_name );
-	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
-	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
-	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
-	configfile.setString	( "drive_advanced_modul_command_load_options", d_settings.drive_advanced_modul_command_load_options);
-	configfile.setString	( "drive_modul_dir", d_settings.drive_modul_dir);
-
-	// mmc modul load options
-	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
-	{	
-		//d_settings.drive_mmc_modul_parameter
-		sprintf(mmc_parm, "drive_mmc_%d_modul_parameter", i);
-		configfile.setString( mmc_parm, d_settings.drive_mmc_modul_parameter[i]);
-	}
-
-	for(int i = 0; i < MAXCOUNT_DRIVE; i++) 
-	{
-		// d_settings.drive_spindown
-		sprintf(spindown_opt, "drive_%d_spindown", i);
-		configfile.setString( spindown_opt, d_settings.drive_spindown[i/*MASTER||SLAVE*/] );
-
-		// d_settings.drive_write_cache
-		sprintf(write_cache_opt, "drive_%d_write_cache", i);
-		configfile.setInt32( write_cache_opt, d_settings.drive_write_cache[i/*MASTER||SLAVE*/]);
-
-		for(int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
-		{
-			// d_settings.drive_partition_size
-			sprintf(partsize_opt, "drive_%d_partition_%d_size", i, ii);
-			configfile.setString( partsize_opt, d_settings.drive_partition_size[i/*MASTER||SLAVE*/][ii] );
-
-			// d_settings.drive_partition_fstype
-			sprintf(fstype_opt, "drive_%d_partition_%d_fstype", i, ii);
-			configfile.setString( fstype_opt, d_settings.drive_partition_fstype[i/*MASTER||SLAVE*/][ii] );
-
-			// d_settings.drive_partition_mountpoint
-			sprintf(mountpoint_opt, "drive_%d_partition_%d_mountpoint", i, ii);
-			configfile.setString( mountpoint_opt, d_settings.drive_partition_mountpoint[i/*MASTER||SLAVE*/][ii]);
-
-			// d_settings.drive_partition_activ
-			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
-			configfile.setBool(partition_activ_opt, d_settings.drive_partition_activ[i/*MASTER||SLAVE*/][ii]);
-#ifdef ENABLE_NFSSERVER
-			// d_settings.drive_partition_nfs
-			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
-			configfile.setBool(partition_nfs_opt, d_settings.drive_partition_nfs[i/*MASTER||SLAVE*/][ii]);
-
-			// d_settings.drive_partition_nfs_host_ip
-			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
-			configfile.setString( partition_nfs_host_ip_opt, d_settings.drive_partition_nfs_host_ip[i/*MASTER||SLAVE*/][ii]);
-#endif /*ENABLE_NFSSERVER*/
-
-#ifdef ENABLE_SAMBASERVER
-			// d_settings.drive_partition_samba
-			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
-			configfile.setBool(partition_samba_opt, d_settings.drive_partition_samba[i/*MASTER||SLAVE*/][ii]);
-
-			// d_settings.drive_partition_samba_ro
-			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
-			configfile.setBool(partition_samba_opt_ro, d_settings.drive_partition_samba_ro[i/*MASTER||SLAVE*/][ii]);
-
-			// d_settings.drive_partition_samba_public
-			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
-			configfile.setBool(partition_samba_opt_public, d_settings.drive_partition_samba_public[i/*MASTER||SLAVE*/][ii]);
-
-			// d_settings.drive_partition_samba_share_name
-			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
-			configfile.setString(partition_samba_share_name, d_settings.drive_partition_samba_share_name[i/*MASTER||SLAVE*/][ii]);
-
-			// d_settings.drive_partition_samba_share_comment
-			sprintf(partition_samba_share_comment, "drive_%d_partition_%d_samba_share_comment", i, ii);
-			configfile.setString(partition_samba_share_comment, d_settings.drive_partition_samba_share_comment[i/*MASTER||SLAVE*/][ii]);
-#endif /*ENABLE_SAMBASERVER*/
-		}
-	}
-	
-	if (!configfile.saveConfig(DRV_CONFIGFILE)) 
-	{
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while writing "<<DRV_CONFIGFILE<<endl;
-		err[ERR_WRITE_SETTINGS] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CONFIGFILE_FAILED);
-		return false;
-	}
-
-	//refresh lists to get modules with options
-	loadMmcModulList();
-
-	return true;
-}
 
 // returns current time string
 string CDriveSetup::getTimeStamp()
@@ -4578,7 +4413,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.59 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.60 $");
 }
 
 // returns text for initfile headers
@@ -4915,6 +4750,241 @@ void CDriveSetup::showHelp()
 	helpbox.show(LOCALE_SETTINGS_HELP);
 }
 
+
+// load settings from configfile
+void CDriveSetup::loadDriveSettings()
+{
+	bool have_no_conf = false;
+	
+	//reset handeled settings
+	v_int_settings.clear();
+	v_string_settings.clear();
+	
+	if(!configfile.loadConfig(DRV_CONFIGFILE)) 
+	{
+		have_no_conf = true;
+	}
+	
+	cout<<"[drive setup] "<<__FUNCTION__ <<": load settings from "<<DRV_CONFIGFILE<<endl;
+	
+	//ide mode
+	d_settings.drive_activate_ide = configfile.getInt32("drive_activate_ide", IDE_OFF);
+	handleSetting(&d_settings.drive_activate_ide);
+
+	//mmc modul
+	strcpy(d_settings.drive_mmc_module_name, configfile.getString("drive_mmc_module_name", "").c_str());
+
+	//swap size
+	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
+
+	// mmc modul load parameter
+	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
+	{	
+		sprintf(mmc_parm, "drive_mmc_%d_modul_parameter", i);
+		d_settings.drive_mmc_modul_parameter[i] = (string)configfile.getString(mmc_parm, "");
+		handleSetting(&d_settings.drive_mmc_modul_parameter[i]);
+	}
+
+	//advanced fstab
+	d_settings.drive_use_fstab = configfile.getInt32("drive_use_fstab", YES);
+	handleSetting(&d_settings.drive_use_fstab);
+	d_settings.drive_use_fstab_auto_fs = configfile.getInt32("drive_use_fstab_auto_fs", NO);
+	handleSetting(&d_settings.drive_use_fstab_auto_fs);
+
+	//advanced insmod/modprobe options
+	d_settings.drive_advanced_modul_command_load_options = configfile.getString("drive_advanced_modul_command_load_options", "");
+	handleSetting(&d_settings.drive_advanced_modul_command_load_options);
+
+	//advanced modul dir
+	d_settings.drive_modul_dir = configfile.getString("drive_modul_dir", VAR_MOUDULDIR);
+ 	handleSetting(&d_settings.drive_modul_dir);
+
+	
+	for(unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
+	{
+		//spindown
+		sprintf(spindown_opt, "drive_%d_spindown", i);
+		strcpy(d_settings.drive_spindown[i], configfile.getString(spindown_opt,"0").c_str());
+
+		//write_cache
+		sprintf(write_cache_opt, "drive_%d_write_cache", i);
+		d_settings.drive_write_cache[i] = configfile.getInt32(write_cache_opt, OFF);
+		handleSetting(&d_settings.drive_write_cache[i]);
+
+		for(unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
+		{
+			//partition_size
+			sprintf(partsize_opt, "drive_%d_partition_%d_size", i, ii);
+			strcpy(d_settings.drive_partition_size[i][ii], configfile.getString(partsize_opt, "0").c_str()); //not handled
+
+			//partition_fstype
+			sprintf(fstype_opt, "drive_%d_partition_%d_fstype", i, ii);
+			strcpy(d_settings.drive_partition_fstype[i][ii], configfile.getString(fstype_opt, "").c_str()); //not handled
+
+			//partition_mountpoint
+			sprintf(mountpoint_opt, "drive_%d_partition_%d_mountpoint", i, ii);
+			d_settings.drive_partition_mountpoint[i][ii] = (string)configfile.getString(mountpoint_opt, "");
+			handleSetting(&d_settings.drive_partition_mountpoint[i][ii]);
+
+			//partition_activ
+			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
+			d_settings.drive_partition_activ[i][ii] = configfile.getBool(partition_activ_opt, YES);
+			handleSetting(&d_settings.drive_partition_activ[i][ii]);
+
+#ifdef ENABLE_NFSSERVER
+			//partition_nfs
+			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
+			d_settings.drive_partition_nfs[i][ii] = configfile.getBool(partition_nfs_opt, OFF);
+			handleSetting(&d_settings.drive_partition_nfs[i][ii]);
+
+			//partition_nfs_host_ip
+			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
+			d_settings.drive_partition_nfs_host_ip[i][ii] = (string)configfile.getString(partition_nfs_host_ip_opt, "");
+			handleSetting(&d_settings.drive_partition_nfs_host_ip[i][ii] );
+#endif /*ENABLE_NFSSERVER*/
+
+#ifdef ENABLE_SAMBASERVER
+			//partition_samba
+			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
+			d_settings.drive_partition_samba[i][ii] = configfile.getBool(partition_samba_opt, OFF);
+			handleSetting(&d_settings.drive_partition_samba[i][ii]);
+
+			//partition_samba_read only
+			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
+			d_settings.drive_partition_samba_ro[i][ii] = configfile.getBool(partition_samba_opt_ro, OFF);
+			handleSetting(&d_settings.drive_partition_samba_ro[i][ii]);
+
+			//partition_samba_public
+			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
+			d_settings.drive_partition_samba_public[i][ii] = configfile.getBool(partition_samba_opt_public, ON);
+			handleSetting(&d_settings.drive_partition_samba_public[i][ii]);
+
+			//partition_samba_share_name
+			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
+			char def_name[9];
+			sprintf(def_name, "Share_%d_%d", i+1, ii+1);
+			d_settings.drive_partition_samba_share_name[i][ii] = (string)configfile.getString(partition_samba_share_name, def_name );
+			handleSetting(&d_settings.drive_partition_samba_share_name[i][ii] );
+
+			//samba_share_comment
+			sprintf(partition_samba_share_comment, "drive_%d_partition_%d_samba_share_comment", i, ii);
+			d_settings.drive_partition_samba_share_comment[i][ii] = (string)configfile.getString(partition_samba_share_comment, "" );
+			handleSetting(&d_settings.drive_partition_samba_share_comment[i][ii] );
+#endif /*ENABLE_SAMBASERVER*/
+		}
+	}
+
+#ifdef ENABLE_SAMBASERVER
+	handleSetting(&g_settings.smb_setup_samba_on_off);
+	handleSetting(&g_settings.smb_setup_samba_workgroup);
+#endif /*ENABLE_SAMBASERVER*/
+
+	//handle char settings, partsize and fstype are not handled
+	handleCharSettings();
+
+	if (have_no_conf)
+	{
+		if (writeDriveSettings())
+			cout<<"[drive setup] "<<__FUNCTION__ <<": found no "<<DRV_CONFIGFILE<< " defaults used..."<<endl;
+	}
+}
+
+// saving settings
+bool CDriveSetup::writeDriveSettings()
+{
+	err[ERR_WRITE_SETTINGS] = "";
+
+	// drivesetup
+	configfile.setInt32	( "drive_activate_ide", d_settings.drive_activate_ide);
+	configfile.setString	( "drive_mmc_module_name", d_settings.drive_mmc_module_name );
+	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
+	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
+	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
+	configfile.setString	( "drive_advanced_modul_command_load_options", d_settings.drive_advanced_modul_command_load_options);
+	configfile.setString	( "drive_modul_dir", d_settings.drive_modul_dir);
+
+	//mmc modul load options
+	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
+	{	
+		//mmc_modul_parameter
+		sprintf(mmc_parm, "drive_mmc_%d_modul_parameter", i);
+		configfile.setString( mmc_parm, d_settings.drive_mmc_modul_parameter[i]);
+	}
+
+	for(int i = 0; i < MAXCOUNT_DRIVE; i++) 
+	{
+		//spindown
+		sprintf(spindown_opt, "drive_%d_spindown", i);
+		configfile.setString( spindown_opt, d_settings.drive_spindown[i/*MASTER||SLAVE*/] );
+
+		//write_cache
+		sprintf(write_cache_opt, "drive_%d_write_cache", i);
+		configfile.setInt32( write_cache_opt, d_settings.drive_write_cache[i/*MASTER||SLAVE*/]);
+
+		for(int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
+		{
+			//partition_size
+			sprintf(partsize_opt, "drive_%d_partition_%d_size", i, ii);
+			configfile.setString( partsize_opt, d_settings.drive_partition_size[i/*MASTER||SLAVE*/][ii] );
+
+			//partition_fstype
+			sprintf(fstype_opt, "drive_%d_partition_%d_fstype", i, ii);
+			configfile.setString( fstype_opt, d_settings.drive_partition_fstype[i/*MASTER||SLAVE*/][ii] );
+
+			//partition_mountpoint
+			sprintf(mountpoint_opt, "drive_%d_partition_%d_mountpoint", i, ii);
+			configfile.setString( mountpoint_opt, d_settings.drive_partition_mountpoint[i/*MASTER||SLAVE*/][ii]);
+
+			//partition_activ
+			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
+			configfile.setBool(partition_activ_opt, d_settings.drive_partition_activ[i/*MASTER||SLAVE*/][ii]);
+#ifdef ENABLE_NFSSERVER
+			//partition_nfs
+			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
+			configfile.setBool(partition_nfs_opt, d_settings.drive_partition_nfs[i/*MASTER||SLAVE*/][ii]);
+
+			//partition_nfs_host_ip
+			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
+			configfile.setString( partition_nfs_host_ip_opt, d_settings.drive_partition_nfs_host_ip[i/*MASTER||SLAVE*/][ii]);
+#endif /*ENABLE_NFSSERVER*/
+
+#ifdef ENABLE_SAMBASERVER
+			//partition_samba
+			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
+			configfile.setBool(partition_samba_opt, d_settings.drive_partition_samba[i/*MASTER||SLAVE*/][ii]);
+
+			//partition_samba_ro
+			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
+			configfile.setBool(partition_samba_opt_ro, d_settings.drive_partition_samba_ro[i/*MASTER||SLAVE*/][ii]);
+
+			//partition_samba_public
+			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
+			configfile.setBool(partition_samba_opt_public, d_settings.drive_partition_samba_public[i/*MASTER||SLAVE*/][ii]);
+
+			//partition_samba_share_name
+			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
+			configfile.setString(partition_samba_share_name, d_settings.drive_partition_samba_share_name[i/*MASTER||SLAVE*/][ii]);
+
+			//partition_samba_share_comment
+			sprintf(partition_samba_share_comment, "drive_%d_partition_%d_samba_share_comment", i, ii);
+			configfile.setString(partition_samba_share_comment, d_settings.drive_partition_samba_share_comment[i/*MASTER||SLAVE*/][ii]);
+#endif /*ENABLE_SAMBASERVER*/
+		}
+	}
+	
+	if (!configfile.saveConfig(DRV_CONFIGFILE)) 
+	{
+		cerr<<"[drive setup] "<<__FUNCTION__ <<": error while writing "<<DRV_CONFIGFILE<<endl;
+		err[ERR_WRITE_SETTINGS] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CONFIGFILE_FAILED);
+		return false;
+	}
+
+	//refresh lists to get modules with options
+	loadMmcModulList();
+
+	return true;
+}
+
 bool CDriveSetup::Reset()
 {
 	bool ret = true;
@@ -5014,6 +5084,111 @@ string CDriveSetup::getErrMsg()
 
 	return ret;
 }
+
+
+//handle/collects old string settings
+void  CDriveSetup::handleSetting(string *setting)
+{	
+	settings_string_t val	= {*setting, setting};
+	v_string_settings.push_back(val);
+}
+
+//handle/collects old int settings
+void  CDriveSetup::handleSetting(int *setting)
+{	
+	settings_int_t val	= {*setting, setting};
+	v_int_settings.push_back(val);
+}
+
+//handle/collects old char settings, Note: it's not necessary to observe partsize and fstype, this values come from system 
+void CDriveSetup::handleCharSettings()
+{
+	uint c = 0;
+
+	//mmc modul name
+	v_old_char_settings.push_back(static_cast <string> (d_settings.drive_mmc_module_name));
+	
+	//swap size
+	v_old_char_settings.push_back(static_cast <string> (d_settings.drive_swap_size));
+
+	//spindown
+	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
+		v_old_char_settings.push_back(static_cast <string> (d_settings.drive_spindown[i]));
+}
+
+//restore old settings
+void CDriveSetup::restoreSettings()
+{
+	//restore integer settings with current settings
+	for (uint i = 0; i < v_int_settings.size(); i++)
+		*v_int_settings[i].p_val = v_int_settings[i].old_val;
+
+	//restore string settings with current settings
+	for (uint i = 0; i < v_string_settings.size(); i++)
+		*v_string_settings[i].p_val = v_string_settings[i].old_val;
+	
+	//restore char settings
+	
+	//Note: the order of next lines must be the same like in handleCharSettings() !! 
+	//Yes, it's better to do this like with strings and integers overloaded in handleSetting(), but this hasn't working nice, please fix it, if you can ;-)
+	uint c = 0;
+	//restore mmc modul name
+	strcpy(d_settings.drive_mmc_module_name, v_old_char_settings[c].c_str()); 
+	c++;
+
+	//restore swap size
+	strcpy(d_settings.drive_swap_size, v_old_char_settings[c].c_str()); 
+	c++;
+
+	//restore spindown
+	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
+	{
+		strcpy(d_settings.drive_spindown[i], v_old_char_settings[c].c_str());
+		c++;
+	}
+}
+
+//check for setup changes
+bool  CDriveSetup::haveChangedSettings()
+{
+	//compare old integer settings with current settings
+	for (uint i = 0; i < v_int_settings.size(); i++)
+		if (v_int_settings[i].old_val != *v_int_settings[i].p_val)
+			return true;
+
+	//compare old string settings with current settings
+	for (uint i = 0; i < v_string_settings.size(); i++)
+		if (v_string_settings[i].old_val != *v_string_settings[i].p_val)
+			return true;
+	
+	//compare old char settings with current settings
+	//Note: it's not necessary to observe partsize and fstype, this values come from system 
+	
+	//Note: the order of next lines must be the same like in handleCharSettings() !! 
+	//Yes, it's better to do this like with strings and integers overloaded in handleSetting(), but this hasn't working nice, please fix it, if you can ;-)
+	uint c = 0;
+	//mmc modul name
+	if (v_old_char_settings[c] != static_cast <string> (d_settings.drive_mmc_module_name))
+		return true;
+	c++;
+
+	//swap size
+	if (v_old_char_settings[c] != static_cast <string> (d_settings.drive_swap_size))
+		return true;
+	c++;
+	
+	//spindown
+	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
+	{
+		if (v_old_char_settings[c] != static_cast <string> (d_settings.drive_spindown[i]))
+			return true;
+		c++;
+	}
+
+	cout<<"[drive setup] no settings changed!"<<endl;
+ 	return false;
+}
+
 
 //enable disable entry for selecting mountpoint
 CDriveSetupFsNotifier::CDriveSetupFsNotifier	(	
