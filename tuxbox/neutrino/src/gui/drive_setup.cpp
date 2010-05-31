@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.62 2010/05/27 18:18:24 dbt Exp $
+	$Id: drive_setup.cpp,v 1.63 2010/05/31 09:23:02 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -239,6 +239,8 @@ CDriveSetup::CDriveSetup():configfile('\t')
 			partitions[i][j] = part_pattern[i] + iToString(j+1);
 		}
 	}
+
+	have_apply_errors = false;
 }
 
 CDriveSetup* CDriveSetup::getInstance()
@@ -269,13 +271,13 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 
 	if (actionKey=="apply")
 	{
-		if (haveChangedSettings())
+		if (ApplySetup(NO/*no message*/))
 		{
-			ApplySetup();
 			Init();
 			return menu_return::RETURN_EXIT;
 		}
-		return res;		
+
+		return res;
 	}
 	else if (actionKey == "mount_device_partitions")
  	{
@@ -475,17 +477,18 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 	}
 
 	Init();
-	if (haveChangedSettings())
-	{
-		if (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_SAVESETTINGS, LOCALE_DRIVE_SETUP_MSG_SAVESETTINGS_FOUND_CHANGES, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_QUESTION, width, 5) == CMessageBox::mbrYes)
-		{
-			if (!ApplySetup())
-				Init();
-		}
-		else
-			restoreSettings();
-	}
 
+	//left menue with user message
+	if (ApplySetup())
+	{
+		//on any error, relaod menue
+		if (have_apply_errors)
+		{
+			Init();
+			return menu_return::RETURN_EXIT;
+		}		
+	}
+		
 	return res;
 }
 
@@ -498,7 +501,7 @@ void CDriveSetup::hide()
 void CDriveSetup::Init()
 {
  	cout<<"[drive_setup] " << getDriveSetupVersion()<<endl;
-
+		
 	CProgressBar pb;
 
 	fb_pixel_t * pixbuf = new fb_pixel_t[pb_w * pb_h];
@@ -544,18 +547,51 @@ void CDriveSetup::Init()
 
 }
 
-bool CDriveSetup::ApplySetup()
+//applying settings wit user message, returns true if applied anything
+bool CDriveSetup::ApplySetup(const bool show_msg)
 {
-	if (!saveHddSetup()) 
+	bool do_apply = false;
+	have_apply_errors = false;
+
+	//observ settings
+	if (haveChangedSettings())
 	{
-		cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
-		string 	err_msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED);
-			err_msg += "\n" + err[ERR_SAVE_DRIVE_SETUP];
-		DisplayErrorMessage(err_msg.c_str());
-		return false;
+		if (show_msg)
+		{
+			if (!ShowLocalizedMessage(LOCALE_DRIVE_SETUP_SAVESETTINGS, LOCALE_DRIVE_SETUP_MSG_SAVESETTINGS_FOUND_CHANGES, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_QUESTION, width, 5) == CMessageBox::mbrYes)
+			{
+				restoreSettings();
+				return false;
+			}
+			else
+				do_apply = true;
+		}
+		else
+			do_apply = true;
 	}
 	
-	return true;
+	//observe current mounts and mount settings only
+	if (!do_apply && haveChangedMounts())
+	{
+		if (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_HEAD, LOCALE_DRIVE_SETUP_MSG_MOUNT, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_QUESTION, width, 5) == CMessageBox::mbrYes)
+			do_apply = true;
+	}
+
+	//save
+	if (do_apply) 
+	{
+		if (!saveHddSetup()) 
+		{
+			cerr<<"[drive setup] "<<__FUNCTION__ <<": errors while applying settings..."<<endl;
+			string 	err_msg = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_FAILED);
+				err_msg += "\n" + err[ERR_SAVE_DRIVE_SETUP];
+			DisplayErrorMessage(err_msg.c_str());
+			have_apply_errors = true;
+		}
+		return true;
+	}
+	
+	return false;
 }
 
 typedef struct mn_data_t
@@ -2277,8 +2313,7 @@ bool CDriveSetup::saveHddSetup()
 	//fstab
 	if (ret) 
 	{
-		bool defaults = (!d_settings.drive_use_fstab ? true:false);
-		if (!mkFstab(defaults))
+		if (!mkFstab())
 		{
 			v_errors.push_back(err[ERR_MK_FSTAB]);
 			ret = false;
@@ -2713,7 +2748,7 @@ bool CDriveSetup::isActivePartition(const string& partname)
 }
 
 // generate fstab file, returns true on success NOTE: All partitions must be mounted!
-bool CDriveSetup::mkFstab(bool write_defaults_only)
+bool CDriveSetup::mkFstab()
 {
 	// set fstab path
 	string fstab = getFstabFilePath();
@@ -2723,9 +2758,12 @@ bool CDriveSetup::mkFstab(bool write_defaults_only)
 	vector<string> v_fstab_entries;
 	v_fstab_entries.push_back("# " + fstab + " generated from neutrino ide/mmc/hdd drive-setup\n #" +  getDriveSetupVersion() + " " +  timestamp );
 
-	if (!write_defaults_only) 
+	//remove fstab if not needed
+	if (!d_settings.drive_use_fstab) 
+		remove(fstab.c_str());
+	else
 	{
-	// collecting mount settings
+		// collecting mount settings
 		for (unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
 		{
 			for (unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
@@ -2752,26 +2790,26 @@ bool CDriveSetup::mkFstab(bool write_defaults_only)
 				}
 			}
 		}
-	}
-
-	// write fstab
-	ofstream str_fstab(fstab.c_str());
- 	if (!str_fstab) 
-	{ // Error while open
-       		cerr << "[drive setup] "<<__FUNCTION__ <<": write error "<<fstab<<", please check permissions..." << strerror(errno)<<endl;
-		err[ERR_MK_FSTAB] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_FSTAB);
-		return false;
-	}
-	else 
-	{
-		for (unsigned int i = 0; i < v_fstab_entries.size(); i++) 
-		{
-			str_fstab << v_fstab_entries[i] <<endl;
+	
+		// write fstab
+		ofstream str_fstab(fstab.c_str());
+		if (!str_fstab) 
+		{ // Error while open
+			cerr << "[drive setup] "<<__FUNCTION__ <<": write error "<<fstab<<", please check permissions..." << strerror(errno)<<endl;
+			err[ERR_MK_FSTAB] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MAKE_FSTAB);
+			return false;
 		}
-	}
-	str_fstab.close();
+		else 
+		{
+			for (unsigned int i = 0; i < v_fstab_entries.size(); i++) 
+			{
+				str_fstab << v_fstab_entries[i] <<endl;
+			}
+		}
+		str_fstab.close();
 
-	cout<<"[drive setup] "<<__FUNCTION__ <<": writing "<<fstab<< "...ok"<<endl;
+		cout<<"[drive setup] "<<__FUNCTION__ <<": writing "<<fstab<< "...ok"<<endl;
+	}
 
 	return true;
 }
@@ -4117,7 +4155,7 @@ bool CDriveSetup::mkSambaInitFile()
 #endif
 
 // mounts all available partitions for all devices 
-bool CDriveSetup::mountAll()
+bool CDriveSetup::mountAll(const bool force_mount)
 {
 	bool ret = true;
 	string err_msg;
@@ -4125,7 +4163,7 @@ bool CDriveSetup::mountAll()
 
 	for (unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
-		if (!mountDevice(i, false))
+		if (!mountDevice(i, force_mount))
 		{
 			err_msg += "\n";
 			err_msg += err[ERR_MOUNT_DEVICE];
@@ -4413,7 +4451,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.62 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.63 $");
 }
 
 // returns text for initfile headers
@@ -4773,9 +4811,11 @@ void CDriveSetup::loadDriveSettings()
 
 	//mmc modul
 	strcpy(d_settings.drive_mmc_module_name, configfile.getString("drive_mmc_module_name", "").c_str());
-
+	old_drive_mmc_module_name = static_cast <string> (d_settings.drive_mmc_module_name);
+	
 	//swap size
 	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
+	old_drive_swap_size = static_cast <string> (d_settings.drive_swap_size);
 
 	// mmc modul load parameter
 	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
@@ -4805,6 +4845,7 @@ void CDriveSetup::loadDriveSettings()
 		//spindown
 		sprintf(spindown_opt, "drive_%d_spindown", i);
 		strcpy(d_settings.drive_spindown[i], configfile.getString(spindown_opt,"0").c_str());
+		old_drive_spindown[i] = static_cast <string> (d_settings.drive_spindown[i]);
 
 		//write_cache
 		sprintf(write_cache_opt, "drive_%d_write_cache", i);
@@ -4878,9 +4919,6 @@ void CDriveSetup::loadDriveSettings()
 	handleSetting(&g_settings.smb_setup_samba_on_off);
 	handleSetting(&g_settings.smb_setup_samba_workgroup);
 #endif /*ENABLE_SAMBASERVER*/
-
-	//handle char settings, partsize and fstype are not handled
-	handleCharSettings();
 
 	if (have_no_conf)
 	{
@@ -5100,20 +5138,6 @@ void  CDriveSetup::handleSetting(int *setting)
 	v_int_settings.push_back(val);
 }
 
-//handle/collects old char settings, Note: it's not necessary to observe partsize and fstype, this values come from system 
-void CDriveSetup::handleCharSettings()
-{
-	//mmc modul name
-	v_old_char_settings.push_back(static_cast <string> (d_settings.drive_mmc_module_name));
-	
-	//swap size
-	v_old_char_settings.push_back(static_cast <string> (d_settings.drive_swap_size));
-
-	//spindown
-	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
-		v_old_char_settings.push_back(static_cast <string> (d_settings.drive_spindown[i]));
-}
-
 //restore old settings
 void CDriveSetup::restoreSettings()
 {
@@ -5129,21 +5153,46 @@ void CDriveSetup::restoreSettings()
 	
 	//Note: the order of next lines must be the same like in handleCharSettings() !! 
 	//Yes, it's better to do this like with strings and integers overloaded in handleSetting(), but this hasn't working nice, please fix it, if you can ;-)
-	uint c = 0;
 	//restore mmc modul name
-	strcpy(d_settings.drive_mmc_module_name, v_old_char_settings[c].c_str()); 
-	c++;
+	strcpy(d_settings.drive_mmc_module_name, old_drive_mmc_module_name.c_str()); 
 
 	//restore swap size
-	strcpy(d_settings.drive_swap_size, v_old_char_settings[c].c_str()); 
-	c++;
+	strcpy(d_settings.drive_swap_size, old_drive_swap_size.c_str()); 
 
 	//restore spindown
 	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
+		strcpy(d_settings.drive_spindown[i], old_drive_spindown[i].c_str());
+		
+}
+
+//check for changed mounts,
+//if we have unmounted or mounted devices that doesn't match with current settings (activ), then returns true
+bool  CDriveSetup::haveChangedMounts()
+{
+	bool is_swap[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
+
+	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
 	{
-		strcpy(d_settings.drive_spindown[i], v_old_char_settings[c].c_str());
-		c++;
-	}
+		for(uint ii = 0; ii < MAXCOUNT_PARTS; ii++) 
+		{
+			if (isActivePartition(partitions[i][ii]))
+			{
+				is_swap[i][ii] = isSwapPartition(partitions[i][ii]);
+	
+				if (!is_swap[i][ii])
+				{
+					if (isMountedPartition(partitions[i][ii]) != d_settings.drive_partition_activ[i][ii])
+						return true;
+				}
+				else
+				{
+					if (is_swap[i][ii] != d_settings.drive_partition_activ[i][ii])
+	 					return true;
+				}	
+			}
+		}
+	}	
+	return false;
 }
 
 //check for setup changes
@@ -5164,23 +5213,30 @@ bool  CDriveSetup::haveChangedSettings()
 	
 	//Note: the order of next lines must be the same like in handleCharSettings() !! 
 	//Yes, it's better to do this like with strings and integers overloaded in handleSetting(), but this hasn't working nice, please fix it, if you can ;-)
-	uint c = 0;
 	//mmc modul name
-	if (v_old_char_settings[c] != static_cast <string> (d_settings.drive_mmc_module_name))
+	if (old_drive_mmc_module_name != static_cast <string> (d_settings.drive_mmc_module_name))
 		return true;
-	c++;
 
 	//swap size
-	if (v_old_char_settings[c] != static_cast <string> (d_settings.drive_swap_size))
+	if (old_drive_swap_size != static_cast <string> (d_settings.drive_swap_size))
 		return true;
-	c++;
 	
 	//spindown
 	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
 	{
-		if (v_old_char_settings[c] != static_cast <string> (d_settings.drive_spindown[i]))
+		if (old_drive_spindown[i] != static_cast <string> (d_settings.drive_spindown[i]))
+		{
+			cout<<"old_drive_spindown["<<i<<"]"<<old_drive_spindown[i]<<"<<<<<<<<<>>>>>>>>>>"<<endl;
+			cout<<"d_settings.drive_spindown["<<i<<"]"<<d_settings.drive_spindown[i]<<"<<<<<<<<<>>>>>>>>>>"<<endl;
 			return true;
-		c++;
+		}
+	}
+
+	//checking fstab
+	if (d_settings.drive_use_fstab)
+	{
+		if(access(getFstabFilePath().c_str(), R_OK) !=0)
+			return true;		
 	}
 
 	cout<<"[drive setup] no settings changed!"<<endl;

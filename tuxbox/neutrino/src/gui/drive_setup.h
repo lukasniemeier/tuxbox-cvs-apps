@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.27 2010/05/25 19:22:00 dbt Exp $
+	$Id: drive_setup.h,v 1.28 2010/05/31 09:23:02 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -252,10 +252,13 @@ class CDriveSetup : public CMenuTarget
 
 		void 	handleSetting(int *setting);
 		void 	handleSetting(std::string *setting);
-		std::vector<std::string> v_old_char_settings;
-		void 	handleCharSettings();
+		std::string old_drive_mmc_module_name;
+		std::string old_drive_swap_size;
+		std::string old_drive_spindown[MAXCOUNT_DRIVE];
+
 		void 	restoreSettings();
 		bool  	haveChangedSettings();
+		bool	haveChangedMounts();
 
 	
 		const char* msg_icon; 	// icon for all hdd setup windows
@@ -310,6 +313,7 @@ class CDriveSetup : public CMenuTarget
 			ERR_WRITE_SETTINGS
 		} errnum_uint_t;
 		std::string err[ERROR_DESCRIPTIONS_NUM_COUNT];
+		bool have_apply_errors;
 		
 		int current_device; 	//MASTER || SLAVE || MMCARD, current edit device
 		int hdd_count; 		// count of hdd drives
@@ -357,7 +361,7 @@ class CDriveSetup : public CMenuTarget
 		bool initModul(const std::string& modul_name, bool do_unload_first = true, const std::string& options = "");
 		bool mountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name, const std::string& mountpoint, const bool force_mount = true);
 		bool mountDevice(const int& device_num, const bool force_mount = true);
-		bool mountAll();
+		bool mountAll(const bool force_mount = false);
 		bool unmountPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number);
 		bool unmountDevice(const int& device_num);
 		bool unmountAll();
@@ -369,7 +373,7 @@ class CDriveSetup : public CMenuTarget
 		bool unloadModul(const std::string& modulname);
 		bool writeInitFile(const bool clear = false);
 		bool mkMounts();
-		bool mkFstab(bool write_defaults_only = false);
+		bool mkFstab();
 	#ifdef ENABLE_NFSSERVER
 		bool mkExports();
 	#endif
@@ -388,7 +392,7 @@ class CDriveSetup : public CMenuTarget
 		bool linkInitFiles();
 		bool haveActiveParts(const int& device_num);
 		bool Reset();
-		bool ApplySetup();
+		bool ApplySetup(const bool show_msg = true);
 		
 		bool mkPartition(const int& device_num /*MASTER || SLAVE || MMCARD*/, const action_int_t& action, const int& part_number, const unsigned long long& start_cyl = 0, const unsigned long long& size = 0);
 		bool mkFs(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number,  const std::string& fs_name);
