@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.63 2010/05/31 09:23:02 dbt Exp $
+	$Id: drive_setup.cpp,v 1.64 2010/05/31 09:42:53 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4451,7 +4451,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.63 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.64 $");
 }
 
 // returns text for initfile headers
@@ -5225,11 +5225,7 @@ bool  CDriveSetup::haveChangedSettings()
 	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
 	{
 		if (old_drive_spindown[i] != static_cast <string> (d_settings.drive_spindown[i]))
-		{
-			cout<<"old_drive_spindown["<<i<<"]"<<old_drive_spindown[i]<<"<<<<<<<<<>>>>>>>>>>"<<endl;
-			cout<<"d_settings.drive_spindown["<<i<<"]"<<d_settings.drive_spindown[i]<<"<<<<<<<<<>>>>>>>>>>"<<endl;
 			return true;
-		}
 	}
 
 	//checking fstab
