@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.178 2010/05/25 19:22:00 dbt Exp $
+ * $Id: locals_intern.h,v 1.179 2010/05/31 09:24:04 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -365,6 +365,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_error_save_configfile_failed",
 	"drive_setup.msg_error_save_failed",
 	"drive_setup.msg_error_save_no_smb_share_definied",
+	"drive_setup.msg_mount",
 	"drive_setup.msg_partition_check",
 	"drive_setup.msg_partition_check_failed",
 	"drive_setup.msg_partition_check_ok",

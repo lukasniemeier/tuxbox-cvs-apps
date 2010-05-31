@@ -337,7 +337,8 @@ drive_setup.msg_error_save_cannot_unmount_partition_busy . Partition kann nicht 
 drive_setup.msg_error_save_cannot_unmount_swap Swap-Partition kann nicht ausgehangen werden!
 drive_setup.msg_error_save_configfile_failed Kann Einstellungen nicht speichern!
 drive_setup.msg_error_save_failed Beim Speichern der Einstellungen sind\nFehler aufgetreten!
-drive_setup.msg_error_save_no_smb_share_definied Es wurden keine Sambafreigaben festgelegt! 
+drive_setup.msg_error_save_no_smb_share_definied Es wurden keine Sambafreigaben festgelegt!
+drive_setup.msg_mount Ein oder mehrere Laufwerke sollten lt. Einstellungen\nein- bzw. ausgehangen sein, jedoch stimmt dies nicht\nmit den aktuellen Einstellungen überein.\nSollen die Einstellungen jetzt übernommen werden? 
 drive_setup.msg_partition_check Soll die Partition jetzt geprüft werden?\nDies kann einige Zeit in Anspruch nehmen.
 drive_setup.msg_partition_check_failed Die Prüfung ist fehlgeschlagen.
 drive_setup.msg_partition_check_ok Die Prüfung wurde erfolgreich durchgeführt.
