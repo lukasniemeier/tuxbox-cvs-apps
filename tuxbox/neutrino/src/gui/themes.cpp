@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.14 2010/06/01 20:09:03 dbt Exp $ 
+	$Id: themes.cpp,v 1.15 2010/06/01 20:14:55 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -428,3 +428,6 @@ void CThemes::setupDefaultColors()
 	g_settings.infobar_Text_green = 0x64;
 	g_settings.infobar_Text_blue  = 0x64;
 }
+
+
+
