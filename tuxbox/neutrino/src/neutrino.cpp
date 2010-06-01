@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1023 2010/05/25 18:25:25 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1024 2010/06/01 19:58:38 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -101,6 +101,7 @@
 #include "gui/screensetup.h"
 #include "gui/esound.h"
 #include "gui/personalize.h"
+#include "gui/themes.h"
 #ifdef ENABLE_SAMBASERVER
 #include "gui/sambaserver_setup.h"
 #endif
@@ -3970,7 +3971,8 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if (actionKey=="theme_neutrino")
 	{
-		setupColors_neutrino();
+		CThemes themes;
+		themes.setupDefaultColors();
 		colorSetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 	}
 	else if(actionKey=="savesettings")

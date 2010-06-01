@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.105 2010/05/15 12:50:39 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.106 2010/06/01 19:58:38 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1771,64 +1771,6 @@ bool CNeutrinoApp::getNVODMenu(CMenuWidget* menu)
 	}
 
 	return true;
-}
-
-/**************************************************************************************
-*                                                                                     *
-*          CNeutrinoApp -  setup Color Sheme (Neutrino)                               *
-*                                                                                     *
-**************************************************************************************/
-void CNeutrinoApp::setupColors_neutrino()
-{
-	g_settings.menu_Head_alpha = 0x00;
-	g_settings.menu_Head_red   = 0x00;
-	g_settings.menu_Head_green = 0x0A;
-	g_settings.menu_Head_blue  = 0x19;
-
-	g_settings.menu_Head_Text_alpha = 0x00;
-	g_settings.menu_Head_Text_red   = 0x5f;
-	g_settings.menu_Head_Text_green = 0x46;
-	g_settings.menu_Head_Text_blue  = 0x00;
-
-	g_settings.menu_Content_alpha = 0x14;
-	g_settings.menu_Content_red   = 0x00;
-	g_settings.menu_Content_green = 0x0f;
-	g_settings.menu_Content_blue  = 0x23;
-
-	g_settings.menu_Content_Text_alpha = 0x00;
-	g_settings.menu_Content_Text_red   = 0x64;
-	g_settings.menu_Content_Text_green = 0x64;
-	g_settings.menu_Content_Text_blue  = 0x64;
-
-	g_settings.menu_Content_Selected_alpha = 0x14;
-	g_settings.menu_Content_Selected_red   = 0x19;
-	g_settings.menu_Content_Selected_green = 0x37;
-	g_settings.menu_Content_Selected_blue  = 0x64;
-
-	g_settings.menu_Content_Selected_Text_alpha  = 0x00;
-	g_settings.menu_Content_Selected_Text_red    = 0x00;
-	g_settings.menu_Content_Selected_Text_green  = 0x00;
-	g_settings.menu_Content_Selected_Text_blue   = 0x00;
-
-	g_settings.menu_Content_inactive_alpha = 0x14;
-	g_settings.menu_Content_inactive_red   = 0x00;
-	g_settings.menu_Content_inactive_green = 0x0f;
-	g_settings.menu_Content_inactive_blue  = 0x23;
-
-	g_settings.menu_Content_inactive_Text_alpha  = 0x00;
-	g_settings.menu_Content_inactive_Text_red    = 55;
-	g_settings.menu_Content_inactive_Text_green  = 70;
-	g_settings.menu_Content_inactive_Text_blue   = 85;
-
-	g_settings.infobar_alpha = 0x14;
-	g_settings.infobar_red   = 0x00;
-	g_settings.infobar_green = 0x0e;
-	g_settings.infobar_blue  = 0x23;
-
-	g_settings.infobar_Text_alpha = 0x00;
-	g_settings.infobar_Text_red   = 0x64;
-	g_settings.infobar_Text_green = 0x64;
-	g_settings.infobar_Text_blue  = 0x64;
 }
 
 

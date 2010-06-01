@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.230 2009/11/20 22:40:08 dbt Exp $
+	$Id: neutrino.h,v 1.231 2010/06/01 19:58:38 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -209,7 +209,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		bool ucodes_available(void);
 #endif
 		void firstChannel();
-		void setupColors_neutrino();
 		void setupNetwork( bool force= false );
 		void setupNFS();
 

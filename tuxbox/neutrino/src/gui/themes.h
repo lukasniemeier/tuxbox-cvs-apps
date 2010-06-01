@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.5 2009/01/27 02:24:19 ecosys Exp $ 
+	$Id: themes.h,v 1.6 2010/06/01 19:58:38 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -50,6 +50,7 @@ class CThemes : public CMenuTarget, CChangeObserver
 	public:
 		CThemes();
 		void hide();
+		void setupDefaultColors();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
