@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.179 2010/05/31 09:24:04 dbt Exp $
+ * $Id: locals_intern.h,v 1.180 2010/06/02 10:17:35 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1226,6 +1226,7 @@ const char * locale_real_names[] =
 	"sambaserver.setup_install_dir",
 	"sambaserver.setup_interface",
 	"sambaserver.setup_msg_missing_smbconf",
+	"sambaserver.setup_msg_not_installed",
 	"sambaserver.setup_msg_save",
 	"sambaserver.setup_server_off",
 	"sambaserver.setup_server_on",

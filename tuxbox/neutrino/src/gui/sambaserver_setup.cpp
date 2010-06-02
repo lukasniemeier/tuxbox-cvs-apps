@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.6 2010/05/03 09:40:59 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.7 2010/06/02 10:17:35 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -103,7 +103,10 @@ void CSambaSetup::hide()
 // init menue
 void CSambaSetup::Init()
 {
-	showSambaSetup();
+	if (!haveSambaSupport())
+		DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_MSG_NOT_INSTALLED));
+	else
+		showSambaSetup();
 }
 
 
@@ -137,7 +140,7 @@ void CSambaSetup::showSambaSetup()
 	CSambaOnOffNotifier * smb_notifier = new CSambaOnOffNotifier(SAMBA_MARKER);
 	CMenuOptionChooser * sm_start = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_STAT, &g_settings.smb_setup_samba_on_off, SMB_YES_NO_OPTIONS, SMB_YES_NO_OPTION_COUNT, true, smb_notifier, CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER);
 
- 	//workroup, domainname
+	//workroup, domainname
 	CStringInputSMS * sm_input_domain = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_WORKGROUP, &g_settings.smb_setup_samba_workgroup,15, LOCALE_SAMBASERVER_SETUP_WORKGROUP_HINT1, LOCALE_SAMBASERVER_SETUP_WORKGROUP_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789_ ");
 	CMenuForwarder * sm_fw_domain = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_WORKGROUP, true, g_settings.smb_setup_samba_workgroup, sm_input_domain, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 
@@ -149,10 +152,10 @@ void CSambaSetup::showSambaSetup()
 	sm->addItem(GenericMenuBack);
 	sm->addItem(GenericMenuSeparatorLine);
 	//-----------------------------------
- 	sm->addItem(sm_start);			//server stat
+	sm->addItem(sm_start);			//server stat
 	sm->addItem(GenericMenuSeparatorLine);
 	//-----------------------------------
- 	sm->addItem(sm_fw_domain);		//workgroup/domain input
+	sm->addItem(sm_fw_domain);		//workgroup/domain input
 	sm->addItem(sm_fw_interface);		//interface
 
 	sm->exec(NULL, "");

@@ -1199,6 +1199,7 @@ sambaserver.setup_configfile_path_hint2 Default path is /etc/smb.conf...
 sambaserver.setup_install_dir Installation directory
 sambaserver.setup_interface Interface
 sambaserver.setup_msg_missing_smbconf No configuration for samba found!\nPlease setup shares first and apply!\n
+sambaserver.setup_msg_not_installed You can't use samba with this image at the moment,\nbecause of missing deamons nmbd and smbd,\nbut You can install this additional.\nFor more informations take a look at:\nwiki.tuxbox.org/Samba-Installation
 sambaserver.setup_msg_save Save settings now??
 sambaserver.setup_server_off Off
 sambaserver.setup_server_on On

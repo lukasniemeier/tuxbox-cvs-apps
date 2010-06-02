@@ -1199,6 +1199,7 @@ sambaserver.setup_configfile_path_hint2 Vorgabe ist /etc/smb.conf...
 sambaserver.setup_install_dir Installationsverzeichnis
 sambaserver.setup_interface Interface
 sambaserver.setup_msg_missing_smbconf Samba-Konfiguration nicht gefunden!\nBitte im Partitionsmenü erst Freigaben festlegen\nund anschließend übernehmen!
+sambaserver.setup_msg_not_installed Samba kann momentan für dieses Image nicht genutzt\nwerden, weil die benötigten Dienste noch nicht installiert\nsind. Diese können aber nachträglich installiert\nwerden. Nähere Informationen finden sie dazu unter:\nwiki.tuxbox.org/Samba-Installation
 sambaserver.setup_msg_save Einstellungen jetzt speichern?
 sambaserver.setup_server_off Aus
 sambaserver.setup_server_on Ein

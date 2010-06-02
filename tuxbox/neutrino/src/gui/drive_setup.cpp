@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.64 2010/05/31 09:42:53 dbt Exp $
+	$Id: drive_setup.cpp,v 1.65 2010/06/02 10:17:35 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -330,6 +330,13 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 
 		return res;
 	}
+#ifdef ENABLE_SAMBASERVER
+	else if (actionKey == "missing_samba")
+	{
+		DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_MSG_NOT_INSTALLED));
+		return res;
+	}
+#endif
 	//using generated actionkeys for...
 	for (int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
@@ -901,6 +908,11 @@ void CDriveSetup::showHddSetupSub()
 	//samba separator
 	CMenuSeparator 	*srv_smb_sep = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
 	srv_smb_sep->setString("Samba");
+	CSambaSetup smb;
+	bool have_samba = smb.haveSambaSupport();
+	CMenuForwarder *smb_info_fw;
+	//info message
+	smb_info_fw = new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP_SMALL);
 #endif
 #endif /*defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER*/
 
@@ -1120,7 +1132,7 @@ void CDriveSetup::showHddSetupSub()
 		CMenuForwarder * srv_smb_globals[MAXCOUNT_PARTS];
 		CDriveSetupSambaNotifier * sambaNotifier[MAXCOUNT_PARTS];
 		CMenuOptionChooser * smb_chooser[MAXCOUNT_PARTS];
-
+		
 		CMenuForwarder * smb_share_name_fw[MAXCOUNT_PARTS];
 		CStringInputSMS * smb_share_name_input[MAXCOUNT_PARTS];
 		CMenuForwarder * smb_share_comment_fw[MAXCOUNT_PARTS];
@@ -1247,10 +1259,9 @@ void CDriveSetup::showHddSetupSub()
 			smb_public_chooser[i] = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_SHARES_PUBLIC, &d_settings.drive_partition_samba_public[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, d_settings.drive_partition_samba[current_device][i], NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4 );
 
 			//prepare on off use
-			//only active if samba binaries are available
-			CSambaSetup smb;
+			//only active if samba binaries are available or if no samba installed, show info message
 			sambaNotifier[i] = new CDriveSetupSambaNotifier (srv_smb_globals[i], smb_share_name_fw[i], smb_ro_chooser[i], smb_public_chooser[i]);
-			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, smb.haveSambaSupport(), sambaNotifier[i], CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN );
+			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, have_samba, sambaNotifier[i], CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN );	
 		#endif /*ENABLE_SAMBASERVER*/
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
 
@@ -1346,6 +1357,8 @@ void CDriveSetup::showHddSetupSub()
 		#endif
 		#ifdef ENABLE_SAMBASERVER
 			part_srv_shares[i]->addItem(srv_smb_sep);		//samba separator
+			if (!have_samba)
+				part_srv_shares[i]->addItem(smb_info_fw);	//samba info
 			part_srv_shares[i]->addItem(smb_chooser[i]);		//samba on/off
 			//------------------------
 			part_srv_shares[i]->addItem(GenericMenuSeparatorLine);	//separator
@@ -4451,7 +4464,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.64 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.65 $");
 }
 
 // returns text for initfile headers
