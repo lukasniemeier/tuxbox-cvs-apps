@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.3 2010/02/22 10:54:11 dbt Exp $
+	$Id: software_update.cpp,v 1.4 2010/06/03 09:35:58 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -193,22 +193,3 @@ void CSoftwareUpdate::showSoftwareUpdateImageinfo(CMenuWidget * entry)
 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CURRENTVERSIONSNAPSHOT, false, versionInfo.getType()));
 }
 
-// #ifndef DISABLE_INTERNET_UPDATE
-// #ifndef HAVE_DREAMBOX_HARDWARE
-// void CSoftwareUpdate::showSoftwareUpdateProxySetup(CMenuWidget * entry)
-// /* shows entries for proxy settings */
-// {
-// 
-// 	entry->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_PROXYSERVER_SEP));
-// 
-// 	CStringInputSMS * softUpdate_proxy = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYSERVER, g_settings.softupdate_proxyserver, 23, LOCALE_FLASHUPDATE_PROXYSERVER_HINT1, LOCALE_FLASHUPDATE_PROXYSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-.: ");
-// 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER, true, g_settings.softupdate_proxyserver, softUpdate_proxy));
-// 
-// 	CStringInputSMS * softUpdate_proxyuser = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYUSERNAME, g_settings.softupdate_proxyusername, 23, LOCALE_FLASHUPDATE_PROXYUSERNAME_HINT1, LOCALE_FLASHUPDATE_PROXYUSERNAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
-// 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYUSERNAME, true, g_settings.softupdate_proxyusername, softUpdate_proxyuser));
-// 
-// 	CStringInputSMS * softUpdate_proxypass = new CStringInputSMS(LOCALE_FLASHUPDATE_PROXYPASSWORD, g_settings.softupdate_proxypassword, 20, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT1, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
-// 	entry->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYPASSWORD, true, g_settings.softupdate_proxypassword, softUpdate_proxypass));
-// }
-// #endif /*HAVE_DREAMBOX_HARDWARE*/
-// #endif /*DISABLE_INTERNET_UPDATE*/
