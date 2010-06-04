@@ -294,7 +294,7 @@ drive_setup.hdd_add_swap_partition Swap-Partition anlegen
 drive_setup.hdd_cache Schreib-Cache
 drive_setup.hdd_capacity Kapazität
 drive_setup.hdd_delete_partition Löschen
-drive_setup.hdd_edit_partition Partition bearbeiten
+drive_setup.hdd_edit_partition Partitionen bearbeiten
 drive_setup.hdd_format_partition Partition erstellen u. formatieren
 drive_setup.hdd_format_set_partition ...richte Partitionen ein
 drive_setup.hdd_format_start Starte Formatierung, bitte warten...
