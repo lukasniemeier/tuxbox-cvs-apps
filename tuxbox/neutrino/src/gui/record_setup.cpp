@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.3 2010/05/06 21:15:18 dbt Exp $
+	$Id: record_setup.cpp,v 1.4 2010/06/04 06:47:52 dbt Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -242,6 +242,9 @@ void CRecordSetup::showRecordSetup()
 		temp[9]=0;// terminate for sure
 		mffc[i] = new CMenuForwarderNonLocalized(temp, true, g_settings.recording_dir[i],fc1[i]);
 	}
+	dirMenu->addItem(GenericMenuSeparator);
+	dirMenu->addItem(GenericMenuBack);
+	dirMenu->addItem(GenericMenuSeparatorLine);
 	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
 	{
 		dirMenu->addItem(mffc[i]);
