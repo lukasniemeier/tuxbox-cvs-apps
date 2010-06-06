@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.79 2009/12/15 09:47:30 dbt Exp $
+	$Id: menue.h,v 1.80 2010/06/06 12:50:48 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -38,6 +38,7 @@
 #include <driver/framebuffer.h>
 #include <driver/rcinput.h>
 #include <system/localize.h>
+#include <gui/widget/icons.h>
 
 #include <string>
 #include <vector>
@@ -113,6 +114,8 @@ class CMenuItem
 			return 0;
 		}
 		virtual void setActive(const bool Active);
+
+		virtual void paintItemButton(const int startX, const int frame_height, const bool select_mode, const std::string& icon_Name = NEUTRINO_ICON_BUTTON_RIGHT);
 };
 
 class CMenuSeparator : public CMenuItem

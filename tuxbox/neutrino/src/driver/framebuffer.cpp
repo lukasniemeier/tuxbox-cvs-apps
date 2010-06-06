@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: framebuffer.cpp,v 1.80 2009/10/17 07:38:04 seife Exp $
+	$Id: framebuffer.cpp,v 1.81 2010/06/06 12:50:48 dbt Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 				  2003 thegoodguy
@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <memory.h>
+#include <errno.h>
 
 #include <linux/kd.h>
 
@@ -537,7 +538,7 @@ int CFrameBuffer::getIconHeight(const char * const filename)
 
 	if (icon_fd == -1)
 	{
-		printf("Framebuffer getIconHeight: error while loading icon: %s\n", iconfile.c_str());
+		printf("[Framebuffer] %s: error while loading icon: %s %s\n", __FUNCTION__, iconfile.c_str(), strerror(errno));
 		return 0;
 	}
 	else
@@ -561,7 +562,7 @@ int CFrameBuffer::getIconWidth(const char * const filename)
 
 	if (icon_fd == -1)
 	{
-		printf("Framebuffer getIconWidth: error while loading icon: %s\n", iconfile.c_str());
+		printf("[Framebuffer] %s: error while loading icon: %s %s\n", __FUNCTION__, iconfile.c_str(), strerror(errno));
 		width = 0;
 	}
 	else
@@ -588,7 +589,7 @@ bool CFrameBuffer::paintIcon8(const std::string & filename, const int x, const i
 
 	if (icon_fd == -1)
 	{
-		printf("Framebuffer paintIcon8: error while loading icon: %s\n", iconfile.c_str());
+		printf("[Framebuffer] %s: error while loading icon: %s %s\n", __FUNCTION__, iconfile.c_str(), strerror(errno));
 		return false;
 	}
 	read(icon_fd, &header, sizeof(struct rawHeader));
@@ -640,11 +641,14 @@ bool CFrameBuffer::paintIcon(const std::string & filename, const int x, const in
 	int              icon_fd;
 	std::string      iconfile = getIconFilePath(filename);
 
+	if (iconfile.empty())
+		return false;
+
 	icon_fd = open(iconfile.c_str(), O_RDONLY);
 
 	if (icon_fd == -1)
 	{
-		printf("Framebuffer paintIcon: error while loading icon: %s\n", iconfile.c_str());
+		printf("[Framebuffer] %s: error while loading icon: %s %s\n", __FUNCTION__, iconfile.c_str(), strerror(errno));
 		return false;
 	}
 

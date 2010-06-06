@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.162 2010/03/29 19:11:14 dbt Exp $
+	$Id: menue.cpp,v 1.163 2010/06/06 12:50:48 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -78,6 +78,59 @@ void CMenuItem::setActive(const bool Active)
 	   Without this, the changeNotifiers would become machine-dependent. */
 	if (used && x != -1)
 		paint();
+}
+
+void CMenuItem::paintItemButton(const int startX, const int frame_height, const bool select_mode, const std::string &icon_Name)
+{
+	CFrameBuffer *frameBuffer = CFrameBuffer::getInstance();
+	bool selected = select_mode;
+	int height = frame_height;
+	bool icon_painted = false;
+
+	std::string icon_name = iconName;
+	int icon_w = 0;
+	int icon_h = 0;
+
+//we can paint number buttons automaticly without parameter, but it isn't a good idea for expensive menue painting with all possible numbers (like in mainmenue)
+//on slower machine like dbox2.
+//if you want to do this nevertheless, remove or comment out the following #ifndef-lines
+#ifndef HAVE_DBOX_HARDWARE
+	if (icon_name.empty() && CRCInput::isNumeric(directKey))
+	{
+		char i_name[4];
+		sprintf(i_name, "%d.raw", CRCInput::getNumericValue(directKey));
+		icon_name = i_name;
+	}
+#endif
+
+	if  (selected) 
+	{
+		if ((CRCInput::isNumeric(directKey)) || (directKey >= CRCInput::RC_red && directKey <= CRCInput::RC_blue) || icon_name.empty())
+			icon_name = icon_Name;
+	}
+
+	if (!icon_name.empty())
+	{
+		icon_w = frameBuffer->getIconWidth(icon_name.c_str());
+		icon_h = frameBuffer->getIconHeight(icon_name.c_str());
+	
+		if (active  && icon_w>0 && icon_h>0)
+		{
+			int icon_x = (x+(startX-x)/2) - (icon_w/2);
+			icon_painted = frameBuffer->paintIcon(icon_name, icon_x, y+ ((height/2- icon_h/2)) );
+		}
+	}
+
+	if (CRCInput::isNumeric(directKey) && !icon_painted)
+	{
+		unsigned char color   = COL_MENUCONTENT;
+		if (selected)
+			color   = COL_MENUCONTENTSELECTED;
+		if (!active)
+			color   = COL_MENUCONTENTINACTIVE;
+
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x + 15, y+ height, height, CRCInput::getKeyName(directKey), color, height);
+	}
 }
 
 CMenuWidget::CMenuWidget()
@@ -236,6 +289,11 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 					}
 					break;
 				}
+
+				case CRCInput::RC_right:
+					CMenuItem* sel_item = items[selected];
+					if(sel_item == GenericMenuBack)
+						break;
 				case CRCInput::RC_ok:
 					//exec this item...
 					if (hasItem())
@@ -259,14 +317,8 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 						msg = CRCInput::RC_timeout;
 					break;
 
-				case CRCInput::RC_home:
-					msg = CRCInput::RC_timeout;
-					break;
-
-				case CRCInput::RC_right:
-					break;
-
 				case CRCInput::RC_left:
+				case CRCInput::RC_home:
 					msg = CRCInput::RC_timeout;
 					break;
 
@@ -427,6 +479,7 @@ void CMenuWidget::paintItems()
 		}
 	}
 }
+
 
 //-------------------------------------------------------------------------------------------------------------------------------
 CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name)
@@ -617,15 +670,7 @@ int CMenuOptionChooser::paint( bool selected )
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), optionNameString.c_str(), color, 0, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), l_option, color, 0, true); // UTF-8
 
-	if (!iconName.empty() && active)
-	{
-		int icon_x = (x+(stringstartposName-x)/2) - (frameBuffer->getIconWidth(iconName.c_str())/2);
-		frameBuffer->paintIcon(iconName, icon_x, y+ ((height/2- frameBuffer->getIconHeight(iconName.c_str())/2)) );
-	}
-	else if (CRCInput::isNumeric(directKey))
-	{
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x + 15, y+ height, height, CRCInput::getKeyName(directKey), color, height);
-	}
+	paintItemButton(stringstartposName, height, selected, NEUTRINO_ICON_BUTTON_OKAY);
 
 	if (selected)
 	{
@@ -789,6 +834,8 @@ int CMenuOptionLanguageChooser::paint( bool selected )
 	int stringstartposOption = x + offx + 10;
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), optionValue, color);
 
+	paintItemButton(stringstartposOption, height, selected, NEUTRINO_ICON_BUTTON_OKAY);
+
 	if (selected)
 	{
 		CLCD::getInstance()->showMenuText(1, optionValue);
@@ -914,15 +961,7 @@ int CMenuForwarder::paint(bool selected)
 	frameBuffer->paintBoxRel(x, y, dx, height, bgcolor, RADIUS_SMALL);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposX, y+ height, dx- (stringstartposX - x), l_text, color, 0, true); // UTF-8
 
-	if (!iconName.empty() && active)
-	{
-		int icon_x = (x+(stringstartposX-x)/2) - (frameBuffer->getIconWidth(iconName.c_str())/2);
-		frameBuffer->paintIcon(iconName, icon_x, y+ ((height/2- frameBuffer->getIconHeight(iconName.c_str())/2)) );
-	}
-	else if (CRCInput::isNumeric(directKey))
-	{
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x + 15, y+ height, height, CRCInput::getKeyName(directKey), color, height);
-	}
+	paintItemButton(stringstartposX, height, selected);
 
 	if (option_text != NULL)
 	{

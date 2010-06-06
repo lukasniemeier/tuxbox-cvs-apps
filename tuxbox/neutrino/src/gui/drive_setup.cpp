@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.65 2010/06/02 10:17:35 dbt Exp $
+	$Id: drive_setup.cpp,v 1.66 2010/06/06 12:50:48 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1223,7 +1223,7 @@ void CDriveSetup::showHddSetupSub()
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 		bool share_chooser_activ = ((string)d_settings.drive_partition_fstype[current_device][i] == "swap" ? false : true);
 		//prepare submenue for server shares
-		part_srv_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE, share_chooser_activ, NULL, part_srv_shares[i], NULL, CRCInput::RC_right, NEUTRINO_ICON_BUTTON_RIGHT);
+		part_srv_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE, share_chooser_activ, NULL, part_srv_shares[i], NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
 
 		//forwarder with current mountpoint as shared path
 		srv_path_fw[i] = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_PATH, false, d_settings.drive_partition_mountpoint[current_device][i]);
@@ -1241,7 +1241,7 @@ void CDriveSetup::showHddSetupSub()
 		#endif /*ENABLE_NFSSERVER*/
 		
 		#ifdef ENABLE_SAMBASERVER
- 			srv_smb_globals[i]= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP,  d_settings.drive_partition_samba[current_device][i], NULL, new CSambaSetup(LOCALE_DRIVE_SETUP_HEAD, msg_icon), NULL, CRCInput::RC_right, NEUTRINO_ICON_BUTTON_RIGHT);
+ 			srv_smb_globals[i]= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP,  d_settings.drive_partition_samba[current_device][i], NULL, new CSambaSetup(LOCALE_DRIVE_SETUP_HEAD, msg_icon), NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
 
 			//prepare share name
 			smb_share_name_input[i] = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, &d_settings.drive_partition_samba_share_name[current_device][i], 20, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT1, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-_. ");
@@ -4464,7 +4464,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.65 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.66 $");
 }
 
 // returns text for initfile headers
