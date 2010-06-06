@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.105 2010/05/11 19:02:54 dbt Exp $
+	$Id: timerlist.cpp,v 1.106 2010/06/06 15:43:00 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -248,7 +248,7 @@ CTimerList::CTimerList()
 	theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	x	= getScreenStartX (width);
-	y	= getScreenStartX (height+INFO_HEIGHT);
+	y	= getScreenStartY (height+INFO_HEIGHT);
 	liststart = 0;
 	Timer = new CTimerdClient();
 	skipEventID=0;
@@ -422,7 +422,7 @@ void CTimerList::updateEvents(void)
 	}
 
 	x	= getScreenStartX (width);
-	y	= getScreenStartX (height+INFO_HEIGHT);
+	y	= getScreenStartY (height+INFO_HEIGHT);
 }
 
 
