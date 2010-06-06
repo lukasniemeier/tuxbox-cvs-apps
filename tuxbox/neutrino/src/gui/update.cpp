@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.143 2010/05/11 19:53:46 dbt Exp $
+	$Id: update.cpp,v 1.144 2010/06/06 10:29:29 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -481,6 +481,9 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &)
 		return menu_return::RETURN_REPAINT;
 	}
 
+	printf("[flashtool] stopping timerd\n");
+	g_Timerd->shutdown();
+
 	CSectionsdClient sd;
 	bool sd_scan = sd.getIsScanningActive();
 	// restart sectionsd, this frees up memory
@@ -626,6 +629,9 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 		g_Radiotext = NULL;
 	}
 #endif
+
+	printf("[flashtool] stopping timerd\n");
+	g_Timerd->shutdown();
 
 	CSectionsdClient sd;
 	bool sd_scan = sd.getIsScanningActive();
