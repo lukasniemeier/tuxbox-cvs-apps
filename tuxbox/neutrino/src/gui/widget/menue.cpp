@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.164 2010/06/09 19:00:48 dbt Exp $
+	$Id: menue.cpp,v 1.165 2010/06/09 20:41:59 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -80,6 +80,14 @@ void CMenuItem::setActive(const bool Active)
 		paint();
 }
 
+void CMenuItem::setItemButton(const std::string& icon_Name, const bool is_select_button)
+{
+	if (is_select_button)
+		selected_iconName = icon_Name;
+	else
+		iconName = icon_Name;
+}
+
 void CMenuItem::paintItemButton(const int startX, const int frame_height, const bool select_mode, const std::string &icon_Name)
 {
 	CFrameBuffer *frameBuffer = CFrameBuffer::getInstance();
@@ -105,8 +113,15 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 
 	if  (selected) 
 	{
+		if (!selected_iconName.empty())
+		{
+			icon_name = selected_iconName;
+		}
+		else
+		{
 		if ((CRCInput::isNumeric(directKey)) || (directKey >= CRCInput::RC_red && directKey <= CRCInput::RC_blue) || icon_name.empty())
 			icon_name = icon_Name;
+		}
 	}
 
 	if (!icon_name.empty())
