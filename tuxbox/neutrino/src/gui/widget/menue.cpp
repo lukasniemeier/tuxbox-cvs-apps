@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.165 2010/06/09 20:41:59 dbt Exp $
+	$Id: menue.cpp,v 1.166 2010/06/10 08:36:17 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -105,8 +105,9 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 #ifndef HAVE_DBOX_HARDWARE
 	if (icon_name.empty() && CRCInput::isNumeric(directKey))
 	{
-		char i_name[5];
-		sprintf(i_name, "%d.raw", CRCInput::getNumericValue(directKey));
+		char i_name[6]; /* X.raw +'\0' */
+		snprintf(i_name, 6, "%d.raw", CRCInput::getNumericValue(directKey));
+		i_name[5] = '\0'; /* even if snprintf truncated the string, ensure termination */
 		icon_name = i_name;
 	}
 #endif
