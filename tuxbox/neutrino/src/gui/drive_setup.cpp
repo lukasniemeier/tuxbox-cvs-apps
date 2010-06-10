@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.66 2010/06/06 12:50:48 dbt Exp $
+	$Id: drive_setup.cpp,v 1.67 2010/06/10 14:17:52 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1674,8 +1674,12 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 	err[ERR_UNMOUNT_PARTITION] = "";
 
 	//executing user script if available before unmounting
-	char user_script[21];
-	sprintf(user_script, "%s/before_unmount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	/* $ echo -n "/var/tuxbox/config/before_unmount_1_1.sh"|wc -c
+	 * 40
+	 */
+	char user_script[64];
+	snprintf(user_script, 64, "%s/before_unmount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	user_script[63] = '\0'; /* ensure termination... */
 	if((access(user_script, F_OK) ==0))
 		CNeutrinoApp::getInstance()->execute_start_file(user_script);
 
@@ -4375,8 +4379,9 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
  	}
 
 	//executing user script if available after mounting
-	char user_script[18];
-	sprintf(user_script, "%s/after_mount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	char user_script[64];
+	snprintf(user_script, 64, "%s/after_mount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	user_script[63] = '\0'; /* ensure termination... */
 	if((access(user_script, F_OK) ==0)) 
 		CNeutrinoApp::getInstance()->execute_start_file(user_script);
 	
@@ -4464,7 +4469,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.66 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.67 $");
 }
 
 // returns text for initfile headers
@@ -4915,7 +4920,7 @@ void CDriveSetup::loadDriveSettings()
 
 			//partition_samba_share_name
 			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
-			char def_name[9];
+			char def_name[10]; /* i and ii are 0 to 3, so this should be enough... */
 			sprintf(def_name, "Share_%d_%d", i+1, ii+1);
 			d_settings.drive_partition_samba_share_name[i][ii] = (string)configfile.getString(partition_samba_share_name, def_name );
 			handleSetting(&d_settings.drive_partition_samba_share_name[i][ii] );
