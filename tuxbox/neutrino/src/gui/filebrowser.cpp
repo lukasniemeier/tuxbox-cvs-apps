@@ -1375,54 +1375,64 @@ const struct button_label FileBrowserButtons[3] =
 {
 	{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_FILEBROWSER_NEXTPAGE        },
 	{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_FILEBROWSER_PREVPAGE        },
-	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_FILEBROWSER_MARK            },
+	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_FILEBROWSER_MARK            }
 };
 const struct button_label FileBrowserFilterButton[2] =
 {
 	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_FILEBROWSER_FILTER_INACTIVE },
-	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_FILEBROWSER_FILTER_ACTIVE   },
+	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_FILEBROWSER_FILTER_ACTIVE   }
 };
+const struct button_label FileBrowserOKButton[1] =
+{
+	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_FILEBROWSER_SELECT          }
+};
+struct button_label FileBrowserHelpButton[1] =
+{
+	{ NEUTRINO_ICON_BUTTON_HELP  , LOCALE_GENERIC_EMPTY               }
+};
+const struct button_label FileBrowserDeleteButton[1] =
+{
+	{ NEUTRINO_ICON_BUTTON_MUTE_SMALL, LOCALE_FILEBROWSER_DELETE      }
+};
+
 
 void CFileBrowser::paintFoot()
 {
-	int dx = (width-20) / 4;
+	int ButtonWidth = (width-20) / 4;
 	//Second Line (bottom, top)
-	int by2 = y + height - (foheight - 4);
-	int ty2 = by2 + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
+	int by2 = y + height - (foheight - 2);
 
 	//Background
 	frameBuffer->paintBoxRel(x, y + height - (2 * foheight ), width, (2 * foheight ), COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
-	if (!(filelist.empty()))
+	if ( !(filelist.empty()) )
 	{
-		int by = y + height - 2 * (foheight - 4);
+		int by = y + height - 2 * (foheight - 2);
 
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, by, dx, Multi_Select ? 3 : 2, FileBrowserButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, by, ButtonWidth, Multi_Select ? 3 : 2, FileBrowserButtons);
 
-		if(Filter != NULL)
-			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + (3 * dx), by, dx, 1, &(FileBrowserFilterButton[use_filter?0:1]));
+		//Blue-Button
+		if (Filter != NULL)
+			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + (3 * ButtonWidth), by, ButtonWidth, 1, &(FileBrowserFilterButton[use_filter?0:1]));
 
 		//OK-Button
-		if( (filelist[selected].getType() != CFile::FILE_UNKNOWN) || (S_ISDIR(filelist[selected].Mode)) )
+		if ( (filelist[selected].getType() != CFile::FILE_UNKNOWN) || (S_ISDIR(filelist[selected].Mode)) )
 		{
-			frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x +3 , by2 - 3);
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 35, ty2, dx - 35, g_Locale->getText(LOCALE_FILEBROWSER_SELECT), COL_INFOBAR_SHADOW_PLUS_1, 0, true); // UTF-8
-
+			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, by2, ButtonWidth, 1, FileBrowserOKButton);
 		}
 
 		//?-Button
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + (1 * dx), by2 - 3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 35 + (1 * dx), ty2, dx - 35, g_Locale->getText(sortByNames[g_settings.filebrowser_sortmethod]), COL_INFOBAR_SHADOW_PLUS_1, 0, true); // UTF-8
+		FileBrowserHelpButton[0].locale = sortByNames[g_settings.filebrowser_sortmethod];
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + (1 * ButtonWidth), by2, ButtonWidth, 1, FileBrowserHelpButton);
 
 		//Mute-Button
 		if (strncmp(Path.c_str(), VLC_URI, strlen(VLC_URI)) != 0) { //Not in vlc mode
-		    frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_MUTE_SMALL, x + (2 * dx), by2 - 3);
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 35 + (2 * dx), ty2, dx - 35, g_Locale->getText(LOCALE_FILEBROWSER_DELETE), COL_INFOBAR_SHADOW_PLUS_1, 0, true); // UTF-8
+			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + (2 * ButtonWidth), by2, ButtonWidth, 1, FileBrowserDeleteButton);
 		}
 
-		if(m_SMSKeyInput.getOldKey()!=0)
+		if (m_SMSKeyInput.getOldKey() != 0)
 		{
-			char cKey[2]={m_SMSKeyInput.getOldKey(),0};
+			char cKey[2] = {m_SMSKeyInput.getOldKey(), 0};
 			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 16, by2 , 16, cKey, COL_MENUHEAD, 0, true); // UTF-8
 		}
 	}
