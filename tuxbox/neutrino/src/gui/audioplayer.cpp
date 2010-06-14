@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.84 2010/05/25 18:30:58 rhabarber1848 Exp $
+  $Id: audioplayer.cpp,v 1.85 2010/06/14 06:37:10 dbt Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -676,6 +676,9 @@ int CAudioPlayerGui::show()
 					CMenuSelectorTarget *InetRadioInputChanger = new CMenuSelectorTarget(&select);
 					// -- setup menue for inetradio input
 					sprintf(cnt, "%d", count);
+					InputSelector.addItem(GenericMenuSeparator);
+					InputSelector.addItem(GenericMenuBack);
+					InputSelector.addItem(GenericMenuSeparatorLine);
 					InputSelector.addItem(new CMenuForwarder(
 						LOCALE_AUDIOPLAYER_ADD_LOC, true, NULL, InetRadioInputChanger,
 						cnt, CRCInput::convertDigitToKey(count + 1)), true);
@@ -1589,15 +1592,18 @@ void CAudioPlayerGui::paintHead()
 	else 
 		strCaption = g_Locale->getText(LOCALE_AUDIOPLAYER_HEAD);
 	m_frameBuffer->paintBoxRel(m_x, m_y + m_title_height, m_width, m_theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	m_frameBuffer->paintIcon(NEUTRINO_ICON_MP3,m_x + 7, m_y + m_title_height + 10);
+
+	int ypos = m_y + m_title_height + (m_theight / 2) - (m_frameBuffer->getIconHeight(NEUTRINO_ICON_MP3) / 2);
+	m_frameBuffer->paintIcon(NEUTRINO_ICON_MP3, m_x + 7, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 35, m_y + m_theight + m_title_height + 0,
 									m_width - 45, strCaption, COL_MENUHEAD, 0, true); // UTF-8
-	int ypos = m_y + m_title_height;
-	if(m_theight > 26)
-		ypos = (m_theight - 26) / 2 + m_y + m_title_height;
+
 #ifdef ENABLE_GUI_MOUNT
 	if (!m_inetmode)
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - 30, ypos);
+	{
+		ypos = m_y + m_title_height + (m_theight / 2) - (m_frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_DBOX) / 2);
+		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - 35, ypos);
+	}
 #endif
 #if 0
 	if( CNeutrinoApp::getInstance()->isMuted() )
@@ -1618,44 +1624,49 @@ const struct button_label AudioPlayerButtons[][4] =
 		{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_AUDIOPLAYER_STOP                        },
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_REWIND                      },
 		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_PAUSE                       },
-		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_FASTFORWARD                 },
+		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_FASTFORWARD                 }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_AUDIOPLAYER_DELETE                      },
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_ADD                         },
 		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_DELETEALL                   },
-		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_SHUFFLE                     },
+		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_SHUFFLE                     }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_JUMP_BACKWARDS              },
-		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_JUMP_FORWARDS               },
+		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_JUMP_FORWARDS               }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_JUMP_BACKWARDS              },
-		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_JUMP_FORWARDS               },
+		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_AUDIOPLAYER_JUMP_FORWARDS               }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_SAVE_PLAYLIST               },
-		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_ID   },
+		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_ID   }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_SAVE_PLAYLIST               },
-		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_NAME },
+		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_BUTTON_SELECT_TITLE_BY_NAME }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_AUDIOPLAYER_STOP                        },
-		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_PAUSE                       },
+		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_PAUSE                       }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_ADD                         },
-		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_INETRADIO_NAME                          },
+		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_INETRADIO_NAME                          }
 	},
 	{
 		{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_AUDIOPLAYER_DELETE                      },
 		{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_AUDIOPLAYER_ADD                         },
 		{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_DELETEALL                   },
-		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_INETRADIO_NAME                          },
-	},
+		{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_INETRADIO_NAME                          }
+	}
+};
+const struct button_label AudioPlayerButtons2[2] =
+{
+	{ NEUTRINO_ICON_BUTTON_HELP, LOCALE_AUDIOPLAYER_KEYLEVEL         },
+	{ NEUTRINO_ICON_BUTTON_OKAY, LOCALE_AUDIOPLAYER_PLAY             }
 };
 //------------------------------------------------------------------------
 
@@ -1664,10 +1675,14 @@ void CAudioPlayerGui::paintFoot()
 	//	printf("paintFoot{\n");
 	int top;
 	int c_rad_mid = RADIUS_MID;
+	int start_x, start_top;
 	if (m_show_playlist)
 		top = m_y + (m_height - m_info_height - 2 * m_buttonHeight);
 	else
 		top = m_y + (m_height - 2 * m_buttonHeight);
+
+	start_x	= m_x + 10;
+	start_top = top + 2;
 
 	int ButtonWidth = (m_width - 20) / 4;
 	int ButtonWidth2 = (m_width - 50) / 2;
@@ -1675,45 +1690,37 @@ void CAudioPlayerGui::paintFoot()
 	m_frameBuffer->paintHLine(m_x, m_x + m_width, top, COL_INFOBAR_SHADOW_PLUS_1);
 
 	if (!m_playlist.empty())
-	{
-		// play
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, m_x + 1 * ButtonWidth2 + 25, top + m_buttonHeight - 3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]
-			->RenderString(m_x + 1 * ButtonWidth2 + 53, top + m_buttonHeight + 24 - 4, ButtonWidth2 - 28,
-						   g_Locale->getText(LOCALE_AUDIOPLAYER_PLAY), COL_INFOBAR_SHADOW_PLUS_1, 0, true); // UTF-8		
-		// keylevel switch
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, m_x + 0 * ButtonWidth + 25, top + m_buttonHeight - 3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]
-			->RenderString(m_x + 0 * ButtonWidth + 53 , top + m_buttonHeight + 24 - 4, ButtonWidth2 - 28,
-						   g_Locale->getText(LOCALE_AUDIOPLAYER_KEYLEVEL), COL_INFOBAR_SHADOW_PLUS_1, 0, true); // UTF-8
-	}
+		::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
+			start_x, top + m_buttonHeight - 2, ButtonWidth2, 2, AudioPlayerButtons2);
 
 	if (m_key_level == 0)
 	{
 		if (m_playlist.empty()) {
 			if (m_inetmode)
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, 
-					m_x + 10, top + 4, ButtonWidth, 2, AudioPlayerButtons[7]);
+					start_x, start_top, ButtonWidth, 2, AudioPlayerButtons[7]);
 			else
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, 
-					m_x + 10, top + 4, ButtonWidth, 1, &(AudioPlayerButtons[7][0]));
+					start_x, start_top, ButtonWidth, 1, &(AudioPlayerButtons[7][0]));
 		} else
 			if (m_inetmode)
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
-					m_x + 10, top + 4, ButtonWidth, 4, AudioPlayerButtons[8]);
+					start_x, start_top, ButtonWidth, 4, AudioPlayerButtons[8]);
 			else
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
-					m_x + 10, top + 4, ButtonWidth, 4, AudioPlayerButtons[1]);
+					start_x, start_top, ButtonWidth, 4, AudioPlayerButtons[1]);
 	}
 	else if (m_key_level == 1)
 	{
 		if (m_curr_audiofile.FileType != CFile::STREAM_AUDIO)
 		{
-			::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, m_x + 10, top + 4, ButtonWidth, 4, AudioPlayerButtons[0]);
+			::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
+				start_x, start_top, ButtonWidth, 4, AudioPlayerButtons[0]);
 		}
 		else
 		{
-			::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, m_x + 10, top + 4, ButtonWidth*2, 2, AudioPlayerButtons[6]);
+			::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
+				start_x, start_top, ButtonWidth*2, 2, AudioPlayerButtons[6]);
 		}
 	} 
 	else 
@@ -1723,12 +1730,12 @@ void CAudioPlayerGui::paintFoot()
 			if (m_select_title_by_name)
 			{
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, 
-						m_x + ButtonWidth + 10, top + 4, ButtonWidth, 2, AudioPlayerButtons[5]);
+						start_x, start_top, ButtonWidth, 2, AudioPlayerButtons[5]);
 			} 
 			else 
 			{
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
-						m_x + ButtonWidth + 10, top + 4, ButtonWidth, 2, AudioPlayerButtons[4]);
+						start_x, start_top, ButtonWidth, 2, AudioPlayerButtons[4]);
 			}
 		} 
 		else 
@@ -1736,12 +1743,12 @@ void CAudioPlayerGui::paintFoot()
 			if (m_select_title_by_name)
 			{
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
-						m_x + ButtonWidth + 10, top + 4, ButtonWidth*2, 2, AudioPlayerButtons[3]);
+						start_x, start_top, ButtonWidth*2, 2, AudioPlayerButtons[3]);
 			} 
 			else 
 			{
 				::paintButtons(m_frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale,
-						m_x + ButtonWidth + 10, top + 4, ButtonWidth*2, 2, AudioPlayerButtons[2]);
+						start_x, start_top, ButtonWidth*2, 2, AudioPlayerButtons[2]);
 			}
 		}
 	}
