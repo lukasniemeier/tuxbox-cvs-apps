@@ -359,6 +359,7 @@ drive_setup.msg_reset_now Now reset?
 drive_setup.msg_saved Settings sucessfully applied!
 drive_setup.msg_saved_disabled Interface disabled
 drive_setup.msg_savesettings_found_changes Do You want to apply your changes now?
+drive_setup.msg_warn_again Don't show last warning next time?
 drive_setup.partition_activate Partition enable
 drive_setup.partition_activate_no no
 drive_setup.partition_activate_yes yes

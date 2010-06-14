@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.29 2010/06/14 11:11:31 dbt Exp $
+	$Id: drive_setup.h,v 1.30 2010/06/14 17:57:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -79,6 +79,7 @@ struct SDriveSettings
 
 	int 	drive_use_fstab;
 	int	drive_use_fstab_auto_fs;
+	int	drive_warn_jffs;
 
 	int 	drive_activate_ide;
 	int 	drive_write_cache[MAXCOUNT_DRIVE];

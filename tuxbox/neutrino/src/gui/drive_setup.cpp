@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.68 2010/06/14 11:11:31 dbt Exp $
+	$Id: drive_setup.cpp,v 1.69 2010/06/14 17:57:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4325,19 +4325,24 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 		else
 		{
 			closedir( mpCheck );
-			//checking mountpoint of selected mountpoint, it's dangerous if we using jffs2!
-			long l_fs = getDeviceInfo(mp.c_str(), FILESYSTEM);
-			if (l_fs == 0x72b6 /*jffs2*/ && access(mp.c_str(), W_OK) ==0)
+			if (d_settings.drive_warn_jffs)
 			{
-				//create warn message
-				string s_fs = getFsTypeStr(l_fs);
-				char warn_msg[255];
-				sprintf(warn_msg,g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_MOUNT_WARNING), mp.c_str(), s_fs.c_str());
-				if ((ShowMsgUTF(LOCALE_MESSAGEBOX_WARNING, warn_msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_ERROR, width, -1))) // UTF-8
-				{	
-					d_settings.drive_partition_mountpoint[device_num][part_number] = mp;
-					strcpy(d_settings.drive_partition_fstype[device_num][part_number],  s_fs.c_str());
-					return true;
+				//checking mountpoint of selected mountpoint, it's dangerous if we using jffs2!
+				long l_fs = getDeviceInfo(mp.c_str(), FILESYSTEM);
+				if (l_fs == 0x72b6 /*jffs2*/ && access(mp.c_str(), W_OK) ==0)
+				{
+					//create warn message
+					string s_fs = getFsTypeStr(l_fs);
+					char warn_msg[255];
+					sprintf(warn_msg,g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_MOUNT_WARNING), mp.c_str(), s_fs.c_str());
+					if ((ShowMsgUTF(LOCALE_MESSAGEBOX_WARNING, warn_msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_ERROR, width, -1))) // UTF-8
+					{	
+						d_settings.drive_partition_mountpoint[device_num][part_number] = mp;
+						strcpy(d_settings.drive_partition_fstype[device_num][part_number],  s_fs.c_str());
+						return true;
+					}
+					//ask user for mount warnings
+					d_settings.drive_warn_jffs = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NOW, LOCALE_DRIVE_SETUP_MSG_WARN_AGAIN, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_QUESTION, width) == CMessageBox::mbrNo) ? true:false; 
 				}
 			}	
 		}
@@ -4476,7 +4481,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.68 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.69 $");
 }
 
 // returns text for initfile headers
@@ -4864,6 +4869,9 @@ void CDriveSetup::loadDriveSettings()
 	d_settings.drive_modul_dir = configfile.getString("drive_modul_dir", VAR_MOUDULDIR);
  	handleSetting(&d_settings.drive_modul_dir);
 
+	//warning for mount in jffs2
+	d_settings.drive_warn_jffs = configfile.getInt32("drive_warn_jffs", YES);
+	handleSetting(&d_settings.drive_warn_jffs);
 	
 	for(unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
@@ -4965,6 +4973,7 @@ bool CDriveSetup::writeDriveSettings()
 	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
 	configfile.setString	( "drive_advanced_modul_command_load_options", d_settings.drive_advanced_modul_command_load_options);
 	configfile.setString	( "drive_modul_dir", d_settings.drive_modul_dir);
+	configfile.setInt32	( "drive_warn_jffs", d_settings.drive_warn_jffs );
 
 	//mmc modul load options
 	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
