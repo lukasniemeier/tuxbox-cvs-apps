@@ -323,6 +323,7 @@ drive_setup.msg_error_disctool_not_found wurde nicht gefunden!\nSetup kann nicht
 drive_setup.msg_error_fatal hat einen schweren Fehler verursacht!\nEs ist ratsam die Startskripte zurückzusetzen,\nSetup zu beenden, neu zu booten,\nund Setup erneut auszuführen!\nSollte dies wieder passieren, bitte den Fehler melden!\nStartskripte jetzt zurücksetzen?
 drive_setup.msg_error_hdparm_not_compatible Hdparm hat Fehler beim zuweisen von\nParametern festgestellt. Es konnten möglicherweise\nnicht alle Parameter gesetzt werden\noder sind unwirksam!
 drive_setup.msg_error_load_mmc_driver_failed MMC/SD-Treiber können nicht geladen werden!
+drive_setup.msg_error_no_fsdriver_found Es wurde kein Dateisystemtreiber gefunden.\nBitte erst die benötigten Module nachinstallieren.
 drive_setup.msg_error_save_cannot_activate_interface IDE-Interface kann nicht aktiviert werden!
 drive_setup.msg_error_save_cannot_hdparm Fehler beim Setzen von HDD-Parametern!
 drive_setup.msg_error_save_cannot_make_exports Fehler beim Erstellen von exports!

@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.180 2010/06/02 10:17:35 dbt Exp $
+ * $Id: locals_intern.h,v 1.181 2010/06/14 11:11:31 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -350,6 +350,7 @@ const char * locale_real_names[] =
 	"drive_setup.msg_error_fatal",
 	"drive_setup.msg_error_hdparm_not_compatible",
 	"drive_setup.msg_error_load_mmc_driver_failed",
+	"drive_setup.msg_error_no_fsdriver_found",
 	"drive_setup.msg_error_save_cannot_activate_interface",
 	"drive_setup.msg_error_save_cannot_hdparm",
 	"drive_setup.msg_error_save_cannot_make_exports",

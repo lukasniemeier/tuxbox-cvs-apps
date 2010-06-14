@@ -323,6 +323,7 @@ drive_setup.msg_error_disctool_not_found not found!\nCan't execute setup.
 drive_setup.msg_error_fatal caused a serious error!\nIt's recommended to reset the boot scripts,\nexit drive setup and reboot,\nthen make settings again!\nIf this happens again,\nplease report!\n Now reset start scripts?
 drive_setup.msg_error_hdparm_not_compatible Hdparm has found errors while setting\nparameters. It's possible, that it's \nnot be able to use all functions or\nsome parameters have no effects!
 drive_setup.msg_error_load_mmc_driver_failed Can't load MMC/SD-drivers!
+drive_setup.msg_error_no_fsdriver_found Filsystem modules not found.\nPlease install first!.
 drive_setup.msg_error_save_cannot_activate_interface Can't activating ide-inteface!
 drive_setup.msg_error_save_cannot_hdparm Error while setting hdd-parameters!
 drive_setup.msg_error_save_cannot_make_exports Error while creating exports!

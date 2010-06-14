@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.28 2010/05/31 09:23:02 dbt Exp $
+	$Id: drive_setup.h,v 1.29 2010/06/14 11:11:31 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -314,6 +314,8 @@ class CDriveSetup : public CMenuTarget
 		} errnum_uint_t;
 		std::string err[ERROR_DESCRIPTIONS_NUM_COUNT];
 		bool have_apply_errors;
+	
+		bool have_fsdrivers;
 		
 		int current_device; 	//MASTER || SLAVE || MMCARD, current edit device
 		int hdd_count; 		// count of hdd drives
