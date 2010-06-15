@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.69 2010/06/14 17:57:15 dbt Exp $
+	$Id: drive_setup.cpp,v 1.70 2010/06/15 08:17:45 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3599,7 +3599,7 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const act
 		{
 			if (isActivePartition(partname)) 
 			{ // partition was deleted but part table is not current, reboot is requiered
-				bool reboot = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION, LOCALE_DRIVE_SETUP_MSG_REBOOT_REQUIERED, CMessageBox::mbrContinue, CMessageBox::mbYes | CMessageBox::mbContinue, NEUTRINO_ICON_INFO, width) == CMessageBox::mbrYes);
+				bool reboot = (ShowLocalizedMessage(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION, LOCALE_DRIVE_SETUP_MSG_REBOOT_REQUIERED, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_INFO, width) == CMessageBox::mbrYes);
 				if (reboot) 
 				{	
 					CNeutrinoApp::getInstance()->exec(NULL, "reboot");
@@ -4481,7 +4481,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.69 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.70 $");
 }
 
 // returns text for initfile headers
