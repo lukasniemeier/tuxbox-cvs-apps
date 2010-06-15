@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.70 2010/06/15 08:17:45 dbt Exp $
+	$Id: drive_setup.cpp,v 1.71 2010/06/15 09:51:16 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1003,16 +1003,22 @@ void CDriveSetup::showHddSetupSub()
 	CMenuSeparator *add_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
 	add_subhead->setString(add_subhead_txt);
 
-	//menue add swap prepare swap size
-	string s_swap_sizes[] = {"64", "128"};
-	//set default swap size to 128 MB
-	if ((string)d_settings.drive_swap_size == "")
-		strcpy(d_settings.drive_swap_size,"128");
+
+	//menue add swap:
+	//prepare swap size
+	string s_mb_size = iToString(ll_free_part_size/1024/1024); //free megabytes
+	string s_swap_sizes[] = {(ll_free_part_size < 0x4000000 ? s_mb_size :"64"), (ll_free_part_size < 0x8000000 ?  s_mb_size : "128")};
+
+	//set default swap size to 128 MB or available max size
+	if ((string)d_settings.drive_swap_size == "" || ((string)d_settings.drive_swap_size != s_swap_sizes[0] && (string)d_settings.drive_swap_size != s_swap_sizes[1]))
+		strcpy(d_settings.drive_swap_size, s_swap_sizes[1].c_str());
+
 	CMenuOptionStringChooser *add_swap_size = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_SIZE, d_settings.drive_swap_size, true );
 	for (uint i=0; i < (sizeof(s_swap_sizes) / sizeof(s_swap_sizes[0])); i++) 
 	{
 		add_swap_size->addOption(s_swap_sizes[i].c_str());
 	}
+
 
 	//menue add_swap: prepare subhead: add swap
 	string add_swap_subhead_txt = dev_name + " >> " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_ADD_SWAP_PARTITION);
@@ -4481,7 +4487,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.70 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.71 $");
 }
 
 // returns text for initfile headers
@@ -4844,7 +4850,7 @@ void CDriveSetup::loadDriveSettings()
 	old_drive_mmc_module_name = static_cast <string> (d_settings.drive_mmc_module_name);
 	
 	//swap size
-	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "128").c_str());
+	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "").c_str());
 	old_drive_swap_size = static_cast <string> (d_settings.drive_swap_size);
 
 	// mmc modul load parameter
