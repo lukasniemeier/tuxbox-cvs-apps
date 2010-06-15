@@ -346,7 +346,7 @@ drive_setup.msg_partition_check_ok Die Prüfung wurde erfolgreich durchgeführt.
 drive_setup.msg_partition_create Alle Daten gehen verloren!\nPartition jetzt anlegen und formatieren!
 drive_setup.msg_partition_create_failed Beim Einrichten der Partition sind Fehler aufgetreten! 
 drive_setup.msg_partition_create_failed_no_fs_definied Kein Dateisystem festgelegt!
-drive_setup.msg_partition_create_fs Soll jetzt auf dieser Partition %s erstellt werden?\nAlle daten gehen verloren!
+drive_setup.msg_partition_create_fs Soll jetzt auf dieser Partition %s erstellt werden?\nAlle Daten gehen verloren!
 drive_setup.msg_partition_create_success Partition wurde erfolgreich erzeugt!
 drive_setup.msg_partition_delete Alle Daten dieser Partition gehen verloren!\nPartition jetzt löschen!
 drive_setup.msg_partition_delete_failed Löschen der Partition fehlgeschlagen!
