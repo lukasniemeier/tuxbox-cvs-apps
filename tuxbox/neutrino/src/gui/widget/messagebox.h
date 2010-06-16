@@ -54,8 +54,7 @@ class CMessageBox : public CHintBoxExt
 			mbrYes    = 0,
 			mbrNo     = 1,
 			mbrCancel = 2,
-			mbrBack   = 3,
-			mbrContinue   = 4
+			mbrBack   = 3
 		} result;
 	
 	enum buttons_
@@ -64,8 +63,7 @@ class CMessageBox : public CHintBoxExt
 			mbNo = 0x02,
 			mbCancel = 0x04,
 			mbAll = 0x07,
-			mbBack = 0x08,
-			mbContinue = 0x10
+			mbBack = 0x08
 		} buttons;
 	
 	// Text & Caption are always UTF-8 encoded
