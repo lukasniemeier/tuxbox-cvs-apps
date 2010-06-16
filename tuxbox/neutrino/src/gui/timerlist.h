@@ -49,13 +49,12 @@ class CTimerList : public CMenuTarget
 		unsigned int		selected;
 		unsigned int		liststart;
 		unsigned int		listmaxshow;
-		int					fheight; // Fonthoehe Timerlist-Inhalt
-		int					theight; // Fonthoehe Timerlist-Titel
-		int               buttonHeight;
-		bool				visible;			
+		int			fheight; //fontheight timerlist-content (text)
+		int			theight; //fontheight timerlist-title
+		bool			visible;			
 
-		CTimerdClient *Timer;
-		CTimerd::TimerList timerlist;             // List of timers		
+		CTimerdClient 		*Timer;
+		CTimerd::TimerList 	timerlist;             // List of timers		
 		CTimerd::responseGetTimer timerNew;
 		int timerNew_standby_on;
 		char timerNew_channel_name[30];

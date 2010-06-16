@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.106 2010/06/06 15:43:00 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.107 2010/06/16 10:20:56 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -244,8 +244,8 @@ CTimerList::CTimerList()
 	visible = false;
 	selected = 0;
 	width 	= w_max (600, 50);
-	buttonHeight = 25;
-	theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+
+	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height+INFO_HEIGHT);
@@ -744,12 +744,16 @@ void CTimerList::paintItem(int pos)
 
 void CTimerList::paintHead()
 {
-	int c_rad_mid = RADIUS_MID;
-	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, y + 6);
+	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
+
+	int theight_mid = theight / 2;
+
+	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER) / 2);
+	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight + 2, width - 45, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, y + 6 );
+	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
 }
 
 const struct button_label TimerListButtons[3] =
@@ -758,21 +762,24 @@ const struct button_label TimerListButtons[3] =
 	{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_TIMERLIST_NEW    },
 	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERLIST_RELOAD }
 };
+const struct button_label TimerListButtonOK[1] =
+{
+	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_TIMERLIST_MODIFY }
+};
 
 void CTimerList::paintFoot()
 {
-	int c_rad_mid = RADIUS_MID;
 	int ButtonWidth = (width - 20) / 4;
-	frameBuffer->paintBoxRel(x, y + height, width, buttonHeight, COL_INFOBAR_SHADOW_PLUS_1, c_rad_mid, CORNER_BOTTOM);
+	int footHeight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY), g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
+
+	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	if (timerlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + ButtonWidth + 10, y + height + 1, ButtonWidth, 2, &(TimerListButtons[1]));
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + ButtonWidth + 10, y + height, ButtonWidth, 2, &(TimerListButtons[1]));
 	else
 	{
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height + 1, ButtonWidth, 3, TimerListButtons);
-
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x + width - ButtonWidth + 10, y + height);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - ButtonWidth + 38, y + height + 24 - 1, ButtonWidth - 28, g_Locale->getText(LOCALE_TIMERLIST_MODIFY), COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, ButtonWidth, 3, TimerListButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height, ButtonWidth, 1, TimerListButtonOK);
 	}
 }
 
@@ -922,6 +929,7 @@ int CTimerList::modifyTimer()
 {
 	CTimerd::responseGetTimer* timer=&timerlist[selected];
 	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUMODIFY, NEUTRINO_ICON_SETTINGS, width);
+	//main items
 	timerSettings.addItem(GenericMenuSeparator);
 	timerSettings.addItem(GenericMenuBack);
 	timerSettings.addItem(GenericMenuSeparatorLine);
@@ -1030,21 +1038,38 @@ int CTimerList::newTimer()
 	strcpy(m_weekdaysStr,"-------");
 	CMenuOptionChooser* m3 = new CMenuOptionChooser(LOCALE_TIMERLIST_REPEAT, (int *)&timerNew.eventRepeat, TIMERLIST_REPEAT_OPTIONS, TIMERLIST_REPEAT_OPTION_COUNT, true, &notifier);
 
+	//bouquets
 	CZapitClient zapit;
 	CZapitClient::BouquetList bouquetlist;
 	zapit.getBouquets(bouquetlist, false, true, CZapitClient::MODE_ALL); // UTF-8
 	CZapitClient::BouquetList::iterator bouquet = bouquetlist.begin();
-	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
-	CMenuWidget mcradio(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
+
+	//bouquet menues tv
+	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width); 
+	mctv.addItem(GenericMenuSeparator);
+	mctv.addItem(GenericMenuBack);
+	mctv.addItem(GenericMenuSeparatorLine);
+
+	//bouquet menues radio
+ 	CMenuWidget mcradio(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
+	mcradio.addItem(GenericMenuSeparator);
+	mcradio.addItem(GenericMenuBack);
+	mcradio.addItem(GenericMenuSeparatorLine);
+
 	for(; bouquet != bouquetlist.end();bouquet++)
-	{
+	{	
 		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width);
 		toDelete.push_back(mwtv);
 		CMenuWidget* mwradio = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width);
 		toDelete.push_back(mwradio);
+
+		//tv
 		CZapitClient::BouquetChannelList subchannellist;
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_TV, true); // UTF-8
 		CZapitClient::BouquetChannelList::iterator channel = subchannellist.begin();
+		mwtv->addItem(GenericMenuSeparator);
+		mwtv->addItem(GenericMenuBack);
+		mwtv->addItem(GenericMenuSeparatorLine);
 		for(; channel != subchannellist.end();channel++)
 		{
 			char cChannelId[3+16+1+1];
@@ -1053,13 +1078,20 @@ int CTimerList::newTimer()
 				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 				",",
 				channel->channel_id);
-			mwtv->addItem(new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str()));
+			CMenuForwarderNonLocalized *tv_ch_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
+			tv_ch_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+			mwtv->addItem(tv_ch_item);	
 		}
 		if (!subchannellist.empty())
 			mctv.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwtv));
 		subchannellist.clear();
+
+		//radio
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_RADIO, true); // UTF-8
 		channel = subchannellist.begin();
+		mwradio->addItem(GenericMenuSeparator);
+		mwradio->addItem(GenericMenuBack);
+		mwradio->addItem(GenericMenuSeparatorLine);
 		for(; channel != subchannellist.end();channel++)
 		{
 			char cChannelId[3+16+1+1];
@@ -1068,14 +1100,21 @@ int CTimerList::newTimer()
 				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 				",",
 				channel->channel_id);
-			mwradio->addItem(new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str()));
+			CMenuForwarderNonLocalized *radio_ch_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
+			radio_ch_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+			mwradio->addItem(radio_ch_item);
 		}
 		if (!subchannellist.empty())
 			mcradio.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwradio));
 	}
+	//selct mode (tv/radio)
 	CMenuWidget mm(LOCALE_TIMERLIST_MODESELECT, NEUTRINO_ICON_SETTINGS, width);
+	mm.addItem(GenericMenuSeparator);
+	mm.addItem(GenericMenuBack);
+	mm.addItem(GenericMenuSeparatorLine);
 	mm.addItem(new CMenuForwarder(LOCALE_TIMERLIST_MODETV, true, NULL, &mctv));
 	mm.addItem(new CMenuForwarder(LOCALE_TIMERLIST_MODERADIO, true, NULL, &mcradio));
+
 	strcpy(timerNew_channel_name,"---");
 	CMenuForwarder* m6 = new CMenuForwarder(LOCALE_TIMERLIST_CHANNEL, true, timerNew_channel_name, &mm);
 
