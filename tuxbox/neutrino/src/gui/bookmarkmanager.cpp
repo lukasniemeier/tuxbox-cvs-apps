@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.17 2009/02/18 17:59:43 seife Exp $
+  $Id: bookmarkmanager.cpp,v 1.19 2010/06/16 07:15:50 dbt Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -229,8 +229,8 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	width = 720;
 	if(g_settings.screen_EndX-g_settings.screen_StartX < width)
 		width=g_settings.screen_EndX-g_settings.screen_StartX-10;
-	buttonHeight = 25;
-	theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	
+	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
 	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-( height+ info_height) ) / 2) + g_settings.screen_StartY;
@@ -427,9 +427,15 @@ void CBookmarkManager::hide()
 void CBookmarkManager::paintHead()
 {
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	frameBuffer->paintIcon("bookmarkmanager.raw",x+5,y+4);
+
+	int theight_mid = theight / 2;
+
+	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER) / 2);
+	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+35,y+theight+0, width- 45, g_Locale->getText(LOCALE_BOOKMARKMANAGER_NAME), COL_MENUHEAD, 0, true); // UTF-8
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x+ width- 30, y+ 5 );
+
+	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
 }
 
 const struct button_label BookmarkmanagerButtons[2] =
@@ -437,23 +443,24 @@ const struct button_label BookmarkmanagerButtons[2] =
 	{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_BOOKMARKMANAGER_DELETE },
 	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_BOOKMARKMANAGER_RENAME }
 };
+const struct button_label BookmarkmanagerButtonOK[1] =
+{
+	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_BOOKMARKMANAGER_SELECT }
+};
+
 
 //------------------------------------------------------------------------
 void CBookmarkManager::paintFoot()
 {
 	int ButtonWidth = (width - 20) / 4;
-	frameBuffer->paintBoxRel(x,y+height, width,buttonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	int footHeight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY), g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 
-	if (bookmarks.empty()) {
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x+width- 1* ButtonWidth + 10, y+height);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 1 * ButtonWidth + 38, y + height + 24 - 2, ButtonWidth - 28, g_Locale->getText(LOCALE_BOOKMARKMANAGER_SELECT), COL_INFOBAR_SHADOW_PLUS_1, 0, true); // UTF-8
-    }    	
-	else
+	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height, ButtonWidth, 1, BookmarkmanagerButtonOK);
+
+	if (!bookmarks.empty())
 	{
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height + 4, ButtonWidth, 2, BookmarkmanagerButtons);
-
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x+width- 1* ButtonWidth + 10, y+height);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+width-1 * ButtonWidth + 38, y+height+24 - 2, ButtonWidth- 28, g_Locale->getText(LOCALE_BOOKMARKMANAGER_SELECT), COL_INFOBAR, 0, true); // UTF-8
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, ButtonWidth, 2, BookmarkmanagerButtons);
 	}
 }
 

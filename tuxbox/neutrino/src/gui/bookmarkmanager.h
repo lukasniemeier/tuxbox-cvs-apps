@@ -66,21 +66,19 @@ class CBookmark
 class CBookmarkManager
 {
  private:
-	std::vector<CBookmark> bookmarks;
-	CConfigFile	bookmarkfile;
-	
-    CFrameBuffer		*frameBuffer;
+	std::vector<CBookmark>	bookmarks;
+	CConfigFile		bookmarkfile;
+	CFrameBuffer		*frameBuffer;
 	unsigned int		selected;
 	unsigned int		liststart;
 	unsigned int		listmaxshow;
-	int					fheight; // Fonthoehe Timerlist-Inhalt
-	int					theight; // Fonthoehe Timerlist-Titel
-	int                 buttonHeight;
-	bool				visible;			
-	int 			width;
-	int 			height;
-	int 			x;
-	int 			y;
+	int		fheight; //fontheight timerlist-content (text)
+	int		theight; //fontheight timerlist-title
+	bool		visible;			
+	int		width;
+	int		height;
+	int		x;
+	int		y;
 
 	
 	//int bookmarkCount;
