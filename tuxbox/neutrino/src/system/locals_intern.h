@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.182 2010/06/14 17:57:15 dbt Exp $
+ * $Id: locals_intern.h,v 1.183 2010/06/18 19:11:01 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1156,7 +1156,6 @@ const char * locale_real_names[] =
 	"pictureviewer.show",
 	"pictureviewer.slide_time",
 	"pictureviewer.slideshow",
-	"pictureviewer.sortorder",
 	"pictureviewer.sortorder.date",
 	"pictureviewer.sortorder.filename",
 	"ping.ok",
