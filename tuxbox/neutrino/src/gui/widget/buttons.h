@@ -2,7 +2,7 @@
 #define __gui_widget_buttons_h__
 
 /*
- * $Id: buttons.h,v 1.3 2008/05/01 00:08:35 dbt Exp $
+ * $Id: buttons.h,v 1.4 2010/06/18 19:01:05 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -40,7 +40,7 @@ void paintButtons(CFrameBuffer * const frameBuffer,
 							const unsigned int buttonwidth, 
 							const unsigned int count, 
 							const struct button_label * const content, 
-							const unsigned int maxwitdth = 720,
+							const unsigned int maxwidth = 720,
 							bool vertical_paint = false);
 											
 					
