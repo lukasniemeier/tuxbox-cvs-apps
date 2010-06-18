@@ -90,9 +90,6 @@ class CPictureViewerGui : public CMenuTarget
 		int 			y;
 		int			m_title_w;
 		long		m_time;
-		
-		int			c_rad_mid;
-
 		int         m_LastMode;
 
 		void paintItem(int pos);

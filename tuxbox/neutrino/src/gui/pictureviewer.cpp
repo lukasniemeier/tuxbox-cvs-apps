@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 	
-	$Id: pictureviewer.cpp,v 1.75 2010/03/06 19:50:00 rhabarber1848 Exp $
+	$Id: pictureviewer.cpp,v 1.76 2010/06/18 19:09:24 dbt Exp $
 
 	MP3Player by Dirch
 	
@@ -128,12 +128,11 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 		height=(g_settings.screen_EndY- g_settings.screen_StartY);
 	sheight      = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	buttonHeight = std::min(25, sheight);
-	theight      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+
+	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_MP3), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	listmaxshow = (height-theight-2*buttonHeight)/(fheight);
 	height = theight+2*buttonHeight+listmaxshow*fheight;	// recalc height
-	
-	c_rad_mid = RADIUS_MID;
 
 	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
 	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height)/ 2) + g_settings.screen_StartY;
@@ -599,16 +598,20 @@ void CPictureViewerGui::paintItem(int pos)
 void CPictureViewerGui::paintHead()
 {
 //	printf("paintHead{\n");
-	std::string strCaption = g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD);
-	frameBuffer->paintBoxRel(x,y, width,theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	frameBuffer->paintIcon(NEUTRINO_ICON_MP3,x+7,y+10);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+35,y+theight+0, width- 45, strCaption, COL_MENUHEAD, 0, true); // UTF-8
-	int ypos=y+0;
-	if(theight > 26)
-		ypos = (theight-26) / 2 + y ;
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x+ width- 60, ypos );
+	int theight_mid = theight / 2;
+	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_MP3) / 2);
+
+	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
+	frameBuffer->paintIcon(NEUTRINO_ICON_MP3, x + 7, ypos);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight, width - 45, g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD), COL_MENUHEAD, 0, true); // UTF-8
+
+	int xpos = x + width - frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HELP) - 6;
+	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, xpos, ypos );
 #ifdef ENABLE_GUI_MOUNT
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, x+ width- 30, ypos );
+	xpos -= frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX) + 6;
+	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_DBOX) / 2);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, xpos, ypos );
 #endif
 //	printf("paintHead}\n");
 }
@@ -621,37 +624,32 @@ const struct button_label PictureViewerButtons[4] =
 	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_AUDIOPLAYER_DELETEALL     },
 	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_PICTUREVIEWER_SLIDESHOW }
 };
+struct button_label PictureViewerButtons2[2] =
+{
+	{ NEUTRINO_ICON_BUTTON_5     , LOCALE_GENERIC_EMPTY             },
+	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_PICTUREVIEWER_SHOW        }
+};
 
 void CPictureViewerGui::paintFoot()
 {
 //	printf("paintFoot{\n");
-	int ButtonWidth = (width-20) / 4;
-	int ButtonWidth2 = (width-50) / 2;
-	uint8_t color = COL_INFOBAR_SHADOW + 1;
-	fb_pixel_t bgcol =  COL_INFOBAR_SHADOW_PLUS_1;
+	int ButtonWidth = (width - 20) / 4;
+	int ButtonWidth2 = (width - 20) / 2;
 	
-	frameBuffer->paintBoxRel(x,y+(height-2*buttonHeight), width,2*buttonHeight, bgcol, c_rad_mid, CORNER_BOTTOM);
-	frameBuffer->paintHLine(x, x+width,  y+(height-2*buttonHeight), COL_INFOBAR_SHADOW_PLUS_0);
+	frameBuffer->paintBoxRel(x, y + height - 2 * buttonHeight, width, 2 * buttonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	if (!playlist.empty())
 	{
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x + 1* ButtonWidth2 + 25, y+(height-buttonHeight)-3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 1 * ButtonWidth2 + 53 , y+(height-buttonHeight)+24 - 4, ButtonWidth2- 28, g_Locale->getText(LOCALE_PICTUREVIEWER_SHOW), color, 0, true); // UTF-8
+		if ( m_sort == FILENAME)
+			PictureViewerButtons2[0].locale = LOCALE_PICTUREVIEWER_SORTORDER_FILENAME;
+		else if( m_sort == DATE )
+			PictureViewerButtons2[0].locale = LOCALE_PICTUREVIEWER_SORTORDER_DATE;
 
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_5, x+ 0* ButtonWidth2 + 25, y+(height-buttonHeight)-3);
-		std::string tmp = g_Locale->getText(LOCALE_PICTUREVIEWER_SORTORDER);
-		tmp += ' ';
-		if(m_sort==FILENAME)
-			tmp += g_Locale->getText(LOCALE_PICTUREVIEWER_SORTORDER_DATE);
-		else if(m_sort==DATE)
-			tmp += g_Locale->getText(LOCALE_PICTUREVIEWER_SORTORDER_FILENAME);
-
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+ 0* ButtonWidth2 +53 , y+(height-buttonHeight)+24 - 4, ButtonWidth2- 28, tmp, color, 0, true); // UTF-8
-
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + (height - 2 * buttonHeight) + 4, ButtonWidth, 4, PictureViewerButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height - 2 * buttonHeight + 2, ButtonWidth, 4, PictureViewerButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height - buttonHeight - 2, ButtonWidth2, 2, PictureViewerButtons2);
 	}
 	else
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + ButtonWidth + 10, y + (height - 2 * buttonHeight) + 4, ButtonWidth, 1, &(PictureViewerButtons[1]));
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + ButtonWidth + 10, y + height - 2 * buttonHeight + 2, ButtonWidth, 1, &(PictureViewerButtons[1]));
 //	printf("paintFoot}\n");
 }
 //------------------------------------------------------------------------
@@ -735,7 +733,7 @@ void CPictureViewerGui::endView()
 std::string CPictureViewerGui::getPictureViewerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.75 $");
+	return imageinfo.getModulVersion("","$Revision: 1.76 $");
 }
 
 void CPictureViewerGui::showHelp()
