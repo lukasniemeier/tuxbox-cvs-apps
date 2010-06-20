@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.3 2010/03/06 19:54:00 rhabarber1848 Exp $
+	$Id: movieplayer_menu.cpp,v 1.4 2010/06/20 13:01:15 dbt Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -114,7 +114,7 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this->moviePlayerGui, "tsmoviebrowser", CRCInput::RC_2));
 #else
 	//moviebrowser init
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, g_MovieBrowser, "run", CRCInput::RC_2));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, CMovieBrowser::getInstance(), "run", CRCInput::RC_2));
 #endif /* ENABLE_MOVIEPLAYER2 */
 	rc_msg = CRCInput::RC_3;
 #else

@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.186 2010/04/21 10:34:37 dbt Exp $
+  $Id: movieplayer.cpp,v 1.187 2010/06/20 13:01:14 dbt Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3319,13 +3319,13 @@ void CMoviePlayerGui::PlayFile (int parental)
 			if(isMovieBrowser == true)
 			{
 				// start the moviebrowser instead of the filebrowser
-				if(g_MovieBrowser->exec(Path_local.c_str()))
+				if(CMovieBrowser::getInstance()->exec(Path_local.c_str()))
 				{
 					// get the current path and file name 
-					Path_local = g_MovieBrowser->getCurrentDir(); 
+					Path_local = CMovieBrowser::getInstance()->getCurrentDir(); 
 					CFile *file;					
 	
-					if((file = g_MovieBrowser->getSelectedFile()) != NULL)
+					if((file = CMovieBrowser::getInstance()->getSelectedFile()) != NULL)
 					{
 						if (g_settings.streaming_show_tv_in_browser == true &&
 						    g_ZapitsetStandbyState == false)
@@ -3340,7 +3340,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 						start_play   = true;
 
 						// get the movie info handle (to be used for e.g. bookmark handling)
-						p_movie_info = g_MovieBrowser->getCurrentMovieInfo();
+						p_movie_info = CMovieBrowser::getInstance()->getCurrentMovieInfo();
 
 						title       = p_movie_info->epgTitle;
 						subtitle    = p_movie_info->epgInfo1;
@@ -3348,8 +3348,8 @@ void CMoviePlayerGui::PlayFile (int parental)
 
 						// get the start position for the movie
 						off_t secondSize = (g_settings.streaming_use_reclength && p_movie_info->rec_length) ? ((file->Size / p_movie_info->rec_length) / SIZE_TS_PKT) * SIZE_TS_PKT : SECONDOFFSET;
-						g_startposition  = g_MovieBrowser->getCurrentStartPos() * secondSize;
-						TRACE("[mp] start pos %llu, %d s Name: %s\r\n", g_startposition, g_MovieBrowser->getCurrentStartPos(), filename);
+						g_startposition  = CMovieBrowser::getInstance()->getCurrentStartPos() * secondSize;
+						TRACE("[mp] start pos %llu, %d s Name: %s\r\n", g_startposition, CMovieBrowser::getInstance()->getCurrentStartPos(), filename);
 
 						if(FileTime.IsVisible()) // update time if visible
 							FileTime.show(g_startposition / secondSize);
@@ -4482,7 +4482,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.186 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.187 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

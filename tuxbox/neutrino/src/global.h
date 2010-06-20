@@ -58,11 +58,6 @@
   #define NEUTRINO_CPP extern
 #endif
 
-#ifdef ENABLE_MOVIEBROWSER
-class CMovieBrowser;
-#endif
-
-
 NEUTRINO_CPP  SNeutrinoSettings	g_settings;
 NEUTRINO_CPP  SglobalInfo	g_info;
 
@@ -80,10 +75,6 @@ NEUTRINO_CPP  CRCInput		*g_RCInput;
 NEUTRINO_CPP  CEpgData		*g_EpgData;
 NEUTRINO_CPP  CInfoViewer	*g_InfoViewer;
 NEUTRINO_CPP  EventList		*g_EventList;
-
-#ifdef ENABLE_MOVIEBROWSER
-NEUTRINO_CPP  CMovieBrowser	*g_MovieBrowser;
-#endif
 
 #ifdef ENABLE_RADIOTEXT
 NEUTRINO_CPP  CRadioText	*g_Radiotext;

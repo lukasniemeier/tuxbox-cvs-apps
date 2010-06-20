@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.13 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: moviebrowser.h,v 1.14 2010/06/20 13:01:14 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -276,6 +276,8 @@ class CMovieBrowser : public CMenuTarget
 		//bool restart_mb_timeout;
 
 	public:  // Functions //////////////////////////////////////////////////////////7
+		static CMovieBrowser* getInstance();
+
 		CMovieBrowser(const char* path); //P1 
 		CMovieBrowser(); //P1 
 		~CMovieBrowser(); //P1 
