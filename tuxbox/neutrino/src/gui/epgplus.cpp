@@ -1,5 +1,5 @@
 /*
-	$Id: epgplus.cpp,v 1.58 2010/02/17 10:13:40 seife Exp $
+	$Id: epgplus.cpp,v 1.59 2010/06/20 11:45:12 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -584,23 +584,23 @@ void EpgPlus::Footer::paintEventDetails(const std::string& description, const st
 	fontEventShortDescription->RenderString(x + 10, yPos, width - 20, shortDescription, color, 0, false);
 }
 
-struct button_label buttonLabels[] =
+struct button_label buttonLabels[6] =
 {
-	{ NEUTRINO_ICON_BUTTON_RED,		LOCALE_EPGPLUS_ACTIONS},
-	{ NEUTRINO_ICON_BUTTON_GREEN,		LOCALE_EPGPLUS_PAGE_DOWN},
-	{ NEUTRINO_ICON_BUTTON_YELLOW,		LOCALE_EPGPLUS_PAGE_UP},
-	{ NEUTRINO_ICON_BUTTON_BLUE,		LOCALE_EPGPLUS_OPTIONS},
-	{ NEUTRINO_ICON_BUTTON_HELP_SMALL,	LOCALE_EPGPLUS_EVENT_INFO},
-	{ NEUTRINO_ICON_BUTTON_DBOX,		LOCALE_EPGPLUS_HIDE}
+	{ NEUTRINO_ICON_BUTTON_RED       , LOCALE_EPGPLUS_ACTIONS    },
+	{ NEUTRINO_ICON_BUTTON_GREEN     , LOCALE_EPGPLUS_PAGE_DOWN  },
+	{ NEUTRINO_ICON_BUTTON_YELLOW    , LOCALE_EPGPLUS_PAGE_UP    },
+	{ NEUTRINO_ICON_BUTTON_BLUE      , LOCALE_EPGPLUS_OPTIONS    },
+	{ NEUTRINO_ICON_BUTTON_HELP_SMALL, LOCALE_EPGPLUS_EVENT_INFO },
+	{ NEUTRINO_ICON_BUTTON_DBOX      , LOCALE_EPGPLUS_HIDE       }
 };
 
 void EpgPlus::Footer::paintButtons(button_label* _buttonLabels, int numberOfButtons)
 {
 	int yPos = y + getUsedHeight() - fontButtons->getHeight();
-	int buttonWidth = 40;
+	int buttonWidth = (width - 10) / 6; //40
 
 	frameBuffer->paintBoxRel(x, yPos, width, fontButtons->getHeight(), COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, fontButtons, g_Locale, x + 5, yPos , buttonWidth, numberOfButtons, _buttonLabels, width - 25);
+	::paintButtons(frameBuffer, fontButtons, g_Locale, x + 5, yPos , buttonWidth, numberOfButtons, _buttonLabels);
 }
 
 EpgPlus::EpgPlus()
@@ -1377,21 +1377,10 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 					{
 						if(is_visible)
 						{
-							std::string EPG_Plus;
-
-							EPG_Plus = g_Locale->getText(LOCALE_EPGPLUS_SHOW);
-							EPG_Plus.insert(0, " ");
-
-							int epgplus_len = header->font->getRenderWidth(EPG_Plus, true); // UTF-8
-							int theight     = header->font->getHeight();
-							int dbox_icon_width = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX);
 
 							is_visible = false;
 							hide();
-
-							frameBuffer->paintBoxRel(usableScreenX + usableScreenWidth - epgplus_len - dbox_icon_width - 2 - 2, usableScreenY, epgplus_len + dbox_icon_width + 2 + 2, theight, COL_MENUHEAD_PLUS_0, RADIUS_SMALL);
-							frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, usableScreenX + usableScreenWidth - epgplus_len - dbox_icon_width - 2, usableScreenY);
-							header->font->RenderString(usableScreenX + usableScreenWidth - epgplus_len, usableScreenY + theight, epgplus_len, EPG_Plus, header->color, 0, true); // UTF-8
+							paintHint();
 						}
 						else
 						{
@@ -1554,6 +1543,24 @@ void EpgPlus::saveSettings
 void EpgPlus::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(usableScreenX, usableScreenY, usableScreenWidth, usableScreenHeight);
+}
+
+void EpgPlus::paintHint()
+{
+	std::string EPG_Plus;
+	EPG_Plus = g_Locale->getText(LOCALE_EPGPLUS_SHOW);
+
+	int iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_DBOX);
+	int iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX);	
+
+	int epgplus_len = header->font->getRenderWidth(EPG_Plus, true); // UTF-8
+	int theight     = std::max(iconh, header->font->getHeight()) + 2;
+	int startx      = usableScreenX + usableScreenWidth - epgplus_len - iconw - 12;
+	int starty      = usableScreenY + (theight / 2) - (iconh / 2);
+
+	frameBuffer->paintBoxRel(startx, usableScreenY, epgplus_len + iconw + 12, theight, COL_MENUHEAD_PLUS_0, RADIUS_SMALL);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, startx + 4, starty);
+	header->font->RenderString(usableScreenX + usableScreenWidth - epgplus_len - 4, usableScreenY + theight, epgplus_len, EPG_Plus, header->color, 0, true); // UTF-8
 }
 
 void EpgPlus::paintChannelEntry(int position)

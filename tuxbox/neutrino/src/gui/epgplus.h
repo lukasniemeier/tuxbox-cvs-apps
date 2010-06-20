@@ -850,6 +850,7 @@ private:
 
 
   void paint();
+  void paintHint();
 
   void paintChannelEntry
     ( int position
