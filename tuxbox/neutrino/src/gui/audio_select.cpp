@@ -81,31 +81,30 @@ int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &)
 
 
 
-
 int CAudioSelectMenuHandler::doMenu ()
 {
-	CMenuWidget AudioSelector(LOCALE_AUDIOSELECTMENUE_HEAD, "audio.raw", 360);
-
+	CMenuWidget AudioSelector(LOCALE_AUDIOSELECTMENUE_HEAD, NEUTRINO_ICON_AUDIO, 360);
 
 	// -- setup menue due to Audio PIDs
+	if (g_RemoteControl->current_PIDs.APIDs.size() > 1) 
+	{
+		uint p_count = g_RemoteControl->current_PIDs.APIDs.size();
+		CMenuForwarderNonLocalized* fw[p_count];
+		AudioSelector.addItem(GenericMenuSeparator);
+		AudioSelector.addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL, true, NULL, NULL, NULL, CRCInput::RC_nokey, NEUTRINO_ICON_BUTTON_HOME));
+		AudioSelector.addItem(GenericMenuSeparatorLine);
 
-	if (g_RemoteControl->current_PIDs.APIDs.size() > 1) {
-
-	   for( unsigned int count=0; count < g_RemoteControl->current_PIDs.APIDs.size(); count++ ) {
-		char apid[5];
-		sprintf(apid, "%d", count);
-		AudioSelector.addItem(new CMenuForwarderNonLocalized(
-				g_RemoteControl->current_PIDs.APIDs[count].desc, true, NULL,
-				APIDChanger, apid, CRCInput::convertDigitToKey(count + 1)),
-				(count == g_RemoteControl->current_PIDs.PIDs.selected_apid));
-	   }
-
+	  	for( uint count=0; count < p_count; count++ ) 
+		{
+			char apid[5];
+			sprintf(apid, "%d", count);
+			fw[count] = new CMenuForwarderNonLocalized(g_RemoteControl->current_PIDs.APIDs[count].desc, true, NULL, APIDChanger, apid, CRCInput::convertDigitToKey(count + 1)), (count == g_RemoteControl->current_PIDs.PIDs.selected_apid);
+			fw[count]->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+			AudioSelector.addItem(fw[count], count == 0 ? true:false);
+	   	}
 	}
 
-
 	// -- setup menue for to Dual Channel Stereo
-
-
 	if (g_settings.audio_left_right_selectable) {
 
 	   AudioSelector.addItem(GenericMenuSeparatorLine);
