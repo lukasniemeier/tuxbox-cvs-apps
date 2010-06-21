@@ -1,5 +1,5 @@
 /*  
-	$Id: dirchooser.cpp,v 1.4 2009/09/26 09:18:38 rhabarber1848 Exp $
+	$Id: dirchooser.cpp,v 1.5 2010/06/21 19:05:22 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 	
@@ -155,6 +155,9 @@ void CRecDirChooser::initMenu(void)
 	char indexStr[10];
 	//************************************************/
 	addItem(GenericMenuSeparator);
+	addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL, true, NULL, NULL, NULL, CRCInput::RC_nokey, NEUTRINO_ICON_BUTTON_HOME));
+	addItem(GenericMenuSeparatorLine);
+
 	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
 	{
 		if(!g_settings.recording_dir[i].empty())
