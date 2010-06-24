@@ -836,6 +836,7 @@ moviebrowser.edit_serie Name der Serie
 moviebrowser.error_no_movies Keine Filme gefunden
 moviebrowser.foot_filter Filter:
 moviebrowser.foot_play Film starten
+moviebrowser.foot_select Auswählen
 moviebrowser.foot_sort Sortieren:
 moviebrowser.head TS Filmarchiv
 moviebrowser.head_filter Filme nach Kategorie filtern:

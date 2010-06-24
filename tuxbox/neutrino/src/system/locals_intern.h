@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.183 2010/06/18 19:11:01 dbt Exp $
+ * $Id: locals_intern.h,v 1.184 2010/06/24 19:34:49 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -863,6 +863,7 @@ const char * locale_real_names[] =
 	"moviebrowser.error_no_movies",
 	"moviebrowser.foot_filter",
 	"moviebrowser.foot_play",
+	"moviebrowser.foot_select",
 	"moviebrowser.foot_sort",
 	"moviebrowser.head",
 	"moviebrowser.head_filter",

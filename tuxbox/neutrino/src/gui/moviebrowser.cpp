@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.41 2010/06/24 19:33:09 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.42 2010/06/24 19:34:49 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.41 2010/06/24 19:33:09 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.42 2010/06/24 19:34:49 dbt Exp $\r\n");
 	init();
 }
 
@@ -1644,16 +1644,19 @@ void CMovieBrowser::refreshTitle(void)
 ************************************************************************/
 void CMovieBrowser::refreshFoot(void) 
 {
+	CFrameBuffer * framebuffer = CFrameBuffer::getInstance();
 	//TRACE("[mb]->refreshButtonLine \r\n");
 	int	color   = (CFBWindow::color_t)COL_INFOBAR_SHADOW;
 	int	bgcolor = (CFBWindow::color_t)COL_INFOBAR_SHADOW_PLUS_0;
 	int	c_rad_mid = RADIUS_MID;
 	int	footheight = m_cBoxFrameFootRel.iHeight + 4;
-
+	
 	std::string filter_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_FILTER);
 	filter_text += m_settings.filter.optionString;
+
 	std::string sort_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT);
 	sort_text += g_Locale->getText(m_localizedItemName[m_settings.sorting.item]);
+
 	std::string ok_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY);
 	
 	// draw the background first
@@ -1666,47 +1669,64 @@ void CMovieBrowser::refreshFoot(void)
 								CORNER_BOTTOM); 
 
 
-	int width = m_cBoxFrameFootRel.iWidth>>2;
+	int width = m_cBoxFrameFootRel.iWidth;
+	int xoffset = 4;
+	int xpos1 = m_cBoxFrameFootRel.iX + xoffset;
+	int width1 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(sort_text, true) + xoffset; // UTF-8;
+
+	int xpos2 = xpos1 + width1 + xoffset;
+	int width2 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(filter_text, true) + xoffset; // UTF-8;
+
+	//ok button should be painted centered, but not if captions of red and green buttons are to big
+	int xpos3 = ((width1 + width2) < width/2) ? width/2 + xoffset : xpos2 + width2 + xoffset;
 	
-	int xpos1 = m_cBoxFrameFootRel.iX;
-	int width1 = width;
-	int xpos2 = xpos1 + width1;
-	int width2 = width + width;
-	int xpos4 = xpos2 + width2;
-	int width4 = width;
-	int ypos_icon = m_cBoxFrameFootRel.iY+5;
+
+	int foot_hmid = footheight/2;
+
 	int ypos_buttontext = m_cBoxFrameFootRel.iY + m_cBoxFrameFootRel.iHeight + 2;
 
-	// draw yellow (sort)
+	// draw red (sort)
 	if (m_settings.gui != MB_GUI_LAST_PLAY && m_settings.gui != MB_GUI_LAST_RECORD)
 	{
+		int iconh_red = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_RED);
+		int iconw_red = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_RED);
+
 		m_pcWindow->paintBoxRel(xpos1, m_cBoxFrameFootRel.iY, width1, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_LEFT);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos1+4, ypos_icon);
-		m_pcWindow->RenderString(m_pcFontFoot, xpos1 + 24, ypos_buttontext , width1-30, sort_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos1, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_red/2);
+		m_pcWindow->RenderString(m_pcFontFoot, xpos1 + iconw_red + xoffset, ypos_buttontext , width1, sort_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 
+	// draw green (filter)
 	if (m_settings.gui != MB_GUI_LAST_PLAY && m_settings.gui != MB_GUI_LAST_RECORD)
 	{
+		int iconh_gr = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_GREEN);
+		int iconw_gr = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_GREEN);
+
 		m_pcWindow->paintBoxRel(xpos2, m_cBoxFrameFootRel.iY, width2, footheight, (CFBWindow::color_t)bgcolor);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos2, ypos_icon);
-		m_pcWindow->RenderString(m_pcFontFoot, xpos2 + 20, ypos_buttontext , width2 -30, filter_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos2, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_gr/2);
+		m_pcWindow->RenderString(m_pcFontFoot, xpos2 + iconw_gr + xoffset, ypos_buttontext , width2, filter_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
-	//xpos += ButtonWidth + ButtonSpacing;
-	// draw 
+
+	// draw ok (select/ start)
 	if(1)
 	{
 		std::string ok_text2;
 		if(m_settings.gui == MB_GUI_FILTER && m_windowFocus == MB_FOCUS_FILTER)
 		{
-			ok_text2 = "select";
+			ok_text2 = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SELECT);
 		}
 		else
 		{
 			ok_text2 = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY);
 		}
-		m_pcWindow->paintBoxRel(xpos4, m_cBoxFrameFootRel.iY, width4, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_RIGHT);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, xpos4, ypos_icon-4);
-		m_pcWindow->RenderString(m_pcFontFoot, xpos4 + 30, ypos_buttontext , width4-30, ok_text2.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
+
+		int iconh_ok = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY);
+		int iconw_ok = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_OKAY);
+		int width3 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(ok_text2, true) + xoffset; // UTF-8;
+
+		m_pcWindow->paintBoxRel(xpos3, m_cBoxFrameFootRel.iY, width3, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_RIGHT);
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, xpos3, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_ok/2);
+		m_pcWindow->RenderString(m_pcFontFoot, xpos3 + iconw_ok + xoffset, ypos_buttontext , width3, ok_text2.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}	
 }
 
@@ -3853,7 +3873,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.41 $");
+	return imageinfo.getModulVersion("","$Revision: 1.42 $");
 }
 
 /************************************************************************/

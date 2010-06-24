@@ -836,6 +836,7 @@ moviebrowser.edit_serie Enter name of serie
 moviebrowser.error_no_movies No movies found
 moviebrowser.foot_filter Filter:
 moviebrowser.foot_play Start movie
+moviebrowser.foot_select Select
 moviebrowser.foot_sort Sort:
 moviebrowser.head Movie Browser
 moviebrowser.head_filter Filter movies by category:
