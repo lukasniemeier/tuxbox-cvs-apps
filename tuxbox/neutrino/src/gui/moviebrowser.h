@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.14 2010/06/20 13:01:14 dbt Exp $
+	$Id: moviebrowser.h,v 1.15 2010/06/24 19:33:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -313,6 +313,7 @@ class CMovieBrowser : public CMenuTarget
 		void initDevelopment(void); //P1 for development testing only
 		void initRows(void);
 		void reinit(void); //P1
+		void initFonts(void);
 
 		///// MovieBrowser Main Window////////// 
 		int paint(void); //P1

@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.40 2010/06/20 13:01:42 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.41 2010/06/24 19:33:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -154,10 +154,6 @@ const CMenuOptionChooser::keyval MESSAGEBOX_PARENTAL_LOCKAGE_OPTIONS[MESSAGEBOX_
 
 #define TITLE_BACKGROUND_COLOR ((CFBWindow::color_t)COL_MENUHEAD_PLUS_0)
 #define TITLE_FONT_COLOR ((CFBWindow::color_t)COL_MENUHEAD)
-
-#define TEXT_FONT g_Font[SNeutrinoSettings::FONT_TYPE_MENU]
-#define TITLE_FONT g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]
-#define FOOT_FONT g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]
 
 #define INTER_FRAME_SPACE 6  // space between e.g. upper and lower window
 #define TEXT_BORDER_WIDTH 8
@@ -366,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.40 2010/06/20 13:01:42 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.41 2010/06/24 19:33:09 dbt Exp $\r\n");
 	init();
 }
 
@@ -466,8 +462,7 @@ void CMovieBrowser::init(void)
 	
 	m_windowFocus = MB_FOCUS_BROWSER;
 
-	m_pcFontFoot  = FOOT_FONT;
-	m_pcFontTitle = TITLE_FONT;
+	initFonts();
 	
 	m_textTitle = g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD);
 	
@@ -1156,6 +1151,14 @@ void CMovieBrowser::hide(void)
 	
 }
 
+
+//init needed fonts
+void CMovieBrowser::initFonts(void)
+{
+	m_pcFontFoot  = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL];
+	m_pcFontTitle = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE];
+}
+
 /************************************************************************
 
 ************************************************************************/
@@ -1166,12 +1169,18 @@ int CMovieBrowser::paint(void)
 		TRACE("[mb]  return -> window already exists\r\n");
 		return (false);
 	}
+
 	TRACE("[mb]->Paint\r\n");
 
 	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD));
 
 	//Font* font = TEXT_FONT;
 	Font* font = NULL;
+	
+	/* If the MB is called again, after changing the Fontsize without a restart of Neutrino,
+	   you will get a segfault. Reason: init() is only done once at start of the MB, so
+	   initialize the font-variables here again*/
+	initFonts();
 
 	// create new window
 	m_pcWindow = new CFBWindow( m_cBoxFrame.iX,
@@ -1183,29 +1192,32 @@ int CMovieBrowser::paint(void)
 								font,
 								CListFrame::SCROLL | CListFrame::HEADER_LINE, 
 								&m_cBoxFrameBrowserList);
+
 	m_pcLastPlay = new CListFrame(&m_playListLines,
 								font,
 								CListFrame::SCROLL | CListFrame::HEADER_LINE | CListFrame::TITLE, 
 								&m_cBoxFrameLastPlayList,
 								g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD_PLAYLIST),
 								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]);
+
 	m_pcLastRecord = new CListFrame(&m_recordListLines,
 								font,
 								CListFrame::SCROLL | CListFrame::HEADER_LINE | CListFrame::TITLE, 
 								&m_cBoxFrameLastRecordList,
 								g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD_RECORDLIST),
 								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]);
+
 	m_pcFilter = new CListFrame(&m_FilterLines,
 								font,
 								CListFrame::SCROLL | CListFrame::TITLE, 
 								&m_cBoxFrameFilter,
 								g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD_FILTER),
 								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]);
+
 	m_pcInfo = new CTextBox(" ",
 							NULL,
 							CTextBox::SCROLL,
 							&m_cBoxFrameInfo);							
-
 
 	if(  m_pcWindow == NULL || 
 		m_pcBrowser == NULL || 
@@ -2148,6 +2160,7 @@ void CMovieBrowser::onSetGUIWindow(MB_GUI gui)
 	{
 		TRACE("[mb] browser info\r\n");
 		// Paint these frames ...
+
 		m_showMovieInfo = true;
 		m_showBrowserFiles = true;
 
@@ -3840,7 +3853,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.40 $");
+	return imageinfo.getModulVersion("","$Revision: 1.41 $");
 }
 
 /************************************************************************/
