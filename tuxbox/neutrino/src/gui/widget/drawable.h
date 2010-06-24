@@ -34,6 +34,7 @@
 #define __drawable__
 
 #include <driver/fb_window.h>
+#include <driver/framebuffer.h>
 #include <system/localize.h>
 
 #include <string>
@@ -88,6 +89,8 @@ protected:
 
 	Drawable();
 
+	int fheight;
+
 	int m_height;
 
 	int m_width;
@@ -125,6 +128,7 @@ protected:
 class DIcon : public Drawable
 {
 public:
+	CFrameBuffer	*frameBuffer;
 	DIcon(std::string& icon);
 
 	DIcon(const char  *icon);

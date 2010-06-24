@@ -42,7 +42,8 @@
 #include <neutrino.h>
 
 Drawable::Drawable()
-{	
+{
+	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 }
 
 Drawable::~Drawable()
@@ -81,7 +82,7 @@ DText::DText(const char *text)
 void DText::init()
 {
 	m_width = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(m_text, true); // UTF-8
-	m_height = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();	
+	m_height = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 }
 
 
@@ -111,13 +112,18 @@ DIcon::DIcon(const char *icon)
 
 void DIcon::init()
 {
-	m_height = 16;
-	m_width = 16;
+	m_height = 12;
+	m_width  = 12;
 }
 
 void DIcon::draw(CFBWindow *window, int x, int y, int /*width*/)
 {
-	window->paintIcon(m_icon.c_str(), x, y);
+	frameBuffer = CFrameBuffer::getInstance();
+
+	int iconh = frameBuffer->getIconHeight(m_icon.c_str());
+	int iconw = frameBuffer->getIconWidth(m_icon.c_str());
+
+	window->paintIcon(m_icon.c_str(), x + 12 - (iconw / 2), y + (fheight / 2) - (iconh / 2));
 }
 
 void DIcon::print(void)
