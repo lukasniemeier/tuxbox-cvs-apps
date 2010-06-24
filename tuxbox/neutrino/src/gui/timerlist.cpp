@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.107 2010/06/16 10:20:56 dbt Exp $
+	$Id: timerlist.cpp,v 1.108 2010/06/24 20:02:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -245,8 +245,6 @@ CTimerList::CTimerList()
 	selected = 0;
 	width 	= w_max (600, 50);
 
-	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
-	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height+INFO_HEIGHT);
 	liststart = 0;
@@ -428,6 +426,9 @@ void CTimerList::updateEvents(void)
 
 int CTimerList::show()
 {
+	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
+	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
 
@@ -750,7 +751,7 @@ void CTimerList::paintHead()
 
 	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER) / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight + 2, width - 45, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight, width - 45, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
 	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
