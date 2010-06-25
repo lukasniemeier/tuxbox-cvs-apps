@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.73 2010/06/25 14:33:31 dbt Exp $
+	$Id: drive_setup.cpp,v 1.74 2010/06/25 23:45:47 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -308,7 +308,7 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		{
 			strcpy(d_settings.drive_partition_fstype[current_device][next_part_number], "swap"); 
 			d_settings.drive_partition_mountpoint[current_device][next_part_number] = "none";
-			strcpy(d_settings.drive_partition_size[current_device][next_part_number], d_settings.drive_swap_size);
+			strncpy(d_settings.drive_partition_size[current_device][next_part_number], swap_size, 4);
 
 			if (!formatPartition(current_device, next_part_number))
 				DisplayErrorMessage(err[ERR_FORMAT_PARTITION].c_str());
@@ -1005,19 +1005,24 @@ void CDriveSetup::showHddSetupSub()
 
 
 	//menue add swap:
-	//prepare swap size
-	string s_mb_size = iToString(ll_free_part_size/1024/1024); //free megabytes
-	string s_swap_sizes[] = {(ll_free_part_size < 0x4000000 ? s_mb_size :"64"), (ll_free_part_size < 0x8000000 ?  s_mb_size : "128")};
+	//prepare swap sizes
+	long long ll_swap_sizes[2] = 	{(ll_free_part_size < 0x4000000 ? ll_free_part_size : 0x4000000 /*64MB*/), 
+					(ll_free_part_size < 0x8000000 ?  ll_free_part_size : 0x8000000 /*128MB*/)};
 
 	//set default swap size to 128 MB or available max size
-	if ((string)d_settings.drive_swap_size == "" || ((string)d_settings.drive_swap_size != s_swap_sizes[0] && (string)d_settings.drive_swap_size != s_swap_sizes[1]))
-		strcpy(d_settings.drive_swap_size, s_swap_sizes[1].c_str());
+	long long ll_max_swap_size = max(ll_swap_sizes[0], ll_swap_sizes[1]);
+	
+	string s_swap_size[2];
+	for (uint i=0; i < 2; i++)
+		s_swap_size[i] = iToString(ll_swap_sizes[i]/1024/1024);
+	
+	string s_max_swap_size = iToString(ll_max_swap_size/1024/1024);
+	
+	strncpy(swap_size, s_max_swap_size.c_str(), 4);	
 
-	CMenuOptionStringChooser *add_swap_size = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_SIZE, d_settings.drive_swap_size, true );
-	for (uint i=0; i < (sizeof(s_swap_sizes) / sizeof(s_swap_sizes[0])); i++) 
-	{
-		add_swap_size->addOption(s_swap_sizes[i].c_str());
-	}
+	CMenuOptionStringChooser *add_swap_size = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_SIZE, swap_size, true );
+	for (uint i=0; i < 2; i++) 
+		add_swap_size->addOption(s_swap_size[i].c_str());
 
 
 	//menue add_swap: prepare subhead: add swap
@@ -2802,7 +2807,7 @@ bool CDriveSetup::mkFstab()
 					mount_entry = partname;
 					mount_entry += " none swap sw 0 0\n"; // TODO setup for fstab swap options
 					mount_entry += "tmpfs /tmp tmpfs size=";
-					mount_entry += d_settings.drive_swap_size;
+					mount_entry += d_settings.drive_partition_size[i][ii];
 					mount_entry += "M,remount 0 0\n";
 					v_fstab_entries.push_back(mount_entry);
 				}
@@ -4265,8 +4270,6 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 		if (!d_settings.drive_partition_activ[device_num][part_number]) 
 			return true;
 	}
-	
-	
 
 	// exit if no available
 	if((access(partname.c_str(), R_OK) !=0)) 	
@@ -4290,12 +4293,14 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			{ 
 				cerr<<"[drive setup] "<<__FUNCTION__ <<":  swapon: "<<strerror(errno)<< " " << partname<<endl;
 				err[ERR_MOUNT_PARTITION] = g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_SAVE_CANNOT_MOUNT_SWAP);
+				strcpy(d_settings.drive_partition_fstype[device_num][part_number], "");
+				d_settings.drive_partition_mountpoint[device_num][part_number] = "";
 				return false;
 			}
 			else
 			{	
 				char size_opt[10];
-				snprintf(size_opt, 10, "size=%sM", d_settings.drive_swap_size);
+				snprintf(size_opt, 10, "size=%sM", d_settings.drive_partition_size[device_num][part_number]);
 				if (mount("tmpfs", "/tmp" , NULL, MS_MGC_VAL | MS_REMOUNT, size_opt) !=0 )
 				{
 					cerr<<"[drive setup] "<<__FUNCTION__ <<":  mount: "<<strerror(errno)<<endl;
@@ -4500,7 +4505,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.73 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.74 $");
 }
 
 // returns text for initfile headers
@@ -4547,7 +4552,7 @@ string CDriveSetup::getInitFileMountEntries()
 			{
 				if (!d_settings.drive_use_fstab)
 				{
-					swapon_entries += "\t\t" SWAPON + partname + " && " + MOUNT + "-n -t tmpfs tmpfs /tmp -o size=" + d_settings.drive_swap_size + "M,remount\n";
+					swapon_entries += "\t\t" SWAPON + partname + " && " + MOUNT + "-n -t tmpfs tmpfs /tmp -o size=" + d_settings.drive_partition_size[i][ii] + "M,remount\n";
 					swapoff_entries += "\t\t" SWAPOFF + partname + "\n";
 				}
 			}
@@ -4862,10 +4867,6 @@ void CDriveSetup::loadDriveSettings()
 	strcpy(d_settings.drive_mmc_module_name, configfile.getString("drive_mmc_module_name", "").c_str());
 	old_drive_mmc_module_name = static_cast <string> (d_settings.drive_mmc_module_name);
 	
-	//swap size
-	strcpy(d_settings.drive_swap_size, configfile.getString("drive_swap_size", "").c_str());
-	old_drive_swap_size = static_cast <string> (d_settings.drive_swap_size);
-
 	// mmc modul load parameter
 	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
 	{	
@@ -4989,7 +4990,6 @@ bool CDriveSetup::writeDriveSettings()
 	configfile.setString	( "drive_mmc_module_name", d_settings.drive_mmc_module_name );
 	configfile.setInt32	( "drive_use_fstab", d_settings.drive_use_fstab );
 	configfile.setInt32	( "drive_use_fstab_auto_fs", d_settings.drive_use_fstab_auto_fs );
-	configfile.setString	( "drive_swap_size", d_settings.drive_swap_size );
 	configfile.setString	( "drive_advanced_modul_command_load_options", d_settings.drive_advanced_modul_command_load_options);
 	configfile.setString	( "drive_modul_dir", d_settings.drive_modul_dir);
 	configfile.setInt32	( "drive_warn_jffs", d_settings.drive_warn_jffs );
@@ -5209,9 +5209,6 @@ void CDriveSetup::restoreSettings()
 	//restore mmc modul name
 	strcpy(d_settings.drive_mmc_module_name, old_drive_mmc_module_name.c_str()); 
 
-	//restore swap size
-	strcpy(d_settings.drive_swap_size, old_drive_swap_size.c_str()); 
-
 	//restore spindown
 	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
 		strcpy(d_settings.drive_spindown[i], old_drive_spindown[i].c_str());
@@ -5268,10 +5265,6 @@ bool  CDriveSetup::haveChangedSettings()
 	//Yes, it's better to do this like with strings and integers overloaded in handleSetting(), but this hasn't working nice, please fix it, if you can ;-)
 	//mmc modul name
 	if (old_drive_mmc_module_name != static_cast <string> (d_settings.drive_mmc_module_name))
-		return true;
-
-	//swap size
-	if (old_drive_swap_size != static_cast <string> (d_settings.drive_swap_size))
 		return true;
 	
 	//spindown

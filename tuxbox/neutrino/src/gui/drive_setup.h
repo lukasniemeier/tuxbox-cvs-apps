@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.30 2010/06/14 17:57:15 dbt Exp $
+	$Id: drive_setup.h,v 1.31 2010/06/25 23:45:47 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -88,7 +88,6 @@ struct SDriveSettings
 	char 	drive_spindown[MAXCOUNT_DRIVE][3];
 	char 	drive_partition_size[MAXCOUNT_DRIVE][MAXCOUNT_PARTS][8];
 	char 	drive_mmc_module_name[10];
-	char	drive_swap_size[3];
 
 #ifdef ENABLE_NFSSERVER
 	std::string 	drive_partition_nfs_host_ip[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
@@ -254,7 +253,6 @@ class CDriveSetup : public CMenuTarget
 		void 	handleSetting(int *setting);
 		void 	handleSetting(std::string *setting);
 		std::string old_drive_mmc_module_name;
-		std::string old_drive_swap_size;
 		std::string old_drive_spindown[MAXCOUNT_DRIVE];
 
 		void 	restoreSettings();
@@ -469,6 +467,7 @@ class CDriveSetup : public CMenuTarget
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 
+		char swap_size[4];
 		//settings	
 		char mmc_parm[27];
 		char mountpoint_opt[31];
