@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.71 2010/06/15 09:51:16 dbt Exp $
+	$Id: drive_setup.cpp,v 1.72 2010/06/25 13:37:54 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4251,6 +4251,14 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 	string mp = mountpoint;
 	err[ERR_MOUNT_PARTITION] = "";
 
+	// get partition name (dev/hda1...4)
+	string partname = partitions[device_num][part_number];
+
+	// prepare user script
+	char user_script[64];
+	snprintf(user_script, 64, "%s/after_mount_%d_%d.sh", CONFIGDIR, device_num, part_number);
+	user_script[63] = '\0'; /* ensure termination... */
+
 	// return true and exit if settings force_mount = false
 	if (!force_mount)
 	{
@@ -4258,8 +4266,7 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			return true;
 	}
 	
-	// get partition name (dev/hda1...4)
-	string partname = partitions[device_num][part_number];
+	
 
 	// exit if no available
 	if((access(partname.c_str(), R_OK) !=0)) 	
@@ -4286,19 +4293,23 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 				return false;
 			}
 			else
-			{	char size_opt[9];
-				sprintf(size_opt, "size=%sM", d_settings.drive_swap_size); 
-				if (mount("tmpfs", "/tmp" , "tmpfs", MS_REMOUNT , size_opt)!=0)
+			{	
+				char size_opt[4];
+				snprintf(size_opt, 4, "size=%sM", d_settings.drive_swap_size);
+				if (mount("tmpfs", "/tmp" , NULL, MS_MGC_VAL | MS_REMOUNT, size_opt) !=0 )
 				{
-					cerr<<"[drive setup] "<<__FUNCTION__ <<":  mount: "<<strerror(errno)<< " " << "tmpfs"<<endl;
+					cerr<<"[drive setup] "<<__FUNCTION__ <<":  mount: "<<strerror(errno)<<endl;
 					err[ERR_MOUNT_PARTITION] += "\nError while remounting /tmp!";
 				}
-				else 
-				{
-					strcpy(d_settings.drive_partition_fstype[device_num][part_number], "swap");
-					d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
-					return true;
-				}
+
+				strcpy(d_settings.drive_partition_fstype[device_num][part_number], "swap");
+				d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
+
+				//executing user script if available after swapon
+				if((access(user_script, F_OK) ==0)) 
+					CNeutrinoApp::getInstance()->execute_start_file(user_script);
+
+				return true;
 			}
 		}
 
@@ -4309,6 +4320,11 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			{
 				strcpy(d_settings.drive_partition_fstype[device_num][part_number], "swap");
 				d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
+
+				//executing user script if available after swapon
+				if((access(user_script, F_OK) ==0)) 
+					CNeutrinoApp::getInstance()->execute_start_file(user_script);
+
 				return true;
 			}
 		}
@@ -4340,7 +4356,7 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 					//create warn message
 					string s_fs = getFsTypeStr(l_fs);
 					char warn_msg[255];
-					sprintf(warn_msg,g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_MOUNT_WARNING), mp.c_str(), s_fs.c_str());
+					snprintf(warn_msg, 255, g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_PARTITION_MOUNT_WARNING), mp.c_str(), s_fs.c_str());
 					if ((ShowMsgUTF(LOCALE_MESSAGEBOX_WARNING, warn_msg, CMessageBox::mbrYes, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_ERROR, width, -1))) // UTF-8
 					{	
 						d_settings.drive_partition_mountpoint[device_num][part_number] = mp;
@@ -4395,14 +4411,11 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			}				
 		}
  	}
-
+	
 	//executing user script if available after mounting
-	char user_script[64];
-	snprintf(user_script, 64, "%s/after_mount_%d_%d.sh", CONFIGDIR, device_num, part_number);
-	user_script[63] = '\0'; /* ensure termination... */
 	if((access(user_script, F_OK) ==0)) 
 		CNeutrinoApp::getInstance()->execute_start_file(user_script);
-	
+
 	return true;
 }
 
@@ -4487,7 +4500,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.71 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.72 $");
 }
 
 // returns text for initfile headers
