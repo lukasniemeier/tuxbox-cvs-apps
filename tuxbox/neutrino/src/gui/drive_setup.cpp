@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.72 2010/06/25 13:37:54 dbt Exp $
+	$Id: drive_setup.cpp,v 1.73 2010/06/25 14:33:31 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4294,8 +4294,8 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			}
 			else
 			{	
-				char size_opt[4];
-				snprintf(size_opt, 4, "size=%sM", d_settings.drive_swap_size);
+				char size_opt[10];
+				snprintf(size_opt, 10, "size=%sM", d_settings.drive_swap_size);
 				if (mount("tmpfs", "/tmp" , NULL, MS_MGC_VAL | MS_REMOUNT, size_opt) !=0 )
 				{
 					cerr<<"[drive setup] "<<__FUNCTION__ <<":  mount: "<<strerror(errno)<<endl;
@@ -4500,7 +4500,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.72 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.73 $");
 }
 
 // returns text for initfile headers
