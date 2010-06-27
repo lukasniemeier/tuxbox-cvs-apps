@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.134 2010/03/12 22:51:50 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.135 2010/06/27 12:23:27 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -712,11 +712,15 @@ void EventList::paint()
 	int sb = fheight* listmaxshow;
 	int sbc= ((evtlist.size()- 1)/ listmaxshow)+ 1;
 	int sbs= (selected/listmaxshow);
-	
+
 	liststart = (selected/listmaxshow)*listmaxshow;
 
 	if (evtlist[0].eventID != 0)
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x+ width- 30, y+ 5 );
+	{
+		int iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP);
+		int iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HELP);
+		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - (iconw + 6) , y + (theight >> 1) - (iconh >> 1));
+	}
 
 	// paint background, so no transparent corners beside selected item at first paint
 	frameBuffer->paintBoxRel(x, ypos, width- 15, sb, COL_MENUCONTENT_PLUS_0);
