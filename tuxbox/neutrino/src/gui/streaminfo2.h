@@ -51,8 +51,6 @@ class CStreamInfo2
 	
 		int  max_height;	// Frambuffer 0.. max
 		int  max_width;	
-	
-		int  c_rad_mid;
 
 		CPIG *pig;
 
