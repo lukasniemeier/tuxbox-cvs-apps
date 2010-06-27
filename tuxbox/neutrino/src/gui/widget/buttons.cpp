@@ -1,5 +1,5 @@
 /*
- * $Id: buttons.cpp,v 1.8 2009/10/03 10:09:30 seife Exp $
+ * $Id: buttons.cpp,v 1.9 2010/06/27 12:20:55 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -23,11 +23,7 @@
 #include <config.h>
 #endif
 
-
 #include <gui/widget/buttons.h>
-#include <gui/color.h>
-
-
 #include <system/settings.h>
 
 /* paintButtons usage: use this fucntion for painting icons with captions in horizontal or vertical direction. 
@@ -40,6 +36,7 @@
  * content			set iconfile and locale constant, for an empty text let locale constant empty , so you can paint icons without captions, 
  * maxwidth			optional, default value is 720 (full screenwidth) sets maximal width there can paint buttons, should be the same like width eg. from a menue
  * vertical_paint	optional, default value is false (horizontal) sets direction of painting
+ * backgroundcolor  optional, default value is COL_INFOBAR_SHADOW_PLUS_1, use it to render font with other backgroundcolor (example: streaminfo2.cpp)
  */
 void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 			const CLocaleManager * const localemanager, 
@@ -49,7 +46,8 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 			const unsigned int count, 
 			const struct button_label * const content,
 			const unsigned int maxwidth,
-			bool vertical_paint)
+			bool vertical_paint,
+			const unsigned char bcolor)
 {
 	int fheight = font->getHeight();
 	unsigned int bwidth, fwidth;
@@ -60,7 +58,6 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 	unsigned int bestButtonwidth = maxwidth/count;
 	unsigned int maxButtonwidth = bestButtonwidth > buttonwidth ? bestButtonwidth : buttonwidth;
 
-	
 	for (unsigned int i = 0; i < count; i++)
 	{
 		const char * buttontext =  content[i].locale ? localemanager->getText(content[i].locale) : "";
@@ -90,7 +87,7 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 		// paint icon and text
 		frameBuffer->paintIcon(icon, xstart , yicon_start);
 		int xbuttontext = xstart + max_iconw + space;
-		font->RenderString(xbuttontext, ytext_start, bwidth, buttontext, COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
+		font->RenderString(xbuttontext, ytext_start, bwidth, buttontext, bcolor /*COL_INFOBAR_SHADOW + 1*/, 0, true); // UTF-8
 		
 		/* 	set next startposition x, if text is length=0 then offset is =renderwidth of icon, 
  		* 		for generating buttons without captions, 
