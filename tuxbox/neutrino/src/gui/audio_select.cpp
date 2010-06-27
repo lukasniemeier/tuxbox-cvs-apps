@@ -91,7 +91,7 @@ int CAudioSelectMenuHandler::doMenu ()
 		uint p_count = g_RemoteControl->current_PIDs.APIDs.size();
 		CMenuForwarderNonLocalized* fw[p_count];
 		AudioSelector.addItem(GenericMenuSeparator);
-		AudioSelector.addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_CANCEL, true, NULL, NULL, NULL, CRCInput::RC_nokey, NEUTRINO_ICON_BUTTON_HOME));
+		AudioSelector.addItem(GenericMenuCancel);
 		AudioSelector.addItem(GenericMenuSeparatorLine);
 
 	  	for( uint count=0; count < p_count; count++ ) 
