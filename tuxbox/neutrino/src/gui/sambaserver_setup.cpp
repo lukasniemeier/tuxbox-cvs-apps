@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.7 2010/06/02 10:17:35 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.8 2010/06/27 19:33:40 rhabarber1848 Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -266,9 +266,11 @@ bool CSambaSetup::killSamba()
 					cout << "[samba setup] killed "<< smb_cmd[i].bin << " pid: "<<pid<<endl;
 			}
 		}
-		
-		char pid_file[9];
-		sprintf( pid_file, "/tmp/%s.pid", smb_cmd[i].bin.c_str()); 
+		/* $ echo -n "/tmp/smbd.pid"|wc -c
+		 * 13
+		 * 15 should be enough */
+		char pid_file[15];
+		sprintf( pid_file, "/tmp/%s.pid", smb_cmd[i].bin.c_str());
 		if (ret)
 			remove(pid_file);
 		
