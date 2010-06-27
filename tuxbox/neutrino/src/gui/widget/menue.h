@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.81 2010/06/09 20:41:59 dbt Exp $
+	$Id: menue.h,v 1.82 2010/06/27 21:16:29 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -401,6 +401,7 @@ class CMenuSelectorTarget : public CMenuTarget
 extern CMenuSeparator * const GenericMenuSeparator;
 extern CMenuSeparator * const GenericMenuSeparatorLine;
 extern CMenuForwarder * const GenericMenuBack;
+extern CMenuForwarder * const GenericMenuCancel;
 
 
 

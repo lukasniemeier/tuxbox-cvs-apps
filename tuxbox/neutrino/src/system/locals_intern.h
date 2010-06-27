@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.184 2010/06/24 19:34:49 dbt Exp $
+ * $Id: locals_intern.h,v 1.185 2010/06/27 21:16:29 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -753,6 +753,7 @@ const char * locale_real_names[] =
 	"mainsettings.video",
 	"mediaplayersettings.general",
 	"menu.back",
+	"menu.cancel",
 	"messagebox.back",
 	"messagebox.cancel",
 	"messagebox.continue",

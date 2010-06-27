@@ -2,7 +2,7 @@
 #define __locals__
 
 /*
- * $Id: locals.h,v 1.184 2010/06/24 19:34:49 dbt Exp $
+ * $Id: locals.h,v 1.185 2010/06/27 21:16:29 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -753,6 +753,7 @@ typedef enum
 	LOCALE_MAINSETTINGS_VIDEO,
 	LOCALE_MEDIAPLAYERSETTINGS_GENERAL,
 	LOCALE_MENU_BACK,
+	LOCALE_MENU_CANCEL,
 	LOCALE_MESSAGEBOX_BACK,
 	LOCALE_MESSAGEBOX_CANCEL,
 	LOCALE_MESSAGEBOX_CONTINUE,

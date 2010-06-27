@@ -726,6 +726,7 @@ mainsettings.streaming Movieplayer
 mainsettings.video Video
 mediaplayersettings.general Medienwiedergabe
 menu.back Zurück
+menu.cancel Abbrechen
 messagebox.back Zurück
 messagebox.cancel Abbruch
 messagebox.continue Weiter

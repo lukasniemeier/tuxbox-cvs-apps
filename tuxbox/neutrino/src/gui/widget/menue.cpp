@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.166 2010/06/10 08:36:17 seife Exp $
+	$Id: menue.cpp,v 1.167 2010/06/27 21:16:29 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -55,9 +55,11 @@
 CMenuSeparator CGenericMenuSeparator;
 CMenuSeparator CGenericMenuSeparatorLine(CMenuSeparator::LINE);
 CMenuForwarder CGenericMenuBack(LOCALE_MENU_BACK, true, NULL, NULL, NULL, CRCInput::RC_nokey, NEUTRINO_ICON_BUTTON_LEFT);
+CMenuForwarder CGenericMenuCancel(LOCALE_MENU_CANCEL, true, NULL, NULL, NULL, CRCInput::RC_nokey, NEUTRINO_ICON_BUTTON_HOME);
 CMenuSeparator * const GenericMenuSeparator = &CGenericMenuSeparator;
 CMenuSeparator * const GenericMenuSeparatorLine = &CGenericMenuSeparatorLine;
 CMenuForwarder * const GenericMenuBack = &CGenericMenuBack;
+CMenuForwarder * const GenericMenuCancel = &CGenericMenuCancel;
 
 
 
@@ -193,7 +195,8 @@ CMenuWidget::~CMenuWidget()
 		CMenuItem * item = items[count];
 		if ((item != GenericMenuSeparator) &&
 		    (item != GenericMenuSeparatorLine) &&
-		    (item != GenericMenuBack))
+		    (item != GenericMenuBack)&&
+		    (item != GenericMenuCancel))
 			delete item;
 	}
 	items.clear();
@@ -308,7 +311,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 
 				case CRCInput::RC_right:
 					CMenuItem* sel_item = items[selected];
-					if(sel_item == GenericMenuBack)
+					if(sel_item == GenericMenuBack || sel_item == GenericMenuCancel)
 						break;
 				case CRCInput::RC_ok:
 					//exec this item...
