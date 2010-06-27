@@ -1,5 +1,5 @@
 /*
-        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.cpp,v 1.17 2010/02/17 11:02:24 seife Exp $        
+        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.cpp,v 1.18 2010/06/27 12:35:10 seife Exp $        
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -126,6 +126,16 @@ FTC_FaceID LcdFontRenderClass::getFaceID(const char *family, const char *style)
 			return (FTC_FaceID)f;
 	}
 	return 0;
+}
+
+std::string LcdFontRenderClass::getFamily(const char *const filename) const
+{
+	for (fontListEntry *f = font; f; f = f->next)
+	{
+		if (!strcmp(f->filename, filename))
+			return std::string(f->family);
+	}
+	return "";
 }
 
 #ifdef FT_NEW_CACHE_API

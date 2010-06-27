@@ -1,5 +1,5 @@
 /*
-        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.h,v 1.12 2009/12/27 12:10:19 rhabarber1848 Exp $
+        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.h,v 1.13 2010/06/27 12:35:10 seife Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -105,6 +105,7 @@ class LcdFontRenderClass
 
 		//FT_Face getFace(const char *family, const char *style);
 		LcdFont *getFont(const char *family, const char *style, int size);
+		std::string getFamily(const char *const filename) const;
 		LcdFontRenderClass(CLCDDisplay *fb);
 		~LcdFontRenderClass();
 
