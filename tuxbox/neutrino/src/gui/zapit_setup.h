@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.h,v 1.1 2010/07/01 05:04:57 rhabarber1848 Exp $
+	$Id: zapit_setup.h,v 1.2 2010/07/01 10:57:49 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -34,9 +34,6 @@
 #include <driver/framebuffer.h>
 #include <zapit/client/zapitclient.h>
 
-extern char CstartChannelRadio[30]; /* defined in setting_helpers.cpp */
-extern char CstartChannelTV[30];
-
 class CZapitSetup : public CMenuTarget
 {
 	private:
@@ -57,6 +54,10 @@ class CZapitSetup : public CMenuTarget
 		int savelastchannel;
 		int uncommitted_switch;
 
+	protected:
+		char CstartChannelRadio[30];
+		char CstartChannelTV[30];
+
 	public:	
 		CZapitSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CZapitSetup();
@@ -75,7 +76,7 @@ class CZapitSetupNotifier : public CChangeObserver
 		bool changeNotify(const neutrino_locale_t OptionName, void * data);
 };
 
-class CZapitChannelExec : public CMenuTarget
+class CZapitChannelExec : public CZapitSetup
 {
 	public:
 		int exec(CMenuTarget* parent, const std::string & actionKey);

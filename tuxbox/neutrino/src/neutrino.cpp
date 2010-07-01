@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1027 2010/07/01 05:04:57 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1028 2010/07/01 10:57:49 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4092,19 +4092,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
 		SendSectionsdConfig();
 	}
-/*	if(actionKey == "zapit_starttv")
-	{
-		parent->hide();
-		InitZapitChannelHelper(CZapitClient::MODE_TV);
-		return menu_return::RETURN_REPAINT;
-	}
-	else if(actionKey == "zapit_startradio")
-	{
-		parent->hide();
-		InitZapitChannelHelper(CZapitClient::MODE_RADIO);
-		return menu_return::RETURN_REPAINT;
-	}
-*/
+
 #ifdef ENABLE_MOVIEPLAYER2
 	else if (actionKey.find("mb.file://") == 0)
 	{
