@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1025 2010/06/20 13:01:14 dbt Exp $
+	$Id: neutrino.cpp,v 1.1026 2010/07/01 04:58:49 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4039,6 +4039,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if(strncmp(actionKey.c_str(), "fontsize.d", 10) == 0)
 	{
+		parent->hide(); // hide menu before set to smaller "default" fonts for menutext, otherwise u get remains
 		for (int i = 0; i < 6; i++)
 		{
 			if (actionKey == font_sizes_groups[i].actionkey)
