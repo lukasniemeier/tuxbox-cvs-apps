@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.13 2010/06/02 21:07:52 dbt Exp $
+	$Id: network_setup.cpp,v 1.14 2010/07/01 11:44:19 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -203,7 +203,7 @@ void CNetworkSetup::showNetworkSetup()
 		networkSettings->addItem( m0 );
 	
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_TEST, true, NULL, this, "networktest", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SHOW, true, NULL, this, "networkshow", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP_SMALL));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SHOW, true, NULL, this, "networkshow", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
 		networkSettings->addItem(GenericMenuSeparatorLine);
 	
 		networkSettings->addItem(o1);

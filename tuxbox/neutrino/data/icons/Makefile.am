@@ -6,7 +6,7 @@ install_DATA = \
 	audio.raw \
 	blau.raw border_lr.raw border_ul.raw \
 	ca.raw colors.raw conflict.raw \
-	dd_avail.raw dd_gray.raw dd.raw down.raw down_small.raw \
+	dd_avail.raw dd_gray.raw dd.raw down.raw \
 	epginfo.raw error.raw \
 	features.raw file.raw folder.raw fta.raw \
 	games.raw gelb.raw gruen.raw \
@@ -16,7 +16,7 @@ install_DATA = \
 	language.raw lcd.raw left.raw lock.raw \
 	mainmenue.raw minus.raw	mounted.raw mp3.raw mute.raw mute_small.raw \
 	not_mounted.raw numericpad.raw \
-	ok.raw ok_small.raw \
+	ok.raw \
 	pause.raw play.raw plus.raw power.raw protecting.raw \
 	question.raw \
 	radar0.raw radar1.raw radar2.raw radar3.raw radar4.raw radar5.raw radar6.raw radar7.raw	radar8.raw radar9.raw radar.pal \
@@ -24,7 +24,7 @@ install_DATA = \
 	scan.pal scan.raw settings.raw shell.raw shutdown.pal shutdown.raw softupdate.raw streaming.raw \
 	subt_gray.raw subt.raw \
 	timer.raw \
-	up.raw up_small.raw \
+	up.raw \
 	video.raw volumebody.raw volume.raw volumeslider2alpha.raw volumeslider2blue.raw volumeslider2green.raw volumeslider2.raw volumeslider2red.raw \
 	vtxt_gray.raw vtxt.raw \
 	zapto_conflict.raw zapto.raw
@@ -49,8 +49,8 @@ install-data-local:
 	$(INSTALL) -m 755 -d $(installdir)
 	$(INSTALL) -m 644 exit.raw $(installdir)/home.raw
 	$(INSTALL) -m 644 menu.raw $(installdir)/dbox.raw
-	$(INSTALL) -m 644 menu_small.raw $(installdir)/dbox_small.raw
+	$(INSTALL) -m 644 menu_small.raw
 else
-install_DATA += home.raw dbox.raw dbox_small.raw
+install_DATA += home.raw dbox.raw
 endif
 

@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.74 2010/06/25 23:45:47 dbt Exp $
+	$Id: drive_setup.cpp,v 1.75 2010/07/01 11:44:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -632,7 +632,7 @@ void CDriveSetup::showHddSetupMain()
 	CMenuForwarder *m1 = new CMenuForwarder(LOCALE_DRIVE_SETUP_SAVESETTINGS, true, NULL, this, "apply", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 
 	// help
-	CMenuForwarder *m_help = new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "show_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP_SMALL);
+	CMenuForwarder *m_help = new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "show_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP);
 
 	// activate/deactivate ide interface
 	if (isIdeInterfaceActive()) 
@@ -916,7 +916,7 @@ void CDriveSetup::showHddSetupSub()
 	bool have_samba = smb.haveSambaSupport();
 	CMenuForwarder *smb_info_fw;
 	//info message
-	smb_info_fw = new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP_SMALL);
+	smb_info_fw = new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP);
 #endif
 #endif /*defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER*/
 
@@ -4505,7 +4505,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.74 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.75 $");
 }
 
 // returns text for initfile headers

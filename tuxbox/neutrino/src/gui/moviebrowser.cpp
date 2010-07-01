@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.43 2010/06/27 12:18:53 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.44 2010/07/01 11:44:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.43 2010/06/27 12:18:53 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.44 2010/07/01 11:44:19 dbt Exp $\r\n");
 	init();
 }
 
@@ -3199,14 +3199,14 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 	mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_DIRECTORIES_HEAD, true, NULL, &dirMenu,    NULL,                                  CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 	mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES,       true, NULL, this,        "reload_movie_info",                   CRCInput::RC_blue,   NEUTRINO_ICON_BUTTON_BLUE));
 #ifdef ENABLE_GUI_MOUNT
-	//mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_NFS_HEAD,       true, NULL, nfs,         NULL,                                  CRCInput::RC_setup,  NEUTRINO_ICON_BUTTON_DBOX_SMALL));
+	//mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_NFS_HEAD,       true, NULL, nfs,         NULL,                                  CRCInput::RC_setup,  NEUTRINO_ICON_BUTTON_DBOX));
 #endif
 #ifdef MOVEMANAGER
 	mainMenu.addItem(GenericMenuSeparatorLine);
 	mainMenu.addItem( new CMenuForwarderNonLocalized("Kopierwerk",        true, NULL,  CMoveManager::getInstance(),   NULL));
 #endif // MOVEMANAGER
 	mainMenu.addItem(GenericMenuSeparatorLine);
-	mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_HELP_HEAD,        true, NULL, movieHelp,   NULL,                                  CRCInput::RC_help,   NEUTRINO_ICON_BUTTON_HELP_SMALL));
+	mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_HELP_HEAD,        true, NULL, movieHelp,   NULL,                                  CRCInput::RC_help,   NEUTRINO_ICON_BUTTON_HELP));
 	mainMenu.addItem(GenericMenuSeparator);
 	mainMenu.exec(NULL, " ");
 
@@ -3896,7 +3896,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.43 $");
+	return imageinfo.getModulVersion("","$Revision: 1.44 $");
 }
 
 /************************************************************************/
