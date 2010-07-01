@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.h,v 1.3 2010/05/03 09:40:59 dbt Exp $
+	$Id: sambaserver_setup.h,v 1.4 2010/07/01 23:33:17 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -43,7 +43,10 @@
 #define NMBD		"nmbd"
 #define SMBD		"smbd"
 #define SAMBA_MARKER	VAR_ETC_DIR "/.sambaserver"
-#define SMB_PRIVAT_DIR	ETC_DIR	"/samba/private"
+#define SMB_DIR		ETC_DIR	"/samba"
+#define SMB_VAR_DIR	VAR_ETC_DIR "/samba"
+#define SMB_PRIVAT_DIR		SMB_DIR	"/private"
+#define SMB_PRIVAT_VAR_DIR	SMB_VAR_DIR "/private"
 
 
 class CSambaSetup : public CMenuTarget

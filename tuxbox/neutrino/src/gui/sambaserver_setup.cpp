@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.8 2010/06/27 19:33:40 rhabarber1848 Exp $
+	$Id: sambaserver_setup.cpp,v 1.9 2010/07/01 23:33:17 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -201,18 +201,28 @@ const smb_cmd_struct_t smb_cmd[SAMBA_COMMANDS_COUNT] =
 bool CSambaSetup::haveSambaSupport()
 {
 	bool ret = true;
+	string 	smbdir[] = {SMB_VAR_DIR, SMB_PRIVAT_VAR_DIR};
 
-	//check private dir
-	DIR   *dirCheck;
-      	dirCheck = opendir(SMB_PRIVAT_DIR);
+	int dirs = (sizeof(smbdir) / sizeof(smbdir[0]));
 
-	if ( dirCheck == NULL )
+	//check and generate private dir, if not exists, usefull for updates from older smb versions without or other path of privat dir
+	DIR   *dirCheck[dirs];
+
+	for (int i = 0; i<dirs; i++)
 	{
-		if(mkdir(SMB_PRIVAT_DIR, 0755) !=0) // generate private dir, if not exists
-			ret = false;
+		dirCheck[i] = opendir(smbdir[i].c_str());
+
+		if ( dirCheck[i] == NULL )
+		{
+			if(mkdir(smbdir[i].c_str(), 0777) !=0) 
+			{	
+				cerr << "[samba setup] "<<smbdir[i]<<" "<< strerror(errno) <<endl;
+				ret = false;
+			}
+		}
+		else 
+			closedir( dirCheck[i] );
 	}
-	else 
-		closedir( dirCheck );
 
 	//check available samba binaries smbd, nmbd
 	for (int i = 0; i<SAMBA_COMMANDS_COUNT; i++)
