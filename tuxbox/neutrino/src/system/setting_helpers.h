@@ -2,7 +2,7 @@
 #define __setting_helpers__
 
 /*
-	$Id: setting_helpers.h,v 1.100 2010/03/29 19:18:24 dbt Exp $
+	$Id: setting_helpers.h,v 1.101 2010/07/01 05:04:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -34,6 +34,8 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef __SETTING_HELPERS__
+#define __SETTING_HELPERS__
 
 #include <config.h>
 #include <gui/widget/menue.h>
@@ -45,6 +47,9 @@ unsigned long long getcurrenttime();
 std::string getPidof(const std::string& process_name);
 std::string getFileEntryString(const char* filename, const std::string& filter_entry, const int& column_num);
 std::string getInterface();
+
+// extern char CstartChannelRadio[30]; /* defined in setting_helpers.cpp */
+// extern char CstartChannelTV[30];
 
 class CSatDiseqcNotifier : public CChangeObserver
 {
@@ -221,23 +226,6 @@ class CAudioSetupNotifier2 : public CChangeObserver
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 
-class CZapitSetupNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder* toDisable[2];
-	public:
-		CZapitSetupNotifier(CMenuForwarder*, CMenuForwarder*);
-		bool changeNotify(const neutrino_locale_t OptionName, void * data);
-};
-
-class CZapitChannelExec : public CMenuTarget
-{
-	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-void InitZapitChannelHelper(CZapitClient::channelsMode mode);
-
 class CKeySetupNotifier : public CChangeObserver
 {
 	public:
@@ -339,4 +327,5 @@ class CNetAdapter
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
+#endif
 #endif

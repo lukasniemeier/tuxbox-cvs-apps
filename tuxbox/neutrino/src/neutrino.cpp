@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1026 2010/07/01 04:58:49 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1027 2010/07/01 05:04:57 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2149,7 +2149,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	CMenuWidget    miscSettingsOSDExtras        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsChannellist        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsEPGSettings        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
-	CMenuWidget    miscSettingsZapitSettings        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsRemoteControl        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsFilebrowser        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	
@@ -2159,12 +2158,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 							miscSettingsInfobar,
 							miscSettingsChannellist,
 							miscSettingsEPGSettings,
-							miscSettingsZapitSettings,
 							miscSettingsRemoteControl,
 							miscSettingsFilebrowser);	
-
-	// zapit settings
-	InitZapitSettings(miscSettingsZapitSettings);
 
 	dprintf( DEBUG_NORMAL, "registering as event client\n");
 
@@ -4097,7 +4092,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
 		SendSectionsdConfig();
 	}
-	if(actionKey == "zapit_starttv")
+/*	if(actionKey == "zapit_starttv")
 	{
 		parent->hide();
 		InitZapitChannelHelper(CZapitClient::MODE_TV);
@@ -4109,6 +4104,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		InitZapitChannelHelper(CZapitClient::MODE_RADIO);
 		return menu_return::RETURN_REPAINT;
 	}
+*/
 #ifdef ENABLE_MOVIEPLAYER2
 	else if (actionKey.find("mb.file://") == 0)
 	{

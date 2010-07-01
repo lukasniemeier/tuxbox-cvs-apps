@@ -50,8 +50,8 @@ libneutrino_gui_a_SOURCES = \
 	themes.cpp \
 	timeosd.cpp \
 	update.cpp \
-	video_setup.cpp
-	
+	video_setup.cpp \
+	zapit_setup.cpp
 
 libneutrino_gui3_a_SOURCES =  movieinfo.cpp
 

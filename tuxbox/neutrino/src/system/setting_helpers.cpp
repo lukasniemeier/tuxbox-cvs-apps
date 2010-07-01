@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.186 2010/03/29 19:16:21 dbt Exp $
+	$Id: setting_helpers.cpp,v 1.187 2010/07/01 05:04:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -62,6 +62,7 @@
 #include <gui/widget/hintbox.h>
 #include <gui/plugins.h>
 #include <gui/scan_setup.h>
+#include <gui/zapit_setup.h>
 #include <daemonc/remotecontrol.h>
 
 extern "C" int pinghost( const char *hostname );
@@ -459,119 +460,6 @@ bool CColorSetupNotifier::changeNotify(const neutrino_locale_t, void *)
 	return false;
 }
 
-CZapitSetupNotifier::CZapitSetupNotifier(CMenuForwarder* i1, CMenuForwarder* i2)
-{
-	toDisable[0]=i1;
-	toDisable[1]=i2;
-}
-
-bool CZapitSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void * data)
-{
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_ZAPITCONFIG_REMAINING_BOUQUET))
-	{
-		g_Zapit->setRemainingChannelsBouquet((*((int *)data)) != 0);
-		CNeutrinoApp::getInstance()->exec(NULL, "reloadchannels");
-	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_ZAPITCONFIG_SAVE_LAST_CHANNEL))
-	{
-		g_Zapit->setSaveLastChannel((*((int *)data)) != 0);
-		if((*((int *)data)) == 0)
-		{
-			for (int i=0; i<2; i++)
-			{
-				toDisable[i]->setActive(true);
-			}
-		}
-		else
-		{
-			for (int i=0; i<2; i++)
-			{
-				toDisable[i]->setActive(false);
-			}
-		}
-	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_ZAPITCONFIG_SAVE_AUDIO_PID))
-	{
-		g_Zapit->setSaveAudioPIDs((*((int *)data)) != 0);
-	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH))
-	{
-		g_Zapit->setUncommittedSwitchMode(*(int *)data);
-	}
-	return true;
-}
-
-extern char CstartChannelRadio[30]; /* defined in gui/neutrino_menu.cpp */
-extern char CstartChannelTV[30];
-
-void InitZapitChannelHelper(CZapitClient::channelsMode mode)
-{
-	CZapitChannelExec *ZapitChannelChooser = new CZapitChannelExec;
-	std::vector<CMenuWidget *> toDelete;
-	CZapitClient zapit;
-	CZapitClient::BouquetList bouquetlist;
-	zapit.getBouquets(bouquetlist, false, true, mode); // UTF-8
-	CZapitClient::BouquetList::iterator bouquet = bouquetlist.begin();
-	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS);
-
-	for(; bouquet != bouquetlist.end();bouquet++)
-	{
-		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS);
-		toDelete.push_back(mwtv);
-		CZapitClient::BouquetChannelList channellist;
-		zapit.getBouquetChannels(bouquet->bouquet_nr,channellist,mode, true); // UTF-8
-		CZapitClient::BouquetChannelList::iterator channel = channellist.begin();
-		for(; channel != channellist.end();channel++)
-		{
-			char cChannelId[32];
-			sprintf(cChannelId,
-				"ZC%c:%d,",
-				(mode==CZapitClient::MODE_TV)?'T':'R',
-				channel->nr);
-			mwtv->addItem(new CMenuForwarderNonLocalized(channel->name, true, NULL, ZapitChannelChooser, (std::string(cChannelId) + channel->name).c_str()));
-		}
-		if (!channellist.empty())
-			mctv.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwtv));
-		channellist.clear();
-	}
-	mctv.exec (NULL, "");
-	mctv.hide ();
-
-	// delete dynamic created objects
-	for(unsigned int count=0;count<toDelete.size();count++)
-	{
-		delete toDelete[count];
-	}
-	toDelete.clear();
-}
-
-int CZapitChannelExec::exec(CMenuTarget*, const std::string & actionKey)
-{
-	int delta;
-	unsigned int cnr;
-	if (strncmp(actionKey.c_str(), "ZCT:", 4) == 0)
-	{
-		sscanf(&(actionKey[4]),
-			"%u"
-			"%n",
-			&cnr,
-			&delta);
-		g_Zapit->setStartChannelTV(cnr-1);
-		strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
-	}
-	else if (strncmp(actionKey.c_str(), "ZCR:", 4) == 0)
-	{
-		sscanf(&(actionKey[4]),
-			"%u"
-			"%n",
-			&cnr,
-			&delta);
-		g_Zapit->setStartChannelRadio(cnr-1);
-		strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
-	}
-	g_RCInput->postMsg(CRCInput::RC_timeout, 0);
-	return menu_return::RETURN_EXIT;
-}
 
 bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void *)
 {

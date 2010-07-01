@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.107 2010/06/20 13:01:15 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.108 2010/07/01 05:04:57 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -103,6 +103,7 @@
 #include "gui/sleeptimer.h"
 #include "gui/update.h"
 #include "gui/themes.h"
+#include "gui/zapit_setup.h"
 
 #if ENABLE_UPNP
 #include "gui/upnpbrowser.h"
@@ -520,7 +521,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 															CMenuWidget &miscSettingsInfobar,
 															CMenuWidget &miscSettingsChannellist,
 															CMenuWidget &miscSettingsEPGSettings,
-															CMenuWidget &miscSettingsZapitSettings,
 															CMenuWidget &miscSettingsRemoteControl,
 															CMenuWidget &miscSettingsFilebrowser)
 {
@@ -543,7 +543,7 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	// epg settings
 	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, true, NULL, &miscSettingsEPGSettings, NULL, CRCInput::convertDigitToKey(shortcut++)));
 	// zapit settings
-	miscSettings.addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, true, NULL, &miscSettingsZapitSettings, NULL, CRCInput::convertDigitToKey(shortcut++)));
+	miscSettings.addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, true, NULL, new CZapitSetup(LOCALE_MAINSETTINGS_MISC), NULL, CRCInput::convertDigitToKey(shortcut++)));
 	// remote control
 	miscSettings.addItem(new CMenuForwarder(LOCALE_KEYBINDINGMENU_RC, true, NULL, &miscSettingsRemoteControl, NULL, CRCInput::convertDigitToKey(shortcut++)));
 	// filebrowser
@@ -619,9 +619,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, true, g_settings.epg_max_events, miscSettings_epg_max_events));
 	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_DIR, true, g_settings.epg_dir, this, "epgdir"));
 
-	//zapit settings
-	miscSettingsZapitSettings.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_ZAPITCONFIG_HEAD));
-
 	// remote control
 	miscSettingsRemoteControl.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_RC));
 	addMenueIntroItems(miscSettingsRemoteControl);
@@ -640,51 +637,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	miscSettingsFilebrowser.addItem(new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true ));
 }
 
-#define ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTION_COUNT 3
-const CMenuOptionChooser::keyval ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTIONS[ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTION_COUNT] =
-{
-	{ 0, LOCALE_OPTIONS_OFF                          },
-	{ 1, LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH_MODE1 },
-	{ 2, LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH_MODE2 }
-};
-
-/* These variables need to be defined outside InitZapitSettings,
-   otherwise locale "INTERNAL ERROR - PLEASE REPORT" is displayed
-   instead of the option values */
-int remainingChannelsBouquet = 0;
-int saveaudiopids = 0;
-int savelastchannel = 0;
-int uncommitted_switch = 0;
-char CstartChannelRadio[30]; /* zapitclient.h, responseChannels, char name[30]; */
-char CstartChannelTV[30];
-
-void CNeutrinoApp::InitZapitSettings(CMenuWidget &miscSettingsZapitSettings)
-{
-	addMenueIntroItems(miscSettingsZapitSettings);
-	CZapitSetupNotifier *zapitSetupNotifier = new CZapitSetupNotifier(NULL, NULL);
-
-	savelastchannel = g_Zapit->getSaveLastChannel() ? 1 : 0;
-	strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
-	strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
-	CMenuForwarder *c1 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_TV, !savelastchannel, CstartChannelTV, this, "zapit_starttv");
-	CMenuForwarder *c2 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_RADIO, !savelastchannel, CstartChannelRadio, this, "zapit_startradio");
-	CZapitSetupNotifier *zapitSaveLastNotifier = new CZapitSetupNotifier(c1, c2);
-	miscSettingsZapitSettings.addItem(new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_LAST_CHANNEL, &savelastchannel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, zapitSaveLastNotifier));
-	miscSettingsZapitSettings.addItem(c1);
-	miscSettingsZapitSettings.addItem(c2);
-
-	saveaudiopids = g_Zapit->getSaveAudioPIDs() ? 1 : 0;
-	miscSettingsZapitSettings.addItem(new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_AUDIO_PID, &saveaudiopids, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, zapitSetupNotifier));
-
-	remainingChannelsBouquet = g_Zapit->getRemainingChannelsBouquet() ? 1 : 0;
-	miscSettingsZapitSettings.addItem(new CMenuOptionChooser(LOCALE_ZAPITCONFIG_REMAINING_BOUQUET, &remainingChannelsBouquet, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, zapitSetupNotifier));
-
-	if(g_info.delivery_system == DVB_S)
-	{
-		uncommitted_switch = g_Zapit->getUncommittedSwitchMode();
-		miscSettingsZapitSettings.addItem(new CMenuOptionChooser(LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH, &uncommitted_switch, ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTIONS, ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTION_COUNT, true, zapitSetupNotifier));
-	}
-}
 
 /* for driver and boot settings menu */
 #define DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT 3
