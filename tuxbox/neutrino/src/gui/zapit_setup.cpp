@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.2 2010/07/01 10:57:49 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.3 2010/07/01 11:51:09 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -51,9 +51,6 @@
 #include <dirent.h>
 
 using namespace std;
-
-// extern char CstartChannelRadio[30]; /* defined in gui/neutrino_menu.cpp */
-// extern char CstartChannelTV[30];
 
 CZapitSetup::CZapitSetup(const neutrino_locale_t title, const char * const IconName)
 {
