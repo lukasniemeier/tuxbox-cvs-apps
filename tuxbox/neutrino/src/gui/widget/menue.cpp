@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.167 2010/06/27 21:16:29 dbt Exp $
+	$Id: menue.cpp,v 1.168 2010/07/01 12:17:07 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -114,7 +114,7 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 	}
 #endif
 
-	if  (selected) 
+	if  (selected && offx > 0)
 	{
 		if (!selected_iconName.empty())
 		{
