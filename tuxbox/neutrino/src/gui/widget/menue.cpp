@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.168 2010/07/01 12:17:07 dbt Exp $
+	$Id: menue.cpp,v 1.169 2010/07/03 19:40:08 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -868,8 +868,11 @@ int CMenuOptionLanguageChooser::paint( bool selected )
 //-------------------------------------------------------------------------------------------------------------------------------
 CMenuForwarder::CMenuForwarder(const neutrino_locale_t Text, const bool Active, const char * const Option, CMenuTarget* Target, const char * const ActionKey, neutrino_msg_t DirectKey, const char * const IconName)
 {
-	option = Option;
-	option_string = NULL;
+	if (Option) {
+		strncpy(option, Option, CMF_OPTION_LEN);
+		option[CMF_OPTION_LEN - 1] = 0x0;
+	} else
+		option[0] = 0x0;
 	text=Text;
 	active = Active;
 	jumpTarget = Target;
@@ -880,8 +883,8 @@ CMenuForwarder::CMenuForwarder(const neutrino_locale_t Text, const bool Active, 
 
 CMenuForwarder::CMenuForwarder(const neutrino_locale_t Text, const bool Active, const std::string &Option, CMenuTarget* Target, const char * const ActionKey, neutrino_msg_t DirectKey, const char * const IconName)
 {
-	option = NULL;
-	option_string = &Option;
+	strncpy(option, Option.c_str(), CMF_OPTION_LEN);
+	option[CMF_OPTION_LEN - 1] = 0x0;
 	text=Text;
 	active = Active;
 	jumpTarget = Target;
@@ -899,7 +902,8 @@ int CMenuForwarder::getHeight(void) const
 // Without this, the changeNotifiers would become machine-dependent.
 void CMenuForwarder::setOption(const std::string &Option)
 {
-	option = Option.c_str();
+	strncpy(option, Option.c_str(), CMF_OPTION_LEN);
+	option[CMF_OPTION_LEN - 1] = 0x0;
 
 	if (used && x != -1)
 		paint();
@@ -929,13 +933,7 @@ int CMenuForwarder::exec(CMenuTarget* parent)
 
 const char * CMenuForwarder::getOption(void)
 {
-	if (option)
-		return option;
-	else
-		if (option_string)
-			return option_string->c_str();
-		else
-			return NULL;
+	return option;
 }
 
 const char * CMenuForwarder::getName(void)

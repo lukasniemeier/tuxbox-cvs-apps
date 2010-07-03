@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.82 2010/06/27 21:16:29 dbt Exp $
+	$Id: menue.h,v 1.83 2010/07/03 19:40:08 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -153,8 +153,8 @@ class CMenuSeparator : public CMenuItem
 
 class CMenuForwarder : public CMenuItem
 {
-	const char *        option;
-	const std::string * option_string;
+#define CMF_OPTION_LEN 128
+	char option[CMF_OPTION_LEN];
 	CMenuTarget *       jumpTarget;
 	std::string         actionKey;
 
