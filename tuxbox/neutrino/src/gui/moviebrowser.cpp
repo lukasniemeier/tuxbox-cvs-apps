@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.44 2010/07/01 11:44:19 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.45 2010/07/03 12:11:35 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.44 2010/07/01 11:44:19 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.45 2010/07/03 12:11:35 dbt Exp $\r\n");
 	init();
 }
 
@@ -1653,6 +1653,9 @@ void CMovieBrowser::refreshFoot(void)
 	
 	std::string filter_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_FILTER);
 	filter_text += m_settings.filter.optionString;
+
+	//cut button caption for filter
+	filter_text = filter_text.length() < 24 ? filter_text : filter_text.substr( 0, 24 ) + "...";
 
 	std::string sort_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT);
 	sort_text += g_Locale->getText(m_localizedItemName[m_settings.sorting.item]);
@@ -3896,7 +3899,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.44 $");
+	return imageinfo.getModulVersion("","$Revision: 1.45 $");
 }
 
 /************************************************************************/
