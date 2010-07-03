@@ -2,7 +2,7 @@
 #define __setting_helpers__
 
 /*
-	$Id: setting_helpers.h,v 1.101 2010/07/01 05:04:57 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.102 2010/07/03 19:38:01 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -69,7 +69,7 @@ class CSatDiseqcNotifier : public CChangeObserver
 class CTP_scanNotifier : public CChangeObserver
 {
 	private:
-		CMenuOptionChooser* toDisable1[3];
+		CMenuOptionChooser* toDisable1[2];
 		CMenuForwarder* toDisable2[2];
 		CMenuOptionStringChooser* toDisable3[1];
 		CMenuForwarder* toModifi;
