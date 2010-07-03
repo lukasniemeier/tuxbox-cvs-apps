@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.135 2010/06/27 12:23:27 dbt Exp $
+	$Id: eventlist.cpp,v 1.136 2010/07/03 07:16:37 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -39,6 +39,7 @@
 #include <gui/epgplus.h>
 #include <gui/timerlist.h>
 
+#include <gui/widget/buttons.h>
 #include <gui/widget/icons.h>
 #include <gui/widget/messagebox.h>
 #include <gui/widget/mountchooser.h>
@@ -95,7 +96,7 @@ EventList::EventList()
 	width  = w_max (590, 20);
 	height = h_max (480, 20);
 
-	iheight = 30;	// info bar height (see below, hard coded at this time)
+	iheight  = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + 2;
 	theight  = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_TITLE]->getHeight();
 	fheight1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE]->getHeight();
 	{
@@ -598,7 +599,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 void EventList::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x, y, width, height - 3);
+	frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 }
 
 void EventList::paintItem(unsigned int pos)
@@ -738,37 +739,40 @@ void EventList::paint()
 // -- Just display/hide function bar
 // -- 2004-04-12 rasc
 //
+struct button_label EventListButtons[5] =
+{
+	{ "", LOCALE_GENERIC_EMPTY          },  // timerlist delete / record button
+	{ "", LOCALE_EVENTFINDER_SEARCH     },  // search button
+	{ "", LOCALE_GENERIC_EMPTY          },  // timerlist delete / channelswitch
+	{ "", LOCALE_EVENTLISTBAR_EVENTSORT },  // sort button
+	{ "", LOCALE_KEYBINDINGMENU_RELOAD  }   // reload button
+};
+
 void  EventList::showFunctionBar (bool show)
 {
-	int  bx,by,bw,bh;
+	int  bx,by;
 	int  cellwidth;		// 5 cells
-	int  h_offset;
-	int  h_iconoffset;
 	int  space = 8;		// space between buttons
-	int  iconw = 0; //16+4;	// buttonwidht + space between icon and caption
-	int  h_maxoffset = 5, h_minoffset = 2;
+	int  iconw = 0; //x+4;	// buttonwidht + space between icon and caption
 
 	CKeyHelper keyhelper;
 	neutrino_msg_t dummy = CRCInput::RC_nokey;
 	const char * icon = NULL;
 	std::string btncaption;	
 
-	bw = width;
-	bh = iheight;
-	bx = x+4;
-	by = y + height-iheight;
-	h_offset = 5;
-	h_iconoffset = 0;
+	bx = x + 5;
+	by = y + height - iheight;
+
+	int ButtonWidth = width / 5;
 
 	// -- hide only?
 	if (!show)
 	{
-		frameBuffer->paintBackgroundBoxRel(bx, by, bw, bh - 3);
+		frameBuffer->paintBackgroundBoxRel(bx, by, width, iheight);
 		return;
 	}
 
-	frameBuffer->paintBoxRel(x, by, bw, bh - 3, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-
+	frameBuffer->paintBoxRel(x, by, width, iheight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].duration,evtlist[selected].get_channel_id());
 	
@@ -777,20 +781,24 @@ void  EventList::showFunctionBar (bool show)
 		(g_settings.key_channelList_addrecord != CRCInput::RC_nokey))
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_addrecord);
-		
+		EventListButtons[0].button = icon;
+
 		if(is_timer & EventList::TIMER_RECORD )
+		{
 			btncaption = g_Locale->getText(LOCALE_TIMERLIST_DELETE);
+			EventListButtons[0].locale = LOCALE_TIMERLIST_DELETE;
+		}
 		else
+		{
 			btncaption = g_Locale->getText(LOCALE_EVENTLISTBAR_RECORDEVENT);
+			EventListButtons[0].locale = LOCALE_EVENTLISTBAR_RECORDEVENT;
+		}
 		
 		iconw = frameBuffer->getIconWidth(icon)+4;
-		cellwidth = iconw + space +g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
+		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 
 		// paint 1st button
-		h_iconoffset = frameBuffer->getIconHeight(icon)> 16 ? h_minoffset : h_maxoffset;
-		frameBuffer->paintIcon(icon, bx, by+h_iconoffset);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(bx+iconw, by+bh-h_offset, bw-30, btncaption, COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
-
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[0]);
 		bx += cellwidth;
 	}
 
@@ -799,6 +807,7 @@ void  EventList::showFunctionBar (bool show)
 	{
 
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_search);
+		EventListButtons[1].button = icon;
 		
 		btncaption = g_Locale->getText(LOCALE_EVENTFINDER_SEARCH);
 		
@@ -806,10 +815,7 @@ void  EventList::showFunctionBar (bool show)
 		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 	
 		// paint second button
-		h_iconoffset = frameBuffer->getIconHeight(icon)> 16 ? h_minoffset : h_maxoffset;
-		frameBuffer->paintIcon(icon, bx, by+h_iconoffset);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(bx+iconw, by+bh-h_offset, bw-30, btncaption, COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
-		
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[1]);
 		bx += cellwidth;
 	}
 
@@ -817,20 +823,24 @@ void  EventList::showFunctionBar (bool show)
 	if (g_settings.key_channelList_addremind != CRCInput::RC_nokey)
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_addremind);
+		EventListButtons[2].button = icon;
 
 		if(is_timer & EventList::TIMER_ZAPTO)
+		{
 			btncaption =  g_Locale->getText(LOCALE_TIMERLIST_DELETE);
+			EventListButtons[2].locale = LOCALE_TIMERLIST_DELETE;
+		}
 		else
+		{
 			btncaption =  g_Locale->getText(LOCALE_EVENTLISTBAR_CHANNELSWITCH);
+			EventListButtons[2].locale = LOCALE_EVENTLISTBAR_CHANNELSWITCH;
+		}
 		
 		iconw = frameBuffer->getIconWidth(icon)+4;
 		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 
 		// paint 3rd button
-		h_iconoffset = frameBuffer->getIconHeight(icon)> 16 ? h_minoffset : h_maxoffset;
-		frameBuffer->paintIcon(icon, bx, by+h_iconoffset);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(bx+iconw, by+bh-h_offset, bw-30, btncaption, COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
-
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[2]);
 		bx += cellwidth;
 	}
 
@@ -838,6 +848,7 @@ void  EventList::showFunctionBar (bool show)
 	if (g_settings.key_channelList_sort != CRCInput::RC_nokey)
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_sort);
+		EventListButtons[3].button = icon;
 		
 		btncaption =  g_Locale->getText(LOCALE_EVENTLISTBAR_EVENTSORT);
 		
@@ -845,9 +856,7 @@ void  EventList::showFunctionBar (bool show)
 		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 	
 		// paint 4th button
-		h_iconoffset = frameBuffer->getIconHeight(icon)> 16 ? h_minoffset : h_maxoffset;
-		frameBuffer->paintIcon(icon, bx, by+h_iconoffset);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(bx+iconw, by+bh-h_offset, bw-30, btncaption, COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[3]);
 		bx += cellwidth;
 	}
 
@@ -855,13 +864,11 @@ void  EventList::showFunctionBar (bool show)
 	if (g_settings.key_channelList_reload != CRCInput::RC_nokey)
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_reload);
+		EventListButtons[4].button = icon;
 
 		// paint 5th button
 		btncaption =  g_Locale->getText(LOCALE_KEYBINDINGMENU_RELOAD);
-		h_iconoffset = frameBuffer->getIconHeight(icon)> 16 ? h_minoffset : h_maxoffset;
-		frameBuffer->paintIcon(icon, bx, by+h_iconoffset);
-		iconw = frameBuffer->getIconWidth(icon)+4;
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(bx+iconw, by+bh-h_offset, bw-30, btncaption, COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[4]);
 	}
 
 }
@@ -1062,13 +1069,11 @@ int CEventFinderMenu::exec(CMenuTarget* parent, const std::string &actionkey)
 		// get channel id / bouquet id
 		if(*m_search_list == EventList::SEARCH_LIST_CHANNEL)
 		{
-			int nNewChannel;
-			int nNewBouquet;
-			nNewBouquet = bouquetList->show();
+			int nNewBouquet = bouquetList->show();
 			//printf("new_bouquet_id %d\n",nNewBouquet);
 			if (nNewBouquet > -1)
 			{
-				nNewChannel = bouquetList->Bouquets[nNewBouquet]->channelList->show();
+				int nNewChannel = bouquetList->Bouquets[nNewBouquet]->channelList->show();
 				//printf("nNewChannel %d\n",nNewChannel);
 				if (nNewChannel > -1)
 				{
