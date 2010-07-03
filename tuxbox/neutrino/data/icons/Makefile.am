@@ -49,7 +49,6 @@ install-data-local:
 	$(INSTALL) -m 755 -d $(installdir)
 	$(INSTALL) -m 644 exit.raw $(installdir)/home.raw
 	$(INSTALL) -m 644 menu.raw $(installdir)/dbox.raw
-	$(INSTALL) -m 644 menu_small.raw
 else
 install_DATA += home.raw dbox.raw
 endif
