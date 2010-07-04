@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.87 2010/03/07 19:41:22 rhabarber1848 Exp $
+	$Id: lcdd.cpp,v 1.88 2010/07/04 10:33:42 seife Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -145,13 +145,11 @@ void* CLCD::TimeThread(void *)
 }
 #endif
 
-void CLCD::init(const char * fontfile, const char * fontname,
-                const char * fontfile2, const char * fontname2,
-                const char * fontfile3, const char * fontname3)
+void CLCD::init(const char *fontfile, const char *fontfile2, const char *fontfile3)
 {
 	InitNewClock();
 
-	if (!lcdInit(fontfile, fontname, fontfile2, fontname2, fontfile3, fontname3 ))
+	if (!lcdInit(fontfile, fontfile2, fontfile3))
 	{
 		printf("[lcdd] LCD-Init failed!\n");
 #ifndef BOXMODEL_DM500
@@ -189,35 +187,43 @@ const char * const background_path[NUMBER_OF_PATHS] = {
 	DATADIR "/lcdd/icons/"
 };
 
-bool CLCD::lcdInit(const char * fontfile, const char * fontname,
-		   const char * fontfile2, const char * fontname2,
-		   const char * fontfile3, const char * fontname3)
+bool CLCD::lcdInit(const char *fontfile, const char *fontfile2, const char *fontfile3)
 {
 	fontRenderer = new LcdFontRenderClass(&display);
 	const char * style_name = fontRenderer->AddFont(fontfile);
+	char * font_name =  strdup(fontRenderer->getFamily(fontfile).c_str());
 	const char * style_name2;
+	char * font_name2;
 	const char * style_name3;
+	char * font_name3;
 
 	if (fontfile2 != NULL)
+	{
 		style_name2 = fontRenderer->AddFont(fontfile2);
+		font_name2 =  strdup(fontRenderer->getFamily(fontfile2).c_str());
+	}
 	else
 	{
 		style_name2 = style_name;
-		fontname2   = fontname;
+		font_name2  = strdup(font_name);
 	}
 
 	if (fontfile3 != NULL)
+	{
 		style_name3 = fontRenderer->AddFont(fontfile3);
+		font_name3 =  strdup(fontRenderer->getFamily(fontfile3).c_str());
+	}
 	else
 	{
 		style_name3 = style_name;
-		fontname3   = fontname;
+		font_name3  = strdup(font_name);
 	}
+
 	fontRenderer->InitFontCache();
 
-	fonts.menu        = fontRenderer->getFont(fontname,  style_name , 12);
-	fonts.time        = fontRenderer->getFont(fontname2, style_name2, 14);
-	fonts.channelname = fontRenderer->getFont(fontname3, style_name3, 15);
+	fonts.menu        = fontRenderer->getFont(font_name,  style_name , 12);
+	fonts.time        = fontRenderer->getFont(font_name2, style_name2, 14);
+	fonts.channelname = fontRenderer->getFont(font_name3, style_name3, 15);
 	fonts.menutitle   = fonts.channelname;
 
 	setAutoDimm(g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM]);
@@ -246,6 +252,9 @@ bool CLCD::lcdInit(const char * fontfile, const char * fontname,
 
 	setMode(MODE_TVRADIO);
 
+	free(font_name);
+	free(font_name2);
+	free(font_name3);
 	return true;
 }
 

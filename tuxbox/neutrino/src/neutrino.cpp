@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1028 2010/07/01 10:57:49 dbt Exp $
+	$Id: neutrino.cpp,v 1.1029 2010/07/04 10:33:42 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1585,7 +1585,7 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 	softupdate = false;
 	fromflash = false;
 
-	font.name = NULL;
+	font.filename[0] = NULL;
 
 	for(int x=1; x<argc; x++)
 	{
@@ -1601,28 +1601,28 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 		}
 		else if (!strcmp(argv[x], "--font"))
 		{
-			if ((x + 3) < argc)
+			if ((x + 2) < argc)
 			{
-				font.name = argv[x + 1];
-				font.size_offset = atoi(argv[x + 2]);
-				font.filename[0] = argv[x + 3];
-				if ((x + 4) < argc)
+				font.is_unicode = -1;
+				font.size_offset = atoi(argv[x + 1]);
+				font.filename[0] = argv[x + 2];
+				if ((x + 3) < argc)
 				{
-					font.filename[1] = argv[x + 4];
+					font.filename[1] = argv[x + 3];
 					x++;
 				}
 				else
 					font.filename[1] = NULL;
 
-				if ((x + 4) < argc)
+				if ((x + 3) < argc)
 				{
-					font.filename[2] = argv[x + 4];
+					font.filename[2] = argv[x + 3];
 					x++;
 				}
 				else
 					font.filename[2] = NULL;
 			}
-			x += 3;
+			x += 2;
 		}
 		else if (((!strcmp(argv[x], "-v")) || (!strcmp(argv[x], "--verbose"))) && (x+1 < argc))
 		{
@@ -1633,7 +1633,7 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 		}
 		else
 		{
-			fprintf(stderr, "Usage: neutrino [-u | --enable-update] [-f | --enable-flash] [-v | --verbose 0..3] [--font name sizeoffset /dir/file.ttf [/dir/bold.ttf [/dir/italic.ttf]]]\n");
+			fprintf(stderr, "Usage: neutrino [-u | --enable-update] [-f | --enable-flash] [-v | --verbose 0..3] [--font sizeoffset /dir/file.ttf [/dir/bold.ttf [/dir/italic.ttf]]]\n");
 			exit(0);
 		}
 	}
@@ -1668,19 +1668,20 @@ void CNeutrinoApp::SetupFrameBuffer()
 
 const neutrino_font_descr_struct predefined_font[2] =
 {
-	{"Micron"            , {FONTDIR "/micron.ttf"        , FONTDIR "/micron_bold.ttf", FONTDIR "/micron_italic.ttf"}, 0},
-	{"MD King KhammuRabi", {FONTDIR "/md_khmurabi_10.ttf", NULL                      , NULL                        }, 0}
+	{ {FONTDIR "/micron.ttf"        , FONTDIR "/micron_bold.ttf", FONTDIR "/micron_italic.ttf"}, 0, 0},
+	{ {FONTDIR "/md_khmurabi_10.ttf", NULL                      , NULL                        }, 0, 1}
 };
 
-const char* predefined_lcd_font[2][6] =
+const char* predefined_lcd_font[2][3] =
 {
-	{FONTDIR "/12.pcf.gz", "Fix12", FONTDIR "/14B.pcf.gz", "Fix14", FONTDIR "/15B.pcf.gz", "Fix15"},
-	{FONTDIR "/md_khmurabi_10.ttf", "MD King KhammuRabi", NULL, NULL,  NULL, NULL}
+	{FONTDIR "/12.pcf.gz", FONTDIR "/14B.pcf.gz", FONTDIR "/15B.pcf.gz"},
+	{FONTDIR "/md_khmurabi_10.ttf", NULL, NULL}
 };
 
 void CNeutrinoApp::SetupFonts()
 {
 	const char * style[3];
+	char *fontname;
 
 	if (g_fontRenderer != NULL)
 		delete g_fontRenderer;
@@ -1689,7 +1690,16 @@ void CNeutrinoApp::SetupFonts()
 
 	style[0] = g_fontRenderer->AddFont(font.filename[0]);
 
-	style[1] = (font.filename[1] == NULL) ? "Bold Regular" : g_fontRenderer->AddFont(font.filename[1]);
+	fontname = strdup(g_fontRenderer->getFamily(font.filename[0]).c_str());
+	fprintf(stderr, "[neutrino] SetupFonts filename: %s fontname: %s\n", font.filename[0], fontname);
+
+	if (font.filename[1] == NULL)
+	{
+		g_fontRenderer->AddFont(font.filename[0], true);
+		style[1] = "Bold Regular";
+	}
+	else
+		style[1] = g_fontRenderer->AddFont(font.filename[1]);
 
 	if (font.filename[2] == NULL)
 	{
@@ -1701,8 +1711,9 @@ void CNeutrinoApp::SetupFonts()
 
 	for (int i = 0; i < FONT_TYPE_COUNT; i++)
 	{
-		g_Font[i] = g_fontRenderer->getFont(font.name, style[neutrino_font[i].style], configfile.getInt32(locale_real_names[neutrino_font[i].name], neutrino_font[i].defaultsize) + neutrino_font[i].size_offset * font.size_offset);
+		g_Font[i] = g_fontRenderer->getFont(fontname, style[neutrino_font[i].style], configfile.getInt32(locale_real_names[neutrino_font[i].name], neutrino_font[i].defaultsize) + neutrino_font[i].size_offset * font.size_offset);
 	}
+	free(fontname);
 }
 
 /**************************************************************************************
@@ -2032,20 +2043,19 @@ int CNeutrinoApp::run(int argc, char **argv)
 	else
 		display_language_selection = false;
 
-	if (font.name == NULL) /* no font specified in command line */
+	if (font.filename[0] == NULL) /* no font specified in command line */
 	{
 		unsigned int use_true_unicode_font = (loadLocale_ret == CLocaleManager::ISO_8859_1_FONT) ? 0 : 1;
 
 		font = predefined_font[use_true_unicode_font];
 		CLCD::getInstance()->init(predefined_lcd_font[use_true_unicode_font][0],
 		                          predefined_lcd_font[use_true_unicode_font][1],
-		                          predefined_lcd_font[use_true_unicode_font][2],
-		                          predefined_lcd_font[use_true_unicode_font][3],
-		                          predefined_lcd_font[use_true_unicode_font][4],
-		                          predefined_lcd_font[use_true_unicode_font][5]);
+		                          predefined_lcd_font[use_true_unicode_font][2]);
 	}
 	else
-		CLCD::getInstance()->init(font.filename[0], font.name);
+	{
+		CLCD::getInstance()->init(font.filename[0]);
+	}
 
 	CLCD::getInstance()->showVolume(g_Controld->getVolume((CControld::volume_type)g_settings.audio_avs_Control));
 	CLCD::getInstance()->setMuted(g_Controld->getMute((CControld::volume_type)g_settings.audio_avs_Control));
@@ -4115,15 +4125,18 @@ bool CNeutrinoApp::changeNotify(const neutrino_locale_t OptionName, void *)
 	{
 		return doGuiRecord(NULL,ARE_LOCALES_EQUAL(OptionName, LOCALE_MAINMENU_RECORDING));
 	}
-	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LANGUAGESETUP_SELECT))
-	{
-		bool use_true_unicode_font = g_Locale->loadLocale(g_settings.language);
 
-		if (font.name == predefined_font[(!use_true_unicode_font)].name)
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LANGUAGESETUP_SELECT))
+	{
+		int unicode_locale = g_Locale->loadLocale(g_settings.language);
+		if (font.is_unicode != -1) /* user defined font, don't mess with that */
+			return false;
+		if (unicode_locale == CLocaleManager::NO_SUCH_LOCALE)	/* should not happen, but anyway.. */
+			return false;				/* avoid crash from negative array index */
+		if (font.is_unicode != unicode_locale)
 		{
-			font = predefined_font[use_true_unicode_font];
+			font = predefined_font[unicode_locale];
 			SetupFonts();
-#warning TODO: reload LCD fonts, too
 		}
 		return true;
 	}

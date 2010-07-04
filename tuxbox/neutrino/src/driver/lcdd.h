@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.h,v 1.44 2010/02/28 08:48:40 rhabarber1848 Exp $
+	$Id: lcdd.h,v 1.45 2010/07/04 10:33:42 seife Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -123,9 +123,7 @@ class CLCD
 		CLCD();
 
 		static void* TimeThread(void*);
-		bool lcdInit(const char * fontfile1, const char * fontname1, 
-		             const char * fontfile2=NULL, const char * fontname2=NULL,
-		             const char * fontfile3=NULL, const char * fontname3=NULL);
+		bool lcdInit(const char *fontfile1, const char *fontfile2 = NULL, const char *fontfile3 = NULL);
 		void setlcdparameter(int dimm, int contrast, int power, int inverse, int bias);
 		void displayUpdate();
 		void showTextScreen(const std::string & big, const std::string & small, int showmode, bool perform_wakeup);
@@ -135,9 +133,7 @@ class CLCD
 		void setlcdparameter(void);
 
 		static CLCD* getInstance();
-		void init(const char * fontfile, const char * fontname,
-		          const char * fontfile2=NULL, const char * fontname2=NULL,
-		          const char * fontfile3=NULL, const char * fontname3=NULL); 
+		void init(const char *fontfile, const char *fontfile2 = NULL, const char *fontfile3 = NULL);
 
 		void setMode(const MODES m, const char * const title = "");
 		MODES getMode() { return mode; };
