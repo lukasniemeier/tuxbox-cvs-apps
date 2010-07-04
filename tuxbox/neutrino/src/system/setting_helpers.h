@@ -2,7 +2,7 @@
 #define __setting_helpers__
 
 /*
-	$Id: setting_helpers.h,v 1.102 2010/07/03 19:38:01 seife Exp $
+	$Id: setting_helpers.h,v 1.103 2010/07/04 16:13:06 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -223,6 +223,16 @@ class CAudioSetupNotifier2 : public CChangeObserver
 		CMenuItem* toDisable[1];
 	public:
 		CAudioSetupNotifier2( CMenuItem* );
+		bool changeNotify(const neutrino_locale_t, void *);
+};
+
+class CUserMenuNotifier : public CChangeObserver
+{
+	private:
+		CMenuForwarder *menuitem;
+	public:
+		CUserMenuNotifier(CMenuForwarder *item = NULL);
+		void setItem(CMenuForwarder *item);
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 

@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.187 2010/07/01 05:04:57 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.188 2010/07/04 16:13:06 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -495,6 +495,25 @@ bool CAudioSetupNotifier2::changeNotify(const neutrino_locale_t, void *)
 	return true;
 }
 
+CUserMenuNotifier::CUserMenuNotifier(CMenuForwarder *item)
+{
+	menuitem = item;
+}
+
+void CUserMenuNotifier::setItem(CMenuForwarder *item)
+{
+	menuitem = item;
+}
+
+bool CUserMenuNotifier::changeNotify(const neutrino_locale_t, void *Data)
+{
+	if (menuitem) {
+		char *data = (char *)Data;
+		menuitem->setOption(std::string(data));
+	}
+	return true;
+}
+
 bool CKeySetupNotifier::changeNotify(const neutrino_locale_t, void *)
 {
 	g_RCInput->setRepeat(atoi(g_settings.repeat_blocker), atoi(g_settings.repeat_genericblocker));
@@ -954,8 +973,11 @@ int CUserMenuMenu::exec(CMenuTarget* parent, const std::string &)
 	menu.addItem(GenericMenuBack);
 	menu.addItem(GenericMenuSeparatorLine);
 	
-	CStringInputSMS name(LOCALE_USERMENU_NAME,    &g_settings.usermenu_text[button], 11, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß/- ");
-	menu.addItem(new CMenuForwarder(LOCALE_USERMENU_NAME,    true, g_settings.usermenu_text[button],&name));
+	CUserMenuNotifier *notify = new CUserMenuNotifier();
+	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß/- ", notify);
+	CMenuForwarder *mf = new CMenuForwarder(LOCALE_USERMENU_NAME, true, g_settings.usermenu_text[button],&name);
+	notify->setItem(mf);
+	menu.addItem(mf);
 	menu.addItem(GenericMenuSeparatorLine);
 	
 	char text[10];
