@@ -98,9 +98,9 @@ int CAudioSelectMenuHandler::doMenu ()
 		{
 			char apid[5];
 			sprintf(apid, "%d", count);
-			fw[count] = new CMenuForwarderNonLocalized(g_RemoteControl->current_PIDs.APIDs[count].desc, true, NULL, APIDChanger, apid, CRCInput::convertDigitToKey(count + 1)), (count == g_RemoteControl->current_PIDs.PIDs.selected_apid);
+			fw[count] = new CMenuForwarderNonLocalized(g_RemoteControl->current_PIDs.APIDs[count].desc, true, NULL, APIDChanger, apid, CRCInput::convertDigitToKey(count + 1));
 			fw[count]->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
-			AudioSelector.addItem(fw[count], count == 0 ? true:false);
+			AudioSelector.addItem(fw[count], (count == g_RemoteControl->current_PIDs.PIDs.selected_apid));
 	   	}
 	}
 
