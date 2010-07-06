@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.153 2010/03/19 21:25:28 dbt Exp $
+	$Id: epgview.cpp,v 1.154 2010/07/06 13:09:35 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,6 +41,7 @@
 
 #include <gui/widget/hintbox.h>
 #include <gui/widget/icons.h>
+#include <gui/widget/buttons.h>
 #include <gui/widget/messagebox.h>
 #include <gui/widget/mountchooser.h>
 #include <gui/widget/dirchooser.h>
@@ -54,6 +55,8 @@
 #include <driver/encoding.h>
 #include <driver/screen_max.h>
 #define ICON_LARGE_WIDTH 26
+#define ICON_HEIGHT 16
+#define BUTTONBAR_FONT_OFFSET 5
 
 int findItem(std::string strItem, std::vector<std::string> & vecItems) {
 	for (std::vector<std::string>::size_type nCnt = 0; nCnt < vecItems.size(); nCnt++) {
@@ -425,8 +428,8 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		startzeit=*a_startzeit;
 	id=a_id;
 
-	int height;
-	height = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->getHeight();
+	int height = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->getHeight();
+	int fheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BUTTONBAR_FONT_OFFSET;
 
 	GetEPGData(channel_id, id, &startzeit );
 	if (doLoop)
@@ -444,11 +447,11 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 
 	printf("showing epgid: 0x%04llx (%lld)\n", epgData.eventID & 0xFFFFULL, epgData.eventID & 0xFFFFULL);
 
-	int pos;
 	std::string text1 = epgData.title;
 	std::string text2 = "";
 	if (g_Font[SNeutrinoSettings::FONT_TYPE_EPG_TITLE]->getRenderWidth(text1) > ox - 15) // 15 for the scroll bar...
 	{
+		int pos;
 		do
 		{
 			pos = text1.find_last_of("[ .]+");
@@ -595,12 +598,12 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		for (unsigned int i=0; i< tags.size(); i++)
 		{
 			if( tags[i].streamContent == 1 && (tags[i].componentType == 2 || tags[i].componentType == 3) )
-			{
-				frameBuffer->paintIcon(NEUTRINO_ICON_16_9, ox + sx - (ICON_LARGE_WIDTH + 2 ) - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + 7);
+			{	
+				frameBuffer->paintIcon(NEUTRINO_ICON_16_9, ox + sx - (ICON_LARGE_WIDTH + 2 ) - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + (fheight >> 1) - (ICON_HEIGHT >> 1));
 			}
 			else if( tags[i].streamContent == 2 && tags[i].componentType == 5 )
 			{
-				frameBuffer->paintIcon(NEUTRINO_ICON_DD, ox + sx - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + 7);
+				frameBuffer->paintIcon(NEUTRINO_ICON_DD, ox + sx - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + (fheight >> 1) - (ICON_HEIGHT >> 1));
 			}
 		}
 	}
@@ -949,40 +952,34 @@ int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::st
 // -- Just display or hide TimerEventbar
 // -- 2002-05-13 rasc
 //
+const struct button_label epgviewButtons[2] =
+{
+	{ NEUTRINO_ICON_BUTTON_RED    , LOCALE_TIMERBAR_RECORDEVENT   },
+	{ NEUTRINO_ICON_BUTTON_YELLOW , LOCALE_TIMERBAR_CHANNELSWITCH }
+
+};
 
 void CEpgData::showTimerEventBar(bool _show)
 {
-	int x,y,w,h;
-	int cellwidth; // 4 cells
-	int h_offset, pos;
-
-	w = ox;
-	h = 30;
-	x = sx;
-	y = sy + oy;
-	h_offset = 5;
-	cellwidth = w / 4;
+	int ButtonWidth = ox / 4; // 4 cells
+	int fheight = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + BUTTONBAR_FONT_OFFSET;
+	int by = sy + oy + (fheight >> 3) - 1;
 
 	// hide only?
 	if (! _show)
 	{
-		frameBuffer->paintBackgroundBoxRel(x, y, w, h);
+		frameBuffer->paintBackgroundBoxRel(sx, sy + oy, ox, fheight);
 		return;
 	}
 
-	frameBuffer->paintBoxRel(x, y, w, h, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	frameBuffer->paintBoxRel(sx, sy + oy, ox, fheight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	// Button: Timer Record & Channelswitch
 	if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-	{
-		pos = 0;
-		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_RED, x + 8 + cellwidth * pos, y + h_offset + 2);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 29 + cellwidth * pos, y + h - h_offset + 2, w - 30, g_Locale->getText(LOCALE_TIMERBAR_RECORDEVENT), COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
-	}
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8, by, ButtonWidth, 1, &epgviewButtons[0]);
+
 	// Button: Timer Channelswitch
-	pos = 2;
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_YELLOW, x + 8 + cellwidth * pos, y + h_offset + 2);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + 29 + cellwidth * pos, y + h - h_offset + 2, w - 30, g_Locale->getText(LOCALE_TIMERBAR_CHANNELSWITCH), COL_INFOBAR_SHADOW + 1, 0, true); // UTF-8
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
 }
 
 
