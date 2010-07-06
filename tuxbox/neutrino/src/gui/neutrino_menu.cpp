@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.108 2010/07/01 05:04:57 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.109 2010/07/06 13:08:12 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1665,6 +1665,8 @@ bool CNeutrinoApp::getNVODMenu(CMenuWidget* menu)
 		return false;
 		
 	menu->addItem(GenericMenuSeparator);
+	menu->addItem(GenericMenuCancel);
+	menu->addItem(GenericMenuSeparatorLine);
 
 	int count = 0;
 	char nvod_id[5];
