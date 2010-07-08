@@ -55,7 +55,9 @@
 #include "textbox.h"
 
 #include <gui/widget/icons.h>
+#include <driver/framebuffer.h>
 #include <driver/fb_window.h>
+
 
 class CMsgBox  
 {
@@ -89,6 +91,8 @@ class CMsgBox
 		}mode;
 
 	private:
+		CFrameBuffer * frameBuffer;
+
 		/* Functions */
 		void initVar(void);
 		void initFramesRel(void);
@@ -143,7 +147,7 @@ class CMsgBox
 		void    refresh(void);
 		void    scrollPageDown(const int pages);
 		void    scrollPageUp(const int pages);
-		int		result(void);
+		int		result(void) const;
 
 		bool	setText(const std::string* newText);
 };

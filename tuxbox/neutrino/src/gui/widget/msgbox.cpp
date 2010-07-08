@@ -94,6 +94,7 @@ CMsgBox::CMsgBox(const char *text,
 		 int return_button,
 		 const result_ default_result)
 {
+	frameBuffer = CFrameBuffer::getInstance();
 	//TRACE("->CMsgBox::CMsgBox\r\n");
 	initVar();
 
@@ -331,6 +332,7 @@ void CMsgBox::initFramesRel(void)
 void CMsgBox::refreshFoot(void)
 {
 	int color,bgcolor;
+	int iconw, iconh;
 	if(	!(m_nMode & FOOT)) return;
 
 	// draw the background first
@@ -346,9 +348,9 @@ void CMsgBox::refreshFoot(void)
 
 	int MaxButtonTextWidth = m_pcFontFoot->getRenderWidth(g_Locale->getText(LOCALE_MESSAGEBOX_CANCEL), true); // UTF-8
 	int ButtonWidth = 20 + 33 + MaxButtonTextWidth;
-	int ButtonSpacing = (m_cBoxFrameFootRel.iWidth - 20- (ButtonWidth*3) ) / 2;
-	int xpos = m_cBoxFrameFootRel.iX;
-	int corner = CORNER_TOP+CORNER_BOTTOM;
+	int ButtonSpacing = (m_cBoxFrameFootRel.iWidth - 40- (ButtonWidth*3) ) / 2;
+	int xpos = m_cBoxFrameFootRel.iX + 20;
+	int ypos = m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1);
 
 	// draw Button mbYes
 	if (m_nFootButtons & mbYes)
@@ -363,9 +365,12 @@ void CMsgBox::refreshFoot(void)
 			color   = COL_INFOBAR_SHADOW;
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
-		m_pcWindow->paintBoxRel(xpos, m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1), ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, CORNER_RADIUS_SMALL, corner);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos + 14, m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1));
-		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, m_cBoxFrameFootRel.iY + m_nFontFootHeight + 4 + (ADD_FOOT_HEIGHT>>1), ButtonWidth - 53, g_Locale->getText(LOCALE_MESSAGEBOX_YES), (CFBWindow::color_t)color, 0, true); // UTF-8
+		// get height/width of icon
+		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_RED);
+		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_RED);
+		m_pcWindow->paintBoxRel(xpos, ypos, ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos + 22 - (iconw >> 1), ypos + ((m_nFontFootHeight + 2)>>1) - (iconh >> 1));
+		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, ypos + m_nFontFootHeight + 2, ButtonWidth - 53, g_Locale->getText(LOCALE_MESSAGEBOX_YES), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 
 	xpos += ButtonWidth + ButtonSpacing;
@@ -383,10 +388,12 @@ void CMsgBox::refreshFoot(void)
 			color   = COL_INFOBAR_SHADOW;
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
-
-		m_pcWindow->paintBoxRel(xpos, m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1), ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, CORNER_RADIUS_SMALL, corner);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos + 14, m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1));
-		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, m_cBoxFrameFootRel.iY + m_nFontFootHeight + 4 + (ADD_FOOT_HEIGHT>>1), ButtonWidth- 53, g_Locale->getText(LOCALE_MESSAGEBOX_NO), (CFBWindow::color_t)color, 0, true); // UTF-8
+		// get height/width of icon
+		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_GREEN);
+		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_GREEN);
+		m_pcWindow->paintBoxRel(xpos, ypos, ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos + 22 - (iconw >> 1), ypos + ((m_nFontFootHeight + 2)>>1) - (iconh >> 1));
+		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, ypos + m_nFontFootHeight + 2, ButtonWidth- 53, g_Locale->getText(LOCALE_MESSAGEBOX_NO), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 
 	xpos += ButtonWidth + ButtonSpacing;
@@ -404,10 +411,13 @@ void CMsgBox::refreshFoot(void)
 			color   = COL_INFOBAR_SHADOW;
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
-
-		m_pcWindow->paintBoxRel(xpos, m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1), ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, CORNER_RADIUS_SMALL, corner);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_HOME, xpos+10, m_cBoxFrameFootRel.iY + (ADD_FOOT_HEIGHT>>1));
-		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, m_cBoxFrameFootRel.iY + m_nFontFootHeight + 2 + (ADD_FOOT_HEIGHT>>1), ButtonWidth- 53, g_Locale->getText((m_nFootButtons & mbCancel) ? LOCALE_MESSAGEBOX_CANCEL : LOCALE_MESSAGEBOX_BACK), (CFBWindow::color_t)color, 0, true); // UTF-8
+		// get height/width of icon
+		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HOME);
+		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HOME);
+		
+		m_pcWindow->paintBoxRel(xpos, ypos, ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_HOME, xpos + 22 - (iconw >> 1), ypos + ((m_nFontFootHeight + 2)>>1) - (iconh >> 1));
+		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, ypos + m_nFontFootHeight + 2, ButtonWidth- 53, g_Locale->getText((m_nFootButtons & mbCancel) ? LOCALE_MESSAGEBOX_CANCEL : LOCALE_MESSAGEBOX_BACK), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 }
 
@@ -780,7 +790,7 @@ bool CMsgBox::setText(const std::string* newText)
 // Return:		
 // Notes:		
 //////////////////////////////////////////////////////////////////////
-int CMsgBox::result(void)
+int CMsgBox::result(void) const
 {
 	return m_nResult;
 }
