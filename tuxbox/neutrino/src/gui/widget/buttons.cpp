@@ -1,5 +1,5 @@
 /*
- * $Id: buttons.cpp,v 1.9 2010/06/27 12:20:55 dbt Exp $
+ * $Id: buttons.cpp,v 1.10 2010/07/12 08:24:55 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -47,7 +47,8 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 			const struct button_label * const content,
 			const unsigned int maxwidth,
 			bool vertical_paint,
-			const unsigned char bcolor)
+			const unsigned char bcolor,
+			const char * alt_buttontext)
 {
 	int fheight = font->getHeight();
 	unsigned int bwidth, fwidth;
@@ -57,12 +58,16 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 	int space = 4;
 	unsigned int bestButtonwidth = maxwidth/count;
 	unsigned int maxButtonwidth = bestButtonwidth > buttonwidth ? bestButtonwidth : buttonwidth;
-
+	
 	for (unsigned int i = 0; i < count; i++)
 	{
 		const char * buttontext =  content[i].locale ? localemanager->getText(content[i].locale) : "";
 		const char * icon = content[i].button ? content[i].button : "";
-		
+
+		// overwrite caption with an alternate buttontext, usefull for Infoviewer 
+		if (alt_buttontext != NULL) 
+			buttontext = alt_buttontext;
+
 		// real rendered textwidth		
 		unsigned int real_textwidth = font->getRenderWidth(buttontext, true);
 		

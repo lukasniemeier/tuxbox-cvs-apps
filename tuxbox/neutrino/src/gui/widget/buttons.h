@@ -2,7 +2,7 @@
 #define __gui_widget_buttons_h__
 
 /*
- * $Id: buttons.h,v 1.5 2010/06/27 12:20:55 dbt Exp $
+ * $Id: buttons.h,v 1.6 2010/07/12 08:24:55 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -43,7 +43,8 @@ void paintButtons(CFrameBuffer * const frameBuffer,
 							const struct button_label * const content, 
 							const unsigned int maxwidth = 720,
 							bool vertical_paint = false,
-							const unsigned char bcolor = COL_INFOBAR_SHADOW_PLUS_1);
+							const unsigned char bcolor = COL_INFOBAR_SHADOW_PLUS_1,
+							const char * alt_buttontext = NULL);
 											
 					
 #endif /* __gui_widget_buttons_h__ */
