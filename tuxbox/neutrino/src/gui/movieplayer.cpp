@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.188 2010/07/09 09:15:06 seife Exp $
+  $Id: movieplayer.cpp,v 1.189 2010/07/12 09:18:16 dbt Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3759,9 +3759,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 
 					g_InfoViewer->showMovieTitle(g_playstate, infobar_title, subtitle,
 							g_percent, g_fileposition / g_secondsize, (g_filesize - g_fileposition) / g_secondsize,
-							ac3state, g_numpida > 1,
-							g_Locale->getText(LOCALE_INFOVIEWER_LANGUAGES),
-							g_Locale->getText(LOCALE_TIMERLIST_PLUGIN));
+							ac3state, g_numpida > 1);
 				}
 				break;
 
@@ -4347,10 +4345,8 @@ CMoviePlayerGui::PlayStream (int streamtype)
 
 			g_InfoViewer->showMovieTitle(g_playstate, infobar_title, "",
 					g_percent, stream_time - buffer_time, stream_length - stream_time + buffer_time,
-					ac3state, true,
-					g_Locale->getText(LOCALE_MOVIEPLAYER_VLCHELP2),
-					g_Locale->getText(LOCALE_AUDIOPLAYER_STOP));
-		}
+					ac3state, true, CInfoViewer::VLC_MODE);  // VLC_MODE is optional and need for the infoviewer
+		}										// to show correct caption for the red and green button
 		else if(msg == CRCInput::RC_ok)
 		{
 			static CMovieBrowser mb;
@@ -4482,7 +4478,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.188 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.189 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

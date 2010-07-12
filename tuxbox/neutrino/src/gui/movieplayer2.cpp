@@ -3306,9 +3306,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 
 			g_InfoViewer->showMovieTitle(g_playstate, title, sub_title,
 					g_percent, elapsed_time, remaining_time,
-					ac3state, g_numpida > 1,
-					g_Locale->getText(LOCALE_INFOVIEWER_LANGUAGES),
-					g_Locale->getText(LOCALE_MOVIEPLAYER_TSHELP17));
+					ac3state, g_numpida > 1);
 		}
 		else if (msg == CRCInput::RC_ok)
 		{
@@ -3454,7 +3452,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.70 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.71 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
