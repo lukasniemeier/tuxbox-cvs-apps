@@ -108,7 +108,7 @@ class CInfoViewer
 	void paintTime( bool show_dot, bool firstPaint );
 	void infobarLoop(bool calledFromNumZap, bool fadeIn);
 	
-    void showButton(const int button, const bool calledFromMPlayer = false, const int mode = 0) const;
+    void showButton(const int button, const bool calledFromMPlayer = false, const int mode = TS_MODE) const;
 	
 	void showIcon_16_9()      const;
 	void showIcon_CA_Status() const;
@@ -142,7 +142,8 @@ class CInfoViewer
 
 	enum
 	{
-		VLC_MODE = 1
+		TS_MODE,
+		VLC_MODE
 	};
 		
 	bool	is_visible;
@@ -155,7 +156,7 @@ class CInfoViewer
 	void	showTitle(const int ChanNum, const std::string & Channel, const t_satellite_position satellitePosition, const t_channel_id new_channel_id = 0, const bool calledFromNumZap = false, int epgpos = 0); // Channel must be UTF-8 encoded
 	void	showMovieTitle(const int playstate, const std::string &title, const std::string &sub_title,
 			       const int percent = 0, const time_t time_elapsed = 0, const time_t time_remaining = 0,
-			       const int ac3state = NO_AC3, const bool show_button_green = false, const int playmode = 0);
+			       const int ac3state = NO_AC3, const bool show_button_green = false, const int playmode = TS_MODE);
 	void	lookAheadEPG(const int ChanNum, const std::string & Channel, const t_channel_id new_channel_id = 0, const bool calledFromNumZap = false); //alpha: fix for nvod subchannel update
 	void	killTitle();
 	void	getEPG(const t_channel_id for_channel_id, CSectionsdClient::CurrentNextInfo &info);
