@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.76 2010/07/18 21:08:55 dbt Exp $
+	$Id: drive_setup.cpp,v 1.77 2010/07/18 21:17:10 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -507,7 +507,7 @@ void CDriveSetup::hide()
 // init menue
 void CDriveSetup::Init()
 {
- 	cout<<"[drive_setup] " << getDriveSetupVersion()<<endl;
+ 	cout<<"[drive_setup] init drive setup " << getDriveSetupVersion()<<endl;
 		
 	CProgressBar pb;
 
@@ -4505,7 +4505,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.76 $");
+	return imageinfo.getModulVersion("","$Revision: 1.77 $");
 }
 
 // returns text for initfile headers
@@ -4825,6 +4825,9 @@ string CDriveSetup::iToString(int int_val)
 }
 
 //show helptext
+/**NOTE: Please don't remove this lines in your public distribution!
+that's important, for an effective feedback and bug fixes,
+otherwise it could be detrimental for your coming distributions*/
 void CDriveSetup::showHelp()
 {
 	Helpbox helpbox;
