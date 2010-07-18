@@ -2,7 +2,7 @@
 #define __setting_helpers__
 
 /*
-	$Id: setting_helpers.h,v 1.103 2010/07/04 16:13:06 seife Exp $
+	$Id: setting_helpers.h,v 1.104 2010/07/18 22:07:20 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -71,12 +71,9 @@ class CTP_scanNotifier : public CChangeObserver
 	private:
 		CMenuOptionChooser* toDisable1[2];
 		CMenuForwarder* toDisable2[2];
-		CMenuOptionStringChooser* toDisable3[1];
-		CMenuForwarder* toModifi;
-
-		
+		CMenuOptionStringChooser* toDisable3[1];		
 	public:
-		CTP_scanNotifier(CMenuOptionChooser*, CMenuOptionChooser*, CMenuForwarder*, CMenuForwarder*, CMenuOptionStringChooser*, CMenuForwarder*);
+		CTP_scanNotifier(CMenuOptionChooser*, CMenuOptionChooser*, CMenuForwarder*, CMenuForwarder*, CMenuOptionStringChooser*);
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 
