@@ -36,6 +36,7 @@
 #include <gui/scan.h>
 
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 
@@ -67,13 +68,13 @@ extern "C" void tuxtxt_close();
 
 CScanTs::CScanTs()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-	hheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	width       = 500;
-	height = hheight + (9 * mheight); //9 lines
-	x = ((720 - width) >> 1) - 20;
-	y = (576 - height) >> 1;
+	frameBuffer	= CFrameBuffer::getInstance();
+	hheight		= g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	mheight		= g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+	width 		= w_max (500, 100);
+	height 		= hheight + (9 * mheight); //9 lines
+	x 		= getScreenStartX (width);
+	y 		= (576 - height) >> 1;
 	radar = 0;
 	xpos_radar = x + 420;
 	ypos_radar = y + hheight + (mheight >> 1);
