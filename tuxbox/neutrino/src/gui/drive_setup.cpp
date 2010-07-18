@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.75 2010/07/01 11:44:19 dbt Exp $
+	$Id: drive_setup.cpp,v 1.76 2010/07/18 21:08:55 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -308,7 +308,7 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 		{
 			strcpy(d_settings.drive_partition_fstype[current_device][next_part_number], "swap"); 
 			d_settings.drive_partition_mountpoint[current_device][next_part_number] = "none";
-			strncpy(d_settings.drive_partition_size[current_device][next_part_number], swap_size, 4);
+			strncpy(d_settings.drive_partition_size[current_device][next_part_number], c_opt[OPT_SWAPSIZE], 4);
 
 			if (!formatPartition(current_device, next_part_number))
 				DisplayErrorMessage(err[ERR_FORMAT_PARTITION].c_str());
@@ -1018,9 +1018,9 @@ void CDriveSetup::showHddSetupSub()
 	
 	string s_max_swap_size = iToString(ll_max_swap_size/1024/1024);
 	
-	strncpy(swap_size, s_max_swap_size.c_str(), 4);	
+	strncpy(c_opt[OPT_SWAPSIZE], s_max_swap_size.c_str(), 4);	
 
-	CMenuOptionStringChooser *add_swap_size = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_SIZE, swap_size, true );
+	CMenuOptionStringChooser *add_swap_size = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_SIZE, c_opt[OPT_SWAPSIZE], true );
 	for (uint i=0; i < 2; i++) 
 		add_swap_size->addOption(s_swap_size[i].c_str());
 
@@ -4505,7 +4505,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("BETA! ","$Revision: 1.75 $");
+	return imageinfo.getModulVersion("BETA! ","$Revision: 1.76 $");
 }
 
 // returns text for initfile headers
@@ -4870,8 +4870,8 @@ void CDriveSetup::loadDriveSettings()
 	// mmc modul load parameter
 	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
 	{	
-		sprintf(mmc_parm, "drive_mmc_%d_modul_parameter", i);
-		d_settings.drive_mmc_modul_parameter[i] = (string)configfile.getString(mmc_parm, "");
+		sprintf(c_opt[OPT_MMC_PARAMETER], "drive_mmc_%d_modul_parameter", i);
+		d_settings.drive_mmc_modul_parameter[i] = (string)configfile.getString(c_opt[OPT_MMC_PARAMETER], "");
 		handleSetting(&d_settings.drive_mmc_modul_parameter[i]);
 	}
 
@@ -4896,73 +4896,73 @@ void CDriveSetup::loadDriveSettings()
 	for(unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
 		//spindown
-		sprintf(spindown_opt, "drive_%d_spindown", i);
-		strcpy(d_settings.drive_spindown[i], configfile.getString(spindown_opt,"0").c_str());
+		sprintf(c_opt[OPT_SPINDOWN], "drive_%d_spindown", i);
+		strcpy(d_settings.drive_spindown[i], configfile.getString(c_opt[OPT_SPINDOWN],"0").c_str());
 		old_drive_spindown[i] = static_cast <string> (d_settings.drive_spindown[i]);
 
 		//write_cache
-		sprintf(write_cache_opt, "drive_%d_write_cache", i);
-		d_settings.drive_write_cache[i] = configfile.getInt32(write_cache_opt, OFF);
+		sprintf(c_opt[OPT_WRITECACHE], "drive_%d_write_cache", i);
+		d_settings.drive_write_cache[i] = configfile.getInt32(c_opt[OPT_WRITECACHE], OFF);
 		handleSetting(&d_settings.drive_write_cache[i]);
 
 		for(unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
 		{
 			//partition_size
-			sprintf(partsize_opt, "drive_%d_partition_%d_size", i, ii);
-			strcpy(d_settings.drive_partition_size[i][ii], configfile.getString(partsize_opt, "0").c_str()); //not handled
+			sprintf(c_opt[OPT_PARTSIZE], "drive_%d_partition_%d_size", i, ii);
+			strcpy(d_settings.drive_partition_size[i][ii], configfile.getString(c_opt[OPT_PARTSIZE], "0").c_str()); //not handled
 
 			//partition_fstype
-			sprintf(fstype_opt, "drive_%d_partition_%d_fstype", i, ii);
-			strcpy(d_settings.drive_partition_fstype[i][ii], configfile.getString(fstype_opt, "").c_str()); //not handled
+			sprintf(c_opt[OPT_FSTYPE], "drive_%d_partition_%d_fstype", i, ii);
+			strcpy(d_settings.drive_partition_fstype[i][ii], configfile.getString(c_opt[OPT_FSTYPE], "").c_str()); //not handled
 
 			//partition_mountpoint
-			sprintf(mountpoint_opt, "drive_%d_partition_%d_mountpoint", i, ii);
-			d_settings.drive_partition_mountpoint[i][ii] = (string)configfile.getString(mountpoint_opt, "");
+			sprintf(c_opt[OPT_MOUNTPOINT], "drive_%d_partition_%d_mountpoint", i, ii);
+			d_settings.drive_partition_mountpoint[i][ii] = (string)configfile.getString(c_opt[OPT_MOUNTPOINT], "");
 			handleSetting(&d_settings.drive_partition_mountpoint[i][ii]);
 
 			//partition_activ
-			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
-			d_settings.drive_partition_activ[i][ii] = configfile.getBool(partition_activ_opt, YES);
+			sprintf(c_opt[OPT_ACTIV_PARTITION], "drive_%d_partition_%d_activ", i, ii);
+			d_settings.drive_partition_activ[i][ii] = configfile.getBool(c_opt[OPT_ACTIV_PARTITION], YES);
 			handleSetting(&d_settings.drive_partition_activ[i][ii]);
 
 #ifdef ENABLE_NFSSERVER
 			//partition_nfs
-			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
-			d_settings.drive_partition_nfs[i][ii] = configfile.getBool(partition_nfs_opt, OFF);
+			sprintf(c_opt[OPT_SHARE_FOR_NFS], "drive_%d_partition_%d_nfs", i, ii);
+			d_settings.drive_partition_nfs[i][ii] = configfile.getBool(c_opt[OPT_SHARE_FOR_NFS], OFF);
 			handleSetting(&d_settings.drive_partition_nfs[i][ii]);
 
 			//partition_nfs_host_ip
-			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
-			d_settings.drive_partition_nfs_host_ip[i][ii] = (string)configfile.getString(partition_nfs_host_ip_opt, "");
+			sprintf(c_opt[OPT_SHARE_NFS_CLIENT_IP], "drive_%d_partition_%d_nfs_host_ip", i, ii);
+			d_settings.drive_partition_nfs_host_ip[i][ii] = (string)configfile.getString(c_opt[OPT_SHARE_NFS_CLIENT_IP], "");
 			handleSetting(&d_settings.drive_partition_nfs_host_ip[i][ii] );
 #endif /*ENABLE_NFSSERVER*/
 
 #ifdef ENABLE_SAMBASERVER
 			//partition_samba
-			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
-			d_settings.drive_partition_samba[i][ii] = configfile.getBool(partition_samba_opt, OFF);
+			sprintf(c_opt[OPT_SHARE_FOR_SAMBA], "drive_%d_partition_%d_samba", i, ii);
+			d_settings.drive_partition_samba[i][ii] = configfile.getBool(c_opt[OPT_SHARE_FOR_SAMBA], OFF);
 			handleSetting(&d_settings.drive_partition_samba[i][ii]);
 
 			//partition_samba_read only
-			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
-			d_settings.drive_partition_samba_ro[i][ii] = configfile.getBool(partition_samba_opt_ro, OFF);
+			sprintf(c_opt[OPT_SHARE_SAMBA_RO], "drive_%d_partition_%d_samba_ro", i, ii);
+			d_settings.drive_partition_samba_ro[i][ii] = configfile.getBool(c_opt[OPT_SHARE_SAMBA_RO], OFF);
 			handleSetting(&d_settings.drive_partition_samba_ro[i][ii]);
 
 			//partition_samba_public
-			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
-			d_settings.drive_partition_samba_public[i][ii] = configfile.getBool(partition_samba_opt_public, ON);
+			sprintf(c_opt[OPT_SHARE_SAMBA_PUBLIC], "drive_%d_partition_%d_samba_public", i, ii);
+			d_settings.drive_partition_samba_public[i][ii] = configfile.getBool(c_opt[OPT_SHARE_SAMBA_PUBLIC], ON);
 			handleSetting(&d_settings.drive_partition_samba_public[i][ii]);
 
 			//partition_samba_share_name
-			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
+			sprintf(c_opt[OPT_SHARE_SAMBA_NAME], "drive_%d_partition_%d_samba_share_name", i, ii);
 			char def_name[10]; /* i and ii are 0 to 3, so this should be enough... */
-			sprintf(def_name, "Share_%d_%d", i+1, ii+1);
-			d_settings.drive_partition_samba_share_name[i][ii] = (string)configfile.getString(partition_samba_share_name, def_name );
+			snprintf(def_name, 10, "Share_%d_%d", i+1, ii+1);
+			d_settings.drive_partition_samba_share_name[i][ii] = (string)configfile.getString(c_opt[OPT_SHARE_SAMBA_NAME], def_name );
 			handleSetting(&d_settings.drive_partition_samba_share_name[i][ii] );
 
 			//samba_share_comment
-			sprintf(partition_samba_share_comment, "drive_%d_partition_%d_samba_share_comment", i, ii);
-			d_settings.drive_partition_samba_share_comment[i][ii] = (string)configfile.getString(partition_samba_share_comment, "" );
+			sprintf(c_opt[OPT_SHARE_SAMBA_COMMENT], "drive_%d_partition_%d_samba_share_comment", i, ii);
+			d_settings.drive_partition_samba_share_comment[i][ii] = (string)configfile.getString(c_opt[OPT_SHARE_SAMBA_COMMENT], "" );
 			handleSetting(&d_settings.drive_partition_samba_share_comment[i][ii] );
 #endif /*ENABLE_SAMBASERVER*/
 		}
@@ -4998,67 +4998,67 @@ bool CDriveSetup::writeDriveSettings()
 	for(unsigned int i = 0; i < MAXCOUNT_MMC_MODULES; i++)
 	{	
 		//mmc_modul_parameter
-		sprintf(mmc_parm, "drive_mmc_%d_modul_parameter", i);
-		configfile.setString( mmc_parm, d_settings.drive_mmc_modul_parameter[i]);
+		sprintf(c_opt[OPT_MMC_PARAMETER], "drive_mmc_%d_modul_parameter", i);
+		configfile.setString( c_opt[OPT_MMC_PARAMETER], d_settings.drive_mmc_modul_parameter[i]);
 	}
 
 	for(int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
 		//spindown
-		sprintf(spindown_opt, "drive_%d_spindown", i);
-		configfile.setString( spindown_opt, d_settings.drive_spindown[i/*MASTER||SLAVE*/] );
+		sprintf(c_opt[OPT_SPINDOWN], "drive_%d_spindown", i);
+		configfile.setString( c_opt[OPT_SPINDOWN], d_settings.drive_spindown[i/*MASTER||SLAVE*/] );
 
 		//write_cache
-		sprintf(write_cache_opt, "drive_%d_write_cache", i);
-		configfile.setInt32( write_cache_opt, d_settings.drive_write_cache[i/*MASTER||SLAVE*/]);
+		sprintf(c_opt[OPT_WRITECACHE], "drive_%d_write_cache", i);
+		configfile.setInt32( c_opt[OPT_WRITECACHE], d_settings.drive_write_cache[i/*MASTER||SLAVE*/]);
 
 		for(int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
 		{
 			//partition_size
-			sprintf(partsize_opt, "drive_%d_partition_%d_size", i, ii);
-			configfile.setString( partsize_opt, d_settings.drive_partition_size[i/*MASTER||SLAVE*/][ii] );
+			sprintf(c_opt[OPT_PARTSIZE], "drive_%d_partition_%d_size", i, ii);
+			configfile.setString( c_opt[OPT_PARTSIZE], d_settings.drive_partition_size[i/*MASTER||SLAVE*/][ii] );
 
 			//partition_fstype
-			sprintf(fstype_opt, "drive_%d_partition_%d_fstype", i, ii);
-			configfile.setString( fstype_opt, d_settings.drive_partition_fstype[i/*MASTER||SLAVE*/][ii] );
+			sprintf(c_opt[OPT_FSTYPE], "drive_%d_partition_%d_fstype", i, ii);
+			configfile.setString( c_opt[OPT_FSTYPE], d_settings.drive_partition_fstype[i/*MASTER||SLAVE*/][ii] );
 
 			//partition_mountpoint
-			sprintf(mountpoint_opt, "drive_%d_partition_%d_mountpoint", i, ii);
-			configfile.setString( mountpoint_opt, d_settings.drive_partition_mountpoint[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_MOUNTPOINT], "drive_%d_partition_%d_mountpoint", i, ii);
+			configfile.setString( c_opt[OPT_MOUNTPOINT], d_settings.drive_partition_mountpoint[i/*MASTER||SLAVE*/][ii]);
 
 			//partition_activ
-			sprintf(partition_activ_opt, "drive_%d_partition_%d_activ", i, ii);
-			configfile.setBool(partition_activ_opt, d_settings.drive_partition_activ[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_ACTIV_PARTITION], "drive_%d_partition_%d_activ", i, ii);
+			configfile.setBool(c_opt[OPT_ACTIV_PARTITION], d_settings.drive_partition_activ[i/*MASTER||SLAVE*/][ii]);
 #ifdef ENABLE_NFSSERVER
 			//partition_nfs
-			sprintf(partition_nfs_opt, "drive_%d_partition_%d_nfs", i, ii);
-			configfile.setBool(partition_nfs_opt, d_settings.drive_partition_nfs[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_FOR_NFS], "drive_%d_partition_%d_nfs", i, ii);
+			configfile.setBool(c_opt[OPT_SHARE_FOR_NFS], d_settings.drive_partition_nfs[i/*MASTER||SLAVE*/][ii]);
 
 			//partition_nfs_host_ip
-			sprintf(partition_nfs_host_ip_opt, "drive_%d_partition_%d_nfs_host_ip", i, ii);
-			configfile.setString( partition_nfs_host_ip_opt, d_settings.drive_partition_nfs_host_ip[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_NFS_CLIENT_IP], "drive_%d_partition_%d_nfs_host_ip", i, ii);
+			configfile.setString( c_opt[OPT_SHARE_NFS_CLIENT_IP], d_settings.drive_partition_nfs_host_ip[i/*MASTER||SLAVE*/][ii]);
 #endif /*ENABLE_NFSSERVER*/
 
 #ifdef ENABLE_SAMBASERVER
 			//partition_samba
-			sprintf(partition_samba_opt, "drive_%d_partition_%d_samba", i, ii);
-			configfile.setBool(partition_samba_opt, d_settings.drive_partition_samba[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_FOR_SAMBA], "drive_%d_partition_%d_samba", i, ii);
+			configfile.setBool(c_opt[OPT_SHARE_FOR_SAMBA], d_settings.drive_partition_samba[i/*MASTER||SLAVE*/][ii]);
 
 			//partition_samba_ro
-			sprintf(partition_samba_opt_ro, "drive_%d_partition_%d_samba_ro", i, ii);
-			configfile.setBool(partition_samba_opt_ro, d_settings.drive_partition_samba_ro[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_SAMBA_RO], "drive_%d_partition_%d_samba_ro", i, ii);
+			configfile.setBool(c_opt[OPT_SHARE_SAMBA_RO], d_settings.drive_partition_samba_ro[i/*MASTER||SLAVE*/][ii]);
 
 			//partition_samba_public
-			sprintf(partition_samba_opt_public, "drive_%d_partition_%d_samba_public", i, ii);
-			configfile.setBool(partition_samba_opt_public, d_settings.drive_partition_samba_public[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_SAMBA_PUBLIC], "drive_%d_partition_%d_samba_public", i, ii);
+			configfile.setBool(c_opt[OPT_SHARE_SAMBA_PUBLIC], d_settings.drive_partition_samba_public[i/*MASTER||SLAVE*/][ii]);
 
 			//partition_samba_share_name
-			sprintf(partition_samba_share_name, "drive_%d_partition_%d_samba_share_name", i, ii);
-			configfile.setString(partition_samba_share_name, d_settings.drive_partition_samba_share_name[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_SAMBA_NAME], "drive_%d_partition_%d_samba_share_name", i, ii);
+			configfile.setString(c_opt[OPT_SHARE_SAMBA_NAME], d_settings.drive_partition_samba_share_name[i/*MASTER||SLAVE*/][ii]);
 
 			//partition_samba_share_comment
-			sprintf(partition_samba_share_comment, "drive_%d_partition_%d_samba_share_comment", i, ii);
-			configfile.setString(partition_samba_share_comment, d_settings.drive_partition_samba_share_comment[i/*MASTER||SLAVE*/][ii]);
+			sprintf(c_opt[OPT_SHARE_SAMBA_COMMENT], "drive_%d_partition_%d_samba_share_comment", i, ii);
+			configfile.setString(c_opt[OPT_SHARE_SAMBA_COMMENT], d_settings.drive_partition_samba_share_comment[i/*MASTER||SLAVE*/][ii]);
 #endif /*ENABLE_SAMBASERVER*/
 		}
 	}

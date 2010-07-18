@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.31 2010/06/25 23:45:47 dbt Exp $
+	$Id: drive_setup.h,v 1.32 2010/07/18 21:08:55 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -466,29 +466,47 @@ class CDriveSetup : public CMenuTarget
 		std::string iToString(int int_val);
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-
-		char swap_size[4];
-		//settings	
-		char mmc_parm[27];
-		char mountpoint_opt[31];
-		char spindown_opt[17];
-		char partsize_opt[25];
-		char fstype_opt[27];
-		char write_cache_opt[20];
-		char partition_activ_opt[26];
-	
+		
+	//char options
 	#ifdef ENABLE_NFSSERVER
-		char partition_nfs_opt[24];
-		char partition_nfs_host_ip_opt[32];
+		#define NFS_OPTS_COUNT 2 
+	#else
+		#define NFS_OPTS_COUNT 0 
 	#endif /*ENABLE_NFSSERVER*/
 
 	#ifdef ENABLE_SAMBASERVER
-		char partition_samba_opt[26];
-		char partition_samba_opt_ro[29];
-		char partition_samba_opt_public[35];
-		char partition_samba_share_name[35];
-		char partition_samba_share_comment[40];
+		#define SMB_OPTS_COUNT 5
+	#else
+		#define SMB_OPTS_COUNT 0  
 	#endif /*ENABLE_SAMBASERVER*/
+
+	#define CHAR_OPTIONS_NUM_COUNT 8 + NFS_OPTS_COUNT + SMB_OPTS_COUNT
+	
+		typedef enum 
+		{
+			OPT_SWAPSIZE,
+			OPT_MMC_PARAMETER,
+			OPT_MOUNTPOINT,
+			OPT_SPINDOWN,
+			OPT_PARTSIZE,
+			OPT_FSTYPE,
+			OPT_WRITECACHE,
+			OPT_ACTIV_PARTITION
+	#ifdef ENABLE_NFSSERVER
+			,
+			OPT_SHARE_FOR_NFS,
+			OPT_SHARE_NFS_CLIENT_IP
+	#endif /*ENABLE_NFSSERVER*/
+	#ifdef ENABLE_SAMBASERVER
+			,
+			OPT_SHARE_FOR_SAMBA,
+			OPT_SHARE_SAMBA_RO,
+			OPT_SHARE_SAMBA_PUBLIC,
+			OPT_SHARE_SAMBA_NAME,
+			OPT_SHARE_SAMBA_COMMENT	
+	#endif /*ENABLE_SAMBASERVER*/
+		}c_option_uint_t;
+		char c_opt[CHAR_OPTIONS_NUM_COUNT][64];
 
 	public:
 		enum DRIVE_NUM	
@@ -505,7 +523,7 @@ class CDriveSetup : public CMenuTarget
 			MMCCOMBO
 		};
 
-		#define DEVICE_INFO_COUNT 5
+	#define DEVICE_INFO_COUNT 5
 		enum DEVICE_INFO	
 		{
 			KB_BLOCKS,
