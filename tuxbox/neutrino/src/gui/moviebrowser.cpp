@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.46 2010/07/10 12:28:48 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.47 2010/07/18 21:23:22 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.46 2010/07/10 12:28:48 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.47 2010/07/18 21:23:22 dbt Exp $\r\n");
 	init();
 }
 
@@ -1637,6 +1637,10 @@ void CMovieBrowser::refreshTitle(void)
 								TITLE_FONT_COLOR, 
 								0, 
 								true); // UTF-8
+
+	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, 
+								m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - CFrameBuffer::getInstance()->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX) -12, 
+								m_cBoxFrameTitleRel.iY+m_cBoxFrameTitleRel.iHeight/2 - CFrameBuffer::getInstance()->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX)/2);
 }
 
 /************************************************************************
@@ -3696,24 +3700,24 @@ int CMenuSelector::paint(bool selected)
 int CMovieHelp::exec(CMenuTarget* /*parent*/, const std::string & /*actionKey*/)
 {
 	static CMovieBrowser mb;
-	std::string version = "Moviebrowser: " + mb.getMovieBrowserVersion();
+	std::string version = "Moviebrowser: " + mb.getMovieBrowserVersion() + " by Günther";
 	Helpbox helpbox;
+	helpbox.addLine(version);
+	helpbox.addLine("");
+
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_RED, g_Locale->getText(LOCALE_PICTUREVIEWER_HELP20));
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_GREEN, g_Locale->getText(LOCALE_MOVIEBROWSER_WINDOW_FILTER));
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_YELLOW, g_Locale->getText(LOCALE_MOVIEBROWSER_WINDOW_CHANGE_ACTIVE));
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_BLUE, g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_FILM_RELOAD));
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_DBOX, g_Locale->getText(LOCALE_MAINMENU_HEAD));
 	helpbox.addLine(g_Locale->getText(LOCALE_MOVIEBROWSER_CHANGE_VIEW));
-	helpbox.addLine(NEUTRINO_ICON_BUTTON_MUTE, g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_FILM_DELETE));
+	helpbox.addLine(NEUTRINO_ICON_BUTTON_MUTE_SMALL, g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_FILM_DELETE));
 	helpbox.addLine("");
 	helpbox.addLine(g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_FILM_DURING));
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_BLUE, g_Locale->getText(LOCALE_MOVIEBROWSER_MENU_MARK));
 	helpbox.addLine(NEUTRINO_ICON_BUTTON_0, g_Locale->getText(LOCALE_MOVIEBROWSER_MENU_MARK_NOACTION));
-	helpbox.addLine("");
-	helpbox.addLine("");
-	helpbox.addLine(version);
-	helpbox.addLine("by Günther");
-	helpbox.show(LOCALE_MESSAGEBOX_INFO);
+	
+	helpbox.show(LOCALE_MOVIEBROWSER_MENU_HELP_HEAD);
 	return(0);
 }
 
@@ -3897,7 +3901,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.46 $");
+	return imageinfo.getModulVersion("","$Revision: 1.47 $");
 }
 
 /************************************************************************/
