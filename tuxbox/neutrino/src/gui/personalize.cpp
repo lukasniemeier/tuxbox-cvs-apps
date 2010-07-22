@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.19 2010/07/01 11:44:19 dbt Exp $
+        $Id: personalize.cpp,v 1.20 2010/07/22 11:12:49 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -374,6 +374,9 @@ void CPersonalizeGui::ShowServiceOptions()
 	int old_imageinfo	= g_settings.personalize_imageinfo;
 	int old_update		= g_settings.personalize_update;
 	int old_chan_epg_stat	= g_settings.personalize_chan_epg_stat;
+#ifdef ENABLE_DRIVE_GUI
+	int old_drive_setup_stat	= g_settings.personalize_drive_setup_stat;
+#endif
 
 	CMenuWidget* pSMMenu = new CMenuWidget(LOCALE_MAINMENU_SERVICE,NEUTRINO_ICON_PROTECTING, width);
 
@@ -393,6 +396,9 @@ void CPersonalizeGui::ShowServiceOptions()
 	pSMMenu->addItem(new CMenuOptionChooser(LOCALE_SERVICEMENU_EPGRESTART, (int *)&g_settings.personalize_epgrestart, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_4));
 	pSMMenu->addItem(new CMenuOptionChooser(LOCALE_SERVICEMENU_UCODECHECK, (int *)&g_settings.personalize_ucodecheck, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_5));
 	pSMMenu->addItem(new CMenuOptionChooser(LOCALE_SERVICEMENU_CHAN_EPG_STAT, (int *)&g_settings.personalize_chan_epg_stat, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_6));
+#ifdef ENABLE_DRIVE_GUI
+	pSMMenu->addItem(new CMenuOptionChooser(LOCALE_DRIVE_SETUP_HEAD, (int *)&g_settings.personalize_drive_setup_stat, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_7));
+#endif
 
 	pSMMenu->addItem(GenericMenuSeparatorLine);
 	pSMMenu->addItem(new CMenuOptionChooser(LOCALE_SERVICEMENU_IMAGEINFO, (int *)&g_settings.personalize_imageinfo, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
@@ -413,7 +419,11 @@ void CPersonalizeGui::ShowServiceOptions()
 		|| old_ucodecheck != g_settings.personalize_ucodecheck
 		|| old_imageinfo != g_settings.personalize_imageinfo
 		|| old_update != g_settings.personalize_update
-		|| old_chan_epg_stat != g_settings.personalize_chan_epg_stat) {
+		|| old_chan_epg_stat != g_settings.personalize_chan_epg_stat
+#ifdef ENABLE_DRIVE_GUI
+		|| old_drive_setup_stat != g_settings.personalize_drive_setup_stat
+#endif	
+		) {
 
 		if (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_PERSONALIZE_SAVERESTART), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
 		{

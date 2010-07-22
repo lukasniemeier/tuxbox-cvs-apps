@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.226 2010/04/21 21:45:11 dbt Exp $
+  $Id: settings.h,v 1.227 2010/07/22 11:12:49 dbt Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -230,6 +230,9 @@ struct SNeutrinoSettings
 	int personalize_imageinfo;
 	int personalize_update;
 	int personalize_chan_epg_stat;
+#ifdef ENABLE_DRIVE_GUI
+	int personalize_drive_setup_stat;
+#endif
 
 	int personalize_audio;
 	int personalize_video;

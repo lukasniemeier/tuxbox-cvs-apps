@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1029 2010/07/04 10:33:42 seife Exp $
+	$Id: neutrino.cpp,v 1.1030 2010/07/22 11:12:49 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -557,7 +557,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.personalize_esound = configfile.getInt32("personalize_esound", CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
 	g_settings.personalize_movieplayer = configfile.getInt32("personalize_movieplayer", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_pictureviewer = configfile.getInt32("personalize_pictureviewer", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
-#if ENABLE_UPNP
+#ifdef ENABLE_UPNP
  	g_settings.personalize_upnpbrowser = configfile.getInt32("personalize_upnpbrowser", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 #endif
 	g_settings.personalize_settings = configfile.getInt32("personalize_settings", CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED);
@@ -573,6 +573,9 @@ int CNeutrinoApp::loadSetup()
 	g_settings.personalize_imageinfo = configfile.getInt32("personalize_imageinfo", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_update = configfile.getInt32("personalize_update", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_chan_epg_stat = configfile.getInt32("personalize_chan_epg_stat", CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
+#ifdef ENABLE_DRIVE_GUI
+	g_settings.personalize_drive_setup_stat = configfile.getInt32("personalize_drive_setup_stat", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
+#endif
 
 	g_settings.personalize_audio = configfile.getInt32("personalize_audio", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_video = configfile.getInt32("personalize_video", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
@@ -1100,7 +1103,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ( "personalize_esound", g_settings.personalize_esound );
 	configfile.setInt32 ( "personalize_movieplayer", g_settings.personalize_movieplayer );
 	configfile.setInt32 ( "personalize_pictureviewer", g_settings.personalize_pictureviewer );
-#if ENABLE_UPNP
+#ifdef ENABLE_UPNP
  	configfile.setInt32 ( "personalize_upnpbrowser", g_settings.personalize_upnpbrowser );
 #endif
 	configfile.setInt32 ( "personalize_settings", g_settings.personalize_settings );
@@ -1119,6 +1122,9 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ( "personalize_imageinfo", g_settings.personalize_imageinfo );
 	configfile.setInt32 ( "personalize_update", g_settings.personalize_update );
 	configfile.setInt32 ( "personalize_chan_epg_stat", g_settings.personalize_chan_epg_stat );
+#ifdef ENABLE_DRIVE_GUI
+	configfile.setInt32 ( "personalize_drive_setup_stat", g_settings.personalize_drive_setup_stat );
+#endif
 
 	configfile.setInt32 ( "personalize_audio", g_settings.personalize_audio );
 	configfile.setInt32 ( "personalize_video", g_settings.personalize_video );

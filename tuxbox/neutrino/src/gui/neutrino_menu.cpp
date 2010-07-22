@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.109 2010/07/06 13:08:12 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.110 2010/07/22 11:12:49 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -353,12 +353,13 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_UCODECHECK, true, NULL, UCodeChecker, NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_ucodecheck);
 #endif
 
-#ifdef ENABLE_DRIVE_GUI 
- 	service.addItem(new CMenuForwarder(LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance(), NULL, CRCInput::convertDigitToKey(shortcut3++)));
-#endif /*ENABLE_DRIVE_GUI*/
-
 	// epg status
 	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, DVBInfo, NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_chan_epg_stat);
+
+#ifdef ENABLE_DRIVE_GUI
+	// ide, hdd, mmc setup
+	shortcut3 += personalize->addItem(service, LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance(), NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_drive_setup_stat); 
+#endif /*ENABLE_DRIVE_GUI*/
 
 	// separator
 	if (	g_settings.personalize_reload		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
@@ -366,8 +367,11 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 		g_settings.personalize_restart		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_epgrestart	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_ucodecheck	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
-		// Stop seperator from appearing when menu entries have been hidden
+		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE
+#ifdef ENABLE_DRIVE_GUI
+		&& g_settings.personalize_drive_setup_stat == CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE
+#endif /*ENABLE_DRIVE_GUI*/
+		);// Stop seperator from appearing when menu entries have been hidden
 	else
 		service.addItem(GenericMenuSeparatorLine); 
 
