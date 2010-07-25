@@ -3,7 +3,7 @@
  *                                                                            *
  *             (c) Thomas "LazyT" Loewe 2002-2003 (LazyT@gmx.net)             *
  *                                                                            *
- *    continued 2004-2005 by Roland Meier <RolandMeier@Siemens.com>           *
+ *    continued 2004-2005 by Roland Meier <roland@meier69.de>                 *
  *                       and DBLuelle <dbluelle@blau-weissoedingen.de>        *
  *	russian and arabic support by Leonid Protasov <Lprot@mail.ru>         *
  *                                                                            *
@@ -145,7 +145,7 @@ void dump_page()
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.113 $";
+	char cvs_revision[] = "$Revision: 1.114 $";
 
 #if !TUXTXT_CFG_STANDALONE
 	int initialized = tuxtxt_init();

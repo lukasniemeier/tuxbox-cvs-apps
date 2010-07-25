@@ -3,7 +3,7 @@
  *                                                                            *
  *             (c) Thomas "LazyT" Loewe 2002-2003 (LazyT@gmx.net)             *
  *                                                                            *
- *    TOP-Text Support 2004 by Roland Meier <RolandMeier@Siemens.com>         *
+ *    TOP-Text Support 2004 by Roland Meier <roland@meier69.de>               *
  *    Info entnommen aus videotext-0.6.19991029,                              *
  *    Copyright (c) 1994-96 Martin Buck  <martin-2.buck@student.uni-ulm.de>   *
  *                                                                            *
