@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.110 2010/07/22 11:12:49 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.111 2010/07/27 07:14:38 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -104,6 +104,7 @@
 #include "gui/update.h"
 #include "gui/themes.h"
 #include "gui/zapit_setup.h"
+#include "gui/keybind_setup.h"
 
 #if ENABLE_UPNP
 #include "gui/upnpbrowser.h"
@@ -131,7 +132,6 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 								CMenuWidget &mainSettings,
 								CMenuWidget &colorSettings,
 								CMenuWidget &lcdSettings,
-								CMenuWidget &keySettings,
 								CMenuWidget &languageSettings,
 								CMenuWidget &miscSettings,
 								CMenuWidget &driverSettings,
@@ -285,7 +285,7 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 	
 	//10. -- only 10 shortcuts (1-9, 0), the next could be the last also!(10. => 0)
 	//keybindings
-	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_KEYBINDING, true, NULL, &keySettings, NULL, personalize->setShortcut(shortcut2), NULL, false, g_settings.personalize_keybinding);
+	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_KEYBINDING, true, NULL, new CKeybindSetup(LOCALE_MAINMENU_SETTINGS) , NULL, personalize->setShortcut(shortcut2), NULL, false, g_settings.personalize_keybinding);
 	
 	//blue (audioplayer, pictureviewer, esd, mediaplayer)
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
@@ -1117,143 +1117,6 @@ void CNeutrinoApp::InitLcdSettings(CMenuWidget &lcdSettings)
 	lcdSettings.addItem(oj);
 }
  
-/* for keybindings settings menu*/
-#define KEYBINDINGMENU_BOUQUETHANDLING_OPTION_COUNT 3
-const CMenuOptionChooser::keyval KEYBINDINGMENU_BOUQUETHANDLING_OPTIONS[KEYBINDINGMENU_BOUQUETHANDLING_OPTION_COUNT] =
-{
-	{ 0, LOCALE_KEYBINDINGMENU_BOUQUETCHANNELS_ON_OK },
-	{ 1, LOCALE_KEYBINDINGMENU_BOUQUETLIST_ON_OK     },
-	{ 2, LOCALE_KEYBINDINGMENU_ALLCHANNELS_ON_OK     }
-};
-
-enum keynames {
-	VIRTUALKEY_TV_RADIO_MODE,
-	VIRTUALKEY_PAGE_UP,
-	VIRTUALKEY_PAGE_DOWN,
-	VIRTUALKEY_CANCEL_ACTION,
-	VIRTUALKEY_SORT,
-	VIRTUALKEY_SEARCH,
-	VIRTUALKEY_ADD_RECORD,
-	VIRTUALKEY_ADD_REMIND,
-	VIRTUALKEY_RELOAD,
-	VIRTUALKEY_CHANNEL_UP,
-	VIRTUALKEY_CHANNEL_DOWN,
-	VIRTUALKEY_BOUQUET_UP,
-	VIRTUALKEY_BOUQUET_DOWN,
-	VIRTUALKEY_SUBCHANNEL_UP,
-	VIRTUALKEY_SUBCHANNEL_DOWN,
-	VIRTUALKEY_SUBCHANNEL_TOGGLE,
-	VIRTUALKEY_ZAP_HISTORY,
-	VIRTUALKEY_LASTCHANNEL,
-
-	MAX_NUM_KEYNAMES
-};
-
-const neutrino_locale_t keydescription_head[] =
-{
-	LOCALE_KEYBINDINGMENU_TVRADIOMODE_HEAD,
-	LOCALE_KEYBINDINGMENU_PAGEUP_HEAD,
-	LOCALE_KEYBINDINGMENU_PAGEDOWN_HEAD,
-	LOCALE_KEYBINDINGMENU_CANCEL_HEAD,
-	LOCALE_KEYBINDINGMENU_SORT_HEAD,
-	LOCALE_EVENTFINDER_HEAD,
-	LOCALE_KEYBINDINGMENU_ADDRECORD_HEAD,
-	LOCALE_KEYBINDINGMENU_ADDREMIND_HEAD,
-	LOCALE_KEYBINDINGMENU_RELOAD_HEAD,
-	LOCALE_KEYBINDINGMENU_CHANNELUP_HEAD,
-	LOCALE_KEYBINDINGMENU_CHANNELDOWN_HEAD,
-	LOCALE_KEYBINDINGMENU_BOUQUETUP_HEAD,
-	LOCALE_KEYBINDINGMENU_BOUQUETDOWN_HEAD,
-	LOCALE_KEYBINDINGMENU_SUBCHANNELUP_HEAD,
-	LOCALE_KEYBINDINGMENU_SUBCHANNELDOWN_HEAD,
-	LOCALE_KEYBINDINGMENU_SUBCHANNELTOGGLE_HEAD,
-	LOCALE_KEYBINDINGMENU_ZAPHISTORY_HEAD,
-	LOCALE_KEYBINDINGMENU_LASTCHANNEL_HEAD
-};
-
-const neutrino_locale_t keydescription[] =
-{
-	LOCALE_KEYBINDINGMENU_TVRADIOMODE,
-	LOCALE_KEYBINDINGMENU_PAGEUP,
-	LOCALE_KEYBINDINGMENU_PAGEDOWN,
-	LOCALE_KEYBINDINGMENU_CANCEL,
-	LOCALE_KEYBINDINGMENU_SORT,
-	LOCALE_EVENTFINDER_HEAD,
-	LOCALE_KEYBINDINGMENU_ADDRECORD,
-	LOCALE_KEYBINDINGMENU_ADDREMIND,
-	LOCALE_KEYBINDINGMENU_RELOAD,
-	LOCALE_KEYBINDINGMENU_CHANNELUP,
-	LOCALE_KEYBINDINGMENU_CHANNELDOWN,
-	LOCALE_KEYBINDINGMENU_BOUQUETUP,
-	LOCALE_KEYBINDINGMENU_BOUQUETDOWN,
-	LOCALE_KEYBINDINGMENU_SUBCHANNELUP,
-	LOCALE_KEYBINDINGMENU_SUBCHANNELDOWN,
-	LOCALE_KEYBINDINGMENU_SUBCHANNELTOGGLE,
-	LOCALE_KEYBINDINGMENU_ZAPHISTORY,
-	LOCALE_KEYBINDINGMENU_LASTCHANNEL
-};
-
-/* keybindings settings menu*/
-void CNeutrinoApp::InitKeySettings(CMenuWidget &keySettings)
-{
-	keySettings.addItem(GenericMenuSeparator);
-	keySettings.addItem(GenericMenuBack);
-	// USERMENU
-	keySettings.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_USERMENU_HEAD));
-	keySettings.addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_RED, true, NULL, new CUserMenuMenu(LOCALE_USERMENU_BUTTON_RED,0), NULL, CRCInput::RC_red,NEUTRINO_ICON_BUTTON_RED));
-	keySettings.addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_GREEN, true, NULL, new CUserMenuMenu(LOCALE_USERMENU_BUTTON_GREEN,1), NULL, CRCInput::RC_green,NEUTRINO_ICON_BUTTON_GREEN));
-	keySettings.addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_YELLOW, true, NULL, new CUserMenuMenu(LOCALE_USERMENU_BUTTON_YELLOW,2), NULL, CRCInput::RC_yellow,NEUTRINO_ICON_BUTTON_YELLOW));
-	keySettings.addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_BLUE, true, NULL, new CUserMenuMenu(LOCALE_USERMENU_BUTTON_BLUE,3), NULL, CRCInput::RC_blue,NEUTRINO_ICON_BUTTON_BLUE));
-
-	neutrino_msg_t * keyvalue_p[] =
-		{
-			&g_settings.key_tvradio_mode,
-			&g_settings.key_channelList_pageup,
-			&g_settings.key_channelList_pagedown,
-			&g_settings.key_channelList_cancel,
-			&g_settings.key_channelList_sort,
-			&g_settings.key_channelList_search,
-			&g_settings.key_channelList_addrecord,
-			&g_settings.key_channelList_addremind,
-			&g_settings.key_channelList_reload,
-			&g_settings.key_quickzap_up,
-			&g_settings.key_quickzap_down,
-			&g_settings.key_bouquet_up,
-			&g_settings.key_bouquet_down,
-			&g_settings.key_subchannel_up,
-			&g_settings.key_subchannel_down,
-			&g_settings.key_subchannel_toggle,
-			&g_settings.key_zaphistory,
-			&g_settings.key_lastchannel
-		};
-
-	CKeyChooser * keychooser[MAX_NUM_KEYNAMES];
-
-	for (int i = 0; i < MAX_NUM_KEYNAMES; i++)
-		keychooser[i] = new CKeyChooser(keyvalue_p[i], keydescription_head[i], NEUTRINO_ICON_SETTINGS);
-
-	keySettings.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_MODECHANGE));
-	keySettings.addItem(new CMenuForwarder(keydescription[VIRTUALKEY_TV_RADIO_MODE], true, NULL, keychooser[VIRTUALKEY_TV_RADIO_MODE]));
-
-	keySettings.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_CHANNELLIST));
-
-	CMenuOptionChooser *oj = new CMenuOptionChooser(LOCALE_KEYBINDINGMENU_BOUQUETHANDLING, &g_settings.bouquetlist_mode, KEYBINDINGMENU_BOUQUETHANDLING_OPTIONS, KEYBINDINGMENU_BOUQUETHANDLING_OPTION_COUNT, true );
-	keySettings.addItem(oj);
-
-	for (int i = VIRTUALKEY_PAGE_UP; i <= VIRTUALKEY_RELOAD; i++)
-		keySettings.addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
-
-	keySettings.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_QUICKZAP));
-
-	for (int i = VIRTUALKEY_CHANNEL_UP; i <= VIRTUALKEY_SUBCHANNEL_DOWN; i++)
-		keySettings.addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
-
-	keySettings.addItem(new CMenuForwarder(keydescription[VIRTUALKEY_SUBCHANNEL_TOGGLE], true, NULL, keychooser[VIRTUALKEY_SUBCHANNEL_TOGGLE]));
-
-	keySettings.addItem(new CMenuForwarder(keydescription[VIRTUALKEY_ZAP_HISTORY], true, NULL, keychooser[VIRTUALKEY_ZAP_HISTORY]));
-
-	keySettings.addItem(new CMenuForwarder(keydescription[VIRTUALKEY_LASTCHANNEL], true, NULL, keychooser[VIRTUALKEY_LASTCHANNEL]));
-}
 
 #define MAINMENU_RECORDING_OPTION_COUNT 2
 const CMenuOptionChooser::keyval MAINMENU_RECORDING_OPTIONS[MAINMENU_RECORDING_OPTION_COUNT] =

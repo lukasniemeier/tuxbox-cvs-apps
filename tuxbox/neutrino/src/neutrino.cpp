@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1030 2010/07/22 11:12:49 dbt Exp $
+	$Id: neutrino.cpp,v 1.1031 2010/07/27 07:14:39 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2130,7 +2130,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	CMenuWidget    colorSettings       (LOCALE_COLORMENU_HEAD                , NEUTRINO_ICON_COLORS  );
 	CMenuWidget    fontSettings        (LOCALE_FONTMENU_HEAD                 , NEUTRINO_ICON_COLORS  );
 	CMenuWidget    lcdSettings         (LOCALE_LCDMENU_HEAD                  , "lcd.raw"             , 500);
-	CMenuWidget    keySettings         (LOCALE_KEYBINDINGMENU_HEAD           , NEUTRINO_ICON_KEYBINDING, 450);
 	CMenuWidget    driverSettings      (LOCALE_DRIVERSETTINGS_HEAD           , NEUTRINO_ICON_SETTINGS);
 	CMenuWidget    miscSettings        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    scanSettingsMenu    (LOCALE_SERVICEMENU_SCANTS            , NEUTRINO_ICON_SETTINGS);
@@ -2144,9 +2143,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 					mainSettings,
 					colorSettings,
 					lcdSettings,
-					keySettings,
 					languageSettings,
-					miscSettings,
+ 					miscSettings,
 					driverSettings,
 					service);
 
@@ -2282,9 +2280,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	//LCD Setup
 	InitLcdSettings(lcdSettings);
-
-	//keySettings
-	InitKeySettings(keySettings);
 
 	AudioMute( g_Controld->getMute((CControld::volume_type)g_settings.audio_avs_Control), true );
 

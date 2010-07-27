@@ -32,6 +32,7 @@ libneutrino_gui_a_SOURCES = \
 	filebrowser.cpp \
 	imageinfo.cpp \
 	infoviewer.cpp \
+	keybind_setup.cpp \
 	neutrino_menu.cpp \
 	network_setup.cpp \
 	nfs.cpp \
