@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.111 2010/07/27 07:14:38 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.112 2010/07/29 19:13:51 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -43,7 +43,7 @@
 #include <neutrino.h>
 
 #include <system/debug.h>
-#include <system/flashtool.h>
+//#include <system/flashtool.h>
 
 #include <driver/encoding.h>
 #include <driver/vcrcontrol.h>
@@ -83,7 +83,7 @@
 #include "gui/movieplayer_menu.h"
 #include "gui/movieplayer_setup.h"
 #endif
-#include "gui/motorcontrol.h"
+//#include "gui/motorcontrol.h"
 #include "gui/network_setup.h"
 #ifdef ENABLE_GUI_MOUNT
 #include "gui/nfs.h"
@@ -95,7 +95,7 @@
 #endif
 #include "gui/pluginlist.h"
 #include "gui/record_setup.h"
-#include "gui/scan.h"
+//#include "gui/scan.h"
 #include "gui/scan_setup.h"
 #include "gui/screensetup.h"
 #include "gui/software_update.h"
