@@ -3452,7 +3452,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.71 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.72 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
@@ -3677,7 +3677,12 @@ int get_PES_PTS(ringbuffer_t *buf, off_t position, bool until_eof)
 		}
 		if ((int)ringbuffer_read_space(buf) < rd)
 		{
-			INFO("ringbuffer_read_space %ld < rd %d\n", ringbuffer_read_space(buf), rd);
+			INFO("ringbuffer_read_space %ld < rd %d eof %d until_eof %d pts %d\n",
+			      ringbuffer_read_space(buf), rd, eof, until_eof, pts);
+			/* can IMHO only happen if "until_eof == true"
+			   exit if EOF, no matter if we already have PTS or not... */
+			if (eof >= 2)
+				break;
 			continue;
 		}
 		ringbuffer_read_advance(buf, rd);
