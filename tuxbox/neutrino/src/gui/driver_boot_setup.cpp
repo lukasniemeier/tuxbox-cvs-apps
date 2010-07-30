@@ -1,7 +1,7 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.1 2010/07/30 20:51:37 dbt Exp $
+	$Id: driver_boot_setup.cpp,v 1.2 2010/07/30 20:59:09 dbt Exp $
 
-	lcd setup implementation - Neutrino-GUI
+	driver_boot_setup implementation - Neutrino-GUI
 
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	and some other guys
