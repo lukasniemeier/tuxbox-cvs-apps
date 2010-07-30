@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.189 2010/07/18 22:07:20 dbt Exp $
+	$Id: setting_helpers.cpp,v 1.190 2010/07/30 20:54:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -505,7 +505,7 @@ bool CUserMenuNotifier::changeNotify(const neutrino_locale_t, void *Data)
 {
 	if (menuitem) {
 		char *data = (char *)Data;
-		menuitem->setOption(std::string(data));
+		menuitem->setOption(data);
 	}
 	return true;
 }
@@ -936,55 +936,3 @@ std::string getInterface()
 	return ret;
 }
 
-// USERMENU
-#define USERMENU_ITEM_OPTION_COUNT SNeutrinoSettings::ITEM_MAX
-const CMenuOptionChooser::keyval USERMENU_ITEM_OPTIONS[USERMENU_ITEM_OPTION_COUNT] =
-{
-	{SNeutrinoSettings::ITEM_NONE, LOCALE_USERMENU_ITEM_NONE} ,
-	{SNeutrinoSettings::ITEM_BAR, LOCALE_USERMENU_ITEM_BAR} ,
-	{SNeutrinoSettings::ITEM_EPG_LIST, LOCALE_EPGMENU_EVENTLIST} ,
-	{SNeutrinoSettings::ITEM_EPG_SUPER, LOCALE_EPGMENU_EPGPLUS} ,
-	{SNeutrinoSettings::ITEM_EPG_INFO, LOCALE_EPGMENU_EVENTINFO} ,
-	{SNeutrinoSettings::ITEM_EPG_MISC, LOCALE_USERMENU_ITEM_EPG_MISC} ,
-	{SNeutrinoSettings::ITEM_AUDIO_SELECT, LOCALE_AUDIOSELECTMENUE_HEAD} ,
-	{SNeutrinoSettings::ITEM_SUBCHANNEL, LOCALE_INFOVIEWER_SUBSERVICE} ,
-	{SNeutrinoSettings::ITEM_PLUGIN, LOCALE_TIMERLIST_PLUGIN} ,
-	{SNeutrinoSettings::ITEM_VTXT, LOCALE_USERMENU_ITEM_VTXT} ,
-	{SNeutrinoSettings::ITEM_RECORD, LOCALE_TIMERLIST_TYPE_RECORD} ,
-	{SNeutrinoSettings::ITEM_MOVIEPLAYER_TS, LOCALE_MAINMENU_MOVIEPLAYER} ,
-	{SNeutrinoSettings::ITEM_MOVIEPLAYER_MB, LOCALE_MOVIEBROWSER_HEAD} ,
-	{SNeutrinoSettings::ITEM_TIMERLIST, LOCALE_TIMERLIST_NAME} ,
-	{SNeutrinoSettings::ITEM_REMOTE, LOCALE_RCLOCK_MENUEADD} ,
-	{SNeutrinoSettings::ITEM_FAVORITS, LOCALE_FAVORITES_MENUEADD} ,
-	{SNeutrinoSettings::ITEM_TECHINFO, LOCALE_EPGMENU_STREAMINFO}
-};
-
-int CUserMenuMenu::exec(CMenuTarget* parent, const std::string &)
-{
-	if(parent != NULL)
-		parent->hide();
-
-	CMenuWidget menu (local , NEUTRINO_ICON_KEYBINDING);
-	menu.addItem(GenericMenuSeparator);
-	menu.addItem(GenericMenuBack);
-	menu.addItem(GenericMenuSeparatorLine);
-	
-	CUserMenuNotifier *notify = new CUserMenuNotifier();
-	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß/- ", notify);
-	CMenuForwarder *mf = new CMenuForwarder(LOCALE_USERMENU_NAME, true, g_settings.usermenu_text[button],&name);
-	notify->setItem(mf);
-	menu.addItem(mf);
-	menu.addItem(GenericMenuSeparatorLine);
-	
-	char text[10];
-	for(int item = 0; item < SNeutrinoSettings::ITEM_MAX && item <13; item++) // Do not show more than 13 items
-	{
-		snprintf(text,10,"%d:",item);
-		text[9]=0;// terminate for sure
-		menu.addItem( new CMenuOptionChooser(text, &g_settings.usermenu[button][item], USERMENU_ITEM_OPTIONS, USERMENU_ITEM_OPTION_COUNT,true ));
-	}
-
-	menu.exec(NULL,"");
-
-	return menu_return::RETURN_REPAINT;	
-}

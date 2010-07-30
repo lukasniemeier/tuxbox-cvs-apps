@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.112 2010/07/29 19:13:51 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.113 2010/07/30 20:54:12 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -43,7 +43,7 @@
 #include <neutrino.h>
 
 #include <system/debug.h>
-//#include <system/flashtool.h>
+
 
 #include <driver/encoding.h>
 #include <driver/vcrcontrol.h>
@@ -53,7 +53,6 @@
 #include "gui/widget/dirchooser.h"
 #include "gui/widget/icons.h"
 #include "gui/widget/keychooser.h"
-#include "gui/widget/lcdcontroler.h"
 #include "gui/movieplayer_setup.h"
 #include "gui/widget/rgbcsynccontroler.h"
 #include "gui/widget/stringinput.h"
@@ -83,7 +82,7 @@
 #include "gui/movieplayer_menu.h"
 #include "gui/movieplayer_setup.h"
 #endif
-//#include "gui/motorcontrol.h"
+
 #include "gui/network_setup.h"
 #ifdef ENABLE_GUI_MOUNT
 #include "gui/nfs.h"
@@ -95,7 +94,7 @@
 #endif
 #include "gui/pluginlist.h"
 #include "gui/record_setup.h"
-//#include "gui/scan.h"
+
 #include "gui/scan_setup.h"
 #include "gui/screensetup.h"
 #include "gui/software_update.h"
@@ -105,6 +104,8 @@
 #include "gui/themes.h"
 #include "gui/zapit_setup.h"
 #include "gui/keybind_setup.h"
+#include "gui/lcd_setup.h"
+#include "gui/driver_boot_setup.h"
 
 #if ENABLE_UPNP
 #include "gui/upnpbrowser.h"
@@ -131,10 +132,8 @@ static CTimingSettingsNotifier timingsettingsnotifier;
 void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 								CMenuWidget &mainSettings,
 								CMenuWidget &colorSettings,
-								CMenuWidget &lcdSettings,
 								CMenuWidget &languageSettings,
 								CMenuWidget &miscSettings,
-								CMenuWidget &driverSettings,
 								CMenuWidget &service)
 {
 	dprintf(DEBUG_DEBUG, "init mainmenue\n");
@@ -281,7 +280,7 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_COLORS, true, NULL, &colorSettings, NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_colors);
 	
 	// lcd.
-	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_LCD, true, NULL, &lcdSettings, NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_lcd);
+	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_LCD, true, NULL, new CLcdSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_lcd);
 	
 	//10. -- only 10 shortcuts (1-9, 0), the next could be the last also!(10. => 0)
 	//keybindings
@@ -293,7 +292,7 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 #endif
 
 	//green (driver/boot settings)
-	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_DRIVER, true, NULL, &driverSettings, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN, false, g_settings.personalize_driver);
+	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_DRIVER, true, NULL, new CDriverBootSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN, false, g_settings.personalize_driver);
 	
 	//yellow (miscSettings)
 	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_MISC, true, NULL, &miscSettings, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW, false, g_settings.personalize_misc);
@@ -642,94 +641,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 }
 
 
-/* for driver and boot settings menu */
-#define DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT 3
-const CMenuOptionChooser::keyval DRIVERSETTINGS_FB_DESTINATION_OPTIONS[DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT] =
-{
-	{ 0, LOCALE_OPTIONS_NULL   },
-	{ 1, LOCALE_OPTIONS_SERIAL },
-	{ 2, LOCALE_OPTIONS_FB     }
-};
-
-#define DRIVERSETTINGS_FDX_OPTION_COUNT 3
-const CMenuOptionChooser::keyval DRIVERSETTINGS_FDX_OPTIONS[DRIVERSETTINGS_FDX_OPTION_COUNT] =
-{
-	{ 0, LOCALE_OPTIONS_OFF					},
-	{ 1, LOCALE_OPTIONS_ON					},
-	{ 2, LOCALE_DRIVERSETTINGS_FDX_FORCE	},
-};
-
-typedef struct driver_setting_files_t
-{
-	const neutrino_locale_t                  name;
-	const char * const                       filename;
-	const CMenuOptionChooser::keyval * const options;
-} driver_setting_files_struct_t;
-
-const driver_setting_files_struct_t driver_setting_files[DRIVER_SETTING_FILES_COUNT] =
-{
-	{LOCALE_DRIVERSETTINGS_BOOTINFO      , "/var/etc/.boot_info"     , OPTIONS_OFF0_ON1_OPTIONS },
-#ifdef HAVE_DBOX_HARDWARE
-#if HAVE_DVB_API_VERSION == 1
-	{LOCALE_DRIVERSETTINGS_STARTBHDRIVER , "/var/etc/.bh"            , OPTIONS_OFF0_ON1_OPTIONS },
-#endif
-	{LOCALE_DRIVERSETTINGS_HWSECTIONS    , "/var/etc/.hw_sections"   , OPTIONS_OFF1_ON0_OPTIONS },
-	{LOCALE_DRIVERSETTINGS_NOAVIAWATCHDOG, "/var/etc/.no_watchdog"   , OPTIONS_OFF1_ON0_OPTIONS },
-	{LOCALE_DRIVERSETTINGS_NOENXWATCHDOG , "/var/etc/.no_enxwatchdog", OPTIONS_OFF1_ON0_OPTIONS },
-	{LOCALE_DRIVERSETTINGS_PHILIPSRCPATCH, "/var/etc/.philips_rc_patch", OPTIONS_OFF0_ON1_OPTIONS },
-	{LOCALE_DRIVERSETTINGS_SPTSFIX       , "/var/etc/.sptsfix"       , OPTIONS_OFF0_ON1_OPTIONS },
-#ifdef ENABLE_RTC
-	{LOCALE_DRIVERSETTINGS_RTC           , "/var/etc/.rtc"           , OPTIONS_OFF0_ON1_OPTIONS },
-#endif
-#endif
-	{LOCALE_DRIVERSETTINGS_PMTUPDATE     , "/var/etc/.no_pmt_update" , OPTIONS_OFF1_ON0_OPTIONS }
-};
-
-/* driver settings menu */
-void CNeutrinoApp::InitDriverSettings(CMenuWidget &driverSettings)
-{
-	bool item_enabled[DRIVER_SETTING_FILES_COUNT];
-	int boxtype = g_Controld->getBoxType();
-	
-	dprintf(DEBUG_DEBUG, "init driversettings\n");
-	driverSettings.addItem(GenericMenuSeparator);
-	driverSettings.addItem(GenericMenuBack);
-	driverSettings.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVERSETTINGS_DRIVER_BOOT));
-
-#ifdef HAVE_DBOX_HARDWARE
-	CSPTSNotifier *sptsNotifier = new CSPTSNotifier;
-	driverSettings.addItem(new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_SPTSMODE, &g_settings.misc_spts, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, sptsNotifier));
-#endif
-
-	for (int i = 0; i < DRIVER_SETTING_FILES_COUNT; i++)
-	{
-		FILE * fd = fopen(driver_setting_files[i].filename, "r");
-		if (fd)
-		{
-			fclose(fd);
-			g_settings.misc_option[i] = 1;
-		}
-		else
-			g_settings.misc_option[i] = 0;
-		
-		if (!strcmp(driver_setting_files[i].filename, "/var/etc/.philips_rc_patch") && (boxtype == 1)) // usefully for Philips RC and sometimes for Sagem RC
-			item_enabled[i] = false;
-		else if (!strcmp(driver_setting_files[i].filename, "/var/etc/.no_enxwatchdog") && (boxtype == 1)) // not for Nokia
-			item_enabled[i] = false;
-		else if (!strcmp(driver_setting_files[i].filename, "/var/etc/.sptsfix") && (boxtype != 1)) // only Nokia has Avia500
-			item_enabled[i] = false;
-		else
-			item_enabled[i] = true;
-
-		driverSettings.addItem(new CMenuOptionChooser(driver_setting_files[i].name, &(g_settings.misc_option[i]), driver_setting_files[i].options, 2, item_enabled[i], new CTouchFileNotifier(driver_setting_files[i].filename)));
-	}
-
-#ifdef HAVE_DBOX_HARDWARE
-	driverSettings.addItem(new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FB_DESTINATION, &g_settings.uboot_console, DRIVERSETTINGS_FB_DESTINATION_OPTIONS, DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT, true, ConsoleDestinationChanger));
-	driverSettings.addItem(new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FDX_LOAD, &g_settings.uboot_dbox_duplex, DRIVERSETTINGS_FDX_OPTIONS, DRIVERSETTINGS_FDX_OPTION_COUNT, true, FdxSettingsChanger));
-#endif
-}
-
 /* language settings menu */
 void CNeutrinoApp::InitLanguageSettings(CMenuWidget &languageSettings)
 {
@@ -1035,86 +946,6 @@ void CNeutrinoApp::InitColorSettingsTiming(CMenuWidget &colorSettings_timing)
 
 	colorSettings_timing.addItem(GenericMenuSeparatorLine);
 	colorSettings_timing.addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, "osd.def"));
-}
-
-/* for lcd settings menu*/
-#define LCDMENU_STATUSLINE_OPTION_COUNT 4
-const CMenuOptionChooser::keyval LCDMENU_STATUSLINE_OPTIONS[LCDMENU_STATUSLINE_OPTION_COUNT] =
-{
-	{ 0, LOCALE_LCDMENU_STATUSLINE_PLAYTIME   },
-	{ 1, LOCALE_LCDMENU_STATUSLINE_VOLUME     },
-	{ 2, LOCALE_LCDMENU_STATUSLINE_BOTH       },
-	{ 3, LOCALE_LCDMENU_STATUSLINE_BOTH_AUDIO }
-};
-
-/* for lcd EPG menu*/
-#define LCDMENU_EPG_OPTION_COUNT 6
-const CMenuOptionChooser::keyval LCDMENU_EPG_OPTIONS[LCDMENU_EPG_OPTION_COUNT] =
-{
-	{ 1, LOCALE_LCDMENU_EPG_NAME		},
-	{ 2, LOCALE_LCDMENU_EPG_TITLE		},
-	{ 3, LOCALE_LCDMENU_EPG_NAME_TITLE	},
-	{ 7, LOCALE_LCDMENU_EPG_NAME_SEPLINE_TITLE },
-	{ 11, LOCALE_LCDMENU_EPG_NAMESHORT_TITLE },
-	{ 15, LOCALE_LCDMENU_EPG_NAMESHORT_SEPLINE_TITLE }
-};
-
-#define LCDMENU_EPGALIGN_OPTION_COUNT 2
-const CMenuOptionChooser::keyval LCDMENU_EPGALIGN_OPTIONS[LCDMENU_EPGALIGN_OPTION_COUNT] =
-{
-	{ 0, LOCALE_LCDMENU_EPGALIGN_LEFT   },
-	{ 1, LOCALE_LCDMENU_EPGALIGN_CENTER	}
-};
-  
-/* lcd settings menu*/
-void CNeutrinoApp::InitLcdSettings(CMenuWidget &lcdSettings)
-{
-	addMenueIntroItems(lcdSettings);
-
-	CLcdControler* lcdsliders = new CLcdControler(LOCALE_LCDMENU_HEAD, NULL);
-
-	CLcdNotifier* lcdnotifier = new CLcdNotifier();
-
-	CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_LCDMENU_INVERSE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, lcdnotifier);
-	lcdSettings.addItem(oj);
-
-#ifndef HAVE_TRIPLEDRAGON
-	if (g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) {
-		oj = new CMenuOptionChooser(LOCALE_LCDMENU_BIAS, &g_settings.lcd_setting[SNeutrinoSettings::LCD_BIAS], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, lcdnotifier);
-		lcdSettings.addItem(oj);
-	}
-
-	oj = new CMenuOptionChooser(LOCALE_LCDMENU_POWER, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, lcdnotifier);
-	lcdSettings.addItem(oj);
-
-	if ((g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) || (g_info.box_Type == CControld::TUXBOX_MAKER_SAGEM))
-	{
-		// Autodimm available on Sagem/Philips only
-		oj = new CMenuOptionChooser(LOCALE_LCDMENU_AUTODIMM, &g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, lcdnotifier);
-		lcdSettings.addItem( oj );
-	}
-
-	CStringInput * dim_time = new CStringInput(LOCALE_LCDMENU_DIM_TIME, g_settings.lcd_setting_dim_time, 3,
-							NONEXISTANT_LOCALE, NONEXISTANT_LOCALE,"0123456789 ");
-	lcdSettings.addItem(new CMenuForwarder(LOCALE_LCDMENU_DIM_TIME,true, g_settings.lcd_setting_dim_time,dim_time));
-
-	CStringInput * dim_brightness = new CStringInput(LOCALE_LCDMENU_DIM_BRIGHTNESS, g_settings.lcd_setting_dim_brightness, 3,
-							NONEXISTANT_LOCALE, NONEXISTANT_LOCALE,"0123456789 ");
-	lcdSettings.addItem(new CMenuForwarder(LOCALE_LCDMENU_DIM_BRIGHTNESS,true, g_settings.lcd_setting_dim_brightness,dim_brightness));
-#endif
-	lcdSettings.addItem(GenericMenuSeparatorLine);
-	lcdSettings.addItem(new CMenuForwarder(LOCALE_LCDMENU_LCDCONTROLER, true, NULL, lcdsliders));
-
-	lcdSettings.addItem(GenericMenuSeparatorLine);
-	oj = new CMenuOptionChooser(LOCALE_LCDMENU_STATUSLINE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME], LCDMENU_STATUSLINE_OPTIONS, LCDMENU_STATUSLINE_OPTION_COUNT, true);
-	lcdSettings.addItem(oj);
-	
-	//lcd_epg
-	lcdSettings.addItem(GenericMenuSeparatorLine);
-	oj = new CMenuOptionChooser(LOCALE_LCDMENU_EPG, &g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE], LCDMENU_EPG_OPTIONS, LCDMENU_EPG_OPTION_COUNT, true);
-	lcdSettings.addItem(oj);
-	oj = new CMenuOptionChooser(LOCALE_LCDMENU_EPGALIGN, &g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN], LCDMENU_EPGALIGN_OPTIONS, LCDMENU_EPGALIGN_OPTION_COUNT, true);
-	lcdSettings.addItem(oj);
 }
  
 

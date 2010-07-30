@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.234 2010/07/27 07:14:39 dbt Exp $
+	$Id: neutrino.h,v 1.235 2010/07/30 20:54:12 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -191,8 +191,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		CDVBInfoExec			*DVBInfo;
 		CStreamFeaturesChangeExec	*StreamFeaturesChanger;
 //		CVCRControl			*vcrControl;
-		CConsoleDestChangeNotifier	*ConsoleDestinationChanger;
-		CFdxChangeNotifier		*FdxSettingsChanger;
 		CRCLock				*rcLock;
 		bool 				parentallocked;
 		CFontSizeNotifier 		*fontsizenotifier;
@@ -235,7 +233,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void InitColorThemesSettings(CMenuWidget &);
 		void InitColorSettingsStatusBarColors(CMenuWidget &colorSettings_menuColors);
 		void InitColorSettingsTiming(CMenuWidget &colorSettings_timing);
-		void InitLcdSettings(CMenuWidget &lcdSettings);
 		void AddFontSettingItem(CMenuWidget &fontSettings, const SNeutrinoSettings::FONT_TYPES number_of_fontsize_entry);
 		void InitFontSettings(CMenuWidget &fontSettings);
 		void InitDriverSettings(CMenuWidget &);
@@ -252,10 +249,8 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void InitMainMenu(CMenuWidget &mainMenu,
 				  CMenuWidget &mainSettings,
 				  CMenuWidget &colorSettings,
-				  CMenuWidget &lcdSettings,
 				  CMenuWidget &languageSettings,
 				  CMenuWidget &miscSettings,
-				  CMenuWidget &driverSettings,
 				  CMenuWidget &service);
 
 		void addMenueIntroItems(CMenuWidget &item);

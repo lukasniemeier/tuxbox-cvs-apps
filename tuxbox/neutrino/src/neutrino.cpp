@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1031 2010/07/27 07:14:39 dbt Exp $
+	$Id: neutrino.cpp,v 1.1032 2010/07/30 20:54:12 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2108,8 +2108,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	DVBInfo				= new CDVBInfoExec;
 	NVODChanger			= new CNVODChangeExec;
 	StreamFeaturesChanger		= new CStreamFeaturesChangeExec;
-	ConsoleDestinationChanger	= new CConsoleDestChangeNotifier;
-	FdxSettingsChanger		= new CFdxChangeNotifier;
 	fontsizenotifier		= new CFontSizeNotifier;
 
 	rcLock				= new CRCLock();
@@ -2129,10 +2127,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 	CMenuWidget    languageSettings    (LOCALE_LANGUAGESETUP_HEAD            , "language.raw"        );
 	CMenuWidget    colorSettings       (LOCALE_COLORMENU_HEAD                , NEUTRINO_ICON_COLORS  );
 	CMenuWidget    fontSettings        (LOCALE_FONTMENU_HEAD                 , NEUTRINO_ICON_COLORS  );
-	CMenuWidget    lcdSettings         (LOCALE_LCDMENU_HEAD                  , "lcd.raw"             , 500);
-	CMenuWidget    driverSettings      (LOCALE_DRIVERSETTINGS_HEAD           , NEUTRINO_ICON_SETTINGS);
 	CMenuWidget    miscSettings        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
-	CMenuWidget    scanSettingsMenu    (LOCALE_SERVICEMENU_SCANTS            , NEUTRINO_ICON_SETTINGS);
 	CMenuWidget    service             (LOCALE_SERVICEMENU_HEAD              , NEUTRINO_ICON_SETTINGS);
 	
 
@@ -2142,10 +2137,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 	InitMainMenu(	mainMenu,
 					mainSettings,
 					colorSettings,
-					lcdSettings,
 					languageSettings,
  					miscSettings,
-					driverSettings,
 					service);
 
 	//service
@@ -2153,9 +2146,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	//language Setup
 	InitLanguageSettings(languageSettings);
-
-	//driver Setup
-	InitDriverSettings(driverSettings);
 
 	// misc settings
 	CMenuWidget    miscSettingsGeneral        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
@@ -2277,9 +2267,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	//color Setup
 	InitColorSettings(colorSettings, fontSettings);
-
-	//LCD Setup
-	InitLcdSettings(lcdSettings);
 
 	AudioMute( g_Controld->getMute((CControld::volume_type)g_settings.audio_avs_Control), true );
 

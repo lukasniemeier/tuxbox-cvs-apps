@@ -25,6 +25,7 @@ libneutrino_gui_a_SOURCES = \
 	bouquetlist.cpp \
 	channellist.cpp \
 	color.cpp \
+	driver_boot_setup.cpp \
 	epg_menu.cpp \
 	epgview.cpp \
 	eventlist.cpp \
@@ -33,6 +34,7 @@ libneutrino_gui_a_SOURCES = \
 	imageinfo.cpp \
 	infoviewer.cpp \
 	keybind_setup.cpp \
+	lcd_setup.cpp \
 	neutrino_menu.cpp \
 	network_setup.cpp \
 	nfs.cpp \
@@ -51,6 +53,7 @@ libneutrino_gui_a_SOURCES = \
 	themes.cpp \
 	timeosd.cpp \
 	update.cpp \
+	user_menue_setup.cpp \
 	video_setup.cpp \
 	zapit_setup.cpp
 

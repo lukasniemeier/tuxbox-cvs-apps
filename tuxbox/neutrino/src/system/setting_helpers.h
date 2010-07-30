@@ -2,7 +2,7 @@
 #define __setting_helpers__
 
 /*
-	$Id: setting_helpers.h,v 1.104 2010/07/18 22:07:20 dbt Exp $
+	$Id: setting_helpers.h,v 1.105 2010/07/30 20:54:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -323,16 +323,7 @@ class CNetAdapter
 		std::string getMacAddr(void);
 };
 
-// USERMENU
- class CUserMenuMenu : public CMenuTarget
-{	
-	private:
-		int button;
-		neutrino_locale_t local;
-	public:
-		CUserMenuMenu(neutrino_locale_t _local, int _button){local = _local;button = _button;};
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
+
 
 #endif
 #endif
