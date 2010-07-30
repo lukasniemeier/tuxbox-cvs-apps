@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.84 2010/07/05 21:06:58 seife Exp $
+	$Id: menue.h,v 1.85 2010/07/30 20:50:34 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -172,7 +172,7 @@ class CMenuForwarder : public CMenuItem
 
 	int paint(bool selected=false);
 	int getHeight(void) const;
-	void setOption(const std::string &Option);
+	void setOption(const char *Option);
 	void setTextLocale(const neutrino_locale_t Text);
 	int exec(CMenuTarget* parent);
 	bool isSelectable(void) const

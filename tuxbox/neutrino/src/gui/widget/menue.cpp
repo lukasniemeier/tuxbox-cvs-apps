@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.170 2010/07/05 21:06:58 seife Exp $
+	$Id: menue.cpp,v 1.171 2010/07/30 20:50:34 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -897,9 +897,9 @@ int CMenuForwarder::getHeight(void) const
 
 // used gets set by the addItem() function. This is for set to paint Option string by just not calling the addItem() function.
 // Without this, the changeNotifiers would become machine-dependent.
-void CMenuForwarder::setOption(const std::string &Option)
+void CMenuForwarder::setOption(const char *Option)
 {
-	option = Option.c_str();
+	option = Option;
 
 	if (used && x != -1)
 		paint();
