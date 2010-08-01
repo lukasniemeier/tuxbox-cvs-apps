@@ -1,5 +1,5 @@
 /*
-	$Id: streaminfo2.cpp,v 1.46 2010/06/27 12:24:38 dbt Exp $
+	$Id: streaminfo2.cpp,v 1.47 2010/08/01 17:02:41 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -512,6 +512,16 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	// Info Output
 	char buf[100], buf2[100];
 	int count = 0;
+	long bitInfo[10];
+	const char *framerates[] = { "",	// 0
+				     "23.976",	// 1
+				     "24fps",	// 2
+				     "25fps",	// 3
+				     "29.97",	// 4
+				     "30fps",	// 5
+				     "50fps",	// 6
+				     "59.94",	// 7
+				     "60fps" };	// 8
 #ifndef HAVE_TRIPLEDRAGON
 	FILE* fd = fopen("/proc/bus/bitstream", "rt");
 	if (fd==NULL)
@@ -519,8 +529,6 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		printf("error while opening proc-bitstream\n" );
 		return;
 	}
-
-	long bitInfo[10];
 
 	char *key,*tmpptr;
 	long value;
@@ -539,7 +547,19 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		}
 	}
 	fclose(fd);
-	
+#else
+	/* set the bitInfo fields similar to the dbox... values are from
+	   the videodecoder, who gets them from the stream... */
+	AVInfo v = g_Zapit->getAVInfo();
+	bitInfo[0] = (long)v.vinfo.h_size;
+	bitInfo[1] = (long)v.vinfo.v_size;
+	bitInfo[2] = (long)v.vinfo.pel_aspect_ratio + 2; // td has 0,1,2 dbox has 2,3,4
+	bitInfo[3] = (long)v.vinfo.frame_rate;
+	if (v.atype != 0)
+		bitInfo[7] = 0;
+	else
+		bitInfo[7] = v.astatus.word00;
+#endif
 	int outputpos_x = (xpos + width/2)/2+25;
 	
 	ypos+= iheight;
@@ -574,17 +594,11 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 
 
 	ypos+= iheight;
-	switch ( bitInfo[3] )
-	{
-			case 3:
-			sprintf((char*) buf, "25fps");
-			break;
-			case 6:
-			sprintf((char*) buf, "50fps");
-			break;
-			default:
-			strncpy(buf, g_Locale->getText(LOCALE_STREAMINFO_FRAMERATE_UNKNOWN), sizeof(buf));
-	}
+	if (bitInfo[3] < 1 || bitInfo[3] > 8)
+		strncpy(buf, g_Locale->getText(LOCALE_STREAMINFO_FRAMERATE_UNKNOWN), sizeof(buf));
+	else
+		strcpy(buf, framerates[bitInfo[3]]);
+
 	g_Font[font_info]->RenderString(xpos, ypos, width-10, g_Locale->getText(LOCALE_STREAMINFO_FRAMERATE), COL_MENUCONTENT, 0, true); // UTF-8
 	g_Font[font_info]->RenderString(outputpos_x, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8
 
@@ -613,9 +627,6 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	g_Font[font_info]->RenderString(xpos, ypos+ iheight, width-10, g_Locale->getText(LOCALE_STREAMINFO_AUDIOTYPE), COL_MENUCONTENT, 0, true); // UTF-8
 	g_Font[font_info]->RenderString(outputpos_x, ypos+ iheight, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8
 	ypos+= iheight+ 10;
-#else /* tripledragon */
-	ypos+= iheight * 3 + 10;
-#endif
 
 	CZapitClient::CCurrentServiceInfo si = g_Zapit->getCurrentServiceInfo();
 	
@@ -806,7 +817,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 std::string CStreamInfo2Misc::getStreamInfoVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.46 $");
+	return imageinfo.getModulVersion("","$Revision: 1.47 $");
 }
 
 int CStreamInfo2Handler::exec(CMenuTarget* parent, const std::string &)
