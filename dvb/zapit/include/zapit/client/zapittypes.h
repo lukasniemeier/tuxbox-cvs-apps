@@ -1,5 +1,5 @@
 /*
- * $Id: zapittypes.h,v 1.30 2009/09/30 17:12:40 seife Exp $
+ * $Id: zapittypes.h,v 1.31 2010/08/01 16:59:42 seife Exp $
  *
  * zapit's types which are used by the clientlib - d-box2 linux project
  *
@@ -34,6 +34,8 @@
 
 #ifdef HAVE_TRIPLEDRAGON
 #include <zapit/td-frontend-compat.h>
+#include <vid/vid_types.h>
+#include <aud/aud_types.h>
 #elif HAVE_DVB_API_VERSION >= 3
 #include <linux/dvb/frontend.h>
 #else
@@ -178,5 +180,15 @@ typedef struct TP_map
 
 typedef std::map <uint32_t, TP_map> TP_map_t;
 typedef std::map <uint32_t, TP_map>::iterator TP_iterator;
+
+#ifdef HAVE_TRIPLEDRAGON
+/* for getting audio / video info */
+typedef struct AVInfo
+{
+	VIDEOINFO vinfo;
+	unsigned int atype;
+	scratchl2 astatus;
+};
+#endif
 
 #endif /* __zapittypes_h__ */

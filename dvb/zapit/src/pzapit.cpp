@@ -1,5 +1,5 @@
 /*
- * $Id: pzapit.cpp,v 1.68 2009/10/11 17:13:07 seife Exp $
+ * $Id: pzapit.cpp,v 1.69 2010/08/01 16:59:42 seife Exp $
  *
  * simple commandline client for zapit
  *
@@ -80,6 +80,7 @@ int usage (const char * basename)
 #ifdef HAVE_TRIPLEDRAGON
 		  << "\t--zoom <percent> zoom picture" << std::endl
 		  << "\t--pig <x y w h a> PIG" << std::endl
+		  << "\t--avinfo get audio/video info" << std::endl
 #endif
 		;
 	return -1;
@@ -134,6 +135,7 @@ int main (int argc, char** argv)
 	bool zoom = false;
 	int zoomlevel = 0;
 	bool pig = false;
+	bool avinfo = false;
 	int pig_x = 0;
 	int pig_y = 0;
 	int pig_w = 0;
@@ -399,6 +401,11 @@ int main (int argc, char** argv)
 			}
 			continue;
 		}
+		else if (!strncmp(argv[i], "--avinfo", 6))
+		{
+			avinfo = true;
+			continue;
+		}
 #endif
 		else if (!strncmp(argv[i], "-vol", 4))
 		{
@@ -573,6 +580,13 @@ int main (int argc, char** argv)
 	{
 		zapit.setPIG(pig_x, pig_y, pig_w, pig_h, !!pig_a);
 		std::cout << "pig = " << pig_x << "." << pig_y << "." << pig_w << "." << pig_h << ":" << pig_a << std::endl;
+		return 0;
+	}
+	if (avinfo)
+	{
+		AVInfo v = zapit.getAVInfo();
+		std::cout << "h_size = " << v.vinfo.h_size << " v_size = " << v.vinfo.v_size << " ar = " << v.vinfo.pel_aspect_ratio << " rate = " << v.vinfo.frame_rate << std::endl;
+		printf("atype = %d astatus0 = 0x%08x astatus1 = 0x%08x\n", v.atype, v.astatus.word00, v.astatus.word01);
 		return 0;
 	}
 #endif

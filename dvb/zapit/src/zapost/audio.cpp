@@ -1,5 +1,5 @@
 /*
- * $Id: audio.cpp,v 1.16 2009/09/30 17:50:36 seife Exp $
+ * $Id: audio.cpp,v 1.17 2010/08/01 16:59:42 seife Exp $
  *
  * (C) 2002 by Steffen Hehn 'McClean' &
  *	Andreas Oberritter <obi@tuxbox.org>
@@ -277,5 +277,20 @@ unsigned char map_volume(const unsigned char volume, const bool /*to_AVS*/)
 //	vol = (invlog63[volume] + 1) / 2;
 	vol = 31 - vol * 31 / 100;
 	return vol;
+}
+#endif
+
+#ifdef HAVE_TRIPLEDRAGON
+void CAudio::getAudioInfo(unsigned int *atype, scratchl2 *astatus)
+{
+	*atype = (unsigned int)-1;
+	if (fd < 0)
+		return;
+	if (ioctl(fd, MPEG_AUD_GET_DECTYP, atype) < 0)
+	{
+		*atype = (unsigned int)-1;
+		return;
+	}
+	ioctl(fd, MPEG_AUD_GET_STATUS, astatus);
 }
 #endif

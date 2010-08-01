@@ -1,5 +1,5 @@
 /*
- * $Id: audio.h,v 1.17 2009/09/30 17:12:39 seife Exp $
+ * $Id: audio.h,v 1.18 2010/08/01 16:59:42 seife Exp $
  *
  * (C) 2002-2003 by Steffen Hehn 'McClean' &
  *	Andreas Oberritter <obi@tuxbox.org>
@@ -88,6 +88,9 @@ class CAudio
 		/* select channels */
 		int setChannel(audio_channel_select_t channel);
 		audio_channel_select_t getChannel(void);
+#ifdef HAVE_TRIPLEDRAGON
+		void getAudioInfo(unsigned int *atype, scratchl2 *astatus);
+#endif
 };
 
 #endif /* __zapit_audio_h__ */

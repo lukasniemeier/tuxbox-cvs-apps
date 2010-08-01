@@ -1,5 +1,5 @@
 /*
- * $Id: video.h,v 1.11 2009/09/30 17:54:43 seife Exp $
+ * $Id: video.h,v 1.12 2010/08/01 16:59:42 seife Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -99,6 +99,7 @@ class CVideo
 		void setZoomAspect(int index);
 		void setPig(int x, int y, int w, int h, bool aspect);
 		int VdecIoctl(int request, int arg);
+		VIDEOINFO getVideoInfo(void);
 #endif
 };
 

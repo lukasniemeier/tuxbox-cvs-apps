@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.450 2009/11/26 20:58:21 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.451 2010/08/01 16:59:42 seife Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -1475,6 +1475,7 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 			(rmsg.cmd != CZapitMessages::CMD_VID_IOCTL) &&
 			(rmsg.cmd != CZapitMessages::CMD_SET_ZOOMLEVEL) &&
 			(rmsg.cmd != CZapitMessages::CMD_GET_ZOOMLEVEL) &&
+			(rmsg.cmd != CZapitMessages::CMD_GET_AVINFO) &&
 #endif
 			(rmsg.cmd != CZapitMessages::CMD_GET_MODE) &&
 			(rmsg.cmd != CZapitMessages::CMD_GETPIDS))) {
@@ -2507,6 +2508,17 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 		CBasicServer::send_data(connfd, &responseInteger, sizeof(responseInteger));
 		break;
 	}
+	case CZapitMessages::CMD_GET_AVINFO:
+	{
+		CZapitMessages::responseAVInfo res;
+		memset(&res, 0, sizeof(res));
+		if (videoDecoder)
+			res.info.vinfo = videoDecoder->getVideoInfo();
+		if (audioDecoder)
+			audioDecoder->getAudioInfo(&res.info.atype, &res.info.astatus);
+		CBasicServer::send_data(connfd, &res, sizeof(res));
+		break;
+	}
 #endif
 	default:
 		WARN("unknown command %d (version %d)", rmsg.cmd, CZapitMessages::ACTVERSION);
@@ -3094,7 +3106,7 @@ void signal_handler(int signum)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.450 2009/11/26 20:58:21 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.451 2010/08/01 16:59:42 seife Exp $\n");
 
 	bool check_lock = true;
 	int opt;

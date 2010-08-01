@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/client/msgtypes.h,v 1.39 2009/11/03 20:13:59 rhabarber1848 Exp $
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/client/msgtypes.h,v 1.40 2010/08/01 16:59:42 seife Exp $
  *
  * types used for clientlib <-> zapit communication - d-box2 linux project
  *
@@ -163,6 +163,7 @@ class CZapitMessages
 			CMD_GET_ZOOMLEVEL		   = 121,
 			CMD_SET_PIG			   = 122,
 			CMD_VID_IOCTL			   = 123,
+			CMD_GET_AVINFO			   = 124,
 #endif
 		};
 
@@ -393,6 +394,11 @@ class CZapitMessages
 	{
 		int request;
 		int arg;
+	};
+
+	struct responseAVInfo
+	{
+		AVInfo info;
 	};
 #endif
 };

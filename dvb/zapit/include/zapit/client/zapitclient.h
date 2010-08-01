@@ -511,6 +511,7 @@ class CZapitClient:public CBasicClient
 	int getZoom(void);
 	void setPIG(int x, int y, int w, int h, bool aspect);
 	int VdecIoctl(int request, int arg);
+	AVInfo getAVInfo(void);
 #endif
 
 	/****************************************/

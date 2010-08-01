@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/lib/zapitclient.cpp,v 1.127 2009/11/03 20:14:00 rhabarber1848 Exp $ *
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/lib/zapitclient.cpp,v 1.128 2010/08/01 16:59:42 seife Exp $ *
  *
  * Zapit client interface - DBoxII-Project
  *
@@ -1148,6 +1148,15 @@ int CZapitClient::VdecIoctl(int request, int arg)
 	send(CZapitMessages::CMD_VID_IOCTL, (char*)&msg, sizeof(msg));
 	CBasicClient::receive_data((char*)&response, sizeof(response));
 	return response.number;
+}
+
+AVInfo CZapitClient::getAVInfo(void)
+{
+	CZapitMessages::responseAVInfo response;
+	send(CZapitMessages::CMD_GET_AVINFO);
+	CBasicClient::receive_data((char*)&response, sizeof(response));
+	close_connection();
+	return response.info;
 }
 #endif
 

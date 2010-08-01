@@ -1,5 +1,5 @@
 /*
- * $Id: video.cpp,v 1.20 2009/11/17 11:55:25 rhabarber1848 Exp $
+ * $Id: video.cpp,v 1.21 2010/08/01 16:59:42 seife Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -592,6 +592,16 @@ int CVideo::VdecIoctl(int request, int arg)
 	ret = ioctl(fd, request, arg);
 	if (ret < 0)
 		return -errno;
+	return ret;
+}
+
+VIDEOINFO CVideo::getVideoInfo(void)
+{
+	VIDEOINFO ret;
+	memset(&ret, 0, sizeof(ret));
+	if (fd < 0)
+		return ret;
+	ioctl(fd, MPEG_VID_GET_V_INFO, &ret);
 	return ret;
 }
 #endif
