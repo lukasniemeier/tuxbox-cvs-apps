@@ -3092,6 +3092,17 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		else if (msg == CRCInput::RC_stop && g_playstate >= CMoviePlayerGui::PLAY)
 #endif
 		{
+#if 0
+			// this records last play stop, but needs more thinking
+			if (/*isMovieBrowser == true &&*/ movieinfo_valid)
+			{
+				// if we have a movie information, try to save the stop position
+				movieinfo.dateOfLastPlay = time(NULL);
+				movieinfo.bookmarks.lastPlayStop = get_filetime();
+				CMovieInfo mi;
+				mi.saveMovieInfo(movieinfo);
+			}
+#endif
 			StreamTime.hide();
 			g_playstate = CMoviePlayerGui::STOPPED;
 			aborted = true;
@@ -3452,7 +3463,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.73 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.74 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
