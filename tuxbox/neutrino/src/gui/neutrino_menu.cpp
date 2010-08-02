@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.113 2010/07/30 20:54:12 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.114 2010/08/02 20:36:16 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -568,7 +568,10 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL, &g_settings.shutdown_real, OPTIONS_OFF1_ON0_OPTIONS, OPTIONS_OFF1_ON0_OPTION_COUNT, true, miscNotifier);
 	miscSettingsGeneral.addItem(m6);
 	miscSettingsGeneral.addItem(m2);
+#ifndef HAVE_TRIPLEDRAGON
+	/* do not allow TD users to shoot themselves in the foot ;) */
 	miscSettingsGeneral.addItem(m3);
+#endif
 	miscSettingsGeneral.addItem(m4);
 	miscSettingsGeneral.addItem(m1);
 	miscSettingsGeneral.addItem(m5);
