@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1033 2010/08/02 20:51:27 seife Exp $
+	$Id: neutrino.cpp,v 1.1034 2010/08/02 20:56:45 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2566,8 +2566,18 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 						}
 					}
 					// Scart-Mode verlassen
+#ifdef HAVE_TRIPLEDRAGON
+					/* on the TD, we switch off power supply of the frontend in standby mode
+					   this needs to be switched on again. The easiest way is to let "exit" not
+					   return to "on" but fall back to "standby", a regular "leave standby"
+					   event will switch on the power again.
+					   Just trust me on that ;) */
+					if (! wakeupfromScart)
+						scartMode(false);
+#else
 					wakeupfromScart = false;
 					scartMode( false );
+#endif
 				}
 				else
 					handleMsg(msg, data);
