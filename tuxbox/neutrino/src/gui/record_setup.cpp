@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.5 2010/07/01 11:44:19 dbt Exp $
+	$Id: record_setup.cpp,v 1.6 2010/08/02 20:48:51 seife Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -107,11 +107,17 @@ const CMenuOptionChooser::keyval MESSAGEBOX_NO_YES_OPTIONS[MESSAGEBOX_NO_YES_OPT
 	{ 1, LOCALE_MESSAGEBOX_YES }
 };
 
+#ifdef HAVE_TRIPLEDRAGON
+#define RECORDINGMENU_RECORDING_TYPE_OPTION_COUNT 3
+#else
 #define RECORDINGMENU_RECORDING_TYPE_OPTION_COUNT 4
+#endif
 const CMenuOptionChooser::keyval RECORDINGMENU_RECORDING_TYPE_OPTIONS[RECORDINGMENU_RECORDING_TYPE_OPTION_COUNT] =
 {
 	{ CNeutrinoApp::RECORDING_OFF   , LOCALE_RECORDINGMENU_OFF    },
+#ifndef HAVE_TRIPLEDRAGON
 	{ CNeutrinoApp::RECORDING_SERVER, LOCALE_RECORDINGMENU_SERVER },
+#endif
 	{ CNeutrinoApp::RECORDING_VCR   , LOCALE_RECORDINGMENU_VCR    },
 	{ CNeutrinoApp::RECORDING_FILE  , LOCALE_RECORDINGMENU_FILE   }
 };
@@ -295,15 +301,20 @@ void CRecordSetup::showRecordSetup()
 	recordingSettings->addItem( oj1); //recording type (off, server, vcr, direct) 
 	recordingSettings->addItem(GenericMenuSeparatorLine);
 	recordingSettings->addItem( mf7); //direct record settings
+#ifndef HAVE_TRIPLEDRAGON
+	/* on the TD, we just do not display those items */
 	recordingSettings->addItem( mf1); //server ip
 	recordingSettings->addItem( mf2); //server port
 	recordingSettings->addItem( oj2); //wol
 	recordingSettings->addItem( mf3); //mac
+#endif
 	recordingSettings->addItem( oj3); //stop playback
 	recordingSettings->addItem( oj4); //stop epg
 	recordingSettings->addItem( oj4b);//switch on announcement
 	recordingSettings->addItem( oj5); //suppress scart switch
+#ifdef HAVE_DBOX_HARDWARE
 	recordingSettings->addItem(oj12); //use spts
+#endif
 	recordingSettings->addItem(GenericMenuSeparatorLine);
 	recordingSettings->addItem( mf15);//timersettings
 		//subhead
