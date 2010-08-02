@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1032 2010/07/30 20:54:12 dbt Exp $
+	$Id: neutrino.cpp,v 1.1033 2010/08/02 20:51:27 seife Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2436,6 +2436,10 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 			else if( msg == CRCInput::RC_text )
 			{
 				g_PluginList->startPlugin("tuxtxt");
+			}
+			else if(msg == CRCInput::RC_timer)
+			{
+				Timerlist->exec(NULL, "");
 			}
 			else if( msg == CRCInput::RC_audio )
 			{

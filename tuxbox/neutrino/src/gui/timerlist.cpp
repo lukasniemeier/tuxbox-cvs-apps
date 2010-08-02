@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.108 2010/06/24 20:02:19 dbt Exp $
+	$Id: timerlist.cpp,v 1.109 2010/08/02 20:51:27 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -370,6 +370,7 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 
 	int ret = show();
+	CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
 
 	return ret;
 /*
