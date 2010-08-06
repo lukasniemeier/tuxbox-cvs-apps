@@ -210,6 +210,13 @@ void eZapOsdSetup::init_eZapOsdSetup()
 	sGamma->setValue( gamma);
 	CONNECT( sGamma->changed, eZapOsdSetup::gammaChanged );
 
+	int bcktrans = 0xC0;
+	eConfig::getInstance()->getKey("/elitedvb/subtitle/backgroundTransparency", bcktrans);
+	sSubtitleBlack = CreateSkinnedSlider("subtitletransparency","lsubtitletransparency", 0, 255 );
+	sSubtitleBlack->setIncrement( 5 ); // Percent !
+	sSubtitleBlack->setValue( bcktrans);
+	CONNECT( sSubtitleBlack->changed, eZapOsdSetup::SubtitleBlackChanged );
+
 	simpleMainMenu=CreateSkinnedCheckbox("simpleMainMenu",0,"/ezap/osd/simpleMainMenu");
 
 	CONNECT( CreateSkinnedButton("skin")->selected, eZapOsdSetup::skinPressed );
@@ -245,6 +252,12 @@ void eZapOsdSetup::gammaChanged( int i )
 {
 	gamma = i;
 	gFBDC::getInstance()->setGamma(gamma);
+}
+
+void eZapOsdSetup::SubtitleBlackChanged( int i )
+{
+	int bcktrans = i;
+	eConfig::getInstance()->setKey("/elitedvb/subtitle/backgroundTransparency", bcktrans);
 }
 
 void eZapOsdSetup::pluginPositionPressed()

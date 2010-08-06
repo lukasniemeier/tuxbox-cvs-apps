@@ -1247,18 +1247,20 @@
 	</object>
 
 	<object name="eZapOsdSetup">
-		<eZapOsdSetup text="OSD Settings" cposition="140:125" csize="460:350">
+		<eZapOsdSetup text="OSD Settings" cposition="140:105" csize="460:390">
 			<eLabel name="lalpha" text="Alpha:" position="20:20" size="110:30" />
 			<eSlider name="alpha" position="150:20" size="290:30" helptext="change the transparency correction" />
 			<eLabel name="lbrightness" text="Brightness:" position="20:60" size="120:30" />
 			<eSlider name="brightness" position="150:60" size="290:30" helptext="change the brightness correction" />
 			<eLabel name="lcontrast" text="Contrast:" position="20:100" size="120:30" />
 			<eSlider name="contrast" position="150:100" size="290:30" helptext="change the contrast" />
-			<eCheckbox name="simpleMainMenu" text="Show Mainmenu like Listbox" position="20:140" size="420:35" helptext="show the Mainmenu in normal listbox style" />
-			<eButton name="skin" text="Change skin" position="20:190" size="205:40" loadDeco="" helptext="press ok to open skin selector" shortcut="blue" />
-			<eButton name="pluginoffs" text="TuxText position" position="235:190" size="205:40" loadDeco="" helptext="here you can center the Tuxtxt (builtin videotext)" shortcut="yellow" />
-			<eButton name="ok" text="save" position="20:245" size="205:40" loadDeco="" helptext="save changes and return" shortcut="green" />
-			<eButton name="expert" text="additional settings" position="235:245" size="205:40" loadDeco="" helptext="open additional settings" shortcut="red" />
+			<eLabel name="lsubtitletransparency" text="Subtitle Transparency:" position="20:140" size="210:30" />
+			<eSlider name="subtitletransparency" position="230:140" size="210:30" helptext="change the transparency of the subtitle black background" />
+			<eCheckbox name="simpleMainMenu" text="Show Mainmenu like Listbox" position="20:180" size="420:35" helptext="show the Mainmenu in normal listbox style" />
+			<eButton name="skin" text="Change skin" position="20:230" size="205:40" loadDeco="" helptext="press ok to open skin selector" shortcut="blue" />
+			<eButton name="pluginoffs" text="TuxText position" position="235:230" size="205:40" loadDeco="" helptext="here you can center the Tuxtxt (builtin videotext)" shortcut="yellow" />
+			<eButton name="ok" text="save" position="20:285" size="205:40" loadDeco="" helptext="save changes and return" shortcut="green" />
+			<eButton name="expert" text="additional settings" position="235:285" size="205:40" loadDeco="" helptext="open additional settings" shortcut="red" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eZapOsdSetup>
 	</object>

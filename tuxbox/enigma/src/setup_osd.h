@@ -10,7 +10,7 @@ class eSlider;
 
 class eZapOsdSetup: public eWindow
 {
-	eSlider *sAlpha, *sBrightness, *sGamma;
+	eSlider *sAlpha, *sBrightness, *sGamma, *sSubtitleBlack;
 
 	eCheckbox *simpleMainMenu;
 	int alpha, brightness, gamma;
@@ -20,6 +20,7 @@ private:
 	void alphaChanged( int );
 	void brightnessChanged( int );
 	void gammaChanged( int );
+	void SubtitleBlackChanged( int );
 	void pluginPositionPressed();
 	void okPressed();
 	void expertPressed();
