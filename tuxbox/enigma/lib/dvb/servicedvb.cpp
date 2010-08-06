@@ -1536,27 +1536,27 @@ eService *eServiceHandlerDVB::createService(const eServiceReference &node)
 	{
 	case -1: // for satellites...
 	{
-		std::map<int,tpPacket>::const_iterator it( eTransponderList::getInstance()->getNetworkNameMap().find( node.data[2] >> 16 ));
-		if ( it == eTransponderList::getInstance()->getNetworkNameMap().end() )
+	    eSatellite *sat = eTransponderList::getInstance()->findSatellite(node.data[2] >> 16 );
+	    if (!sat)
 			return 0;
 		else
-			return new eService( it->second.name+ _(" - provider"));
+			return new eService( eString().sprintf("%s%s",sat->getDescription().c_str(),_(" - provider")));
 	}
 	case -2: // for satellites...
 	{
-		std::map<int,tpPacket>::const_iterator it( eTransponderList::getInstance()->getNetworkNameMap().find( node.data[2] >> 16 ));
-		if ( it == eTransponderList::getInstance()->getNetworkNameMap().end() )
+	    eSatellite *sat = eTransponderList::getInstance()->findSatellite(node.data[2] >> 16 );
+	    if (!sat)
 			return 0;
 		else
-			return new eService( it->second.name+ _(" - services"));
+			return new eService( eString().sprintf("%s%s",sat->getDescription().c_str(),_(" - services")));
 	}
 	case -5: // for satellites...
 	{
-		std::map<int,tpPacket>::const_iterator it( eTransponderList::getInstance()->getNetworkNameMap().find( node.data[2] >> 16 ));
-		if ( it == eTransponderList::getInstance()->getNetworkNameMap().end() )
+	    eSatellite *sat = eTransponderList::getInstance()->findSatellite(node.data[2] >> 16 );
+	    if (!sat)
 			return 0;
 		else
-			return new eService( it->second.name+ _(" - new found"));
+			return new eService( eString().sprintf("%s%s",sat->getDescription().c_str(),_(" - new found")));
 	}
 	case -6: 
 	{

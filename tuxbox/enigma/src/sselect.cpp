@@ -239,26 +239,22 @@ void eListBoxEntryService::invalidateDescr()
 }
 struct eListBoxEntryService_countServices
 {
-	Signal1<void,const eServiceReference&> &callback;
 	int type;
 	int DVBNamespace;
 	int* count;
 	bool onlyNew;
 	eListBoxEntryService_countServices(int type, int DVBNamespace, int* count,bool onlyNew=false)
-	: callback(callback), type(type), DVBNamespace(DVBNamespace), count(count),onlyNew(onlyNew)
+	: type(type), DVBNamespace(DVBNamespace), count(count),onlyNew(onlyNew)
 	{
 	}
-	void operator()(const eServiceReference &service)
+	void operator()(const eService &service)
 	{
-		eService *s = eTransponderList::getInstance()->searchService( service );
-		if ( !s )  // dont show "removed services"
+		if ( !service.dvb || (service.dvb && service.dvb->dxflags & eServiceDVB::dxDontshow) )
 			return;
-		else if ( s->dvb && s->dvb->dxflags & eServiceDVB::dxDontshow )
+		if ( onlyNew && !(service.dvb && service.dvb->dxflags & eServiceDVB::dxNewFound ) )
 			return;
-		if ( onlyNew && !(s->dvb && s->dvb->dxflags & eServiceDVB::dxNewFound ) )
-			return;
-		int t = ((eServiceReferenceDVB&)service).getServiceType();
-		int nspace = ((eServiceReferenceDVB&)service).getDVBNamespace().get()&0xFFFF0000;
+		int t = service.dvb->service_type;
+		int nspace = service.dvb->dvb_namespace.get()&0xFFFF0000;
 		if (t < 0)
 			t=0;
 		if (t >= 31)
@@ -347,11 +343,11 @@ const eString &eListBoxEntryService::redraw(gPainter *rc, const eRect &rect, gCo
 				switch (service.data[0])
 				{
 				case -2:  // all TV or all Radio Services
-					eTransponderList::getInstance()->forEachServiceReference(eListBoxEntryService_countServices(service.data[1], service.data[2], &count));
+					eTransponderList::getInstance()->forEachService(eListBoxEntryService_countServices(service.data[1], service.data[2], &count));
 					sname= eString().sprintf("%s (%d)",pservice->service_name.c_str(),count);
 					break;
 				case -5:  // all TV or all Radio Services (only services marked as new)
-					eTransponderList::getInstance()->forEachServiceReference(eListBoxEntryService_countServices(service.data[1], service.data[2], &count, true ));
+					eTransponderList::getInstance()->forEachService(eListBoxEntryService_countServices(service.data[1], service.data[2], &count, true ));
 					sname= eString().sprintf("%s (%d)",pservice->service_name.c_str(),count);
 					break;
 				default:
