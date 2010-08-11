@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1034 2010/08/02 20:56:45 seife Exp $
+	$Id: neutrino.cpp,v 1.1035 2010/08/11 20:24:07 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -825,7 +825,7 @@ int CNeutrinoApp::loadSetup()
 	if(fromflash)
 	{
 		g_settings.uboot_baudrate	= 9600;
-		g_settings.uboot_console	= 0;
+		g_settings.uboot_console	= 1;
 		g_settings.uboot_dbox_duplex	= 0;
 		g_settings.uboot_lcd_inverse	= -1;
 		g_settings.uboot_lcd_contrast	= -1;
