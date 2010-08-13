@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1036 2010/08/13 19:50:09 dbt Exp $
+	$Id: neutrino.cpp,v 1.1037 2010/08/13 21:01:23 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3572,7 +3572,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 			frameBuffer->paintBoxRel(x+iw+vol+r/2, y+b+2, w-vol, dy-2*(b+2), COL_INFOBAR_PLUS_1);
 			/* erase the numbers... */
 			frameBuffer->paintBoxRel(x+dx-nw-b-r/2, y+b,     nw, dy-2*b,     COL_INFOBAR_PLUS_1);
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+dx-nw-r/2, y+dy, nw, p, COL_INFOBAR_PLUS_1);
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(x+dx-nw-r/2, y+dy, nw, p, COL_INFOBAR_PLUS_1);
 			if (mode != mode_scart && mode != mode_pic && doShowMuteIcon())
 				AudioMute(true, true);
 		}
