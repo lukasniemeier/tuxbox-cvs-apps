@@ -376,8 +376,6 @@ fontsize.filebrowser_item filväljare post
 fontsize.gamelist_itemlarge stor
 fontsize.gamelist_itemsmall liten
 fontsize.hint Initialiserar font,\nvar god vänta...
-fontsize.imageinfo_info bildinformation
-fontsize.imageinfo_small bildinformation licens
 fontsize.infobar_channame Kanalnamn
 fontsize.infobar_info info
 fontsize.infobar_number Nummer

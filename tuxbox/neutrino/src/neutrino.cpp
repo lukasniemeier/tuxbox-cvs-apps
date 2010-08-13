@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1035 2010/08/11 20:24:07 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1036 2010/08/13 19:50:09 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -306,9 +306,7 @@ const font_sizes_struct neutrino_font[FONT_TYPE_COUNT] =
 	{LOCALE_FONTSIZE_INFOBAR_CHANNAME   ,  30, FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_INFOBAR_INFO       ,  20, FONT_STYLE_REGULAR, 1},
 	{LOCALE_FONTSIZE_INFOBAR_SMALL      ,  14, FONT_STYLE_REGULAR, 1},
-	{LOCALE_FONTSIZE_FILEBROWSER_ITEM   ,  16, FONT_STYLE_BOLD   , 1},
-	{LOCALE_FONTSIZE_IMAGEINFO_INFO     ,  18, FONT_STYLE_REGULAR, 1},
-	{LOCALE_FONTSIZE_IMAGEINFO_SMALL    ,  15, FONT_STYLE_REGULAR, 1}
+	{LOCALE_FONTSIZE_FILEBROWSER_ITEM   ,  16, FONT_STYLE_BOLD   , 1}
 };
 
 typedef struct lcd_setting_t
@@ -3574,7 +3572,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 			frameBuffer->paintBoxRel(x+iw+vol+r/2, y+b+2, w-vol, dy-2*(b+2), COL_INFOBAR_PLUS_1);
 			/* erase the numbers... */
 			frameBuffer->paintBoxRel(x+dx-nw-b-r/2, y+b,     nw, dy-2*b,     COL_INFOBAR_PLUS_1);
-			g_Font[SNeutrinoSettings::FONT_TYPE_IMAGEINFO_INFO]->RenderString(x+dx-nw-r/2, y+dy, nw, p, COL_INFOBAR_PLUS_1);
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+dx-nw-r/2, y+dy, nw, p, COL_INFOBAR_PLUS_1);
 			if (mode != mode_scart && mode != mode_pic && doShowMuteIcon())
 				AudioMute(true, true);
 		}

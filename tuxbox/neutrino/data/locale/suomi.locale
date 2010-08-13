@@ -386,8 +386,6 @@ fontsize.filebrowser_item Tiedostoselain
 fontsize.gamelist_itemlarge Suuri
 fontsize.gamelist_itemsmall Pieni
 fontsize.hint Alustan kirjasinta,\nodota hetki...
-fontsize.imageinfo_info Ohjelmistotiedot
-fontsize.imageinfo_small Ohjelmiston lisenssitiedot
 fontsize.infobar_channame Kanavan nimi
 fontsize.infobar_info Info
 fontsize.infobar_number Numero

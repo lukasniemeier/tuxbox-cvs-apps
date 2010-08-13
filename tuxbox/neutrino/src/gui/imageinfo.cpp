@@ -1,5 +1,5 @@
 /*
-	$Id: imageinfo.cpp,v 1.36 2010/02/26 17:59:55 rhabarber1848 Exp $
+	$Id: imageinfo.cpp,v 1.37 2010/08/13 19:50:10 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -25,7 +25,7 @@
 #include <config.h>
 #endif
 
-#include <gui/imageinfo.h>
+#include "imageinfo.h"
 
 #ifdef ENABLE_MOVIEBROWSER
 #include "moviebrowser.h"
@@ -39,8 +39,6 @@
 #endif /* ENABLE_DRIVE_GUI */
 #endif /*ENABLE_KERNEL26*/
 
-
-#include <gui/widget/icons.h>
 #include <gui/widget/buttons.h>
 
 #include <cstring>
@@ -69,14 +67,14 @@ CImageInfo::CImageInfo()
 	frameBuffer 	= CFrameBuffer::getInstance();
 
 	font_head 	= SNeutrinoSettings::FONT_TYPE_MENU_TITLE;
-	font_small 	= SNeutrinoSettings::FONT_TYPE_IMAGEINFO_SMALL;
-	font_info 	= SNeutrinoSettings::FONT_TYPE_IMAGEINFO_INFO;
-	font_small_text 	= SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
+	font_small 	= SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
+	font_info 	= SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO;
+	font_small_text = SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
 
 	hheight		= g_Font[font_head]->getHeight();
 	iheight		= g_Font[font_info]->getHeight();
 	sheight		= g_Font[font_small]->getHeight();
-	ssheight		= g_Font[font_small_text]->getHeight();
+	ssheight	= g_Font[font_small_text]->getHeight();
 	
 	startX 	= 45; //mainwindow position
 	startY 	= 35;
@@ -240,12 +238,13 @@ void CImageInfo::paintSupport(int y_startposition)
 	frameBuffer->paintLine(xpos, y_startposition, width, y_startposition, COL_GRAY);	
 		
 	y_startposition += ssheight+ ssheight/2;
-	paintContent(font_info, xpos, y_startposition,g_Locale->getText(LOCALE_IMAGEINFO_NOTEFLASHTYPE));
+	paintContent(font_small, xpos, y_startposition,g_Locale->getText(LOCALE_IMAGEINFO_NOTEFLASHTYPE));
 	
 	y_startposition += sheight;
-	paintContent(font_info, xpos, y_startposition, g_Locale->getText(LOCALE_IMAGEINFO_CHIPSET) );
-	paintContent(font_info, xpos+x_offset_large+60,y_startposition, getChipInfo().c_str());		
+	paintContent(font_small, xpos, y_startposition, g_Locale->getText(LOCALE_IMAGEINFO_CHIPSET) );
+	paintContent(font_small, xpos+x_offset_large+60,y_startposition, getChipInfo().c_str());		
 #endif
+
 
 }
 
@@ -300,61 +299,61 @@ void CImageInfo::paintRevisionInfos(int y_startposition)
 
 	clearContentBox();
 	
-	paintContent(font_info, xpos, y_startposition, "Kernel:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos, y_startposition, "Kernel:", COL_MENUCONTENTINACTIVE );
 	if (!uname(&u))	// no idea what could go wrong here, but u would be uninitialized.
-		paintContent(font_info, xpos+x_offset_large, y_startposition, u.release);
+		paintContent(font_small, xpos+x_offset_large, y_startposition, u.release);
 	
-	y_startposition += iheight;
-	paintContent(font_info, xpos, y_startposition, "BusyBox:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, getSysInfo("BusyBox v", false).c_str());
+	y_startposition += sheight;
+	paintContent(font_small, xpos, y_startposition, "BusyBox:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, getSysInfo("BusyBox v", false).c_str());
 	
-	y_startposition += iheight;
-	paintContent(font_info, xpos, y_startposition, "JFFS2:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, getSysInfo("JFFS2 version ", false).c_str());
+	y_startposition += sheight;
+	paintContent(font_small, xpos, y_startposition, "JFFS2:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, getSysInfo("JFFS2 version ", false).c_str());
 	
-	y_startposition += iheight;
-	paintContent(font_info, xpos, y_startposition, "Squashfs:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, getSysInfo("squashfs: version ", false).c_str());
+	y_startposition += sheight;
+	paintContent(font_small, xpos, y_startposition, "Squashfs:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, getSysInfo("squashfs: version ", false).c_str());
 	
-	y_startposition += iheight;
-	paintContent(font_info, xpos, y_startposition, "Imageinfo:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, getModulVersion("","$Revision: 1.36 $").c_str());
+	y_startposition += sheight;
+	paintContent(font_small, xpos, y_startposition, "Imageinfo:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, getModulVersion("","$Revision: 1.37 $").c_str());
 	
 #ifdef ENABLE_MOVIEBROWSER
-	y_startposition += iheight;
+	y_startposition += sheight;
 	static CMovieBrowser mb;
-	paintContent(font_info, xpos, y_startposition, "Moviebrowser:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, mb.getMovieBrowserVersion().c_str());
+	paintContent(font_small, xpos, y_startposition, "Moviebrowser:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, mb.getMovieBrowserVersion().c_str());
 #endif /* ENABLE_MOVIEBROWSER */
 
 
 #ifdef ENABLE_MOVIEPLAYER
-	y_startposition += iheight;
+	y_startposition += sheight;
 	static CMoviePlayerGui mp;
-	paintContent(font_info, xpos, y_startposition, "Movieplayer:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, mp.getMoviePlayerVersion().c_str());
+	paintContent(font_small, xpos, y_startposition, "Movieplayer:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, mp.getMoviePlayerVersion().c_str());
 #endif
 
 #ifdef ENABLE_PICTUREVIEWER
-	y_startposition += iheight;
+	y_startposition += sheight;
 	static CPictureViewerGui pv;
-	paintContent(font_info, xpos, y_startposition, "Pictureviewer:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, pv.getPictureViewerVersion().c_str());
+	paintContent(font_small, xpos, y_startposition, "Pictureviewer:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, pv.getPictureViewerVersion().c_str());
 #endif
 
 #ifndef ENABLE_KERNEL26 //TODO: k26 support
 #ifdef ENABLE_DRIVE_GUI
-	y_startposition += iheight;
+	y_startposition += sheight;
 	static CDriveSetup ide;
-	paintContent(font_info, xpos, y_startposition, "IDE/MMC:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, ide.getDriveSetupVersion().c_str());
+	paintContent(font_small, xpos, y_startposition, "IDE/MMC:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, ide.getDriveSetupVersion().c_str());
 #endif /*ENABLE_DRIVE_GUI*/
 #endif /*ENABLE_KERNEL26*/
 	
-	y_startposition += iheight;
+	y_startposition += sheight;
 	static CStreamInfo2Misc si;
-	paintContent(font_info, xpos, y_startposition, "Streaminfo:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_info, xpos+x_offset_large, y_startposition, si.getStreamInfoVersion().c_str());
+	paintContent(font_small, xpos, y_startposition, "Streaminfo:", COL_MENUCONTENTINACTIVE );
+	paintContent(font_small, xpos+x_offset_large, y_startposition, si.getStreamInfoVersion().c_str());
 	
 }
 
@@ -628,16 +627,16 @@ void CImageInfo::paint()
 
 /* 	usefull stuff for version informations * getModulVersion()
  * 	returns a numeric version string for better version handling from any module without 	
- * 	special characters like "$" or the complete string "Revision" ->> eg: "$Revision: 1.36 $" becomes "1.xx", 
+ * 	special characters like "$" or the complete string "Revision" ->> eg: "$Revision: 1.37 $" becomes "1.xx", 
  * 	argument prefix can be empty or a replacement for "Revision"-string eg. "Version: " or "v." as required,
  * 	argument ID_string must be a CVS-keyword like "$ Revision $", used and changed by 
  * 	cvs-committs or a version data string eg: "1.xxx" by yourself
  * 	Note for imagemakers: Keywords will working only with CVS without local -kx options,
  *	if you are using an other CMS like Git or so..., you must change these entries manually
  * 	some examples:
- * 	getModulVersion("Version: ","$Revision: 1.36 $")	 returns "Version: 1.x"	
- * 	getModulVersion("v.","$Revision: 1.36 $")			 returns "v.1.x"
- *  	getModulVersion("","$Revision: 1.36 $")		 		 returns "1.x"
+ * 	getModulVersion("Version: ","$Revision: 1.37 $")	 returns "Version: 1.x"	
+ * 	getModulVersion("v.","$Revision: 1.37 $")			 returns "v.1.x"
+ *  	getModulVersion("","$Revision: 1.37 $")		 		 returns "1.x"
  */
 std::string CImageInfo::getModulVersion(const std::string &prefix_string, std::string ID_string)
 {

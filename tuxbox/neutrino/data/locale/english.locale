@@ -547,8 +547,6 @@ fontsize.filebrowser_item Filebrowser Item
 fontsize.gamelist_itemlarge large
 fontsize.gamelist_itemsmall small
 fontsize.hint Initialising font,\nplease wait...
-fontsize.imageinfo_info imageinformation
-fontsize.imageinfo_small imageinformation license
 fontsize.infobar_channame Channel name
 fontsize.infobar_info info
 fontsize.infobar_number Number
