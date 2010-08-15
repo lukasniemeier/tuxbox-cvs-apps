@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.32 2010/07/18 21:08:55 dbt Exp $
+	$Id: drive_setup.h,v 1.33 2010/08/15 21:23:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -320,6 +320,7 @@ class CDriveSetup : public CMenuTarget
 		int hdd_count; 		// count of hdd drives
  		int part_count[MAXCOUNT_DRIVE /*MASTER || SLAVE || MMCARD*/]; //count of partitions at device
 		int next_part_number;// number of next free partition that can be added from device 1...4
+		int count_Partitions; // needed for creating the proper sequence in scriptfile
 
 		unsigned long long start_cylinder;
 		unsigned long long end_cylinder;
@@ -408,7 +409,6 @@ class CDriveSetup : public CMenuTarget
 		void hide();
 		void Init();
 		
-		void calPartCount();
 		void loadHddCount();
 		void loadHddModels();
 		void loadFsModulList();
@@ -424,6 +424,7 @@ class CDriveSetup : public CMenuTarget
 		bool writeDriveSettings();
 		void loadDriveSettings();
 
+		void generateAllUsableDataOfDevice(const int& device_num /*MASTER || SLAVE || MMCARD*/);
 		unsigned long long getFreeDiskspace(const char *mountpoint);
 		unsigned long long getUnpartedDeviceSize(const int& device_num /*MASTER || SLAVE || MMCARD*/);
 		unsigned long long getFileEntryLong(const char* filename, const std::string& filter_entry, const int& column_num);

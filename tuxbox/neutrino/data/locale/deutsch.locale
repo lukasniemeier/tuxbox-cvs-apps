@@ -369,7 +369,7 @@ drive_setup.partition_current_cylinders Start/End-Zylinder
 drive_setup.partition_current_size Aktuelle Partitionsgröße
 drive_setup.partition_delete Löschen
 drive_setup.partition_format Formatieren
-drive_setup.partition_free_size Noch partitionierbarer Speicherplatz
+drive_setup.partition_free_size Restl./verfügb. Kap.
 drive_setup.partition_fs Dateisystem
 drive_setup.partition_info Partitions-Daten
 drive_setup.partition_mount_no_mountpoint Kein korrektes Einhängeverzeichnis angegeben!

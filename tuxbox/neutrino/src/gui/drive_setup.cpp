@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.77 2010/07/18 21:17:10 dbt Exp $
+	$Id: drive_setup.cpp,v 1.78 2010/08/15 21:23:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -179,6 +179,19 @@ const drives_struct_t drives[MAXCOUNT_DRIVE] =
  	{MMCA, MMC0DISC}, 	//MMCARD
 };
 
+typedef struct data_cyl_t
+{
+	unsigned long long start_cyl;
+	unsigned long long end_cyl;
+	unsigned long long used_size;
+	unsigned long long free_size;
+};
+
+struct data_cyl_t data_partition[MAXCOUNT_DRIVE][MAXCOUNT_PARTS] = 
+{
+	{ 0, 0, 0, 0 }, 
+};
+
 CDriveSetup::CDriveSetup():configfile('\t')
 {
 	frameBuffer = CFrameBuffer::getInstance();
@@ -356,7 +369,6 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 				{
 					if (formatPartition(current_device, ii)) 
 					{ // success
-						calPartCount(); //refresh part counter
 						return menu_return::RETURN_EXIT_ALL;
 					}
 					else // formating failed
@@ -519,7 +531,6 @@ void CDriveSetup::Init()
 						&CDriveSetup::loadModulDirs,
 						&CDriveSetup::loadHddCount,
 						&CDriveSetup::loadHddModels,
-						&CDriveSetup::calPartCount,
 						&CDriveSetup::loadFsModulList,
 						&CDriveSetup::loadMmcModulList,
 						&CDriveSetup::loadFdiskData,
@@ -971,17 +982,21 @@ void CDriveSetup::showHddSetupSub()
 		item_name[i] = getPartEntryString(partname[i]).c_str(), isActivePartition(partname[i]);
 		sub_part_entry[i] = new CMenuForwarderNonLocalized(item_name[i].c_str(), isActivePartition(partname[i]), NULL, part[i], NULL/*part_num_actionkey[i]*/, CRCInput::convertDigitToKey(i+1));
 	}
+	// generate all usable DATA from Device
+	generateAllUsableDataOfDevice(current_device);
 
-	//menue sub: prepare item: add partition
-	bool add_activate;
-	unsigned long long ll_free_part_size = getUnpartedDeviceSize(current_device);
+	//menue sub:
+	next_part_number = getFirstUnusedPart(current_device); //also used from swap_add
+	unsigned long long ll_free_device_size 		= getUnpartedDeviceSize(current_device);
+	unsigned long long ll_next_free_part_size 	= data_partition[current_device][next_part_number].free_size;
+
 	// disable entry if we have no free partition or not enough size
-	if ((part_count[current_device] < MAXCOUNT_PARTS) && (ll_free_part_size > 0xA00000)) 
+	bool add_activate;
+	if (count_Partitions < MAXCOUNT_PARTS && ll_free_device_size > 0xA00000)
 		add_activate = true;
 	else 
 		add_activate = false;
-
-	next_part_number = getFirstUnusedPart(current_device); //also used from swap_add
+	
 	//menue sub: prepare separator: hdparms
 	CMenuSeparator *sep_jobs = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_JOBS);
  	
@@ -1006,8 +1021,8 @@ void CDriveSetup::showHddSetupSub()
 
 	//menue add swap:
 	//prepare swap sizes
-	long long ll_swap_sizes[2] = 	{(ll_free_part_size < 0x4000000 ? ll_free_part_size : 0x4000000 /*64MB*/), 
-					(ll_free_part_size < 0x8000000 ?  ll_free_part_size : 0x8000000 /*128MB*/)};
+	long long ll_swap_sizes[2] = 	{(ll_next_free_part_size < 0x4000000 ? ll_next_free_part_size : 0x4000000 /*64MB*/), 
+					(ll_next_free_part_size < 0x8000000 ?  ll_next_free_part_size : 0x8000000 /*128MB*/)};
 
 	//set default swap size to 128 MB or available max size
 	long long ll_max_swap_size = max(ll_swap_sizes[0], ll_swap_sizes[1]);
@@ -1056,14 +1071,16 @@ void CDriveSetup::showHddSetupSub()
 	//menue partitions: subhead text
 	string sh_txt[MAXCOUNT_PARTS];
 
-	//menue partitions: prepare information about possible size, cylinders 
-	string s_free_part_size = convertByteString(ll_free_part_size);
-	CMenuForwarder *freesize = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_FREE_SIZE, false, s_free_part_size.c_str());
+	//menue partitions: prepare information about possible size, cylinders
+	string s_free_sizeOfDevice = convertByteString(ll_free_device_size);
 
-	//menue partitions: size of current partition
-	unsigned long long ll_cur_part_size[MAXCOUNT_PARTS];  
+	//menue partitions: size of current and free partition
+
+	unsigned long long ll_cur_part_size[MAXCOUNT_PARTS];
 	string p_size[MAXCOUNT_PARTS];
 	string s_size[MAXCOUNT_PARTS];
+	string s_sizes_Of_Part_and_Whole[MAXCOUNT_PARTS];
+	CMenuForwarder *freesizeOfPart[MAXCOUNT_PARTS];
 	CMenuForwarder *partsize[MAXCOUNT_PARTS];
 
 	//sub menue main
@@ -1191,21 +1208,24 @@ void CDriveSetup::showHddSetupSub()
 		sub->addItem (sub_part_entry[i]); //possible parts 1-4 for menue partitions:
 
 		//prepare sub head text
-		sh_txt[i] = dev_name + " >> " + iToString(i+1) + ". " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION);
-		p_subhead[i] = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
+		sh_txt[i] 		= dev_name + " >> " + iToString(i+1) + ". " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION);
+		p_subhead[i] 		= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
 		p_subhead[i]->setString(sh_txt[i]);
 
-		//prepare current partsizes
-		ll_cur_part_size[i] = getPartSize(current_device, i);
-		p_size[i] = convertByteString(ll_cur_part_size[i]);
-		s_size[i] = iToString(ll_cur_part_size[i]/1024/1024);
-		partsize[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_SIZE, false, p_size[i].c_str());
+		//prepare current partsizes and current freesize
+		s_sizes_Of_Part_and_Whole[i] = convertByteString(data_partition[current_device][i].free_size) + " / " + s_free_sizeOfDevice;
+		freesizeOfPart[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_FREE_SIZE, false, s_sizes_Of_Part_and_Whole[i].c_str());
+
+		ll_cur_part_size[i] 	= getPartSize(current_device, i);
+		p_size[i] 		= convertByteString(ll_cur_part_size[i]);
+		s_size[i] 		= iToString(ll_cur_part_size[i]/1024/1024);
+		partsize[i] 		= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_SIZE, false, p_size[i].c_str());
 
 		//prepare cylinders
-		start_cyl[i] = getPartData(current_device, i, START_CYL, NO_REFRESH);
-		end_cyl[i] = getPartData(current_device, i, END_CYL, NO_REFRESH);
-		ed_cylinders[i] = iToString(start_cyl[i]) + " / " + iToString(end_cyl[i]);
-		fw_cylinders[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_CYLINDERS, false, ed_cylinders[i].c_str());
+		start_cyl[i] 		= getPartData(current_device, i, START_CYL, NO_REFRESH);
+		end_cyl[i] 		= getPartData(current_device, i, END_CYL, NO_REFRESH);
+		ed_cylinders[i] 	= iToString(start_cyl[i]) + " / " + iToString(end_cyl[i]);
+		fw_cylinders[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_CYLINDERS, false, ed_cylinders[i].c_str());
 
 		//enable/disable partition
 		activate[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_ACTIVATE, &d_settings.drive_partition_activ[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, true , NULL, CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER );
@@ -1232,16 +1252,16 @@ void CDriveSetup::showHddSetupSub()
 
 
 		//prepare option mointpoint
-		mountdir[i] = new CDirChooser(&d_settings.drive_partition_mountpoint[current_device][i]);
-		mp_chooser[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_MOUNTPOINT, item_activ[i], d_settings.drive_partition_mountpoint[current_device][i], mountdir[i]);
+		mountdir[i] 	= new CDirChooser(&d_settings.drive_partition_mountpoint[current_device][i]);
+		mp_chooser[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_MOUNTPOINT, item_activ[i], d_settings.drive_partition_mountpoint[current_device][i], mountdir[i]);
 
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 		bool share_chooser_activ = ((string)d_settings.drive_partition_fstype[current_device][i] == "swap" ? false : true);
 		//prepare submenue for server shares
-		part_srv_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE, share_chooser_activ, NULL, part_srv_shares[i], NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
+		part_srv_fw[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE, share_chooser_activ, NULL, part_srv_shares[i], NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
 
 		//forwarder with current mountpoint as shared path
-		srv_path_fw[i] = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_PATH, false, d_settings.drive_partition_mountpoint[current_device][i]);
+		srv_path_fw[i] 	= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_PATH, false, d_settings.drive_partition_mountpoint[current_device][i]);
 
 		#ifdef ENABLE_NFSSERVER
 			//prepare option host input
@@ -1312,7 +1332,6 @@ void CDriveSetup::showHddSetupSub()
 		{
 			ak_mount_umount_partition[i] = UNMOUNT_PARTITION + iToString(i);
 			locale_mount_umount[i] = LOCALE_DRIVE_SETUP_PARTITION_UNMOUNT_NOW;
-			
 		}
 		else
 		{
@@ -1337,7 +1356,7 @@ void CDriveSetup::showHddSetupSub()
 		//------------------------
 		part[i]->addItem(sep_info);			//separator information
 		//------------------------
-		part[i]->addItem(freesize);			//freesize
+//		part[i]->addItem(freesizeOfPart[i]);		//freesize of Part and / whole freesize, it is not very useful to show more, than size of partition in edit mode!
 		part[i]->addItem(partsize[i]);			//partsize
 		part[i]->addItem(fw_cylinders[i]);		//cylinders
 		//------------------------
@@ -1346,7 +1365,7 @@ void CDriveSetup::showHddSetupSub()
 		part[i]->addItem(activate[i]);			//enable/disable partition
 		part[i]->addItem(fs_chooser[i]);		//select filesystem
 		part[i]->addItem(mp_chooser[i]);		//select mountpoint
-		part[i]->addItem(input_size[i]);		//input part size
+// 		part[i]->addItem(input_size[i]);		//input part size , it's sufficient to show only the used size, since subsequent changes are not foreseen at the moment!
 		//------------------------
 		part[i]->addItem(sep_jobs);			//separator jobs
 		//------------------------
@@ -1397,7 +1416,7 @@ void CDriveSetup::showHddSetupSub()
 	sub_add->addItem(GenericMenuBack);		//back
 	sub_add->addItem(GenericMenuSeparatorLine);	//separator
 	//------------------------
-	sub_add->addItem(freesize);			//freesize
+	sub_add->addItem(freesizeOfPart[next_part_number]); // freesize of Part
 	sub_add->addItem(fw_add_start_cyl);		//start_cylinder
 	sub_add->addItem(GenericMenuSeparatorLine);	//separator
 	//------------------------
@@ -1449,7 +1468,7 @@ void CDriveSetup::showHddSetupSub()
 	sub_add_swap->addItem(GenericMenuBack);			//back
 	sub_add_swap->addItem(GenericMenuSeparatorLine);	//separator
 	//------------------------
-	sub_add_swap->addItem(freesize);			//freesize
+	sub_add_swap->addItem(freesizeOfPart[next_part_number]); // freesize of Part
 	sub_add_swap->addItem(fw_add_start_cyl);		//start_cylinder
 	sub_add_swap->addItem(GenericMenuSeparatorLine);	//separator
 	//------------------------
@@ -2986,28 +3005,6 @@ string CDriveSetup::getUsedMmcModulName()
 	return g_Locale->getText(LOCALE_OPTIONS_OFF);
 }
 
-// set count of active partitions for current devices
-void CDriveSetup::calPartCount()
-{
-	// reset part_count
-	for (unsigned int i = 0; i < MAXCOUNT_DRIVE; i++)
-	{
-		part_count[i]=0;
-	}
-
-	for (unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
-	{
-		for (unsigned int ii = 0; ii < MAXCOUNT_PARTS; ii++) 
-		{
-			string partname = partitions[i][ii];
-			if (isActivePartition(partname))
-				part_count[i]++;
-		}			
-	}
-// 	printf("[drive setup] found partitions: master->%d slave->%d mmc->%d\n", part_count[MASTER], part_count[SLAVE], part_count[MMCARD]);
-}
-
-
 void CDriveSetup::loadHddCount()
 {
 	hdd_count = 0; // reset
@@ -3316,6 +3313,68 @@ bool CDriveSetup::haveSwap()
 		return false;
 }
 
+// generates several DATA from device
+void CDriveSetup::generateAllUsableDataOfDevice(const int& device_num)
+{
+	unsigned long long total_used_cyl= 0;
+
+ 	if (loadFdiskPartTable(device_num)) 
+	{
+		unsigned long long cyl_size 	= getFileEntryLong(PART_TABLE, "Units", 8);
+		unsigned long long fullcyl	= getFileEntryLong(PART_TABLE, "sectors/track", 4);
+		string partname;
+		count_Partitions = 0;
+
+		for (int i = 0; i < MAXCOUNT_PARTS; i++)
+		{
+			partname = partitions[device_num][i];
+
+			data_partition[device_num][i].start_cyl = getFileEntryLong(PART_TABLE, partname, FDISK_INFO_START_CYL);
+			data_partition[device_num][i].end_cyl 	= getFileEntryLong(PART_TABLE, partname, FDISK_INFO_END_CYL);
+			data_partition[device_num][i].used_size = data_partition[device_num][i].start_cyl > 0 ? (data_partition[device_num][i].end_cyl - data_partition[device_num][i].start_cyl + 1)*cyl_size : 0;
+
+			total_used_cyl += data_partition[device_num][i].start_cyl > 0 ? data_partition[device_num][i].end_cyl - data_partition[device_num][i].start_cyl + 1 : 0;
+
+			if (data_partition[device_num][i].start_cyl > 0)
+				count_Partitions++;
+		}	
+
+		// FREE Cylinders for mkpartition
+		for (int i = 0; i < MAXCOUNT_PARTS; i++)
+		{
+			unsigned long long next_startcyl = 0, free_cyl = 0;
+			// search for next start_cyl
+			for (int ii = i; ii < MAXCOUNT_PARTS - 1; ii++)
+			{
+				if (data_partition[device_num][ii+1].start_cyl > 0)
+				{
+					next_startcyl = data_partition[device_num][ii+1].start_cyl;
+					break;
+				}
+			}
+
+			if (i == 0)                      // PARTITION 1
+			{
+				if (data_partition[device_num][i].start_cyl == 0 && next_startcyl > 0)
+					free_cyl = next_startcyl - 1;
+			}
+			else if (i > 0 && i < 3)         // PARTITION 2 + 3
+			{
+				if (data_partition[device_num][i].start_cyl == 0 && next_startcyl > 0)
+					free_cyl =  next_startcyl- 1 - data_partition[device_num][i-1].end_cyl;
+			}
+
+			if (data_partition[device_num][i].start_cyl == 0 && next_startcyl == 0)
+			{
+				free_cyl = fullcyl - total_used_cyl;
+			}
+
+			data_partition[device_num][i].free_size = free_cyl * cyl_size;
+
+		}
+	}
+}
+
 // returns free size for new partitions from device in Bytes
 unsigned long long CDriveSetup::getUnpartedDeviceSize(const int& device_num)
 {
@@ -3323,42 +3382,42 @@ unsigned long long CDriveSetup::getUnpartedDeviceSize(const int& device_num)
 
  	if (loadFdiskPartTable(device_num)) 
 	{
-		unsigned long long cyl_size = getFileEntryLong(PART_TABLE, "Units", 8);
-		unsigned long long fullcyl = getFileEntryLong(PART_TABLE, "sectors/track", 4);
+		unsigned long long cyl_size 	= getFileEntryLong(PART_TABLE, "Units", 8);
+		unsigned long long fullcyl 	= getFileEntryLong(PART_TABLE, "sectors/track", 4);
 		string partname;
 
 		for (int i = 0; i < MAXCOUNT_PARTS; i++)
 		{
-			partname = partitions[device_num][i];
-			start_cyl = getFileEntryLong(PART_TABLE, partname, 1);
-			end_cyl = getFileEntryLong(PART_TABLE, partname, 2);
-			used_cyl += end_cyl-start_cyl;
+			partname 	= partitions[device_num][i];
+			start_cyl 	= getFileEntryLong(PART_TABLE, partname, FDISK_INFO_START_CYL);
+			end_cyl 	= getFileEntryLong(PART_TABLE, partname, FDISK_INFO_END_CYL);
+			used_cyl 	+= start_cyl > 0 ? end_cyl - start_cyl + 1 : 0;
 		}
 		
-		rest_cyl = fullcyl-used_cyl;
-		rest_size = rest_cyl*cyl_size;
+		rest_cyl 	= fullcyl-used_cyl;
+		rest_size 	= rest_cyl*cyl_size;
 	}
 
 	return rest_size;
 }
 
-// calc cylinders from meagbytes
+// calc cylinders from megabytes
 unsigned long long CDriveSetup::calcCyl(const int& device_num /*MASTER || SLAVE*/, const unsigned long long& bytes)
 {
 
 	unsigned long long cyl_max 	= device_cylcount[device_num];
 	unsigned long long cyl_size	= device_cyl_size[device_num];
 	unsigned long long size		= bytes;
-	unsigned long long cyl_count 	= size / cyl_size;
+	unsigned long long cyl_used	= size / cyl_size;
 
 	// do not allow more then available cylinders and set cylinders to max value if bytes == 0
 	if (size == 0)
 	{
-// 		cout<<"[drive setup] "<<__FUNCTION__ <<": set cylinders to max = "<<cyl_max<<endl;
+ 		cout<<"[drive setup] "<<__FUNCTION__ <<": set cylinders to max = "<<cyl_max<<endl;
 		return cyl_max;
 	}
 	else
-		return cyl_count;
+		return cyl_used;
 }
 
 // create temp partable of current device from fdisk
@@ -3484,10 +3543,10 @@ unsigned long long CDriveSetup::getPartData(const int& device_num /*MASTER||SLAV
 			res = device_cyl_size[device_num]; // bytes
 			break;
 		case COUNT_CYL:
-			res = getFileEntryLong(PART_TABLE, partname, FDISK_INFO_END_CYL) - getFileEntryLong(PART_TABLE, partname, FDISK_INFO_START_CYL);
+			res = getFileEntryLong(PART_TABLE, partname, FDISK_INFO_END_CYL) - getFileEntryLong(PART_TABLE, partname, FDISK_INFO_START_CYL) + 1;
 			break;
 		case PART_SIZE: // bytes
-			unsigned long long count_cyl = getFileEntryLong(PART_TABLE, partname, FDISK_INFO_END_CYL) - getFileEntryLong(PART_TABLE, partname, FDISK_INFO_START_CYL);
+			unsigned long long count_cyl = getFileEntryLong(PART_TABLE, partname, FDISK_INFO_END_CYL) - getFileEntryLong(PART_TABLE, partname, FDISK_INFO_START_CYL) + 1;
 			res = device_cyl_size[device_num] * count_cyl;
 			break;
 	}
@@ -3528,22 +3587,54 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const act
 		s_out += device +  " <<EOF\n";
 
 	unsigned int part_n = part_number+1; // real part number is needed
-		
+
 	switch (action)
 	{
 		case ADD:
 			unsigned long long cyl_max = device_cylcount[device_num]; 		//requesting max cylinders of device
-			unsigned long long cyl = calcCyl(device_num, size);			//calc cylinders from user definied size
-			unsigned long long end_cyl = (cyl == cyl_max) ? cyl_max : start_cyl + cyl;
+			unsigned long long cyl = calcCyl(device_num, size);	//calc cylinders from user definied size
+			unsigned long long end_cyl;
+
+			if (cyl == cyl_max)
+				end_cyl = 0;  // 0 means only enter/default end_cyl
+			else
+				end_cyl = start_cyl + cyl;
+
+			// search for next start_cyl
+			for (int i = part_n; i < MAXCOUNT_PARTS - 1; i++)  // 0-3
+			{
+				if (data_partition[device_num][i+1].start_cyl > 0)
+				{
+					if (end_cyl >= data_partition[device_num][i+1].start_cyl)  // existing next partition, so set end_cyl < start_cyl of next partition
+					{                                                // use default end_cyl
+						end_cyl = 0;
+						break;
+					}
+					break;
+				}
+			}
+
 			s_out += "n\n";
 			s_out += "p\n";
-			s_out += iToString(part_n) + "\n";
+
+			/* if we have 3 detected Partitions, fdisk set last Partition automaticly to "X",
+			   so set only the Partition if we have none, 1 or 2 detected Partitions */
+			if (count_Partitions < 3)
+				s_out += iToString(part_n) + "\n";
 			s_out += iToString(start_cyl) + "\n";
-			s_out += iToString(end_cyl) + "\n";
+			if (end_cyl == 0) //use default endzylinder instead of MAX, this is safer when insert a partition
+				s_out += "\n";
+			else
+				s_out += iToString(end_cyl) + "\n";
 			if ((string)d_settings.drive_partition_fstype[device_num][part_number] == "swap") //setting system id
 			{
-				s_out += "t\n"/*<<endl*/;
-				s_out += iToString(part_n) + "\n";
+				s_out += "t\n";
+
+				/* if we create and change the 1. Partition, fdisk need no indication of the Partition
+				   we will change, because it is only one; counter of Partitions == 0,
+				   do not write output to scriptfile */
+				if (count_Partitions > 0)
+					s_out += iToString(part_n) + "\n";
 				s_out += "82\n";
 			}
 			break;
@@ -3555,7 +3646,12 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const act
 				return false;
 			}
 			s_out += "d\n";
-			s_out += iToString(part_n) + "\n";
+
+			/* if we delete the last Partition, fdisk need no indication of Partition
+			   we will delete, because it is logical; counter of Partitions == 1,
+			   do not write output to scriptfile */
+			if (count_Partitions > 1)
+				s_out += iToString(part_n) + "\n";
 			break;
 		case DELETE_CLEAN:
 			if (!unmountPartition(device_num, part_number))
@@ -3565,7 +3661,12 @@ bool CDriveSetup::mkPartition(const int& device_num /*MASTER||SLAVE*/, const act
 				return false;
 			}
 			s_out += "d\n";
-			s_out += iToString(part_n) + "\n";
+
+			/* if we delete the last Partition, fdisk need no indication of Partition
+			   we will delete, because it is logical; counter of Partitions == 1,
+			   do not write output to scriptfile */
+			if (count_Partitions > 1)
+				s_out += iToString(part_n) + "\n";
 			//reset settings
 			strcpy(d_settings.drive_partition_fstype[device_num][part_number],"");
 			d_settings.drive_partition_mountpoint[device_num][part_number] = "";
@@ -4505,7 +4606,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.77 $");
+	return imageinfo.getModulVersion("","$Revision: 1.78 $");
 }
 
 // returns text for initfile headers
