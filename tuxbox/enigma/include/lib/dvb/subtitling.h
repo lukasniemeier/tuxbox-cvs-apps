@@ -15,6 +15,7 @@ class eSubtitleWidget: public eWidget
 	eSocketNotifier *sn;
 	int fd;
 	int isvisible;
+	int alpha_original;
 #ifndef TUXTXT_CFG_STANDALONE
 	int ttxpage;
 	int ttx_running;
