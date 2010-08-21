@@ -252,6 +252,7 @@ int eSubtitleWidget::eventHandler(const eWidgetEvent &event)
 	switch (event.type)
 	{
 	case eWidgetEvent::willShow:
+		alpha_original = gFBDC::getInstance()->getAlpha();
 //		eDebug("willShow!!!");
 #ifndef TUXTXT_CFG_STANDALONE
 		startttx(ttxpage);
@@ -274,6 +275,7 @@ int eSubtitleWidget::eventHandler(const eWidgetEvent &event)
 		isvisible = 0;
 		subtitle_screen_enable(subtitle, 0);
 		//restore old palette
+		gFBDC::getInstance()->setAlpha(alpha_original);
 		eSkin::getActive()->setPalette(gFBDC::getInstance());
 		break;
 	default:
@@ -314,6 +316,11 @@ void eSubtitleWidget::startttx(int page)
 		eConfig::getInstance()->setKey("/ezap/teletext/NationalSubset", tuxtxt_cache.national_subset);
 	if (eConfig::getInstance()->getKey("/ezap/teletext/UseTTF", renderinfo.usettf ))
 		eConfig::getInstance()->setKey("/ezap/teletext/UseTTF", renderinfo.usettf);
+
+	int bcktrans = 0xC0;
+	eConfig::getInstance()->getKey("/elitedvb/subtitle/backgroundTransparency", bcktrans);
+	renderinfo.trans_mode = bcktrans/10-1 ;
+	renderinfo.transpmode = 1;
 
 	renderinfo.fb =fbClass::getInstance()->lock();
 	if (tuxtxt_InitRendering(&renderinfo,0))
@@ -409,6 +416,9 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 	{
 	//	eDebug("updating palette!");
 		gRGB palette[pal->size];
+		int bcktrans = 0xC0;
+		eConfig::getInstance()->getKey("/elitedvb/subtitle/backgroundTransparency", bcktrans);
+		gFBDC::getInstance()->setAlpha(255);
 
 		for (int i=0; i<pal->size; ++i)
 		{
@@ -429,7 +439,10 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 				palette[i].g = ((1164 * y - 813 * cr - 392 * cb) + 500) / 1000;
 				palette[i].b = ((1164 * y + 2017 * cb) + 500) / 1000;
 #endif
-				palette[i].a = (pal->entries[i].T) & 0xFF;
+				if (palette[i].r || palette[i].g || palette[i].b)
+					palette[i].a = (pal->entries[i].T) & 0xFF;
+				else
+					palette[i].a = bcktrans;
 			} else
 			{
 				palette[i].r = 0;
