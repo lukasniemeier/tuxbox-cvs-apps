@@ -407,33 +407,38 @@ void eventData::load(FILE *f)
 	fread(&size, sizeof(int), 1, f);
 	while(size)
 	{
-		fread(&id, sizeof(__u32), 1, f);
-		fread(&p.first, sizeof(int), 1, f);
-		fread(header, 2, 1, f);
+		if (fread(&id, sizeof(__u32), 1, f) < 1 ||
+		    fread(&p.first, sizeof(int), 1, f) < 1 ||
+		    fread(header, 2, 1, f) < 1)
+			break;
 		int bytes = header[1]+2;
 		p.second = new __u8[bytes];
 		p.second[0] = header[0];
 		p.second[1] = header[1];
-		fread(p.second+2, bytes-2, 1, f);
+		if (fread(p.second+2, bytes-2, 1, f) < 1)
+			break;
 		descriptors[id]=p;
 		--size;
 		CacheSize+=bytes;
 	}
 }
 
-void eventData::save(FILE *f)
+int eventData::save(FILE *f)
 {
 	int size=descriptors.size();
 	descriptorMap::iterator it(descriptors.begin());
-	fwrite(&size, sizeof(int), 1, f);
+	if (fwrite(&size, sizeof(int), 1, f) < 1)
+		return -1;
 	while(size)
 	{
-		fwrite(&it->first, sizeof(__u32), 1, f);
-		fwrite(&it->second.first, sizeof(int), 1, f);
-		fwrite(it->second.second, it->second.second[1]+2, 1, f);
+		if (fwrite(&it->first, sizeof(__u32), 1, f) < 1 ||
+		    fwrite(&it->second.first, sizeof(int), 1, f) < 1 ||
+		    fwrite(it->second.second, it->second.second[1]+2, 1, f) < 1)
+			return -1;
 		++it;
 		--size;
 	}
+	return 0;
 }
 
 eEPGCache::eEPGCache()
@@ -2028,6 +2033,8 @@ void eEPGCache::save()
 	int cnt=0;
 	if ( f )
 	{
+		// remove md5 file so that if we fill the disk there will very probably be no space for md5
+		unlink(cachefilenamemd5.c_str());
 		unsigned int magic = 0x98765432;
 		fwrite( &magic, sizeof(int), 1, f);
 		const char *text = "ENIGMA_EPG_V7";
@@ -2050,7 +2057,10 @@ void eEPGCache::save()
 			}
 		}
 		eDebug("%d events written to %s", cnt,cachefilename.c_str());
-		eventData::save(f);
+		if (eventData::save(f)) {
+			fclose(f);
+			return; // file corrupt, md5 not written
+		}
 #ifdef ENABLE_PRIVATE_EPG
 		const char* text3 = "PRIVATE_EPG";
 		fwrite( text3, 11, 1, f );

@@ -121,7 +121,7 @@ public:
 	__u8 type;
 	static int CacheSize;
 	static void load(FILE *);
-	static void save(FILE *);
+	static int  save(FILE *);
 	eventData(const eit_event_struct* e, int size, int type);
 	~eventData();
 	const eit_event_struct* get() const;
