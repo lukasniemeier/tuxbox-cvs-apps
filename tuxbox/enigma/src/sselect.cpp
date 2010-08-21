@@ -1997,10 +1997,11 @@ const eServiceReference *eServiceSelector::choose(int irc)
 	return result;
 }
 
-const eServiceReference *eServiceSelector::next()
+const eServiceReference *eServiceSelector::next(bool fromselected)
 {
 	services->beginAtomic();
-	selectService(eServiceInterface::getInstance()->service);
+	if (fromselected)
+		selectService(eServiceInterface::getInstance()->service);
 
 	eListBoxEntryService *s=0, *cur=services->getCurrent();
 	do
@@ -2017,10 +2018,11 @@ const eServiceReference *eServiceSelector::next()
 		return 0;
 }
 
-const eServiceReference *eServiceSelector::prev()
+const eServiceReference *eServiceSelector::prev(bool fromselected)
 {
 	services->beginAtomic();
-	selectService(eServiceInterface::getInstance()->service);
+	if (fromselected)
+		selectService(eServiceInterface::getInstance()->service);
 	eListBoxEntryService *s=0, *cur=services->getCurrent();
 	do
 		s=services->goPrev();
