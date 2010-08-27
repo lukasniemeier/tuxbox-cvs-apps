@@ -238,9 +238,9 @@ static eString buildDayString(int type)
 	return tmp;
 }
 
+#ifdef WRITE_LOGFILE
 void eTimerManager::writeToLogfile( const char *str )
 {
-#ifdef WRITE_LOGFILE
 	if ( logfile && str )
 	{
 		time_t tmp = time(0)+eDVB::getInstance()->time_difference;
@@ -249,7 +249,6 @@ void eTimerManager::writeToLogfile( const char *str )
 		str2.sprintf("%02d.%02d, %02d:%02d - %s\n", now.tm_mday, now.tm_mon+1, now.tm_hour, now.tm_min, str );
 		logfilesize += (fwrite(str2.c_str(), str2.size(), 1, logfile) * str2.size());
 	}
-#endif
 }
 
 void eTimerManager::writeToLogfile( eString str )
@@ -257,6 +256,9 @@ void eTimerManager::writeToLogfile( eString str )
 	if ( str.length() )
 		writeToLogfile( str.c_str() );
 }
+#else
+#define writeToLogfile( ... )  do { } while (0)
+#endif
 
 // DBOX2 DEEPSTANDBY DEFINES
 #ifndef FP_IOCTL_SET_WAKEUP_TIMER
@@ -524,7 +526,9 @@ extern int freeRecordSpace(void);  // implemented in enigma_main.cpp
 
 void eTimerManager::actionHandler()
 {
+#ifdef WRITE_LOGFILE
 	static int calldepth=0;
+#endif
 	switch( nextAction )
 	{
 		case zap:
