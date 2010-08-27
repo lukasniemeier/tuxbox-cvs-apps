@@ -21,7 +21,10 @@ gRC::gRC()
 	pthread_mutex_init(&mutex, 0);
 	pthread_cond_init(&cond, 0);
 	rp=wp=0;
-	eDebug(pthread_create(&the_thread, 0, thread_wrapper, this)?"RC thread couldn't be created":"RC thread createted successfully");
+	if (pthread_create(&the_thread, 0, thread_wrapper, this))
+	  eDebug("RC thread couldn't be created");
+	else 
+	  eDebug("RC thread createted successfully");
 }
 
 gRC::~gRC()

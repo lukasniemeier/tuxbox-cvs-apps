@@ -65,6 +65,7 @@ void eThread::kill(bool sendcancel)
 		eDebug("send cancel to thread");
 		pthread_cancel(the_thread);
 	}
-	eDebug("thread joined %d", pthread_join(the_thread, 0));
+	int res = pthread_join(the_thread, 0);
+	eDebug("thread joined %d", res);
 	the_thread=0;
 }
