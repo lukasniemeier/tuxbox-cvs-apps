@@ -211,22 +211,6 @@ colorchooser.alpha Άλφα
 colorchooser.blue Μπλε
 colorchooser.green Πράσινο
 colorchooser.red Κόκκινο
-colormenu.background Χρώμα Βάθους
-colormenu.background_head Χρώμα Βάθους
-colormenu.fade Το μενου Ξεθωριάζω
-colormenu.font Μέγεθος χαρακτήρα
-colormenu.gtx_alpha Διαφάνεια (GTX)
-colormenu.head Ρυθμίσει χρώμα
-colormenu.menucolors Μενού χρώμα
-colormenu.osd OSD Θέση ήχου
-colormenu.osd_bottom Κάτω
-colormenu.osd_normal Κανονικά
-colormenu.osd_off Κλεινό
-colormenu.statusbar Θέσει μπάρας
-colormenu.textcolor Χρώμα κειμένων
-colormenu.textcolor_head Χρώμα κειμένων
-colormenu.themeselect Διαλέγω πρόσοψη
-colormenu.timing OSD Ακυρώνω
 colormenusetup.head Μενού χρώμα
 colormenusetup.menucontent Περιεχόμενο
 colormenusetup.menucontent_inactive Περιεχόμενο απενεργοποιημένο
@@ -437,7 +421,6 @@ infoviewer.noepg Δεν υπάρχουν EPG πληροφορίες
 infoviewer.notavailable Το κανάλι προς στιγμήν δεν διατίθεται.
 infoviewer.selecttime Ώρα ενάρξεις
 infoviewer.streaminfo Επιλογή
-infoviewer.subchan_disp_pos Ένδειξη κάτω κανάλι
 infoviewer.subservice Προβολή εικόνας
 infoviewer.waittime Αναμένετε το ρόλοι...
 ipsetup.hint_1 Επιλέξτε 0..9 η επαινώ /κάτω
@@ -527,7 +510,6 @@ mainmenu.shutdown Τέλος λειτουργίας
 mainmenu.sleeptimer Sleep Χρονόμετρο
 mainmenu.tvmode Τηλεόραση
 mainsettings.audio Ήχος
-mainsettings.colors Χρώμα/πρόσοψη/γράψιμο
 mainsettings.driver Οδηγοί-και Boot επιλογές
 mainsettings.head Ρυθμίσεις
 mainsettings.keybinding Ρυθμίσεις πλήκτρων
@@ -535,6 +517,7 @@ mainsettings.language Γλώσσα
 mainsettings.lcd LC-Οθόνη
 mainsettings.misc Διάφορες ρυθμίσεις
 mainsettings.network Κάρτα δικτύου
+mainsettings.osd Χρώμα/πρόσοψη/γράψιμο
 mainsettings.recording Έγγραφη
 mainsettings.savesettingsnow Τις ρύθμισης τις αποθηκεύω
 mainsettings.savesettingsnow_hint Η ρύθμισης τώρα θα αποθηκευτούν\Παρακαλώ περιμένετε...
@@ -561,15 +544,12 @@ miscsettings.epg_old_events_hint1 Πόσο διάρκεια EPG-τα στοιχ�
 miscsettings.epg_old_events_hint2 Εισάγεται σε ώρες
 miscsettings.general Διάφορα
 miscsettings.head Διάφορες Ρυθμίσεις
-miscsettings.infobar_sat_display Ένδειξη δορυφόρους
-miscsettings.infobar_show EPG Πληροφορίες
 miscsettings.shutdown_count Εντελώς σβήστε κατόπιν
 miscsettings.shutdown_count_hint1 Χρονόμετρο σε λεπτά μετά από μερικό σβήσιμο
 miscsettings.shutdown_count_hint2 Τέλειος κλειστό σε (0=κλειστό).
 miscsettings.shutdown_real Μερικό σβήσιμο
 miscsettings.shutdown_real_rcdelay Καθυστερήσει ολικό σβήσιμο
 miscsettings.tuxtxt_cache Τελετεχτ μισώ αποθηκεύω
-miscsettings.virtual_zap_mode Πραγματικός τρόπος
 motorcontrol.head Εγκατάσταση-μοτέρ
 moviebrowser.book_clear_all Διαγράφει όλα
 moviebrowser.book_head Σήμανση
@@ -790,6 +770,26 @@ options.off Κλειστό
 options.on Ανοιχτό
 options.on.without_messages (Δεν υπάρχει πληροφορία)μέσα
 options.serial Σειριακά
+osdsettings.colormenu.background Χρώμα Βάθους
+osdsettings.colormenu.background_head Χρώμα Βάθους
+osdsettings.colormenu.fade Το μενου Ξεθωριάζω
+osdsettings.colormenu.font Μέγεθος χαρακτήρα
+osdsettings.colormenu.gtx_alpha Διαφάνεια (GTX)
+osdsettings.colormenu.head Ρυθμίσει χρώμα
+osdsettings.colormenu.menucolors Μενού χρώμα
+osdsettings.colormenu.osd OSD Θέση ήχου
+osdsettings.colormenu.osd_bottom Κάτω
+osdsettings.colormenu.osd_normal Κανονικά
+osdsettings.colormenu.osd_off Κλεινό
+osdsettings.colormenu.statusbar Θέσει μπάρας
+osdsettings.colormenu.textcolor Χρώμα κειμένων
+osdsettings.colormenu.textcolor_head Χρώμα κειμένων
+osdsettings.colormenu.timing OSD Ακυρώνω
+osdsettings.infobar_sat_display Ένδειξη δορυφόρους
+osdsettings.infobar_show EPG Πληροφορίες
+osdsettings.infobar_virtual_zap_mode Πραγματικός τρόπος
+osdsettings.infoviewer.subchan_disp_pos Ένδειξη κάτω κανάλι
+osdsettings.themeselect Διαλέγω πρόσοψη
 parentallock.changepin PIN-Σταθερό κωδικό
 parentallock.changepin_hint1 Δώστε τον καινούργιο κωδικό μέσα!
 parentallock.changetolocked Για κλειδωμένα μπουκέτα

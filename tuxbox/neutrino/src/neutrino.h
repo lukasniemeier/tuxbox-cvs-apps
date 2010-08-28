@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.235 2010/07/30 20:54:12 dbt Exp $
+	$Id: neutrino.h,v 1.236 2010/08/28 23:06:59 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -179,8 +179,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		bool				skipShutdownTimer;
 
-		CColorSetupNotifier		*colorSetupNotifier;
-
 		CKeySetupNotifier       	*keySetupNotifier;
 		CShutdownCountNotifier		*shutdownCountNotifier;
 		CNetworkSetup 			*networksetup;
@@ -193,7 +191,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 //		CVCRControl			*vcrControl;
 		CRCLock				*rcLock;
 		bool 				parentallocked;
-		CFontSizeNotifier 		*fontsizenotifier;
 		bool 				waitforshutdown;
 		bool				volumeBarIsVisible;
 
@@ -227,20 +224,10 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void RealRun(CMenuWidget &mainSettings);
 		void InitZapper();
 		void InitServiceSettings(CMenuWidget &);
-		void InitColorSettingsMenuColors(CMenuWidget &);
-		void InitColorSettings(CMenuWidget &, CMenuWidget &);
-		void InitLanguageSettings(CMenuWidget &);
-		void InitColorThemesSettings(CMenuWidget &);
-		void InitColorSettingsStatusBarColors(CMenuWidget &colorSettings_menuColors);
-		void InitColorSettingsTiming(CMenuWidget &colorSettings_timing);
-		void AddFontSettingItem(CMenuWidget &fontSettings, const SNeutrinoSettings::FONT_TYPES number_of_fontsize_entry);
 		void InitFontSettings(CMenuWidget &fontSettings);
 		void InitDriverSettings(CMenuWidget &);
 		void InitMiscSettings(CMenuWidget &miscSettings,
 								CMenuWidget &miscSettingsGeneral,
-								CMenuWidget &miscSettingsOSDExtras,
-								CMenuWidget &miscSettingsInfobar,
-								CMenuWidget &miscSettingsChannellist,
 								CMenuWidget &miscSettingsEPGSettings,
 								CMenuWidget &miscSettingsRemoteControl,
 								CMenuWidget &miscSettingsFilebrowser);
@@ -248,8 +235,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void InitParentalLockSettings(CMenuWidget &);
 		void InitMainMenu(CMenuWidget &mainMenu,
 				  CMenuWidget &mainSettings,
-				  CMenuWidget &colorSettings,
-				  CMenuWidget &languageSettings,
 				  CMenuWidget &miscSettings,
 				  CMenuWidget &service);
 
@@ -302,6 +287,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		bool execute_start_file(const char *filename, const bool blocking = true, const bool verbose = false);
 		int execute_sys_command(const char *command);
+		CConfigFile* getConfigFile() {return &configfile;};
 };
 
 

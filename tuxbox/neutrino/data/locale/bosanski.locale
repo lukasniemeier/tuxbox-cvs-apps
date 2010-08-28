@@ -145,18 +145,6 @@ colorchooser.alpha alfa
 colorchooser.blue plavo
 colorchooser.green zeleno
 colorchooser.red crveno
-colormenu.background boja pozadine
-colormenu.background_head boja pozadine
-colormenu.fade izblijediti izbore
-colormenu.font veličina slova
-colormenu.gtx_alpha providnost (gtx)
-colormenu.head namjestiti boje
-colormenu.menucolors boja izbora
-colormenu.statusbar statusna traka
-colormenu.textcolor boja teksta
-colormenu.textcolor_head boja teksta
-colormenu.themeselect izabrati teme
-colormenu.timing osd tajm-aut
 colormenusetup.head boja izbora
 colormenusetup.menucontent sadržaj prozora
 colormenusetup.menucontent_inactive deaktiviran sadržaj prozora
@@ -392,13 +380,13 @@ mainmenu.shutdown ugasiti
 mainmenu.sleeptimer vremenski brojač za ugasiti
 mainmenu.tvmode tv
 mainsettings.audio ton
-mainsettings.colors boje / teme
 mainsettings.head namješćenje
 mainsettings.keybinding namjestiti tipku
 mainsettings.language jezik
 mainsettings.lcd tečni kristal
 mainsettings.misc namjestiti razne stvari
 mainsettings.network mreža
+mainsettings.osd boje / teme
 mainsettings.plugins namješćenje plugina
 mainsettings.recording snimanje
 mainsettings.savesettingsnow namješćenje sada memorisati
@@ -419,8 +407,6 @@ miscsettings.boxtype proizvođač dbox2
 miscsettings.fb_destination majstori! boot konsola
 miscsettings.general generalno
 miscsettings.head namjestiti razne stvari
-miscsettings.infobar_sat_display informativna traka sateliti
-miscsettings.infobar_show EPG Info
 miscsettings.shutdown_real pripravnost
 miscsettings.shutdown_real_rcdelay ugasiti sa zastojanjem
 miscsettings.startbhdriver startovati bh-mode driver
@@ -485,6 +471,20 @@ options.null null
 options.off ugašeno
 options.on upaljeno
 options.serial serijski
+osdsettings.colormenu.background boja pozadine
+osdsettings.colormenu.background_head boja pozadine
+osdsettings.colormenu.fade izblijediti izbore
+osdsettings.colormenu.font veličina slova
+osdsettings.colormenu.gtx_alpha providnost (gtx)
+osdsettings.colormenu.head namjestiti boje
+osdsettings.colormenu.menucolors boja izbora
+osdsettings.colormenu.statusbar statusna traka
+osdsettings.colormenu.textcolor boja teksta
+osdsettings.colormenu.textcolor_head boja teksta
+osdsettings.colormenu.timing osd tajm-aut
+osdsettings.infobar_sat_display informativna traka sateliti
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect izabrati teme
 parentallock.changepin izabrati pin-broj
 parentallock.changepin_hint1 Utipkajte novi pin-broj!
 parentallock.changetolocked kod zabranjenih buketa

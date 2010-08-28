@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1037 2010/08/13 21:01:23 dbt Exp $
+	$Id: neutrino.cpp,v 1.1038 2010/08/28 23:06:59 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -98,10 +98,10 @@
 #include "gui/nfs.h"
 #endif
 #include "gui/scan_setup.h"
-#include "gui/screensetup.h"
 #include "gui/esound.h"
 #include "gui/personalize.h"
-#include "gui/themes.h"
+#include "gui/osd_setup.h"
+#include "gui/osdlang_setup.h"
 #ifdef ENABLE_SAMBASERVER
 #include "gui/sambaserver_setup.h"
 #endif
@@ -404,8 +404,8 @@ int CNeutrinoApp::loadSetup()
 	g_settings.channellist_epgtext_align_right		= configfile.getBool("channellist_epgtext_align_right"          , false);
 	g_settings.channellist_extended		= configfile.getBool("channellist_extended"          , false);
 	strcpy( g_settings.infobar_channel_logodir, configfile.getString( "infobar_channel_logodir", "/var/share/tuxbox/neutrino/icons/").c_str()); 
-	g_settings.infobar_show_channellogo	= configfile.getInt32("infobar_show_channellogo"		,0);
-	g_settings.infobar_channellogo_background		= configfile.getInt32("infobar_channellogo_background"		,0);
+	g_settings.infobar_show_channellogo	= configfile.getInt32("infobar_show_channellogo"		,COsdSetup::INFOBAR_NO_LOGO);
+	g_settings.infobar_channellogo_background		= configfile.getInt32("infobar_channellogo_background"		,COsdSetup::INFOBAR_NO_BACKGROUND);
 	g_settings.startmode			= configfile.getInt32("startmode" , STARTMODE_RESTORE );
 
 	g_settings.radiotext_enable		= configfile.getBool("radiotext_enable"          , false);
@@ -581,7 +581,6 @@ int CNeutrinoApp::loadSetup()
 	g_settings.personalize_network = configfile.getInt32("personalize_network", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_recording = configfile.getInt32("personalize_recording", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_keybinding = configfile.getInt32("personalize_keybinding", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
-	g_settings.personalize_language = configfile.getInt32("personalize_language", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_colors = configfile.getInt32("personalize_colors", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_lcd = configfile.getInt32("personalize_lcd", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_mediaplayer = configfile.getInt32("personalize_mediaplayer", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
@@ -1130,7 +1129,6 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ( "personalize_network", g_settings.personalize_network );
 	configfile.setInt32 ( "personalize_recording", g_settings.personalize_recording );
 	configfile.setInt32 ( "personalize_keybinding", g_settings.personalize_keybinding );
-	configfile.setInt32 ( "personalize_language", g_settings.personalize_language );
 	configfile.setInt32 ( "personalize_colors", g_settings.personalize_colors );
 	configfile.setInt32 ( "personalize_lcd", g_settings.personalize_lcd );
 	configfile.setInt32 ( "personalize_mediaplayer", g_settings.personalize_mediaplayer );
@@ -2097,7 +2095,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	g_PluginList->loadPlugins();
 
 
-	colorSetupNotifier		= new CColorSetupNotifier;
 	audioSetupNotifier		= new CAudioSetupNotifier;
 	APIDChanger			= new CAPIDChangeExec;
 #ifdef HAVE_DBOX_HARDWARE
@@ -2106,13 +2103,10 @@ int CNeutrinoApp::run(int argc, char **argv)
 	DVBInfo				= new CDVBInfoExec;
 	NVODChanger			= new CNVODChangeExec;
 	StreamFeaturesChanger		= new CStreamFeaturesChangeExec;
-	fontsizenotifier		= new CFontSizeNotifier;
 
 	rcLock				= new CRCLock();
 	//USERMENU
 	Timerlist			= new CTimerList;
-
-	colorSetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 
 	// setup recording device
 	if (g_settings.recording_type != RECORDING_OFF)
@@ -2122,8 +2116,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	//Main settings
 	CMenuWidget    mainMenu            (LOCALE_MAINMENU_HEAD                 , "mainmenue.raw"       );
 	CMenuWidget    mainSettings        (LOCALE_MAINSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS);
-	CMenuWidget    languageSettings    (LOCALE_LANGUAGESETUP_HEAD            , "language.raw"        );
-	CMenuWidget    colorSettings       (LOCALE_COLORMENU_HEAD                , NEUTRINO_ICON_COLORS  );
 	CMenuWidget    fontSettings        (LOCALE_FONTMENU_HEAD                 , NEUTRINO_ICON_COLORS  );
 	CMenuWidget    miscSettings        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    service             (LOCALE_SERVICEMENU_HEAD              , NEUTRINO_ICON_SETTINGS);
@@ -2134,31 +2126,20 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	InitMainMenu(	mainMenu,
 					mainSettings,
-					colorSettings,
-					languageSettings,
  					miscSettings,
 					service);
 
 	//service
 	InitServiceSettings(service);
 
-	//language Setup
-	InitLanguageSettings(languageSettings);
-
 	// misc settings
 	CMenuWidget    miscSettingsGeneral        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
-	CMenuWidget    miscSettingsInfobar        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
-	CMenuWidget    miscSettingsOSDExtras        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
-	CMenuWidget    miscSettingsChannellist        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsEPGSettings        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsRemoteControl        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	CMenuWidget    miscSettingsFilebrowser        (LOCALE_MISCSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS, 500);
 	
 	InitMiscSettings(miscSettings,
 							miscSettingsGeneral,
-							miscSettingsOSDExtras,
-							miscSettingsInfobar,
-							miscSettingsChannellist,
 							miscSettingsEPGSettings,
 							miscSettingsRemoteControl,
 							miscSettingsFilebrowser);	
@@ -2222,8 +2203,12 @@ int CNeutrinoApp::run(int argc, char **argv)
 	g_Timerd->registerEvent(CTimerdClient::EVT_REMIND, 222, NEUTRINO_UDS_NAME);
 	g_Timerd->registerEvent(CTimerdClient::EVT_EXEC_PLUGIN, 222, NEUTRINO_UDS_NAME);
 
+	//show language settings, if no language is configured
 	if (display_language_selection)
+	{
+		COsdLangSetup languageSettings;
 		languageSettings.exec(NULL, "");
+	}
 
 
 #ifdef HAVE_DBOX_HARDWARE
@@ -2259,12 +2244,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	//init programm
 	InitZapper();
-
-	//font Setup
-	InitFontSettings(fontSettings);
-
-	//color Setup
-	InitColorSettings(colorSettings, fontSettings);
 
 	AudioMute( g_Controld->getMute((CControld::volume_type)g_settings.audio_avs_Control), true );
 
@@ -3969,12 +3948,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		g_RCInput->postMsg( NeutrinoMessages::VCR_ON, 0 );
 		returnval = menu_return::RETURN_EXIT_ALL;
 	}
-	else if (actionKey=="theme_neutrino")
-	{
-		CThemes themes;
-		themes.setupDefaultColors();
-		colorSetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
-	}
 	else if(actionKey=="savesettings")
 	{
 		CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MAINSETTINGS_SAVESETTINGSNOW_HINT)); // UTF-8
@@ -4041,20 +4014,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			hintBox->hide();
 			delete hintBox;
 		}
-	}
-	else if(strncmp(actionKey.c_str(), "fontsize.d", 10) == 0)
-	{
-		parent->hide(); // hide menu before set to smaller "default" fonts for menutext, otherwise u get remains
-		for (int i = 0; i < 6; i++)
-		{
-			if (actionKey == font_sizes_groups[i].actionkey)
-				for (unsigned int j = 0; j < font_sizes_groups[i].count; j++)
-				{
-					SNeutrinoSettings::FONT_TYPES k = font_sizes_groups[i].content[j];
-					configfile.setInt32(locale_real_names[neutrino_font[k].name], neutrino_font[k].defaultsize);
-				}
-		}
-		fontsizenotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 	}
 	else if(actionKey=="osd.def")
 	{

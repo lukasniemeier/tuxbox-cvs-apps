@@ -205,18 +205,6 @@ colorchooser.alpha alpha
 colorchooser.blue azul
 colorchooser.green verde
 colorchooser.red vermelho
-colormenu.background Fundo
-colormenu.background_head Fundo
-colormenu.fade Menus escondidos
-colormenu.font Tamanho da letra
-colormenu.gtx_alpha Transparência (GTX)
-colormenu.head Configurar cor
-colormenu.menucolors Menu cor
-colormenu.statusbar Barra de Informação
-colormenu.textcolor Cor do Texto
-colormenu.textcolor_head Cor do Texto
-colormenu.themeselect Seleccionar tema
-colormenu.timing Tempo de OSD
 colormenusetup.head Menu Cores
 colormenusetup.menucontent Janela actual
 colormenusetup.menucontent_inactive Janela inactiva
@@ -479,13 +467,13 @@ mainmenu.shutdown Desligar
 mainmenu.sleeptimer Desligar por temporizador
 mainmenu.tvmode Modo TV
 mainsettings.audio Aúdio
-mainsettings.colors Cores / temas / letra
 mainsettings.head Configurações
 mainsettings.keybinding Configurar teclas
 mainsettings.language Língua
-mainsettings.lcd LC-Display
+mainsettings.lcd LCD
 mainsettings.misc Outras configurações
 mainsettings.network Rede
+mainsettings.osd Cores / temas / letra
 mainsettings.recording Gravação
 mainsettings.savesettingsnow Guardar alterações agora
 mainsettings.savesettingsnow_hint A guardar alterações,\npor favor aguarde...
@@ -506,8 +494,6 @@ miscsettings.fb_destination Expertos! Boot-Console
 miscsettings.general Geral
 miscsettings.head Outras configurações
 miscsettings.hwsections Secções de hardware usado
-miscsettings.infobar_sat_display Mostrar satélite na barra de informações
-miscsettings.infobar_show EPG Info
 miscsettings.pmtupdate activar actualização do pmt
 miscsettings.shutdown_real Activar standby
 miscsettings.shutdown_real_rcdelay Desligar com telecomando
@@ -577,6 +563,20 @@ options.null nulo
 options.off off
 options.on on
 options.serial serie
+osdsettings.colormenu.background Fundo
+osdsettings.colormenu.background_head Fundo
+osdsettings.colormenu.fade Menus escondidos
+osdsettings.colormenu.font Tamanho da letra
+osdsettings.colormenu.gtx_alpha Transparência (GTX)
+osdsettings.colormenu.head Configurar cor
+osdsettings.colormenu.menucolors Menu cor
+osdsettings.colormenu.statusbar Barra de Informação
+osdsettings.colormenu.textcolor Cor do Texto
+osdsettings.colormenu.textcolor_head Cor do Texto
+osdsettings.colormenu.timing Tempo de OSD
+osdsettings.infobar_sat_display Mostrar satélite na barra de informações
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect Seleccionar tema
 parentallock.changepin Alterar código PIN
 parentallock.changepin_hint1 Introduza aqui o seu novo código pin!
 parentallock.changetolocked nos bouquets bloqueados

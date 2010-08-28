@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.20 2010/07/22 11:12:49 dbt Exp $
+        $Id: personalize.cpp,v 1.21 2010/08/28 23:06:59 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -296,7 +296,6 @@ void CPersonalizeGui::ShowSettingsOptions()
 	int old_youth		= g_settings.personalize_youth;
 	int old_network		= g_settings.personalize_network;
 	int old_recording	= g_settings.personalize_recording;
-	int old_language	= g_settings.personalize_language;
 	int old_colors		= g_settings.personalize_colors;
 	int old_lcd		= g_settings.personalize_lcd;
 	int old_keybinding	= g_settings.personalize_keybinding;
@@ -320,10 +319,9 @@ void CPersonalizeGui::ShowSettingsOptions()
 	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_PARENTALLOCK_PARENTALLOCK, (int *)&g_settings.personalize_youth, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_3));
 	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_NETWORK, (int *)&g_settings.personalize_network, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_4));
 	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_RECORDING, (int *)&g_settings.personalize_recording, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_5));
-	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_LANGUAGE, (int *)&g_settings.personalize_language, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_6));
-	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_COLORS, (int *)&g_settings.personalize_colors, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_7));
-	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_LCD, (int *)&g_settings.personalize_lcd, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_8));
-	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_KEYBINDING, (int *)&g_settings.personalize_keybinding, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_9));
+	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_OSD, (int *)&g_settings.personalize_colors, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_6));
+	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_LCD, (int *)&g_settings.personalize_lcd, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_7));
+	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MAINSETTINGS_KEYBINDING, (int *)&g_settings.personalize_keybinding, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_8));
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
 	pSTMenu->addItem(new CMenuOptionChooser(LOCALE_MEDIAPLAYERSETTINGS_GENERAL, (int *)&g_settings.personalize_mediaplayer, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 #endif
@@ -341,7 +339,6 @@ void CPersonalizeGui::ShowSettingsOptions()
 		|| old_youth != g_settings.personalize_youth
 		|| old_network != g_settings.personalize_network
 		|| old_recording != g_settings.personalize_recording
-		|| old_language != g_settings.personalize_language
 		|| old_colors != g_settings.personalize_colors
 		|| old_lcd != g_settings.personalize_lcd
 		|| old_keybinding != g_settings.personalize_keybinding

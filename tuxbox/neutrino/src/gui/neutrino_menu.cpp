@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.114 2010/08/02 20:36:16 seife Exp $
+	$Id: neutrino_menu.cpp,v 1.115 2010/08/28 23:06:59 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -37,13 +37,10 @@
 #include <config.h>
 #endif
 
-#include <dirent.h>
-
 #include <global.h>
 #include <neutrino.h>
 
 #include <system/debug.h>
-
 
 #include <driver/encoding.h>
 #include <driver/vcrcontrol.h>
@@ -53,75 +50,75 @@
 #include "gui/widget/dirchooser.h"
 #include "gui/widget/icons.h"
 #include "gui/widget/keychooser.h"
-#include "gui/movieplayer_setup.h"
 #include "gui/widget/rgbcsynccontroler.h"
 #include "gui/widget/stringinput.h"
 #include "gui/widget/stringinput_ext.h"
 
-#include "gui/alphasetup.h"
-#include "gui/audio_setup.h"
-#include "gui/video_setup.h"
-#include "gui/audio_select.h"
+#include "movieplayer_setup.h"
+#include "audio_setup.h"
+#include "video_setup.h"
+#include "audio_select.h"
 #ifdef ENABLE_AUDIOPLAYER
-#include "gui/audioplayer.h"
+#include "audioplayer.h"
 #endif
 #ifdef ENABLE_ESD
-#include "gui/esound.h"
+#include "esound.h"
 #endif
 #ifdef ENABLE_EPGPLUS
-#include "gui/epgplus.h"
+#include "epgplus.h"
 #endif
-#include "gui/favorites.h"
-#include "gui/imageinfo.h"
-#include "gui/keyhelper.h"
+#include "favorites.h"
+#include "imageinfo.h"
+#include "keyhelper.h"
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_INTERNETRADIO) || defined(ENABLE_ESD) || defined(ENABLE_PICTUREVIEWER) || defined (ENABLE_MOVIEPLAYER)
-#include "gui/mediaplayer_setup.h"
+#include "mediaplayer_setup.h"
 #endif
 #ifdef ENABLE_MOVIEPLAYER
-#include "gui/movieplayer.h"
-#include "gui/movieplayer_menu.h"
-#include "gui/movieplayer_setup.h"
+#include "movieplayer.h"
+#include "movieplayer_menu.h"
+#include "movieplayer_setup.h"
 #endif
 
-#include "gui/network_setup.h"
+#include "network_setup.h"
 #ifdef ENABLE_GUI_MOUNT
-#include "gui/nfs.h"
+#include "nfs.h"
 #endif
-#include "gui/parentallock_setup.h"
-#include "gui/personalize.h"
+#include "parentallock_setup.h"
+#include "personalize.h"
 #ifdef ENABLE_PICTUREVIEWER
-#include "gui/pictureviewer.h"
+#include "pictureviewer.h"
 #endif
-#include "gui/pluginlist.h"
-#include "gui/record_setup.h"
+#include "pluginlist.h"
+#include "record_setup.h"
 
-#include "gui/scan_setup.h"
-#include "gui/screensetup.h"
-#include "gui/software_update.h"
-#include "gui/streaminfo2.h"
-#include "gui/sleeptimer.h"
-#include "gui/update.h"
-#include "gui/themes.h"
-#include "gui/zapit_setup.h"
-#include "gui/keybind_setup.h"
-#include "gui/lcd_setup.h"
-#include "gui/driver_boot_setup.h"
+#include "scan_setup.h"
+#include "screensetup.h"
+#include "software_update.h"
+#include "streaminfo2.h"
+#include "sleeptimer.h"
+#include "update.h"
+#include "zapit_setup.h"
+#include "keybind_setup.h"
+#include "lcd_setup.h"
+#include "driver_boot_setup.h"
+#include "osd_setup.h"
+
 
 #if ENABLE_UPNP
-#include "gui/upnpbrowser.h"
+#include "upnpbrowser.h"
 #endif
 
 #ifdef _EXPERIMENTAL_SETTINGS_
-#include "gui/experimental_menu.h"
+#include "experimental_menu.h"
 #endif
 
 // TODO: k26 support for ENABLE_DRIVE_GUI, it's disabled with -enable-kernel26 yet
 #if ENABLE_DRIVE_GUI
-#include "gui/drive_setup.h"
+#include "drive_setup.h"
 #endif /*ENABLE_DRIVE_GUI*/
 
 
-static CTimingSettingsNotifier timingsettingsnotifier;
+// static CTimingSettingsNotifier timingsettingsnotifier;
 
 /**************************************************************************************
 *                                                                                     *
@@ -131,8 +128,6 @@ static CTimingSettingsNotifier timingsettingsnotifier;
 
 void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 								CMenuWidget &mainSettings,
-								CMenuWidget &colorSettings,
-								CMenuWidget &languageSettings,
 								CMenuWidget &miscSettings,
 								CMenuWidget &service)
 {
@@ -273,11 +268,8 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 	// record settings
 	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_RECORDING, true, NULL, new CRecordSetup(), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false,g_settings.personalize_recording);
 
-	// language
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, &languageSettings , NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_language);
-
-	// color
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_COLORS, true, NULL, &colorSettings, NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_colors);
+	// osd
+	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_OSD, true, NULL, new COsdSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_colors);
 	
 	// lcd.
 	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_LCD, true, NULL, new CLcdSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_lcd);
@@ -409,74 +401,12 @@ const CMenuOptionChooser::keyval MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTIONS[MISCSET
 	{ 1, LOCALE_FILESYSTEM_IS_UTF8_OPTION_UTF8      }
 };
 
-#define INFOBAR_SUBCHAN_DISP_POS_OPTIONS_COUNT 5
-const CMenuOptionChooser::keyval  INFOBAR_SUBCHAN_DISP_POS_OPTIONS[INFOBAR_SUBCHAN_DISP_POS_OPTIONS_COUNT]=
-{
-	{ 0 , LOCALE_SETTINGS_POS_TOP_RIGHT },
-	{ 1 , LOCALE_SETTINGS_POS_TOP_LEFT },
-	{ 2 , LOCALE_SETTINGS_POS_BOTTOM_LEFT },
-	{ 3 , LOCALE_SETTINGS_POS_BOTTOM_RIGHT },
-	{ 4 , LOCALE_SETTINGS_POS_INFOBAR }
-};
-
 #define INFOBAR_SHOW_OPTIONS_COUNT 3
 const CMenuOptionChooser::keyval  INFOBAR_SHOW_OPTIONS[INFOBAR_SHOW_OPTIONS_COUNT]=
 {
 	{ 0 , LOCALE_OPTIONS_OFF },
 	{ 1 , LOCALE_PICTUREVIEWER_RESIZE_SIMPLE },
 	{ 2 , LOCALE_PICTUREVIEWER_RESIZE_COLOR_AVERAGE }
-};
-
-#define INFOBAR_EPG_SHOW_OPTIONS_COUNT 3
-const CMenuOptionChooser::keyval  INFOBAR_EPG_SHOW_OPTIONS[INFOBAR_EPG_SHOW_OPTIONS_COUNT]=
-{
-   { 0 , LOCALE_OPTIONS_OFF },
-   { 1 , LOCALE_INFOVIEWER_EPGINFO_SIMPLE_MESSAGE },
-   { 2 , LOCALE_INFOVIEWER_EPGINFO_EXPENSIVE_MESSAGE }
-};
-
-#define VOLUMEBAR_DISP_POS_OPTIONS_COUNT 7
-const CMenuOptionChooser::keyval  VOLUMEBAR_DISP_POS_OPTIONS[VOLUMEBAR_DISP_POS_OPTIONS_COUNT]=
-{
-	{ 0 , LOCALE_SETTINGS_POS_TOP_RIGHT },
-	{ 1 , LOCALE_SETTINGS_POS_TOP_LEFT },
-	{ 2 , LOCALE_SETTINGS_POS_BOTTOM_LEFT },
-	{ 3 , LOCALE_SETTINGS_POS_BOTTOM_RIGHT },
-	{ 4 , LOCALE_SETTINGS_POS_DEFAULT_CENTER },
-	{ 5 , LOCALE_SETTINGS_POS_HIGHER_CENTER },
-	{ 6 , LOCALE_SETTINGS_POS_OFF }
-};
-
-#define SHOW_MUTE_ICON_OPTIONS_COUNT 3
-const CMenuOptionChooser::keyval  SHOW_MUTE_ICON_OPTIONS[SHOW_MUTE_ICON_OPTIONS_COUNT]=
-{
-	{ 0 , LOCALE_MISCSETTINGS_SHOW_MUTE_ICON_NO },
-	{ 1 , LOCALE_MISCSETTINGS_SHOW_MUTE_ICON_YES },
-	{ 2 , LOCALE_MISCSETTINGS_SHOW_MUTE_ICON_NOT_IN_AC3MODE }
-};
-
-#define CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT 2
-const CMenuOptionChooser::keyval  CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS[CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT]=
-{
-	{ 0 , LOCALE_CHANNELLIST_EPGTEXT_ALIGN_LEFT },
-	{ 1 , LOCALE_CHANNELLIST_EPGTEXT_ALIGN_RIGHT }
-};
-
-#define INFOBAR_CHANNELLOGO_SHOW_OPTIONS_COUNT 4
-const CMenuOptionChooser::keyval  INFOBAR_CHANNELLOGO_SHOW_OPTIONS[INFOBAR_CHANNELLOGO_SHOW_OPTIONS_COUNT]=
-{
-   { 0 , LOCALE_INFOVIEWER_CHANNELLOGO_OFF },
-   { 1 , LOCALE_INFOVIEWER_CHANNELLOGO_SHOW_IN_NUMBERBOX },
-   { 2 , LOCALE_INFOVIEWER_CHANNELLOGO_SHOW_AS_CHANNELNAME },
-   { 3 , LOCALE_INFOVIEWER_CHANNELLOGO_SHOW_BESIDE_CHANNELNAME }
-};
-
-#define INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS_COUNT 3
-const CMenuOptionChooser::keyval  INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS[INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS_COUNT]=
-{
-   { 0 , LOCALE_INFOVIEWER_CHANNELLOGO_BACKGROUND_OFF },
-   { 1 , LOCALE_INFOVIEWER_CHANNELLOGO_BACKGROUND_FRAMED },
-   { 2 , LOCALE_INFOVIEWER_CHANNELLOGO_BACKGROUND_SHADED }
 };
 
 #define REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS_COUNT 4
@@ -520,9 +450,6 @@ const CMenuOptionChooser::keyval  MISCSETTINGS_STARTMODE_WITH_OPTIONS[MISCSETTIN
 /* misc settings menu */
 void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 															CMenuWidget &miscSettingsGeneral,
-															CMenuWidget &miscSettingsOSDExtras,
-															CMenuWidget &miscSettingsInfobar,
-															CMenuWidget &miscSettingsChannellist,
 															CMenuWidget &miscSettingsEPGSettings,
 															CMenuWidget &miscSettingsRemoteControl,
 															CMenuWidget &miscSettingsFilebrowser)
@@ -536,13 +463,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	addMenueIntroItems(miscSettings);
 	// general
 	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_GENERAL, true, NULL, &miscSettingsGeneral, NULL,  CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));	
-	// OSD-specials
-	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_OSD_SPECIALS, true, NULL, &miscSettingsOSDExtras, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-	// infobar
-	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_INFOBAR, true, NULL, &miscSettingsInfobar, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
-	// channellist
-	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLIST, true, NULL, &miscSettingsChannellist, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
-	miscSettings.addItem(GenericMenuSeparatorLine);
 	// epg settings
 	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, true, NULL, &miscSettingsEPGSettings, NULL, CRCInput::convertDigitToKey(shortcut++)));
 	// zapit settings
@@ -581,36 +501,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	miscSettingsGeneral.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_TUXTXT_CACHE, &g_settings.tuxtxt_cache, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, tuxtxtcacheNotifier));
 #endif
 	
-	// OSD - specials
-	miscSettingsOSDExtras.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_OSD_SPECIALS));
-	addMenueIntroItems(miscSettingsOSDExtras);
-	miscSettingsOSDExtras.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_VOLUMEBAR_DISP_POS, &g_settings.volumebar_disp_pos, VOLUMEBAR_DISP_POS_OPTIONS, VOLUMEBAR_DISP_POS_OPTIONS_COUNT, true));
-	miscSettingsOSDExtras.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHOW_MUTE_ICON, &g_settings.show_mute_icon, SHOW_MUTE_ICON_OPTIONS, SHOW_MUTE_ICON_OPTIONS_COUNT, true));
-
-	//infobar settings
-	miscSettingsInfobar.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_INFOBAR));
-	addMenueIntroItems(miscSettingsInfobar);
-	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SAT_DISPLAY, &g_settings.infobar_sat_display, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_INFOVIEWER_SUBCHAN_DISP_POS, &g_settings.infobar_subchan_disp_pos, INFOBAR_SUBCHAN_DISP_POS_OPTIONS, INFOBAR_SUBCHAN_DISP_POS_OPTIONS_COUNT, true));
-	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_VIRTUAL_ZAP_MODE, &g_settings.virtual_zap_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_INFOBAR_SHOW, &g_settings.infobar_show, INFOBAR_EPG_SHOW_OPTIONS, INFOBAR_EPG_SHOW_OPTIONS_COUNT, true));
-
-#ifdef ENABLE_RADIOTEXT
-	CRadiotextNotifier *radiotextNotifier = new CRadiotextNotifier;
-	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, radiotextNotifier));
-#endif
-	miscSettingsInfobar.addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_CHANNELLOGO));
-	
-	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_CHANNELLOGO_SHOW, &g_settings.infobar_show_channellogo, INFOBAR_CHANNELLOGO_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_SHOW_OPTIONS_COUNT, true));
-	miscSettingsInfobar.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLOGO_LOGODIR, true, g_settings.infobar_channel_logodir, this, "channel_logodir"));
- 	miscSettingsInfobar.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_CHANNELLOGO_BACKGROUND, &g_settings.infobar_channellogo_background, INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS_COUNT, true));
-
-	//channellist
-	miscSettingsChannellist.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_CHANNELLIST));
-	addMenueIntroItems(miscSettingsChannellist);
-	miscSettingsChannellist.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_CHANNELLIST_EPGTEXT_ALIGN, &g_settings.channellist_epgtext_align_right, CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS, CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT, true));
-	miscSettingsChannellist.addItem(new CMenuOptionChooser(LOCALE_CHANNELLIST_EXTENDED, &g_settings.channellist_extended, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-	
 	//epg settings
 	miscSettingsEPGSettings.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_EPG_HEAD));
 	addMenueIntroItems(miscSettingsEPGSettings);
@@ -643,314 +533,6 @@ void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
 	miscSettingsFilebrowser.addItem(new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true ));
 }
 
-
-/* language settings menu */
-void CNeutrinoApp::InitLanguageSettings(CMenuWidget &languageSettings)
-{
-	addMenueIntroItems(languageSettings);
-
-	//search available languages....
-
-	struct dirent **namelist;
-	int n;
-	//		printf("scanning locale dir now....(perhaps)\n");
-
-	const char *pfad[] = {DATADIR "/neutrino/locale","/var/tuxbox/config/locale"};
-
-	for(int p = 0;p < 2;p++)
-	{
-		n = scandir(pfad[p], &namelist, 0, alphasort);
-		if(n < 0)
-		{
-			perror("loading locales: scandir");
-		}
-		else
-		{
-			for(int count=0;count<n;count++)
-			{
-				char * locale = strdup(namelist[count]->d_name);
-				char * pos = strstr(locale, ".locale");
-				if(pos != NULL)
-				{
-					*pos = '\0';
-					CMenuOptionLanguageChooser* oj = new CMenuOptionLanguageChooser((char*)locale, this);
-					oj->addOption(locale);
-					languageSettings.addItem( oj );
-				}
-				else
-					free(locale);
-				free(namelist[count]);
-			}
-			free(namelist);
-		}
-	}
-}
-
-
-/* for font settings menu */
-class CMenuNumberInput : public CMenuForwarder, CMenuTarget, CChangeObserver
-{
-private:
-	CChangeObserver * observer;
-	CConfigFile     * configfile;
-	int32_t           defaultvalue;
-	char              value[11];
-
-protected:
-
-	virtual const char * getOption(void)
-		{
-			sprintf(value, "%u", configfile->getInt32(locale_real_names[text], defaultvalue));
-			return value;
-		}
-
-	virtual bool changeNotify(const neutrino_locale_t OptionName, void * Data)
-		{
-			configfile->setInt32(locale_real_names[text], atoi(value));
-			return observer->changeNotify(OptionName, Data);
-		}
-
-
-public:
-	CMenuNumberInput(const neutrino_locale_t Text, const int32_t DefaultValue, CChangeObserver * const _observer, CConfigFile * const _configfile) : CMenuForwarder(Text, true, NULL, this)
-		{
-			observer     = _observer;
-			configfile   = _configfile;
-			defaultvalue = DefaultValue;
-		}
-
-	int exec(CMenuTarget * parent, const std::string & action_Key)
-		{
-			CStringInput input(text, (char *)getOption(), 3, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, "0123456789 ", this);
-			return input.exec(parent, action_Key);
-		}
-};
-
-void CNeutrinoApp::AddFontSettingItem(CMenuWidget &fontSettings, const SNeutrinoSettings::FONT_TYPES number_of_fontsize_entry)
-{
-	fontSettings.addItem(new CMenuNumberInput(neutrino_font[number_of_fontsize_entry].name, neutrino_font[number_of_fontsize_entry].defaultsize, fontsizenotifier, &configfile));
-}
-
-
-const SNeutrinoSettings::FONT_TYPES channellist_font_sizes[4] =
-{
-	SNeutrinoSettings::FONT_TYPE_CHANNELLIST,
-	SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR,
-	SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER,
-	SNeutrinoSettings::FONT_TYPE_CHANNEL_NUM_ZAP
-};
-
-const SNeutrinoSettings::FONT_TYPES eventlist_font_sizes[4] =
-{
-	SNeutrinoSettings::FONT_TYPE_EVENTLIST_TITLE,
-	SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE,
-	SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL,
-	SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME,
-};
-
-const SNeutrinoSettings::FONT_TYPES infobar_font_sizes[4] =
-{
-	SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER,
-	SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME,
-	SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO,
-	SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL
-};
-
-const SNeutrinoSettings::FONT_TYPES epg_font_sizes[4] =
-{
-	SNeutrinoSettings::FONT_TYPE_EPG_TITLE,
-	SNeutrinoSettings::FONT_TYPE_EPG_INFO1,
-	SNeutrinoSettings::FONT_TYPE_EPG_INFO2,
-	SNeutrinoSettings::FONT_TYPE_EPG_DATE
-};
-
-const SNeutrinoSettings::FONT_TYPES gamelist_font_sizes[2] =
-{
-	SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMLARGE,
-	SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMSMALL
-};
-
-const SNeutrinoSettings::FONT_TYPES other_font_sizes[4] =
-{
-	SNeutrinoSettings::FONT_TYPE_MENU,
-	SNeutrinoSettings::FONT_TYPE_MENU_TITLE,
-	SNeutrinoSettings::FONT_TYPE_MENU_INFO,
-	SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM
-};
-
-font_sizes_groups font_sizes_groups[6] =
-{
-	{LOCALE_FONTMENU_CHANNELLIST, 4, channellist_font_sizes, "fontsize.dcha"},
-	{LOCALE_FONTMENU_EVENTLIST  , 4, eventlist_font_sizes  , "fontsize.deve"},
-	{LOCALE_FONTMENU_EPG        , 4, epg_font_sizes        , "fontsize.depg"},
-	{LOCALE_FONTMENU_INFOBAR    , 4, infobar_font_sizes    , "fontsize.dinf"},
-	{LOCALE_FONTMENU_GAMELIST   , 2, gamelist_font_sizes   , "fontsize.dgam"},
-	{NONEXISTANT_LOCALE         , 4, other_font_sizes      , "fontsize.doth"}
-};
-
-/* font settings menu */
-void CNeutrinoApp::InitFontSettings(CMenuWidget &fontSettings)
-{
-	addMenueIntroItems(fontSettings);
-	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_MENU);
-	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_MENU_TITLE);
-	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_MENU_INFO);
-	fontSettings.addItem(GenericMenuSeparatorLine);
-
-	for (int i = 0; i < 5; i++)
-	{
-		CMenuWidget * fontSettingsSubMenu = new CMenuWidget(font_sizes_groups[i].groupname, NEUTRINO_ICON_COLORS);
-		fontSettingsSubMenu->addItem(GenericMenuSeparator);
-		fontSettingsSubMenu->addItem(GenericMenuBack);
-		fontSettingsSubMenu->addItem(GenericMenuSeparatorLine);
-		for (unsigned int j = 0; j < font_sizes_groups[i].count; j++)
-		{
-			AddFontSettingItem(*fontSettingsSubMenu, font_sizes_groups[i].content[j]);
-		}
-		fontSettingsSubMenu->addItem(GenericMenuSeparatorLine);
-		fontSettingsSubMenu->addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[i].actionkey));
-
-		fontSettings.addItem(new CMenuForwarder(font_sizes_groups[i].groupname, true, NULL, fontSettingsSubMenu));
-	}
-
-	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM);
-	fontSettings.addItem(GenericMenuSeparatorLine);
-	fontSettings.addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[5].actionkey));
-}
-
-/* for color settings menu */
-#define COLORMENU_CORNERSETTINGS_TYPE_OPTION_COUNT 2
-const CMenuOptionChooser::keyval COLORMENU_CORNERSETTINGS_TYPE_OPTIONS[COLORMENU_CORNERSETTINGS_TYPE_OPTION_COUNT] =
-{
-	{ 0, LOCALE_COLORMENU_ROUNDED_CORNERS_OFF },
-	{ 1, LOCALE_COLORMENU_ROUNDED_CORNERS_ON  }
-};
-
-/* color settings menu */
-void CNeutrinoApp::InitColorSettings(CMenuWidget &colorSettings, CMenuWidget &fontSettings)
-{
-	addMenueIntroItems(colorSettings);
-
-	CMenuWidget *colorSettings_Themes = new CMenuWidget(LOCALE_COLORTHEMEMENU_HEAD, NEUTRINO_ICON_SETTINGS);
-	InitColorThemesSettings(*colorSettings_Themes);
-
-	colorSettings.addItem( new CMenuForwarder(LOCALE_COLORMENU_THEMESELECT, true, NULL, colorSettings_Themes, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED) );
-	CMenuWidget *colorSettings_menuColors = new CMenuWidget(LOCALE_COLORMENUSETUP_HEAD, NEUTRINO_ICON_SETTINGS, 400, 400);
-	InitColorSettingsMenuColors(*colorSettings_menuColors);
-	colorSettings.addItem( new CMenuForwarder(LOCALE_COLORMENU_MENUCOLORS, true, NULL, colorSettings_menuColors, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN) );
-
-	CMenuWidget *colorSettings_statusbarColors = new CMenuWidget(LOCALE_COLORMENU_STATUSBAR, NEUTRINO_ICON_SETTINGS);
-	InitColorSettingsStatusBarColors(*colorSettings_statusbarColors);
-	colorSettings.addItem( new CMenuForwarder(LOCALE_COLORSTATUSBAR_HEAD, true, NULL, colorSettings_statusbarColors, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW) );
-
-	colorSettings.addItem(GenericMenuSeparatorLine);
-	colorSettings.addItem( new CMenuForwarder(LOCALE_COLORMENU_FONT, true, NULL, &fontSettings, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE) );
-	CMenuWidget *colorSettings_timing = new CMenuWidget(LOCALE_COLORMENU_TIMING, NEUTRINO_ICON_SETTINGS);
-	InitColorSettingsTiming(*colorSettings_timing);
-	colorSettings.addItem(new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL, colorSettings_timing, NULL, CRCInput::RC_1));
-
-	colorSettings.addItem(GenericMenuSeparatorLine);
-#ifdef HAVE_DBOX_HARDWARE
-	if ((g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) || (g_info.box_Type == CControld::TUXBOX_MAKER_SAGEM)) // eNX
-	{
-		CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
-		colorSettings.addItem(oj);
-	}
-	else // GTX, ...
-	{
-		CAlphaSetup* chAlphaSetup = new CAlphaSetup(LOCALE_COLORMENU_GTX_ALPHA, &g_settings.gtx_alpha1, &g_settings.gtx_alpha2);
-		colorSettings.addItem( new CMenuForwarder(LOCALE_COLORMENU_GTX_ALPHA, true, NULL, chAlphaSetup, NULL, CRCInput::RC_2));
-	}
-#else // dream and TD
-	CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
-	colorSettings.addItem(oj);
-#endif
-	CMenuOptionChooser* ojc = new CMenuOptionChooser(LOCALE_COLORMENU_ROUNDED_CORNERS, &g_settings.rounded_corners, COLORMENU_CORNERSETTINGS_TYPE_OPTIONS, COLORMENU_CORNERSETTINGS_TYPE_OPTION_COUNT, true );
-	colorSettings.addItem(ojc);
-}
-
-/* theme settings menu */
-void CNeutrinoApp::InitColorThemesSettings(CMenuWidget &colorSettings_Themes)
-{
-	addMenueIntroItems(colorSettings_Themes);
-	colorSettings_Themes.addItem(new CMenuForwarder(LOCALE_COLORTHEMEMENU_NEUTRINO_THEME, true, NULL, this, "theme_neutrino", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-
-	CThemes* cthemes = new CThemes();
-	colorSettings_Themes.addItem( new CMenuForwarder(LOCALE_COLORTHEMEMENU_HEAD2, true, NULL, cthemes, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-
-}
-
-/* color chooser menu */
-/* menu colors */
-void CNeutrinoApp::InitColorSettingsMenuColors(CMenuWidget &colorSettings_menuColors)
-{
-	colorSettings_menuColors.addItem(GenericMenuSeparator);
-	colorSettings_menuColors.addItem(GenericMenuBack);
-
-	CColorChooser* chHeadcolor = new CColorChooser(LOCALE_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Head_red, &g_settings.menu_Head_green, &g_settings.menu_Head_blue,
-																  &g_settings.menu_Head_alpha, colorSetupNotifier);
-	CColorChooser* chHeadTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Head_Text_red, &g_settings.menu_Head_Text_green, &g_settings.menu_Head_Text_blue,
-																		NULL, colorSetupNotifier);
-	CColorChooser* chContentcolor = new CColorChooser(LOCALE_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_red, &g_settings.menu_Content_green, &g_settings.menu_Content_blue,
-																	  &g_settings.menu_Content_alpha, colorSetupNotifier);
-	CColorChooser* chContentTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_Text_red, &g_settings.menu_Content_Text_green, &g_settings.menu_Content_Text_blue,
-																			NULL, colorSetupNotifier);
-	CColorChooser* chContentSelectedcolor = new CColorChooser(LOCALE_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_Selected_red, &g_settings.menu_Content_Selected_green, &g_settings.menu_Content_Selected_blue,
-																				 &g_settings.menu_Content_Selected_alpha, colorSetupNotifier);
-	CColorChooser* chContentSelectedTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_Selected_Text_red, &g_settings.menu_Content_Selected_Text_green, &g_settings.menu_Content_Selected_Text_blue,
-																					  NULL, colorSetupNotifier);
-	CColorChooser* chContentInactivecolor = new CColorChooser(LOCALE_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_inactive_red, &g_settings.menu_Content_inactive_green, &g_settings.menu_Content_inactive_blue,
-																				 &g_settings.menu_Content_inactive_alpha, colorSetupNotifier);
-	CColorChooser* chContentInactiveTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_inactive_Text_red, &g_settings.menu_Content_inactive_Text_green, &g_settings.menu_Content_inactive_Text_blue,
-																					  NULL, colorSetupNotifier);
-	colorSettings_menuColors.addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUHEAD));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chHeadcolor ));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chHeadTextcolor ));
-	colorSettings_menuColors.addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chContentcolor ));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chContentTextcolor ));
-	colorSettings_menuColors.addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT_INACTIVE));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chContentInactivecolor ));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chContentInactiveTextcolor));
-	colorSettings_menuColors.addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT_SELECTED));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chContentSelectedcolor ));
-	colorSettings_menuColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chContentSelectedTextcolor ));
-}
-
-/* infobar colors */
-void CNeutrinoApp::InitColorSettingsStatusBarColors(CMenuWidget &colorSettings_statusbarColors)
-{
-	colorSettings_statusbarColors.addItem(GenericMenuSeparator);
-
-	colorSettings_statusbarColors.addItem(GenericMenuBack);
-
-	CColorChooser* chInfobarcolor = new CColorChooser(LOCALE_COLORMENU_BACKGROUND_HEAD, &g_settings.infobar_red, &g_settings.infobar_green, &g_settings.infobar_blue,
-																	  &g_settings.infobar_alpha, colorSetupNotifier);
-	CColorChooser* chInfobarTextcolor = new CColorChooser(LOCALE_COLORMENU_TEXTCOLOR_HEAD, &g_settings.infobar_Text_red, &g_settings.infobar_Text_green, &g_settings.infobar_Text_blue,
-																			NULL, colorSetupNotifier);
-
-	colorSettings_statusbarColors.addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORSTATUSBAR_TEXT));
-	colorSettings_statusbarColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_BACKGROUND, true, NULL, chInfobarcolor ));
-	colorSettings_statusbarColors.addItem( new CMenuForwarder(LOCALE_COLORMENU_TEXTCOLOR, true, NULL, chInfobarTextcolor ));
-}
-
-/* OSD timeouts */
-void CNeutrinoApp::InitColorSettingsTiming(CMenuWidget &colorSettings_timing)
-{
-	/* note: SetupTiming() is already called in CNeutrinoApp::run */
-
-	addMenueIntroItems(colorSettings_timing);
-
-	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
-	{
-		CStringInput * colorSettings_timing_item = new CStringInput(timing_setting_name[i], g_settings.timing_string[i], 3, LOCALE_TIMING_HINT_1, LOCALE_TIMING_HINT_2, "0123456789 ", &timingsettingsnotifier);
-		colorSettings_timing.addItem(new CMenuForwarder(timing_setting_name[i], true, g_settings.timing_string[i], colorSettings_timing_item));
-	}
-
-	colorSettings_timing.addItem(GenericMenuSeparatorLine);
-	colorSettings_timing.addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, "osd.def"));
-}
- 
 
 #define MAINMENU_RECORDING_OPTION_COUNT 2
 const CMenuOptionChooser::keyval MAINMENU_RECORDING_OPTIONS[MAINMENU_RECORDING_OPTION_COUNT] =

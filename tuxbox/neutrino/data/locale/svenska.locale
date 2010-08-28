@@ -211,18 +211,6 @@ colorchooser.alpha alpha
 colorchooser.blue blå
 colorchooser.green grön
 colorchooser.red röd
-colormenu.background Bakgrund
-colormenu.background_head Bakgrund
-colormenu.fade Tona ner menyer
-colormenu.font Font storlek
-colormenu.gtx_alpha Genomskinlighet (GTX)
-colormenu.head Färginställningar
-colormenu.menucolors Menyfärger
-colormenu.statusbar Infobalk
-colormenu.textcolor Textfärg
-colormenu.textcolor_head Textfärg
-colormenu.themeselect välj tema
-colormenu.timing OSD Tajming
 colormenusetup.head Menyfärger
 colormenusetup.menucontent Fönsterinnehåll
 colormenusetup.menucontent_inactive Fönsterinnehåll inaktivt
@@ -404,7 +392,6 @@ infoviewer.noepg EPG inte tillgänglig
 infoviewer.notavailable Kanal inte tillgänglig
 infoviewer.selecttime Tidsval
 infoviewer.streaminfo Innehåller
-infoviewer.subchan_disp_pos Underkanal visning
 infoviewer.subservice Underkanaler
 infoviewer.waittime Väntar på tid...
 ipsetup.hint_1 Använd 0..9, eller använd Up/Ned,
@@ -492,13 +479,13 @@ mainmenu.shutdown Avstängning
 mainmenu.sleeptimer Sovtimer
 mainmenu.tvmode TV-läge
 mainsettings.audio Ljud
-mainsettings.colors Färger / teman / font
 mainsettings.head Inställningar
 mainsettings.keybinding Knappkonfiguration
 mainsettings.language Språk
-mainsettings.lcd LCD-skärm
+mainsettings.lcd LCD
 mainsettings.misc Extra inställningar
 mainsettings.network Nätverk
+mainsettings.osd Färger / teman / font
 mainsettings.recording Inspelning
 mainsettings.savesettingsnow spara inställningar nu
 mainsettings.savesettingsnow_hint Sparar inställningar,\nvänta...
@@ -519,7 +506,6 @@ miscsettings.fb_destination Expert! Bootkonsol
 miscsettings.general Generellt
 miscsettings.head Extra inställningar
 miscsettings.hwsections använd hårdvarusektioner
-miscsettings.infobar_sat_display Satellitinfo på Infobalken
 miscsettings.noaviawatchdog aktivera AVIA watchdog
 miscsettings.noenxwatchdog aktivera eNX watchdog
 miscsettings.pmtupdate aktivera pmt uppdatering
@@ -531,7 +517,6 @@ miscsettings.shutdown_real_rcdelay Fördröjd avstängning
 miscsettings.sptsmode använd spts läge
 miscsettings.startbhdriver ladda BH-Mode drivare
 miscsettings.tuxtxt_cache mellanlagring av TextTV-sidor
-miscsettings.virtual_zap_mode Virtuell zapp vid infobalk
 motorcontrol.head Motorinstallation
 movieplayer.bookmark Bokmärken
 movieplayer.bookmarkname Bokmärkesnamn
@@ -622,6 +607,21 @@ options.off av
 options.on på
 options.on.without_messages (tyst) på
 options.serial seriell
+osdsettings.colormenu.background Bakgrund
+osdsettings.colormenu.background_head Bakgrund
+osdsettings.colormenu.fade Tona ner menyer
+osdsettings.colormenu.font Font storlek
+osdsettings.colormenu.gtx_alpha Genomskinlighet (GTX)
+osdsettings.colormenu.head Färginställningar
+osdsettings.colormenu.menucolors Menyfärger
+osdsettings.colormenu.statusbar Infobalk
+osdsettings.colormenu.textcolor Textfärg
+osdsettings.colormenu.textcolor_head Textfärg
+osdsettings.colormenu.timing OSD Tajming
+osdsettings.infobar_sat_display Satellitinfo på Infobalken
+osdsettings.infobar_virtual_zap_mode Virtuell zapp vid infobalk
+osdsettings.infoviewer.subchan_disp_pos Underkanal visning
+osdsettings.themeselect välj tema
 parentallock.changepin ändra PIN-kod
 parentallock.changepin_hint1 Ange PIN-kod för förädralåset!
 parentallock.changetolocked är låsta bouquets

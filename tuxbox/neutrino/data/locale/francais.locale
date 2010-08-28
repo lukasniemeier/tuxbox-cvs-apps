@@ -205,18 +205,6 @@ colorchooser.alpha alpha
 colorchooser.blue bleu
 colorchooser.green vert
 colorchooser.red rouge
-colormenu.background Arrière plan
-colormenu.background_head Arrière plan
-colormenu.fade Fade menus
-colormenu.font Font taille
-colormenu.gtx_alpha Transparence (GTX)
-colormenu.head Color Régalges
-colormenu.menucolors Couleur de Menu
-colormenu.statusbar Barre d'info
-colormenu.textcolor Couleur du texte
-colormenu.textcolor_head Couleur de texte
-colormenu.themeselect sélectionner le thème
-colormenu.timing Temporisation OSD
 colormenusetup.head Couleurs du Menu
 colormenusetup.menucontent Contenu Fenêtre
 colormenusetup.menucontent_inactive Contenue Fenêtre inactive
@@ -479,13 +467,13 @@ mainmenu.shutdown Eteindre
 mainmenu.sleeptimer Veille
 mainmenu.tvmode Mode TV
 mainsettings.audio Audio
-mainsettings.colors Coleurs / thèmes / Caractères
 mainsettings.head Réglages
 mainsettings.keybinding Réglage touche
 mainsettings.language Langue
 mainsettings.lcd Ecran à Cristaux Liquides (LCD)
 mainsettings.misc Réglage divers
 mainsettings.network Réseau
+mainsettings.osd Coleurs / thèmes / Caractères
 mainsettings.recording Enregistrement
 mainsettings.savesettingsnow Sauvegarder réglage maintenant
 mainsettings.savesettingsnow_hint Sauvegarde de réglage,\nPatientez SVP...
@@ -506,8 +494,6 @@ miscsettings.fb_destination Console de démarrage Expert!
 miscsettings.general Général
 miscsettings.head Réglages divers
 miscsettings.hwsections Utiliser les sections hardware
-miscsettings.infobar_sat_display Affichage du satellite dans la barre d'infos
-miscsettings.infobar_show EPG Info
 miscsettings.pmtupdate enable m.à.j pmt
 miscsettings.shutdown_real Permettre Veille
 miscsettings.shutdown_real_rcdelay Arrêt retardé
@@ -576,6 +562,20 @@ options.null null
 options.off off
 options.on on
 options.serial série
+osdsettings.colormenu.background Arrière plan
+osdsettings.colormenu.background_head Arrière plan
+osdsettings.colormenu.fade Fade menus
+osdsettings.colormenu.font Font taille
+osdsettings.colormenu.gtx_alpha Transparence (GTX)
+osdsettings.colormenu.head Color Régalges
+osdsettings.colormenu.menucolors Couleur de Menu
+osdsettings.colormenu.statusbar Barre d'info
+osdsettings.colormenu.textcolor Couleur du texte
+osdsettings.colormenu.textcolor_head Couleur de texte
+osdsettings.colormenu.timing Temporisation OSD
+osdsettings.infobar_sat_display Affichage du satellite dans la barre d'infos
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect sélectionner le thème
 parentallock.changepin changer PIN code
 parentallock.changepin_hint1 Entrer votre code de protection(PIN) ici!
 parentallock.changetolocked pour les bouquets bloquer

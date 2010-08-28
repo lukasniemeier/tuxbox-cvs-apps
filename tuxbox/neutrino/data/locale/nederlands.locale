@@ -181,18 +181,6 @@ colorchooser.alpha alpha
 colorchooser.blue blauw
 colorchooser.green groen
 colorchooser.red rood
-colormenu.background Achtergrond
-colormenu.background_head Achtergrond
-colormenu.fade Fade menu's
-colormenu.font lettergrootte
-colormenu.gtx_alpha Transparantheid (GTX)
-colormenu.head Kleur Settings
-colormenu.menucolors Menu kleuren
-colormenu.statusbar Infobar
-colormenu.textcolor Tekstkleur
-colormenu.textcolor_head Tekstkleur
-colormenu.themeselect selecteer onderwerp
-colormenu.timing OSD Tijd
 colormenusetup.head Menu Kleuren
 colormenusetup.menucontent Vensterinhoud
 colormenusetup.menucontent_inactive Vensterinhoud niet actief
@@ -432,13 +420,13 @@ mainmenu.shutdown Uitschakelen
 mainmenu.sleeptimer SleepTimer
 mainmenu.tvmode TV-Mode
 mainsettings.audio Geluid
-mainsettings.colors Kleuren/lettertype
 mainsettings.head Settings
 mainsettings.keybinding Key Setup
 mainsettings.language Taal
 mainsettings.lcd LCD-display
 mainsettings.misc Overige settings
 mainsettings.network Netwerk
+mainsettings.osd Kleuren/lettertype
 mainsettings.recording Opnemen
 mainsettings.savesettingsnow Bewaar de settings nu
 mainsettings.savesettingsnow_hint Even geduld, settings worden bewaard
@@ -459,8 +447,6 @@ miscsettings.fb_destination Expert! Boot-Console
 miscsettings.general Algemeen
 miscsettings.head Overige settings
 miscsettings.hwsections Gebruik hardware secties
-miscsettings.infobar_sat_display Satelliet display in infobar
-miscsettings.infobar_show EPG Info
 miscsettings.shutdown_real standby
 miscsettings.shutdown_real_rcdelay vertraagde shutdown
 miscsettings.sptsmode Gebruik spts-mode
@@ -529,6 +515,20 @@ options.null Null
 options.off Uit
 options.on Aan
 options.serial Serieel
+osdsettings.colormenu.background Achtergrond
+osdsettings.colormenu.background_head Achtergrond
+osdsettings.colormenu.fade Fade menu's
+osdsettings.colormenu.font lettergrootte
+osdsettings.colormenu.gtx_alpha Transparantheid (GTX)
+osdsettings.colormenu.head Kleur Settings
+osdsettings.colormenu.menucolors Menu kleuren
+osdsettings.colormenu.statusbar Infobar
+osdsettings.colormenu.textcolor Tekstkleur
+osdsettings.colormenu.textcolor_head Tekstkleur
+osdsettings.colormenu.timing OSD Tijd
+osdsettings.infobar_sat_display Satelliet display in infobar
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect selecteer onderwerp
 parentallock.changepin verander PIN code
 parentallock.changepin_hint1 Geef hier de nieuwe PIN-code in!
 parentallock.changetolocked on locked bouquets
@@ -647,7 +647,7 @@ streaminfo.resolution Resolutie
 streaming.buffer_overflow De opname is afgebroken \nomdat doelmap niet kon geopend worden.
 streaming.busy Een of meerdere opnames zijn bezig.\nAls U deze oodschap krijgt en er is geen opname\nbezig herstart dan Neutrino.
 streaming.dir_not_writable De opnamefolder is niet bereikbaar.\nOpnemen zal niet gaan.
-streaming.success De opname is met succes beëindigd
+streaming.success De opname is met succes beï¿½indigd
 streaming.write_error De opname is afgebroken \nomdat er een schrijffout opgetreden is.
 streaming.write_error_open De opname is afgebroken \nomdat de doelmap niet kon geopend worden.
 streamingmenu.352x288 352x288

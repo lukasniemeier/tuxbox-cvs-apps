@@ -230,21 +230,6 @@ colorchooser.alpha alpha
 colorchooser.blue blau
 colorchooser.green grün
 colorchooser.red rot
-colormenu.background Hintergrundfarbe
-colormenu.background_head Hintergrundfarbe
-colormenu.fade Menüs faden
-colormenu.font Schriftgröße
-colormenu.gtx_alpha Transparenz (GTX)
-colormenu.head Farb-Einstellungen
-colormenu.menucolors Menüfarben
-colormenu.rounded_corners Eckendarstellung
-colormenu.rounded_corners_off eckig
-colormenu.rounded_corners_on abgerundet
-colormenu.statusbar Statusbalken
-colormenu.textcolor Textfarbe
-colormenu.textcolor_head Textfarbe
-colormenu.themeselect Theme auswählen
-colormenu.timing OSD Timeouts
 colormenusetup.head Menüfarben
 colormenusetup.menucontent Fensterinhalt
 colormenusetup.menucontent_inactive Fensterinhalt deaktiviert
@@ -529,7 +514,7 @@ fontmenu.channellist Kanalliste
 fontmenu.epg EPG
 fontmenu.eventlist Eventlist
 fontmenu.gamelist Gameliste
-fontmenu.head Schriftgrössen Einstellungen
+fontmenu.head Schriftgrössen
 fontmenu.infobar Infobar
 fontsize.channel_num_zap Direktauswahl
 fontsize.channellist Kanalliste
@@ -599,7 +584,6 @@ infoviewer.notavailable Kanal (zur Zeit) nicht verfügbar.
 infoviewer.now jetzt
 infoviewer.selecttime Startzeiten
 infoviewer.streaminfo Features
-infoviewer.subchan_disp_pos Unterkanalanzeige
 infoviewer.subchan_portal Portal
 infoviewer.subservice Bildregie
 infoviewer.waittime Warte auf Uhrzeit...
@@ -709,14 +693,14 @@ mainmenu.sleeptimer SleepTimer
 mainmenu.tvmode TV-Modus
 mainmenu.upnpbrowser UPnP Browser
 mainsettings.audio Audio
-mainsettings.colors Farben / Themes / Schrift
 mainsettings.driver Treiber- und Bootoptionen
 mainsettings.head Einstellungen
-mainsettings.keybinding Tasten Einstellungen
+mainsettings.keybinding Tasten
 mainsettings.language Sprache
-mainsettings.lcd LC-Display
+mainsettings.lcd LCD
 mainsettings.misc Diverse Einstellungen
 mainsettings.network Netzwerk
+mainsettings.osd OSD
 mainsettings.recording Aufnahme
 mainsettings.savesettingsnow Einstellungen jetzt speichern
 mainsettings.savesettingsnow_hint Einstellungen werden jetzt gespeichert,\nbitte warten...
@@ -736,10 +720,6 @@ messagebox.warning Warnung!
 messagebox.yes Ja
 miscsettings.channellist Kanalliste
 miscsettings.channellist_epgtext_align Ausrichtung des Programmtextes
-miscsettings.channellogo Senderlogo
-miscsettings.channellogo_background Hintergrund
-miscsettings.channellogo_logodir Logoverzeichnis
-miscsettings.channellogo_show Anzeige
 miscsettings.epg_cache EPG-Cache (Tage)
 miscsettings.epg_cache_hint1 EPG-Daten im Voraus cachen?
 miscsettings.epg_cache_hint2 Angabe in Tagen
@@ -756,17 +736,12 @@ miscsettings.epg_old_events_hint1 Wie lange abgelaufene EPG-Daten aufheben?
 miscsettings.epg_old_events_hint2 Angabe in Stunden
 miscsettings.general Allgemein
 miscsettings.head Diverse Einstellungen
-miscsettings.infobar Infobar
-miscsettings.infobar_sat_display Satellitenanzeige
-miscsettings.infobar_show Info bei EPG Änderung
 miscsettings.osd_specials OSD-Extras
-miscsettings.radiotext Radiotext
 miscsettings.rc_standby_off_with Standby aus mit
 miscsettings.rc_standby_off_with_power Power
 miscsettings.rc_standby_off_with_power_home Power, Home
 miscsettings.rc_standby_off_with_power_home_ok Power, Home, OK
 miscsettings.rc_standby_off_with_power_ok Power, OK
-miscsettings.show_mute_icon Mute-Icon bei Lautstärke 0
 miscsettings.show_mute_icon_no nein
 miscsettings.show_mute_icon_not_in_ac3mode nicht bei AC3
 miscsettings.show_mute_icon_yes ja 
@@ -779,8 +754,6 @@ miscsettings.standby_save_power Standby Stromsparmodus (exp.)
 miscsettings.startmode Startmodus
 miscsettings.startmode_restore Letzter Modus
 miscsettings.tuxtxt_cache Videotext zwischenspeichern
-miscsettings.virtual_zap_mode Virtual Zap
-miscsettings.volumebar_disp_pos Lautstärkeanzeige
 motorcontrol.decrease_motor_position verringere Motor Position (a)
 motorcontrol.decrease_step_size Decrease Step Size (c)
 motorcontrol.disable_soft_limits Disable (soft) Limits
@@ -1055,6 +1028,33 @@ options.off aus
 options.on ein
 options.on.without_messages (keine Info) ein
 options.serial seriell
+osdsettings.colormenu.background Hintergrundfarbe
+osdsettings.colormenu.background_head Hintergrundfarbe
+osdsettings.colormenu.fade Menüs faden
+osdsettings.colormenu.font Schriftgröße
+osdsettings.colormenu.gtx_alpha Transparenz (GTX)
+osdsettings.colormenu.head Farben
+osdsettings.colormenu.menucolors Menüfarben
+osdsettings.colormenu.statusbar Statusbalken
+osdsettings.colormenu.textcolor Textfarbe
+osdsettings.colormenu.textcolor_head Textfarbe
+osdsettings.colormenu.timing Timeouts
+osdsettings.infobar Infobar
+osdsettings.infobar_channellogo Senderlogo
+osdsettings.infobar_channellogo_background Hintergrund
+osdsettings.infobar_channellogo_logodir Logoverzeichnis
+osdsettings.infobar_channellogo_show Anzeige
+osdsettings.infobar_sat_display Satellitenanzeige
+osdsettings.infobar_show Info bei EPG Änderung
+osdsettings.infobar_virtual_zap_mode Virtual Zap
+osdsettings.infoviewer.radiotext Radiotext
+osdsettings.infoviewer.subchan_disp_pos Unterkanalanzeige
+osdsettings.rounded_corners Eckendarstellung
+osdsettings.rounded_corners_off eckig
+osdsettings.rounded_corners_on abgerundet
+osdsettings.show_mute_icon Mute-Icon bei Lautstärke 0
+osdsettings.themeselect Theme auswählen
+osdsettings.volumebar_disp_pos Lautstärkeanzeige
 parentallock.changepin PIN-Code festlegen
 parentallock.changepin_hint1 Geben Sie hier Ihren neuen PIN-Code ein!
 parentallock.changetolocked Bei vorgesperrten Bouquets
@@ -1449,13 +1449,13 @@ timersettings.zapto_safety_time_before.hint_2 des jeweiligen Timers abgezogen we
 timing.chanlist Kanalliste
 timing.epg Epg
 timing.filebrowser Filebrowser
-timing.head OSD Timeouts
+timing.head Timeouts
 timing.hint_1 Einblendzeit in Sek., die das OSD auf dem TV
 timing.hint_2 angezeigt wird (permanentes Einblenden mit 0.)
 timing.infobar Infobar
 timing.infobar_movieplayer Infobar/Filmwiedergabe
 timing.infobar_radio Infobar/Radio
-timing.menu Menu
+timing.menu Menü
 timing.numericzap Umschalten mit Zifferntasten
 ucodecheck.avia500 Avia 500
 ucodecheck.avia600 Avia 600
@@ -1481,7 +1481,7 @@ videomenu.csync Sync.-Korrektur
 videomenu.head Video
 videomenu.osd OSD
 videomenu.rgb_centering RGB-Zentrierung
-videomenu.screensetup OSD-Bereich einstellen
+videomenu.screensetup OSD-Bereich
 videomenu.tv-scart TV Scart
 videomenu.vcr-scart VCR Scart
 videomenu.vcrsignal VCR-Ausgang Signalart

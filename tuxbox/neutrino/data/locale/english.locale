@@ -230,21 +230,6 @@ colorchooser.alpha alpha
 colorchooser.blue blue
 colorchooser.green green
 colorchooser.red red
-colormenu.background Background
-colormenu.background_head Background
-colormenu.fade Fade Menus
-colormenu.font Font Size
-colormenu.gtx_alpha Transparency (GTX)
-colormenu.head Color Settings
-colormenu.menucolors Menu Colors
-colormenu.rounded_corners Shape of corners
-colormenu.rounded_corners_off angular
-colormenu.rounded_corners_on rounded
-colormenu.statusbar Infobar
-colormenu.textcolor Textcolor
-colormenu.textcolor_head Textcolor
-colormenu.themeselect Select Theme
-colormenu.timing OSD Timing
 colormenusetup.head Menu Colors
 colormenusetup.menucontent Window-Content
 colormenusetup.menucontent_inactive Window-Content inactive
@@ -599,7 +584,6 @@ infoviewer.notavailable Channel not available
 infoviewer.now now
 infoviewer.selecttime Timeselection
 infoviewer.streaminfo Features
-infoviewer.subchan_disp_pos Subchannel Display
 infoviewer.subchan_portal Portal
 infoviewer.subservice Subservices
 infoviewer.waittime Waiting for time...
@@ -709,14 +693,14 @@ mainmenu.sleeptimer SleepTimer
 mainmenu.tvmode TV-Mode
 mainmenu.upnpbrowser UPnP Browser
 mainsettings.audio Audio
-mainsettings.colors Colors / Themes / Font
 mainsettings.driver Driver & Boot
 mainsettings.head Settings
 mainsettings.keybinding Keybinding
 mainsettings.language Language
-mainsettings.lcd LC-Display
+mainsettings.lcd LCD
 mainsettings.misc Miscellaneous
 mainsettings.network Network
+mainsettings.osd OSD
 mainsettings.recording Recording
 mainsettings.savesettingsnow save settings now
 mainsettings.savesettingsnow_hint Saving settings,\nplease wait...
@@ -736,10 +720,6 @@ messagebox.warning Warning!
 messagebox.yes Yes
 miscsettings.channellist Channellist
 miscsettings.channellist_epgtext_align Programtext Align
-miscsettings.channellogo Channellogo
-miscsettings.channellogo_background Background
-miscsettings.channellogo_logodir Logo directory
-miscsettings.channellogo_show Show
 miscsettings.epg_cache EPG-Cache (Days)
 miscsettings.epg_cache_hint1 How long will EPG-Data in the future cached?
 miscsettings.epg_cache_hint2 Set in days.
@@ -756,17 +736,12 @@ miscsettings.epg_old_events_hint1 How long will EPG-Data be stored after they ti
 miscsettings.epg_old_events_hint2 Set in hours
 miscsettings.general General
 miscsettings.head Miscellaneous Settings
-miscsettings.infobar Infobar
-miscsettings.infobar_sat_display Satellite display
-miscsettings.infobar_show EPG Info
 miscsettings.osd_specials OSD-Specials
-miscsettings.radiotext Radiotext
 miscsettings.rc_standby_off_with Standby off with
 miscsettings.rc_standby_off_with_power Power
 miscsettings.rc_standby_off_with_power_home Power, Home
 miscsettings.rc_standby_off_with_power_home_ok Power, Home, OK
 miscsettings.rc_standby_off_with_power_ok Power, OK
-miscsettings.show_mute_icon Mute-Icon on volume 0
 miscsettings.show_mute_icon_no no
 miscsettings.show_mute_icon_not_in_ac3mode not in AC3 mode
 miscsettings.show_mute_icon_yes yes
@@ -779,8 +754,6 @@ miscsettings.standby_save_power Standby power save mode (exp.)
 miscsettings.startmode Startmode
 miscsettings.startmode_restore Restore last mode
 miscsettings.tuxtxt_cache TuxText Cache
-miscsettings.virtual_zap_mode Virtual Zap
-miscsettings.volumebar_disp_pos Volumebar
 motorcontrol.decrease_motor_position Decrease Motor Position (a)
 motorcontrol.decrease_step_size Decrease Step Size (c)
 motorcontrol.disable_soft_limits Disable (soft) Limits
@@ -1055,6 +1028,33 @@ options.off off
 options.on on
 options.on.without_messages (w/o msgs.) on
 options.serial serial
+osdsettings.colormenu.background Background
+osdsettings.colormenu.background_head Background
+osdsettings.colormenu.fade Fade Menus
+osdsettings.colormenu.font Font Size
+osdsettings.colormenu.gtx_alpha Transparency (GTX)
+osdsettings.colormenu.head Colors
+osdsettings.colormenu.menucolors Menu Colors
+osdsettings.colormenu.statusbar Infobar
+osdsettings.colormenu.textcolor Textcolor
+osdsettings.colormenu.textcolor_head Textcolor
+osdsettings.colormenu.timing Timing
+osdsettings.infobar Infobar
+osdsettings.infobar_channellogo Channellogo
+osdsettings.infobar_channellogo_background Background
+osdsettings.infobar_channellogo_logodir Logo directory
+osdsettings.infobar_channellogo_show Show
+osdsettings.infobar_sat_display Satellite display
+osdsettings.infobar_show EPG Info
+osdsettings.infobar_virtual_zap_mode Virtual Zap
+osdsettings.infoviewer.radiotext Radiotext
+osdsettings.infoviewer.subchan_disp_pos Subchannel Display
+osdsettings.rounded_corners Shape of corners
+osdsettings.rounded_corners_off angular
+osdsettings.rounded_corners_on rounded
+osdsettings.show_mute_icon Mute-Icon on volume 0
+osdsettings.themeselect Select Theme
+osdsettings.volumebar_disp_pos Volumebar
 parentallock.changepin change PIN code
 parentallock.changepin_hint1 Enter your new youth protection pin code here!
 parentallock.changetolocked on locked bouquets

@@ -146,18 +146,6 @@ colorchooser.alpha alpha
 colorchooser.blue blau
 colorchooser.green grea
 colorchooser.red rot
-colormenu.background Hintergrundfarb
-colormenu.background_head Hintergrundfarbe
-colormenu.fade Menüs faden
-colormenu.font Schriftgräßn
-colormenu.gtx_alpha Alpha überblendunga
-colormenu.head Farb-Eistellunga
-colormenu.menucolors Menüfarbn
-colormenu.statusbar Statusboikn
-colormenu.textcolor Textfarb
-colormenu.textcolor_head Textfarb
-colormenu.themeselect Theme auswähn
-colormenu.timing OSD Timeouts
 colormenusetup.head Menüfarbn
 colormenusetup.menucontent Fenstainhoit
 colormenusetup.menucontent_inactive Fenstainhoit deaktiviert
@@ -411,13 +399,13 @@ mainmenu.shutdown Ausmacha
 mainmenu.sleeptimer EischlofTimer
 mainmenu.tvmode Fernseh schaugn
 mainsettings.audio Audio
-mainsettings.colors Forbn / Themes
 mainsettings.head Eistellunga
 mainsettings.keybinding Tasdn-Eistellunga
 mainsettings.language Sproch
-mainsettings.lcd LC-Disbläi
+mainsettings.lcd LCD
 mainsettings.misc No a boar Eistellunga
 mainsettings.network Netzwerk
+mainsettings.osd Forbn / Themes
 mainsettings.recording Streamingserva
 mainsettings.savesettingsnow Eistellunga jetz speichan
 mainsettings.savesettingsnow_hint De Eistellunga wern jezt gespeichat,\noan Moment bitte...
@@ -435,8 +423,6 @@ miscsettings.bootinfo Informationa beim Startn zoang
 miscsettings.fb_destination EXPERT! Boot-Konsole
 miscsettings.general Allgemein
 miscsettings.head Diverse Eistellunga
-miscsettings.infobar_sat_display Satelitn Informationsleistn
-miscsettings.infobar_show EPG Info
 miscsettings.shutdown_real bissi ausmacha
 miscsettings.shutdown_real_rcdelay verzögats Ausschoitn
 miscsettings.startbhdriver BH-Mode Treiba lon
@@ -501,6 +487,20 @@ options.null null
 options.off ausmacha
 options.on omacha
 options.serial seriell
+osdsettings.colormenu.background Hintergrundfarb
+osdsettings.colormenu.background_head Hintergrundfarbe
+osdsettings.colormenu.fade Menüs faden
+osdsettings.colormenu.font Schriftgräßn
+osdsettings.colormenu.gtx_alpha Alpha überblendunga
+osdsettings.colormenu.head Farb-Eistellunga
+osdsettings.colormenu.menucolors Menüfarbn
+osdsettings.colormenu.statusbar Statusboikn
+osdsettings.colormenu.textcolor Textfarb
+osdsettings.colormenu.textcolor_head Textfarb
+osdsettings.colormenu.timing OSD Timeouts
+osdsettings.infobar_sat_display Satelitn Informationsleistn
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect Theme auswähn
 parentallock.changepin PIN-Code eistain
 parentallock.changepin_hint1 Gems jetz Eanan PIN-Code ei!
 parentallock.changetolocked Bei vorgsperrde Bouquets

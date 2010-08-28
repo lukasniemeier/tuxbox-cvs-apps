@@ -145,18 +145,6 @@ colorchooser.alpha alpha
 colorchooser.blue blau
 colorchooser.green grien
 colorchooser.red rot
-colormenu.background Hintergrundfarb
-colormenu.background_head Hintergrundfarb
-colormenu.fade Menüs faden
-colormenu.font Schriftgrössi
-colormenu.gtx_alpha Transparänz (GTX)
-colormenu.head Farb-Iischdellige
-colormenu.menucolors Menüfarb
-colormenu.statusbar Statusbalke
-colormenu.textcolor Textfarb
-colormenu.textcolor_head Textfarb
-colormenu.themeselect Theme usswähle
-colormenu.timing OSD Timeouts
 colormenusetup.head Menüfarbe
 colormenusetup.menucontent Fenschderinhalt
 colormenusetup.menucontent_inactive Fenschderinhalt deaktiviert
@@ -410,13 +398,13 @@ mainmenu.shutdown Usschalde
 mainmenu.sleeptimer Schloofschalder
 mainmenu.tvmode TV-Modus
 mainsettings.audio Audio
-mainsettings.colors Farbe / Theme / Schrifd
 mainsettings.head Iischdellige
 mainsettings.keybinding Taste-Iischdellige
 mainsettings.language Sprooch
-mainsettings.lcd LC-Display
+mainsettings.lcd LCD
 mainsettings.misc Diversi Iischdellige
 mainsettings.network Netzwärk
+mainsettings.osd Farbe / Theme / Schrifd
 mainsettings.plugins Plugin Iischdellige
 mainsettings.recording Sdreamingsörfer
 mainsettings.savesettingsnow Iischdellige jetz speichere
@@ -437,8 +425,6 @@ miscsettings.boxtype DBox Hersdeller
 miscsettings.fb_destination EXPERT! Boot-Chonsole
 miscsettings.general Allg'mein
 miscsettings.head Diverse Iischdellige
-miscsettings.infobar_sat_display Infobar Satellite-A'zeig
-miscsettings.infobar_show EPG Info
 miscsettings.shutdown_real Sdändbymodus
 miscsettings.shutdown_real_rcdelay V'rzögerede Shudown
 miscsettings.startbhdriver BH-Mode Triiber lade
@@ -503,6 +489,20 @@ options.null null
 options.off us
 options.on ii
 options.serial säriell
+osdsettings.colormenu.background Hintergrundfarb
+osdsettings.colormenu.background_head Hintergrundfarb
+osdsettings.colormenu.fade Menüs faden
+osdsettings.colormenu.font Schriftgrössi
+osdsettings.colormenu.gtx_alpha Transparänz (GTX)
+osdsettings.colormenu.head Farb-Iischdellige
+osdsettings.colormenu.menucolors Menüfarb
+osdsettings.colormenu.statusbar Statusbalke
+osdsettings.colormenu.textcolor Textfarb
+osdsettings.colormenu.textcolor_head Textfarb
+osdsettings.colormenu.timing OSD Timeouts
+osdsettings.infobar_sat_display Infobar Satellite-A'zeig
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect Theme usswähle
 parentallock.changepin PIN-Code feschdlege
 parentallock.changepin_hint1 Gib de neu PIN-Code ii!
 parentallock.changetolocked Bi vorgsperrte Bouquets

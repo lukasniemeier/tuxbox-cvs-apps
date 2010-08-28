@@ -38,6 +38,8 @@ libneutrino_gui_a_SOURCES = \
 	neutrino_menu.cpp \
 	network_setup.cpp \
 	nfs.cpp \
+	osd_setup.cpp \
+	osdlang_setup.cpp \
 	parentallock_setup.cpp \
 	personalize.cpp \
 	pluginlist.cpp \

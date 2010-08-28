@@ -208,18 +208,6 @@ colorchooser.alpha alpha
 colorchooser.blue blau
 colorchooser.green grüän
 colorchooser.red rot
-colormenu.background Hingergrundfarb
-colormenu.background_head Hingergrundfarb
-colormenu.fade Menüs faden
-colormenu.font Schriftgrössi
-colormenu.gtx_alpha Transparänz (GTX)
-colormenu.head Farb-Ischtöuige
-colormenu.menucolors Menüfarbe
-colormenu.statusbar Schtatusbauke
-colormenu.textcolor Textfarb
-colormenu.textcolor_head Textfarb
-colormenu.themeselect Theme uswähle
-colormenu.timing OSD Timeouts
 colormenusetup.head Menüfarbä
 colormenusetup.menucontent Fäischterinhaut
 colormenusetup.menucontent_inactive Fäischterinhaut deaktiviert
@@ -402,7 +390,6 @@ infoviewer.noepg Kei EPG-Informationä verfüegbar
 infoviewer.notavailable Kanau (zur Zyt) nid verfüägbar
 infoviewer.selecttime Schtartzyte
 infoviewer.streaminfo Features
-infoviewer.subchan_disp_pos Ungerkanauazeig
 infoviewer.subservice Böudregie
 infoviewer.waittime Warte uf d'Uhrzyt...
 ipsetup.hint_1 Benutz 0..9 oder uäche/abä
@@ -487,13 +474,13 @@ mainmenu.shutdown Usschaute
 mainmenu.sleeptimer SleepTimer
 mainmenu.tvmode TV-Modus
 mainsettings.audio Audio
-mainsettings.colors Farbä / Themes / Schrift
 mainsettings.head Ischtöuige
 mainsettings.keybinding Taschtä Ischtöuige
 mainsettings.language Schprooch
-mainsettings.lcd LC-Display
+mainsettings.lcd LCD
 mainsettings.misc Diversi Ischtöuige
 mainsettings.network Netzwärk
+mainsettings.osd Farbä / Themes / Schrift
 mainsettings.recording Ufnahm
 mainsettings.savesettingsnow Ischtöuige jetzt schpichere
 mainsettings.savesettingsnow_hint Ischtöuige wärde jetzt gschpicheret,\nbitte wartä...
@@ -514,8 +501,6 @@ miscsettings.fb_destination EXPERT! Boot-Konsole
 miscsettings.general Augemein
 miscsettings.head Diversi Ischtöuige
 miscsettings.hwsections HW-Sections verwände
-miscsettings.infobar_sat_display Infobar Satelliteazeig
-miscsettings.infobar_show EPG Info
 miscsettings.noaviawatchdog AVIA-Watchdog aktiviere
 miscsettings.noenxwatchdog eNX-Watchdog aktiviere
 miscsettings.pmtupdate PMT Update verwände
@@ -612,6 +597,21 @@ options.null nou
 options.off aus
 options.on ein
 options.serial seriell
+osdsettings.colormenu.background Hingergrundfarb
+osdsettings.colormenu.background_head Hingergrundfarb
+osdsettings.colormenu.fade Menüs faden
+osdsettings.colormenu.font Schriftgrössi
+osdsettings.colormenu.gtx_alpha Transparänz (GTX)
+osdsettings.colormenu.head Farb-Ischtöuige
+osdsettings.colormenu.menucolors Menüfarbe
+osdsettings.colormenu.statusbar Schtatusbauke
+osdsettings.colormenu.textcolor Textfarb
+osdsettings.colormenu.textcolor_head Textfarb
+osdsettings.colormenu.timing OSD Timeouts
+osdsettings.infobar_sat_display Infobar Satelliteazeig
+osdsettings.infobar_show EPG Info
+osdsettings.infoviewer.subchan_disp_pos Ungerkanauazeig
+osdsettings.themeselect Theme uswähle
 parentallock.changepin PIN-Code feschtlege
 parentallock.changepin_hint1 Gib do dä nöi PIN-Code i!
 parentallock.changetolocked Bi vorgschperrte Bouquets

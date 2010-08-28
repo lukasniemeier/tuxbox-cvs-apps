@@ -146,18 +146,6 @@ colorchooser.alpha nasycenie
 colorchooser.blue nieb.
 colorchooser.green ziel.
 colorchooser.red czer.
-colormenu.background Kolor tla
-colormenu.background_head Kolor tla
-colormenu.fade Redukcja kontrastu 
-colormenu.font Czcionka
-colormenu.gtx_alpha Przezroczystosc (GTX)
-colormenu.head Ustawienia kolorów
-colormenu.menucolors Kolory menu
-colormenu.statusbar Listwa statusowa
-colormenu.textcolor Kolor tekstu
-colormenu.textcolor_head Kolor tekstu
-colormenu.themeselect Wybór tematu
-colormenu.timing Czas wyswietlania OSD
 colormenusetup.head Kolory Menu
 colormenusetup.menucontent Zawartosc okien
 colormenusetup.menucontent_inactive Zawartosc okien wylaczona
@@ -397,13 +385,13 @@ mainmenu.shutdown Wylacz
 mainmenu.sleeptimer Wylacznik czasowy
 mainmenu.tvmode Telewizja
 mainsettings.audio Dzwiek
-mainsettings.colors Kolory / Tematy
 mainsettings.head Glówne ustawienia
 mainsettings.keybinding Wybór klawiszy
 mainsettings.language Jezyk
-mainsettings.lcd LCD-ustawienia
+mainsettings.lcd LCD
 mainsettings.misc Inne Ustawienia
 mainsettings.network Siec
+mainsettings.osd Kolory / Tematy
 mainsettings.plugins Dodatki
 mainsettings.recording Nagrywanie
 mainsettings.savesettingsnow Zapisz natychmiast ustawienia
@@ -426,8 +414,6 @@ miscsettings.fb_destination Ekspert! -konsola
 miscsettings.general Glówne
 miscsettings.head Inne Ustawienia
 miscsettings.hwsections HW-Sekcje uzywac
-miscsettings.infobar_sat_display Nazwa satelity na pasku
-miscsettings.infobar_show EPG Info
 miscsettings.shutdown_real Zalacz Standby
 miscsettings.shutdown_real_rcdelay Opóznione wylaczenie
 miscsettings.sptsmode SPTS-Mode drivery ladowac
@@ -492,6 +478,20 @@ options.null brak
 options.off wyl
 options.on wla
 options.serial szeregowy
+osdsettings.colormenu.background Kolor tla
+osdsettings.colormenu.background_head Kolor tla
+osdsettings.colormenu.fade Redukcja kontrastu 
+osdsettings.colormenu.font Czcionka
+osdsettings.colormenu.gtx_alpha Przezroczystosc (GTX)
+osdsettings.colormenu.head Ustawienia kolorów
+osdsettings.colormenu.menucolors Kolory menu
+osdsettings.colormenu.statusbar Listwa statusowa
+osdsettings.colormenu.textcolor Kolor tekstu
+osdsettings.colormenu.textcolor_head Kolor tekstu
+osdsettings.colormenu.timing Czas wyswietlania OSD
+osdsettings.infobar_sat_display Nazwa satelity na pasku
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect Wybór tematu
 parentallock.changepin Zmien kod PIN
 parentallock.changepin_hint1 Wprowadz nowy kod blokady wiekowej!
 parentallock.changetolocked na zabezpieczonych bukietach

@@ -145,18 +145,6 @@ colorchooser.alpha alpha
 colorchooser.blue blu
 colorchooser.green verde
 colorchooser.red rosso
-colormenu.background Colori di fondo
-colormenu.background_head Colori di fondo
-colormenu.fade Fader
-colormenu.font Tipo grandezza Font
-colormenu.gtx_alpha Trasparenza
-colormenu.head Impostazioni-Colori
-colormenu.menucolors Colori Menu
-colormenu.statusbar statusbar
-colormenu.textcolor Colori Testo
-colormenu.textcolor_head Colori di Testo
-colormenu.themeselect Sciegli Tema
-colormenu.timing Timing
 colormenusetup.head Colori Menu
 colormenusetup.menucontent Contenuto Menu
 colormenusetup.menucontent_inactive Contenuto Menu disattivato
@@ -410,13 +398,13 @@ mainmenu.shutdown Spegnere
 mainmenu.sleeptimer SleepTimer
 mainmenu.tvmode Modo-TV
 mainsettings.audio Audio
-mainsettings.colors Colori / Themes
 mainsettings.head Impostazioni
 mainsettings.keybinding Impostazioni-Tasti
 mainsettings.language Lingua
-mainsettings.lcd LC-Display
+mainsettings.lcd LCD
 mainsettings.misc Altre Impostazioni
 mainsettings.network Network
+mainsettings.osd Colori / Themes
 mainsettings.plugins plugins 
 mainsettings.recording Registrazione Streaming
 mainsettings.savesettingsnow Salvare le Impostazioni
@@ -437,8 +425,6 @@ miscsettings.boxtype DBox Costruttore
 miscsettings.fb_destination EXPERT! Boot-Konsole
 miscsettings.general Generale
 miscsettings.head Altre Impostazioni
-miscsettings.infobar_sat_display Infobar Display Satellite
-miscsettings.infobar_show EPG Info
 miscsettings.shutdown_real Modo Standby
 miscsettings.shutdown_real_rcdelay shutdown ritardato
 miscsettings.startbhdriver Carica Driver BH-Mode
@@ -503,6 +489,20 @@ options.null null
 options.off Spegni
 options.on Accendi
 options.serial seriale
+osdsettings.colormenu.background Colori di fondo
+osdsettings.colormenu.background_head Colori di fondo
+osdsettings.colormenu.fade Fader
+osdsettings.colormenu.font Tipo grandezza Font
+osdsettings.colormenu.gtx_alpha Trasparenza
+osdsettings.colormenu.head Impostazioni-Colori
+osdsettings.colormenu.menucolors Colori Menu
+osdsettings.colormenu.statusbar statusbar
+osdsettings.colormenu.textcolor Colori Testo
+osdsettings.colormenu.textcolor_head Colori di Testo
+osdsettings.colormenu.timing Timing
+osdsettings.infobar_sat_display Infobar Display Satellite
+osdsettings.infobar_show EPG Info
+osdsettings.themeselect Sciegli Tema
 parentallock.changepin Sciegliere PIN-Code
 parentallock.changepin_hint1 Inserire il nuovo PIN-Code !
 parentallock.changetolocked Con Bouquets Bloccati

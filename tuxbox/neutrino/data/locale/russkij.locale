@@ -205,18 +205,6 @@ colorchooser.alpha alpha
 colorchooser.blue синий
 colorchooser.green зеленый
 colorchooser.red красный
-colormenu.background Фон
-colormenu.background_head Фон
-colormenu.fade Fade-режим для меню
-colormenu.font Размер шрифта
-colormenu.gtx_alpha Прозрачность (GTX)
-colormenu.head Настройки цвета
-colormenu.menucolors Выбор цветов в меню
-colormenu.statusbar Информационная панель
-colormenu.textcolor Цвет текста
-colormenu.textcolor_head Цвет текста
-colormenu.themeselect Выбор темы
-colormenu.timing Время показа OSD
 colormenusetup.head Выбор цветов в меню
 colormenusetup.menucontent Содержимое окна
 colormenusetup.menucontent_inactive Содержимое окна неактивное
@@ -479,13 +467,13 @@ mainmenu.shutdown Выключить
 mainmenu.sleeptimer Таймер дежурного режима
 mainmenu.tvmode ТВ-каналы
 mainsettings.audio Аудио
-mainsettings.colors Цвета / Темы / Шрифты
 mainsettings.head Настройки
 mainsettings.keybinding Настройки пульта ДУ
 mainsettings.language Языки
 mainsettings.lcd ЖК-дисплей
 mainsettings.misc Прочие настройки
 mainsettings.network Сеть
+mainsettings.osd Цвета / Темы / Шрифты
 mainsettings.recording Запись
 mainsettings.savesettingsnow сохранить изменения
 mainsettings.savesettingsnow_hint Сохранение сделанных изменений.\nвыполняется...
@@ -506,8 +494,6 @@ miscsettings.fb_destination Expert! Boot-Console
 miscsettings.general Основное
 miscsettings.head Прочие настройки
 miscsettings.hwsections HW-Sections использовать
-miscsettings.infobar_sat_display Название спутника на инфопанели
-miscsettings.infobar_show EPG информация
 miscsettings.pmtupdate enable pmt update
 miscsettings.shutdown_real Включить дежурный режим
 miscsettings.shutdown_real_rcdelay Задержка выключения
@@ -577,6 +563,20 @@ options.null null
 options.off выкл.
 options.on вкл.
 options.serial serial
+osdsettings.colormenu.background Фон
+osdsettings.colormenu.background_head Фон
+osdsettings.colormenu.fade Fade-режим для меню
+osdsettings.colormenu.font Размер шрифта
+osdsettings.colormenu.gtx_alpha Прозрачность (GTX)
+osdsettings.colormenu.head Настройки цвета
+osdsettings.colormenu.menucolors Выбор цветов в меню
+osdsettings.colormenu.statusbar Информационная панель
+osdsettings.colormenu.textcolor Цвет текста
+osdsettings.colormenu.textcolor_head Цвет текста
+osdsettings.colormenu.timing Время показа OSD
+osdsettings.infobar_sat_display Название спутника на инфопанели
+osdsettings.infobar_show EPG информация
+osdsettings.themeselect Выбор темы
 parentallock.changepin Изменить PIN-код
 parentallock.changepin_hint1 Введите новый PIN-код.
 parentallock.changetolocked на пакет
