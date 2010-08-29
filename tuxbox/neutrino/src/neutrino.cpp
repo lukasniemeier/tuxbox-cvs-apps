@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1038 2010/08/28 23:06:59 dbt Exp $
+	$Id: neutrino.cpp,v 1.1039 2010/08/29 20:04:42 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3404,7 +3404,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 	const int r = RADIUS_LARGE;	// radius
 	const int b = 4;	// border
 	const int w = 200;	// volume bar width
-	const int nw = 36;	// numbers width
+	const int nw = 40;	// numbers width
 	const int iw = 24;	// icon width
 	const int dx = w + b*2 + iw + nw + r; 	// width + 2*border + icon + numbers + round
 	const int bwx = 20;	// border width x from left and right
