@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1039 2010/08/29 20:04:42 dbt Exp $
+	$Id: neutrino.cpp,v 1.1040 2010/08/30 15:04:05 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3399,12 +3399,12 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 #else
 	const bool lirc = false;
 #endif
-	const int dy = 28; 	// height
+	const int dy = std::max(28, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getHeight()); 	// height
 	// if you want a non-rounded volumebar, set r=0 here...
 	const int r = RADIUS_LARGE;	// radius
 	const int b = 4;	// border
 	const int w = 200;	// volume bar width
-	const int nw = 40;	// numbers width
+	const int nw = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth("100")+2;// 40;	// numbers width
 	const int iw = 24;	// icon width
 	const int dx = w + b*2 + iw + nw + r; 	// width + 2*border + icon + numbers + round
 	const int bwx = 20;	// border width x from left and right
@@ -3459,8 +3459,9 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 		if(pixbuf!= NULL)
 			frameBuffer->SaveScreen(x, y, dx, dy, pixbuf);
 		frameBuffer->paintBoxRel(           x,   y,  dx,     dy, COL_INFOBAR_PLUS_1, r);
-		frameBuffer->paintBoxRel(x+iw+r/2-b/2, y+b, w+b, dy-2*b, COL_SILVER);	
-		frameBuffer->paintIcon("volume.raw", x+b+r/2, y+6, COL_INFOBAR);
+		frameBuffer->paintBoxRel(x+iw+r/2-b/2, y+b, w+b, dy-2*b, COL_SILVER);
+		int icon_h = frameBuffer->getIconHeight(NEUTRINO_ICON_VOLUME);	
+		frameBuffer->paintIcon(NEUTRINO_ICON_VOLUME, x+b+r/2, y+(dy/2)-(icon_h/2), COL_INFOBAR);
 	}
 
 	neutrino_msg_data_t data;

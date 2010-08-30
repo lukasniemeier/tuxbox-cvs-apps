@@ -2,7 +2,7 @@
 #define __gui_widget_icons_h__
 
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/gui/widget/icons.h,v 1.23 2010/07/30 20:48:25 dbt Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/gui/widget/icons.h,v 1.24 2010/08/30 15:04:06 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -99,6 +99,7 @@
 #define NEUTRINO_ICON_VTXT_GREY		"vtxt_gray.raw"
 #define NEUTRINO_ICON_PARTITION		"partition.raw"
 #define NEUTRINO_ICON_LCD		"lcd.raw"
+#define NEUTRINO_ICON_VOLUME		"volume.raw"
 
 #define DUMMY_ICON			"dummy.raw"
 
