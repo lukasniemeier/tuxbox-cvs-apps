@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1040 2010/08/30 15:04:05 dbt Exp $
+	$Id: neutrino.cpp,v 1.1041 2010/09/02 13:48:05 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3399,12 +3399,13 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 #else
 	const bool lirc = false;
 #endif
-	const int dy = std::max(28, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getHeight()); 	// height
+	const int fheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getHeight();
+	const int dy = std::max(28, fheight); 	// height
 	// if you want a non-rounded volumebar, set r=0 here...
 	const int r = RADIUS_LARGE;	// radius
 	const int b = 4;	// border
 	const int w = 200;	// volume bar width
-	const int nw = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth("100")+2;// 40;	// numbers width
+	const int nw = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth("100")+6;// 40;	// numbers width
 	const int iw = 24;	// icon width
 	const int dx = w + b*2 + iw + nw + r; 	// width + 2*border + icon + numbers + round
 	const int bwx = 20;	// border width x from left and right
@@ -3552,7 +3553,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 			frameBuffer->paintBoxRel(x+iw+vol+r/2, y+b+2, w-vol, dy-2*(b+2), COL_INFOBAR_PLUS_1);
 			/* erase the numbers... */
 			frameBuffer->paintBoxRel(x+dx-nw-b-r/2, y+b,     nw, dy-2*b,     COL_INFOBAR_PLUS_1);
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(x+dx-nw-r/2, y+dy, nw, p, COL_INFOBAR_PLUS_1);
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(x+dx-nw-r/2, y+(dy>>1)+(fheight>>1)+1, nw, p, COL_INFOBAR_PLUS_1);
 			if (mode != mode_scart && mode != mode_pic && doShowMuteIcon())
 				AudioMute(true, true);
 		}
