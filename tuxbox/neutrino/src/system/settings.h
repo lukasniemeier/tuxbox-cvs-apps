@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.229 2010/08/28 23:06:59 dbt Exp $
+  $Id: settings.h,v 1.230 2010/09/03 22:47:41 dbt Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -115,9 +115,9 @@ struct SNeutrinoSettings
 		TIMING_EPG         = 2,
 		TIMING_INFOBAR     = 3,
 		TIMING_INFOBAR_RADIO = 4,
-		TIMING_FILEBROWSER = 5,
-		TIMING_NUMERICZAP  = 6,
-		TIMING_INFOBAR_MOVIE = 7
+		TIMING_INFOBAR_MOVIE = 5,
+		TIMING_FILEBROWSER = 6,
+		TIMING_NUMERICZAP  = 7
 	};
 
 	int  timing       [TIMING_SETTING_COUNT]   ;
@@ -512,8 +512,24 @@ struct SNeutrinoSettings
 
 /* some default Values */
 
-extern const int               default_timing     [TIMING_SETTING_COUNT];
-extern const neutrino_locale_t timing_setting_name[TIMING_SETTING_COUNT];
+typedef struct time_settings_t
+{
+	const int default_timing;
+	const neutrino_locale_t name;
+} time_settings_struct_t;
+
+const time_settings_struct_t timing_setting[TIMING_SETTING_COUNT] =
+{
+	{60, 	LOCALE_TIMING_MENU},
+	{60, 	LOCALE_TIMING_CHANLIST},
+	{240,	LOCALE_TIMING_EPG},
+	{6,	LOCALE_TIMING_INFOBAR},
+	{10,	LOCALE_TIMING_INFOBAR_RADIO},
+	{6,	LOCALE_TIMING_INFOBAR_MOVIEPLAYER},
+	{60,	LOCALE_TIMING_FILEBROWSER},
+	{3,	LOCALE_TIMING_NUMERICZAP},
+
+};
 
 // lcdd
 #define DEFAULT_LCD_BRIGHTNESS			0xff

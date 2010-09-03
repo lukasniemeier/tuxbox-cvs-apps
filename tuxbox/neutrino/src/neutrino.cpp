@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1041 2010/09/02 13:48:05 dbt Exp $
+	$Id: neutrino.cpp,v 1.1042 2010/09/03 22:47:41 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -727,7 +727,7 @@ int CNeutrinoApp::loadSetup()
 	strcpy( g_settings.parentallock_pincode, configfile.getString( "parentallock_pincode", "0000" ).c_str() );
 
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
-		g_settings.timing[i] = configfile.getInt32(locale_real_names[timing_setting_name[i]], default_timing[i]);
+		g_settings.timing[i] = configfile.getInt32(locale_real_names[timing_setting[i].name], timing_setting[i].default_timing);
 
 	for (int i = 0; i < SNeutrinoSettings::LCD_SETTING_COUNT; i++)
 		g_settings.lcd_setting[i] = configfile.getInt32(lcd_setting[i].name, lcd_setting[i].default_value);
@@ -1249,7 +1249,7 @@ void CNeutrinoApp::saveSetup()
 
 	//timing
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
-		configfile.setInt32(locale_real_names[timing_setting_name[i]], g_settings.timing[i]);
+		configfile.setInt32(locale_real_names[timing_setting[i].name], g_settings.timing[i]);
 
 	for (int i = 0; i < SNeutrinoSettings::LCD_SETTING_COUNT; i++)
 		configfile.setInt32(lcd_setting[i].name, g_settings.lcd_setting[i]);
@@ -4020,7 +4020,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	else if(actionKey=="osd.def")
 	{
 		for (int i = 0; i < TIMING_SETTING_COUNT; i++)
-			g_settings.timing[i] = default_timing[i];
+			g_settings.timing[i] = timing_setting[i].default_timing;
 
 		SetupTiming();
 	}
