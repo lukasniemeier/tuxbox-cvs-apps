@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.236 2010/08/28 23:06:59 dbt Exp $
+	$Id: neutrino.h,v 1.237 2010/09/04 21:21:58 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -240,7 +240,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		void addMenueIntroItems(CMenuWidget &item);
 
-		void SetupTiming();
 		void SetupFrameBuffer();
 		void SelectAPID();
 		void SelectNVOD();
@@ -253,6 +252,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 	public:
 		void SetupFonts();
+		void SetupTiming();
 		~CNeutrinoApp();
 		const CScanSettings& getScanSettings(){ return scanSettings;};
 		CScanSettings& ScanSettings(){ return scanSettings;};

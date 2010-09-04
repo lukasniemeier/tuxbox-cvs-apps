@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.3 2010/09/04 20:22:23 dbt Exp $
+	$Id: osd_setup.cpp,v 1.4 2010/09/04 21:21:58 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -199,6 +199,14 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		b.Dir_Mode=true;
 		if (b.exec(g_settings.infobar_channel_logodir))
 			strncpy(g_settings.infobar_channel_logodir, b.getSelectedFile()->Name.c_str(), sizeof(g_settings.infobar_channel_logodir)-1);
+		return menu_return::RETURN_REPAINT;
+	}
+	else if(actionKey=="osd.def")
+	{
+		for (int i = 0; i < TIMING_SETTING_COUNT; i++)
+			g_settings.timing[i] = timing_setting[i].default_timing;
+
+		CNeutrinoApp::getInstance()->SetupTiming();
 		return menu_return::RETURN_REPAINT;
 	}
 
@@ -649,3 +657,4 @@ void COsdSetup::showOsdFontSizeSetup()
 	fontSettings->hide();
 	delete fontSettings;
 }
+

@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1043 2010/09/04 20:22:23 dbt Exp $
+	$Id: neutrino.cpp,v 1.1044 2010/09/04 21:21:58 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4016,13 +4016,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			hintBox->hide();
 			delete hintBox;
 		}
-	}
-	else if(actionKey=="osd.def")
-	{
-		for (int i = 0; i < TIMING_SETTING_COUNT; i++)
-			g_settings.timing[i] = timing_setting[i].default_timing;
-
-		SetupTiming();
 	}
 	else if(actionKey == "epgdir")
 	{
