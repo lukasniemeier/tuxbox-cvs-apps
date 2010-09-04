@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.190 2010/07/30 20:54:13 dbt Exp $
+	$Id: setting_helpers.cpp,v 1.191 2010/09/04 13:42:07 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -540,7 +540,7 @@ bool CTimingSettingsNotifier::changeNotify(const neutrino_locale_t OptionName, v
 {
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
 	{
-		if (ARE_LOCALES_EQUAL(OptionName, timing_setting_name[i]))
+		if (ARE_LOCALES_EQUAL(OptionName, timing_setting[i].name))
 		{
 			g_settings.timing[i] = atoi(g_settings.timing_string[i]);
 			return true;
