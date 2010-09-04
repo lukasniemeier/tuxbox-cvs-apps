@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.2 2010/09/03 22:47:41 dbt Exp $
+	$Id: osd_setup.cpp,v 1.3 2010/09/04 20:22:23 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -39,6 +39,7 @@
 #include "themes.h"
 #include "screensetup.h"
 #include "osdlang_setup.h"
+#include "filebrowser.h"
 
 #include <global.h>
 #include <neutrino.h>
@@ -190,6 +191,14 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 
 		fontsizenotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+		return menu_return::RETURN_REPAINT;
+	}
+	else if(actionKey == "channel_logodir")
+	{
+		CFileBrowser b;
+		b.Dir_Mode=true;
+		if (b.exec(g_settings.infobar_channel_logodir))
+			strncpy(g_settings.infobar_channel_logodir, b.getSelectedFile()->Name.c_str(), sizeof(g_settings.infobar_channel_logodir)-1);
 		return menu_return::RETURN_REPAINT;
 	}
 
