@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.15 2010/06/01 20:14:55 dbt Exp $ 
+	$Id: themes.cpp,v 1.16 2010/09/05 21:27:44 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -52,7 +52,7 @@ CThemes::CThemes()
 : themefile('\t')
 {
 	frameBuffer = CFrameBuffer::getInstance();
-	width 	= w_max (550, 100);
+	width 	= w_max (500, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
@@ -140,7 +140,7 @@ void CThemes::Show()
 {
 	std::string file_name = "";
 
-	CMenuWidget themes (LOCALE_COLORTHEMEMENU_HEAD2, NEUTRINO_ICON_SETTINGS, 500);
+	CMenuWidget themes (LOCALE_COLORTHEMEMENU_HEAD2, NEUTRINO_ICON_SETTINGS, width);
 	themes.addItem(GenericMenuSeparator);
 	themes.addItem(GenericMenuBack);
 
