@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.116 2010/09/07 09:22:36 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.117 2010/09/07 09:59:06 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -125,9 +125,7 @@
 *                                                                                     *
 **************************************************************************************/
 
-void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
-								CMenuWidget &mainSettings,
-								CMenuWidget &service)
+void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu, CMenuWidget &mainSettings, CMenuWidget &service)
 {
 	dprintf(DEBUG_DEBUG, "init mainmenue\n");
 
@@ -275,6 +273,11 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 	//10. -- only 10 shortcuts (1-9, 0), the next could be the last also!(10. => 0)
 	//keybindings
 	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_KEYBINDING, true, NULL, new CKeybindSetup(LOCALE_MAINMENU_SETTINGS) , NULL, personalize->setShortcut(shortcut2), NULL, false, g_settings.personalize_keybinding);
+
+#ifdef ENABLE_DRIVE_GUI
+	// ide, hdd, mmc setup
+	shortcut2 += personalize->addItem(mainSettings, LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance(), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_drive_setup_stat); 
+#endif /*ENABLE_DRIVE_GUI*/
 	
 	//blue (audioplayer, pictureviewer, esd, mediaplayer)
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
@@ -345,11 +348,6 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 	// epg status
 	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, DVBInfo, NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_chan_epg_stat);
 
-#ifdef ENABLE_DRIVE_GUI
-	// ide, hdd, mmc setup
-	shortcut3 += personalize->addItem(service, LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance(), NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_drive_setup_stat); 
-#endif /*ENABLE_DRIVE_GUI*/
-
 	// separator
 	if (	g_settings.personalize_reload		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_getplugins	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
@@ -357,9 +355,6 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 		g_settings.personalize_epgrestart	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_ucodecheck	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE
-#ifdef ENABLE_DRIVE_GUI
-		&& g_settings.personalize_drive_setup_stat == CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE
-#endif /*ENABLE_DRIVE_GUI*/
 		);// Stop seperator from appearing when menu entries have been hidden
 	else
 		service.addItem(GenericMenuSeparatorLine); 
