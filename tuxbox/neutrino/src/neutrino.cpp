@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1045 2010/09/07 09:31:53 dbt Exp $
+	$Id: neutrino.cpp,v 1.1046 2010/09/07 09:42:55 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2114,7 +2114,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	dprintf( DEBUG_NORMAL, "menue setup\n");
 	//Main settings
-	CMenuWidget    mainMenu            (LOCALE_MAINMENU_HEAD                 , "mainmenue.raw"       );
+	CMenuWidget    mainMenu            (LOCALE_MAINMENU_HEAD                 , NEUTRINO_ICON_MAIN    );
 	CMenuWidget    mainSettings        (LOCALE_MAINSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS);
 	CMenuWidget    service             (LOCALE_SERVICEMENU_HEAD              , NEUTRINO_ICON_SETTINGS);
 	
