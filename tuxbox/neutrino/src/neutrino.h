@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.237 2010/09/04 21:21:58 dbt Exp $
+	$Id: neutrino.h,v 1.238 2010/09/07 09:31:53 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -179,7 +179,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		bool				skipShutdownTimer;
 
-		CKeySetupNotifier       	*keySetupNotifier;
 		CShutdownCountNotifier		*shutdownCountNotifier;
 		CNetworkSetup 			*networksetup;
 		CNVODChangeExec         	*NVODChanger;
@@ -224,18 +223,9 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void RealRun(CMenuWidget &mainSettings);
 		void InitZapper();
 		void InitServiceSettings(CMenuWidget &);
-		void InitFontSettings(CMenuWidget &fontSettings);
-		void InitDriverSettings(CMenuWidget &);
-		void InitMiscSettings(CMenuWidget &miscSettings,
-								CMenuWidget &miscSettingsGeneral,
-								CMenuWidget &miscSettingsEPGSettings,
-								CMenuWidget &miscSettingsRemoteControl,
-								CMenuWidget &miscSettingsFilebrowser);
-
-		void InitParentalLockSettings(CMenuWidget &);
+// 		void InitParentalLockSettings(CMenuWidget &);
 		void InitMainMenu(CMenuWidget &mainMenu,
 				  CMenuWidget &mainSettings,
-				  CMenuWidget &miscSettings,
 				  CMenuWidget &service);
 
 		void addMenueIntroItems(CMenuWidget &item);
