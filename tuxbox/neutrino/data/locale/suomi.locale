@@ -522,7 +522,6 @@ miscsettings.epg_max_events_hint2 korkeintaan kerätään. (Oletus: 6000)
 miscsettings.epg_old_events Menneiden ohjelmien tiedot
 miscsettings.epg_old_events_hint1 Montako tuntia menneiden ohjelmien 
 miscsettings.epg_old_events_hint2 ohjelmatietoja säilytetään?
-miscsettings.general Yleiset
 miscsettings.head Sekalaiset asetukset
 miscsettings.shutdown_count Automaattinen sammutus
 miscsettings.shutdown_count_hint1 Aika minuutteina jonka jälkeen laite sammuu

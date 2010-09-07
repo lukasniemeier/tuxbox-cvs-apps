@@ -405,7 +405,6 @@ messagebox.yes ja
 miscsettings.bootinfo pokazati informacije pri startovanju
 miscsettings.boxtype proizvođač dbox2
 miscsettings.fb_destination majstori! boot konsola
-miscsettings.general generalno
 miscsettings.head namjestiti razne stvari
 miscsettings.shutdown_real pripravnost
 miscsettings.shutdown_real_rcdelay ugasiti sa zastojanjem

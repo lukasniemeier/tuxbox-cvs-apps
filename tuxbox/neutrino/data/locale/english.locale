@@ -589,6 +589,7 @@ infoviewer.subservice Subservices
 infoviewer.waittime Waiting for time...
 ipsetup.hint_1 Use 0..9, or use Up/Down,
 ipsetup.hint_2 OK saves, Home aborts
+keybindingmenu Keybindings
 keybindingmenu.RC Key repeat-blocker
 keybindingmenu.addrecord add record timer
 keybindingmenu.addrecord_head add record timer
@@ -698,7 +699,7 @@ mainsettings.head Settings
 mainsettings.keybinding Keybinding
 mainsettings.language Language
 mainsettings.lcd LCD
-mainsettings.misc Miscellaneous
+mainsettings.misc Extended Settings
 mainsettings.network Network
 mainsettings.osd OSD
 mainsettings.recording Recording
@@ -734,9 +735,8 @@ miscsettings.epg_max_events_hint2 normaly 6000
 miscsettings.epg_old_events EPG Remove After (hours)
 miscsettings.epg_old_events_hint1 How long will EPG-Data be stored after they timed out?
 miscsettings.epg_old_events_hint2 Set in hours
-miscsettings.general General
-miscsettings.head Miscellaneous Settings
-miscsettings.osd_specials OSD-Specials
+miscsettings.head Extended Settings
+miscsettings.rc_standby_modes Energy
 miscsettings.rc_standby_off_with Standby off with
 miscsettings.rc_standby_off_with_power Power
 miscsettings.rc_standby_off_with_power_home Power, Home

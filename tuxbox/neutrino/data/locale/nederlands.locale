@@ -444,7 +444,6 @@ miscsettings.bootinfo Toon info bij starten
 miscsettings.bootmenu Info tonen bij opstarten
 miscsettings.driver_boot Bootoptie's
 miscsettings.fb_destination Expert! Boot-Console
-miscsettings.general Algemeen
 miscsettings.head Overige settings
 miscsettings.hwsections Gebruik hardware secties
 miscsettings.shutdown_real standby

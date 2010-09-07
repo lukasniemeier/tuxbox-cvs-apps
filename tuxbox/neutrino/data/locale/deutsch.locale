@@ -589,6 +589,7 @@ infoviewer.subservice Bildregie
 infoviewer.waittime Warte auf Uhrzeit...
 ipsetup.hint_1 Benutzen Sie 0..9 oder hoch/runter
 ipsetup.hint_2 OK speichert, Home bricht ab
+keybindingmenu Tastenbelegung
 keybindingmenu.RC Fernbedienung
 keybindingmenu.addrecord Aufnahme-Timer hinzufügen
 keybindingmenu.addrecord_head Aufnahme-Timer hinzufügen
@@ -698,7 +699,7 @@ mainsettings.head Einstellungen
 mainsettings.keybinding Tasten
 mainsettings.language Sprache
 mainsettings.lcd LCD
-mainsettings.misc Diverse Einstellungen
+mainsettings.misc Erweiterte Einstellungen
 mainsettings.network Netzwerk
 mainsettings.osd OSD
 mainsettings.recording Aufnahme
@@ -734,9 +735,8 @@ miscsettings.epg_max_events_hint2 Standard 6000
 miscsettings.epg_old_events EPG verwerfen nach (Std.)
 miscsettings.epg_old_events_hint1 Wie lange abgelaufene EPG-Daten aufheben?
 miscsettings.epg_old_events_hint2 Angabe in Stunden
-miscsettings.general Allgemein
-miscsettings.head Diverse Einstellungen
-miscsettings.osd_specials OSD-Extras
+miscsettings.head Erweiterte Einstellungen
+miscsettings.rc_standby_modes Energieverbrauch
 miscsettings.rc_standby_off_with Standby aus mit
 miscsettings.rc_standby_off_with_power Power
 miscsettings.rc_standby_off_with_power_home Power, Home

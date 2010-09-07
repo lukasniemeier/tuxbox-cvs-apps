@@ -411,7 +411,6 @@ miscsettings.bootinfo Pokaz info przy starcie
 miscsettings.boxtype Tyb DBox'a
 miscsettings.driver_boot Ustawiena driverów i Startu
 miscsettings.fb_destination Ekspert! -konsola
-miscsettings.general Glówne
 miscsettings.head Inne Ustawienia
 miscsettings.hwsections HW-Sekcje uzywac
 miscsettings.shutdown_real Zalacz Standby

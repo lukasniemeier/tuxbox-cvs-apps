@@ -542,7 +542,6 @@ miscsettings.epg_max_events_hint2 Σταθερό 6000
 miscsettings.epg_old_events EPG Απορρίπτω σε (Ώρες.)
 miscsettings.epg_old_events_hint1 Πόσο διάρκεια EPG-τα στοιχεία τα κρατώ?
 miscsettings.epg_old_events_hint2 Εισάγεται σε ώρες
-miscsettings.general Διάφορα
 miscsettings.head Διάφορες Ρυθμίσεις
 miscsettings.shutdown_count Εντελώς σβήστε κατόπιν
 miscsettings.shutdown_count_hint1 Χρονόμετρο σε λεπτά μετά από μερικό σβήσιμο

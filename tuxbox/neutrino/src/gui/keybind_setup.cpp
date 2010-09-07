@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.2 2010/07/30 20:54:12 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.3 2010/09/07 09:22:36 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -183,6 +183,21 @@ void CKeybindSetup::showSetup()
 	for (int i = 0; i < MAX_NUM_KEYNAMES; i++)
 		keychooser[i] = new CKeyChooser(keyvalue_p[i], keydescription_head[i], NEUTRINO_ICON_SETTINGS);
 
+
+	//remote control
+	CMenuWidget * ks_rc 		= new CMenuWidget(menue_title, menue_icon, width);
+	CMenuForwarder *ks_rc_fw 	= new CMenuForwarder(LOCALE_KEYBINDINGMENU, true, NULL, ks_rc, NULL, CRCInput::RC_setup, NEUTRINO_ICON_BUTTON_DBOX);
+	
+	CMenuSeparator * ks_rc_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU);
+
+	CMenuSeparator *ks_rc_sep 				= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_RC);
+	keySetupNotifier = new CKeySetupNotifier;
+	CStringInput * keySettings_repeat_genericblocker 	= new CStringInput(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
+	CStringInput * keySettings_repeatBlocker 		= new CStringInput(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
+	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+	CMenuForwarder *ks_rc_repeat_fw 			= new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCK, true, g_settings.repeat_blocker, keySettings_repeatBlocker);
+	CMenuForwarder *ks_rc_repeat_generic_fw 		= new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, true, g_settings.repeat_genericblocker, keySettings_repeat_genericblocker);
+
 	//mode change
 	CMenuSeparator * ks_mc_sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_MODECHANGE);
 	CMenuForwarder * ks_mc_fw = new CMenuForwarder(keydescription[VIRTUALKEY_TV_RADIO_MODE], true, NULL, keychooser[VIRTUALKEY_TV_RADIO_MODE]);
@@ -202,33 +217,42 @@ void CKeybindSetup::showSetup()
 	ks->addItem(GenericMenuSeparator);
 	ks->addItem(GenericMenuBack);
 	//----------------------------------
+	//remote control
+	ks->addItem(ks_rc_sep);
+	ks->addItem(ks_rc_repeat_fw);
+	ks->addItem(ks_rc_repeat_generic_fw);
+	//----------------------------------
+	//keysetup
+	ks->addItem(GenericMenuSeparatorLine);
+	ks->addItem(ks_rc_fw);
+	//----------------------------------
+		ks_rc->addItem(ks_rc_subhead);
+		ks_rc->addItem(GenericMenuSeparator);
+		ks_rc->addItem(GenericMenuBack);
+		//show mode change item
+		ks_rc->addItem(ks_mc_sep);
+		ks_rc->addItem(ks_mc_fw);
+		//----------------------------------
+		//show channellist items
+		ks_rc->addItem(ks_cl_sep);
+		ks_rc->addItem(ks_cl_oj);
+		for (int i = VIRTUALKEY_PAGE_UP; i <= VIRTUALKEY_RELOAD; i++)
+			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
+		//----------------------------------
+		//show quickzap items
+		ks_rc->addItem(ks_qz_sep);
+		for (int i = VIRTUALKEY_CHANNEL_UP; i <= VIRTUALKEY_SUBCHANNEL_DOWN; i++)
+			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
+		ks_rc->addItem(ks_qz_fw1);
+		ks_rc->addItem(ks_qz_fw2);
+		ks_rc->addItem(ks_qz_fw3);
+	//----------------------------------
 	//show user menue items
  	ks->addItem(ks_um_sep);
 	ks->addItem(ks_um_red);
 	ks->addItem(ks_um_green);
 	ks->addItem(ks_um_yellow);
 	ks->addItem(ks_um_blue);
-	//----------------------------------
-	//show mode change item
-	ks->addItem(ks_mc_sep);
-	ks->addItem(ks_mc_fw);
-	//----------------------------------
-	//show channellist items
-	ks->addItem(ks_cl_sep);
-	ks->addItem(ks_cl_oj);
-	for (int i = VIRTUALKEY_PAGE_UP; i <= VIRTUALKEY_RELOAD; i++)
-		ks->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
-	//----------------------------------
-	//show quickzap items
-	ks->addItem(ks_qz_sep);
-	for (int i = VIRTUALKEY_CHANNEL_UP; i <= VIRTUALKEY_SUBCHANNEL_DOWN; i++)
-		ks->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
-	ks->addItem(ks_qz_fw1);
-	ks->addItem(ks_qz_fw2);
-	ks->addItem(ks_qz_fw3);
-
-	
-
 
 	ks->exec(NULL, "");
 	ks->hide();

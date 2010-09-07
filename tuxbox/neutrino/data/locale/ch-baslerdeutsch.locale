@@ -423,7 +423,6 @@ messagebox.yes Jo
 miscsettings.bootinfo Infos bim Boote a'zeige
 miscsettings.boxtype DBox Hersdeller
 miscsettings.fb_destination EXPERT! Boot-Chonsole
-miscsettings.general Allg'mein
 miscsettings.head Diverse Iischdellige
 miscsettings.shutdown_real Sdändbymodus
 miscsettings.shutdown_real_rcdelay V'rzögerede Shudown

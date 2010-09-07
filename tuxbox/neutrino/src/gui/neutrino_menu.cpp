@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.115 2010/08/28 23:06:59 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.116 2010/09/07 09:22:36 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -90,14 +90,13 @@
 #endif
 #include "pluginlist.h"
 #include "record_setup.h"
-
+#include "miscsettings_menu.h"
 #include "scan_setup.h"
 #include "screensetup.h"
 #include "software_update.h"
 #include "streaminfo2.h"
 #include "sleeptimer.h"
 #include "update.h"
-#include "zapit_setup.h"
 #include "keybind_setup.h"
 #include "lcd_setup.h"
 #include "driver_boot_setup.h"
@@ -128,7 +127,6 @@
 
 void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 								CMenuWidget &mainSettings,
-								CMenuWidget &miscSettings,
 								CMenuWidget &service)
 {
 	dprintf(DEBUG_DEBUG, "init mainmenue\n");
@@ -287,7 +285,7 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu,
 	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_DRIVER, true, NULL, new CDriverBootSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN, false, g_settings.personalize_driver);
 	
 	//yellow (miscSettings)
-	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_MISC, true, NULL, &miscSettings, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW, false, g_settings.personalize_misc);
+	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW, false, g_settings.personalize_misc);
 	
 	// personalize
 	shortcut2 += personalize->addItem(mainSettings, LOCALE_PERSONALIZE_HEAD, true, NULL, new CPersonalizeGui(), NULL, personalize->setShortcut(shortcut2), NULL, false, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE, g_settings.personalize_pinstatus);
@@ -379,27 +377,6 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 	delete personalize;
 }
 
-#define MESSAGEBOX_NO_YES_OPTION_COUNT 2
-const CMenuOptionChooser::keyval MESSAGEBOX_NO_YES_OPTIONS[MESSAGEBOX_NO_YES_OPTION_COUNT] =
-{
-	{ 0, LOCALE_MESSAGEBOX_NO  },
-	{ 1, LOCALE_MESSAGEBOX_YES }
-};
-
-/* for misc settings menu */
-#define OPTIONS_OFF1_ON0_OPTION_COUNT 2
-const CMenuOptionChooser::keyval OPTIONS_OFF1_ON0_OPTIONS[OPTIONS_OFF1_ON0_OPTION_COUNT] =
-{
-	{ 1, LOCALE_OPTIONS_OFF },
-	{ 0, LOCALE_OPTIONS_ON  }
-};
-
-#define MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT 2
-const CMenuOptionChooser::keyval MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTIONS[MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT] =
-{
-	{ 0, LOCALE_FILESYSTEM_IS_UTF8_OPTION_ISO8859_1 },
-	{ 1, LOCALE_FILESYSTEM_IS_UTF8_OPTION_UTF8      }
-};
 
 #define INFOBAR_SHOW_OPTIONS_COUNT 3
 const CMenuOptionChooser::keyval  INFOBAR_SHOW_OPTIONS[INFOBAR_SHOW_OPTIONS_COUNT]=
@@ -408,130 +385,6 @@ const CMenuOptionChooser::keyval  INFOBAR_SHOW_OPTIONS[INFOBAR_SHOW_OPTIONS_COUN
 	{ 1 , LOCALE_PICTUREVIEWER_RESIZE_SIMPLE },
 	{ 2 , LOCALE_PICTUREVIEWER_RESIZE_COLOR_AVERAGE }
 };
-
-#define REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS_COUNT 4
-const CMenuOptionChooser::keyval  REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS[REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS_COUNT]=
-{
-   { 0 , LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH_POWER },
-   { 1 , LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH_POWER_OK },
-   { 2 , LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH_POWER_HOME },
-   { 3 , LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH_POWER_HOME_OK }
-};
-
-#if !defined(ENABLE_AUDIOPLAYER) && !defined(ENABLE_ESD)
-#define MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT 5
-#else
-#if !defined(ENABLE_AUDIOPLAYER) && defined(ENABLE_ESD)
-#define MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT 6
-#else
-#if defined(ENABLE_AUDIOPLAYER) && !defined(ENABLE_ESD)
-#define MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT 7
-#else
-#define MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT 8
-#endif
-#endif
-#endif
-const CMenuOptionChooser::keyval  MISCSETTINGS_STARTMODE_WITH_OPTIONS[MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT]=
-{
-   { 0 , LOCALE_MISCSETTINGS_STARTMODE_RESTORE },
-   { 1 , LOCALE_MAINMENU_TVMODE },
-   { 2 , LOCALE_MAINMENU_RADIOMODE },
-   { 3 , LOCALE_MAINMENU_SCARTMODE },
-#ifdef ENABLE_AUDIOPLAYER
-   { 4 , LOCALE_MAINMENU_AUDIOPLAYER },
-   { 5 , LOCALE_INETRADIO_NAME },
-#endif
-#ifdef ENABLE_ESD
-   { 6 , LOCALE_ESOUND_NAME },
-#endif
-   { 7 , LOCALE_TIMERLIST_TYPE_STANDBY },
-};
-
-/* misc settings menu */
-void CNeutrinoApp::InitMiscSettings(CMenuWidget &miscSettings,
-															CMenuWidget &miscSettingsGeneral,
-															CMenuWidget &miscSettingsEPGSettings,
-															CMenuWidget &miscSettingsRemoteControl,
-															CMenuWidget &miscSettingsFilebrowser)
-{
-	dprintf(DEBUG_DEBUG, "init miscsettings\n");
-	
-	// auto numbering
-	int shortcut = 1;
-	
-	// misc settings menue main view ///////////////////////
-	addMenueIntroItems(miscSettings);
-	// general
-	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_GENERAL, true, NULL, &miscSettingsGeneral, NULL,  CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));	
-	// epg settings
-	miscSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, true, NULL, &miscSettingsEPGSettings, NULL, CRCInput::convertDigitToKey(shortcut++)));
-	// zapit settings
-	miscSettings.addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, true, NULL, new CZapitSetup(LOCALE_MAINSETTINGS_MISC), NULL, CRCInput::convertDigitToKey(shortcut++)));
-	// remote control
-	miscSettings.addItem(new CMenuForwarder(LOCALE_KEYBINDINGMENU_RC, true, NULL, &miscSettingsRemoteControl, NULL, CRCInput::convertDigitToKey(shortcut++)));
-	// filebrowser
-	miscSettings.addItem(new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, true, NULL, &miscSettingsFilebrowser, NULL, CRCInput::convertDigitToKey(shortcut++)));
-	
-	
-	/* misc settings sub menues */
-	// general
-	miscSettingsGeneral.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_GENERAL));
-	addMenueIntroItems(miscSettingsGeneral);
-	CMenuOptionChooser *m6 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STARTMODE, &g_settings.startmode, MISCSETTINGS_STARTMODE_WITH_OPTIONS, MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT, true);
-	CMenuOptionChooser *m1 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL_RCDELAY, &g_settings.shutdown_real_rcdelay, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
-	CMenuOptionChooser *m5 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH, &g_settings.standby_off_with, REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS, REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS_COUNT, !g_settings.shutdown_real);
-	CShutdownCountNotifier *shutDownCountNotifier = new CShutdownCountNotifier;
-	CStringInput * miscSettings_shutdown_count = new CStringInput(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", shutDownCountNotifier);
-	CMenuForwarder *m4 = new CMenuForwarder(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, !g_settings.shutdown_real, g_settings.shutdown_count, miscSettings_shutdown_count);
-	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STANDBY_SAVE_POWER, &g_settings.standby_save_power, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
-	CMiscNotifier* miscNotifier = new CMiscNotifier(m1, m3, m4, m5);
-	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL, &g_settings.shutdown_real, OPTIONS_OFF1_ON0_OPTIONS, OPTIONS_OFF1_ON0_OPTION_COUNT, true, miscNotifier);
-	miscSettingsGeneral.addItem(m6);
-	miscSettingsGeneral.addItem(m2);
-#ifndef HAVE_TRIPLEDRAGON
-	/* do not allow TD users to shoot themselves in the foot ;) */
-	miscSettingsGeneral.addItem(m3);
-#endif
-	miscSettingsGeneral.addItem(m4);
-	miscSettingsGeneral.addItem(m1);
-	miscSettingsGeneral.addItem(m5);
-
-#ifndef TUXTXT_CFG_STANDALONE
-	CTuxtxtCacheNotifier *tuxtxtcacheNotifier = new CTuxtxtCacheNotifier;
-	miscSettingsGeneral.addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_TUXTXT_CACHE, &g_settings.tuxtxt_cache, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, tuxtxtcacheNotifier));
-#endif
-	
-	//epg settings
-	miscSettingsEPGSettings.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_EPG_HEAD));
-	addMenueIntroItems(miscSettingsEPGSettings);
-	CSectionsdConfigNotifier* sectionsdConfigNotifier = new CSectionsdConfigNotifier;
-	CStringInput * miscSettings_epg_cache = new CStringInput(LOCALE_MISCSETTINGS_EPG_CACHE, &g_settings.epg_cache, 2,LOCALE_MISCSETTINGS_EPG_CACHE_HINT1, LOCALE_MISCSETTINGS_EPG_CACHE_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_CACHE, true, g_settings.epg_cache, miscSettings_epg_cache));
-	CStringInput * miscSettings_epg_extendedcache = new CStringInput(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, &g_settings.epg_extendedcache, 2,LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT1, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, true, g_settings.epg_extendedcache, miscSettings_epg_extendedcache));
-	CStringInput * miscSettings_epg_old_events = new CStringInput(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, &g_settings.epg_old_events, 2,LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, true, g_settings.epg_old_events, miscSettings_epg_old_events));
-	CStringInput * miscSettings_epg_max_events = new CStringInput(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, &g_settings.epg_max_events, 5,LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, true, g_settings.epg_max_events, miscSettings_epg_max_events));
-	miscSettingsEPGSettings.addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_DIR, true, g_settings.epg_dir, this, "epgdir"));
-
-	// remote control
-	miscSettingsRemoteControl.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_RC));
-	addMenueIntroItems(miscSettingsRemoteControl);
-	keySetupNotifier = new CKeySetupNotifier;
-	CStringInput * keySettings_repeat_genericblocker = new CStringInput(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
-	CStringInput * keySettings_repeatBlocker = new CStringInput(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
-	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
-	miscSettingsRemoteControl.addItem(new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCK, true, g_settings.repeat_blocker, keySettings_repeatBlocker));
-	miscSettingsRemoteControl.addItem(new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, true, g_settings.repeat_genericblocker, keySettings_repeat_genericblocker));
-		
-	// filebrowser
-	miscSettingsFilebrowser.addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_FILEBROWSER_HEAD));
-	addMenueIntroItems(miscSettingsFilebrowser);
-	miscSettingsFilebrowser.addItem(new CMenuOptionChooser(LOCALE_FILESYSTEM_IS_UTF8            , &g_settings.filesystem_is_utf8            , MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTIONS, MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT, true ));
-	miscSettingsFilebrowser.addItem(new CMenuOptionChooser(LOCALE_FILEBROWSER_SHOWRIGHTS        , &g_settings.filebrowser_showrights        , MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true ));
-	miscSettingsFilebrowser.addItem(new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true ));
-}
 
 
 #define MAINMENU_RECORDING_OPTION_COUNT 2

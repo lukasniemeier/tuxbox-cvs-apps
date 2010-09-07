@@ -491,7 +491,6 @@ miscsettings.bootinfo Показывать информацию при стар�
 miscsettings.bootmenu Показывать меню загрузки
 miscsettings.driver_boot Загрузка системы 
 miscsettings.fb_destination Expert! Boot-Console
-miscsettings.general Основное
 miscsettings.head Прочие настройки
 miscsettings.hwsections HW-Sections использовать
 miscsettings.pmtupdate enable pmt update

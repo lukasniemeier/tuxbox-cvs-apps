@@ -423,7 +423,6 @@ messagebox.yes Si
 miscsettings.bootinfo Informazioni all'invio
 miscsettings.boxtype DBox Costruttore
 miscsettings.fb_destination EXPERT! Boot-Konsole
-miscsettings.general Generale
 miscsettings.head Altre Impostazioni
 miscsettings.shutdown_real Modo Standby
 miscsettings.shutdown_real_rcdelay shutdown ritardato

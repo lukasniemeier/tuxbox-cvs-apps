@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.187 2010/08/28 23:06:59 dbt Exp $
+ * $Id: locals_intern.h,v 1.188 2010/09/07 09:22:36 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -616,6 +616,7 @@ const char * locale_real_names[] =
 	"infoviewer.waittime",
 	"ipsetup.hint_1",
 	"ipsetup.hint_2",
+	"keybindingmenu",
 	"keybindingmenu.RC",
 	"keybindingmenu.addrecord",
 	"keybindingmenu.addrecord_head",
@@ -761,9 +762,8 @@ const char * locale_real_names[] =
 	"miscsettings.epg_old_events",
 	"miscsettings.epg_old_events_hint1",
 	"miscsettings.epg_old_events_hint2",
-	"miscsettings.general",
 	"miscsettings.head",
-	"miscsettings.osd_specials",
+	"miscsettings.rc_standby_modes",
 	"miscsettings.rc_standby_off_with",
 	"miscsettings.rc_standby_off_with_power",
 	"miscsettings.rc_standby_off_with_power_home",

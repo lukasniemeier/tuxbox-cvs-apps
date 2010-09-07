@@ -491,7 +491,6 @@ miscsettings.bootinfo Montrer les infos au démarrage
 miscsettings.bootmenu Montrer le menu démarrage
 miscsettings.driver_boot Options de driver et Démarrage
 miscsettings.fb_destination Console de démarrage Expert!
-miscsettings.general Général
 miscsettings.head Réglages divers
 miscsettings.hwsections Utiliser les sections hardware
 miscsettings.pmtupdate enable m.à.j pmt
