@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.1 2010/09/07 09:20:50 dbt Exp $
+	$Id: miscsettings_menu.cpp,v 1.2 2010/09/12 21:00:06 dbt Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -193,7 +193,7 @@ void CMiscMenue::showMenue()
 	// filebrowser
 	misc_menue->addItem(new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, 		true, NULL, misc_menue_filebrowser, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 
-	misc_menue->addItem(GenericMenuSeparator);
+	misc_menue->addItem(GenericMenuSeparatorLine);
 #ifndef TUXTXT_CFG_STANDALONE
 	//tutxt cache
 	CTuxtxtCacheNotifier *tuxtxtcacheNotifier = new CTuxtxtCacheNotifier;
