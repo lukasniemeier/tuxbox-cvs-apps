@@ -220,7 +220,12 @@ int eLabel::setProperty(const eString &prop, const eString &value)
 			setAlign(eTextPara::dirLeft);
 	}
 	else if (prop=="vcenter")
-		setFlags( flagVCenter );
+	{
+		if (value == "off")
+		  removeFlags( flagVCenter );
+		else
+		  setFlags( flagVCenter );
+	}
 	else if (prop == "shortcut")
 	{
 		setShortcutPixmap(value);
