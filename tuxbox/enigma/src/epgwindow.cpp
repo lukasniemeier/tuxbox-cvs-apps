@@ -73,7 +73,11 @@ void eListBoxEntryEPG::build()
 		return;
 	}
 	LocalEventData led;
-	led.getLocalData(&event, &descr);
+	eString shortdesc;
+	eString longdesc;
+	led.getLocalData(&event, &descr, &shortdesc, &longdesc);
+	helptext= (longdesc.length() > 0 ? longdesc : shortdesc);
+	  
 
 	if (descr)
 		return;
@@ -287,6 +291,7 @@ void eEPGSelector::fillEPGList()
 		new eListBoxEntryEPG(*It->second, events, current);
 	eEPGCache::getInstance()->Unlock();
 	events->endAtomic();
+	events->moveSelection( eListBoxBase::dirFirst );
 }
 
 void eEPGSelector::entrySelected(eListBoxEntryEPG *entry)
@@ -343,6 +348,7 @@ eEPGSelector::eEPGSelector(const eServiceReferenceDVB &service)
 void eEPGSelector::init_eEPGSelector(eString* pSearchString)
 {
 	events = new eListBox<eListBoxEntryEPG>(this);
+	events->setFlags( eListBoxBase::flagShowEntryHelp );
 	events->setName("events");
 	events->setActiveColor(eSkin::getActive()->queryScheme("eServiceSelector.highlight.background"), eSkin::getActive()->queryScheme("eServiceSelector.highlight.foreground"));
 
