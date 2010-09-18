@@ -756,7 +756,7 @@
 	<object name="eEPGSelector">
 		<eBouquetSelector cposition="70:100" csize="590:420" text="EPG">
 			<eListbox name="events" position="0:0" size="e:e-90" />
-			<eStatusBar name="statusbar" position="0:e-90" size="e:e" loadDeco="" />
+			<eStatusBar name="statusbar" position="0:e-90" size="e:e" loadDeco="" vcenter="off"/>
 		</eBouquetSelector>
 	</object>
 
