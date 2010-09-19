@@ -867,12 +867,18 @@ void eDVRPlayerThread::gotMessage(const eDVRPlayerThreadMessage &message)
 			}
 			offset/=8000;
 			offset*=message.parm -(message.parm >= 0 ? 0 : offset*12);
-			buffer.clear();
 			offset-=1000*1000; // account for pvr buffer
 			if (message.type == eDVRPlayerThreadMessage::skip)
 			{
-				offset += position + getCurrentSliceLength();
+				offset += position + getCurrentSliceLength() - curBufferFullness;
+				
+				if (message.parm < 0)
+				{
+					offset -= getDriverBufferFullness();
+					Decoder::flushBuffer();
+				}
 			}
+			buffer.clear();
 			if (offset<0)
 				offset=0;
 			curBufferFullness=0;
