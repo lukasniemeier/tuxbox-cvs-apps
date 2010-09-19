@@ -1805,7 +1805,6 @@ void CRCInput::setRepeat(unsigned int delay,unsigned int period)
 	ioctl(fd_rc[0], IOC_IR_SET_DELAY, 1);
 	printf("[neutrino] %s: delay=%d period=%d rc_addr=%d\n", __FUNCTION__, delay, period, rc_addr);
 #else
-	int ret;
 	struct my_repeat {
 		unsigned int delay;	// in ms
 		unsigned int period;	// in ms
@@ -1818,13 +1817,8 @@ void CRCInput::setRepeat(unsigned int delay,unsigned int period)
 
 	for (int i = 0; i < NUMBER_OF_EVENT_DEVICES; i++)
 	{
-		if (fd_rc[i] != -1)
-		{
-			if ((ret = ioctl(fd_rc[i], EVIOCSREP, &n)) < 0)
-				printf("[neutrino] can not use input repeat on fd_rc[%d]: %d (%m) \n", i, errno);
-			else
-				repeat_kernel = true;
-		}
+		if (fd_rc[i] != -1 && ioctl(fd_rc[i], EVIOCSREP, &n) == 0)
+			repeat_kernel = true;
 	}
 	printf("[neutrino] %s: delay=%d period=%d use kernel-repeat: %s\n", __FUNCTION__, delay, period, repeat_kernel?"yes":"no");
 #endif
