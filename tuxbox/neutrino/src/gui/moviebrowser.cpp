@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.47 2010/07/18 21:23:22 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.48 2010/09/19 20:16:51 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.47 2010/07/18 21:23:22 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.48 2010/09/19 20:16:51 dbt Exp $\r\n");
 	init();
 }
 
@@ -3031,7 +3031,7 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CDateInput   dateUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,        &movie_info->dateOfLastPlay, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 	CDateInput   recUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,         &movie_info->file.Time, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 	CIntInput    lengthUserIntInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,       (long&)movie_info->length, 3, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
-	CStringInputSMS countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    &movie_info->productionCountry, 11, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZ ");
+	CStringInputSMS countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    &movie_info->productionCountry, 11, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
 	CIntInput    yearUserIntInput(LOCALE_MOVIEBROWSER_INFO_PRODYEAR,       (long&)movie_info->productionDate, 4, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 
 	CMenuWidget movieInfoMenu (LOCALE_MOVIEBROWSER_INFO_HEAD, NEUTRINO_ICON_STREAMING,m_cBoxFrame.iWidth);
@@ -3901,7 +3901,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.47 $");
+	return imageinfo.getModulVersion("","$Revision: 1.48 $");
 }
 
 /************************************************************************/
