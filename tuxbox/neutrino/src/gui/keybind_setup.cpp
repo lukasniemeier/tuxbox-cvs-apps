@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.3 2010/09/07 09:22:36 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.4 2010/09/20 10:24:12 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -52,6 +52,9 @@
 CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const IconName)
 {
 	frameBuffer = CFrameBuffer::getInstance();
+	
+	keySetupNotifier = new CKeySetupNotifier;
+	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 
 	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_MAINSETTINGS_KEYBINDING;
 	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_KEYBINDING;
@@ -191,7 +194,7 @@ void CKeybindSetup::showSetup()
 	CMenuSeparator * ks_rc_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU);
 
 	CMenuSeparator *ks_rc_sep 				= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_RC);
-	keySetupNotifier = new CKeySetupNotifier;
+	
 	CStringInput * keySettings_repeat_genericblocker 	= new CStringInput(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
 	CStringInput * keySettings_repeatBlocker 		= new CStringInput(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
 	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
