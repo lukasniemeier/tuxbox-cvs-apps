@@ -1,5 +1,5 @@
 /*
-	$Id: motorcontrol.cpp,v 1.25 2010/09/20 19:10:08 seife Exp $
+	$Id: motorcontrol.cpp,v 1.26 2010/09/20 19:12:03 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -474,7 +474,7 @@ const struct button_label CMotorControlMenueButtons3[1] =
 	{ NEUTRINO_ICON_BUTTON_RED, 	LOCALE_MOTORCONTROL_STEP_DRIVE_MOTOR_HALT }
 };
 
-struct button_label CMotorControlMenueButtons4[9] =
+struct button_label CMotorControlMenueButtons4[6] =
 {
 	{ NEUTRINO_ICON_BUTTON_4, 	LOCALE_MOTORCONTROL_SET_WEST_SOFT_LIMIT },
 	{ NEUTRINO_ICON_BUTTON_5 ,	LOCALE_MOTORCONTROL_DISABLE_SOFT_LIMITS },
