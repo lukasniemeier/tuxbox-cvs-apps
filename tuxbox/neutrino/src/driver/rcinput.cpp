@@ -1697,19 +1697,23 @@ if (trkey == RC_nokey || count > 1) fprintf(stderr, "ev.code: %04hx trkey: %04x 
 								//fprintf(stderr, "pressed ");
 								break;
 							case 0x02:	// key repeat
-								*msg = trkey | RC_Repeat;
 								if (repeat_kernel)
+								{
+									*msg = trkey | RC_Repeat;
 									break;
+								}
+								*msg = RC_ignore; // KEY_RESERVED
 								// unfortunately, the old dbox remote control driver did no rate control
 								if (repeating || (evtime > last_keypress + repeat_block)) // delay
 								{
 									//fprintf(stderr, "repeat  ");
 									repeating = true;
 									if (evtime > last_keypress + repeat_block_generic) // rate
+									{
+										*msg = trkey | RC_Repeat;
 										last_keypress = evtime;
+									}
 								}
-								else
-									*msg = RC_ignore; // KEY_RESERVED
 								break;
 							case 0x00:	// key released
 								*data = 1; // compat
