@@ -1,5 +1,5 @@
 /*
-	$Id: motorcontrol.cpp,v 1.24 2009/03/29 16:25:34 seife Exp $
+	$Id: motorcontrol.cpp,v 1.25 2010/09/20 19:10:08 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -565,7 +565,9 @@ void CMotorControl::startSatFind(void)
 		case 0:
 			printf("[motorcontrol] starting satfind...\n");
 			if (execlp("/bin/satfind", "satfind", NULL) < 0)
-				printf("[motorcontrol] execlp satfind failed.\n");		
+				printf("[motorcontrol] execlp satfind failed.\n");
+			/* normally not reached */
+			_exit(0);
 			break;
 		} /* switch */
 }
