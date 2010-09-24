@@ -33,13 +33,13 @@
 #include <config.h>
 #endif
 
-#include <gui/alphasetup.h>
+#include "alphasetup.h"
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
-
 #include <gui/widget/messagebox.h>
 
 #include <fcntl.h>
@@ -62,21 +62,19 @@
 #include <neutrino.h>
 
 
-CAlphaSetup::CAlphaSetup(const neutrino_locale_t Name, unsigned char* Alpha1, unsigned char* Alpha2, CChangeObserver* Observer)
+CAlphaSetup::CAlphaSetup(const neutrino_locale_t Name)
 {
 	frameBuffer = CFrameBuffer::getInstance();
-	observer = Observer;
 	name = Name;
-	width = 360;
+	width = w_max (360, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+ mheight*3;
-	x=((720-width) >> 1) -20;
-	y=(576-height)>>1;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 
-	alpha1 = Alpha1;
-	alpha2 = Alpha2;
-	frameBuffer->setBlendLevel(*alpha1, *alpha2);
+	alpha1 = &g_settings.gtx_alpha1;
+	alpha2 = &g_settings.gtx_alpha2;
 }
 
 int CAlphaSetup::exec(CMenuTarget* parent, const std::string &)
@@ -232,9 +230,6 @@ int CAlphaSetup::exec(CMenuTarget* parent, const std::string &)
 	}
 
 	hide();
-
-	if(observer)
-		observer->changeNotify(name, NULL);
 
 	return res;
 }

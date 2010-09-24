@@ -58,15 +58,13 @@ class CAlphaSetup : public CMenuTarget
 
 		neutrino_locale_t name;
 
-		CChangeObserver* observer;
-
 		void paint();
 		void setAlpha();
 		void paintSlider(const int x, const int y, const unsigned char * const spos, const neutrino_locale_t text, const char * const iconname, const bool selected);
 
 	public:
 
-		CAlphaSetup(const neutrino_locale_t Name, unsigned char* Alpha1, unsigned char* Alpha2, CChangeObserver* Observer = NULL);
+		CAlphaSetup(const neutrino_locale_t Name);
 
 		void hide();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
