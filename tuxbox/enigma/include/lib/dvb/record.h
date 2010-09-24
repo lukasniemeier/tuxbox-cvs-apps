@@ -17,6 +17,9 @@
 #define RECORD_TELETEXT
 #define RECORD_SUBTITLES
 
+//#define RECORD_BUFFERSIZE 524144
+#define RECORD_BUFFERSIZE 262072
+
 /**
  * \brief The DVBRecorder
  *
@@ -70,7 +73,7 @@ class eDVBRecorder: private eThread, public Object
 
 	eString filename;
 
-	char buf[524144]; 
+	char buf[RECORD_BUFFERSIZE]; 
 	int bufptr;
 
 	int written_since_last_sync;

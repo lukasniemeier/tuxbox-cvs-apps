@@ -210,7 +210,7 @@ void eDVBRecorder::thread()
 	PatPmtWrite();
 	while (state == stateRunning)
 	{
-		int rd = 524144-bufptr;
+		int rd = RECORD_BUFFERSIZE-bufptr;
 		if ( rd > 65424 )
 			rd = 65424;
 		int r = ::read(dvrfd, buf+bufptr, rd);
@@ -247,7 +247,7 @@ void eDVBRecorder::thread()
 			PatPmtWrite();
 			writePatPmt=false;
 		}
-		else if ( bufptr > 524143 )
+		else if ( bufptr >= RECORD_BUFFERSIZE )
 			flushBuffer();
 	}
 	alarm(0);
@@ -670,7 +670,7 @@ void eDVBRecorder::writeSection(void *data, int pid, unsigned int &cc)
 
 	if ( len )
 	{
-		if ( (bufptr+len) > 524143 )
+		if ( (bufptr+len) >= RECORD_BUFFERSIZE )
 			flushBuffer();
 
 		memcpy(buf+bufptr, secbuf, len);
