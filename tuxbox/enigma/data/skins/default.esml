@@ -148,6 +148,7 @@
 		<img name="sselect_newfound_small" src="newfound_small-fs8.png" />
 		<img name="timer_symbol" src="clock-fs8.png" />
 		<img name="timer_rec_symbol" src="clock_rec-fs8.png" />
+		<img name="timer_other_symbol" src="newfound_small-fs8.png" />
 		<img name="ok_symbol" src="event_ok-fs8.png" />
 		<img name="failed_symbol" src="event_failed-fs8.png" />
 		<img name="dreamlogo" src="dreamlogo-fs8.png" />

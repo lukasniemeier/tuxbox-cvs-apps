@@ -18,6 +18,7 @@ gFont eListBoxEntryEPG::TimeFont;
 gFont eListBoxEntryEPG::DescrFont;
 gPixmap *eListBoxEntryEPG::inTimer=0;
 gPixmap *eListBoxEntryEPG::inTimerRec=0;
+gPixmap *eListBoxEntryEPG::inTimerOther=0;
 int eListBoxEntryEPG::timeXSize=0;
 int eListBoxEntryEPG::dateXSize=0;
 
@@ -50,6 +51,7 @@ int eListBoxEntryEPG::getEntryHeight()
 		TimeFont = eSkin::getActive()->queryFont("eEPGSelector.Entry.DateTime");
 		inTimer = eSkin::getActive()->queryImage("timer_symbol");
 		inTimerRec = eSkin::getActive()->queryImage("timer_rec_symbol");
+		inTimerOther = eSkin::getActive()->queryImage("timer_other_symbol");
 		eTextPara* tmp = new eTextPara( eRect(0, 0, 200, 30) );
 		tmp->setFont( TimeFont );
 		tmp->renderString( "00:00" );
@@ -126,7 +128,14 @@ const eString &eListBoxEntryEPG::redraw(gPainter *rc, const eRect& rect, gColor 
 
 	drawEntryRect(rc, rect, coActiveB, coActiveF, coNormalB, coNormalF, hilited);
 
-	int xpos=rect.left()+10;
+	int xpos=rect.left()+2;
+	if ( inTimerOther && (eTimerManager::getInstance()->findOverlappingEvent( &service, &event )) )
+	{
+		int ypos = (rect.height() - inTimerOther->y) / 2;
+		rc->blit( *inTimerOther, ePoint( xpos, rect.top()+ypos ), eRect(), gPixmap::blitAlphaTest);		
+	}
+	xpos+=8;
+	
 	if (!paraDate)
 	{
 		paraDate = new eTextPara( eRect( 0, 0, dateXSize, rect.height()) );

@@ -10,7 +10,7 @@ class eListBoxEntryEPG:public eListBoxEntry
 	friend class eListBox<eListBoxEntryEPG>;
 	friend class eEPGSelector;
 	static gFont TimeFont, DescrFont;
-	static gPixmap *inTimer, *inTimerRec;
+	static gPixmap *inTimer, *inTimerRec, *inTimerOther;
 	static int timeXSize, dateXSize;
 	int TimeYOffs, DescrYOffs;
 	eTextPara *paraDate, *paraTime, *paraDescr;

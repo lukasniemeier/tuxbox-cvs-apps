@@ -77,6 +77,7 @@ public:
 	void timeChanged();
 	int getTimerCount() { return timerlist->getConstList().size(); }
 	ePlaylistEntry* findEvent( eServiceReference *service, EITEvent *evt );
+	ePlaylistEntry* findOverlappingEvent( eServiceReference *service, EITEvent *evt );
 	void disableDeepstandbyWakeup() { setdeepstandbywakeup=false; }
 	template <class Z>
 	void forEachEntry(Z ob)

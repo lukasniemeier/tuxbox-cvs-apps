@@ -1487,6 +1487,16 @@ ePlaylistEntry* eTimerManager::findEvent( eServiceReference *service, EITEvent *
 	return 0;
 }
 
+ePlaylistEntry* eTimerManager::findOverlappingEvent( eServiceReference *service, EITEvent *evt )
+{
+	ePlaylistEntry tmp(*service, evt->start_time, evt->duration, evt->event_id);
+	for ( std::list<ePlaylistEntry>::iterator i( timerlist->getList().begin() ); i != timerlist->getList().end(); i++)
+		if (  *service != i->service && Overlapping(*i, tmp ) )
+			return &*i;
+
+	return 0;
+}
+
 bool Overlap( time_t beginTime1, int duration1, time_t beginTime2, int duration2 )
 {
 	eRect movie1( ePoint(beginTime1, 0), eSize( duration1, 10) );
