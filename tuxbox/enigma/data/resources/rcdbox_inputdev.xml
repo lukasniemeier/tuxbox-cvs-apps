@@ -136,6 +136,8 @@
 			<action name="removeTimerEvent" key="red" flags="m" />
 			<action name="showExtendedInfo" key="?" flags="m" />
 			<action name="searchEPG" key="d-box" flags="m" />
+			<action name="prevService" key="-" flags="m" />
+			<action name="nextService" key="+" flags="m" />
 		</actionmap>
 
 		<actionmap name="serviceSelector" style="default" descr="Default (Enigma)" >
