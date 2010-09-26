@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.3 2010/07/01 11:51:09 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.4 2010/09/26 22:01:08 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -81,7 +81,6 @@ CZapitSetup::~CZapitSetup()
 
 int CZapitSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 {
-	dprintf(DEBUG_DEBUG, "init zapit menu\n");
 	int   res = menu_return::RETURN_REPAINT;
 
 	if (parent)
@@ -91,15 +90,36 @@ int CZapitSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if(actionKey == "zapit_starttv")
 	{
-		//parent->hide();
 		InitZapitChannelHelper(CZapitClient::MODE_TV);
 		return res;
 	}
 	else if(actionKey == "zapit_startradio")
 	{
-		//parent->hide();
 		InitZapitChannelHelper(CZapitClient::MODE_RADIO);
 		return res;
+	}
+	// set new start channel settings for...
+	else if (strncmp(actionKey.c_str(), "ZCT:", 4) == 0 || strncmp(actionKey.c_str(), "ZCR:", 4) == 0)
+	{
+		int delta;
+		unsigned int cnr;
+		
+		sscanf(&(actionKey[4]),"%u" "%n", &cnr, &delta);
+		
+		if (strncmp(actionKey.c_str(), "ZCT:", 4) == 0)//...tv
+		{
+			g_Zapit->setStartChannelTV(cnr-1);
+			strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
+		}
+		else if (strncmp(actionKey.c_str(), "ZCR:", 4) == 0)//...radio
+		{
+			g_Zapit->setStartChannelRadio(cnr-1);
+			strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
+		}
+		
+		// ...leave bouquet/channel menu and show a refreshed zapit menu with current start channel(s)
+		g_RCInput->postMsg(CRCInput::RC_timeout, 0);
+		return menu_return::RETURN_EXIT;	
 	}
 	
 	Init();
@@ -115,6 +135,9 @@ void CZapitSetup::hide()
 // init menue
 void CZapitSetup::Init()
 {
+	printf("[neutrino] init zapit menu\n");
+	strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
+	strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
 	showSetup();
 }
 
@@ -143,8 +166,6 @@ void CZapitSetup::showSetup()
 
 	//save last channel on/off
 	savelastchannel = g_Zapit->getSaveLastChannel() ? 1 : 0;
-	strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
-	strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
 
 	//last tv-channel
 	CMenuForwarder *c1 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_TV, !savelastchannel, CstartChannelTV, this, "zapit_starttv");
@@ -187,12 +208,8 @@ void CZapitSetup::showSetup()
 	delete z;
 }
 
-// char CstartChannelRadio[30];
-// char CstartChannelTV[30];
-
 void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 {
-	CZapitChannelExec *ZapitChannelChooser = new CZapitChannelExec;
 	std::vector<CMenuWidget *> toDelete;
 	CZapitClient zapit;
 	CZapitClient::BouquetList bouquetlist;
@@ -220,7 +237,7 @@ void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 				"ZC%c:%d,",
 				(mode==CZapitClient::MODE_TV)?'T':'R',
 				channel->nr);
-			CMenuForwarderNonLocalized * chan_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, ZapitChannelChooser, (std::string(cChannelId) + channel->name).c_str());
+			CMenuForwarderNonLocalized * chan_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
 			chan_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			mwtv->addItem(chan_item);
 		}
@@ -279,33 +296,5 @@ bool CZapitSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 		g_Zapit->setUncommittedSwitchMode(*(int *)data);
 	}
 	return true;
-}
-
-int CZapitChannelExec::exec(CMenuTarget*, const std::string & actionKey)
-{
-	int delta;
-	unsigned int cnr;
-	if (strncmp(actionKey.c_str(), "ZCT:", 4) == 0)
-	{
-		sscanf(&(actionKey[4]),
-			"%u"
-			"%n",
-			&cnr,
-			&delta);
-		g_Zapit->setStartChannelTV(cnr-1);
-		strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
-	}
-	else if (strncmp(actionKey.c_str(), "ZCR:", 4) == 0)
-	{
-		sscanf(&(actionKey[4]),
-			"%u"
-			"%n",
-			&cnr,
-			&delta);
-		g_Zapit->setStartChannelRadio(cnr-1);
-		strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
-	}
-	g_RCInput->postMsg(CRCInput::RC_timeout, 0);
-	return menu_return::RETURN_EXIT;
 }
 

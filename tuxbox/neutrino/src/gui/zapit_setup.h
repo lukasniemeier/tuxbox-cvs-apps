@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.h,v 1.2 2010/07/01 10:57:49 dbt Exp $
+	$Id: zapit_setup.h,v 1.3 2010/09/26 22:01:08 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -75,13 +75,5 @@ class CZapitSetupNotifier : public CChangeObserver
 		CZapitSetupNotifier(CMenuForwarder*, CMenuForwarder*);
 		bool changeNotify(const neutrino_locale_t OptionName, void * data);
 };
-
-class CZapitChannelExec : public CZapitSetup
-{
-	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-
 
 #endif
