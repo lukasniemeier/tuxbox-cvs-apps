@@ -1,5 +1,5 @@
 /*
- * $Id: start.c,v 1.3 2009/12/18 20:30:23 rhabarber1848 Exp $
+ * $Id: start.c,v 1.4 2010/09/27 19:40:10 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -28,13 +28,14 @@
 
 void plugin_exec()
 {
-	int ret, pid, status;
+	int pid, status;
 	pid=fork();
 	if (pid == -1) {
 		fprintf(stderr, "[%s.so] fork\n", SCRIPT);
 		return;
 	} else
 	if (pid == 0) {
+		int ret;
 		fprintf(stderr, "[%s.so] forked, executing %s\n", SCRIPT, SCRIPT);
 		for (ret=3 ; ret < 255; ret++)
 			close (ret);

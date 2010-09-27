@@ -1,5 +1,5 @@
 /*
- * $Id: gfx.h,v 1.1 2009/12/12 18:42:44 rhabarber1848 Exp $
+ * $Id: gfx.h,v 1.2 2010/09/27 19:40:10 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -23,8 +23,10 @@
 
 #define __GFX_H__
 
-void RenderBox(int sx, int sy, int ex, int ey, int mode, int color);
+void getIconFilePath(const char * const filename, char* res_buffer);
+void getIconSize(const char * const filename, int* width, int* height);
+void RenderBox(int _sx, int _sy, int _ex, int _ey, int mode, int color);
 //void RenderCircle(int sx, int sy, char type);
-void PaintIcon(char *filename, int x, int y, unsigned char offset);
+void PaintIcon(const char * const filename, int x, int y, unsigned char offset);
 
 #endif

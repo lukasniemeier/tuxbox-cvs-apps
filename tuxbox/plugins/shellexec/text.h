@@ -1,5 +1,5 @@
 /*
- * $Id: text.h,v 1.1 2009/12/12 18:42:44 rhabarber1848 Exp $
+ * $Id: text.h,v 1.2 2010/09/27 19:40:10 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -30,9 +30,9 @@ extern int FSIZE_MED;
 extern int FSIZE_SMALL;
 
 void TranslateString(char *src);
-int GetStringLen(int sx, unsigned char *string);
-FT_Error MyFaceRequester(FTC_FaceID face_id, FT_Library library, FT_Pointer request_data, FT_Face *aface);
-void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int size, int color);
+int GetStringLen(int _sx, unsigned char *string);
+FT_Error MyFaceRequester(FTC_FaceID face_id, FT_Library _library, FT_Pointer request_data, FT_Face *aface);
+void RenderString(char *string, int _sx, int _sy, int maxwidth, int layout, int size, int color);
 void ShowMessage(char *mtitle, char *message, int wait);
 void remove_tabs(char *src);
 
