@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.5 2009/10/09 04:58:18 dbt Exp $
+$Id: personalize.h,v 1.6 2010/09/29 22:00:21 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -44,56 +44,69 @@ using namespace std;
 
 class CPersonalizeGui : public CMenuTarget
 {
-private:
-CFrameBuffer *frameBuffer;
-int x, y, width, height, hheight, mheight;
-void ShowHelpPersonalize();
+	private:
+		CFrameBuffer *frameBuffer;
+		int x, y, width, height, hheight, mheight;
+		void 	ShowHelpPersonalize();
+		
+		//stuff for settings handlers
+		void	handleSetting(int *setting);
+		void	manageSettings();
+		void	restoreSettings();
+		bool	haveChangedSettings();
+		typedef struct settings_int_t
+		{
+			int old_val;
+			int *p_val;
+		};
+		std::vector<settings_int_t> v_int_settings;
 
-public:
+	public:
 
-enum PERSONALIZE_MODE
-{
-	PERSONALIZE_MODE_NOTVISIBLE =  0,
-	PERSONALIZE_MODE_VISIBLE  =  1,
-	PERSONALIZE_MODE_PIN  = 2
-};
+		enum PERSONALIZE_MODE
+		{
+			PERSONALIZE_MODE_NOTVISIBLE =  0,
+			PERSONALIZE_MODE_VISIBLE  =  1,
+			PERSONALIZE_MODE_PIN  = 2
+		};
 
-enum PERSONALIZE_PROTECT_MODE
-{
-	PROTECT_MODE_NOT_PROTECTED =  0,
-	PROTECT_MODE_PIN_PROTECTED  =  1
-};
+		enum PERSONALIZE_PROTECT_MODE
+		{
+			PROTECT_MODE_NOT_PROTECTED =  0,
+			PROTECT_MODE_PIN_PROTECTED  =  1
+		};
 
-enum PERSONALIZE_ACTIVE_MODE
-{
-	PERSONALIZE_MODE_DISABLED =  0,
-	PERSONALIZE_MODE_ENABLED  =  1
-};
+		enum PERSONALIZE_ACTIVE_MODE
+		{
+			PERSONALIZE_MODE_DISABLED =  0,
+			PERSONALIZE_MODE_ENABLED  =  1
+		};
 
-CConfigFile                     configfile;
-CPersonalizeGui();
-void hide();
-int exec(CMenuTarget* parent, const std::string & actionKey);
-void ShowMainMenuOptions();
-void ShowSettingsOptions();
-void ShowServiceOptions();
-void ShowPersonalizationMenu();
-void SaveAndRestart();
+		CConfigFile                     configfile;
+		CPersonalizeGui();
+		void hide();
+		int exec(CMenuTarget* parent, const std::string & actionKey);
+		void ShowMainMenuOptions();
+		void ShowSettingsOptions();
+		void ShowServiceOptions();
+		void ShowPersonalizationMenu();
+		void SaveAndRestart();
 
-int addItem(	CMenuWidget &item,
-		const neutrino_locale_t Text,
-		bool isActiv = PERSONALIZE_MODE_ENABLED,
-		const char * const Option = NULL,
-		CMenuTarget* Target = NULL,
-		const char * const ActionKey = NULL,
-		neutrino_msg_t DirectKey = NULL,
-		const char * const IconName = NULL,
-		const bool defaultselected = false,
-		const int & personalize_mode = PERSONALIZE_MODE_VISIBLE,
-		const int & personalize_protect_mode = PROTECT_MODE_NOT_PROTECTED, 
-		const bool alwaysAsk = true);
 
-neutrino_msg_t	setShortcut(const int & shortcut_num, neutrino_msg_t alternate_rc_key = CRCInput::RC_nokey);
+	int addItem(	CMenuWidget &item,
+			const neutrino_locale_t Text,
+			bool isActiv = PERSONALIZE_MODE_ENABLED,
+			const char * const Option = NULL,
+			CMenuTarget* Target = NULL,
+			const char * const ActionKey = NULL,
+			neutrino_msg_t DirectKey = NULL,
+			const char * const IconName = NULL,
+			const bool defaultselected = false,
+			const int & personalize_mode = PERSONALIZE_MODE_VISIBLE,
+			const int & personalize_protect_mode = PROTECT_MODE_NOT_PROTECTED, 
+			const bool alwaysAsk = true);
+
+	neutrino_msg_t	setShortcut(const int & shortcut_num, neutrino_msg_t alternate_rc_key = CRCInput::RC_nokey);
 
 };
 #endif

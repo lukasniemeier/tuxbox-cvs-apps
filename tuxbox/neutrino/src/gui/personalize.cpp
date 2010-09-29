@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.22 2010/09/07 09:59:06 dbt Exp $
+        $Id: personalize.cpp,v 1.23 2010/09/29 22:00:21 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -90,12 +90,13 @@ CPersonalizeGui::CPersonalizeGui()
 : configfile('\t')
 {
 	frameBuffer = CFrameBuffer::getInstance();
-	width = w_max (710, 100);
+	
+	width 	= w_max (710, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	height 	= hheight+13*mheight+ 10;
+	x	= getScreenStartX (width);
+	y	= getScreenStartY (height);
 }
 
 int CPersonalizeGui::exec(CMenuTarget* parent, const std::string & actionKey)
@@ -131,6 +132,7 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const std::string & actionKey)
 	return res;
 }
 
+
 void CPersonalizeGui::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
@@ -140,6 +142,8 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 {
 /*      This is the main personalization menu. From here we can go to the other sub-menu's and enable/disable
         the PIN code feature, as well as determine whether or not the EPG menu/Features menu is accessible. */
+
+	manageSettings();
 
 	CMenuWidget* pMenu = new CMenuWidget(LOCALE_PERSONALIZE_HEAD,NEUTRINO_ICON_PROTECTING, width);
 	CPINChangeWidget * pinChangeWidget = new CPINChangeWidget(LOCALE_PERSONALIZE_PINCODE, g_settings.personalize_pincode, 4, LOCALE_PERSONALIZE_PINHINT);
@@ -166,40 +170,22 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->exec (NULL, "");
 	pMenu->hide ();
 	delete pMenu;
+	
+	if (haveChangedSettings())
+	{
+		if (ShowMsgUTF(LOCALE_PERSONALIZE_HEAD, g_Locale->getText(LOCALE_PERSONALIZE_SAVERESTART), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
+			SaveAndRestart();
+		else
+			if (ShowMsgUTF(LOCALE_PERSONALIZE_HEAD, g_Locale->getText(LOCALE_MESSAGEBOX_DISCARD), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
+				restoreSettings();
+	}
+		
 }
 
 void CPersonalizeGui::ShowMainMenuOptions()
 {
 /*      Here we give the user the option to enable, disable, or PIN protect items on the Main Menu.
         We also provide a means of PIN protecting the menu itself. */
-
-	int old_tvmode		= g_settings.personalize_tvmode;
-	int old_radiomode	= g_settings.personalize_radiomode;
-	int old_scartmode	= g_settings.personalize_scartmode;
-	int old_games		= g_settings.personalize_games;
-#ifdef ENABLE_AUDIOPLAYER
-	int old_audioplayer	= g_settings.personalize_audioplayer;
-#ifdef ENABLE_INTERNETRADIO
-	int old_inetradio	= g_settings.personalize_inetradio;
-#endif
-#endif
-#ifdef ENABLE_ESD
-	int old_esound		= g_settings.personalize_esound;
-#endif
-#ifdef ENABLE_MOVIEPLAYER
-	int old_movieplayer	= g_settings.personalize_movieplayer;
-#endif
-#ifdef ENABLE_PICTUREVIEWER
-	int old_pictureviewer	= g_settings.personalize_pictureviewer;
-#endif
-#ifdef ENABLE_UPNP
-	int old_upnpbrowser	= g_settings.personalize_upnpbrowser;
-#endif
-	int old_settings	= g_settings.personalize_settings;
-	int old_service		= g_settings.personalize_service;
-	int old_sleeptimer	= g_settings.personalize_sleeptimer;
-	int old_reboot		= g_settings.personalize_reboot;
-	int old_shutdown	= g_settings.personalize_shutdown;
 
 	int shortcut = 1;
 
@@ -249,40 +235,6 @@ void CPersonalizeGui::ShowMainMenuOptions()
 	pMMMenu->hide ();
 	delete pMMMenu;
 
-	// Check for changes
-	if (	   old_tvmode != g_settings.personalize_tvmode
-		|| old_radiomode != g_settings.personalize_radiomode
-		|| old_scartmode != g_settings.personalize_scartmode
-		|| old_games != g_settings.personalize_games
-#ifdef ENABLE_AUDIOPLAYER
-		|| old_audioplayer != g_settings.personalize_audioplayer
-#ifdef ENABLE_INTERNETRADIO
-		|| old_inetradio != g_settings.personalize_inetradio
-#endif
-#endif
-#ifdef ENABLE_ESD
-		|| old_esound != g_settings.personalize_esound
-#endif
-#ifdef ENABLE_MOVIEPLAYER
-		|| old_movieplayer != g_settings.personalize_movieplayer
-#endif
-#ifdef ENABLE_PICTUREVIEWER
-		|| old_pictureviewer != g_settings.personalize_pictureviewer
-#endif
-#ifdef ENABLE_UPNP
-		|| old_upnpbrowser != g_settings.personalize_upnpbrowser
-#endif
-		|| old_settings != g_settings.personalize_settings
-		|| old_service != g_settings.personalize_service
-		|| old_sleeptimer != g_settings.personalize_sleeptimer
-		|| old_reboot != g_settings.personalize_reboot
-		|| old_shutdown != g_settings.personalize_shutdown) {
-
-		if (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_PERSONALIZE_SAVERESTART), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
-		{
-			SaveAndRestart(); 
-		}
-	}
 }
 
 void CPersonalizeGui::ShowSettingsOptions()
@@ -290,24 +242,6 @@ void CPersonalizeGui::ShowSettingsOptions()
 /*      Here we give the user the option to enable, disable, or PIN protect items on the Settings Menu.
         We also provide a means of PIN protecting the menu itself. */
 
-	int old_stprotect	= g_settings.personalize_settings;
-	int old_video		= g_settings.personalize_video;
-	int old_audio		= g_settings.personalize_audio;
-	int old_youth		= g_settings.personalize_youth;
-	int old_network		= g_settings.personalize_network;
-	int old_recording	= g_settings.personalize_recording;
-	int old_colors		= g_settings.personalize_colors;
-	int old_lcd		= g_settings.personalize_lcd;
-	int old_keybinding	= g_settings.personalize_keybinding;
-#if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
-	int old_mediaplayer	= g_settings.personalize_mediaplayer;
-#endif
-	int old_driver		= g_settings.personalize_driver;
-	int old_misc		= g_settings.personalize_misc;
-#ifdef ENABLE_DRIVE_GUI
-	int old_drive_setup_stat	= g_settings.personalize_drive_setup_stat;
-#endif
-	
 	CMenuWidget* pSTMenu = new CMenuWidget(LOCALE_MAINMENU_SETTINGS,NEUTRINO_ICON_PROTECTING, width);
 
 	pSTMenu->addItem(GenericMenuSeparator);
@@ -338,48 +272,12 @@ void CPersonalizeGui::ShowSettingsOptions()
 	pSTMenu->hide ();
 	delete pSTMenu;
 
-	// Check for changes
-	if (	   old_stprotect != g_settings.personalize_settings
-		|| old_video != g_settings.personalize_video
-		|| old_audio != g_settings.personalize_audio
-		|| old_youth != g_settings.personalize_youth
-		|| old_network != g_settings.personalize_network
-		|| old_recording != g_settings.personalize_recording
-		|| old_colors != g_settings.personalize_colors
-		|| old_lcd != g_settings.personalize_lcd
-		|| old_keybinding != g_settings.personalize_keybinding
-#ifdef ENABLE_DRIVE_GUI
-		|| old_drive_setup_stat != g_settings.personalize_drive_setup_stat
-#endif
-#if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
-		|| old_mediaplayer != g_settings.personalize_mediaplayer
-#endif
-		|| old_driver != g_settings.personalize_driver
-		|| old_misc != g_settings.personalize_misc) {
-
-		if (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_PERSONALIZE_SAVERESTART), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
-		{ 
-			SaveAndRestart(); 
-		}
-	}
 }
 
 void CPersonalizeGui::ShowServiceOptions()
 {
 /*      Here we give the user the option to enable, disable, or PIN protect items on the Service Menu.
         We also provide a means of PIN protecting the menu itself. */
-
-	int old_svprotect	= g_settings.personalize_service;
-	int old_bouqueteditor	= g_settings.personalize_bouqueteditor;
-	int old_scants		= g_settings.personalize_scants;
-	int old_reload		= g_settings.personalize_reload;
-	int old_getplugins	= g_settings.personalize_getplugins;
-	int old_restart		= g_settings.personalize_restart;
-	int old_epgrestart	= g_settings.personalize_epgrestart;
-	int old_ucodecheck	= g_settings.personalize_ucodecheck;
-	int old_imageinfo	= g_settings.personalize_imageinfo;
-	int old_update		= g_settings.personalize_update;
-	int old_chan_epg_stat	= g_settings.personalize_chan_epg_stat;
 
 	CMenuWidget* pSMMenu = new CMenuWidget(LOCALE_MAINMENU_SERVICE,NEUTRINO_ICON_PROTECTING, width);
 
@@ -407,26 +305,6 @@ void CPersonalizeGui::ShowServiceOptions()
 	pSMMenu->exec (NULL, "");
 	pSMMenu->hide ();
 	delete pSMMenu;
-
-	// Check for changes
-	if (	   old_svprotect != g_settings.personalize_service
-		|| old_bouqueteditor != g_settings.personalize_bouqueteditor
-		|| old_scants != g_settings.personalize_scants
-		|| old_reload != g_settings.personalize_reload
-		|| old_getplugins != g_settings.personalize_getplugins
-		|| old_restart != g_settings.personalize_restart
-		|| old_epgrestart != g_settings.personalize_epgrestart
-		|| old_ucodecheck != g_settings.personalize_ucodecheck
-		|| old_imageinfo != g_settings.personalize_imageinfo
-		|| old_update != g_settings.personalize_update
-		|| old_chan_epg_stat != g_settings.personalize_chan_epg_stat
-		) {
-
-		if (ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_PERSONALIZE_SAVERESTART), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
-		{
-			SaveAndRestart(); 
-		}
-	}
 }
 
 void CPersonalizeGui::ShowHelpPersonalize()
@@ -503,5 +381,98 @@ neutrino_msg_t CPersonalizeGui::setShortcut(const int & shortcut_num, neutrino_m
 	{
 		return alternate_rc_key;
 	}
+}
+
+
+//handle/collects old int settings
+void  CPersonalizeGui::handleSetting(int *setting)
+{	
+	settings_int_t val	= {*setting, setting};
+	v_int_settings.push_back(val);
+}
+
+void  CPersonalizeGui::manageSettings()
+{
+	//main menu settings
+	handleSetting(&g_settings.personalize_tvmode);
+	handleSetting(&g_settings.personalize_tvmode);
+	handleSetting(&g_settings.personalize_radiomode);
+	handleSetting(&g_settings.personalize_scartmode);
+	handleSetting(&g_settings.personalize_games);
+#ifdef ENABLE_AUDIOPLAYER
+	handleSetting(&g_settings.personalize_audioplayer);
+#ifdef ENABLE_INTERNETRADIO
+	handleSetting(&g_settings.personalize_inetradio);
+#endif
+#endif
+#ifdef ENABLE_ESD
+	handleSetting(&g_settings.personalize_esound);
+#endif
+#ifdef ENABLE_MOVIEPLAYER
+	handleSetting(&g_settings.personalize_movieplayer);
+#endif
+#ifdef ENABLE_PICTUREVIEWER
+	handleSetting(&g_settings.personalize_pictureviewer);
+#endif
+#ifdef ENABLE_UPNP
+	handleSetting(&g_settings.personalize_upnpbrowser);
+#endif
+	handleSetting(&g_settings.personalize_settings);
+	handleSetting(&g_settings.personalize_service);
+	handleSetting(&g_settings.personalize_sleeptimer);
+	handleSetting(&g_settings.personalize_reboot);
+	handleSetting(&g_settings.personalize_shutdown);
+	
+	//settings menu
+	handleSetting(&g_settings.personalize_settings);
+	handleSetting(&g_settings.personalize_video);
+	handleSetting(&g_settings.personalize_audio);
+	handleSetting(&g_settings.personalize_youth);
+	handleSetting(&g_settings.personalize_network);
+	handleSetting(&g_settings.personalize_recording);
+	handleSetting(&g_settings.personalize_colors);
+	handleSetting(&g_settings.personalize_lcd);
+	handleSetting(&g_settings.personalize_keybinding);
+#if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
+	handleSetting(&g_settings.personalize_mediaplayer);
+#endif
+	handleSetting(&g_settings.personalize_driver);
+	handleSetting(&g_settings.personalize_misc);
+#ifdef ENABLE_DRIVE_GUI
+	handleSetting(&g_settings.personalize_drive_setup_stat);
+#endif
+
+	//service menu
+	handleSetting(&g_settings.personalize_service);
+	handleSetting(&g_settings.personalize_bouqueteditor);
+	handleSetting(&g_settings.personalize_scants);
+	handleSetting(&g_settings.personalize_reload);
+	handleSetting(&g_settings.personalize_getplugins);
+	handleSetting(&g_settings.personalize_restart);
+	handleSetting(&g_settings.personalize_epgrestart);
+	handleSetting(&g_settings.personalize_ucodecheck);
+	handleSetting(&g_settings.personalize_imageinfo);
+	handleSetting(&g_settings.personalize_update);
+	handleSetting(&g_settings.personalize_chan_epg_stat);
+	
+}
+
+//check for setup changes
+bool  CPersonalizeGui::haveChangedSettings()
+{
+	//compare old settings with current settings
+	for (uint i = 0; i < v_int_settings.size(); i++)
+		if (v_int_settings[i].old_val != *v_int_settings[i].p_val)
+			return true;
+
+	return false;
+}
+
+//restore old settings
+void CPersonalizeGui::restoreSettings()
+{
+	//restore settings with current settings
+	for (uint i = 0; i < v_int_settings.size(); i++)
+		*v_int_settings[i].p_val = v_int_settings[i].old_val;
 }
 
