@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.23 2010/09/29 22:00:21 dbt Exp $
+        $Id: personalize.cpp,v 1.24 2010/09/30 18:11:54 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -394,7 +394,6 @@ void  CPersonalizeGui::handleSetting(int *setting)
 void  CPersonalizeGui::manageSettings()
 {
 	//main menu settings
-	handleSetting(&g_settings.personalize_tvmode);
 	handleSetting(&g_settings.personalize_tvmode);
 	handleSetting(&g_settings.personalize_radiomode);
 	handleSetting(&g_settings.personalize_scartmode);
