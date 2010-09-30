@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.5 2010/09/24 21:47:11 dbt Exp $
+	$Id: osd_setup.cpp,v 1.6 2010/09/30 20:13:59 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -259,7 +259,7 @@ void COsdSetup::showOsdSetup()
 
 
 	// language
-	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, new COsdLangSetup(LOCALE_MAINMENU_SETTINGS) , NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, new COsdLangSetup() , NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 	//osd themes setup forwarder
 	CMenuForwarder *osd_themes_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_THEMESELECT, true, NULL, new CThemes(), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 	//osd color setup forwarder
