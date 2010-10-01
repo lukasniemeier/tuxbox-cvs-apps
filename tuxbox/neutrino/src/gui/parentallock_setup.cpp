@@ -1,5 +1,5 @@
 /*
-	$Id: parentallock_setup.cpp,v 1.3 2010/10/01 15:58:49 dbt Exp $
+	$Id: parentallock_setup.cpp,v 1.4 2010/10/01 15:59:10 dbt Exp $
 
 	parentallock setup implementation - Neutrino-GUI
 
@@ -54,9 +54,9 @@ CParentalSetup::CParentalSetup()
 	width = w_max (500, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	height 	= hheight+13*mheight+ 10;
+	x	= getScreenStartX (width);
+	y	= getScreenStartY (height);
 }
 
 CParentalSetup::~CParentalSetup()
