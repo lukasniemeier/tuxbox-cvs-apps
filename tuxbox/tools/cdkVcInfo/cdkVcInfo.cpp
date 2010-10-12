@@ -1,7 +1,7 @@
 /*
  * Tool for printing some image information during bootup.
  *
- * $Id: cdkVcInfo.cpp,v 1.8 2010/05/15 18:03:44 rhabarber1848 Exp $
+ * $Id: cdkVcInfo.cpp,v 1.9 2010/10/12 11:31:58 rhabarber1848 Exp $
  *
  * cdkVcInfo - d-box2 linux project
  *
@@ -114,7 +114,7 @@ int main (int argc, char **argv)
 	char gateway[BUFFERSIZE];
 	char null[BUFFERSIZE] = "";
 	char versioninfo[20];
-	char cvs_revision[] = "$Revision: 1.8 $";
+	char cvs_revision[] = "$Revision: 1.9 $";
 	sscanf(cvs_revision, "%*s %s", versioninfo);
 
 	while ((opt = getopt(argc, argv, "hgdn:")) != -1)
@@ -206,7 +206,7 @@ int main (int argc, char **argv)
 		while (fgets(buf, BUFFERSIZE, fv4)) {
 			sscanf(buf, " inet addr:%s  Bcast:%s  Mask:%[^\n]", (char *) &address, (char *) &broadcast, (char *) &netmask);
 		}
-		fclose(fv4);
+		pclose(fv4);
 	}
 
 	FILE* fv5 = popen("/sbin/route -n", "r");
@@ -216,7 +216,7 @@ int main (int argc, char **argv)
 		while (fgets(buf, BUFFERSIZE, fv5)) {
 			sscanf(buf, "%s %[0-9.]", (char *) &null, (char *) &gateway);
 		}
-		fclose(fv5);
+		pclose(fv5);
 	}
 
   FILE* fv6 = fopen(MOUNTS_FILE, "r"); //Root-Server IP ermitteln, falls yadd
