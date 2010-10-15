@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.85 2010/07/30 20:50:34 dbt Exp $
+	$Id: menue.h,v 1.86 2010/10/15 18:56:41 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -174,6 +174,7 @@ class CMenuForwarder : public CMenuItem
 	int getHeight(void) const;
 	void setOption(const char *Option);
 	void setTextLocale(const neutrino_locale_t Text);
+	neutrino_locale_t getTextLocale(){return text;};
 	int exec(CMenuTarget* parent);
 	bool isSelectable(void) const
 		{
@@ -256,6 +257,7 @@ class CMenuOptionChooser : public CAbstractMenuOptionChooser
 	int getOptionValue(void) const;
 
 	int paint(bool selected);
+	std::string getOptionName() {return optionNameString;};
 
 	int exec(CMenuTarget* parent);
 };
@@ -344,6 +346,7 @@ class CMenuWidget : public CMenuTarget
 		virtual void paint();
 		virtual void hide();
 		virtual int exec(CMenuTarget* parent, const std::string & actionKey);
+		virtual std::string getName(){ return nameString;};
 };
 
 class CPINProtection
