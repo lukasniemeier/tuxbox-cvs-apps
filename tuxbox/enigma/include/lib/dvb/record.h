@@ -17,8 +17,11 @@
 #define RECORD_TELETEXT
 #define RECORD_SUBTITLES
 
-//#define RECORD_BUFFERSIZE 524144
+#ifdef HAVE_DBOX_HARDWARE
 #define RECORD_BUFFERSIZE 262072
+#else
+#define RECORD_BUFFERSIZE 524144
+#endif
 
 /**
  * \brief The DVBRecorder
