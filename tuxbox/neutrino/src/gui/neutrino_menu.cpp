@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.117 2010/09/07 09:59:06 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.118 2010/10/15 19:43:42 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -116,40 +116,73 @@
 #include "drive_setup.h"
 #endif /*ENABLE_DRIVE_GUI*/
 
+#include <driver/screen_max.h>
 
-// static CTimingSettingsNotifier timingsettingsnotifier;
+typedef struct mn_data_t
+{
+	const neutrino_locale_t locale_text;
+	const std::string icon;
+} mn_data_struct_t;
 
-/**************************************************************************************
-*                                                                                     *
-*          CNeutrinoApp -  init main menu                                             *
-*                                                                                     *
-**************************************************************************************/
+const mn_data_struct_t mn_data[CNeutrinoApp::MENU_MAX] =
+{
+	{LOCALE_MAINMENU_HEAD, 		NEUTRINO_ICON_MAIN},		//main
+	{LOCALE_MAINSETTINGS_HEAD, 	NEUTRINO_ICON_SETTINGS},	//settings
+	{LOCALE_SERVICEMENU_HEAD,	NEUTRINO_ICON_SETTINGS}, 	//service
+};
 
-void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu, CMenuWidget &mainSettings, CMenuWidget &service)
+//init all menues
+void CNeutrinoApp::InitMenu()
+{
+	printf("[neutrino] init menus...\n");
+	
+	personalize = CPersonalizeGui::getInstance();
+	
+	int width = w_max (500, 50);
+	
+	for (uint i = 0; i<(CNeutrinoApp::MENU_MAX); i++)
+	{
+		printf("[neutrino] loading menus %d...\n",i);
+		if (menus[i] == NULL)
+			menus[i]	= new CMenuWidget(mn_data[i].locale_text, mn_data[i].icon	,width);
+	}	
+	
+	//needs to run before InitMenuMain() !!
+	firstChannel();
+	
+	InitMenuMain();
+	InitMenuSettings();
+	InitMenuService();
+
+	personalize->addPersonalizedItems();
+}
+
+//init main menu
+void CNeutrinoApp::InitMenuMain()
 {
 	dprintf(DEBUG_DEBUG, "init mainmenue\n");
-
+	
 	// Dynamic renumbering
-	int shortcut = 1;
-	int shortcut2 = 1;
-
-	CPersonalizeGui	*personalize;
-	personalize = new CPersonalizeGui;
+	personalize->shortcut = 1;
+	
+	CMenuWidget &menu = *menus[MENU_MAIN];
 	
 	// Main Menu
-	mainMenu.addItem(GenericMenuSeparator);
+	menu.addItem(GenericMenuSeparator);
 
 	//tv-mode
- 	personalize->addItem(mainMenu, LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED, (g_settings.startmode == STARTMODE_TV || firstchannel.mode != 'r' ), g_settings.personalize_tvmode);
-
-	//radio mode
-	personalize->addItem(mainMenu, LOCALE_MAINMENU_RADIOMODE, true, NULL, this, "radio", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN, (g_settings.startmode == STARTMODE_RADIO || (!(g_settings.startmode == STARTMODE_TV) && firstchannel.mode == 'r')),g_settings.personalize_radiomode);
+	CMenuItem *tvswitch = new CMenuForwarder(LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	personalize->addItem(&menu, tvswitch, &g_settings.personalize_tvmode, (g_settings.startmode == STARTMODE_TV || firstchannel.mode != 'r' ));
+	
+	//radio-mode
+	CMenuItem *radioswitch = new CMenuForwarder(LOCALE_MAINMENU_RADIOMODE, true, NULL, this, "radio", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	personalize->addItem(&menu, radioswitch, &g_settings.personalize_radiomode, (g_settings.startmode == STARTMODE_RADIO || (!(g_settings.startmode == STARTMODE_TV) && firstchannel.mode == 'r')));
 
 	//scart
-	personalize->addItem(mainMenu, LOCALE_MAINMENU_SCARTMODE, true, NULL, this, "scart", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW, false, g_settings.personalize_scartmode);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCARTMODE, true, NULL, this, "scart", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_scartmode);
 
 	//games
-	personalize->addItem(mainMenu, LOCALE_MAINMENU_GAMES, true, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE, false, g_settings.personalize_games);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_GAMES, true, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_games);
 
 	//separator	
 	if (	g_settings.personalize_tvmode		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
@@ -158,15 +191,15 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu, CMenuWidget &mainSettings
 		g_settings.personalize_games		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
 		;// Stop seperator from appearing when menu entries have been hidden	
 	else
-		mainMenu.addItem(GenericMenuSeparatorLine); 
+		personalize->addSeparator(menu); 
 	
 #ifdef ENABLE_AUDIOPLAYER
 	// audioplayer
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, new CAudioPlayerGui(), NULL, CRCInput::convertDigitToKey(shortcut), NULL, false,   g_settings.personalize_audioplayer);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, new CAudioPlayerGui()), &g_settings.personalize_audioplayer);
 	
 #ifdef ENABLE_INTERNETRADIO
 	// internet player
-	shortcut += personalize->addItem(mainMenu, LOCALE_INETRADIO_NAME, true, NULL, new CAudioPlayerGui(true), NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, g_settings.personalize_inetradio);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_INETRADIO_NAME, true, NULL, new CAudioPlayerGui(true)), &g_settings.personalize_inetradio);
 #endif
 #endif	
 
@@ -175,28 +208,28 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu, CMenuWidget &mainSettings
 	if (access("/bin/esd", X_OK) == 0 || access("/var/bin/esd", X_OK) == 0)
 	{
 		puts("[neutrino] found esound, adding personalized esound entry to mainmenue");
-		shortcut += personalize->addItem(mainMenu, LOCALE_ESOUND_NAME, true, NULL, new CEsoundGui(), NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, g_settings.personalize_esound);
+		personalize->addItem(&menu, new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, new CEsoundGui()), &g_settings.personalize_esound);
 	}
 #endif
 
 #ifdef ENABLE_MOVIEPLAYER
 	// movieplayer
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_MOVIEPLAYER, true, NULL, new CMoviePlayerMenue(), NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, g_settings.personalize_movieplayer);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_MOVIEPLAYER, true, NULL, new CMoviePlayerMenue()), &g_settings.personalize_movieplayer);
 #endif
 
 #ifdef ENABLE_PICTUREVIEWER
 	// pictureviewer
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_PICTUREVIEWER, true, NULL, new CPictureViewerGui(), NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, g_settings.personalize_pictureviewer);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_PICTUREVIEWER, true, NULL, new CPictureViewerGui()), &g_settings.personalize_pictureviewer);
 #endif
 
 #if ENABLE_UPNP
 	// upnpbrowser
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_UPNPBROWSER, true, NULL, new CUpnpBrowserGui(), NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, g_settings.personalize_upnpbrowser);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_UPNPBROWSER, true, NULL, new CUpnpBrowserGui()), &g_settings.personalize_upnpbrowser);
 #endif
 
-	// scripts
-	if (g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT))
-		mainMenu.addItem(new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, true, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT), "", CRCInput::convertDigitToKey(shortcut++)));
+	// scripts - not personalized
+	if (g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT) ? CPersonalizeGui::PERSONALIZE_MODE_VISIBLE : CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
+		personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, true, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), NULL, false, false);
 
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_INTERNETRADIO) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_UPNP)
 	// separator
@@ -208,13 +241,25 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu, CMenuWidget &mainSettings
 		g_settings.personalize_upnpbrowser	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
 		;// Stop seperator from appearing when menu entries have been hidden
 	else
-		mainMenu.addItem(GenericMenuSeparatorLine); 
+		personalize->addSeparator(menu, NONEXISTANT_LOCALE, false); //don't show this separator in personal menu
 #endif
-	// settings
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_SETTINGS, true, NULL, &mainSettings, NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE, g_settings.personalize_settings);
+	// settings - not personalized
+	CMenuItem *settings;
+	if (g_settings.personalize_settings == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
+		settings = new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, menus[MENU_SETTINGS]);
+	else
+		settings = new CLockedMenuForwarder(LOCALE_MAINMENU_SETTINGS, g_settings.personalize_pincode, true, true, NULL, menus[MENU_SETTINGS]);
+	
+	personalize->addItem(&menu, settings, NULL, false, false);
 
-	// service
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_SERVICE, true, NULL, &service, NULL, CRCInput::convertDigitToKey(shortcut), NULL, false, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE, g_settings.personalize_service);
+	// service - not personalized
+	CMenuItem *service;
+	if (g_settings.personalize_service == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
+		service = new CMenuForwarder(LOCALE_MAINMENU_SERVICE, true, NULL, menus[MENU_SERVICE]);
+	else
+		service = new CLockedMenuForwarder(LOCALE_MAINMENU_SERVICE, g_settings.personalize_pincode, true, true, NULL, menus[MENU_SERVICE]);
+	
+	personalize->addItem(&menu, service, NULL, false, false);
 
 	//separator
 	if (	g_settings.personalize_sleeptimer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
@@ -222,78 +267,97 @@ void CNeutrinoApp::InitMainMenu(CMenuWidget &mainMenu, CMenuWidget &mainSettings
 		g_settings.personalize_shutdown		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
 		 ;// Stop seperator from appearing when menu entries have been hidden
 	else
-		mainMenu.addItem(GenericMenuSeparatorLine);
+		personalize->addSeparator(menu);
 
 	//10. -- only 10 shortcuts (1-9, 0), the next could be the last also!(10. => 0)
 	//sleeptimer
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_SLEEPTIMER, true, NULL, new CSleepTimerWidget, NULL, personalize->setShortcut(shortcut), NULL, false, g_settings.personalize_sleeptimer);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SLEEPTIMER, true, NULL, new CSleepTimerWidget), &g_settings.personalize_sleeptimer);
 
 	// reboot
-	shortcut += personalize->addItem(mainMenu, LOCALE_MAINMENU_REBOOT, true, NULL, this, "reboot", personalize->setShortcut(shortcut), NULL, false, g_settings.personalize_reboot);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_REBOOT, true, NULL, this, "reboot"), &g_settings.personalize_reboot);
 
 	// shutdown
-	personalize->addItem(mainMenu, LOCALE_MAINMENU_SHUTDOWN, true, NULL, this, "shutdown", CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER, false, g_settings.personalize_shutdown);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SHUTDOWN, true, NULL, this, "shutdown", CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER), &g_settings.personalize_shutdown);
+}
 
-//----------------------
+//settings menue
+void CNeutrinoApp::InitMenuSettings()
+{
+	dprintf(DEBUG_DEBUG, "init settings menue...\n");
+	
+	CMenuWidget &menu = *menus[MENU_SETTINGS];
+
+	// Dynamic renumbering
+	personalize->shortcut = 1;
+	
 	//red Settings Menu
-	addMenueIntroItems(mainSettings);
-	mainSettings.addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "savesettings", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-	mainSettings.addItem(GenericMenuSeparatorLine);
+	addMenueIntroItems(menu);
+	menu.addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "savesettings", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	menu.addItem(GenericMenuSeparatorLine);
 
 	// video.
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_VIDEO, true, NULL, new CVideoSetup(), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_video);	
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_VIDEO, true, NULL, new CVideoSetup()), &g_settings.personalize_video);	
 
 	// audio
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_AUDIO, true, NULL, new CAudioSetup(), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_audio);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_AUDIO, true, NULL, new CAudioSetup()), &g_settings.personalize_audio);
 	
 	// parental lock
-	if (g_settings.personalize_youth == CPersonalizeGui::PERSONALIZE_MODE_VISIBLE) {
+	CMenuItem *item_y_protect = NULL;
+	if (g_settings.personalize_youth == CPersonalizeGui::PERSONALIZE_MODE_VISIBLE) 
+	{
 		if(g_settings.parentallock_prompt)
-			mainSettings.addItem(new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.parentallock_pincode, true, true, NULL, new CParentalSetup(), NULL, CRCInput::convertDigitToKey(shortcut2++)));
-		else
-			mainSettings.addItem(new CMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, true, NULL, new CParentalSetup(), NULL, CRCInput::convertDigitToKey(shortcut2++)));
- 	}
+			item_y_protect = new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.parentallock_pincode, true, true, NULL, new CParentalSetup());
+ 		else
+			item_y_protect = new CMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, true, NULL, new CParentalSetup());
+	}
 	else if (g_settings.personalize_youth == CPersonalizeGui::PERSONALIZE_MODE_PIN)
-		mainSettings.addItem(new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.personalize_pincode, true, true, NULL, new CParentalSetup(), NULL, CRCInput::convertDigitToKey(shortcut2++)));
+		item_y_protect = new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.personalize_pincode, true, true, NULL, new CParentalSetup());
+	
+	if (item_y_protect != NULL) //for shure
+		personalize->addItem(&menu, item_y_protect, &g_settings.personalize_youth);
 
 	// network
 	if(networksetup == NULL)
 		networksetup = new CNetworkSetup();
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_NETWORK, true, NULL, networksetup, NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_network);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_NETWORK, true, NULL, networksetup), &g_settings.personalize_network);
 
 	// record settings
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_RECORDING, true, NULL, new CRecordSetup(), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false,g_settings.personalize_recording);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_RECORDING, true, NULL, new CRecordSetup()), &g_settings.personalize_recording);
 
 	// osd
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_OSD, true, NULL, new COsdSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_colors);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_OSD, true, NULL, new COsdSetup(LOCALE_MAINMENU_SETTINGS)), &g_settings.personalize_colors);
 	
 	// lcd.
-	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_LCD, true, NULL, new CLcdSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_lcd);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_LCD, true, NULL, new CLcdSetup(LOCALE_MAINMENU_SETTINGS)), &g_settings.personalize_lcd);
 	
 	//10. -- only 10 shortcuts (1-9, 0), the next could be the last also!(10. => 0)
 	//keybindings
-	shortcut2 += personalize->addItem(mainSettings,LOCALE_MAINSETTINGS_KEYBINDING, true, NULL, new CKeybindSetup(LOCALE_MAINMENU_SETTINGS) , NULL, personalize->setShortcut(shortcut2), NULL, false, g_settings.personalize_keybinding);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_KEYBINDING, true, NULL, new CKeybindSetup(LOCALE_MAINMENU_SETTINGS)), &g_settings.personalize_keybinding);
 
 #ifdef ENABLE_DRIVE_GUI
 	// ide, hdd, mmc setup
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance(), NULL, CRCInput::convertDigitToKey(shortcut2), NULL, false, g_settings.personalize_drive_setup_stat); 
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_DRIVE_SETUP_HEAD, true, NULL, CDriveSetup::getInstance()), &g_settings.personalize_drive_setup_stat); 
 #endif /*ENABLE_DRIVE_GUI*/
 	
 	//blue (audioplayer, pictureviewer, esd, mediaplayer)
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
-	personalize->addItem(mainSettings, LOCALE_MEDIAPLAYERSETTINGS_GENERAL, true, NULL, new CMediaPlayerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE, false, g_settings.personalize_mediaplayer);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MEDIAPLAYERSETTINGS_GENERAL, true, NULL, new CMediaPlayerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_mediaplayer);
 #endif
 
 	//green (driver/boot settings)
-	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_DRIVER, true, NULL, new CDriverBootSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN, false, g_settings.personalize_driver);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_DRIVER, true, NULL, new CDriverBootSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), &g_settings.personalize_driver);
 	
 	//yellow (miscSettings)
-	personalize->addItem(mainSettings, LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW, false, g_settings.personalize_misc);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_misc);
 	
-	// personalize
-	shortcut2 += personalize->addItem(mainSettings, LOCALE_PERSONALIZE_HEAD, true, NULL, new CPersonalizeGui(), NULL, personalize->setShortcut(shortcut2), NULL, false, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE, g_settings.personalize_pinstatus);
+	// personalize - not personalized
+	CMenuItem *personalize_menu;
+	if (g_settings.personalize_pinstatus == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
+		personalize_menu = new CMenuForwarder(LOCALE_PERSONALIZE_HEAD, true, NULL, personalize);
+	else
+		personalize_menu = new CLockedMenuForwarder(LOCALE_PERSONALIZE_HEAD, g_settings.personalize_pincode, true, true, NULL, personalize);
 
-	delete personalize ;
+	personalize->addItem(&menu, personalize_menu, NULL, false, false);
 }
 
 const CMenuOptionChooser::keyval OPTIONS_OFF0_ON1_OPTIONS[OPTIONS_OFF0_ON1_OPTION_COUNT] =
@@ -303,50 +367,49 @@ const CMenuOptionChooser::keyval OPTIONS_OFF0_ON1_OPTIONS[OPTIONS_OFF0_ON1_OPTIO
 };
 
 /* service menu*/
-void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
+void CNeutrinoApp::InitMenuService()
 {
-	dprintf(DEBUG_DEBUG, "init serviceSettings\n");
+	dprintf(DEBUG_DEBUG, "init service menu...\n");
 
-	CPersonalizeGui	*personalize;
-	personalize = new CPersonalizeGui;
-
+	CMenuWidget &menu = *menus[MENU_SERVICE];
+	
 	// Dynamic renumbering
-	int shortcut3 = 1;
+	personalize->shortcut = 1;
 
-	addMenueIntroItems(service);
+	addMenueIntroItems(menu);
 
 	// bouquets
-	personalize->addItem(service, LOCALE_BOUQUETEDITOR_NAME, true, NULL, new CBEBouquetWidget(), NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED, false, g_settings.personalize_bouqueteditor);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_BOUQUETEDITOR_NAME, true, NULL, new CBEBouquetWidget(), NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED), &g_settings.personalize_bouqueteditor);
 
 	// channel scan
-	personalize->addItem(service, LOCALE_SERVICEMENU_SCANTS, true, NULL, new CScanSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN, false, g_settings.personalize_scants);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_SCANTS, true, NULL, new CScanSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), &g_settings.personalize_scants);
 
 	// separator
 	if (	g_settings.personalize_bouqueteditor	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_scants		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
 		// Stop seperator from appearing when menu entries have been hidden
 	else
-		service.addItem(GenericMenuSeparatorLine); 
+		personalize->addSeparator(menu); 
 
 	// reload channels
-	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_RELOAD, true, NULL, this, "reloadchannels", CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_reload);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_RELOAD, true, NULL, this, "reloadchannels"), &g_settings.personalize_reload);
 
 	// reload plugins
-	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_GETPLUGINS, true, NULL, this, "reloadplugins" , CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_getplugins);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_GETPLUGINS, true, NULL, this, "reloadplugins"), &g_settings.personalize_getplugins);
 	
 	// restart neutrino
-	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_RESTART, true, NULL, this, "restart", CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_restart);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_RESTART, true, NULL, this, "restart"), &g_settings.personalize_restart);
 	
 	// epg restart
-	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_EPGRESTART, true, NULL, this, "EPGrestart", CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_epgrestart);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_EPGRESTART, true, NULL, this, "EPGrestart"), &g_settings.personalize_epgrestart);
 	
 #ifdef HAVE_DBOX_HARDWARE
 	// ucode check
-	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_UCODECHECK, true, NULL, UCodeChecker, NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_ucodecheck);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_UCODECHECK, true, NULL, UCodeChecker), &g_settings.personalize_ucodecheck);
 #endif
 
 	// epg status
-	shortcut3 += personalize->addItem(service, LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, DVBInfo, NULL, CRCInput::convertDigitToKey(shortcut3), NULL, false, g_settings.personalize_chan_epg_stat);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, DVBInfo), &g_settings.personalize_chan_epg_stat);
 
 	// separator
 	if (	g_settings.personalize_reload		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
@@ -357,19 +420,18 @@ void CNeutrinoApp::InitServiceSettings(CMenuWidget &service)
 		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE
 		);// Stop seperator from appearing when menu entries have been hidden
 	else
-		service.addItem(GenericMenuSeparatorLine); 
+		personalize->addSeparator(menu); 
 
 	//yellow imageinfo
-	personalize->addItem(service, LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfo(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW, false, g_settings.personalize_imageinfo);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfo(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_imageinfo);
 
 	//softupdate
 	if(softupdate)
 	{
 		// blue software update
-		personalize->addItem(service, LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE, false, g_settings.personalize_update);
+		personalize->addItem(&menu, new CMenuForwarder(LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_update);
  	}
 
-	delete personalize;
 }
 
 

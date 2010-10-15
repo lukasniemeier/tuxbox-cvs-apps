@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.238 2010/09/07 09:31:53 dbt Exp $
+	$Id: neutrino.h,v 1.239 2010/10/15 19:43:42 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -45,6 +45,7 @@
 #include <timerdclient/timerdtypes.h>
 #include <gui/channellist.h>          /* CChannelList */
 #include <gui/rc_lock.h>
+#include <gui/personalize.h>
 #include <daemonc/remotecontrol.h>    /* st_rmsg      */
 
 #include <zapit/client/zapitclient.h>
@@ -86,9 +87,16 @@ typedef struct font_sizes_groups
 	const char * const                          actionkey;
 } font_sizes_groups_struct;
 
+typedef struct menu_item_t
+{
+	CMenuItem* menuItem;
+	bool default_selected;
+};
+
 #define FONT_STYLE_REGULAR 0
 #define FONT_STYLE_BOLD    1
 #define FONT_STYLE_ITALIC  2
+
 
 extern const font_sizes_struct neutrino_font[];
 extern const char * locale_real_names[]; /* #include <system/locals_intern.h> */
@@ -152,6 +160,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 			STARTMODE_ESOUND	= 6,
 			STARTMODE_STANDBY	= 7,
 		};
+		
 
 		CConfigFile			configfile;
 		CScanSettings			scanSettings;
@@ -220,13 +229,14 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		
 		void ExitRun(const bool write_si);
 		
-		void RealRun(CMenuWidget &mainSettings);
+		void RealRun(CMenuWidget &menu);
 		void InitZapper();
-		void InitServiceSettings(CMenuWidget &);
-// 		void InitParentalLockSettings(CMenuWidget &);
-		void InitMainMenu(CMenuWidget &mainMenu,
-				  CMenuWidget &mainSettings,
-				  CMenuWidget &service);
+		
+		//menues
+		void InitMenu();
+		void InitMenuMain();
+		void InitMenuSettings();
+		void InitMenuService();
 
 		void addMenueIntroItems(CMenuWidget &item);
 
@@ -240,7 +250,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void prepareEnviroment();
 		CNeutrinoApp();
 
-	public:
+	public:	
 		void SetupFonts();
 		void SetupTiming();
 		~CNeutrinoApp();
@@ -251,6 +261,8 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		CChannelList			*channelListTV;
 		CChannelList			*channelListRADIO;
 		CChannelList			*channelListRecord;
+		
+		CPersonalizeGui			*personalize;
 
 		static CNeutrinoApp* getInstance();
 
@@ -278,6 +290,19 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		bool execute_start_file(const char *filename, const bool blocking = true, const bool verbose = false);
 		int execute_sys_command(const char *command);
 		CConfigFile* getConfigFile() {return &configfile;};
+		
+	friend class CPersonalizeGui;
+	
+		enum
+		{
+			MENU_MAIN,
+			MENU_SETTINGS,
+			MENU_SERVICE,
+			MENU_MAX //= 3
+		};
+		
+		//menues
+		CMenuWidget    *menus[MENU_MAX];
 };
 
 

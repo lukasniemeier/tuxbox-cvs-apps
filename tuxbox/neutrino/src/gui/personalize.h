@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.6 2010/09/29 22:00:21 dbt Exp $
+$Id: personalize.h,v 1.7 2010/10/15 19:43:42 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -33,6 +33,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #ifndef __personalize__
 #define __personalize__
+
+#include <gui/widget/menue.h>
 #include <string>
 #include <vector>
 #include <configfile.h>
@@ -46,12 +48,14 @@ class CPersonalizeGui : public CMenuTarget
 {
 	private:
 		CFrameBuffer *frameBuffer;
+		
 		int x, y, width, height, hheight, mheight;
 		void 	ShowHelpPersonalize();
 		
+		std::string action_key[3/*=CNeutrinoApp::MENU_MAX*/];
+		
 		//stuff for settings handlers
 		void	handleSetting(int *setting);
-		void	manageSettings();
 		void	restoreSettings();
 		bool	haveChangedSettings();
 		typedef struct settings_int_t
@@ -60,7 +64,26 @@ class CPersonalizeGui : public CMenuTarget
 			int *p_val;
 		};
 		std::vector<settings_int_t> v_int_settings;
-
+		
+		typedef struct menu_item_t
+		{
+			CMenuWidget *menu;
+			CMenuItem* menuItem;
+			bool default_selected;
+			neutrino_locale_t locale_name;
+			int* personalize_mode;
+			bool show_in_options;
+		};
+		std::vector<menu_item_t> v_item;
+		
+		void 	ShowPersonalizationMenu();
+		void 	ShowMenuOptions(const int& menu);
+		
+		void 	hide();
+		void 	SaveAndRestart();
+		
+		neutrino_msg_t	getShortcut(const int & shortcut_num, neutrino_msg_t alternate_rc_key = CRCInput::RC_nokey);
+		
 	public:
 
 		enum PERSONALIZE_MODE
@@ -82,31 +105,17 @@ class CPersonalizeGui : public CMenuTarget
 			PERSONALIZE_MODE_ENABLED  =  1
 		};
 
-		CConfigFile                     configfile;
 		CPersonalizeGui();
-		void hide();
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void ShowMainMenuOptions();
-		void ShowSettingsOptions();
-		void ShowServiceOptions();
-		void ShowPersonalizationMenu();
-		void SaveAndRestart();
+		~CPersonalizeGui();
+		
+		static CPersonalizeGui* getInstance();
+		
+		int shortcut;
 
-
-	int addItem(	CMenuWidget &item,
-			const neutrino_locale_t Text,
-			bool isActiv = PERSONALIZE_MODE_ENABLED,
-			const char * const Option = NULL,
-			CMenuTarget* Target = NULL,
-			const char * const ActionKey = NULL,
-			neutrino_msg_t DirectKey = NULL,
-			const char * const IconName = NULL,
-			const bool defaultselected = false,
-			const int & personalize_mode = PERSONALIZE_MODE_VISIBLE,
-			const int & personalize_protect_mode = PROTECT_MODE_NOT_PROTECTED, 
-			const bool alwaysAsk = true);
-
-	neutrino_msg_t	setShortcut(const int & shortcut_num, neutrino_msg_t alternate_rc_key = CRCInput::RC_nokey);
-
+		int 	exec(CMenuTarget* parent, const std::string & actionKey);
+				
+		void 	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode = NULL, const bool defaultselected = false, const bool show_in_options = true);
+		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const bool show_in_options = true);
+		void 	addPersonalizedItems();
 };
 #endif

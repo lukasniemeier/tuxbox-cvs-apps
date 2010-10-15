@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1046 2010/09/07 09:42:55 dbt Exp $
+	$Id: neutrino.cpp,v 1.1047 2010/10/15 19:43:42 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -99,7 +99,6 @@
 #endif
 #include "gui/scan_setup.h"
 #include "gui/esound.h"
-#include "gui/personalize.h"
 #include "gui/osd_setup.h"
 #include "gui/osdlang_setup.h"
 #ifdef ENABLE_SAMBASERVER
@@ -2113,19 +2112,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 		setupRecordingDevice();
 
 	dprintf( DEBUG_NORMAL, "menue setup\n");
-	//Main settings
-	CMenuWidget    mainMenu            (LOCALE_MAINMENU_HEAD                 , NEUTRINO_ICON_MAIN    );
-	CMenuWidget    mainSettings        (LOCALE_MAINSETTINGS_HEAD             , NEUTRINO_ICON_SETTINGS);
-	CMenuWidget    service             (LOCALE_SERVICEMENU_HEAD              , NEUTRINO_ICON_SETTINGS);
-	
-
-	// needs to run before initMainMenu()
-	firstChannel();
-
-	InitMainMenu(	mainMenu, mainSettings, service);
-
-	//service
-	InitServiceSettings(service);
+	//init Menues
+	InitMenu();
 
 	dprintf( DEBUG_NORMAL, "registering as event client\n");
 
@@ -2235,7 +2223,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	execute_start_file(NEUTRINO_INIT_END_SCRIPT, false);
 
-	RealRun(mainMenu);
+	RealRun(*menus[MENU_MAIN]);
 
 	ExitRun(true);
 
@@ -2243,13 +2231,13 @@ int CNeutrinoApp::run(int argc, char **argv)
 }
 
 
-void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
+void CNeutrinoApp::RealRun(CMenuWidget &menu)
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
 
 	dprintf(DEBUG_NORMAL, "initialized everything\n");
-
+	
 #ifdef ENABLE_LIRC
 	CIRSend irs("neutrinoon");
 	irs.Send();
@@ -2348,7 +2336,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &mainMenu)
 			}
 			else if( msg == CRCInput::RC_setup )
 			{
-				mainMenu.exec(NULL, "");
+				menu.exec(NULL, "");
 			}
 			else if(msg == CRCInput::RC_ok)
 			{
