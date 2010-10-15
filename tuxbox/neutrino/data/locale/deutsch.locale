@@ -266,6 +266,7 @@ date.Tue  Di
 date.Wed  Mi
 drive_setup.advanced_settings Erweitert
 drive_setup.advanced_settings_custom_moduldir Bevorzugt suchen in...
+drive_setup.advanced_settings_format_options Formatierungsoptionen
 drive_setup.advanced_settings_modul Treiber-Module
 drive_setup.advanced_settings_modul_loadcmd_options_entry Optionen
 drive_setup.advanced_settings_modul_loadcmd_options_input Eingabe

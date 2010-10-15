@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.33 2010/08/15 21:23:19 dbt Exp $
+	$Id: drive_setup.h,v 1.34 2010/10/15 13:43:56 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -68,6 +68,8 @@
 #define MAXCOUNT_PARTS 4
 // maximal count of possible supported mmc driver modules
 #define MAXCOUNT_MMC_MODULES 3
+// possible supported fstypes for mkfs.X and fsck.x
+#define MAXCOUNT_FSTYPES 7
 
 // drive settings
 struct SDriveSettings
@@ -88,6 +90,7 @@ struct SDriveSettings
 	char 	drive_spindown[MAXCOUNT_DRIVE][3];
 	char 	drive_partition_size[MAXCOUNT_DRIVE][MAXCOUNT_PARTS][8];
 	char 	drive_mmc_module_name[10];
+	char 	drive_fs_format_option[MAXCOUNT_FSTYPES][36];
 
 #ifdef ENABLE_NFSSERVER
 	std::string 	drive_partition_nfs_host_ip[MAXCOUNT_DRIVE][MAXCOUNT_PARTS];
@@ -254,6 +257,7 @@ class CDriveSetup : public CMenuTarget
 		void 	handleSetting(std::string *setting);
 		std::string old_drive_mmc_module_name;
 		std::string old_drive_spindown[MAXCOUNT_DRIVE];
+		std::string old_drive_fs_format_option[MAXCOUNT_FSTYPES];
 
 		void 	restoreSettings();
 		bool  	haveChangedSettings();
@@ -481,7 +485,7 @@ class CDriveSetup : public CMenuTarget
 		#define SMB_OPTS_COUNT 0  
 	#endif /*ENABLE_SAMBASERVER*/
 
-	#define CHAR_OPTIONS_NUM_COUNT 8 + NFS_OPTS_COUNT + SMB_OPTS_COUNT
+	#define CHAR_OPTIONS_NUM_COUNT 9 + NFS_OPTS_COUNT + SMB_OPTS_COUNT
 	
 		typedef enum 
 		{
@@ -491,6 +495,7 @@ class CDriveSetup : public CMenuTarget
 			OPT_SPINDOWN,
 			OPT_PARTSIZE,
 			OPT_FSTYPE,
+			OPT_FS_FORMAT_OPTION,
 			OPT_WRITECACHE,
 			OPT_ACTIV_PARTITION
 	#ifdef ENABLE_NFSSERVER

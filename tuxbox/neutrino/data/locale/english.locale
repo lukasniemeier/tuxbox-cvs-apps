@@ -266,6 +266,7 @@ date.Tue  Tue
 date.Wed  Wed
 drive_setup.advanced_settings Advanced
 drive_setup.advanced_settings_custom_moduldir Preferred search in...
+drive_setup.advanced_settings_format_options Format options
 drive_setup.advanced_settings_modul Driver modules
 drive_setup.advanced_settings_modul_loadcmd_options_entry Options
 drive_setup.advanced_settings_modul_loadcmd_options_input Input

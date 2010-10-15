@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.78 2010/08/15 21:23:19 dbt Exp $
+	$Id: drive_setup.cpp,v 1.79 2010/10/15 13:43:56 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -612,6 +612,26 @@ bool CDriveSetup::ApplySetup(const bool show_msg)
 	return false;
 }
 
+//names and properities for supported filesystems
+typedef struct fstype_t
+{
+	const string fsname;
+	const string mkfs_options;
+	const string fsck_options;
+} fstype_struct_t;
+
+//Note: mkfs options are default values for settings
+const fstype_struct_t fstype[MAXCOUNT_FSTYPES] =
+{
+	{"ext2", 	"-T largefile -v -m0 -q -I 128", 	"-y -v"},
+	{"ext3",	"-T largefile -v -m0 -q -I 128", 	"-y -v"},
+	{"msdos", 	"", 			"-y"},
+	{"vfat", 	"", 			"-y"},
+	{"reiserfs", 	"-f", 			"-f -y "},
+	{"xfs", 	"-l version=2 -f -q", 	"-v"},
+	{"swap", 	"", 			""},
+};
+
 typedef struct mn_data_t
 {
 	const neutrino_locale_t entry_locale;
@@ -778,7 +798,23 @@ void CDriveSetup::showHddSetupMain()
 
 		//extended settings: reset settings
 		CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
-
+		
+		//extended settings: filesystem format options
+		vector<CStringInputSMS*> v_input_fs_options;
+		vector<CMenuItem*> v_fs_item;
+		CMenuSeparator * sep_fs_format_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_FORMAT_OPTIONS);
+		for (int i = 0; i<MAXCOUNT_FSTYPES; i++)
+		{
+ 			for (uint ii = 0; ii<v_fs_modules.size(); ii++)
+			{
+ 				if (v_fs_modules[ii] != fstype[i].fsname)
+					continue;
+				
+				v_input_fs_options.push_back(new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, d_settings.drive_fs_format_option[i], 32, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- "));
+				v_fs_item.push_back(new CMenuForwarderNonLocalized(fstype[i].fsname.c_str(), true, d_settings.drive_fs_format_option[i], v_input_fs_options.back()));
+ 			}
+		}
+		
 		//extended settings: paint items 
 		extsettings->addItem(subhead_extsettings);	//menue subhead
 		extsettings->addItem(GenericMenuSeparator);	//empty intro separator
@@ -793,6 +829,11 @@ void CDriveSetup::showHddSetupMain()
 		extsettings->addItem (sep_modules);		//separator modul
 		extsettings->addItem (fw_moduldir);		//select prefered modul directory
 		// -----------------------------------------
+		if (v_fs_item.size() > 0)			//separator format options
+			extsettings->addItem(sep_fs_format_options);
+		for (uint i = 0; i<v_fs_item.size(); i++)	//format options
+			extsettings->addItem(v_fs_item[i]);
+		//------------------------------------------
 		extsettings->addItem(GenericMenuSeparatorLine);	//separator
 		extsettings->addItem (fw_reset);		//reset
 
@@ -3784,33 +3825,14 @@ string CDriveSetup::getSmbConfFilePath()
 }
 #endif
 
-// possible supported fstypes for mkfs.X and fsck.x
-#define MAXCOUNT_FSTYPES 7
-
-typedef struct fstype_t
-{
-	const string fsname;
-	const string mkfs_options;
-	const string fsck_options;
-} fstype_struct_t;
-
-const fstype_struct_t fstype[MAXCOUNT_FSTYPES] =
-{
-	{"ext2", 	"-v -m0 -q -I 128", 	"-y -v"},
-	{"ext3",	"-v -m0 -q -I 128", 	"-y -v"},
-	{"msdos", 	"", 			"-y"},
-	{"vfat", 	"", 			"-y"},
-	{"reiserfs", 	"-f", 			"-f -y "},
-	{"xfs", 	"-l version=2 -f -q", 	"-v"},
-	{"swap", 	"", 			""},
-};
-
 // formats a partition, 1st parameter "device_num" is MASTER, SLAVE..., 3rd parameter "filesystem" means a name of filesystem as string eg, ext3...
 bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_number,  const std::string& fs_name)
 {
 	// get partition name (dev/hda1...4)
 	string partname = partitions[device_num][part_number];
 	err[ERR_MK_FS] = "";
+	//TODO show correct progress status, it's not real at time ;-( 
+	showStatus(40, "creating Filesystem, please wait...", 100);
 
 	if (isActivePartition(partname))
 	{	
@@ -3835,7 +3857,7 @@ bool CDriveSetup::mkFs(const int& device_num /*MASTER||SLAVE*/, const int& part_
 	{
 		if (fs_name==fstype[i].fsname) 
  		{
-			string opts = char(32) + fstype[i].mkfs_options + char(32);
+			string opts = char(32) + (string)d_settings.drive_fs_format_option[i]/*fstype[i].mkfs_options*/ + char(32);
 
 			if (fs_name == "swap")
 				mkfs_cmd = MKSWAP + opts;
@@ -3893,6 +3915,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 	bool ret = true;
 	err[ERR_CHKFS] = "";
 	//TODO show correct progress or message
+	showStatus(50, "creating Filesystem, please wait...", 100);
 	CProgressBar pb;
 
 	// get partition name (dev/hda1...4)
@@ -3925,7 +3948,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 	if (pixbuf != NULL)
 		frameBuffer->SaveScreen(pb_x, pb_y, pb_w, pb_h, pixbuf);
 
-	showStatus(50, "checking Filesystem...", 100);
+	showStatus(70, "checking Filesystem...", 100);
 	
 	bool is_active = isActivePartition(partname);
 	string 	cmd_check;
@@ -4606,7 +4629,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.78 $");
+	return imageinfo.getModulVersion("","$Revision: 1.79 $");
 }
 
 // returns text for initfile headers
@@ -4997,6 +5020,14 @@ void CDriveSetup::loadDriveSettings()
 	d_settings.drive_warn_jffs = configfile.getInt32("drive_warn_jffs", YES);
 	handleSetting(&d_settings.drive_warn_jffs);
 	
+	//fs format options
+	for(unsigned int i = 0; i < MAXCOUNT_FSTYPES; i++) 
+	{
+		sprintf(c_opt[OPT_FS_FORMAT_OPTION], "drive_fs_%s_format_option", fstype[i].fsname.c_str());
+		strcpy(d_settings.drive_fs_format_option[i], configfile.getString(c_opt[OPT_FS_FORMAT_OPTION],fstype[i].mkfs_options.c_str()).c_str());
+ 		old_drive_fs_format_option[i] = static_cast <string> (d_settings.drive_fs_format_option[i]);
+	}
+	
 	for(unsigned int i = 0; i < MAXCOUNT_DRIVE; i++) 
 	{
 		//spindown
@@ -5104,6 +5135,13 @@ bool CDriveSetup::writeDriveSettings()
 		//mmc_modul_parameter
 		sprintf(c_opt[OPT_MMC_PARAMETER], "drive_mmc_%d_modul_parameter", i);
 		configfile.setString( c_opt[OPT_MMC_PARAMETER], d_settings.drive_mmc_modul_parameter[i]);
+	}
+	
+	//fs format options
+	for(unsigned int i = 0; i < MAXCOUNT_FSTYPES; i++)
+	{
+		sprintf(c_opt[OPT_FS_FORMAT_OPTION], "drive_fs_%s_format_option", fstype[i].fsname.c_str());
+		configfile.setString( c_opt[OPT_FS_FORMAT_OPTION], d_settings.drive_fs_format_option[i]);
 	}
 
 	for(int i = 0; i < MAXCOUNT_DRIVE; i++) 
@@ -5316,7 +5354,11 @@ void CDriveSetup::restoreSettings()
 	//restore spindown
 	for(uint i = 0; i < MAXCOUNT_DRIVE; i++)
 		strcpy(d_settings.drive_spindown[i], old_drive_spindown[i].c_str());
-		
+	
+	//restore fs format option
+	for(uint i = 0; i < MAXCOUNT_FSTYPES; i++)
+		strcpy(d_settings.drive_fs_format_option[i], old_drive_fs_format_option[i].c_str());
+	
 }
 
 //check for changed mounts,
