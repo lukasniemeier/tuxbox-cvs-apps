@@ -963,6 +963,98 @@ void subtitle_reset(struct subtitle_ctx *sub)
 		delete page;
 	}
 }
+// draw black border around letters when using blacktransparency
+void subtitle_draw_outline(struct subtitle_page *page,struct subtitle_region *reg)
+{
+	struct subtitle_clut *clut = page->cluts;	
+	while (clut)
+	{
+		//eDebug("have %d, want %d", clut->clut_id, main_clut_id);
+		if (clut->clut_id == reg->clut_id)
+		{
+			break;
+		}
+		clut = clut->next;
+	}
+	/* set outline */
+	if (clut)
+	{
+		__u8 blackcolors[16];
+		__u8 transpcolors[16];
+		int maxblackcolor = 0;
+		int maxtranspcolor = 0;
+		for (int b = 0; b < 16; b++)
+		{
+			if (clut->entries[b].blackclutentry)
+				blackcolors[maxblackcolor++] = b | (clut->mapping ? ((3-clut->mapping) <<4)|0xc0  :0xf0);
+			if (!clut->entries[b].Y)
+				transpcolors[maxtranspcolor++] = b | (clut->mapping ? ((3-clut->mapping) <<4)|0xc0  :0xf0);
+		}
+		for (int y=0; y < reg->region_height && maxblackcolor > 0; ++y)
+		{
+			// set black borders for black transparency entries
+			for (int x = 0; x < reg->region_width-1; x++)
+			{
+				__u8 * p = reg->region_buffer + reg->region_width * y + x;
+				if (!(*p) || !(*(p+1)))
+				  continue;
+				bool btransp = false;
+				for (int b = 0; b < maxtranspcolor; b++)
+				{
+					if (*p == transpcolors[b])
+					{
+						btransp = true;
+						break;
+					}
+					if (*(p+1) == transpcolors[b])
+					{
+						btransp = true;
+						break;
+					}
+				}
+				if (btransp)
+				  continue;
+				bool b1=false, b2=false;
+				for (int b = 0; b < maxblackcolor; b++)
+				{
+					if (*p == blackcolors[b])
+						b1 = true;
+					if (*(p+1) == blackcolors[b])
+						b2 = true;
+				}
+				if ((*(p+1) != 0xbf) && b1 && !b2)
+					*p = 0xbf; 
+				if ((*p != 0xbf) && !b1 && b2)
+					*(p+1) = 0xbf;
+				if (y)
+				{
+					__u8 * p1 = reg->region_buffer + reg->region_width * (y-1) + x;
+					btransp = false;
+					for (int b = 0; b < maxtranspcolor; b++)
+					{
+						if (*p1 == transpcolors[b])
+						{
+							btransp = true;
+							break;
+						}
+					}
+					if (btransp)
+					  continue;
+					bool b3=false;
+					for (int b = 0; b < maxblackcolor; b++)
+					{
+						if (*p1 == blackcolors[b])
+							b3 = true;
+					}
+					if ((*p != 0xbf) && b3 && !b1)
+						*p1 = 0xbf; 
+					if ((*p1 !=  0xbf) && !b3 && b1)
+						*p = 0xbf; 
+				}
+			}
+		}
+	}
+}
 
 void subtitle_redraw(struct subtitle_ctx *sub, int page_id)
 {
@@ -1002,7 +1094,7 @@ void subtitle_redraw(struct subtitle_ctx *sub, int page_id)
 		}
 		if (reg)
 		{
-			int y;
+			
 			int clut_id = reg->clut_id;
 			//eDebug("clut %d, %d", clut_id, main_clut_id);
 			int i = 0;
@@ -1010,7 +1102,56 @@ void subtitle_redraw(struct subtitle_ctx *sub, int page_id)
 				i++;
 			if (i < 4)
 			  clut_ids[i] = clut_id;
-				
+		}
+		region = region->next;
+	}
+	
+	if ((clut_ids[0] != -1) && !((sub->current_clut_id == clut_ids[0]) && (sub->current_clut_page_id == page_id)))
+	{
+		//eDebug("updating clut..");
+				/* find corresponding clut */
+		for (int i = 0; i < 4; i++)
+		{
+			if (clut_ids[i] == -1)
+			  break;
+			
+			struct subtitle_clut *clut = page->cluts;	
+			while (clut)
+			{
+				//eDebug("have %d, want %d", clut->clut_id, main_clut_id);
+				if (clut->clut_id == clut_ids[i])
+					break;
+				clut = clut->next;
+			}
+			if (clut)
+			{
+				// do not change color palette when anyone has 
+				// locked the framebuffer ( non enigma plugins )
+				if (!fbClass::getInstance()->islocked())
+					sub->set_palette(clut,clut->mapping);
+			}
+			else
+			{
+				if (!fbClass::getInstance()->islocked())
+					sub->set_palette(0,0);
+			}
+		}
+	}
+	region = page->page_regions;
+	while (region)
+	{
+		//eDebug("region %d", region->region_id);
+			/* find corresponding region */
+		struct subtitle_region *reg = page->regions;
+		while (reg)
+		{
+			if (reg->region_id == region->region_id)
+				break;
+			reg = reg->next;
+		}
+		if (reg)
+		{
+			int y;
 			int x0 = region->region_horizontal_address;
 			int y0 = region->region_vertical_address;
 			int x1 = x0 + reg->region_width;
@@ -1037,14 +1178,15 @@ void subtitle_redraw(struct subtitle_ctx *sub, int page_id)
 			// do not draw when anyone has locked the 
 			// framebuffer ( non enigma plugins... )
 			if ( !fbClass::getInstance()->islocked() )
+			{
+				subtitle_draw_outline(page,reg);
 				/* copy to screen */
 				for (y=0; y < reg->region_height; ++y)
-				{
 					memcpy(sub->screen_buffer + 
 						sub->screen_width * (y + region->region_vertical_address) + 
 						region->region_horizontal_address, 
 						reg->region_buffer + reg->region_width * y, reg->region_width);
-				}
+			}
 		} 
 		else
 			eDebug("region not found");
@@ -1052,40 +1194,6 @@ void subtitle_redraw(struct subtitle_ctx *sub, int page_id)
 	}
 	//eDebug("schon gut.");
 	
-	if (clut_ids[0] == -1)
-		return; /* most probably no display active */
-	
-	if ((sub->current_clut_id == clut_ids[0]) && (sub->current_clut_page_id == page_id))
-		return;
-	
-	//eDebug("updating clut..");
-			/* find corresponding clut */
-	for (int i = 0; i < 4; i++)
-	{
-		if (clut_ids[i] == -1)
-		  break;
-		
-		struct subtitle_clut *clut = page->cluts;	
-		while (clut)
-		{
-			//eDebug("have %d, want %d", clut->clut_id, main_clut_id);
-			if (clut->clut_id == clut_ids[i])
-				break;
-			clut = clut->next;
-		}
-		if (clut)
-		{
-			// do not change color palette when anyone has 
-			// locked the framebuffer ( non enigma plugins )
-			if (!fbClass::getInstance()->islocked())
-				sub->set_palette(clut,clut->mapping);
-		}
-		else
-		{
-			if (!fbClass::getInstance()->islocked())
-				sub->set_palette(0,0);
-		}
-	}
 }
 
 void subtitle_screen_enable(struct subtitle_ctx *sub, int enable)

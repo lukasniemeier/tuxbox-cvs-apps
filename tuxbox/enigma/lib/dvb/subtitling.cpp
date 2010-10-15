@@ -423,6 +423,7 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 		for (int i=0; i<pal->size; ++i)
 		{
 			int y = pal->entries[i].Y, cr = pal->entries[i].Cr, cb = pal->entries[i].Cb;
+			pal->entries[i].blackclutentry = 0;
 		
 			if (y > 0)
 			{
@@ -442,7 +443,10 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 				if (palette[i].r || palette[i].g || palette[i].b)
 					palette[i].a = (pal->entries[i].T) & 0xFF;
 				else
+				{
+					pal->entries[i].blackclutentry = 1;
 					palette[i].a = bcktrans;
+				}
 			} else
 			{
 				palette[i].r = 0;
@@ -453,6 +457,11 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 //		eDebug("%d: %d %d %d %d", i, palette[i].r, palette[i].g, palette[i].b, palette[i].a);
 		}
 		p.setPalette(palette, 240- subpal*16, pal->size);
+		palette[0].r = 0;
+		palette[0].g = 0;
+		palette[0].b = 0;
+		palette[0].a = 0;
+		p.setPalette(palette, 0xbf, 1);
 	}
 //	eDebug("palette changed");
 }

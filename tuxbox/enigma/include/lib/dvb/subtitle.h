@@ -7,7 +7,7 @@ typedef unsigned char __u8;
 
 struct subtitle_clut_entry
 {
-	__u8 Y, Cr, Cb, T;
+	__u8 Y, Cr, Cb, T, blackclutentry;
 };
 
 struct subtitle_clut
