@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.189 2010/10/15 13:43:55 dbt Exp $
+ * $Id: locals_intern.h,v 1.190 2010/10/16 18:14:22 dbt Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1121,8 +1121,6 @@ const char * locale_real_names[] =
 	"personalize.pinstatus",
 	"personalize.saverestart",
 	"personalize.setupmenuwithpin",
-	"personalize.stprotect",
-	"personalize.svprotect",
 	"personalize.visible",
 	"pictureviewer.decode_server_ip",
 	"pictureviewer.decode_server_port",

@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.7 2010/10/15 19:43:42 dbt Exp $
+$Id: personalize.h,v 1.8 2010/10/16 18:14:22 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -72,7 +72,7 @@ class CPersonalizeGui : public CMenuTarget
 			bool default_selected;
 			neutrino_locale_t locale_name;
 			int* personalize_mode;
-			bool show_in_options;
+			int item_mode;
 		};
 		std::vector<menu_item_t> v_item;
 		
@@ -104,6 +104,13 @@ class CPersonalizeGui : public CMenuTarget
 			PERSONALIZE_MODE_DISABLED =  0,
 			PERSONALIZE_MODE_ENABLED  =  1
 		};
+		
+		enum PERSONALIZE_ITEM_MODE
+		{
+			PERSONALIZE_SHOW_NO =  0,
+			PERSONALIZE_SHOW_AS_ITEM_OPTION  =  1,
+			PERSONALIZE_SHOW_AS_ACCESS_OPTION  =  2
+		};
 
 		CPersonalizeGui();
 		~CPersonalizeGui();
@@ -114,8 +121,8 @@ class CPersonalizeGui : public CMenuTarget
 
 		int 	exec(CMenuTarget* parent, const std::string & actionKey);
 				
-		void 	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode = NULL, const bool defaultselected = false, const bool show_in_options = true);
-		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const bool show_in_options = true);
+		void 	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode = NULL, const bool defaultselected = false, const int item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const bool item_mode = true);
 		void 	addPersonalizedItems();
 };
 #endif

@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.118 2010/10/15 19:43:42 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.119 2010/10/16 18:14:22 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -116,8 +116,6 @@
 #include "drive_setup.h"
 #endif /*ENABLE_DRIVE_GUI*/
 
-#include <driver/screen_max.h>
-
 typedef struct mn_data_t
 {
 	const neutrino_locale_t locale_text;
@@ -138,14 +136,9 @@ void CNeutrinoApp::InitMenu()
 	
 	personalize = CPersonalizeGui::getInstance();
 	
-	int width = w_max (500, 50);
-	
 	for (uint i = 0; i<(CNeutrinoApp::MENU_MAX); i++)
-	{
-		printf("[neutrino] loading menus %d...\n",i);
 		if (menus[i] == NULL)
-			menus[i]	= new CMenuWidget(mn_data[i].locale_text, mn_data[i].icon	,width);
-	}	
+			menus[i]	= new CMenuWidget(mn_data[i].locale_text, mn_data[i].icon);
 	
 	//needs to run before InitMenuMain() !!
 	firstChannel();
@@ -227,9 +220,9 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_UPNPBROWSER, true, NULL, new CUpnpBrowserGui()), &g_settings.personalize_upnpbrowser);
 #endif
 
-	// scripts - not personalized
-	if (g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT) ? CPersonalizeGui::PERSONALIZE_MODE_VISIBLE : CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
-		personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, true, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), NULL, false, false);
+	// scripts 
+	if (g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT))
+		personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, true, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), &g_settings.personalize_scripts);
 
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_INTERNETRADIO) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_UPNP)
 	// separator
@@ -243,23 +236,23 @@ void CNeutrinoApp::InitMenuMain()
 	else
 		personalize->addSeparator(menu, NONEXISTANT_LOCALE, false); //don't show this separator in personal menu
 #endif
-	// settings - not personalized
+	// settings
 	CMenuItem *settings;
 	if (g_settings.personalize_settings == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
 		settings = new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, menus[MENU_SETTINGS]);
 	else
 		settings = new CLockedMenuForwarder(LOCALE_MAINMENU_SETTINGS, g_settings.personalize_pincode, true, true, NULL, menus[MENU_SETTINGS]);
 	
-	personalize->addItem(&menu, settings, NULL, false, false);
+	personalize->addItem(&menu, settings, &g_settings.personalize_settings, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
-	// service - not personalized
+	// service 
 	CMenuItem *service;
 	if (g_settings.personalize_service == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
 		service = new CMenuForwarder(LOCALE_MAINMENU_SERVICE, true, NULL, menus[MENU_SERVICE]);
 	else
 		service = new CLockedMenuForwarder(LOCALE_MAINMENU_SERVICE, g_settings.personalize_pincode, true, true, NULL, menus[MENU_SERVICE]);
 	
-	personalize->addItem(&menu, service, NULL, false, false);
+	personalize->addItem(&menu, service, &g_settings.personalize_service, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
 	//separator
 	if (	g_settings.personalize_sleeptimer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 

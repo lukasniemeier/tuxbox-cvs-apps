@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.25 2010/10/15 19:43:42 dbt Exp $
+        $Id: personalize.cpp,v 1.26 2010/10/16 18:14:22 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -40,12 +40,12 @@
         
         
         Parameters:
-	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool show_in_options),
+	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool item_mode),
 	
 	CMenuWidget *menu 		= pointer to menuewidget object
 	CMenuItem *menuItem		= pointer to a menuitem object, can be forwarder, chooser, separator...all
 	const int *personalize_mode	= optional, default NULL, pointer to a specified personalize setting look at: PERSONALIZE_MODE, this regulates the personalize mode
-	const bool show_in_options	= optional, default true, if you don't want to see this item in personalize menue, then set it to false
+	const bool item_mode		= optional, default true, if you don't want to see this item in personalize menue, then set it to false
 	
 	Icon handling:
 	If you define an icon in the item object, this will be shown also in the menu (not the personilazitions menue), otherwise a shortcut will be create
@@ -55,12 +55,12 @@
 	
 	Separators:
 	You must add separators with
-	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const bool show_in_options)
+	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const bool item_mode)
 	
 		Parameters:
 		CMenuWidget &menu 			= rev to menuewidget object
 		const neutrino_locale_t locale_text	= optional, default NONEXISTANT_LOCALE, adds a line separator, is defined a locale then adds a text separator
-		const bool show_in_options		= optional, default true, if you don't want to see this sparator also in personalize menue, then set it to false, usefull for to much separtors ;-)
+		const bool item_mode		= optional, default true, if you don't want to see this sparator also in personalize menue, then set it to false, usefull for to much separtors ;-)
 		
 	Usage:
 	It's no matter what a kind of menue item (e.g. forwarder, optionchooser ...) you would like to personalize.
@@ -240,11 +240,11 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 
 	pMenu->addItem(GenericMenuSeparator);
 	pMenu->addItem(GenericMenuBack);
-	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_ACCESS));
-
+	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_MENUCONFIGURATION));
+	
 	pMenu->addItem(new CMenuOptionChooser(LOCALE_PERSONALIZE_PINSTATUS, (int *)&g_settings.personalize_pinstatus, PERSONALIZE_YON_OPTIONS, PERSONALIZE_YON_OPTION_COUNT, true, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_PINCODE, true, g_settings.personalize_pincode, pinChangeWidget, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, 	LOCALE_PERSONALIZE_MENUCONFIGURATION));
+	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_ACCESS));
 	
 	CMenuForwarderNonLocalized *p_mn[CNeutrinoApp::MENU_MAX];
 	std::string mn_name;
@@ -285,26 +285,46 @@ void CPersonalizeGui::ShowMenuOptions(const int& menu)
 	std::string mn_name = CNeutrinoApp::getInstance()->menus[menu]->getName();
 
 	CMenuWidget* pm = new CMenuWidget(LOCALE_PERSONALIZE_HEAD, NEUTRINO_ICON_PROTECTING, width);
+	
+	//subhead
 	CMenuSeparator * pm_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
-	pm_subhead->setString(mn_name);
+	std::string 	s_sh = g_Locale->getText(LOCALE_PERSONALIZE_ACCESS);
+			s_sh += ": " + mn_name;
+	pm_subhead->setString(s_sh);
 	
 	pm->addItem(pm_subhead);
 	pm->addItem(GenericMenuSeparator);
 	pm->addItem(GenericMenuBack);
-	pm->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_RIGHT | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_ACCESS));
+	pm->addItem(GenericMenuSeparatorLine);
 
 	//add all needed items
 	for (uint i = 0; i<v_item.size(); i++)
 	{
 		if (mn_name == v_item[i].menu->getName())
 		{
-			if (v_item[i].show_in_options)
+			int show_mode = v_item[i].item_mode;
+			
+			if (show_mode != PERSONALIZE_SHOW_NO)
 			{
-				if (v_item[i].personalize_mode != NULL) //option chooser
-					pm->addItem(new CMenuOptionChooser(v_item[i].locale_name, v_item[i].personalize_mode, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true));
-				else 
-					pm->addItem(v_item[i].menuItem); //separator
-			}
+				if (show_mode == PERSONALIZE_SHOW_AS_ITEM_OPTION) 
+				{	
+					if (v_item[i].personalize_mode != NULL) //option chooser
+						pm->addItem(new CMenuOptionChooser(v_item[i].locale_name, v_item[i].personalize_mode, PERSONALIZE_STD_OPTIONS, PERSONALIZE_STD_OPTION_COUNT, true));
+					else 
+						pm->addItem(v_item[i].menuItem); //separator
+				}
+				
+				//pin protected items only
+				if (show_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION)
+				{
+					std::string 	itm_name = g_Locale->getText(v_item[i].locale_name);
+							itm_name += " ";
+							itm_name += g_Locale->getText(LOCALE_PERSONALIZE_PINSTATUS);
+							
+					if (v_item[i].personalize_mode != NULL) 	
+						pm->addItem(new CMenuOptionChooser(itm_name.c_str(), v_item[i].personalize_mode, PERSONALIZE_YON_OPTIONS, PERSONALIZE_YON_OPTION_COUNT, true));
+				}
+			}	
 		}
 	}
 	
@@ -339,11 +359,11 @@ void CPersonalizeGui::SaveAndRestart()
 }
 
 //adds a personalized menu item object to menu with personalizing parameters
-void CPersonalizeGui::addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool show_in_options)
+void CPersonalizeGui::addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const int item_mode)
 {
 	CMenuForwarder *fw = static_cast <CMenuForwarder*> (menuItem);
 	
-	menu_item_t item = {menu, menuItem, defaultselected, fw->getTextLocale(), (int*)personalize_mode, show_in_options};
+	menu_item_t item = {menu, menuItem, defaultselected, fw->getTextLocale(), (int*)personalize_mode, item_mode};
 	
 	std::string icon = item.menuItem->iconName;
 	neutrino_msg_t d_key = item.menuItem->directKey;
@@ -351,15 +371,24 @@ void CPersonalizeGui::addItem(CMenuWidget *menu, CMenuItem *menuItem, const int 
 	
 	if (icon.empty() &&  d_key == CRCInput::RC_nokey)
 		add_shortcut = true;
-	
+
 	if (add_shortcut)
 		item.menuItem->directKey = getShortcut(shortcut);
-	
-	if (personalize_mode == NULL)
+
+	if (item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION)
 	{
 		if (add_shortcut)
 			shortcut++;
 		
+		v_item.push_back(item);
+		
+		handleSetting((int*)personalize_mode);
+	}
+	else if (personalize_mode == NULL)
+	{
+		if (add_shortcut)
+			shortcut++;
+
 		v_item.push_back(item);
 	}
 	else if (personalize_mode != NULL)
@@ -372,16 +401,18 @@ void CPersonalizeGui::addItem(CMenuWidget *menu, CMenuItem *menuItem, const int 
 		
 		v_item.push_back(item);
 		
-		handleSetting((int*)personalize_mode);	
+		handleSetting((int*)personalize_mode);
 	}
+	else
+		return;
 }
 
 //adds a menu separator to menue, based upon GenericMenuSeparatorLine or CMenuSeparator objects with locale
 //expands with parameter within you can show or hide this item in personalize options
-void CPersonalizeGui::addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const bool show_in_options)
+void CPersonalizeGui::addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const bool item_mode)
 {
-	menu_item_t to_add_sep[2] = {	{&menu, GenericMenuSeparatorLine, false, locale_text, NULL, show_in_options}, 
-					{&menu, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, show_in_options}};
+	menu_item_t to_add_sep[2] = {	{&menu, GenericMenuSeparatorLine, false, locale_text, NULL, item_mode}, 
+					{&menu, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, item_mode}};
 	
 	if (locale_text == NONEXISTANT_LOCALE)
 		v_item.push_back(to_add_sep[0]);
@@ -397,7 +428,7 @@ void CPersonalizeGui::addPersonalizedItems()
 	{	
 		if (v_item[i].personalize_mode != NULL)
 		{
-			if (*v_item[i].personalize_mode != PERSONALIZE_MODE_NOTVISIBLE) 
+			if (*v_item[i].personalize_mode != PERSONALIZE_MODE_NOTVISIBLE || v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION) 
 				v_item[i].menu->addItem(v_item[i].menuItem, v_item[i].default_selected); //forwarders...
 		}
 		else

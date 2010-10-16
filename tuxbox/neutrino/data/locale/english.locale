@@ -1070,7 +1070,7 @@ parentallock.never never
 parentallock.onsignal on broadcasted lock
 parentallock.parentallock Youth protection
 parentallock.prompt prompt for PIN
-personalize.access Access
+personalize.access Access options
 personalize.disabled Disabled
 personalize.enabled Enabled
 personalize.head Personalization
@@ -1094,8 +1094,6 @@ personalize.pinprotect Yes
 personalize.pinstatus Require PIN
 personalize.saverestart Neutrino needs to be restarted. Restart Now?
 personalize.setupmenuwithpin Settings Menu with PIN
-personalize.stprotect Menu Access with PIN
-personalize.svprotect Service Menu with PIN
 personalize.visible Visible
 pictureviewer.decode_server_ip decode server ip
 pictureviewer.decode_server_port decode server port
