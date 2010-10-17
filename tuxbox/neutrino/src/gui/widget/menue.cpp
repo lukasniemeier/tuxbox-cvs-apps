@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.171 2010/07/30 20:50:34 dbt Exp $
+	$Id: menue.cpp,v 1.172 2010/10/17 11:04:10 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -122,23 +122,35 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 		}
 		else
 		{
-		if ((CRCInput::isNumeric(directKey)) || (directKey >= CRCInput::RC_red && directKey <= CRCInput::RC_blue) || icon_name.empty())
+		if ((CRCInput::isNumeric(directKey)) /*|| (directKey >= CRCInput::RC_red && directKey <= CRCInput::RC_blue)*/ || icon_name.empty())
 			icon_name = icon_Name;
 		}
 	}
+	
+	//paint icon
+	//get data for marker icon
+	int m_icon_w = frameBuffer->getIconWidth(NEUTRINO_ICON_RIGHT_MARKER);
+	int m_icon_h = frameBuffer->getIconHeight(NEUTRINO_ICON_RIGHT_MARKER);
+	
+	int icon_x;
+	int icon_space = (x+(startX-x)/2);
 
 	if (!icon_name.empty())
 	{
 		icon_w = frameBuffer->getIconWidth(icon_name.c_str());
 		icon_h = frameBuffer->getIconHeight(icon_name.c_str());
-	
+		
 		if (active  && icon_w>0 && icon_h>0)
 		{
-			int icon_x = (x+(startX-x)/2) - (icon_w/2);
-			icon_painted = frameBuffer->paintIcon(icon_name, icon_x, y+ ((height/2- icon_h/2)) );
+			icon_x = icon_space - ((icon_w+m_icon_w)/2);
+			icon_painted = 	frameBuffer->paintIcon(icon_name, icon_x, y+ ((height/2- icon_h/2)) );
 		}
 	}
 
+	//paint number 
+	int number_w = 0;
+	int number_x = 0;
+	
 	if (CRCInput::isNumeric(directKey) && !icon_painted)
 	{
 		unsigned char color   = COL_MENUCONTENT;
@@ -147,7 +159,23 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 		if (!active)
 			color   = COL_MENUCONTENTINACTIVE;
 
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x + 15, y+ height, height, CRCInput::getKeyName(directKey), color, height);
+		number_w = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getRenderWidth(CRCInput::getKeyName(directKey));
+		
+		number_x = icon_space - ((number_w+m_icon_w)/2);
+		
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(number_x/*x + 15*/, y+ height, height, CRCInput::getKeyName(directKey), color, height);
+	}
+	
+	//paint marker
+	if  (selected && directKey != CRCInput::RC_nokey)
+	{
+		int icon_offset = 2;
+		if (icon_painted)
+			icon_offset += icon_x+icon_w;
+		else
+			icon_offset += number_x + number_w;
+		
+		frameBuffer->paintIcon(NEUTRINO_ICON_RIGHT_MARKER, icon_offset, y+ ((height/2- m_icon_h/2)) );
 	}
 }
 

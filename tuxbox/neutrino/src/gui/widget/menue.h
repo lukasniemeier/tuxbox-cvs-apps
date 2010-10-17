@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.86 2010/10/15 18:56:41 dbt Exp $
+	$Id: menue.h,v 1.87 2010/10/17 11:04:10 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -116,7 +116,7 @@ class CMenuItem
 		}
 		virtual void setActive(const bool Active);
 
-		virtual void paintItemButton(const int startX, const int frame_height, const bool select_mode, const std::string& icon_Name = NEUTRINO_ICON_BUTTON_RIGHT);
+		virtual void paintItemButton(const int startX, const int frame_height, const bool select_mode, const std::string& icon_Name = "");
 
 		virtual void setItemButton(const std::string& icon_Name, const bool is_select_button = false);
 };
