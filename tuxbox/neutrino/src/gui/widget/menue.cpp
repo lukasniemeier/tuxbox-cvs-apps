@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.173 2010/10/17 13:25:25 dbt Exp $
+	$Id: menue.cpp,v 1.174 2010/10/17 20:33:01 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -807,6 +807,8 @@ int CMenuOptionStringChooser::paint( bool selected )
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), l_optionName, color, 0, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), optionValue, color);
 
+	paintItemButton(stringstartposName, height, selected, NEUTRINO_ICON_BUTTON_OKAY);
+	
 	if (selected)
 	{
 		CLCD::getInstance()->showMenuText(0, l_optionName, -1, true); // UTF-8
