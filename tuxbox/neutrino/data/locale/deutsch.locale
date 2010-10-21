@@ -341,7 +341,7 @@ drive_setup.msg_partition_format_ok Dateisystem wurde erfolgreich erzeugt!
 drive_setup.msg_partition_mount_warning Das festgelegte Einhängeverzeichnis\n%s\nbefindet sich in einem %s-Bereich. Dies kann nach\nMountfehlern und nachfolgenden Datenverkehr das\nFlash-Image dauerhaft beschädigen!\nTrotzdem jetzt einhängen?
 drive_setup.msg_partition_not_mounted_please_activate Partition wurde angelegt, aber nicht eingehangen.\nPartition muss dafür vorher aktiviert werden!
 drive_setup.msg_reboot_requiered Diese Aktion wird erst nach einem Neustart Ihres\nReceivers wirksam.\nJetzt neu booten?
-drive_setup.msg_reset_now Jetzt zurücksetzten?
+drive_setup.msg_reset_now Jetzt zurücksetzen?
 drive_setup.msg_saved Einstellungen wurden erfolgreich\nübertragen!
 drive_setup.msg_saved_disabled Gerät(e) wurden deaktiviert.
 drive_setup.msg_savesettings_found_changes Änderungen jetzt übernehmen?
