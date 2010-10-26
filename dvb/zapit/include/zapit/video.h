@@ -1,5 +1,5 @@
 /*
- * $Id: video.h,v 1.12 2010/08/01 16:59:42 seife Exp $
+ * $Id: video.h,v 1.13 2010/10/26 20:10:42 dbt Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -63,6 +63,10 @@ class CVideo
 		/* constructor & destructor */
 		CVideo(void);
 		~CVideo(void);
+
+		/* claim and release the device */
+		int openDevice(void);
+		void closeDevice(void);
 
 		/* aspect ratio */
 		video_format_t getAspectRatio(void);

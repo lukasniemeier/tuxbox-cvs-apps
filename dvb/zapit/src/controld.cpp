@@ -972,9 +972,10 @@ void controld_end()
 
 void CControldAspectRatioNotifier::aspectRatioChanged( int newAspectRatio )
 {
-	/* the videodecoder gets initialized after the watchdog thread is started
-	   but we can get an even when zapit is in standby (e.g. movieplayer on
-	   dbox), so set the global aspectRatio values first... */
+	/* the videodecoder gets initialized after the watchdog thread is started */
+	if (!videoDecoder)
+		return;
+
 	int activeAspectRatio;
 	settings.aspectRatio_dvb = newAspectRatio & 0xFF;
 	settings.aspectRatio_vcr = (newAspectRatio & 0xFF00) >> 8;
@@ -982,10 +983,6 @@ void CControldAspectRatioNotifier::aspectRatioChanged( int newAspectRatio )
 		activeAspectRatio = settings.aspectRatio_vcr;
 	else
 		activeAspectRatio = settings.aspectRatio_dvb;
-
-	/* ...then check for videodecoder and return to not crash later. */
-	if (!videoDecoder)
-		return;
 
 #ifdef HAVE_TRIPLEDRAGON
 	// probably not correct for VCR scart

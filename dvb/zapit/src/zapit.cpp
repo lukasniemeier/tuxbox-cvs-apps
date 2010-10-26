@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.452 2010/10/26 19:56:41 dbt Exp $
+ * $Id: zapit.cpp,v 1.453 2010/10/26 20:10:42 dbt Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -2970,8 +2970,7 @@ void enterStandby(void)
 #ifdef HAVE_DBOX_HARDWARE
 	// needed in standby to correct aspect ration in movieplayer, but not on dbox...
 	if (videoDecoder) {
-		delete videoDecoder;
-		videoDecoder = NULL;
+		videoDecoder->closeDevice();
 	}
 #endif
 
@@ -3003,6 +3002,8 @@ void leaveStandby(void)
 
 	if (!videoDecoder)
 		videoDecoder = new CVideo();
+	else	// reopen the device...
+		videoDecoder->openDevice();
 
 	switch (frontend->getInfo()->type) {
 		case FE_QPSK:
@@ -3104,7 +3105,7 @@ void signal_handler(int signum)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.452 2010/10/26 19:56:41 dbt Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.453 2010/10/26 20:10:42 dbt Exp $\n");
 
 	bool check_lock = true;
 	int opt;
