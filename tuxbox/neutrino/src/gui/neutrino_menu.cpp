@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.119 2010/10/16 18:14:22 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.120 2010/11/05 08:28:09 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -295,19 +295,13 @@ void CNeutrinoApp::InitMenuSettings()
 	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_AUDIO, true, NULL, new CAudioSetup()), &g_settings.personalize_audio);
 	
 	// parental lock
-	CMenuItem *item_y_protect = NULL;
-	if (g_settings.personalize_youth == CPersonalizeGui::PERSONALIZE_MODE_VISIBLE) 
-	{
-		if(g_settings.parentallock_prompt)
-			item_y_protect = new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.parentallock_pincode, true, true, NULL, new CParentalSetup());
- 		else
-			item_y_protect = new CMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, true, NULL, new CParentalSetup());
-	}
-	else if (g_settings.personalize_youth == CPersonalizeGui::PERSONALIZE_MODE_PIN)
-		item_y_protect = new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.personalize_pincode, true, true, NULL, new CParentalSetup());
-	
-	if (item_y_protect != NULL) //for shure
-		personalize->addItem(&menu, item_y_protect, &g_settings.personalize_youth);
+	CMenuItem *item_y_protect;
+	if (g_settings.parentallock_prompt)
+		item_y_protect = new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.parentallock_pincode, true, true, NULL, new CParentalSetup());
+	else
+		item_y_protect = new CMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, true, NULL, new CParentalSetup());
+
+	personalize->addItem(&menu, item_y_protect, &g_settings.personalize_youth);
 
 	// network
 	if(networksetup == NULL)
