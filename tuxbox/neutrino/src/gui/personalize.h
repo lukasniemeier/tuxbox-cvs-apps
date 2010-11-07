@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.8 2010/10/16 18:14:22 dbt Exp $
+$Id: personalize.h,v 1.9 2010/11/07 15:04:43 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -121,7 +121,7 @@ class CPersonalizeGui : public CMenuTarget
 
 		int 	exec(CMenuTarget* parent, const std::string & actionKey);
 				
-		void 	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode = NULL, const bool defaultselected = false, const int item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		void 	addItem(CMenuWidget *menu, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
 		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const bool item_mode = true);
 		void 	addPersonalizedItems();
 };

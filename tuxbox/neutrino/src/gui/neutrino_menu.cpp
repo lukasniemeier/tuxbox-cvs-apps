@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.120 2010/11/05 08:28:09 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.121 2010/11/07 15:04:43 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -198,11 +198,14 @@ void CNeutrinoApp::InitMenuMain()
 
 #ifdef ENABLE_ESD
 	// esound
+	bool show_esd = false;
 	if (access("/bin/esd", X_OK) == 0 || access("/var/bin/esd", X_OK) == 0)
 	{
 		puts("[neutrino] found esound, adding personalized esound entry to mainmenue");
-		personalize->addItem(&menu, new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, new CEsoundGui()), &g_settings.personalize_esound);
+		show_esd = true;
 	}
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_ESOUND_NAME, show_esd, NULL, new CEsoundGui()), &g_settings.personalize_esound);
+
 #endif
 
 #ifdef ENABLE_MOVIEPLAYER
@@ -236,23 +239,12 @@ void CNeutrinoApp::InitMenuMain()
 	else
 		personalize->addSeparator(menu, NONEXISTANT_LOCALE, false); //don't show this separator in personal menu
 #endif
-	// settings
-	CMenuItem *settings;
-	if (g_settings.personalize_settings == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
-		settings = new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, menus[MENU_SETTINGS]);
-	else
-		settings = new CLockedMenuForwarder(LOCALE_MAINMENU_SETTINGS, g_settings.personalize_pincode, true, true, NULL, menus[MENU_SETTINGS]);
-	
-	personalize->addItem(&menu, settings, &g_settings.personalize_settings, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
-	// service 
-	CMenuItem *service;
-	if (g_settings.personalize_service == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
-		service = new CMenuForwarder(LOCALE_MAINMENU_SERVICE, true, NULL, menus[MENU_SERVICE]);
-	else
-		service = new CLockedMenuForwarder(LOCALE_MAINMENU_SERVICE, g_settings.personalize_pincode, true, true, NULL, menus[MENU_SERVICE]);
-	
-	personalize->addItem(&menu, service, &g_settings.personalize_service, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+	// settings, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, menus[MENU_SETTINGS]), &g_settings.personalize_settings, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+
+	// service, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SERVICE, true, NULL, menus[MENU_SERVICE]), &g_settings.personalize_service, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
 	//separator
 	if (	g_settings.personalize_sleeptimer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
