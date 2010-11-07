@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.87 2010/10/17 11:04:10 dbt Exp $
+	$Id: menue.h,v 1.88 2010/11/07 15:01:52 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -175,6 +175,8 @@ class CMenuForwarder : public CMenuItem
 	void setOption(const char *Option);
 	void setTextLocale(const neutrino_locale_t Text);
 	neutrino_locale_t getTextLocale(){return text;};
+	CMenuTarget* getTarget(){return jumpTarget;};
+	std::string getActionKey(){return actionKey;};
 	int exec(CMenuTarget* parent);
 	bool isSelectable(void) const
 		{
