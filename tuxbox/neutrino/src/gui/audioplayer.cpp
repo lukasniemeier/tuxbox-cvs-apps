@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.85 2010/06/14 06:37:10 dbt Exp $
+  $Id: audioplayer.cpp,v 1.86 2010/11/08 21:34:25 dbt Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -184,7 +184,6 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 	m_inetmode = inetmode;
 	m_visible = false;
 	m_selected = 0;
-	m_alreadyPainted = false;
 	m_metainfo.clear();
 
 	m_select_title_by_name = g_settings.audioplayer_select_title_by_name==1;
@@ -1499,7 +1498,6 @@ void CAudioPlayerGui::paintItem(int pos)
 			bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		}
 		paintItemID3DetailsLine(pos);
-		m_alreadyPainted = true;
 		c_rad_small = RADIUS_SMALL;
 	}
 	else
@@ -1764,12 +1762,12 @@ void CAudioPlayerGui::paintInfo()
 		if (!m_show_playlist)
 		{
 			// no playlist -> smaller Info-Box
-			m_frameBuffer->paintBoxRel(m_x, m_y, m_width, m_title_height - 10 - m_fheight, COL_MENUCONTENT_PLUS_6, c_rad_mid);
+			m_frameBuffer->paintBoxFrame(m_x, m_y, m_width, m_title_height - 10 - m_fheight, 2, COL_MENUCONTENT_PLUS_6, c_rad_mid);
 			m_frameBuffer->paintBoxRel(m_x + 2, m_y + 2 , m_width - 4, m_title_height - 14 - m_fheight, COL_MENUCONTENTSELECTED_PLUS_0, c_rad_mid);
 		}
 		else
 		{
-			m_frameBuffer->paintBoxRel(m_x, m_y, m_width, m_title_height - 10, COL_MENUCONTENT_PLUS_6, c_rad_mid);
+			m_frameBuffer->paintBoxFrame(m_x, m_y, m_width, m_title_height - 10, 2, COL_MENUCONTENT_PLUS_6, c_rad_mid);
 			m_frameBuffer->paintBoxRel(m_x + 2, m_y + 2 , m_width - 4, m_title_height - 14, COL_MENUCONTENTSELECTED_PLUS_0, c_rad_mid);
 		}
 
@@ -1886,12 +1884,10 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 	if (!m_playlist.empty() && (pos >= 0))
 	{
 		// paint id3 infobox
-
-		if(!m_alreadyPainted) //reduce flickering of infobox
-		{
-			m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2, 20, m_info_height, col2, RADIUS_MID);
-			m_frameBuffer->paintBoxRel(m_x - 3, ypos2, m_width + 3, m_info_height, col1, RADIUS_MID);
-		}
+		int yoffs = g_settings.rounded_corners ? 7 : 0;
+		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2+yoffs, 1, m_info_height-2*yoffs, col2);
+		m_frameBuffer->paintBoxRel(m_x - 3, ypos2+yoffs, 3, m_info_height-2*yoffs, col1);
+		m_frameBuffer->paintBoxFrame(m_x, ypos2, m_width, m_info_height, 2,col1, RADIUS_MID);
 		m_frameBuffer->paintBoxRel(m_x + 2, ypos2 + 2 , m_width - 4, m_info_height - 4, col3, RADIUS_MID);
 
 		// 1. col thick line
@@ -1936,10 +1932,7 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 									tmp, COL_MENUCONTENTDARK, 0, true); // UTF-8
 	}
 	else
-	{
 		m_frameBuffer->paintBackgroundBoxRel(m_x, ypos2, m_width, m_info_height);
-		m_alreadyPainted = false;
-	}
 }
 //------------------------------------------------------------------------
 

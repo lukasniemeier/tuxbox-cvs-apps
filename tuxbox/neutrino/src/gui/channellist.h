@@ -2,7 +2,7 @@
 #define __channellist__
 
 /*
-	$Id: channellist.h,v 1.78 2010/05/25 18:30:58 rhabarber1848 Exp $
+	$Id: channellist.h,v 1.79 2010/11/08 21:34:25 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -93,7 +93,6 @@ class CChannelList
 
 		bool historyMode;
 		bool displayNext;
-		bool alreadyPainted;
 
 		void paintDetails(unsigned int index);
 		void clearItem2DetailsLine ();

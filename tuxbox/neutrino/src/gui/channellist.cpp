@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.222 2010/07/01 11:44:19 dbt Exp $
+	$Id: channellist.cpp,v 1.223 2010/11/08 21:34:25 dbt Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -279,7 +279,6 @@ int CChannelList::show()
 	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-( height+ info_height) ) / 2) + g_settings.screen_StartY;
 
 	displayNext = false;
-	alreadyPainted = false;
 	paintHead();
 //	updateEvents();
 	paint();
@@ -503,7 +502,6 @@ void CChannelList::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x, y, width, height+ info_height+ 5);
 	clearItem2DetailsLine ();
-	alreadyPainted = false;
 	//displayNext = 0; // always start with current events
 }
 
@@ -1011,22 +1009,13 @@ void CChannelList::paintDetails(unsigned int index)
 	}
 
 	if (index >= chanlist.size() || p_event->description.empty())
-	{
 		frameBuffer->paintBackgroundBoxRel(x, y+ height, width, info_height);
-		alreadyPainted = false;
-	}
 	else
 	{
-		if (!alreadyPainted) //reduce flickering of infobox
-		{
-			frameBuffer->paintBoxRel(x - 4, y + height,        20, info_height, COL_MENUCONTENT_PLUS_1, RADIUS_MID, CORNER_LEFT);
-//			frameBuffer->paintBoxRel(x - 3, y + height, width + 3, info_height, COL_MENUCONTENT_PLUS_6, RADIUS_MID);
-			frameBuffer->paintBoxRel(x+4, y+height ,width-10, 2, COL_MENUCONTENT_PLUS_6);
-			frameBuffer->paintBoxRel(x+4, y+height+info_height-2, width-10, 2, COL_MENUCONTENT_PLUS_6);
-			frameBuffer->paintBoxRel(x-3, y+height, 20, info_height, COL_MENUCONTENT_PLUS_6, RADIUS_MID, CORNER_LEFT);
-			frameBuffer->paintBoxRel(x+width-20, y+height, 20, info_height, COL_MENUCONTENT_PLUS_6, RADIUS_MID, CORNER_RIGHT);
-			alreadyPainted = true;		
-		}		
+		int yoffs = g_settings.rounded_corners ? 7 : 0;
+		frameBuffer->paintBoxRel(x-4, y+height+yoffs, 1, info_height-2*yoffs, COL_MENUCONTENT_PLUS_1);
+		frameBuffer->paintBoxRel(x-3, y+height+yoffs, 3, info_height-2*yoffs, COL_MENUCONTENT_PLUS_6);
+		frameBuffer->paintBoxFrame(x, y + height, width, info_height, 2, COL_MENUCONTENT_PLUS_6, RADIUS_MID);
 		frameBuffer->paintBoxRel(x + 2, y + height + 2, width - 4, info_height - 4, COL_MENUCONTENTDARK_PLUS_0, RADIUS_MID);
 
 		char cNoch[50]; // UTF-8
