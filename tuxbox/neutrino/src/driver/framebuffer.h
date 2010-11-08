@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: framebuffer.h,v 1.55 2009/10/17 07:38:04 seife Exp $
+	$Id: framebuffer.h,v 1.56 2010/11/08 21:33:10 dbt Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -172,6 +172,8 @@ class CFrameBuffer
 
 		void paintBoxRel(const int x, const int y, const int dx, const int dy, const fb_pixel_t col, const int radius = 0, const int corners = 0xf);
 		inline void paintBox(int xa, int ya, int xb, int yb, const fb_pixel_t col, const int radius = 0, const int corners = 0xf) { paintBoxRel(xa, ya, xb - xa, yb - ya, col, radius, corners); }
+
+		void paintBoxFrame(const int x, const int y, const int dx, const int dy, const int px, const fb_pixel_t col, const int rad = 0);
 
 		void paintLine(int xa, int ya, int xb, int yb, const fb_pixel_t col);
 
