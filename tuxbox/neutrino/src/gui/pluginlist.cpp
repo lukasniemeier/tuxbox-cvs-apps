@@ -150,7 +150,7 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 		if ( msg <= CRCInput::RC_MaxRC )
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
-		if (msg == CRCInput::RC_timeout || msg == g_settings.key_channelList_cancel)
+		if (msg == CRCInput::RC_timeout || msg == CRCInput::RC_left || msg == g_settings.key_channelList_cancel)
 		{
 			loop=false;
 		}
@@ -208,11 +208,12 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 				paintItem(selected - liststart);
 			}
 		}
-		else if ( msg == CRCInput::RC_ok )
+		else if (msg == CRCInput::RC_right || msg == CRCInput::RC_ok)
 		{
 			if(selected==0)
 			{
-				loop=false;
+				if (msg == CRCInput::RC_ok)
+					loop = false;
 			}
 			else
 			{//exec the plugin :))
