@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.27 2010/11/07 15:04:43 dbt Exp $
+        $Id: personalize.cpp,v 1.28 2010/11/18 09:22:11 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -323,8 +323,12 @@ void CPersonalizeGui::ShowMenuOptions(const int& menu)
 							itm_name += g_Locale->getText(LOCALE_PERSONALIZE_PINSTATUS);
 							
 					if (v_item[i].personalize_mode != NULL) 	
-						pm->addItem(new CMenuOptionChooser(itm_name.c_str(), v_item[i].personalize_mode, PERSONALIZE_YON_OPTIONS, PERSONALIZE_YON_OPTION_COUNT, true));
+						pm->addItem(new CMenuOptionChooser(itm_name.c_str(), v_item[i].personalize_mode, PERSONALIZE_YON_OPTIONS, PERSONALIZE_YON_OPTION_COUNT, v_item[i].menuItem->active));
 				}
+				
+				//only show in personalize menu, usefull to hide separators in menu, but visible only in personalizing menu
+				if (show_mode == PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU)
+					pm->addItem(v_item[i].menuItem); 
 			}	
 		}
 	}
@@ -419,7 +423,7 @@ void CPersonalizeGui::addItem(CMenuWidget *menu, CMenuItem *menu_Item, const int
 
 //adds a menu separator to menue, based upon GenericMenuSeparatorLine or CMenuSeparator objects with locale
 //expands with parameter within you can show or hide this item in personalize options
-void CPersonalizeGui::addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const bool item_mode)
+void CPersonalizeGui::addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const int item_mode)
 {
 	menu_item_t to_add_sep[2] = {	{&menu, GenericMenuSeparatorLine, false, locale_text, NULL, item_mode}, 
 					{&menu, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, item_mode}};
@@ -436,13 +440,16 @@ void CPersonalizeGui::addPersonalizedItems()
 {
  	for (uint i = 0; i < v_item.size(); i++)
 	{	
-		if (v_item[i].personalize_mode != NULL)
+		if (v_item[i].item_mode != PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU)
 		{
-			if (*v_item[i].personalize_mode != PERSONALIZE_MODE_NOTVISIBLE || v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION) 
-				v_item[i].menu->addItem(v_item[i].menuItem, v_item[i].default_selected); //forwarders...
+			if (v_item[i].personalize_mode != NULL)
+			{
+				if (v_item[i].menuItem->active && (*v_item[i].personalize_mode != PERSONALIZE_MODE_NOTVISIBLE || v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
+					v_item[i].menu->addItem(v_item[i].menuItem, v_item[i].default_selected); //forwarders...
+			}
+			else 
+				v_item[i].menu->addItem(v_item[i].menuItem, v_item[i].default_selected); //separators
 		}
-		else
-			v_item[i].menu->addItem(v_item[i].menuItem, v_item[i].default_selected); //separators
 	}
 }
 

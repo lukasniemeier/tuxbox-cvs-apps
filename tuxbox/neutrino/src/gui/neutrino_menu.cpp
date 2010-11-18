@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.121 2010/11/07 15:04:43 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.122 2010/11/18 09:22:11 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -175,14 +175,15 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCARTMODE, true, NULL, this, "scart", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_scartmode);
 
 	//games
-	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_GAMES, true, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_games);
+	bool show_games = g_PluginList->hasPlugin(CPlugins::P_TYPE_GAME);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_GAMES, show_games, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_games);
 
-	//separator	
+	//separator
 	if (	g_settings.personalize_tvmode		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_radiomode	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_scartmode	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_games		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		;// Stop seperator from appearing when menu entries have been hidden	
+		personalize->addSeparator(menu, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden
 	else
 		personalize->addSeparator(menu); 
 	
@@ -224,8 +225,8 @@ void CNeutrinoApp::InitMenuMain()
 #endif
 
 	// scripts 
-	if (g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT))
-		personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, true, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), &g_settings.personalize_scripts);
+	bool show_scripts = g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT);
+	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, show_scripts, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), &g_settings.personalize_scripts);
 
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_INTERNETRADIO) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_UPNP)
 	// separator
@@ -250,7 +251,7 @@ void CNeutrinoApp::InitMenuMain()
 	if (	g_settings.personalize_sleeptimer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_reboot		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_shutdown		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		 ;// Stop seperator from appearing when menu entries have been hidden
+		personalize->addSeparator(menu, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden
 	else
 		personalize->addSeparator(menu);
 
@@ -330,13 +331,7 @@ void CNeutrinoApp::InitMenuSettings()
 	personalize->addItem(&menu, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_misc);
 	
 	// personalize - not personalized
-	CMenuItem *personalize_menu;
-	if (g_settings.personalize_pinstatus == CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED)
-		personalize_menu = new CMenuForwarder(LOCALE_PERSONALIZE_HEAD, true, NULL, personalize);
-	else
-		personalize_menu = new CLockedMenuForwarder(LOCALE_PERSONALIZE_HEAD, g_settings.personalize_pincode, true, true, NULL, personalize);
-
-	personalize->addItem(&menu, personalize_menu, NULL, false, false);
+	personalize->addItem(&menu, new CLockedMenuForwarder(LOCALE_PERSONALIZE_HEAD, g_settings.personalize_pincode, g_settings.personalize_pinstatus, true, NULL, personalize), NULL, false, false);
 }
 
 const CMenuOptionChooser::keyval OPTIONS_OFF0_ON1_OPTIONS[OPTIONS_OFF0_ON1_OPTION_COUNT] =
@@ -365,8 +360,8 @@ void CNeutrinoApp::InitMenuService()
 
 	// separator
 	if (	g_settings.personalize_bouqueteditor	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_scants		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
-		// Stop seperator from appearing when menu entries have been hidden
+		g_settings.personalize_scants		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
+		personalize->addSeparator(menu, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden;
 	else
 		personalize->addSeparator(menu); 
 
@@ -396,8 +391,8 @@ void CNeutrinoApp::InitMenuService()
 		g_settings.personalize_restart		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_epgrestart	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
 		g_settings.personalize_ucodecheck	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE
-		);// Stop seperator from appearing when menu entries have been hidden
+		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
+		personalize->addSeparator(menu, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden
 	else
 		personalize->addSeparator(menu); 
 

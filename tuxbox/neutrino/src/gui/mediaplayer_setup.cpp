@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: mediaplayer_setup.cpp,v 1.3 2010/11/18 09:22:11 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -125,7 +125,8 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 #endif
 #ifdef ENABLE_ESD
 	// esound
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, new CEsdSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	if (access("/bin/esd", X_OK) == 0 || access("/var/bin/esd", X_OK) == 0)
+		mediaSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, new CEsdSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 #endif
 #ifdef ENABLE_MOVIEPLAYER
 	// movieplayer
