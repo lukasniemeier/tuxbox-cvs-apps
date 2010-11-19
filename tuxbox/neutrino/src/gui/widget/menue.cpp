@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.174 2010/10/17 20:33:01 dbt Exp $
+	$Id: menue.cpp,v 1.175 2010/11/19 21:03:14 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1184,12 +1184,12 @@ bool CZapProtection::check()
 int CLockedMenuForwarder::exec(CMenuTarget* parent)
 {
 	Parent = parent;
-	if( (g_settings.parentallock_prompt != PARENTALLOCK_PROMPT_NEVER) || AlwaysAsk )
-		if (!check())
-		{
-			Parent = NULL;
-			return menu_return::RETURN_REPAINT;
-		}
+
+	if (Ask && !check())
+	{
+		Parent = NULL;
+		return menu_return::RETURN_REPAINT;
+	}
 
 	Parent = NULL;
 	return CMenuForwarder::exec(parent);
