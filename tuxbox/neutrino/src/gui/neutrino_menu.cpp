@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.123 2010/11/19 21:03:14 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.124 2010/11/23 18:56:54 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -238,7 +238,7 @@ void CNeutrinoApp::InitMenuMain()
 		g_settings.personalize_upnpbrowser	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
 		;// Stop seperator from appearing when menu entries have been hidden
 	else
-		personalize->addSeparator(menu, NONEXISTANT_LOCALE, false); //don't show this separator in personal menu
+		personalize->addSeparator(menu, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_NO); //don't show this separator in personal menu
 #endif
 
 	// settings, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
