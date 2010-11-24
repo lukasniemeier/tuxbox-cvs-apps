@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.5 2010/07/01 11:44:19 dbt Exp $
+	$Id: movieplayer_menu.cpp,v 1.6 2010/11/24 21:03:26 dbt Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -54,8 +54,6 @@ CMoviePlayerMenue::CMoviePlayerMenue()
 {
 	frameBuffer = CFrameBuffer::getInstance();
 
-	moviePlayerGui = NULL;
-
 	width = w_max (500, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
@@ -67,7 +65,7 @@ CMoviePlayerMenue::CMoviePlayerMenue()
 
 CMoviePlayerMenue::~CMoviePlayerMenue()
 {
-	delete moviePlayerGui;
+
 }
 
 int CMoviePlayerMenue::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
@@ -93,7 +91,7 @@ void CMoviePlayerMenue::hide()
 
 void CMoviePlayerMenue::showMoviePlayerMenue()
 {
-	moviePlayerGui = new CMoviePlayerGui();
+	CMenuTarget* 	moviePlayerGui = new CMoviePlayerGui();
 
 	//init
 	CMenuWidget * mpmenue = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_EPGINFO, width);
@@ -103,15 +101,15 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
 	//ts playback 
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, this->moviePlayerGui, "tsplayback", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, moviePlayerGui, "tsplayback", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 	//ts playback pin 
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK_PC, true, NULL, this->moviePlayerGui, "tsplayback_pc", CRCInput::RC_1));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK_PC, true, NULL, moviePlayerGui, "tsplayback_pc", CRCInput::RC_1));
 
 	neutrino_msg_t rc_msg;
 #ifdef ENABLE_MOVIEBROWSER
 #ifndef ENABLE_MOVIEPLAYER2
 	//moviebrowser init via movieplayer 1
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this->moviePlayerGui, "tsmoviebrowser", CRCInput::RC_2));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, moviePlayerGui, "tsmoviebrowser", CRCInput::RC_2));
 #else
 	//moviebrowser init
 	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, CMovieBrowser::getInstance(), "run", CRCInput::RC_2));
@@ -122,16 +120,16 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 #endif /* ENABLE_MOVIEBROWSER */
 
 	//bookmark
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_BOOKMARK, true, NULL, this->moviePlayerGui, "bookmarkplayback", rc_msg));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_BOOKMARK, true, NULL, moviePlayerGui, "bookmarkplayback", rc_msg));
 
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
 	//vlc file play
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, this->moviePlayerGui, "fileplayback", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, moviePlayerGui, "fileplayback", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	//vlc dvd play
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_DVDPLAYBACK, true, NULL, this->moviePlayerGui, "dvdplayback", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_DVDPLAYBACK, true, NULL, moviePlayerGui, "dvdplayback", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 	//vlc vcd play
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_VCDPLAYBACK, true, NULL, this->moviePlayerGui, "vcdplayback", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_VCDPLAYBACK, true, NULL, moviePlayerGui, "vcdplayback", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
@@ -146,5 +144,6 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->exec(NULL, "");
 	mpmenue->hide();
 	delete mpmenue;
+
 }
 
