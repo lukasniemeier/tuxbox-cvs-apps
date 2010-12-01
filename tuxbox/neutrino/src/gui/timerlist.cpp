@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.109 2010/08/02 20:51:27 seife Exp $
+	$Id: timerlist.cpp,v 1.110 2010/12/01 10:58:31 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -460,9 +460,9 @@ int CTimerList::show()
 		if( msg <= CRCInput::RC_MaxRC )
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
 
-		if( ( msg == CRCInput::RC_timeout ) ||
-			 ( msg == CRCInput::RC_home) )
-		{ //Exit after timeout or cancel key
+		//exit timerlist on timeout, button left and home
+		if (msg == CRCInput::RC_timeout || msg == CRCInput::RC_left || msg == g_settings.key_channelList_cancel)
+		{
 			loop=false;
 		}
 		else if (msg_repeatok == CRCInput::RC_up && !timerlist.empty())
@@ -502,7 +502,7 @@ int CTimerList::show()
 				paintItem(selected - liststart);
 			}
 		}
-		else if ((msg == CRCInput::RC_ok) && !(timerlist.empty()))
+		else if ((msg == CRCInput::RC_right || msg == CRCInput::RC_ok) && !(timerlist.empty()))
 		{
 			if (modifyTimer()==menu_return::RETURN_EXIT_ALL)
 			{
@@ -758,13 +758,14 @@ void CTimerList::paintHead()
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
 }
 
-const struct button_label TimerListButtons[3] =
+const struct button_label TimerListButtons[4] =
 {
+	{ NEUTRINO_ICON_BUTTON_HOME  , LOCALE_MENU_CANCEL },
 	{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_TIMERLIST_DELETE },
 	{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_TIMERLIST_NEW    },
 	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERLIST_RELOAD }
 };
-const struct button_label TimerListButtonOK[1] =
+const struct button_label TimerListButtonOK[2] =
 {
 	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_TIMERLIST_MODIFY }
 };
@@ -777,11 +778,11 @@ void CTimerList::paintFoot()
 	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	if (timerlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + ButtonWidth + 10, y + height, ButtonWidth, 2, &(TimerListButtons[1]));
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + ButtonWidth + 10, y + height, ButtonWidth, 3, /*&(*/TimerListButtons/*[1])*/);
 	else
 	{
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, ButtonWidth, 3, TimerListButtons);
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height, ButtonWidth, 1, TimerListButtonOK);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, ButtonWidth, 4, TimerListButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + width - 1 * ButtonWidth, y + height, ButtonWidth, 1, TimerListButtonOK);
 	}
 }
 
