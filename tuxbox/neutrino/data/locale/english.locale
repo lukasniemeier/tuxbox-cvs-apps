@@ -1352,7 +1352,7 @@ streamingmenu.server_ip Streaming Server IP
 streamingmenu.server_port Streaming Server Port
 streamingmenu.streaming_audiorate Datarate Audio
 streamingmenu.streaming_buffer_segment_size Buffer Segments
-streamingmenu.streaming_buffer_segment_size_hint1 Min: 6, Max: 124, optimal: 24
+streamingmenu.streaming_buffer_segment_size_hint1 Min: 6, Max: 128, optimal: 24
 streamingmenu.streaming_buffer_segment_size_hint2
 streamingmenu.streaming_force_avi_rawaudio Force AC3 for AVI
 streamingmenu.streaming_force_transcode_video Transcode MPG/VCD video
