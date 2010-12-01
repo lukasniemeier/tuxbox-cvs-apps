@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.110 2010/12/01 10:58:31 dbt Exp $
+	$Id: timerlist.cpp,v 1.111 2010/12/01 11:14:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -465,42 +465,47 @@ int CTimerList::show()
 		{
 			loop=false;
 		}
-		else if (msg_repeatok == CRCInput::RC_up && !timerlist.empty())
+		else if ((msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup) && !timerlist.empty())
 		{
-			int prevselected=selected;
-			if(selected==0)
-			{
-				selected = timerlist.size()-1;
-			}
-			else
-				selected--;
-			paintItem(prevselected - liststart);
+			int step = 0;
+			int prev_selected = selected;
+
+			step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			selected -= step;
+			if((prev_selected-step) < 0)		// because of uint
+				selected = timerlist.size() - 1;
+
+			paintItem(prev_selected - liststart);
 			unsigned int oldliststart = liststart;
 			liststart = (selected/listmaxshow)*listmaxshow;
+
 			if(oldliststart!=liststart)
-			{
 				paint();
-			}
 			else
-			{
 				paintItem(selected - liststart);
-			}
 		}
-		else if (msg_repeatok == CRCInput::RC_down && !timerlist.empty())
+		else if ((msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown) && !timerlist.empty())
 		{
-			int prevselected=selected;
-			selected = (selected+1)%timerlist.size();
-			paintItem(prevselected - liststart);
+			unsigned int step = 0;
+			int prev_selected = selected;
+
+			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			selected += step;
+
+			if(selected >= timerlist.size())
+				if (((timerlist.size() / listmaxshow) + 1) * listmaxshow == timerlist.size() + listmaxshow) // last page has full entries
+					selected = 0;
+				else
+					selected = ((step == listmaxshow) && (selected < (((timerlist.size() / listmaxshow) + 1) * listmaxshow))) ? (timerlist.size() - 1) : 0;
+
+			paintItem(prev_selected - liststart);
 			unsigned int oldliststart = liststart;
 			liststart = (selected/listmaxshow)*listmaxshow;
+
 			if(oldliststart!=liststart)
-			{
 				paint();
-			}
 			else
-			{
 				paintItem(selected - liststart);
-			}
 		}
 		else if ((msg == CRCInput::RC_right || msg == CRCInput::RC_ok) && !(timerlist.empty()))
 		{
