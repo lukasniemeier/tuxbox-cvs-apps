@@ -1456,6 +1456,7 @@ timing.infobar_movieplayer Infobar/Movieplayer
 timing.infobar_radio Infobar/Radio
 timing.menu Menu
 timing.numericzap Numeric Zap
+timing.volumebar Volume Control
 ucodecheck.avia500 Avia 500
 ucodecheck.avia600 Avia 600
 ucodecheck.cam-alpha Cam-Alpha

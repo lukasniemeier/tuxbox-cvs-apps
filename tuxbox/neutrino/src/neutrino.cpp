@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1050 2010/11/18 09:22:11 dbt Exp $
+	$Id: neutrino.cpp,v 1.1051 2010/12/01 10:41:53 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3503,12 +3503,12 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 				current_volume = 50;
 			}
 #endif
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] / 2);
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_VOLUMEBAR]);
 		}
 		else if (msg == NeutrinoMessages::EVT_VOLCHANGED)
 		{
 			current_volume = g_Controld->getVolume((CControld::volume_type)g_settings.audio_avs_Control);
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] / 2);
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_VOLUMEBAR]);
 		}
 		else if (handleMsg(msg, data) & messages_return::unhandled)
 		{

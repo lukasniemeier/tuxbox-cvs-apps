@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.232 2010/10/17 11:50:29 dbt Exp $
+  $Id: settings.h,v 1.233 2010/12/01 10:41:53 dbt Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -108,7 +108,7 @@ struct SNeutrinoSettings
 	char language[25];
 
 	//timing
-#define TIMING_SETTING_COUNT 8
+#define TIMING_SETTING_COUNT 9
 	enum TIMING_SETTINGS {
 		TIMING_MENU        = 0,
 		TIMING_CHANLIST    = 1,
@@ -116,8 +116,9 @@ struct SNeutrinoSettings
 		TIMING_INFOBAR     = 3,
 		TIMING_INFOBAR_RADIO = 4,
 		TIMING_INFOBAR_MOVIE = 5,
-		TIMING_FILEBROWSER = 6,
-		TIMING_NUMERICZAP  = 7
+		TIMING_VOLUMEBAR   = 6, 
+		TIMING_FILEBROWSER = 7,
+		TIMING_NUMERICZAP  = 8
 	};
 
 	int  timing       [TIMING_SETTING_COUNT]   ;
@@ -522,15 +523,15 @@ typedef struct time_settings_t
 
 const time_settings_struct_t timing_setting[TIMING_SETTING_COUNT] =
 {
-	{60, 	LOCALE_TIMING_MENU},
-	{60, 	LOCALE_TIMING_CHANLIST},
-	{240,	LOCALE_TIMING_EPG},
-	{6,	LOCALE_TIMING_INFOBAR},
-	{10,	LOCALE_TIMING_INFOBAR_RADIO},
-	{6,	LOCALE_TIMING_INFOBAR_MOVIEPLAYER},
-	{60,	LOCALE_TIMING_FILEBROWSER},
-	{3,	LOCALE_TIMING_NUMERICZAP},
-
+	{ 60,   LOCALE_TIMING_MENU        },
+	{ 60,   LOCALE_TIMING_CHANLIST    },
+	{ 240,  LOCALE_TIMING_EPG         },
+	{ 6,    LOCALE_TIMING_INFOBAR     },
+	{ 10,   LOCALE_TIMING_INFOBAR_RADIO },
+	{ 6,    LOCALE_TIMING_INFOBAR_MOVIEPLAYER},
+	{ 3,    LOCALE_TIMING_VOLUMEBAR   },
+	{ 60,   LOCALE_TIMING_FILEBROWSER },
+	{ 3,    LOCALE_TIMING_NUMERICZAP  }
 };
 
 // lcdd

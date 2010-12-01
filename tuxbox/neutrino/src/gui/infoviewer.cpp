@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.293 2010/07/12 09:22:21 dbt Exp $
+	$Id: infoviewer.cpp,v 1.294 2010/12/01 10:41:53 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -590,13 +590,29 @@ void CInfoViewer::infobarLoop(bool calledFromNumZap, bool fadeIn)
 
 	if ( !calledFromNumZap )
 	{
-		bool tsmode = (neutrino->getMode() == NeutrinoMessages::mode_ts);
+		int mode = neutrino->getMode();
+		bool tsmode = (mode == NeutrinoMessages::mode_ts);
 		bool show_dot= true;
 		if ( fadeIn )
 			fadeTimer = g_RCInput->addTimer( FADE_TIME, false );
 
 		bool hideIt = true;
-		unsigned long long timeoutEnd = (neutrino->getMode() != NeutrinoMessages::mode_radio) ?  CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR]) : CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR_RADIO]);
+		unsigned long long timeoutEnd;
+		switch (mode)
+		{
+			case NeutrinoMessages::mode_tv:
+					timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR]);
+					break;
+			case NeutrinoMessages::mode_radio:
+					timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR_RADIO]);
+					break;
+			case NeutrinoMessages::mode_ts:
+					timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR_MOVIE]);
+					break;
+			default:
+					timeoutEnd = CRCInput::calcTimeoutEnd(6); //default 6 seconds
+					break;
+		}
 
 		int res = messages_return::none;
 

@@ -1456,6 +1456,7 @@ timing.infobar_movieplayer Infobar/Filmwiedergabe
 timing.infobar_radio Infobar/Radio
 timing.menu Menü
 timing.numericzap Umschalten mit Zifferntasten
+timing.volumebar Lautstärkebalken
 ucodecheck.avia500 Avia 500
 ucodecheck.avia600 Avia 600
 ucodecheck.cam-alpha Cam-Alpha
