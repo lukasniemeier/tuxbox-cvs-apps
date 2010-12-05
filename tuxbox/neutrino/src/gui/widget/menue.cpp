@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.175 2010/11/19 21:03:14 dbt Exp $
+	$Id: menue.cpp,v 1.176 2010/12/05 22:30:22 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -193,7 +193,8 @@ CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon,
 	frameBuffer = CFrameBuffer::getInstance();
 	nameString = g_Locale->getText(Name);
 	iconfile = Icon;
-	selected = -1;
+	preselected = -1;
+	selected = preselected;
 	width = mwidth;
 	if(width > (g_settings.screen_EndX - g_settings.screen_StartX))
 		width = g_settings.screen_EndX - g_settings.screen_StartX;
@@ -207,7 +208,8 @@ CMenuWidget::CMenuWidget(const char* Name, const std::string & Icon, const int m
 	frameBuffer = CFrameBuffer::getInstance();
 	nameString = Name;
 	iconfile = Icon;
-	selected = -1;
+	preselected = -1;
+	selected = preselected;
 	width = mwidth;
 	if(width > (g_settings.screen_EndX - g_settings.screen_StartX))
 		width = g_settings.screen_EndX - g_settings.screen_StartX;
@@ -233,8 +235,17 @@ CMenuWidget::~CMenuWidget()
 
 void CMenuWidget::addItem(CMenuItem* menuItem, const bool defaultselected)
 {
-	if (defaultselected)
-		selected = items.size();
+	if (menuItem->isSelectable())
+	{
+		bool isSelected = defaultselected;
+
+		if (preselected != -1)
+			isSelected = (preselected == (int)items.size());
+
+		if (isSelected)
+			selected = items.size();
+	}
+
 	menuItem->isUsed();
 	items.push_back(menuItem);
 }
