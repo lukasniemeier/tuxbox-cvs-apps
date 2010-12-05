@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.h,v 1.1 2010/07/30 20:51:37 dbt Exp $
+	$Id: driver_boot_setup.h,v 1.2 2010/12/05 22:32:12 dbt Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -43,7 +43,7 @@
 
 		CFrameBuffer *frameBuffer;
 		
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;

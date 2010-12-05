@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.1 2010/08/28 22:47:09 dbt Exp $
+	$Id: osd_setup.h,v 1.2 2010/12/05 22:32:12 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -48,7 +48,7 @@
 		CColorSetupNotifier *colorSetupNotifier;
 		CFontSizeNotifier *fontsizenotifier;
 		
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;

@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.14 2010/07/01 11:44:19 dbt Exp $
+	$Id: network_setup.cpp,v 1.15 2010/12/05 22:32:12 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -74,6 +74,8 @@ CNetworkSetup::CNetworkSetup()
 	height = hheight+13*mheight+ 10;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
+
+	selected = -1;
 
 	network_automatic_start = networkConfig->automatic_start;
 	network_dhcp 		= networkConfig->inet_static ? NETWORK_DHCP_OFF : NETWORK_DHCP_ON;
@@ -164,6 +166,7 @@ void CNetworkSetup::showNetworkSetup()
 	{		
 		//menue init
 		CMenuWidget* networkSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+		networkSettings->setPreselected(selected);
 
 		//subhead
 		networkSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_NETWORK));
@@ -266,6 +269,7 @@ void CNetworkSetup::showNetworkSetup()
 
 		networkSettings->exec(NULL, "");
 		networkSettings->hide();
+		selected = networkSettings->getSelected();
 		delete networkSettings;
 					
 		// Check for changes

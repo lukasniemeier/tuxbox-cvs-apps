@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.h,v 1.3 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: network_setup.h,v 1.4 2010/12/05 22:32:12 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -48,7 +48,7 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 		CFrameBuffer *frameBuffer;
  		CNetworkConfig  *networkConfig;
 						
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
 		int network_dhcp;
 		int network_automatic_start;

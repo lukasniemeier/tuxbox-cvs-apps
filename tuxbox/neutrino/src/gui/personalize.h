@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.10 2010/11/18 09:22:11 dbt Exp $
+$Id: personalize.h,v 1.11 2010/12/05 22:32:12 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -49,7 +49,7 @@ class CPersonalizeGui : public CMenuTarget
 	private:
 		CFrameBuffer *frameBuffer;
 		
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 		void 	ShowHelpPersonalize();
 		
 		std::string action_key[3/*=CNeutrinoApp::MENU_MAX*/];

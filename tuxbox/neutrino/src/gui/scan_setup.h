@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.h,v 1.5 2010/07/18 21:21:42 dbt Exp $
+	$Id: scan_setup.h,v 1.6 2010/12/05 22:32:12 dbt Exp $
 
 	Copyright (C) 2009 Thilo Graf (dbt)
 	http://www.dbox2-tuning.de
@@ -39,7 +39,7 @@ class CScanSetup : public CMenuTarget
 {
 	private:
 		CFrameBuffer *frameBuffer;
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		uint sat_list_size;
 		uint provider_list_size;

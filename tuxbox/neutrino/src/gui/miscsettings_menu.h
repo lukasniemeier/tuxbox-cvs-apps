@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.h,v 1.1 2010/09/07 09:20:50 dbt Exp $
+	$Id: miscsettings_menu.h,v 1.2 2010/12/05 22:32:12 dbt Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -41,7 +41,7 @@
 
 		CFrameBuffer *frameBuffer;
 		
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;

@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.6 2010/08/02 20:48:51 seife Exp $
+	$Id: record_setup.cpp,v 1.7 2010/12/05 22:32:12 dbt Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -59,6 +59,8 @@ CRecordSetup::CRecordSetup()
 	height = hheight+13*mheight+ 10;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
+
+	selected = -1;
 }
 
 CRecordSetup::~CRecordSetup()
@@ -144,6 +146,7 @@ void CRecordSetup::showRecordSetup()
 {
 	//menue init
 	CMenuWidget* recordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+	recordingSettings->setPreselected(selected);
 
 	//subhead
 	recordingSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_RECORDING));	
@@ -347,8 +350,8 @@ void CRecordSetup::showRecordSetup()
 
 	recordingSettings->exec(NULL, "");
 	recordingSettings->hide();
+	selected = recordingSettings->getSelected();
 	delete recordingSettings;
-
 }
 
 

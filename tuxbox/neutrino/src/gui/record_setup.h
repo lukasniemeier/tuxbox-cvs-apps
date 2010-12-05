@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.h,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: record_setup.h,v 1.3 2010/12/05 22:32:12 dbt Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -44,7 +44,7 @@ class CRecordSetup : public CMenuTarget
 	private:
 		CFrameBuffer *frameBuffer;
 		
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
 		void hide();
 		void showRecordSetup();

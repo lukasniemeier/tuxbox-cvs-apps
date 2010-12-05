@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.7 2010/11/24 21:13:27 dbt Exp $
+	$Id: movieplayer_menu.cpp,v 1.8 2010/12/05 22:32:12 dbt Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -61,6 +61,7 @@ CMoviePlayerMenue::CMoviePlayerMenue()
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
 
+	selected = -1;
 }
 
 CMoviePlayerMenue::~CMoviePlayerMenue()
@@ -95,6 +96,7 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 
 	//init
 	CMenuWidget * mpmenue = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_EPGINFO, width);
+	mpmenue->setPreselected(selected);
 
 	mpmenue->addItem(GenericMenuSeparator);
 	mpmenue->addItem(GenericMenuBack);
@@ -143,7 +145,7 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 
 	mpmenue->exec(NULL, "");
 	mpmenue->hide();
+	selected = mpmenue->getSelected();
 	delete mpmenue;
-
 }
 

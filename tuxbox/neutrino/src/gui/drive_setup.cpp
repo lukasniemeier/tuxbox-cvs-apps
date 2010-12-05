@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.79 2010/10/15 13:43:56 dbt Exp $
+	$Id: drive_setup.cpp,v 1.80 2010/12/05 22:32:12 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -200,6 +200,7 @@ CDriveSetup::CDriveSetup():configfile('\t')
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height 	= hheight+13*mheight+ 10;
+	selected_main = -1;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
 
@@ -658,6 +659,7 @@ void CDriveSetup::showHddSetupMain()
 
 	// main menue
 	CMenuWidget 	*m = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
+	m->setPreselected(selected_main);
 
 	// apply
 	CMenuForwarder *m1 = new CMenuForwarder(LOCALE_DRIVE_SETUP_SAVESETTINGS, true, NULL, this, "apply", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
@@ -873,6 +875,7 @@ void CDriveSetup::showHddSetupMain()
 
 	m->exec (NULL, "");
 	m->hide ();
+	selected_main = m->getSelected();
 	delete m;
 }
 
@@ -4629,7 +4632,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.79 $");
+	return imageinfo.getModulVersion("","$Revision: 1.80 $");
 }
 
 // returns text for initfile headers

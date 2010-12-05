@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.7 2010/12/05 22:29:15 dbt Exp $
+	$Id: video_setup.cpp,v 1.8 2010/12/05 22:32:12 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -58,6 +58,7 @@ CVideoSetup::CVideoSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
+	selected = -1;
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 
@@ -134,6 +135,7 @@ void CVideoSetup::showVideoSetup()
 {
 	//init
 	CMenuWidget * videosetup = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+	videosetup->setPreselected(selected);
 	//subhead
 	videosetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_VIDEOMENU_HEAD));
 
@@ -186,6 +188,7 @@ void CVideoSetup::showVideoSetup()
 
 	videosetup->exec(NULL, "");
 	videosetup->hide();
+	selected = videosetup->getSelected();
 	delete videosetup;
 }
 

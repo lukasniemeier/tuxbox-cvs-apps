@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.h,v 1.4 2010/02/22 10:54:11 dbt Exp $
+	$Id: software_update.h,v 1.5 2010/12/05 22:32:12 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,7 +41,7 @@ class CSoftwareUpdate : public CMenuTarget
 {
 	private:
 		CFrameBuffer *frameBuffer;
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
 		void hide();
 		void showSoftwareUpdate();

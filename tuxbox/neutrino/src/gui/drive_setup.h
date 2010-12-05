@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.34 2010/10/15 13:43:56 dbt Exp $
+	$Id: drive_setup.h,v 1.35 2010/12/05 22:32:12 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -233,7 +233,7 @@ class CDriveSetup : public CMenuTarget
 		CConfigFile	configfile;
 		SDriveSettings	d_settings;
 
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected_main;
 		int pb_x, pb_y, pb_w, pb_h;
 		int msg_timeout; 	// timeout for messages
 

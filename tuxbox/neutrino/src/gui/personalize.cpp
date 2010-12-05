@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.28 2010/11/18 09:22:11 dbt Exp $
+        $Id: personalize.cpp,v 1.29 2010/12/05 22:32:12 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -164,6 +164,7 @@ CPersonalizeGui::CPersonalizeGui()
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
 
+	selected = -1;
 	shortcut = 0;
 }
 
@@ -237,6 +238,8 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	handleSetting(&g_settings.personalize_pinstatus);
 
 	CMenuWidget* pMenu = new CMenuWidget(LOCALE_PERSONALIZE_HEAD,NEUTRINO_ICON_PROTECTING, width);
+	pMenu->setPreselected(selected);
+
 	CPINChangeWidget * pinChangeWidget = new CPINChangeWidget(LOCALE_PERSONALIZE_PINCODE, g_settings.personalize_pincode, 4, LOCALE_PERSONALIZE_PINHINT);
 
 	pMenu->addItem(GenericMenuSeparator);
@@ -264,8 +267,9 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->addItem(GenericMenuSeparatorLine);
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
 
-	pMenu->exec (NULL, "");
-	pMenu->hide ();
+	pMenu->exec(NULL, "");
+	pMenu->hide();
+	selected = pMenu->getSelected();
 	delete pMenu;
 	
 	if (haveChangedSettings())

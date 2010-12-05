@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.h,v 1.4 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: video_setup.h,v 1.5 2010/12/05 22:32:12 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -50,7 +50,7 @@ class CVideoSetup : public CMenuTarget, CChangeObserver
 		int video_out_signal;
 		int vcr_video_out_signal;
 				
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
  		virtual bool changeNotify(const neutrino_locale_t OptionName, void *);
 

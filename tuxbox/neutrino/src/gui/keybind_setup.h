@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.h,v 1.2 2010/09/07 09:22:36 dbt Exp $
+	$Id: keybind_setup.h,v 1.3 2010/12/05 22:32:12 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -71,7 +71,7 @@ class CKeybindSetup : public CMenuTarget
 		CFrameBuffer *frameBuffer;
 		CKeySetupNotifier      *keySetupNotifier;
 		
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;
