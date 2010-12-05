@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.137 2010/07/03 11:22:04 dbt Exp $
+	$Id: eventlist.cpp,v 1.138 2010/12/05 22:29:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -111,8 +111,8 @@ EventList::EventList()
 
 	listmaxshow = (height-theight-iheight-0)/fheight;
 	height = theight+iheight+0+listmaxshow*fheight; // recalc height
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 	liststart = 0;
 	sort_mode = 0;
 }

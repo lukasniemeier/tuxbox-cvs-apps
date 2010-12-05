@@ -65,8 +65,8 @@ CBEBouquetWidget::CBEBouquetWidget()
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
 	listmaxshow = (height-theight-0)/fheight;
 	height = theight+0+listmaxshow*fheight; // recalc height
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 	liststart = 0;
 	state = beDefault;
 	blueFunction = beRename;
@@ -107,7 +107,7 @@ void CBEBouquetWidget::paintItem(int pos)
 	{
 		if (Bouquets[liststart+pos].locked)
 		{
-			frameBuffer->paintIcon("lock.raw", x + 7, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_LOCK, x + 7, ypos);
 		}
 		if (Bouquets[liststart+pos].hidden)
 		{

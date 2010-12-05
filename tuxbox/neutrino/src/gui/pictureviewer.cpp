@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 	
-	$Id: pictureviewer.cpp,v 1.76 2010/06/18 19:09:24 dbt Exp $
+	$Id: pictureviewer.cpp,v 1.77 2010/12/05 22:29:15 dbt Exp $
 
 	MP3Player by Dirch
 	
@@ -46,6 +46,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #ifdef ENABLE_GUI_MOUNT
 #include <gui/nfs.h>
@@ -120,7 +121,7 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 {
 	struct stat sFileInfo;
 	selected = 0;
-	width = 710;
+	width = w_max (710, 30);
 	if((g_settings.screen_EndX- g_settings.screen_StartX) < width)
 		width=(g_settings.screen_EndX- g_settings.screen_StartX);
 	height = 570;
@@ -134,8 +135,8 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 	listmaxshow = (height-theight-2*buttonHeight)/(fheight);
 	height = theight+2*buttonHeight+listmaxshow*fheight;	// recalc height
 
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height)/ 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 
 	m_viewer->SetScaling((CPictureViewer::ScalingMode)g_settings.picviewer_scaling);
 	m_viewer->SetVisible(g_settings.screen_StartX, g_settings.screen_EndX, g_settings.screen_StartY, g_settings.screen_EndY);
@@ -733,7 +734,7 @@ void CPictureViewerGui::endView()
 std::string CPictureViewerGui::getPictureViewerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.76 $");
+	return imageinfo.getModulVersion("","$Revision: 1.77 $");
 }
 
 void CPictureViewerGui::showHelp()

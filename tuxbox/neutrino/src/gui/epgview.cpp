@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.154 2010/07/06 13:09:35 dbt Exp $
+	$Id: epgview.cpp,v 1.155 2010/12/05 22:29:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -133,8 +133,8 @@ void CEpgData::start()
 	botheight     = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->getHeight();
 	botboxheight  = botheight + 6;
 
-	sx = (g_settings.screen_EndX - g_settings.screen_StartX - ox) / 2 + g_settings.screen_StartX;
-	sy = (g_settings.screen_EndY - g_settings.screen_StartY - oy) / 2 + g_settings.screen_StartY - 30/2;
+	sx = getScreenStartX (ox);
+	sy = getScreenStartY (oy) - 30/2;
 	/* this is the text box height - and the height of the scroll bar */
 	sb = oy - topboxheight - botboxheight;
 	medlineheight = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight();

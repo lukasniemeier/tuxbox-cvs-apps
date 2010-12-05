@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.6 2010/08/28 23:06:59 dbt Exp $
+	$Id: video_setup.cpp,v 1.7 2010/12/05 22:29:15 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -58,8 +58,8 @@ CVideoSetup::CVideoSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 
 	video_out_signal = g_Controld->getVideoOutput();
 	vcr_video_out_signal = g_Controld->getVCROutput();

@@ -170,8 +170,8 @@ int CBouquetList::show()
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
 	listmaxshow = (height-theight-0)/fheight;
 	height      = theight + listmaxshow * fheight; // recalc height
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY - g_settings.screen_StartY) - height) / 2) + g_settings.screen_StartY - theight/2;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height) - theight/2;
 
 	if(Bouquets.size()==0)
 	{

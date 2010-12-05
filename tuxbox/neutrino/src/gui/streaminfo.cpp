@@ -39,11 +39,11 @@ CStreamInfo::CStreamInfo()
 	frameBuffer = CFrameBuffer::getInstance();
 	hheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	width       = 400;
+	width       = w_max (400, 50);
 	height      = hheight+14*mheight+ 10;
 
-    	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 }
 
 

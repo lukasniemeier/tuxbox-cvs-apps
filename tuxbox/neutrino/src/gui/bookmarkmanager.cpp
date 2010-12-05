@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.19 2010/06/16 07:15:50 dbt Exp $
+  $Id: bookmarkmanager.cpp,v 1.20 2010/12/05 22:29:15 dbt Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -53,6 +53,7 @@
 
 #define info_height 60
 
+#include <driver/screen_max.h>
 
 CBookmark::CBookmark(const std::string & inName, const std::string & inUrl, const std::string & inTime)
 {
@@ -226,14 +227,14 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	visible = false;
 	selected = 0;
 	// Max
-	width = 720;
+	width = w_max (720, 30);
 	if(g_settings.screen_EndX-g_settings.screen_StartX < width)
 		width=g_settings.screen_EndX-g_settings.screen_StartX-10;
 	
 	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-( height+ info_height) ) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height + info_height);
 	listmaxshow = (height-theight-0)/(fheight*2);
 	liststart = 0;
 	
@@ -250,8 +251,8 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 		selected=bookmarks.size()-1;
 		liststart = (selected/listmaxshow)*listmaxshow;
 	}
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-( height+ info_height) ) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height + info_height);
 
 
 	int res = -1;

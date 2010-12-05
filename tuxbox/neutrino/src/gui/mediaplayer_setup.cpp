@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.3 2010/11/18 09:22:11 dbt Exp $
+	$Id: mediaplayer_setup.cpp,v 1.4 2010/12/05 22:29:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -74,8 +74,8 @@ CMediaPlayerSetup::CMediaPlayerSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 }
 
 CMediaPlayerSetup::~CMediaPlayerSetup()

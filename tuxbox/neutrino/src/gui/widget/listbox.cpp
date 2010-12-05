@@ -31,6 +31,7 @@
 #include <neutrino.h>
 
 #include <gui/widget/icons.h>
+#include <driver/screen_max.h>
 
 CListBox::CListBox(const char * const Caption)
 {
@@ -38,7 +39,7 @@ CListBox::CListBox(const char * const Caption)
 	caption = Caption;
 	liststart = 0;
 	selected =  0;
-	width =  400;
+	width = w_max (400, 100);
 	height = 420;
 	ButtonHeight = 25;
 	modified = false;
@@ -46,8 +47,8 @@ CListBox::CListBox(const char * const Caption)
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
 	listmaxshow = (height-theight-0)/fheight;
 	height = theight+0+listmaxshow*fheight; // recalc height
-	x=(((g_settings.screen_EndX- g_settings.screen_StartX)-width) / 2) + g_settings.screen_StartX;
-	y=(((g_settings.screen_EndY- g_settings.screen_StartY)-height) / 2) + g_settings.screen_StartY;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 }
 
 void CListBox::setModified(void)
