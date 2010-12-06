@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.5 2010/12/05 22:29:15 dbt Exp $
+	$Id: audio_setup.cpp,v 1.6 2010/12/06 21:00:15 dbt Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -55,6 +55,7 @@ CAudioSetup::CAudioSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
+	selected = -1;
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 }
@@ -138,6 +139,7 @@ void CAudioSetup::showAudioSetup()
 
 	//menue init
 	CMenuWidget* audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+	audioSettings->setPreselected(selected);
 
 	//subhead
 	audioSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_AUDIO));
@@ -186,5 +188,6 @@ void CAudioSetup::showAudioSetup()
 
 	audioSettings->exec(NULL, "");
 	audioSettings->hide();
+	selected = audioSettings->getSelected();
 	delete audioSettings;
 }

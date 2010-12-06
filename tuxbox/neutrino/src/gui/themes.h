@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.6 2010/06/01 19:58:38 dbt Exp $ 
+	$Id: themes.h,v 1.7 2010/12/06 21:00:15 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -36,7 +36,7 @@ class CThemes : public CMenuTarget, CChangeObserver
 		CConfigFile themefile;
 		CColorSetupNotifier *notifier;
 
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 		int oldThemeValues[40];
 
 		bool hasThemeChanged;

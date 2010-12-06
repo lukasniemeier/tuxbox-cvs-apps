@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.16 2010/09/05 21:27:44 dbt Exp $ 
+	$Id: themes.cpp,v 1.17 2010/12/06 21:00:15 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -56,6 +56,7 @@ CThemes::CThemes()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
+	selected = -1;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
 
@@ -141,6 +142,7 @@ void CThemes::Show()
 	std::string file_name = "";
 
 	CMenuWidget themes (LOCALE_COLORTHEMEMENU_HEAD2, NEUTRINO_ICON_SETTINGS, width);
+	themes.setPreselected(selected);
 	themes.addItem(GenericMenuSeparator);
 	themes.addItem(GenericMenuBack);
 
@@ -167,6 +169,7 @@ void CThemes::Show()
 
 	themes.exec(NULL, "");
 	themes.hide();
+	selected = themes.getSelected();
 
 	if (file_name.length() > 1) {
 		saveFile((char*)((std::string)USERDIR + file_name + FILE_PREFIX).c_str());

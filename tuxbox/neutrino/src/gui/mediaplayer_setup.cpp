@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.4 2010/12/05 22:29:15 dbt Exp $
+	$Id: mediaplayer_setup.cpp,v 1.5 2010/12/06 21:00:15 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -74,6 +74,7 @@ CMediaPlayerSetup::CMediaPlayerSetup()
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height = hheight+13*mheight+ 10;
+	selected = -1;
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 }
@@ -111,6 +112,7 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 {
 
 	CMenuWidget* mediaSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
+	mediaSetup->setPreselected(selected);
 	mediaSetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MEDIAPLAYERSETTINGS_GENERAL));
 
 	// intros
@@ -139,6 +141,7 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 
 	mediaSetup->exec (NULL, "");
 	mediaSetup->hide ();
+	selected = mediaSetup->getSelected();
 	delete mediaSetup;
 
 }
