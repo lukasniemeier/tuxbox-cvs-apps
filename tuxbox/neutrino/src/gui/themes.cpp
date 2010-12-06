@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.17 2010/12/06 21:00:15 dbt Exp $ 
+	$Id: themes.cpp,v 1.18 2010/12/06 21:02:00 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -69,12 +69,24 @@ int CThemes::exec(CMenuTarget* parent, const std::string & actionKey)
 
 	if( !actionKey.empty() )
 	{
-		std::string themeFile = actionKey;
-		if ( strstr(themeFile.c_str(), "{U}") != 0 ) {
-			themeFile.erase(0, 3);
-			readFile((char*)((std::string)USERDIR + themeFile + FILE_PREFIX).c_str());
-		} else
-			readFile((char*)((std::string)THEMEDIR + themeFile + FILE_PREFIX).c_str());
+		if (actionKey=="theme_neutrino")
+		{
+			setupDefaultColors();
+			notifier = new CColorSetupNotifier();
+			notifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+			delete notifier;
+		}
+				else
+		{
+			std::string themeFile = actionKey;
+			if ( strstr(themeFile.c_str(), "{U}") != 0 ) 
+			{
+				themeFile.erase(0, 3);
+				readFile((char*)((std::string)USERDIR + themeFile + FILE_PREFIX).c_str());
+			} 
+			else
+				readFile((char*)((std::string)THEMEDIR + themeFile + FILE_PREFIX).c_str());
+		}
 		return res;
 	}
 
@@ -145,6 +157,10 @@ void CThemes::Show()
 	themes.setPreselected(selected);
 	themes.addItem(GenericMenuSeparator);
 	themes.addItem(GenericMenuBack);
+	themes.addItem(GenericMenuSeparatorLine);
+	
+	//set default theme
+	themes.addItem(new CMenuForwarder(LOCALE_COLORTHEMEMENU_NEUTRINO_THEME, true, NULL, this, "theme_neutrino", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 
 	readThemes(themes);
 
