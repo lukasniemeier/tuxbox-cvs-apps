@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.h,v 1.2 2010/09/30 20:13:59 dbt Exp $
+	$Id: osdlang_setup.h,v 1.3 2010/12/08 18:03:23 dbt Exp $
 
 	OSD-Language Setup implementation - Neutrino-GUI
 
@@ -49,7 +49,7 @@ class COsdLangSetup : public CMenuTarget, CChangeObserver
 
 		CFrameBuffer *frameBuffer;
 		
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		void hide();
 		void showSetup();

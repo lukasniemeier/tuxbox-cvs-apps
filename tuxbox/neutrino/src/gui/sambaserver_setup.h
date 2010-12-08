@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.h,v 1.4 2010/07/01 23:33:17 dbt Exp $
+	$Id: sambaserver_setup.h,v 1.5 2010/12/08 18:03:23 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -55,7 +55,7 @@ class CSambaSetup : public CMenuTarget
 
 		CFrameBuffer *frameBuffer;
 
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;

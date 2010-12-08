@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.9 2010/07/01 23:33:17 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.10 2010/12/08 18:03:23 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -72,6 +72,8 @@ CSambaSetup::CSambaSetup(const neutrino_locale_t title, const char * const IconN
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
 
+	selected = -1;
+
 	interface = getInterface();
 }
 
@@ -122,6 +124,8 @@ void CSambaSetup::showSambaSetup()
 {
 	//init
 	CMenuWidget * sm = new CMenuWidget(menue_title, menue_icon, width);
+	sm->setPreselected(selected);
+
 	if (menue_title != NONEXISTANT_LOCALE)
 	{
 		CMenuSeparator * sm_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_SAMBASERVER_SETUP);
@@ -160,6 +164,7 @@ void CSambaSetup::showSambaSetup()
 
 	sm->exec(NULL, "");
 	sm->hide();
+	selected = sm->getSelected();
 	delete sm;
 }
 

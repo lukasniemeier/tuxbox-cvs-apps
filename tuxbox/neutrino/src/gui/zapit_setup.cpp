@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.4 2010/09/26 22:01:08 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.5 2010/12/08 18:03:23 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -65,6 +65,8 @@ CZapitSetup::CZapitSetup(const neutrino_locale_t title, const char * const IconN
 	height 	= hheight+13*mheight+ 10;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
+
+	selected = -1;
 
 	/* These variables need to be defined outside InitZapitSettings,
    	otherwise locale "INTERNAL ERROR - PLEASE REPORT" is displayed
@@ -154,6 +156,7 @@ void CZapitSetup::showSetup()
 {
 	//init
 	CMenuWidget * z = new CMenuWidget(menue_title, menue_icon, width);
+	z->setPreselected(selected);
 
 	//subhead
 	if (menue_title != NONEXISTANT_LOCALE)
@@ -205,6 +208,7 @@ void CZapitSetup::showSetup()
 
 	z->exec(NULL, "");
 	z->hide();
+	selected = z->getSelected();
 	delete z;
 }
 

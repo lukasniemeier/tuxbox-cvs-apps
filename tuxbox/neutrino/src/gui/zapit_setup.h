@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.h,v 1.3 2010/09/26 22:01:08 dbt Exp $
+	$Id: zapit_setup.h,v 1.4 2010/12/08 18:03:23 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -40,7 +40,7 @@ class CZapitSetup : public CMenuTarget
 
 		CFrameBuffer *frameBuffer;
 
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;

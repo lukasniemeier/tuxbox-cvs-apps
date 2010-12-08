@@ -1,5 +1,5 @@
 /*
-	$Id: pictureviewer_setup.cpp,v 1.3 2010/12/05 22:29:15 dbt Exp $
+	$Id: pictureviewer_setup.cpp,v 1.4 2010/12/08 18:03:23 dbt Exp $
 
 	pictureviewer setup implementation - Neutrino-GUI
 
@@ -61,6 +61,8 @@ CPictureViewerSetup::CPictureViewerSetup()
 	height = hheight+13*mheight+ 10;
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
+
+	selected = -1;
 }
 
 CPictureViewerSetup::~CPictureViewerSetup()
@@ -122,6 +124,7 @@ void CPictureViewerSetup::showPictureViewerSetup()
 
 	CMenuWidget* picviewsetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	picviewsetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_PICTUREVIEWER_HEAD));
+	picviewsetup->setPreselected(selected);
 
 	// intros: back ande save
 	picviewsetup->addItem(GenericMenuSeparator);
@@ -142,9 +145,8 @@ void CPictureViewerSetup::showPictureViewerSetup()
 
 	picviewsetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_DECODE_SERVER_PORT, true, g_settings.picviewer_decode_server_port, picViewSettings_DecServerPort));
 
-
-	picviewsetup->exec (NULL, "");
-	picviewsetup->hide ();
+	picviewsetup->exec(NULL, "");
+	picviewsetup->hide();
+	selected = picviewsetup->getSelected();
 	delete picviewsetup;
-
 }

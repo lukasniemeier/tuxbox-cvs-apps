@@ -1,5 +1,5 @@
 /*
-	$Id: esd_setup.h,v 1.2 2009/11/22 15:36:52 rhabarber1848 Exp $
+	$Id: esd_setup.h,v 1.3 2010/12/08 18:03:23 dbt Exp $
 
 	esound setup implementation - Neutrino-GUI
 
@@ -43,7 +43,7 @@ class CEsdSetup : public CMenuTarget
 	private:
 		CFrameBuffer *frameBuffer;
 		
-		int x, y, width, height, menue_width, hheight, mheight;
+		int x, y, width, height, menue_width, hheight, mheight, selected;
 
 		void hide();
 		void showEsdSetup();

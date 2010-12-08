@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.cpp,v 1.2 2010/03/02 20:11:42 dbt Exp $
+	$Id: proxyserver_setup.cpp,v 1.3 2010/12/08 18:03:23 dbt Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -58,6 +58,7 @@ CProxySetup::CProxySetup(const neutrino_locale_t title, const char * const IconN
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
 
+	selected = -1;
 }
 
 CProxySetup::~CProxySetup()
@@ -90,6 +91,7 @@ void CProxySetup::showProxySetup()
 {
 	//init
 	CMenuWidget * mn = new CMenuWidget(menue_title, menue_icon, width);
+	mn->setPreselected(selected);
 
 	if (menue_title != NONEXISTANT_LOCALE)
 	{
@@ -112,6 +114,7 @@ void CProxySetup::showProxySetup()
 
 	mn->exec(NULL, "");
 	mn->hide();
+	selected = mn->getSelected();
 	delete mn;
 }
 

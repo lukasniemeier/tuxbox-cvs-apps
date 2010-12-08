@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.h,v 1.1 2010/02/22 10:52:34 dbt Exp $
+	$Id: proxyserver_setup.h,v 1.2 2010/12/08 18:03:23 dbt Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -43,7 +43,7 @@ class CProxySetup : public CMenuTarget
 	private:
 		CFrameBuffer *frameBuffer;
 
-		int x, y, width, height, hheight, mheight;
+		int x, y, width, height, hheight, mheight, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;

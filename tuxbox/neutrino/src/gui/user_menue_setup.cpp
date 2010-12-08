@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.1 2010/07/30 20:52:31 dbt Exp $
+	$Id: user_menue_setup.cpp,v 1.2 2010/12/08 18:03:23 dbt Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -61,6 +61,8 @@ CUserMenuSetup::CUserMenuSetup(neutrino_locale_t menue_title, int menue_button)
 	height 	= hheight+13*mheight+ 10;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);
+
+	selected = -1;
 }
 
 CUserMenuSetup::~CUserMenuSetup()
@@ -108,6 +110,7 @@ int CUserMenuSetup::exec(CMenuTarget* parent, const std::string &)
 void CUserMenuSetup::showSetup()
 {
 	CMenuWidget * ums = new CMenuWidget(local, NEUTRINO_ICON_KEYBINDING, width);
+	ums->setPreselected(selected);
 
 	CUserMenuNotifier *notify = new CUserMenuNotifier();
 	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß/- ", notify);
@@ -133,7 +136,7 @@ void CUserMenuSetup::showSetup()
 
 	ums->exec(NULL, "");
 	ums->hide();
+	selected = ums->getSelected();
 	delete ums;
-
 }
 
