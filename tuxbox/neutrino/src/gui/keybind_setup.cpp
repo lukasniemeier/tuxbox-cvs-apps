@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.5 2010/12/05 22:32:12 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.6 2010/12/16 08:12:40 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -35,7 +35,6 @@
 
 
 #include "gui/keybind_setup.h"
-#include "gui/user_menue_setup.h"
 
 #include <global.h>
 #include <neutrino.h>
@@ -157,13 +156,6 @@ void CKeybindSetup::showSetup()
 		ks->addItem(ks_subhead);
 	}
 
-	//usermenue
-	CMenuSeparator * ks_um_sep 	= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_USERMENU_HEAD);
-	CMenuForwarder * ks_um_red 	= new CMenuForwarder(LOCALE_USERMENU_BUTTON_RED, 	true, NULL, 	new CUserMenuSetup(LOCALE_USERMENU_BUTTON_RED,0), 	NULL, CRCInput::RC_red,NEUTRINO_ICON_BUTTON_RED);
-	CMenuForwarder * ks_um_green 	= new CMenuForwarder(LOCALE_USERMENU_BUTTON_GREEN, 	true, NULL, 	new CUserMenuSetup(LOCALE_USERMENU_BUTTON_GREEN,1), 	NULL, CRCInput::RC_green,NEUTRINO_ICON_BUTTON_GREEN);
-	CMenuForwarder * ks_um_yellow 	= new CMenuForwarder(LOCALE_USERMENU_BUTTON_YELLOW, 	true, NULL, 	new CUserMenuSetup(LOCALE_USERMENU_BUTTON_YELLOW,2), 	NULL, CRCInput::RC_yellow,NEUTRINO_ICON_BUTTON_YELLOW);
-	CMenuForwarder * ks_um_blue 	= new CMenuForwarder(LOCALE_USERMENU_BUTTON_BLUE, 	true, NULL, 	new CUserMenuSetup(LOCALE_USERMENU_BUTTON_BLUE,3), 	NULL, CRCInput::RC_blue,NEUTRINO_ICON_BUTTON_BLUE);
-
 	neutrino_msg_t * keyvalue_p[] =
 		{
 			&g_settings.key_tvradio_mode,
@@ -193,7 +185,7 @@ void CKeybindSetup::showSetup()
 
 	//remote control
 	CMenuWidget * ks_rc 		= new CMenuWidget(menue_title, menue_icon, width);
-	CMenuForwarder *ks_rc_fw 	= new CMenuForwarder(LOCALE_KEYBINDINGMENU, true, NULL, ks_rc, NULL, CRCInput::RC_setup, NEUTRINO_ICON_BUTTON_DBOX);
+	CMenuForwarder *ks_rc_fw 	= new CMenuForwarder(LOCALE_KEYBINDINGMENU, true, NULL, ks_rc, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 	
 	CMenuSeparator * ks_rc_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU);
 
@@ -253,13 +245,6 @@ void CKeybindSetup::showSetup()
 		ks_rc->addItem(ks_qz_fw1);
 		ks_rc->addItem(ks_qz_fw2);
 		ks_rc->addItem(ks_qz_fw3);
-	//----------------------------------
-	//show user menue items
- 	ks->addItem(ks_um_sep);
-	ks->addItem(ks_um_red);
-	ks->addItem(ks_um_green);
-	ks->addItem(ks_um_yellow);
-	ks->addItem(ks_um_blue);
 
 	ks->exec(NULL, "");
 	ks->hide();
