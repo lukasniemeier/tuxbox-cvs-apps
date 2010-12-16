@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.124 2010/11/23 18:56:54 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.125 2010/12/16 08:23:21 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -724,99 +724,6 @@ bool CNeutrinoApp::showUserMenu(int button)
 	if(tmpEPGDataHandler)		delete tmpEPGDataHandler;
 	return true;
 }
-
-// should be remove, now just for reference
-void CNeutrinoApp::ShowStreamFeatures()
-{
-	char id[5];
-	int cnt = 0;
-	int enabled_count = 0;
-	CMenuWidget *StreamFeatureSelector = new CMenuWidget(LOCALE_STREAMFEATURES_HEAD, NEUTRINO_ICON_FEATURES, 350);
-	if (StreamFeatureSelector == NULL) return;
-
-	StreamFeatureSelector->addItem(GenericMenuSeparator);
-
-	for(unsigned int count=0;count < (unsigned int) g_PluginList->getNumberOfPlugins();count++)
-	{
-		if (g_PluginList->getType(count)== CPlugins::P_TYPE_TOOL && !g_PluginList->isHidden(count))
-		{
-			// zB vtxt-plugins
-
-			sprintf(id, "%d", count);
-
-			enabled_count++;
-
-			StreamFeatureSelector->addItem(new CMenuForwarderNonLocalized(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, (cnt== 0) ? CRCInput::RC_blue : CRCInput::convertDigitToKey(enabled_count-1), (cnt == 0) ? NEUTRINO_ICON_BUTTON_BLUE : ""), (cnt == 0));
-			cnt++;
-		}
-	}
-
-	if(cnt>0)
-	{
-		StreamFeatureSelector->addItem(GenericMenuSeparatorLine);
-	}
-
-	sprintf(id, "%d", -1);
-
-	// -- Add Channel to favorites
-//	StreamFeatureSelector.addItem(new CMenuForwarder(LOCALE_FAVORITES_MENUEADD, true, NULL, new CFavorites, id, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), false);
-	CFavorites *tmpFavorites = new CFavorites;
-	StreamFeatureSelector->addItem(new CMenuForwarder(LOCALE_FAVORITES_MENUEADD, true, NULL, tmpFavorites, id, CRCInput::convertDigitToKey(enabled_count), ""), false);
-
-	StreamFeatureSelector->addItem(GenericMenuSeparatorLine);
-
-	// start/stop recording
-	if (g_settings.recording_type != RECORDING_OFF)
-	{
-		StreamFeatureSelector->addItem(new CMenuOptionChooser(LOCALE_MAINMENU_RECORDING, &recordingstatus, MAINMENU_RECORDING_OPTIONS, MAINMENU_RECORDING_OPTION_COUNT, true, this, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-	}
-
-#ifdef ENABLE_MOVIEPLAYER
-	// -- Add TS Playback to blue button
-	StreamFeatureSelector->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, new CMoviePlayerGui(), "tsplayback", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), false);
-#endif
-
-	// -- Timer-Liste
-	CTimerList *tmpTimerlist = new CTimerList;
-	StreamFeatureSelector->addItem(new CMenuForwarder(LOCALE_TIMERLIST_NAME, true, NULL, tmpTimerlist, id, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
-
-	StreamFeatureSelector->addItem(GenericMenuSeparatorLine);
-
-	// --  Lock remote control
-	StreamFeatureSelector->addItem(new CMenuForwarder(LOCALE_RCLOCK_MENUEADD, true, NULL, this->rcLock, id, CRCInput::RC_nokey, ""), false);
-
-	// -- Sectionsd pause
-	int dummy = g_Sectionsd->getIsScanningActive();
-	CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_MAINMENU_PAUSESECTIONSD, &dummy, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, new CPauseSectionsdNotifier );
-	StreamFeatureSelector->addItem(oj);
-
-#ifdef _EXPERIMENTAL_SETTINGS_
-	//Experimental Settings
-	StreamFeatureSelector->addItem(new CMenuForwarder(LOCALE_EXPERIMENTALSETTINGS, true, NULL, new CExperimentalSettingsMenuHandler(), id, CRCInput::RC_nokey, ""), false);
-#endif
-
-	StreamFeatureSelector->exec(NULL,"");
-
-	// restore mute symbol
-	delete StreamFeatureSelector;
-	delete tmpFavorites;
-	delete tmpTimerlist;
-}
-
-
-// USERMENU
-// leave this functions, somebody might want to use it in the future again
-void CNeutrinoApp::SelectNVOD()
-{
-	if (!(g_RemoteControl->subChannels.empty()))
-	{
-		// NVOD/SubService- Kanal!
-		CMenuWidget NVODSelector(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_HEAD, NEUTRINO_ICON_VIDEO, 350);
-		if(getNVODMenu(&NVODSelector))
-			NVODSelector.exec(NULL, "");
-	}
-}
-
 
 bool CNeutrinoApp::getNVODMenu(CMenuWidget* menu)
 {

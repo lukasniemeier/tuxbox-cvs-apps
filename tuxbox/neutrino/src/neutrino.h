@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.239 2010/10/15 19:43:42 dbt Exp $
+	$Id: neutrino.h,v 1.240 2010/12/16 08:23:21 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -242,9 +242,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		void SetupFrameBuffer();
 		void SelectAPID();
-		void SelectNVOD();
 		void CmdParser(int argc, char **argv);
-		void ShowStreamFeatures();
 		bool doGuiRecord(char * preselectedDir, bool addTimer = false, char * filename = NULL);
 		bool doShowMuteIcon(void);
 		void prepareEnviroment();
