@@ -335,7 +335,7 @@
 			<action name="green" key="KEY_GREEN" flags="m" />
 			<action name="yellow" key="KEY_YELLOW" flags="m" />
 			<action name="blue" key="KEY_BLUE" flags="m" />
-
+			<action name="menu" key="KEY_SETUP" flags="m" />
 			<action name="escape" key="KEY_ESC" flags="mr" />
 		</actionmap>
 
@@ -537,6 +537,9 @@
 			<action name="removeTimerEvent" key="KEY_BACKSPACE" flags="m" />
 			<action name="removeTimerEvent" key="KEY_DELETE" flags="m" />
 			<action name="showExtendedInfo" key="KEY_INFO" flags="m" />
+			<action name="searchEPG" key="KEY_SETUP" flags="m" />
+			<action name="prevService" key="KEY_CHANNELUP" flags="m" />
+			<action name="nextService" key="KEY_CHANNELDOWN" flags="m" />
 		</actionmap>
 		<actionmap name="timerEdit">
 			<action name="incBegTime" key="KEY_VOLUMEUP" flags="mr" />
@@ -561,6 +564,12 @@
 		</actionmap>
 		<actionmap name="EPGStyleSelector">
 			<action name="infoPressed" key="KEY_INFO" flags="m" />
+		</actionmap>
+		<actionmap name="Tuxtxt">
+			<action name="switchZoommode" key="KEY_FORWARD" flags="m" />
+			<action name="switchScreenmode" key="KEY_BACK" flags="m" />
+			<action name="switchTranspmode" key="KEY_VIDEO" flags="m" />
+			<action name="switchHintmode" key="KEY_INFO" flags="m" />
 		</actionmap>
 	</device>
 </rcdefaults>
