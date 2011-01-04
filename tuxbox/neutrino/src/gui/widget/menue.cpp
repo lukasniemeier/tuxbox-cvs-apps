@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.178 2010/12/08 19:49:30 dbt Exp $
+	$Id: menue.cpp,v 1.179 2011/01/04 15:49:46 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -160,7 +160,7 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 	}
 	
 	//paint marker
-	if  (selected && directKey != CRCInput::RC_nokey)
+	if  (selected && directKey != CRCInput::RC_nokey && selected_iconName.empty())
 	{
 		int icon_offset = 2;
 		if (icon_painted)
