@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.5 2010/12/05 22:32:12 dbt Exp $
+	$Id: software_update.cpp,v 1.6 2011/01/04 16:51:37 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,7 +41,6 @@
 
 #include "gui/update.h"
 #include "gui/imageinfo.h"
-#include "gui/proxyserver_setup.h"
 
 #include "gui/widget/stringinput.h"
 #include <gui/widget/icons.h>
@@ -126,16 +125,15 @@ void CSoftwareUpdate::showSoftwareUpdate()
  	/* show current version */
 	showSoftwareUpdateImageinfo(softUpdate);
 
-#ifndef DISABLE_INTERNET_UPDATE
-#ifndef HAVE_DREAMBOX_HARDWARE
-	//showSoftwareUpdateProxySetup(softUpdate);
-	softUpdate->addItem(GenericMenuSeparatorLine);
-	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, new CProxySetup(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-#endif
-#endif
+//#ifndef DISABLE_INTERNET_UPDATE
+// #ifndef HAVE_DREAMBOX_HARDWARE
+// 	softUpdate->addItem(GenericMenuSeparatorLine);
+// 	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, new CProxySetup(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+// #endif
+// #endif
 	// update check
 	softUpdate->addItem(GenericMenuSeparatorLine);
-	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, new CFlashUpdate(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, new CFlashUpdate(), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 
 	softUpdate->exec (NULL, "");
 	softUpdate->hide ();
