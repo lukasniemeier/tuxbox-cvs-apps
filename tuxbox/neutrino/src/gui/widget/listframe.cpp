@@ -4,7 +4,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: listframe.cpp,v 1.6 2011/01/01 20:16:38 seife Exp $
+	$Id: listframe.cpp,v 1.7 2011/01/04 15:59:19 dbt Exp $
 
 	Kommentar:
 
@@ -715,21 +715,24 @@ void CListFrame::scrollLineDown(const int lines)
 	if( !(m_nMode & SCROLL)) return;
 	if( m_nNrOfLines <= 1) return;
 	
-	if(m_nSelectedLine < m_nNrOfLines - 1 && m_nNrOfLines != 0) m_nSelectedLine++;
-	
-	// check if the cursor moves out of the window
-	if(m_nSelectedLine - m_nCurrentLine > m_nLinesPerPage-1)
-	{
-		// yes, scroll to next page
-		//TRACE("[CListFrame]  m_nSelectedLine: %d, \r\n",m_nSelectedLine);
-		scrollPageDown(1);
-	}
-	else
-	{
-		refreshLine(m_nSelectedLine-lines);
-		refreshLine(m_nSelectedLine);
+	if(m_nSelectedLine < m_nNrOfLines - 1) {
+		m_nSelectedLine++;
+		// check if the cursor moves out of the window
+		if(m_nSelectedLine - m_nCurrentLine > m_nLinesPerPage-1) {
+			// yes, scroll to next page
+			//TRACE("[CListFrame]  m_nSelectedLine: %d, \r\n",m_nSelectedLine);
+			scrollPageDown(1);
+		} else {
+			refreshLine(m_nSelectedLine-lines);
+			refreshLine(m_nSelectedLine);
+		}
+	} else {
+		m_nCurrentPage = 0;
+		m_nCurrentLine = m_nSelectedLine = 0;
+		refreshList();
 	}
 }
+
 //////////////////////////////////////////////////////////////////////
 // Function Name:		
 // Description:		
@@ -744,18 +747,22 @@ void CListFrame::scrollLineUp(const int lines)
 	if( !(m_nMode & SCROLL)) return;
 	if( m_nNrOfLines <= 1) return;
 
-	if(m_nSelectedLine > 0) m_nSelectedLine--;
-	// check if the cursor moves out of the window
-	if(m_nSelectedLine < m_nCurrentLine )
-	{
-		// yes, scroll to next page
-		//TRACE("[CListFrame]  m_nSelectedLine: %d, \r\n",m_nSelectedLine);
-		scrollPageUp(1);
-	}
-	else
-	{
-		refreshLine(m_nSelectedLine+lines);
-		refreshLine(m_nSelectedLine);
+	if(m_nSelectedLine > 0) {
+		m_nSelectedLine--;
+		// check if the cursor moves out of the window
+		if(m_nSelectedLine < m_nCurrentLine ) {
+			// yes, scroll to next page
+			//TRACE("[CListFrame]  m_nSelectedLine: %d, \r\n",m_nSelectedLine);
+			scrollPageUp(1);
+		} else {
+			refreshLine(m_nSelectedLine+lines);
+			refreshLine(m_nSelectedLine);
+		}
+	} else if(m_nSelectedLine == 0) {
+		//m_nCurrentPage = m_nNrOfPages - 1;
+		//m_nCurrentLine = m_nSelectedLine = m_nNrOfLines - 1;
+		//refresh();
+		setSelectedLine(m_nNrOfLines - 1);
 	}
 }
 
