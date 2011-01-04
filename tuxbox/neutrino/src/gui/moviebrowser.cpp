@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.51 2011/01/04 16:27:42 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.52 2011/01/04 16:51:32 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.51 2011/01/04 16:27:42 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.52 2011/01/04 16:51:32 dbt Exp $\r\n");
 	init();
 }
 
@@ -575,7 +575,7 @@ void CMovieBrowser::initGlobalSettings(void)
 	m_settings.sorting.item 	=  MB_INFO_TITLE;
 
 	m_settings.filter.item = MB_INFO_MAX_NUMBER;
-	m_settings.filter.optionString = "";
+	m_settings.filter.optionString = "-";
 	m_settings.filter.optionVar = 0;
 	
 	m_settings.parentalLockAge = MI_PARENTAL_OVER18;
@@ -746,7 +746,7 @@ bool CMovieBrowser::loadSettings(MB_SETTINGS* settings)
 		settings->sorting.direction = (MB_DIRECTION)configfile.getInt32("mb_sorting_direction", MB_DIRECTION_UP);
 		
 		settings->filter.item = (MB_INFO_ITEM)configfile.getInt32("mb_filter_item", MB_INFO_INFO1);
-		settings->filter.optionString = configfile.getString("mb_filter_optionString", "");
+		settings->filter.optionString = configfile.getString("mb_filter_optionString", "-");
 		settings->filter.optionVar = configfile.getInt32("mb_filter_optionVar", 0);
 		
 		settings->parentalLockAge = (MI_PARENTAL_LOCKAGE)configfile.getInt32("mb_parentalLockAge", MI_PARENTAL_OVER18);
@@ -1654,18 +1654,26 @@ void CMovieBrowser::refreshFoot(void)
 	int	bgcolor = (CFBWindow::color_t)COL_INFOBAR_SHADOW_PLUS_0;
 	int	c_rad_mid = RADIUS_MID;
 	int	footheight = m_cBoxFrameFootRel.iHeight + 4;
-	
+
+	//button caption for green (filter)
 	std::string filter_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_FILTER);
+	filter_text += " ";
 	filter_text += m_settings.filter.optionString;
+	if (filter_text.length() > 27)
+		filter_text = filter_text.substr(0, 27) + "...";
 
-	//cut button caption for filter
-	filter_text = filter_text.length() < 24 ? filter_text : filter_text.substr( 0, 24 ) + "...";
-
+	//button caption for red (sort)
 	std::string sort_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SORT);
+	sort_text += " ";
 	sort_text += g_Locale->getText(m_localizedItemName[m_settings.sorting.item]);
 
-	std::string ok_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY);
-	
+	//button caption for ok (select/start)
+	std::string ok_text;
+	if (m_settings.gui == MB_GUI_FILTER && m_windowFocus == MB_FOCUS_FILTER)
+		ok_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SELECT);
+	else
+		ok_text = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY);
+
 	// draw the background first
 	m_pcWindow->paintBoxRel(	m_cBoxFrameFootRel.iX, 
 								m_cBoxFrameFootRel.iY, 
@@ -1675,18 +1683,23 @@ void CMovieBrowser::refreshFoot(void)
 								c_rad_mid, 
 								CORNER_BOTTOM); 
 
-
 	int width = m_cBoxFrameFootRel.iWidth;
 	int xoffset = 4;
+
+	//red button
 	int xpos1 = m_cBoxFrameFootRel.iX + xoffset;
 	int width1 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(sort_text, true) + xoffset; // UTF-8;
 
+	//green button
 	int xpos2 = xpos1 + width1 + xoffset;
 	int width2 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(filter_text, true) + xoffset; // UTF-8;
 
 	//ok button should be painted centered, but not if captions of red and green buttons are to big
 	int xpos3 = ((width1 + width2) < width/2) ? width/2 + xoffset : xpos2 + width2 + xoffset;
-	
+	int width3 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(ok_text, true) + xoffset; // UTF-8;
+	int xpos3_max = m_cBoxFrameFootRel.iX + width - width3;
+	if (xpos3 > xpos3_max)
+		xpos3 = xpos3_max;
 
 	int foot_hmid = footheight/2;
 
@@ -1714,27 +1727,12 @@ void CMovieBrowser::refreshFoot(void)
 		m_pcWindow->RenderString(m_pcFontFoot, xpos2 + iconw_gr + xoffset, ypos_buttontext , width2, filter_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 
-	// draw ok (select/ start)
-	if(1)
-	{
-		std::string ok_text2;
-		if(m_settings.gui == MB_GUI_FILTER && m_windowFocus == MB_FOCUS_FILTER)
-		{
-			ok_text2 = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_SELECT);
-		}
-		else
-		{
-			ok_text2 = g_Locale->getText(LOCALE_MOVIEBROWSER_FOOT_PLAY);
-		}
-
-		int iconh_ok = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY);
-		int iconw_ok = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_OKAY);
-		int width3 = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(ok_text2, true) + xoffset; // UTF-8;
-
-		m_pcWindow->paintBoxRel(xpos3, m_cBoxFrameFootRel.iY, width3, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_RIGHT);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, xpos3, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_ok/2);
-		m_pcWindow->RenderString(m_pcFontFoot, xpos3 + iconw_ok + xoffset, ypos_buttontext , width3, ok_text2.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
-	}	
+	// draw ok (select/start)
+	int iconh_ok = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY);
+	int iconw_ok = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_OKAY);
+	m_pcWindow->paintBoxRel(xpos3, m_cBoxFrameFootRel.iY, width3, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_RIGHT);
+	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, xpos3, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_ok/2);
+	m_pcWindow->RenderString(m_pcFontFoot, xpos3 + iconw_ok + xoffset, ypos_buttontext , width3, ok_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 }
 
 /************************************************************************
@@ -2073,7 +2071,7 @@ bool CMovieBrowser::onButtonPressFilterList(neutrino_msg_t msg)
 			if(selected_line == 0)
 			{
 				m_settings.filter.item = MB_INFO_MAX_NUMBER;
-				m_settings.filter.optionString = "";
+				m_settings.filter.optionString = "-";
 				m_settings.filter.optionVar = 0;
 				refreshFilterList();
 				m_pcFilter->setSelectedLine(0);
@@ -3898,7 +3896,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.51 $");
+	return imageinfo.getModulVersion("","$Revision: 1.52 $");
 }
 
 /************************************************************************/
