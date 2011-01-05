@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: system_settings.cpp,v 1.11 2009/02/07 10:06:31 dbluelle Exp $
+ * $Id: system_settings.cpp,v 1.12 2011/01/05 13:57:08 dbluelle Exp $
  */
 
 #include <system_settings.h>
@@ -52,7 +52,7 @@ void eSystemSettings::init_eSystemSettings()
 #ifndef DISABLE_HDD
 #ifndef DISABLE_FILE
 	if ( eSystemInfo::getInstance()->hasHDD() )
-		CONNECT((new eListBoxEntryMenu(&list, _("Harddisc Setup"), eString().sprintf("(%d) %s", ++entry, _("open harddisc setup")) ))->selected, eSystemSettings::harddisc_setup);
+		CONNECT((new eListBoxEntryMenu(&list, _("Harddisk Setup"), eString().sprintf("(%d) %s", ++entry, _("open harddisc setup")) ))->selected, eSystemSettings::harddisc_setup);
 #endif
 #endif
 #ifdef ENABLE_KEYBOARD
@@ -127,7 +127,7 @@ void eSystemSettings::harddisc_setup()
 #endif
 	if (!setup.getNr())
 	{
-		eMessageBox::ShowBox(_("sorry, no harddisks found!"), _("Harddisk setup..."));
+		eMessageBox::ShowBox(_("sorry, no harddisks found!"), _("Harddisk Setup"));
 	} else
 	{
 		setup.show();

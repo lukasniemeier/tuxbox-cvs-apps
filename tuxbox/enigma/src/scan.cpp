@@ -774,7 +774,7 @@ void tsScan::dvbEvent(const eDVBEvent &event)
 			transponder_data->setText( eString().sprintf("%d MHz / %d ksyms / %s",
 				event.transponder->satellite.frequency / 1000,
 				event.transponder->satellite.symbol_rate / 1000,
-				event.transponder->satellite.polarisation?_("Vertical"):"Horizontal") );
+				event.transponder->satellite.polarisation?_("vertical"):_("horizontal")) );
 		}
 		else if( eSystemInfo::getInstance()->getFEType() == eSystemInfo::feCable )
 		{

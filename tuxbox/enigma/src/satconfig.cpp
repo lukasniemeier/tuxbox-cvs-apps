@@ -1127,23 +1127,23 @@ void eDiSEqCPage::init_eDiSEqCPage( eWidget *parent, eSatellite *sat)
 	DiSEqCMode = CreateSkinnedComboBoxWithLabel("DiSEqCMode", 4, "lDiSEqCMode" );
 	// *DiSEqCMode... here we use the operator eListBox* from eComboBox !
 	new eListBoxEntryText( *DiSEqCMode, "None", (void*)eDiSEqC::NONE, 0, _("Disable DiSEqC") );
-	new eListBoxEntryText( *DiSEqCMode, "Version 1.0", (void*)eDiSEqC::V1_0, 0, _("Use DiSEqC Version 1.0") );
-	new eListBoxEntryText( *DiSEqCMode, "Version 1.1", (void*)eDiSEqC::V1_1, 0, _("Use DiSEqC Version 1.1") );
-	new eListBoxEntryText( *DiSEqCMode, "Version 1.2", (void*)eDiSEqC::V1_2, 0, _("Use DiSEqC Version 1.2") );
+	new eListBoxEntryText( *DiSEqCMode, "Version 1.0", (void*)eDiSEqC::V1_0, 0, eString().sprintf(_("Use DiSEqC Version %s"),"1.0") );
+	new eListBoxEntryText( *DiSEqCMode, "Version 1.1", (void*)eDiSEqC::V1_1, 0, eString().sprintf(_("Use DiSEqC Version %s"),"1.1") );
+	new eListBoxEntryText( *DiSEqCMode, "Version 1.2", (void*)eDiSEqC::V1_2, 0, eString().sprintf(_("Use DiSEqC Version %s"),"1.2") );
 	// no SMATV at the moment... we can do this when anyone ask...
 	// 	new eListBoxEntryText( *DiSEqCMode, "SMATV", (void*)eDiSEqC::SMATV, 0, _("Use SMATV Remote Tuning") );
 
 	lDiSEqCParam = CreateSkinnedLabel("lDiSEqCParam");
 	DiSEqCParam = CreateSkinnedComboBox("DiSEqCParam", 4, lDiSEqCParam );
-	new eListBoxEntryText( *DiSEqCParam, "A/A", (void*)eDiSEqC::AA, 0, _("sends DiSEqC cmd A/A") );
-	new eListBoxEntryText( *DiSEqCParam, "A/B", (void*)eDiSEqC::AB, 0, _("sends DiSEqC cmd A/B") );
-	new eListBoxEntryText( *DiSEqCParam, "B/A", (void*)eDiSEqC::BA, 0, _("sends DiSEqC cmd B/A") );
-	new eListBoxEntryText( *DiSEqCParam, "B/B", (void*)eDiSEqC::BB, 0, _("sends DiSEqC cmd B/B") );
+	new eListBoxEntryText( *DiSEqCParam, "A/A", (void*)eDiSEqC::AA, 0, eString().sprintf(_("sends DiSEqC cmd %s"),"A/A") );
+	new eListBoxEntryText( *DiSEqCParam, "A/B", (void*)eDiSEqC::AB, 0, eString().sprintf(_("sends DiSEqC cmd %s"),"A/B") );
+	new eListBoxEntryText( *DiSEqCParam, "B/A", (void*)eDiSEqC::BA, 0, eString().sprintf(_("sends DiSEqC cmd %s"),"B/A") );
+	new eListBoxEntryText( *DiSEqCParam, "B/B", (void*)eDiSEqC::BB, 0, eString().sprintf(_("sends DiSEqC cmd %s"),"B/B") );
 	new eListBoxEntryText( *DiSEqCParam, "None", (void*)eDiSEqC::SENDNO, 0, _("sends no committed DiSEqC cmd") );
 	i = 0;
 	while (i < 16)
 	{
-		new eListBoxEntryText( *DiSEqCParam, eString().sprintf(_("%d"),i+1), (void*)(0xF0+i), 0, eString().sprintf(_("sends switch cmd %d"),i+1) );
+		new eListBoxEntryText( *DiSEqCParam, eString().sprintf("%d",i+1), (void*)(0xF0+i), 0, eString().sprintf(_("sends switch cmd %d"),i+1) );
 		i++;
 	}
 

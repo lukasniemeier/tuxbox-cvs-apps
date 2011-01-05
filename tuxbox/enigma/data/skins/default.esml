@@ -368,10 +368,10 @@
 
 	<object name="enigma_lcd_satfind">
 		<eZapLCDSatfind position="0:0" size="120:64">
-			<eLabel position="0:0" size="60:18" font="lcd.menu.title" text="SNR:" />
+			<eLabel position="0:0" size="60:18" font="lcd.menu.title" text="SNR" />
 			<eLabel position="70:0" size="e:18" font="lcd.menu.title" name="snrtext" />
 			<eProgress position="0:20" size="e:11" name="snr" foregroundColor="255" leftColor="255" rightColor="0" border="1" />
-			<eLabel position="0:32" size="60:18" font="lcd.menu.title" text="AGC:" />
+			<eLabel position="0:32" size="60:18" font="lcd.menu.title" text="AGC" />
 			<eLabel position="70:32" size="e:18" font="lcd.menu.title" name="agctext" />
 			<eProgress position="0:52" size="e:11" name="agc" foregroundColor="255" leftColor="255" rightColor="0" border="1" />
 		</eZapLCDSatfind>
@@ -394,7 +394,7 @@
 			<eProgress name="scrollbar" position="e-35:90" size="20:190" direction="1" />
 			<eButton name="close" position="10:e-100" size="175:40" text="save" helptext="close Satellite Configuration" loadDeco="" shortcut="green" />
 			<eButton name="new" position="195:e-100" size="175:40" text="new" helptext="add a new Satellite" loadDeco="" shortcut="yellow" />
-			<eButton name="erase" position="380:e-100" size="175:40" text="erase" helptext="remove the selected Satellite" loadDeco="" shortcut="red" />
+			<eButton name="erase" position="380:e-100" size="175:40" text="delete" helptext="remove the selected Satellite" loadDeco="" shortcut="red" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eSatelliteConfigurationManager>
 	</object>
@@ -444,12 +444,12 @@
 
 	<object name="eSatfind" >
 		<eSatfind cposition="120:120" csize="500:380" text="Satfind" >
-			<eLabel text="SNR:" position="10:0" size="190:50" font="eSatfind" vcenter="on" />
+			<eLabel text="SNR" position="10:0" size="190:50" font="eSatfind" vcenter="on" />
 			<eLabel name="snr_num" position="210:0" size="150:50" font="eSatfind" vcenter="on" />
 			<eCheckbox text="LOCK" name="lock" position="e-125:0" size="125:50" font="eSatfind" vcenter="on" />
 			<eProgress name="snr" position="10:50" size="e-10:40" />
 
-			<eLabel text="AGC:" position="10:90" size="190:50" font="eSatfind" vcenter="on" />
+			<eLabel text="AGC" position="10:90" size="190:50" font="eSatfind" vcenter="on" />
 			<eLabel name="agc_num" position="210:90" size="150:50" font="eSatfind" vcenter="on" />
 			<eCheckbox text="SYNC" name="sync" position="e-125:90" size="125:50" font="eSatfind" vcenter="on"  />
 			<eProgress name="agc" position="10:140" size="e-10:40" />
@@ -458,7 +458,7 @@
 			<eLabel name="ber_num" position="210:180" size="150:50" font="eSatfind" vcenter="on" />
 			<eProgress name="ber" position="10:230" size="e-10:40" />
 
-			<eLabel name="lSat" text="Satellite:" position="10:285" size="160:35" vcenter="on" />
+			<eLabel name="lSat" text="Satellite" position="10:285" size="160:35" vcenter="on" />
 			<eComboBox name="sat" position="180:285" size="e-10:35" helptext="choose the Satellite you wish to find" loadDeco="" />
 
 			<eLabel text="Transponder:" position="10:330" size="160:35" vcenter="on" />
@@ -506,7 +506,7 @@
 		<RotorManual text="Motor Config" cposition="80:100" csize="540:410" >
 			<eLabel name="lMode" text="Mode:" position="10:10" size="200:35" vcenter="on" />
 			<eComboBox name="Mode" position="220:10" size="e-10:35" helptext="choose what you want to do" loadDeco="" />
-			<eLabel name="lSat" text="Satellite:" position="10:55" size="200:35" vcenter="on" />
+			<eLabel name="lSat" text="Satellite" position="10:55" size="200:35" vcenter="on" />
 			<eComboBox name="Sat" position="220:55" size="e-10:35" helptext="choose the Satellite you wish to find" loadDeco="" />
 			<eNumber name="num" position="220:55" size="e-10:35" helptext="enter stored satellite pos" loadDeco="" />
 			<eLabel name="lTransponder" text="Transponder:" position="10:100" size="200:35" vcenter="on" />
@@ -539,7 +539,7 @@
 			<eFEStatus name="festatus" position="0:165" size="400:85" />
 			<eCheckbox text="use ONIT" name="useonit" position="10:e-110" size="230:30" helptext="enable/disable check ONIT on any transponder" />
 			<eCheckbox text="use BAT" name="usebat" position="240:e-110" size="200:30" helptext="enable/disable use BAT for scan (if exists)" />
-			<eCheckbox text="only Free" name="onlyFree" position="10:e-80" size="230:30" helptext="add only not scrambled services" />
+			<eCheckbox text="only Free" name="onlyFree" position="10:e-80" size="230:30" helptext="add only unscrambled services" />
 			<eCheckbox text="network search" name="searchnit" position="240:e-80" size="200:30" helptext="enable/disable initiate network search" />
 			<eButton text="start scan" name="start" position="10:e-40" size="215:40" helptext="start the transponder scan" loadDeco="" vcenter="on" shortcut="green" />
 			<eButton text="enter pids" name="manual_pids" position="235:e-40" size="215:40" helptext="enter manual pids" loadDeco="" vcenter="on" shortcut="yellow" />
@@ -610,7 +610,7 @@
 
 	<object name="transpondersettings.satellite">
 		<eTranspondersettings position="0:0" size="454:160">
-			<eLabel text="Satellite:" name="lSat" position="10:10" size="150:34" vcenter="on" />
+			<eLabel text="Satellite" name="lSat" position="10:10" size="150:34" vcenter="on" />
 			<eComboBox name="sat" position="164:10" size="e-10:35" helptext="choose wished satellite (ok)" loadDeco=""  />
 
 			<eLabel  name="lFreq" text="Frequency:" position="10:50" size="150:32" vcenter="on" />
@@ -795,7 +795,7 @@
 			<eNumber name="e_time" position="e-82:150" size="72:35" helptext="edit the end time (0..9, left, right)" loadDeco="" />
 			<eComboBox name="type" openEntries="3" position="10:195" size="250:35" helptext="select the timer type (ok)" loadDeco="" />
 			<eButton name="select_service" position="270:195" size="e-10:35" helptext="to change service press ok" loadDeco="" />
-			<eButton name="apply" text="apply" position="10:240" size="250:35" shortcut="green" helptext="save data and close window" loadDeco="" />
+			<eButton name="apply" text="apply" position="10:240" size="250:35" shortcut="green" helptext="save changes and return" loadDeco="" />
 			<eButton name="scanEPG" text="scan EPG" position="270:240" size="e-10:35" shortcut="blue" helptext="search event name for this beg-/end time in epg" loadDeco="" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eTimerEditView>
@@ -806,13 +806,13 @@
 			<eLabel name="vendor" position="10:0" csize="e:25"/>
 			<eLabel name="machine" position="30:25" font="eAboutScreen.machine" csize="e:50"/>
 			<eLabel name="processor" position="10:80" csize="e:30" />
-			<eLabel name="frontend" text="frontend: " position="10:110" csize="e:30" />
-			<eLabel name="harddisk_label" text="harddisk: " position="10:140" csize="e:30" />
+			<eLabel name="frontend" text="Frontend" position="10:110" csize="e:30" />
+			<eLabel name="harddisk_label" text="Harddisk" position="10:140" csize="e:30" />
 			<eLabel name="harddisks" position="10:170" csize="e:60" />
-			<eLabel text="Software Version:" position="10:230" csize="e:30" />
+			<eLabel text="Software Version" position="10:230" csize="e:30" />
 			<eLabel name="version" position="10:260" csize="e:60" />
-			<eLabel text="FP Version:" name="fp_version" position="10:290" csize="e:30" />
-			<eButton name="okButton" position="20:e-70" csize="100:40" text="ok" loadDeco="" shortcut="green" />
+			<eLabel text="FP Version" name="fp_version" position="10:290" csize="e:30" />
+			<eButton name="okButton" position="20:e-70" csize="100:40" text="OK" loadDeco="" shortcut="green" />
 			<eLabel name="dreamlogo" pixmap="dreamlogo" position="e-160:e-105" csize="143:75" alphatest="on" />
 			<eLabel name="triaxlogo" pixmap="triaxlogo" position="e-277:e-105" csize="260:75" alphatest="on" />
 		</eAboutScreen>
@@ -864,7 +864,7 @@
 			<eLabel name="bus" position="160:70" size="e-150:30" />
 			<eLabel text="status:" position="10:110" size="70:30" />
 			<eLabel name="status" position="80:110" size="e:30" />
-			<eButton name="standby" text="standby  " position="e-150:30" size="e-10:40" loadDeco="" helptext="send harddisk to standby immediately" shortcut="blue" />
+			<eButton name="standby" text="Standby" position="e-150:30" size="e-10:40" loadDeco="" helptext="send harddisk to standby immediately" shortcut="blue" />
 			<eButton name="format" text="format" position="10:170" size="225:40" loadDeco="" helptext="initialize the disk for use with the dreambox" shortcut="red" />
 			<eButton name="check" text="check" position="245:170" size="225:40" loadDeco="" helptext="do a filesystem check" shortcut="yellow" />
 			<eButton name="ext" position="480:170" size="60:40" loadDeco="" helptext="show extended configuration" />
@@ -873,7 +873,7 @@
 			<eLabel name="lblacoustic" text="acoustic management:" position="10:260" size="230:30" />
 			<eNumber name="acoustic" position="240:260" size="60:35" helptext="set automatic acoustic management (0 - 254)" loadDeco="" />
 			<eCombobox name="fs" position="e-210:220" size="e-10:35" loadDeco="" helptext="select filsystem to format" />
-			<eButton name="store" text="store" position="e-210:260" size="e-10:35" loadDeco="" helptext="save settings" shortcut="green" />
+			<eButton name="store" text="save" position="e-210:260" size="e-10:35" loadDeco="" helptext="save settings" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eHarddiskMenu>
 	</object>
@@ -888,7 +888,7 @@
 	</object>
 	
 	<object name="eUpgrade">
-		<eUpgrade text="Software upgrade..." cposition="120:90" csize="500:420" >
+		<eUpgrade text="Software Update" cposition="120:90" csize="500:420" >
 			<eStatusbar name="status" position="0:e-50" size="e:e" loadDeco="" />
 			<eListBox name="images" position="10:40" size="480:150" loadDeco="" />
 			<eLabel name="imagehelp" position="10:0" size="460:30" />
@@ -982,14 +982,14 @@
 			<eCheckbox name="pause" text="activate pause button" position="10:140" size="350:30" helptext="use yellow button as pause button" loadDeco="" />
 			<eTextInputField name="path" position="10:180" size="e-60:40" loadDeco="" helptext="set directory where timeshift files will be stored" />
 			<eButton name="seldir" align="center" vcenter="on" position="e-50:180" size="40:40" loadDeco="" pixmap="sselect_folder" helptext="set directory where timeshift files will be stored" />
-			<eButton name="store" text="store" position="10:e-100" size="150:40" loadDeco="" helptext="store timeshift settings and leave" shortcut="green" />
+			<eButton name="store" text="save" position="10:e-100" size="150:40" loadDeco="" helptext="save changes and return" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</SetupTimeshift>
 	</object>
 
 	<object name="SetupTuxtxt">
 		<SetupTuxtxt text="Teletext Settings" cposition="140:80" csize="440:385">
-			<eLabel text="Favourites:" position="10:10" size="110:30" />
+			<eLabel text="Favourites" position="10:10" size="110:30" />
 			<eComboBox name="favourites" openEntries="5" position="140:10" size="60:30" loadDeco="" />
 			<eNumber name="pagenumber" position="140:45" size="60:30" helptext="teletext page number (100 - 899)" loadDeco="" />
 			<eButton name="removepage" text="remove page" position="e-200:10" size="190:30" loadDeco="" helptext="remove selected page from favourites" shortcut="red" />
@@ -998,11 +998,11 @@
 			<eComboBox name="service" openEntries="5" position="140:80" size="e-10:35" loadDeco="" helptext="select teletext service" />
 			<eCheckbox name="normal169" text="16:9 mode in normal view" position="10:120" size="e-10:30" helptext="switch to 16:9 mode when displaying teletext pages" vcenter="on" />
 			<eCheckbox name="split169" text="16:9 mode on splitscreen" position="10:150" size="e-10:30" helptext="switch to 16:9 in split screen mode"  vcenter="on" />
-			<eLabel text="Brightness:" position="10:180" size="140:30" />
+			<eLabel text="Brightness" position="10:180" size="140:30" />
 			<eSlider name="sBrightness" position="140:180" size="e-10:30" helptext="set brightness of the displayed teletext page" />
-			<eLabel text="Transparency:" position="10:220" size="140:30" />
+			<eLabel text="Transparency" position="10:220" size="140:30" />
 			<eSlider name="sTransparency" position="140:220" size="e-10:30" helptext="set amount of transparency when in semi-transparent mode" />
-			<eLabel text="Language:" position="10:260" size="140:30" />
+			<eLabel text="Language" position="10:260" size="140:30" />
 			<eComboBox name="language" openEntries="5" position="140:260" size="e-10:35" loadDeco="" helptext="set the language of the displayed pages" />
 			<eCheckbox name="truetype" text="use truetype font" position="10:300" size="e-10:30" helptext="use truetype font instead of standard font" vcenter="on" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
@@ -1011,18 +1011,18 @@
 
 	<object name="eEPGSearch">
 		<eEPGSearch text="EPG Search" cposition="115:80" csize="490:410">
-			<eLabel text="Title:" position="10:10" size="200:30" />
+			<eLabel text="title" position="10:10" size="200:30" />
 			<eTextInputField name="searchtext" position="10:40" size="e-10:40" loadDeco="eNumber" helptext="Enter title for epg searching" />
-			<eLabel text="Search in:" position="10:95" size="180:30" />
+			<eLabel text="Service:" position="10:95" size="180:30" />
 			<eCheckbox name="CurrentService" text="" position="190:95" size="e-10:30" helptext="Select this option if you want to search the title only in selected channel" vcenter="on" />
 			<eCheckbox name="AllServices" text="All Services" position="190:125" size="e-10:30" helptext="Select this option if you want to search the title in all services" vcenter="on" />
-			<eLabel text="Search options:" position="10:175" size="180:30" />
+			<eLabel text="Options:" position="10:175" size="180:30" />
 			<eCheckbox name="ExactMatch" text="Exact match" position="190:175" size="e-10:30" helptext="Select this option if you want to search the exact title" vcenter="on" />
 			<eCheckbox name="CaseSensitive" text="Case Sensitive" position="190:205" size="e-10:30" helptext="Select this option if you want to make this epg search case sensitive" vcenter="on" />
-			<eLabel text="Genre:" position="10:260" size="100:30" />
+			<eLabel text="genre" position="10:260" size="100:30" />
 			<eComboBox name="Genre" openEntries="5" position="120:255" size="e-10:35" loadDeco="" helptext="Select a genre if you want to search for a genre" />
-			<eButton name="Close" text="Close" position="10:310" size="210:40" loadDeco="" helptext="Closes EPG search window" shortcut="blue" />
-			<eButton name="Start" text="Start" position="230:310" size="210:40" loadDeco="" helptext="Begin EPG Search" shortcut="green" />
+			<eButton name="Close" text="close" position="10:310" size="210:40" loadDeco="" helptext="close window" shortcut="blue" />
+			<eButton name="Start" text="start" position="230:310" size="210:40" loadDeco="" helptext="Begin EPG Search" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eEPGSearch>
 	</object>
@@ -1056,7 +1056,7 @@
 			<eCheckbox name="cachebouquets" text="only cache EPG data from bouquets" position="20:130" size="e-10:30" helptext="uncheck to cache all available data" vcenter="on" />
 			<eCheckbox name="infobarcache" text="Use EPG cache for Infobar" position="20:170" size="e-10:30" helptext="use the EPG cache for the infobar if the EIT is unavailable" vcenter="on" />
 			<eButton name="clear" text="clear EPG cache" position="20:210" size="240:40" loadDeco="" helptext="remove all entries from EPG cache" shortcut="yellow" />
-			<eButton name="store" text="store" position="20:e-100" size="150:40" loadDeco="" helptext="store settings and leave" shortcut="green" />
+			<eButton name="store" text="save" position="20:e-100" size="150:40" loadDeco="" helptext="save changes and return" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</EPGSetup>
 	</object>
@@ -1105,7 +1105,7 @@
 			<eCheckbox name="subdirs" text="Include subdirectories" position="10:45" size="300:30" helptext="Include slides of subdirectories in slideshow" />
 			<eCheckbox name="busy" text="Show busy sign" position="10:80" size="300:30" helptext="Show busy sign while preprocessing slide" />
 			<eCheckbox name="format_169" text="Show in 16:9 format" position="10:115" size="300:30" helptext="Always show slides in 16:9 format" />
-			<eButton name="store" text="save" position="10:e-100" size="130:40" loadDeco="" helptext="store settings and close window" shortcut="green" />
+			<eButton name="store" text="save" position="10:e-100" size="130:40" loadDeco="" helptext="save changes and return" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</picmanager>
 	</object>
@@ -1126,7 +1126,7 @@
 		<eStoreWindow text="Store Satellite" cposition="150:150" csize="360:140">
 			<eLabel name="lStorageLoc" text="Storage Location:" position="10:10" size="250:35" />
 			<eNumber name="StorageLoc" position="270:10" size="80:35" helptext="change storage Location or store" loadDeco="" />
-			<eButton name="store" text="store" position="10:60" size="220:40" loadDeco="" helptext="save changes and return" shortcut="green" />
+			<eButton name="store" text="save" position="10:60" size="220:40" loadDeco="" helptext="save changes and return" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-30" size="e:e" loadDeco="" />
 		</eStoreWindow>
 	</object>
@@ -1187,13 +1187,13 @@
 
 	<object name="eZapLCDSetup">
 		<eZapLCDSetup text="LC-Display Setup" cposition="150:126" csize="400:290">
-			<eLabel name="lbrightness" text="Brightness:" position="20:20" size="110:30" />
+			<eLabel name="lbrightness" text="Brightness" position="20:20" size="110:30" />
 			<eSlider name="brightness" position="140:20" size="240:30" helptext="set LCD brightness ( left / right )" />
-			<eLabel name="lcontrast" text="Contrast:" position="20:60" size="110:30" />
+			<eLabel name="lcontrast" text="Contrast" position="20:60" size="110:30" />
 			<eSlider name="contrast" position="140:60" size="240:30" helptext="set LCD contrast ( left / right )" />
-			<eLabel name="lstandby" text="Standby:" position="20:100" size="110:30" />
+			<eLabel name="lstandby" text="Standby" position="20:100" size="110:30" />
 			<eSlider name="standby" position="140:100" size="240:30" helptext="set LCD brightness for Standby Mode ( left / right )" />
-			<eCheckbox name="inverted" text="Inverted:" position="20:140" size="150:30" helptext="enable/disable inverted LCD (ok)" />
+			<eCheckbox name="inverted" text="Inverted" position="20:140" size="150:30" helptext="enable/disable inverted LCD (ok)" />
 			<eButton name="ok" text="save" position="20:190" size="220:40" loadDeco="" helptext="save changes and return" shortcut="green" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eZapLCDSetup>
@@ -1234,9 +1234,9 @@
 			<eComboBox name="combo_options" position="350:140" size="320:30" loadDeco="" helptext="press ok to change mount options" />
 			<eLabel name="lextraoptions" text="Extra:" position="20:90" size="120:30" />
 			<eTextInputField name="extraoptions" position="160:90" size="320:30" helptext="press ok to edit extra options" loadDeco="" />
-			<eLabel name="luser" text="User:" position="20:90" size="120:30" />
+			<eLabel name="luser" text="Login:" position="20:90" size="120:30" />
 			<eTextInputField name="user" position="160:90" size="320:30" helptext="press ok to edit username" loadDeco="" />
-			<eLabel name="lpass" text="Pass:" position="20:90" size="120:30" />
+			<eLabel name="lpass" text="Password:" position="20:90" size="120:30" />
 			<eTextInputField name="pass" position="160:90" size="320:30" helptext="press ok to edit password" loadDeco="" />
 			<eCheckbox name="doamount" text="Automount" position="340:10" size="140:30" helptext="enable/disable automount (ok)" />
 			<eButton name="prev" text="&lt;" position="10:e-110" size="30:40" loadDeco="" helptext="go to previous share" />
@@ -1250,13 +1250,13 @@
 
 	<object name="eZapOsdSetup">
 		<eZapOsdSetup text="OSD Settings" cposition="140:105" csize="460:390">
-			<eLabel name="lalpha" text="Alpha:" position="20:20" size="110:30" />
+			<eLabel name="lalpha" text="Transparency" position="20:20" size="110:30" />
 			<eSlider name="alpha" position="150:20" size="290:30" helptext="change the transparency correction" />
-			<eLabel name="lbrightness" text="Brightness:" position="20:60" size="120:30" />
+			<eLabel name="lbrightness" text="Brightness" position="20:60" size="120:30" />
 			<eSlider name="brightness" position="150:60" size="290:30" helptext="change the brightness correction" />
-			<eLabel name="lcontrast" text="Contrast:" position="20:100" size="120:30" />
+			<eLabel name="lcontrast" text="Contrast" position="20:100" size="120:30" />
 			<eSlider name="contrast" position="150:100" size="290:30" helptext="change the contrast" />
-			<eLabel name="lsubtitletransparency" text="Subtitle Transparency:" position="20:140" size="210:30" />
+			<eLabel name="lsubtitletransparency" text="Subtitle Transparency" position="20:140" size="210:30" />
 			<eSlider name="subtitletransparency" position="230:140" size="210:30" helptext="change the transparency of the subtitle black background" />
 			<eCheckbox name="simpleMainMenu" text="Show Mainmenu like Listbox" position="20:180" size="420:35" helptext="show the Mainmenu in normal listbox style" />
 			<eButton name="skin" text="Change skin" position="20:230" size="205:40" loadDeco="" helptext="press ok to open skin selector" shortcut="blue" />
@@ -1354,7 +1354,7 @@
 			<eComboBox name="direction" position="350:55" size="110:35" loadDeco="" helptext="press ok to change direction" />
 			<eCheckbox name="doNetworkSearch" text="Network search" position="10:95" size="e-20:30" helptext="scan Network Information Table(s)\nthis is recommend" />
 			<eCheckbox name="useONIT" text="Extended networks search" position="10:135" size="e-20:30" helptext="scan NITs of other transponders\nthis is slower, but sometimes needed)" />
-			<eCheckbox name="useBAT" text="Use BAT" position="10:175" size="e-20:30" helptext="use Provider DVB Bouquet Tables if exist" />
+			<eCheckbox name="useBAT" text="use BAT" position="10:175" size="e-20:30" helptext="use Provider DVB Bouquet Tables if exist" />
 			<eButton name="save" text="save" position="10:255" size="200:40" loadDeco=""  shortcut="green" helptext="save changes and return" />
 			<eStatusBar name="statusbar" position="0:e-50" size="e:e" loadDeco="" />
 		</eSatEditDialog>

@@ -30,7 +30,7 @@ struct tuxtxtActions
 	eActionMap map;
 	eAction switchZoommode, switchScreenmode, switchTranspmode, switchHintmode;
 	tuxtxtActions():
-		map("Tuxtxt", _("enigma tuxtxt")),
+		map("Tuxtxt", "enigma tuxtxt"),
 		switchZoommode(map, "switchZoommode", _("toggle double height"), eAction::prioDialog),
 		switchScreenmode(map, "switchScreenmode", _("toggle splitscreen mode"), eAction::prioDialog),
 		switchTranspmode(map, "switchTranspmode", _("toggle transparency"), eAction::prioDialog),
@@ -321,7 +321,7 @@ int eTuxtxtSetup::GetTeletextPIDs()
 		return 0;
 	}
 
-	eMessageBox box(_("Searching for Teletext services on this Transponder"), _("Search"), eMessageBox::iconInfo );
+	eMessageBox box(_("Searching for Teletext services on this Transponder"), _("search"), eMessageBox::iconInfo );
 	box.show();
 
 	/* read PAT to get all PMT's */

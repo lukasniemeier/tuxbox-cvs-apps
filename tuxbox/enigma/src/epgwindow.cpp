@@ -195,7 +195,7 @@ void eEPGSelector::fillEPGList()
 	events->clearList();
 	eService *service=eDVB::getInstance()->settings->getTransponders()->searchService(current);
 	if (service)
-		setText(eString(_("EPG - "))+service->service_name);
+		setText(eString().sprintf("%s - %s",_("EPG"),service->service_name.c_str()));
 	eDebug("get EventMap for onid: %02x, sid: %02x", current.getOriginalNetworkID().get(), current.getServiceID().get());
 
 	eEPGCache::getInstance()->Lock();
@@ -369,7 +369,7 @@ void eEPGSelector::init_eEPGSelector(eString* pSearchString)
 	{
 		myEPGSearch = 1;
 		fillEPGSearchList();
-		setText(eString(_("EPG Search")) +": " + *pSearchString);
+		setText(eString(_("EPG Search")) +eString(": ") + *pSearchString);
 	}
 	else
 		fillEPGList();

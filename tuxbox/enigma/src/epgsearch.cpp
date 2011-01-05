@@ -1,5 +1,5 @@
 /*
- * $Id: epgsearch.cpp,v 1.4 2010/01/04 11:43:12 dbluelle Exp $
+ * $Id: epgsearch.cpp,v 1.5 2011/01/05 13:57:08 dbluelle Exp $
  *
  * (C) 2008 by Dr. Best  <dr.best@dreambox-tools.info>
  *
@@ -233,7 +233,7 @@ void eEPGSearch::Search()
 {
 	eString h;
 	if (chkAllServices->isChecked())
-		h = _("all services");
+		h = _("All services");
 	else
 		h = sServiceReferenceSearch;
 
@@ -247,8 +247,8 @@ void eEPGSearch::Search()
 	}
 	else
 	{
-		Anzeige = eString(_("Searching for ")) + eString(_("Genre:")) + cboGenre->getText() + "\nin " + h + "...";
-		SearchName = eString(_("Genre:")) + cboGenre->getText();
+		Anzeige = eString(_("Searching for ")) + eString(_("genre")) +eString(":") + cboGenre->getText() + "\nin " + h + "...";
+		SearchName = eString(_("genre")) +eString(":")+ cboGenre->getText();
 	}
 	//hide();
 	eMessageBox msg(Anzeige, _("EPG Search"), eMessageBox::iconInfo);

@@ -102,7 +102,7 @@ void eParentalSetup::slockChecked(int i)
 		changeSetupPin->show();
 	else
 	{
-		if ( checkPin( setuppin, _("setup") ) )
+		if ( checkPin( setuppin, _("Setup") ) )
 		{
 			setuppin=0;
 			changeSetupPin->hide();
@@ -114,7 +114,7 @@ void eParentalSetup::slockChecked(int i)
 
 void eParentalSetup::changePin(eButton *p)
 {
-	const char *text = ( p == changeParentalPin ) ? _("parental") : _("setup");
+	const char *text = ( p == changeParentalPin ) ? _("parental") : _("Setup");
 
 	int oldpin = (p == changeParentalPin) ? parentalpin : setuppin;
 

@@ -1077,43 +1077,43 @@ void eServiceHandlerDVB::init_eServiceHandlerDVB()
 
 	cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -1, (1<<4)|(1<<1), 0xFFFFFFFF),
-			new eService( _("Providers (TV)"))
+			new eService( eString().sprintf("%s (%s)",_("Providers"),_("TV")))
 		);
 	cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -1, 1<<2, 0xFFFFFFFF ),
-			new eService( _("Providers (Radio)"))
+			new eService( eString().sprintf("%s (%s)",_("Providers"),_("Radio")))
 		);
 	cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -1, data, 0xFFFFFFFF),
-			new eService( _("Providers (Data)"))
+			new eService( eString().sprintf("%s (%s)",_("Providers"),_("Data")))
 		);
 
 	cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -2, (1<<4)|(1<<1), 0xFFFFFFFF ), // TV and NVOD
-			new eService( _("All services (TV)"))
+			new eService( eString().sprintf("%s (%s)",_("All services"),_("TV")))
 		);
 	cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -2, 1<<2, 0xFFFFFFFF ), // radio
-			new eService( _("All services (Radio)"))
+			new eService( eString().sprintf("%s (%s)",_("All services"),_("Radio")))
 		);
 	cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -2, data, 0xFFFFFFFF),
-			new eService( _("All services (Data)"))
+			new eService( eString().sprintf("%s (%s)",_("All services"),_("Data")))
 		);
 
 	if ( eSystemInfo::getInstance()->getFEType() == eSystemInfo::feSatellite )
 	{
 		cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -4, (1<<4)|(1<<1)),
-			new eService( _("Satellites (TV)"))
+			new eService( eString().sprintf("%s (%s)",_("Satellites"),_("TV")))
 		);
 		cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -4, 1<<2),
-			new eService( _("Satellites (Radio)"))
+			new eService( eString().sprintf("%s (%s)",_("Satellites"),_("Radio")))
 		);
 		cache.addPersistentService(
 			eServiceReference(eServiceReference::idDVB, eServiceReference::flagDirectory|eServiceReference::shouldSort, -4, data),
-			new eService( _("Satellites (Data)"))
+			new eService( eString().sprintf("%s (%s)",_("Satellites"),_("Data")))
 		);
 }
 #ifndef DISABLE_FILE
@@ -1546,7 +1546,7 @@ eService *eServiceHandlerDVB::createService(const eServiceReference &node)
 	    if (!sat)
 			return 0;
 		else
-			return new eService( eString().sprintf("%s%s",sat->getDescription().c_str(),_(" - provider")));
+			return new eService( eString().sprintf("%s - %s",sat->getDescription().c_str(),_("Providers")));
 	}
 	case -2: // for satellites...
 	{
@@ -1554,7 +1554,7 @@ eService *eServiceHandlerDVB::createService(const eServiceReference &node)
 	    if (!sat)
 			return 0;
 		else
-			return new eService( eString().sprintf("%s%s",sat->getDescription().c_str(),_(" - services")));
+			return new eService( eString().sprintf("%s - %s",sat->getDescription().c_str(),_("Services")));
 	}
 	case -5: // for satellites...
 	{
@@ -1562,7 +1562,7 @@ eService *eServiceHandlerDVB::createService(const eServiceReference &node)
 	    if (!sat)
 			return 0;
 		else
-			return new eService( eString().sprintf("%s%s",sat->getDescription().c_str(),_(" - new found")));
+			return new eService( eString().sprintf("%s - %s",sat->getDescription().c_str(),_("new found")));
 	}
 	case -6: 
 	{

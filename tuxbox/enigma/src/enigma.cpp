@@ -558,7 +558,7 @@ int main(int argc, char **argv)
 				eZap::getInstance()->getDesktop(eZap::desktopFB)->makeRoot();
 				eMessageBox mb(
 					_("Please wait... your Dreambox is shutting down!"),
-					_("Shutdown..."), eMessageBox::iconInfo);
+					_("Shutdown"), eMessageBox::iconInfo);
 				mb.show();
 				fbClass::getInstance()->lock();
 				fbClass::getInstance()->setAvailable(0);

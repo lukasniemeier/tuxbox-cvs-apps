@@ -53,9 +53,9 @@ void eSwapManager::init_eSwapManager()
 
 	cb_file=CreateSkinnedComboBox("file",4);
 
-	new eListBoxEntryText( *cb_file, "swap", (void*)0, 0, eString().sprintf("%s%s", _("Filename: "), "swap"));
-	new eListBoxEntryText( *cb_file, "swapfile", (void*)1, 0, eString().sprintf("%s%s", _("Filename: "), "swapfile"));
-	new eListBoxEntryText( *cb_file, "myswap", (void*)2, 0, eString().sprintf("%s%s", _("Filename: "), "myswap"));
+	new eListBoxEntryText( *cb_file, "swap", (void*)0, 0, eString().sprintf("%s %s", _("Filename:"), "swap"));
+	new eListBoxEntryText( *cb_file, "swapfile", (void*)1, 0, eString().sprintf("%s %s", _("Filename:"), "swapfile"));
+	new eListBoxEntryText( *cb_file, "myswap", (void*)2, 0, eString().sprintf("%s %s", _("Filename:"), "myswap"));
 	if(swap != 0)
 	{
 		eString s = eString(swap);
@@ -77,7 +77,7 @@ void eSwapManager::init_eSwapManager()
 		else
 		{
 			filename=3;
-			new eListBoxEntryText( *cb_file, file.c_str(), (void*)3, 0, eString().sprintf("%s%s", _("Filename: "), file.c_str() ) );
+			new eListBoxEntryText( *cb_file, file.c_str(), (void*)3, 0, eString().sprintf("%s %s", _("Filename:"), file.c_str() ) );
 		}
 		path = s.substr(0, pos+1);
 	}
@@ -87,7 +87,7 @@ void eSwapManager::init_eSwapManager()
 
 	cb_size=CreateSkinnedComboBox("filesize", 4);
 	for (int i = 0; i < 9; i++)
-		new eListBoxEntryText( *cb_size, eString().sprintf("%d MB",(4<<i)).c_str(), (void*)((4<<i)), 0, eString().sprintf(_("Filesize: %d MB"),(4<<i)).c_str());
+		new eListBoxEntryText( *cb_size, eString().sprintf("%d MB",(4<<i)).c_str(), (void*)((4<<i)), 0, eString().sprintf("%s %d MB",_("Filesize:"),(4<<i)).c_str());
 
 	bt_delswap = CreateSkinnedButton("delete");
 	bt_stswap = CreateSkinnedButton("stop");
@@ -210,7 +210,7 @@ void eSwapManager::getSize()
 
 	if( used > 1024 ) 
 	{
-		new eListBoxEntryText( *cb_size, eString().sprintf("%d MB", used), (void*)used, 0, eString().sprintf(_("Filesize: %d MB"), used));
+		new eListBoxEntryText( *cb_size, eString().sprintf("%d MB", used), (void*)used, 0, eString().sprintf("%s %d MB",_("Filesize:"), used));
 	}
 	cb_size->setCurrent((void*)used, true);
 }
@@ -322,7 +322,7 @@ void eSwapManager::appClosed(int)
 	}
 	else
 	{
-		eMessageBox::ShowBox((eString().sprintf("%s\n%s",_("There has been an error during creation!"),strerror(errno))), _("Swap Manager"), eMessageBox::iconWarning|eMessageBox::btOK);
+		eMessageBox::ShowBox(strerror(errno), _("Error"), eMessageBox::iconError|eMessageBox::btOK);
 	}
 	setButtons();
 }
@@ -348,7 +348,7 @@ void eSwapManager::activateSwap()
 	}
 	else
 	{
-		eMessageBox::ShowBox((eString().sprintf("%s\n%s",_("Error during activation!"),strerror(errno))), _("Swap Manager"), eMessageBox::iconWarning|eMessageBox::btOK);
+		eMessageBox::ShowBox(strerror(errno), _("Error"), eMessageBox::iconError|eMessageBox::btOK);
 	}
 }
 
@@ -368,7 +368,7 @@ void eSwapManager::stopSwap()
 	}
 	else
 	{
-		eMessageBox::ShowBox((eString().sprintf("%s\n%s",_("Error during inactivation!"),strerror(errno))), _("Swap Manager"), eMessageBox::iconWarning|eMessageBox::btOK);
+		eMessageBox::ShowBox(strerror(errno), _("Error"), eMessageBox::iconError|eMessageBox::btOK);
 	}
 }
 
@@ -384,7 +384,7 @@ void eSwapManager::deleteSwap()
 	}
 	else
 	{
-		eMessageBox::ShowBox(eString().sprintf("%s\n%s",_("File has not been deleted due to an error!"),strerror(errno)), _("Swap Manager"), eMessageBox::iconWarning|eMessageBox::btOK);
+		eMessageBox::ShowBox(strerror(errno), _("Error"), eMessageBox::iconError|eMessageBox::btOK);
 	}
 }
 

@@ -13,8 +13,8 @@ struct enigmaVCRActions
 	eAction volumeUp, volumeDown;
 	enigmaVCRActions():
 		map("enigmaVCR", "enigma VCR"),
-		volumeUp(map, "volumeUp", "volume up", eAction::prioDialog),
-		volumeDown(map, "volumeDown", "volume down", eAction::prioDialog)
+		volumeUp(map, "volumeUp", 0, eAction::prioDialog),
+		volumeDown(map, "volumeDown", 0, eAction::prioDialog)
 	{
 	}
 };

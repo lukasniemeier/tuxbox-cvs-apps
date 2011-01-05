@@ -102,7 +102,7 @@ const char *eChannelInfo::genresTableShort[256] =
 							NULL,
 
 	/* 0x7 Culture */      	_("Culture"),_("Perf. Arts"),_("Fine Arts"),_("Religion"),_("Pop. Arts"),_("Literature"),
-							_("Film"),_("Experimental"),_("Press"),_("New Media"),_("Art Mag."),_("Fashion"),
+							_("Movie"),_("Experimental"),_("Press"),_("New Media"),_("Art Mag."),_("Fashion"),
 							NULL,NULL,NULL,NULL,
 
 	/* 0x8 Social */       	_("Social"),_("Soc. Mag."),_("Economics"),_("Remark. People"),
@@ -289,8 +289,8 @@ void eChannelInfo::getServiceInfo( const eServiceReferenceDVB& service )
 		int i = service.path.rfind("/");
 		i++;
 		eString size;
-		size.sprintf(_("\nFilesize: %d MB"), filelength/1024);
-		cname.setText(eString(_("Filename: "))+service.path.mid( i, service.path.length()-i)+size );
+		size.sprintf("\n%s %d MB",_("Filesize:"), filelength/1024);
+		cname.setText(eString(_("Filename:"))+service.path.mid( i, service.path.length()-i)+size );
 	}
 }
 	

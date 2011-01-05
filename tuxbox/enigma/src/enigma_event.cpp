@@ -18,8 +18,8 @@ struct enigmaEventViewActions
 	eActionMap map;
 	eAction close;
 	enigmaEventViewActions():
-		map("enigmaEventView", _("enigma event view")),
-		close(map, "close", _("closes the Event View"), eAction::prioDialog)
+		map("enigmaEventView", "enigma event view"),
+		close(map, "close", 0, eAction::prioDialog)
 	{
 	}
 };

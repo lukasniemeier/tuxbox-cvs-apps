@@ -41,7 +41,7 @@ struct PluginOffsetActions
 	eActionMap map;
 	eAction leftTop, rightBottom, store;
 	PluginOffsetActions()
-		:map("PluginOffsetActions", _("PluginOffsetActions")),
+		:map("PluginOffsetActions", "PluginOffsetActions"),
 		leftTop(map,"leftTop", _("enable set the leftTop Point of the rectangle")),
 		rightBottom(map,"rightBottom", _("enable set the rightBottom Point of the rectangle")),
 		store(map, "store", _("saves the current positions"))

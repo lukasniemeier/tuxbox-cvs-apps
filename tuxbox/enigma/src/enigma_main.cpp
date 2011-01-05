@@ -84,17 +84,17 @@ struct enigmaMainActions
 		modeTV, modeRadio, modeFile,
 		toggleDVRFunctions, toggleIndexmark, indexSeekNext, indexSeekPrev;
 	enigmaMainActions():
-		map("enigmaMain", _("enigma Zapp")),
+		map("enigmaMain", "enigma Zapp"),
 		showMainMenu(map, "showMainMenu", _("show main menu"), eAction::prioDialog),
-		standby_press(map, "standby_press", _("go to standby (press)"), eAction::prioDialog),
-		standby_nomenu_press(map, "standby_nomenu_press", _("go to standby without menu (press)"), eAction::prioDialog),
-		standby_repeat(map, "standby_repeat", _("go to standby (repeat)"), eAction::prioDialog),
-		standby_release(map, "standby_release", _("go to standby (release)"), eAction::prioDialog),
+		standby_press(map, "standby_press", 0, eAction::prioDialog),
+		standby_nomenu_press(map, "standby_nomenu_press", 0, eAction::prioDialog),
+		standby_repeat(map, "standby_repeat", 0, eAction::prioDialog),
+		standby_release(map, "standby_release", 0, eAction::prioDialog),
 
-		showInfobar(map, "showInfobar", _("show infobar"), eAction::prioDialog),
-		hideInfobar(map, "hideInfobar", _("hide infobar"), eAction::prioDialog),
+		showInfobar(map, "showInfobar", 0, eAction::prioDialog),
+		hideInfobar(map, "hideInfobar", 0, eAction::prioDialog),
 		showInfobarEPG(map, "showInfobarEPG", _("show infobar or EPG"), eAction::prioDialog),
-		showServiceSelector(map, "showServiceSelector", _("show service selector"), eAction::prioDialog),
+		showServiceSelector(map, "showServiceSelector", "show service selector", eAction::prioDialog),
 		showSubservices(map, "showSubservices", _("show subservices/NVOD"), eAction::prioDialog),
 		showAudioOrPause(map, "showAudioOrPause", _("show audio selector"), eAction::prioDialog),
 		showAudio(map, "showAudio", _("show audio selector"), eAction::prioDialog),
@@ -102,51 +102,51 @@ struct enigmaMainActions
 		pluginExt(map, "pluginExt", _("show extension Plugins"), eAction::prioDialog),
 		showEPGList(map, "showEPGList", _("show epg schedule list"), eAction::prioDialog),
 		showEPG(map, "showEPG", _("show extended info"), eAction::prioDialog),
-		nextSubService(map, "nextSubService", _("zap to next subService"), eAction::prioDialog),
-		prevSubService(map, "prevSubService", _("zap to prev subService"), eAction::prioDialog),
-		nextService(map, "nextService", _("quickzap next"), eAction::prioDialog),
-		prevService(map, "prevService", _("quickzap prev"), eAction::prioDialog),
+		nextSubService(map, "nextSubService", 0, eAction::prioDialog),
+		prevSubService(map, "prevSubService", 0, eAction::prioDialog),
+		nextService(map, "nextService", 0, eAction::prioDialog),
+		prevService(map, "prevService", 0, eAction::prioDialog),
 
 		playlistNextService(map, "playlistNextService", _("playlist/history next"), eAction::prioDialog),
 		playlistPrevService(map, "playlistPrevService", _("playlist/history prev"), eAction::prioDialog),
 
-		serviceListDown(map, "serviceListDown", _("service list and down"), eAction::prioDialog),
-		serviceListUp(map, "serviceListUp", _("service list and up"), eAction::prioDialog),
+		serviceListDown(map, "serviceListDown",0, eAction::prioDialog),
+		serviceListUp(map, "serviceListUp",0, eAction::prioDialog),
 
-		volumeUp(map, "volumeUp", _("volume up"), eAction::prioDialog),
-		volumeDown(map, "volumeDown", _("volume down"), eAction::prioDialog),
-		toggleMute(map, "toggleMute", _("toggle mute flag"), eAction::prioDialog),
+		volumeUp(map, "volumeUp", 0, eAction::prioDialog),
+		volumeDown(map, "volumeDown", 0, eAction::prioDialog),
+		toggleMute(map, "toggleMute", 0, eAction::prioDialog),
 
 		stop(map, "stop", _("stop playback"), eAction::prioWidget),
 		pause(map, "pause", _("pause playback"), eAction::prioWidget),
 		play(map, "play", _("resume playback"), eAction::prioWidget),
-		record(map, "record", _("record"), eAction::prioWidget),
+		record(map, "record", _("Record"), eAction::prioWidget),
 
 		startSkipForward(map, "startSkipF", _("start skipping forward"), eAction::prioWidget),
-		repeatSkipForward(map, "repeatSkipF", _("repeat skipping forward"), eAction::prioWidget),
-		stopSkipForward(map, "stopSkipF", _("stop skipping forward"), eAction::prioWidget),
+		repeatSkipForward(map, "repeatSkipF", 0, eAction::prioWidget),
+		stopSkipForward(map, "stopSkipF", 0, eAction::prioWidget),
 
 		startSkipReverse(map, "startSkipR", _("start skipping reverse"), eAction::prioWidget),
-		repeatSkipReverse(map, "repeatSkipR", _("repeat skipping reverse"), eAction::prioWidget),
-		stopSkipReverse(map, "stopSkipR", _("stop skipping reverse"), eAction::prioWidget),
+		repeatSkipReverse(map, "repeatSkipR", 0, eAction::prioWidget),
+		stopSkipReverse(map, "stopSkipR", 0, eAction::prioWidget),
 
 		discrete_stop(map, "discrete_stop", _("stop playback"), eAction::prioWidget),
 		discrete_pause(map, "discrete_pause", _("pause playback"), eAction::prioWidget),
 		discrete_play(map, "discrete_play", _("resume playback"), eAction::prioWidget),
-		discrete_record(map, "discrete_record", _("record"), eAction::prioWidget),
+		discrete_record(map, "discrete_record", _("Record"), eAction::prioWidget),
 
-		discrete_startSkipForward(map, "discrete_startSkipF", _("start skipping forward"), eAction::prioWidget),
-		discrete_repeatSkipForward(map, "discrete_repeatSkipF", _("repeat skipping forward"), eAction::prioWidget),
-		discrete_stopSkipForward(map, "discrete_stopSkipF", _("stop skipping forward"), eAction::prioWidget),
+		discrete_startSkipForward(map, "discrete_startSkipF", 0, eAction::prioWidget),
+		discrete_repeatSkipForward(map, "discrete_repeatSkipF", 0, eAction::prioWidget),
+		discrete_stopSkipForward(map, "discrete_stopSkipF", 0, eAction::prioWidget),
 
-		discrete_startSkipReverse(map, "discrete_startSkipR", _("start skipping reverse"), eAction::prioWidget),
-		discrete_repeatSkipReverse(map, "discrete_repeatSkipR", _("repeat skipping reverse"), eAction::prioWidget),
-		discrete_stopSkipReverse(map, "discrete_stopSkipR", _("stop skipping reverse"), eAction::prioWidget),
+		discrete_startSkipReverse(map, "discrete_startSkipR", 0, eAction::prioWidget),
+		discrete_repeatSkipReverse(map, "discrete_repeatSkipR", 0, eAction::prioWidget),
+		discrete_stopSkipReverse(map, "discrete_stopSkipR", 0, eAction::prioWidget),
 
-		showUserBouquets(map, "showUserBouquets", _("open the serviceselector and show bouquets"), eAction::prioWidget),
-		showDVBBouquets(map, "showDVBBouquets", _("open the serviceselector and show provider"), eAction::prioWidget),
-		showRecMovies(map, "showRecMovies", _("open the serviceselector and show recorded movies"), eAction::prioWidget),
-		showPlaylist(map, "showPlaylist", _("open the serviceselector and shows the playlist"), eAction::prioWidget),
+		showUserBouquets(map, "showUserBouquets", 0, eAction::prioWidget),
+		showDVBBouquets(map, "showDVBBouquets", 0, eAction::prioWidget),
+		showRecMovies(map, "showRecMovies", 0, eAction::prioWidget),
+		showPlaylist(map, "showPlaylist", 0, eAction::prioWidget),
 
 		modeTV(map, "modeTV", _("switch to TV mode"), eAction::prioDialog),
 		modeRadio(map, "modeRadio", _("switch to Radio mode"), eAction::prioDialog),
@@ -170,9 +170,9 @@ struct enigmaGlobalActions
 	enigmaGlobalActions():
 		map("enigmaGlobal", "enigma global"),
 
-		volumeUp(map, "volumeUp", _("volume up"), eAction::prioGlobal),
-		volumeDown(map, "volumeDown", _("volume down"), eAction::prioGlobal),
-		toggleMute(map, "toggleMute", _("toggle mute flag"), eAction::prioGlobal)
+		volumeUp(map, "volumeUp", 0, eAction::prioGlobal),
+		volumeDown(map, "volumeDown", 0, eAction::prioGlobal),
+		toggleMute(map, "toggleMute", 0, eAction::prioGlobal)
 	{
 		eWidget::addGlobalActionMap(&map);
 	}
@@ -711,8 +711,8 @@ void ePSAudioSelector::add(unsigned int id)
 {
 	eDebug("add AUDIO %02x",id);
 	list.beginAtomic();
-	new eListBoxEntryText(&list, (id&0xFF)==0xBD ?
-		_("Audiotrack(AC3)") : _("Audiotrack"), (void*)id );
+	new eListBoxEntryText(&list, eString().sprintf("%s%s",_("Audiotrack"), ( id&0xFF)==0xBD ?
+		"(AC3)" :"") , (void*)id );
 	list.endAtomic();
 }
 
@@ -1198,7 +1198,7 @@ void eServiceNumberWidget::init_eServiceNumberWidget(int initial)
 	resize(eSize(280, 120));
 	eLabel *label;
 	label=new eLabel(this);
-	label->setText(_("Channel:"));
+	label->setText(eString().sprintf("%s:",_("Channel")));
 	label->move(ePoint(50, 15));
 	label->resize(eSize(110, eSkin::getActive()->queryValue("fontsize", 20)+4));
 
@@ -1496,7 +1496,7 @@ void eZapMain::loadUserBouquets( bool destroy )
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeTV), userTVBouquetsRef);
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeTvRadio), userTVBouquetsRef);
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeBouquets), userTVBouquetsRef);
-	userTVBouquets->service_name=_("Bouquets (TV)");
+	userTVBouquets->service_name=eString().sprintf("%s (%s)",_("Bouquets"),_("TV"));
 	userTVBouquets->load((basePath+"/userbouquets.tv.epl").c_str());
 
 	// create user bouquet file list
@@ -1507,7 +1507,7 @@ void eZapMain::loadUserBouquets( bool destroy )
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeRoot), userFileBouquetsRef);
 //	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeFile), userFileBouquetsRef);
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeBouquets), userFileBouquetsRef);
-	userFileBouquets->service_name=_("Bouquets (File)");
+	userFileBouquets->service_name=eString().sprintf("%s (%s)",_("Bouquets"),_("File"));
 	userFileBouquets->load((eplPath+"/userbouquets.file.epl").c_str());
 
 	// create user bouquet radio list
@@ -1519,7 +1519,7 @@ void eZapMain::loadUserBouquets( bool destroy )
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeRadio), userRadioBouquetsRef);
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeTvRadio), userRadioBouquetsRef);
 	eServicePlaylistHandler::getInstance()->newPlaylist(eServiceStructureHandler::getRoot(eServiceStructureHandler::modeBouquets), userRadioBouquetsRef);
-	userRadioBouquets->service_name=_("Bouquets (Radio)");
+	userRadioBouquets->service_name=eString().sprintf("%s (%s)",_("Bouquets"),_("Radio"));
 	userRadioBouquets->load((basePath+"/userbouquets.radio.epl").c_str());
 
 	int i=0;
@@ -1568,19 +1568,19 @@ void eZapMain::loadUserBouquets( bool destroy )
 					parentList = userTVBouquets;
 					parentRef = userTVBouquetsRef;
 					path = basePath+'/'+eString().sprintf("userbouquet.%x.tv",ref.data[1]);
-					name = _("Favourites (TV)");
+					name = eString().sprintf("%s (%s)",_("Favourites"),_("TV"));
 					break;
 				case modeRadio:
 					parentList = userRadioBouquets;
 					parentRef = userRadioBouquetsRef;
 					path = basePath+'/'+eString().sprintf("userbouquet.%x.radio",ref.data[1]);
-					name = _("Favourites (Radio)");
+					name = eString().sprintf("%s (%s)",_("Favourites"),_("Radio"));
 					break;
 				case modeFile:
 					parentList = userFileBouquets;
 					parentRef = userFileBouquetsRef;
 					path = eplPath+'/'+eString().sprintf("userbouquet.%x.file",ref.data[1]);
-					name = _("Favourites (File)");
+					name = eString().sprintf("%s (%s)",_("Favourites"),_("File"));
 					break;
 			}
 			addUserBouquet( parentRef, parentList, path, name, ref, true );
@@ -3409,7 +3409,7 @@ int eZapMain::recordDVR(int onoff, int user, time_t evtime, const char *timer_de
 		{
 			if (user)
 			{
-				eMessageBox::ShowBox(_("Sorry, you cannot record this service."), _("record"), eMessageBox::iconWarning|eMessageBox::btOK );
+				eMessageBox::ShowBox(_("Sorry, you cannot record this service."), _("Record"), eMessageBox::iconWarning|eMessageBox::btOK );
 			}
 			return -1; // cannot record this service
 		}
@@ -4015,7 +4015,7 @@ void eZapMain::renameService( eServiceSelector *sel )
 				if (!old)
 					old="";
 				TextEditWindow wnd(_("Enter new name:"));
-				wnd.setText(_("Rename entry"));
+				wnd.setText(_("rename selected entry"));
 				wnd.show();
 				wnd.setEditText(old);
 				int ret = wnd.exec();
@@ -4078,7 +4078,7 @@ void eZapMain::renameService( eServiceSelector *sel )
 					) )
 	{
 		TextEditWindow wnd(_("Enter new name:"));
-		wnd.setText(_("Rename entry"));
+		wnd.setText(_("rename selected entry"));
 		wnd.show();
 		if ( it->service.descr.length() )
 			wnd.setEditText(it->service.descr);
@@ -4140,7 +4140,7 @@ void eZapMain::deleteService( eServiceSelector *sel )
 			sel->movemode &= ~2;
 			return;
 		}
-		eMessageBox::ShowBox(_("Sorry, you cannot delete this service."), _("delete service"), eMessageBox::iconWarning|eMessageBox::btOK );
+		eMessageBox::ShowBox(_("Sorry, you cannot delete this service."), _("delete selected entry"), eMessageBox::iconWarning|eMessageBox::btOK );
 		return;
 	}
 	bool removeEntry=true;
@@ -4287,7 +4287,7 @@ void eZapMain::deleteFile( eServiceSelector *sel )
 	{
 		eString s;
 		s.sprintf(_("You are trying to delete '%s'.\nReally do this?"),ref.path.c_str() );
-		int r = eMessageBox::ShowBox(s, _("Delete File"), eMessageBox::btYes|eMessageBox::btNo|eMessageBox::iconQuestion, eMessageBox::btNo);
+		int r = eMessageBox::ShowBox(s, _("delete file"), eMessageBox::btYes|eMessageBox::btNo|eMessageBox::iconQuestion, eMessageBox::btNo);
 		if (r != eMessageBox::btYes)
 			removeEntry=false;
 	}
@@ -4357,7 +4357,7 @@ void eZapMain::renameFile( eServiceSelector *sel )
 		fname.erase(b);
 
 	TextEditWindow wnd(_("Enter new Filename:"),"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 -_äöüÄÖÜ");
-	wnd.setText(_("Rename File"));
+	wnd.setText(_("rename file"));
 	wnd.show();
 	wnd.setEditText(fname);
 	int ret = wnd.exec();
@@ -5697,7 +5697,7 @@ int eZapMain::eventHandler(const eWidgetEvent &event)
 	{
 		eMessageBox::ShowBox(
 			_("please wait until the timer has started the recording (max 10 seconds)"),
-			_("information"),
+			_("Information"),
 			eMessageBox::btOK|eMessageBox::iconInfo,
 			eMessageBox::btOK,
 		10);
@@ -7933,8 +7933,8 @@ void eServiceContextMenu::init_eServiceContextMenu(const eServiceReference &ref,
 			prev = new eListBoxEntryText(&list, _("rename"), (void*)9, 0, _("rename the current selected service/movie"));
 			prev = new eListBoxEntryText(&list, _("delete"), (void*)1, 0, _("delete the current selected service/movie"));
 			prev = new eListBoxEntryTextSeparator(&list, eSkin::getActive()->queryImage("listbox.separator"), 0, true );
-			prev = new eListBoxEntryText(&list, _("set as startup"), (void*)17, 0, _("set the current selected service/movie as startup service"));
-			prev = new eListBoxEntryText(&list, _("reset startup"), (void*)18, 0, _("reset startup service"));
+			prev = new eListBoxEntryText(&list, _("set as startup service"), (void*)17, 0, _("set the current selected service/movie as startup service"));
+			prev = new eListBoxEntryText(&list, _("reset startup service"), (void*)18, 0, _("last selected service will be selected on startup"));
 			b=false;
 		}
 #ifndef DISABLE_FILE
@@ -8012,8 +8012,6 @@ eSleepTimerContextMenu::eSleepTimerContextMenu( eWidget* lcdTitle, eWidget *lcdE
 		case eSystemInfo::DM500:
 		case eSystemInfo::DM5600:
 		case eSystemInfo::DM5620:
-			new eListBoxEntryText(&list, _("reboot now"), (void*)4, 0, _("restart your dreambox"));
-			break;
 		case eSystemInfo::TR_DVB272S:
 			new eListBoxEntryText(&list, _("reboot now"), (void*)4, 0, _("restart your receiver"));
 			break;
@@ -8021,12 +8019,9 @@ eSleepTimerContextMenu::eSleepTimerContextMenu( eWidget* lcdTitle, eWidget *lcdE
 		case eSystemInfo::DM600PVR:
 		case eSystemInfo::DM7000:
 		case eSystemInfo::DM7020:
-			new eListBoxEntryText(&list, _("shutdown now"), (void*)1, 0, _("shutdown your dreambox"));
-			new eListBoxEntryText(&list, _("restart"), (void*)4, 0, _("restart your dreambox"));
-			break;
 		case eSystemInfo::dbox2Nokia ... eSystemInfo::dbox2Philips:
-			new eListBoxEntryText(&list, _("shutdown now"), (void*)1, 0, _("shutdown your dbox-2"));
-			new eListBoxEntryText(&list, _("restart"), (void*)4, 0, _("restart your dbox-2"));
+			new eListBoxEntryText(&list, _("shutdown now"), (void*)1, 0, _("shutdown your receiver"));
+			new eListBoxEntryText(&list, _("restart"), (void*)4, 0, _("restart your receiver"));
 			break;
 	}
 	new eListBoxEntryTextSeparator(&list, eSkin::getActive()->queryImage("listbox.separator"), 0, true );
@@ -8143,7 +8138,7 @@ void eTimerInput::setPressed()
 extern ePermanentTimeshift permanentTimeshift;
 
 eRecordContextMenu::eRecordContextMenu( eWidget *LCDTitle, eWidget *LCDElement )
-	: eListBoxWindow<eListBoxEntryText>(_("Record Menu"), 6, 500, true)
+	: eListBoxWindow<eListBoxEntryText>(_("Record"), 6, 500, true)
 {
 	init_eRecordContextMenu();
 }

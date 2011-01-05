@@ -22,8 +22,8 @@ struct enigmaStandbyActions
 	eActionMap map;
 	eAction wakeUp;
 	enigmaStandbyActions():
-		map("enigmaStandby", _("enigma standby")),
-		wakeUp(map, "wakeUp", _("wake up enigma"), eAction::prioDialog)	{
+		map("enigmaStandby", "enigma standby"),
+		wakeUp(map, "wakeUp", 0, eAction::prioDialog)	{
 	}
 };
 

@@ -11,15 +11,15 @@ struct epgSelectorActions
 	eAction addDVRTimerEvent, addNGRABTimerEvent, addSwitchTimerEvent,
 		removeTimerEvent, showExtendedInfo, searchEPG, prevService, nextService;
 	epgSelectorActions()
-		:map("epgSelector", _("EPG selector")),
+		:map("epgSelector", "EPG selector"),
 		addDVRTimerEvent(map, "addDVRTimerEvent", _("add this event as DVR Event to timer list"), eAction::prioDialog ),
 		addNGRABTimerEvent(map, "addNGRABTimerEvent", _("add this event as NGRAB Event to timer list"), eAction::prioDialog ),
 		addSwitchTimerEvent(map, "addSwitchTimerEvent", _("add this event as simple Switch Event to timer list"), eAction::prioDialog ),
 		removeTimerEvent(map, "removeTimerEvent", _("remove this event from timer list"), eAction::prioDialog ),
 		showExtendedInfo(map, "showExtendedInfo", _("show extended event information"), eAction::prioDialog ),
-		searchEPG(map, "searchEPG", _("search for event information") , eAction::prioDialog ),
-		prevService(map, "prevService", "switch to epg of previous service" , eAction::prioDialog ),
-		nextService(map, "nextService", "switch to epg of next service" , eAction::prioDialog )
+		searchEPG(map, "searchEPG", 0 , eAction::prioDialog ),
+		prevService(map, "prevService", 0 , eAction::prioDialog ),
+		nextService(map, "nextService", 0 , eAction::prioDialog )
 	{
 	}
 	int checkTimerActions( const void *action )

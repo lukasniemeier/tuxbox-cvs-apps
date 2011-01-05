@@ -1872,7 +1872,7 @@ struct eTimerViewActions
 	eActionMap map;
 	eAction addTimerEntry, removeTimerEntry;
 	eTimerViewActions():
-		map("timerView", _("timerView")),
+		map("timerView", "timerView"),
 		addTimerEntry(map, "addTimerEntry", _("add new event to Timerlist"), eAction::prioDialog ),
 		removeTimerEntry(map, "removeTimerEntry", _("remove this entry from timer list"), eAction::prioDialog )
 	{
@@ -2068,7 +2068,7 @@ void eTimerListView::init_eTimerListView()
 
 	BuildSkin("eTimerListView");
 
-	setText(_("Timer list"));
+	setText(_("Timerlist"));
 
 	fillTimerList();
 
@@ -2172,7 +2172,7 @@ struct TimerEditActions
 	eActionMap map;
 	eAction incBegTime, decBegTime, incEndTime, decEndTime;
 	TimerEditActions():
-		map("timerEdit", _("Timer Edit View")),
+		map("timerEdit", "Timer Edit View"),
 		incBegTime(map, "incBegTime", _("increase the event begin time in 1 minute steps"), eAction::prioDialog ),
 		decBegTime(map, "decBegTime", _("decrease the event begin time in 1 minute steps"), eAction::prioDialog ),
 		incEndTime(map, "incEndTime", _("increase the event end time in 1 minute steps"), eAction::prioDialog ),

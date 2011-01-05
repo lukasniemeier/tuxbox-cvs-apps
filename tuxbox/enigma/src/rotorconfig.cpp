@@ -463,7 +463,7 @@ void eRotorManual::modeChanged( eListBoxEntryText *e)
 		default:
 		case 0:
 			helptext=_("store current pos in motor");
-			buttonText=_("store");
+			buttonText=_("save");
 		break;
 		case 1:
 			helptext=_("drive motor to stored pos");
@@ -479,11 +479,11 @@ void eRotorManual::modeChanged( eListBoxEntryText *e)
 		break;
 		case 4:
 			helptext=_("store current pos as east soft limit");
-			buttonText=_("store");
+			buttonText=_("save");
 		break;
 		case 5:
 			helptext=_("store current pos as west soft limit");
-			buttonText=_("store");
+			buttonText=_("save");
 		break;
 		case 6:
 			helptext=_("disable soft limits");
@@ -552,14 +552,14 @@ void eRotorManual::modeChanged( eListBoxEntryText *e)
 			lDirection->show();
 		case 8: // goto sat pos
 			num->hide();
-			lSat->setText(_("Satellite:"));
+			lSat->setText(_("Satellite"));
 			lSat->show();
 			Sat->show();
 		break;
 
 		case 1: // go to stored pos
 			lSat->show();
-			lSat->setText("Position:");
+			lSat->setText("position");
 			num->show();
 		case 6: // clear limits
 		case 7: // set limits
@@ -759,7 +759,7 @@ int eRotorManual::eventHandler( const eWidgetEvent& e)
 							retuneTimer->stop();
 					}
 					retune();
-					Direction->setText(_("<    Stop    >"));
+					Direction->setText(eString().sprintf("< %s >",_("Stop")));
 				}
 				else
 					break;

@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: enigma_info.cpp,v 1.34 2009/11/14 16:22:48 dbluelle Exp $
+ * $Id: enigma_info.cpp,v 1.35 2011/01/05 13:57:08 dbluelle Exp $
  */
 
 #include <enigma_info.h>
@@ -36,7 +36,7 @@
 #include <lib/system/dmfp.h>
 
 eZapInfo::eZapInfo()
-	:eListBoxWindow<eListBoxEntryMenu>(_("Infos"), 7, 320)
+	:eListBoxWindow<eListBoxEntryMenu>(_("Information"), 7, 320)
 {
 	move(ePoint(150, 166));
 	CONNECT((new eListBoxEntryMenu(&list, _("Streaminfo"), _("open the Streaminfo")))->selected, eZapInfo::sel_streaminfo);
@@ -131,16 +131,16 @@ private:
 		switch (eSystemInfo::getInstance()->getFEType())
 		{
 			case eSystemInfo::feSatellite:
-				frontend->setText(_("Frontend: Satellite"));
+				frontend->setText(eString().sprintf("%s: %s",_("Frontend"),_("Satellite")));
 				break;
 			case eSystemInfo::feCable:
-				frontend->setText(_("Frontend: Cable"));
+				frontend->setText(eString().sprintf("%s: %s",_("Frontend"),_("Cable")));
 				break;
 			case eSystemInfo::feTerrestrial:
-				frontend->setText(_("Frontend: Terrestrial"));
+				frontend->setText(eString().sprintf("%s: %s",_("Frontend"),_("Terrestrial")));
 				break;
 			default:
-				frontend->setText(_("Frontend: Unknown"));
+				frontend->setText(eString().sprintf("%s: %s",_("Frontend"),_("unknown")));
 		}
 
 		eString sharddisks;

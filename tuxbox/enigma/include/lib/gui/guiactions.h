@@ -11,16 +11,16 @@ struct cursorActions
 	eAction up, down, left, right, insertchar, deletechar, capslock, ok, cancel, help;
 	cursorActions():
 		map("cursor", "Cursor"),
-		up(map, "up", _("up"), eAction::prioWidget),
-		down(map, "down", _("down"), eAction::prioWidget),
-		left(map, "left", _("left"), eAction::prioWidget),
-		right(map, "right", _("right"), eAction::prioWidget),
-		insertchar(map, "insertchar", _("next char"), eAction::prioWidget),
-		deletechar(map, "deletechar", _("prev char"), eAction::prioWidget),
-		capslock(map, "capslock", _("CapsLock"), eAction::prioWidget),
-		ok(map, "ok", "OK", eAction::prioWidget),
-		cancel(map, "cancel", _("cancel"), eAction::prioDialog),
-		help(map, "help", _("show the help window"), eAction::prioGlobal)
+		up(map, "up", 0, eAction::prioWidget),
+		down(map, "down", 0, eAction::prioWidget),
+		left(map, "left", 0, eAction::prioWidget),
+		right(map, "right", 0, eAction::prioWidget),
+		insertchar(map, "insertchar", 0, eAction::prioWidget),
+		deletechar(map, "deletechar", 0, eAction::prioWidget),
+		capslock(map, "capslock", 0, eAction::prioWidget),
+		ok(map, "ok", 0, eAction::prioWidget),
+		cancel(map, "cancel", 0, eAction::prioDialog),
+		help(map, "help", 0, eAction::prioGlobal)
 	{
 	}
 };
@@ -33,10 +33,10 @@ struct focusActions
 	eAction up, down, left, right;
 	focusActions(): 
 		map("focus", "Focus"),
-		up(map, "up", _("up"), eAction::prioGlobal),
-		down(map, "down", _("down"), eAction::prioGlobal),
-		left(map, "left", _("left"), eAction::prioGlobal),
-		right(map, "right", _("right"), eAction::prioGlobal)
+		up(map, "up", 0, eAction::prioGlobal),
+		down(map, "down", 0, eAction::prioGlobal),
+		left(map, "left", 0, eAction::prioGlobal),
+		right(map, "right", 0, eAction::prioGlobal)
 	{
 	}
 };
@@ -49,8 +49,8 @@ struct listActions
 	eAction pageup, pagedown;
 	listActions():
 		map("list", "Listen"),
-		pageup(map, "pageup", _("page up"), eAction::prioWidget+1),
-		pagedown(map, "pagedown", _("page down"), eAction::prioWidget+1)
+		pageup(map, "pageup", 0, eAction::prioWidget+1),
+		pagedown(map, "pagedown", 0, eAction::prioWidget+1)
 	{
 	}
 };
@@ -65,22 +65,22 @@ struct shortcutActions
 			red, green, yellow, blue, menu, escape;
 	shortcutActions():
 		map("shortcut", "Shortcuts"),
-		number0(map, "0", "0", eAction::prioGlobal),
-		number1(map, "1", "1", eAction::prioGlobal),
-		number2(map, "2", "2", eAction::prioGlobal),
-		number3(map, "3", "3", eAction::prioGlobal),
-		number4(map, "4", "4", eAction::prioGlobal),
-		number5(map, "5", "5", eAction::prioGlobal),
-		number6(map, "6", "6", eAction::prioGlobal),
-		number7(map, "7", "7", eAction::prioGlobal),
-		number8(map, "8", "8", eAction::prioGlobal),
-		number9(map, "9", "9", eAction::prioGlobal),
-		red(map, "red", _("red"), eAction::prioGlobal),
-		green(map, "green", _("green"), eAction::prioGlobal),
-		yellow(map, "yellow", _("yellow"), eAction::prioGlobal),
-		blue(map, "blue", _("blue"), eAction::prioGlobal),
-		menu(map, "menu", _("menu"), eAction::prioGlobal),
-		escape(map, "escape", _("escape"), eAction::prioGlobal)
+		number0(map, "0", 0, eAction::prioGlobal),
+		number1(map, "1", 0, eAction::prioGlobal),
+		number2(map, "2", 0, eAction::prioGlobal),
+		number3(map, "3", 0, eAction::prioGlobal),
+		number4(map, "4", 0, eAction::prioGlobal),
+		number5(map, "5", 0, eAction::prioGlobal),
+		number6(map, "6", 0, eAction::prioGlobal),
+		number7(map, "7", 0, eAction::prioGlobal),
+		number8(map, "8", 0, eAction::prioGlobal),
+		number9(map, "9", 0, eAction::prioGlobal),
+		red(map, "red", 0, eAction::prioGlobal),
+		green(map, "green", 0, eAction::prioGlobal),
+		yellow(map, "yellow", 0, eAction::prioGlobal),
+		blue(map, "blue", 0, eAction::prioGlobal),
+		menu(map, "menu", 0, eAction::prioGlobal),
+		escape(map, "escape", 0, eAction::prioGlobal)
 	{
 	}
 };

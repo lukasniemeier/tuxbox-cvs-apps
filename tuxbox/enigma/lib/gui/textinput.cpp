@@ -16,12 +16,12 @@ struct texteditActions
 	eAction capslock, swapnum, insertchar, deletechar, backspace, showHelp;
 	texteditActions():
 		map("textedit", "enigma global"),
-		capslock(map, "capslock", _("enable/disable capslock"), eAction::prioDialog),
-		swapnum(map, "swapnum", _("put numbers before/after characters"), eAction::prioDialog),
-		insertchar(map, "insertchar", _("insert blank at cursor position"), eAction::prioDialog),
-		deletechar(map, "deletechar", _("remove the character at the cursor position"), eAction::prioDialog),
-		backspace(map, "backspace", _("remove the character before the cursor position"), eAction::prioDialog),
-		showHelp(map, "showHelp", _("shows the textinputfield help"), eAction::prioDialog )
+		capslock(map, "capslock", 0, eAction::prioDialog),
+		swapnum(map, "swapnum", 0, eAction::prioDialog),
+		insertchar(map, "insertchar", 0, eAction::prioDialog),
+		deletechar(map, "deletechar", 0, eAction::prioDialog),
+		backspace(map, "backspace", 0, eAction::prioDialog),
+		showHelp(map, "showHelp", 0, eAction::prioDialog )
 	{
 	}
 };

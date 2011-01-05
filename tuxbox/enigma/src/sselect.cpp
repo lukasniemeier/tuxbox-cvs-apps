@@ -52,7 +52,7 @@ struct EPGStyleSelectorActions
 	eActionMap map;
 	eAction infoPressed;
 	EPGStyleSelectorActions():
-		map("EPGStyleSelector", _("EPG Style Selector")),
+		map("EPGStyleSelector", "EPG Style Selector"),
 		infoPressed(map, "infoPressed", _("open the EPG with selected style"), eAction::prioDialog)
 	{
 	}
@@ -130,14 +130,14 @@ struct serviceSelectorActions
 			showAll, showSatellites, showProvider, showBouquets, deletePressed,
 			markPressed, renamePressed, insertPressed;
 	serviceSelectorActions():
-		map("serviceSelector", _("service selector")),
-		nextBouquet(map, "nextBouquet", _("switch to next bouquet"), eAction::prioDialogHi),
-		prevBouquet(map, "prevBouquet", _("switch to previous bouquet"), eAction::prioDialogHi),
+		map("serviceSelector", "service selector"),
+		nextBouquet(map, "nextBouquet", 0, eAction::prioDialogHi),
+		prevBouquet(map, "prevBouquet", 0, eAction::prioDialogHi),
 		pathUp(map, "pathUp", _("go up a directory"), eAction::prioDialog),
 		showEPGSelector(map, "showEPGSelector", _("shows the EPG selector for the highlighted channel"), eAction::prioDialog),
 		showMenu(map, "showMenu", _("show service selector menu"), eAction::prioDialog),
-		addService(map, "addService", _("add service to playlist"), eAction::prioDialog),
-		addServiceToUserBouquet(map, "addServiceToUserBouquet", _("add service to a specific bouquet"), eAction::prioDialog),
+		addService(map, "addService", 0, eAction::prioDialog),
+		addServiceToUserBouquet(map, "addServiceToUserBouquet", 0, eAction::prioDialog),
 		modeTV(map, "modeTV", _("switch to TV mode"), eAction::prioDialog),
 		modeRadio(map, "modeRadio", _("switch to Radio mode"), eAction::prioDialog),
 		modeFile(map, "modeFile", _("switch to File mode"), eAction::prioDialog),
@@ -2190,7 +2190,7 @@ void eFileSelector::setKeyDescriptions( bool editMode )
 	key[0]->setText(_("Root"));
 	key[1]->setText(_("Select"));
 	key[2]->setText(_("New Directory"));
-	key[3]->setText(_("Delete"));
+	key[3]->setText(_("delete"));
 }
 eServicePath eFileSelector::getDirRoot(int list, int _mode)
 {
@@ -2207,7 +2207,7 @@ eServicePath eFileSelector::getDirRoot(int list, int _mode)
 	case listProvider:
 		{
 			TextEditWindow wnd(_("Enter name of new directory:"));
-			wnd.setText(_("Create Directory"));
+			wnd.setText(_("New Directory"));
 			wnd.show();
 			int ret = wnd.exec();
 			wnd.hide();
@@ -2216,7 +2216,7 @@ eServicePath eFileSelector::getDirRoot(int list, int _mode)
 				eString cmd = eString().sprintf("mkdir \"%s/%s\"",getPath().current().path.c_str(),wnd.getEditText().c_str());
 				if ( system(cmd.c_str()) )
 				{
-					eMessageBox::ShowBox(strerror(errno),_("Error creating directory"),eMessageBox::btOK|eMessageBox::iconError);
+					eMessageBox::ShowBox(strerror(errno),_("Error"),eMessageBox::btOK|eMessageBox::iconError);
 				}
 				else
 					actualize();
@@ -2229,7 +2229,7 @@ eServicePath eFileSelector::getDirRoot(int list, int _mode)
 				break;
 			eString s;
 			s.sprintf(_("You are trying to delete '%s'.\nReally do this?"),selected.path.c_str() );
-			int r = eMessageBox::ShowBox(s, _("Delete"), eMessageBox::btYes|eMessageBox::btNo|eMessageBox::iconQuestion, eMessageBox::btNo);
+			int r = eMessageBox::ShowBox(s, _("delete"), eMessageBox::btYes|eMessageBox::btNo|eMessageBox::iconQuestion, eMessageBox::btNo);
 			if (r == eMessageBox::btYes)
 			{
 				eString cmd = eString().sprintf("rm -f -r \"%s\"",selected.path.c_str());

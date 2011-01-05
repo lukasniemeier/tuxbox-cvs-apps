@@ -23,10 +23,10 @@ struct enigmaMainmenuActions
 	eActionMap map;
 	eAction close, prev, next;
 	enigmaMainmenuActions():
-		map("mainmenu", _("enigma mainmenu")),
-		close(map, "close", _("close the mainmenu"), eAction::prioDialog),
-		prev(map, "prev", _("select previous entry"), eAction::prioDialog),
-		next(map, "next", _("select next entry"), eAction::prioDialog)
+		map("mainmenu", "enigma mainmenu"),
+		close(map, "close", 0, eAction::prioDialog),
+		prev(map, "prev", 0, eAction::prioDialog),
+		next(map, "next", 0, eAction::prioDialog)
 	{
 	}
 };
@@ -292,7 +292,7 @@ void eMainMenu::sel_setup()
 	int setuppin=0;
 	eConfig::getInstance()->getKey("/elitedvb/pins/setuplock", setuppin);
 
-	if ( checkPin( setuppin, _("setup") ) )
+	if ( checkPin( setuppin, _("Setup") ) )
 	{
 		hide();
 		int i=0;

@@ -542,21 +542,14 @@ void eZapNetworkSetup::init_eZapNetworkSetup()
 	rejectWWW->setText("WWW");
 	rejectWWW->move(ePoint(20,255));
 	rejectWWW->resize(eSize(90, fd+4));
-	eString t = _("reject incoming connections on port 80");
-	unsigned int pos = t.find("80");
-	if (pos != eString::npos )
-	{
-		t.erase(pos,2);
-		t.insert(pos,eString().sprintf("%d", webifport));
-	}
-	rejectWWW->setHelpText(t);
+	rejectWWW->setHelpText(eString().sprintf(_("reject incoming connections on port %d"), webifport));
 	rejectWWW->hide();
 
 	rejectTelnet=new eCheckbox(this, flags&2, 1);
 	rejectTelnet->setText("Telnet");
 	rejectTelnet->move(ePoint(130,255));
 	rejectTelnet->resize(eSize(90, fd+4));
-	rejectTelnet->setHelpText(_("reject incoming connections on port 23"));
+	rejectTelnet->setHelpText(eString().sprintf(_("reject incoming connections on port %d"), 23));
 	rejectTelnet->hide();
 
 	rejectSamba=new eCheckbox(this, flags&4, 1);
@@ -570,7 +563,7 @@ void eZapNetworkSetup::init_eZapNetworkSetup()
 	rejectFTP->setText("FTP");
 	rejectFTP->move(ePoint(360,255));
 	rejectFTP->resize(eSize(70, fd+4));
-	rejectFTP->setHelpText(_("reject incoming connections on ports 21"));
+	rejectFTP->setHelpText(eString().sprintf(_("reject incoming connections on port %d"), 21));
 	rejectFTP->hide();
 #endif
 

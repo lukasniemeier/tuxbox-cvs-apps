@@ -19,7 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: setup_harddisk.cpp,v 1.30 2009/11/14 16:53:18 dbluelle Exp $
+ * $Id: setup_harddisk.cpp,v 1.31 2011/01/05 13:57:08 dbluelle Exp $
  */
 
 #include <setup_harddisk.h>
@@ -600,7 +600,7 @@ int ePartitionCheck::eventHandler( const eWidgetEvent &e )
 				 eMessageBox::btOK|eMessageBox::iconError);
 				close(-1);
 			}
-			if ( fs == "ext3" )
+			if ( fs == "ext3"  || fs == "ext2")
 			{
 				eWindow::globalCancel(eWindow::OFF);
 				fsck = new eConsoleAppContainer( eString().sprintf("/sbin/fsck.ext3 -f -y /dev/ide/host%d/bus%d/target%d/lun0/%s", host, bus, target, part.c_str()) );
@@ -608,7 +608,7 @@ int ePartitionCheck::eventHandler( const eWidgetEvent &e )
 				if ( !fsck->running() )
 				{
 					eMessageBox::ShowBox(
-						_("sorry, couldn't find fsck.ext3 utility to check the ext3 filesystem."),
+						eString().sprintf(_("sorry, couldn't find %s%s utility to check the %s filesystem."),"fsck.",fs.c_str(),fs.c_str()),
 						_("check filesystem..."),
 						eMessageBox::btOK|eMessageBox::iconError);
 					close(-1);
@@ -616,26 +616,6 @@ int ePartitionCheck::eventHandler( const eWidgetEvent &e )
 				else
 				{
 					eDebug("fsck.ext3 opened");
-					CONNECT( fsck->dataAvail, ePartitionCheck::getData );
-					CONNECT( fsck->appClosed, ePartitionCheck::fsckClosed );
-				}
-			}
-			else if ( fs == "ext2" )
-			{
-				eWindow::globalCancel(eWindow::OFF);
-				fsck = new eConsoleAppContainer( eString().sprintf("/sbin/fsck.ext2 -f -y /dev/ide/host%d/bus%d/target%d/lun0/%s", host, bus, target, part.c_str()) );
-
-				if ( !fsck->running() )
-				{
-					eMessageBox::ShowBox(
-						_("sorry, couldn't find fsck.ext2 utility to check the ext2 filesystem."),
-						_("check filesystem..."),
-						eMessageBox::btOK|eMessageBox::iconError);
-					close(-1);
-				}
-				else
-				{
-					eDebug("fsck.ext2 opened");
 					CONNECT( fsck->dataAvail, ePartitionCheck::getData );
 					CONNECT( fsck->appClosed, ePartitionCheck::fsckClosed );
 				}
@@ -648,7 +628,7 @@ int ePartitionCheck::eventHandler( const eWidgetEvent &e )
 				if ( !fsck->running() )
 				{
 					eMessageBox::ShowBox(
-						_("sorry, couldn't find reiserfsck utility to check the reiserfs filesystem."),
+						eString().sprintf(_("sorry, couldn't find %s%s utility to check the %s filesystem."),"reiserfsck","","reiserfs"),
 						_("check filesystem..."),
 						eMessageBox::btOK|eMessageBox::iconError);
 					close(-1);

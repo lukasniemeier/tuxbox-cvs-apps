@@ -74,7 +74,7 @@ void ePlugin::init_ePlugin(const char *cfgfile, eSimpleConfigFile &config, const
 }
 
 ePluginContextMenu::ePluginContextMenu(ePlugin* current_plugin, int reordering)
-: eListBoxWindow<eListBoxEntryMenu>(_("Plugin Menu"), 6, 400, true)
+: eListBoxWindow<eListBoxEntryMenu>(_("Plugins"), 6, 400, true)
 {
 	init_ePluginContextMenu(current_plugin, reordering);
 }

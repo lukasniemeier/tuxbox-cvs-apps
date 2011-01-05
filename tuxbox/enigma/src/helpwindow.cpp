@@ -17,10 +17,10 @@ struct enigmaHelpWindowActions
 	eActionMap map;
 	eAction close, up, down;
 	enigmaHelpWindowActions():
-		map("helpwindow", _("Help window")),
-		close(map, "close", _("close the help window"), eAction::prioDialog),
-		up(map, "up", _("scroll up"), eAction::prioDialogHi),
-		down(map, "down", _("scroll down"), eAction::prioDialogHi)
+		map("helpwindow", "Help window"),
+		close(map, "close", 0, eAction::prioDialog),
+		up(map, "up", 0, eAction::prioDialogHi),
+		down(map, "down", 0, eAction::prioDialogHi)
 	{
 	}
 };

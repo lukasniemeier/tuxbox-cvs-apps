@@ -269,7 +269,7 @@ eString extractNameFromPathControl(const char *path)
 }
 
 eMainmenuPackageManager::eMainmenuPackageManager()
-:eSetupWindow(_("Package Manager"), 6, 330)
+:eSetupWindow(_("package manager"), 6, 330)
 {
 	init_eMainmenuPackageManager();
 }
