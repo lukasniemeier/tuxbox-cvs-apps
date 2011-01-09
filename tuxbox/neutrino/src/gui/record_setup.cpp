@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.7 2010/12/05 22:32:12 dbt Exp $
+	$Id: record_setup.cpp,v 1.8 2011/01/09 17:22:05 zwen Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -277,9 +277,12 @@ void CRecordSetup::showRecordSetup()
 	CMenuOptionChooser* oj9 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_STREAM_SUBTITLE_PID, &g_settings.recording_stream_subtitle_pid, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
 	CMenuOptionChooser* oj13 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_RINGBUFFERS, &g_settings.recording_ringbuffers, RECORDINGMENU_RINGBUFFER_SIZES, RECORDINGMENU_RINGBUFFER_SIZE_COUNT, true);
+
 	CMenuOptionChooser* oj10 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_CHOOSE_DIRECT_REC_DIR, &g_settings.recording_choose_direct_rec_dir, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
 	CMenuOptionChooser* oj11 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_EPG_FOR_FILENAME, &g_settings.recording_epg_for_filename, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+
+	CMenuOptionChooser* oj14 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_GEN_PSI, &g_settings.recording_gen_psi, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
 	CStringInput * recordingSettings_filenameTemplate = new CStringInput(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template[0], 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
 	CMenuForwarder* mf11 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template[0],recordingSettings_filenameTemplate);
@@ -346,6 +349,7 @@ void CRecordSetup::showRecordSetup()
 		directRecordingSettings->addItem(GenericMenuSeparatorLine);
 		directRecordingSettings->addItem(oj11);
 		directRecordingSettings->addItem(mf11);
+		directRecordingSettings->addItem(oj14); //gen_psi
 
 
 	recordingSettings->exec(NULL, "");

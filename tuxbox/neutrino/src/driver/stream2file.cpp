@@ -1,5 +1,5 @@
 /*
- * $Id: stream2file.cpp,v 1.38 2010/01/28 19:45:45 striper Exp $
+ * $Id: stream2file.cpp,v 1.39 2011/01/09 17:22:05 zwen Exp $
  * 
  * streaming to file/disc
  * 
@@ -114,6 +114,7 @@ static unsigned char busy_count = 0;
 static pthread_t demux_thread[MAXPIDS];
 static bool use_o_sync;
 static bool use_fdatasync;
+static bool gen_psi;
 static unsigned long long limit;
 static unsigned int ringbuffersize;
 static time_t record_start_time = 0;
@@ -247,7 +248,7 @@ void * FileThread(void * v_arg)
 					exit_flag = STREAM2FILE_STATUS_WRITE_OPEN_FAILURE;
 					pthread_exit(NULL);
 				}
-				if( strstr(filename, ".ts") != NULL )
+				if( strstr(filename, ".ts") != NULL && gen_psi )
 				{
 					genpsi(fd2);
 				}
@@ -520,7 +521,8 @@ stream2file_error_msg_t start_recording(const char * const filename,
 					const unsigned int numpids,
 					const unsigned short * const pids,
 					const bool write_ts,
-					const unsigned int ringbuffers)
+					const unsigned int ringbuffers,
+					const bool with_gen_psi )
 {
 	int fd;
 	char buf[FILENAMEBUFFERSIZE];
@@ -573,6 +575,7 @@ stream2file_error_msg_t start_recording(const char * const filename,
 
 	use_o_sync    = with_o_sync;
 	use_fdatasync = with_fdatasync;
+	gen_psi       = with_gen_psi;
 
 	if (ringbuffers > 4)
 		ringbuffersize = ((1 << 19) << 4);

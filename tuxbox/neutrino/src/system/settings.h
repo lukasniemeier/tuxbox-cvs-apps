@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.233 2010/12/01 10:41:53 dbt Exp $
+  $Id: settings.h,v 1.234 2011/01/09 17:22:05 zwen Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -278,6 +278,8 @@ struct SNeutrinoSettings
 
 #define MAX_RECORDING_DIR 10	
 	std::string recording_dir[MAX_RECORDING_DIR];
+	int recording_gen_psi;
+
 	//streaming
 	int  streaming_type;
 	std::string streaming_server_ip;

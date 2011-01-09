@@ -143,6 +143,7 @@ class CVCRControl
 			bool         Use_Fdatasync;
 			bool         StreamVTxtPid;
 			bool         StreamSubtitlePid;
+			bool         GenPsi;
 			unsigned int RingBuffers;
 				
 			virtual CVCRDevices getDeviceType(void) const
@@ -154,12 +155,12 @@ class CVCRControl
 			virtual bool Record(const t_channel_id channel_id = 0, int mode = 1, const event_id_t epgid = 0,
 					    const std::string& epgTitle = "", unsigned char apids = 0, const time_t epg_time = 0);
 			
-			CFileDevice(const bool stopplayback, const int stopsectionsd, const char * const directory, const unsigned int splitsize, const bool use_o_sync, const bool use_fdatasync, const bool stream_vtxt_pid, const bool stream_subtitle_pid, const unsigned int ringbuffers, bool createTemplateDirectories)
+			CFileDevice(const bool stopplayback, const int stopsectionsd, const char * const directory, const unsigned int splitsize, const bool use_o_sync, const bool use_fdatasync, const bool stream_vtxt_pid, const bool stream_subtitle_pid, const unsigned int ringbuffers, const bool gen_psi, bool createTemplateDirectories)
 				
 				: Directory(directory), FilenameTemplate(""), CreateTemplateDirectories(createTemplateDirectories),
 				SplitSize(splitsize), Use_O_Sync(use_o_sync), Use_Fdatasync(use_fdatasync),
 				StreamVTxtPid(stream_vtxt_pid),
-				StreamSubtitlePid(stream_subtitle_pid), RingBuffers(ringbuffers)
+				StreamSubtitlePid(stream_subtitle_pid), GenPsi(gen_psi), RingBuffers(ringbuffers)
 			{
 				StopPlayBack = stopplayback;
 				StopSectionsd = stopsectionsd;

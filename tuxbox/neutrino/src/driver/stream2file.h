@@ -1,5 +1,5 @@
 /*
- * $Id: stream2file.h,v 1.13 2009/07/26 17:00:23 rhabarber1848 Exp $
+ * $Id: stream2file.h,v 1.14 2011/01/09 17:22:05 zwen Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -60,7 +60,8 @@ stream2file_error_msg_t start_recording(const char * const filename,
 					const unsigned int numpids,
 					const unsigned short * const pids,
 					const bool write_ts = true,
-					const unsigned int ringbuffers = 20);
+					const unsigned int ringbuffers = 20,
+					const bool gen_psi = true);
 stream2file_error_msg_t stop_recording(void);
 
 #endif

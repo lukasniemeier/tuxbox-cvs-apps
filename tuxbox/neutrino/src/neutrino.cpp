@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1051 2010/12/01 10:41:53 dbt Exp $
+	$Id: neutrino.cpp,v 1.1052 2011/01/09 17:22:05 zwen Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -633,6 +633,8 @@ int CNeutrinoApp::loadSetup()
 		sprintf(cfg_key, "recording_dir_%d", i);
 		g_settings.recording_dir[i] = configfile.getString( cfg_key, "" );
 	}
+	g_settings.recording_gen_psi = configfile.getBool("recordingmenu.gen_psi", true);
+
 	//streaming (server)
 	g_settings.streaming_type = configfile.getInt32( "streaming_type", 0 );
 	g_settings.streaming_server_ip = configfile.getString("streaming_server_ip", "10.10.10.10");
@@ -1158,6 +1160,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setBool  ("recordingmenu.stream_vtxt_pid"      , g_settings.recording_stream_vtxt_pid      );
 	configfile.setBool  ("recordingmenu.stream_subtitle_pid"  , g_settings.recording_stream_subtitle_pid);
 	configfile.setInt32 ("recordingmenu.ringbuffers"          , g_settings.recording_ringbuffers);
+	configfile.setBool  ("recordingmenu.gen_psi"              , g_settings.recording_gen_psi);
 	configfile.setInt32 ("recording_choose_direct_rec_dir"    , g_settings.recording_choose_direct_rec_dir);
 	configfile.setBool  ("recording_epg_for_filename"         , g_settings.recording_epg_for_filename     );
 	configfile.setBool  ("recording_in_spts_mode"             , g_settings.recording_in_spts_mode         );
@@ -1963,7 +1966,7 @@ void CNeutrinoApp::setupRecordingDevice(void)
 		sscanf(g_settings.recording_splitsize, "%u", &splitsize);
 		ringbuffers = g_settings.recording_ringbuffers;
 
-		recordingdevice = new CVCRControl::CFileDevice(g_settings.recording_stopplayback, g_settings.recording_stopsectionsd, g_settings.recording_dir[0].c_str(), splitsize, g_settings.recording_use_o_sync, g_settings.recording_use_fdatasync, g_settings.recording_stream_vtxt_pid, g_settings.recording_stream_subtitle_pid, ringbuffers,true);
+		recordingdevice = new CVCRControl::CFileDevice(g_settings.recording_stopplayback, g_settings.recording_stopsectionsd, g_settings.recording_dir[0].c_str(), splitsize, g_settings.recording_use_o_sync, g_settings.recording_use_fdatasync, g_settings.recording_stream_vtxt_pid, g_settings.recording_stream_subtitle_pid, ringbuffers, g_settings.recording_gen_psi, true);
 
 		CVCRControl::getInstance()->registerDevice(recordingdevice);
 	}

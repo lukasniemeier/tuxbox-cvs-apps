@@ -884,7 +884,8 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 					      numpids,
 					      pids,
 					      sptsmode,
-					      RingBuffers);
+					      RingBuffers,
+					      GenPsi);
 	}
 	CreateTemplateDirectories = true;
 	if (error_msg == STREAM2FILE_OK)
