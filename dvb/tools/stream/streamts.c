@@ -1,5 +1,5 @@
 /*
- * $Id: streamts.c,v 1.21 2008/01/04 15:39:49 obi Exp $
+ * $Id: streamts.c,v 1.22 2011/01/15 13:45:38 dbluelle Exp $
  * 
  * inetd style daemon for streaming avpes, ps and ts
  * 
@@ -39,6 +39,9 @@
  */
 
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,9 +50,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 #include <ctype.h>
 
 #if HAVE_DVB_API_VERSION < 3
@@ -455,7 +455,7 @@ main (int argc, char ** argv) {
 		}
 		tsfilelen = strlen(tsfile);
 		/* open ts file */
-		if ((dvrfd = open(tsfile, O_RDONLY)) < 0) {
+		if ((dvrfd = open(tsfile, O_RDONLY|O_LARGEFILE)) < 0) {
 			free(buf);
 			return EXIT_FAILURE;
 		}
