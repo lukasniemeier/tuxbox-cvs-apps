@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.88 2010/07/04 10:33:42 seife Exp $
+	$Id: lcdd.cpp,v 1.89 2011/01/22 17:00:44 seife Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -543,19 +543,27 @@ void CLCD::setEPGTitle(const std::string title)
 	showServicename("", false);
 }
 
-void CLCD::setMovieInfo(const AUDIOMODES playmode, const std::string big, const std::string small)
+void CLCD::setMoviePlaymode(const AUDIOMODES playmode)
+{
+	movie_playmode = playmode;
+
+	if (mode != MODE_MOVIE)
+		return;
+
+	showAudioPlayMode(movie_playmode);
+}
+
+void CLCD::setMovieInfo(const std::string big, const std::string small)
 {
 	int showmode = g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE];
 	showmode |= 3; // take only the separator line from the config
 
-	movie_playmode = playmode;
 	movie_big = big;
 	movie_small = small;
 
 	if (mode != MODE_MOVIE)
 		return;
 
-	showAudioPlayMode(movie_playmode);
 	showTextScreen(movie_big, movie_small, showmode, true);
 }
 
@@ -881,7 +889,8 @@ void CLCD::setMode(const MODES m, const char * const title)
 			showServicename(servicename);
 		else
 		{
-			setMovieInfo(movie_playmode, movie_big, movie_small);
+			setMoviePlaymode(movie_playmode);
+			setMovieInfo(movie_big, movie_small);
 			setMovieAudio(movie_is_ac3);
 		}
 		showclock = true;

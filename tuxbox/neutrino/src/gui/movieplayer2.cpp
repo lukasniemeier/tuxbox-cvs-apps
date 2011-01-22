@@ -2152,6 +2152,7 @@ OutputThread(void *arg)
 		switch (g_playstate)
 		{
 			case CMoviePlayerGui::PAUSE:
+				CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PAUSE);
 #ifdef HAVE_TRIPLEDRAGON
 				ioctl(adec, AUDIO_STOP);
 				ioctl(dmxa, DMX_STOP);
@@ -2192,6 +2193,7 @@ OutputThread(void *arg)
 					perror("AUDIO_SET_MUTE");
 #endif
 #endif
+				CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PLAY);
 				break;
 			case CMoviePlayerGui::SKIP:
 				DBG("requesting buffer reset\n");
@@ -2432,7 +2434,8 @@ void updateLcd(const std::string &s)
 		break;
 	}
 	StrSearchReplace(lcd,"_", " ");
-	CLCD::getInstance()->setMovieInfo(playmode, "", lcd);
+	CLCD::getInstance()->setMoviePlaymode(playmode);
+	CLCD::getInstance()->setMovieInfo("", lcd);
 }
 
 //== seek to pos with sync to next proper TS packet ==
@@ -3117,7 +3120,6 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			break;
 		else if (msg == CRCInput::RC_yellow || msg == CRCInput::RC_playpause)
 		{
-			update_info = true;
 			g_playstate = (g_playstate == CMoviePlayerGui::PAUSE) ? CMoviePlayerGui::PLAY : CMoviePlayerGui::PAUSE;
 			if (stream) // stream time is only counting seconds...
 				StreamTime.hide();
@@ -3463,7 +3465,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.74 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.75 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
