@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.294 2010/12/01 10:41:53 dbt Exp $
+	$Id: infoviewer.cpp,v 1.295 2011/01/22 12:19:32 seife Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1401,6 +1401,7 @@ int CInfoViewer::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data)
 	}
 	else if (msg == NeutrinoMessages::EVT_ZAP_SUB_COMPLETE)
 	{
+		channel_id = (*(t_channel_id *)data);
 		//if ((*(t_channel_id *)data) == channel_id)
 		{
 			if ( is_visible && showButtonBar &&  ( !g_RemoteControl->are_subchannels ) )

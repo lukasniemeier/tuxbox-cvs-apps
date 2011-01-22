@@ -164,7 +164,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 
 	if ( msg == NeutrinoMessages::EVT_CURRENTEPG )
 	{
-		if ((*(t_channel_id *)data) != current_channel_id)
+		if ((*(t_channel_id *)data) != current_channel_id && (*(t_channel_id *)data) != current_sub_channel_id)
 			return messages_return::handled;
 
 		const CSectionsdClient::CurrentNextInfo info_CN = g_InfoViewer->getCurrentNextInfo();
@@ -190,7 +190,7 @@ int CRemoteControl::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data
 				if ( has_unresolved_ctags )
 					processAPIDnames();
 
-				if (info_CN.flags & CSectionsdClient::epgflags::current_has_linkagedescriptors)
+				if (selected_subchannel <= 0 && info_CN.flags & CSectionsdClient::epgflags::current_has_linkagedescriptors)
 				{
 					subChannels.clear();
 					getSubChannels();
@@ -563,6 +563,7 @@ const std::string & CRemoteControl::setSubChannel(const int numSub, const bool f
 	selected_subchannel = subchannel;
 	current_sub_channel_id = subChannels[subchannel].getChannelID();
 	g_Zapit->zapTo_subServiceID_NOWAIT(current_sub_channel_id);
+	g_Sectionsd->setServiceChanged(current_sub_channel_id, false);
 
 	return subChannels[subchannel].subservice_name;
 }
