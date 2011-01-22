@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.319 2010/02/21 10:14:15 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.320 2011/01/22 12:17:57 seife Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2571,7 +2571,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.319 2010/02/21 10:14:15 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.320 2011/01/22 12:17:57 seife Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -3101,6 +3101,9 @@ static void commandCurrentNextInfoChannelID(int connfd, char *data, const unsign
 			flag |= CSectionsdClient::epgflags::has_next; // aktuelles event da...
 			flag |= CSectionsdClient::epgflags::has_anything;
 		}
+		/* hack: if paused (!scanning), then current/next is not uptodate, so don't use it */
+		if (!scanning)
+			flag = CSectionsdClient::epgflags::not_broadcast;
 	}
 
 	//dprintf("flag: 0x%x, has_current: 0x%x has_next: 0x%x\n", flag, CSectionsdClient::epgflags::has_current, CSectionsdClient::epgflags::has_next); 
@@ -3288,7 +3291,7 @@ static void commandCurrentNextInfoChannelID(int connfd, char *data, const unsign
 	unlockEvents();
 
 	//dprintf("change: %s, messaging_eit_busy: %s, last_request: %d\n", change?"true":"false", messaging_eit_is_busy?"true":"false",(time(NULL) - messaging_last_requested));
-	if (change && !messaging_eit_is_busy && (time(NULL) - messaging_last_requested) < 11) {
+	if (change && scanning && !messaging_eit_is_busy && (time(NULL) - messaging_last_requested) < 11) {
 		/* restart dmxCN, but only if it is not already running, and only for 10 seconds */
 		dprintf("change && !messaging_eit_is_busy => dmxCN.change(0)\n");
 		dmxCN.change(0);
@@ -8493,7 +8496,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.319 2010/02/21 10:14:15 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.320 2011/01/22 12:17:57 seife Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
