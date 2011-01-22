@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.189 2010/07/12 09:18:16 dbt Exp $
+  $Id: movieplayer.cpp,v 1.190 2011/01/22 16:57:58 seife Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -164,7 +164,7 @@ static CMoviePlayerGui::state g_playstate;
 static off_t g_startposition = 0L;
 static off_t g_fileposition  = 0L;
 static off_t g_filesize      = 0L;
-static off_t g_secondsize    = SECONDOFFSET;
+static off_t g_secondoffset  = SECONDOFFSET;
 static int   g_jumpseconds   = 0;
 
 unsigned short g_apids[10];
@@ -1326,7 +1326,7 @@ void updateLcd(const std::string & big, const std::string & small)
 #define PF_EMPTY      0
 #define PF_READY      1
 #define PF_LST_ITEMS  30
-#define PF_SKPOS_OFFS (g_secondsize*60)
+#define PF_SKPOS_OFFS (g_secondoffset*60)
 #define PF_JMP_END    0x7FFFFFFF
 
 #define SIZE_LINE_MAX 2047
@@ -2054,14 +2054,14 @@ void mp_bufferReset(MP_CTX *ctx, int jumpReq, bool abs)
 
     if(abs == false)
     {
-        ctx->jmp = ctx->pos + (jumpReq * g_secondsize);
+        ctx->jmp = ctx->pos + (jumpReq * g_secondoffset);
     }
     else
     {
         if(jumpReq == PF_JMP_END)
             ctx->jmp = ctx->fileSize - PF_SKPOS_OFFS;
         else
-            ctx->jmp = jumpReq * g_secondsize;
+            ctx->jmp = jumpReq * g_secondoffset;
     }
 
 	//-- check limits --
@@ -2866,10 +2866,10 @@ void *mp_playFileMain(void *filename)
 		if(g_settings.streaming_use_reclength)
 		{
 			while(g_reclength == -1) usleep(50000);
-			g_secondsize = (g_reclength) ? ((ctx->fileSize / g_reclength) / SIZE_TS_PKT) * SIZE_TS_PKT : SECONDOFFSET;
+			g_secondoffset = (g_reclength) ? ((ctx->fileSize / g_reclength) / SIZE_TS_PKT) * SIZE_TS_PKT : SECONDOFFSET;
 		}
 		else
-			g_secondsize = SECONDOFFSET;
+			g_secondoffset = SECONDOFFSET;
 
 		//-- lcd audio type --
 		CLCD::getInstance()->setMovieAudio(ctx->ac3);
@@ -3186,7 +3186,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 			// do all moviebrowser stuff here ( like commercial jump ect.)
 			if(g_playstate == CMoviePlayerGui::PLAY)
 			{
-				int play_sec = g_fileposition / g_secondsize;  // get current seconds from moviestart
+				int play_sec = g_fileposition / g_secondoffset;  // get current seconds from moviestart
 
 				if(play_sec + 10 < jump_not_until || play_sec  > jump_not_until +10) jump_not_until = 0; // check if !jump is stale (e.g. if user jumped forward or backward)
 				
@@ -3347,12 +3347,12 @@ void CMoviePlayerGui::PlayFile (int parental)
 						g_reclength = p_movie_info->rec_length;
 
 						// get the start position for the movie
-						off_t secondSize = (g_settings.streaming_use_reclength && p_movie_info->rec_length) ? ((file->Size / p_movie_info->rec_length) / SIZE_TS_PKT) * SIZE_TS_PKT : SECONDOFFSET;
-						g_startposition  = CMovieBrowser::getInstance()->getCurrentStartPos() * secondSize;
+						off_t secondoffset = (g_settings.streaming_use_reclength && p_movie_info->rec_length) ? ((file->Size / p_movie_info->rec_length) / SIZE_TS_PKT) * SIZE_TS_PKT : SECONDOFFSET;
+						g_startposition    = CMovieBrowser::getInstance()->getCurrentStartPos() * secondoffset;
 						TRACE("[mp] start pos %llu, %d s Name: %s\r\n", g_startposition, CMovieBrowser::getInstance()->getCurrentStartPos(), filename);
 
 						if(FileTime.IsVisible()) // update time if visible
-							FileTime.show(g_startposition / secondSize);
+							FileTime.show(g_startposition / secondoffset);
 					}
 				}
 			}
@@ -3564,7 +3564,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 					gettimeofday(&current_time, NULL);
 					p_movie_info->dateOfLastPlay = current_time.tv_sec;
 					current_time.tv_sec = time( NULL );
-					p_movie_info->bookmarks.lastPlayStop = g_fileposition / g_secondsize;
+					p_movie_info->bookmarks.lastPlayStop = g_fileposition / g_secondoffset;
 					
 					cMovieInfo.saveMovieInfo(*p_movie_info);
 					//p_movie_info->fileInfoStale(); //TODO: we might to tell the Moviebrowser that the movie info has changed, but this could cause long reload times  when reentering the Moviebrowser
@@ -3582,7 +3582,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				{
 					g_playstate = CMoviePlayerGui::PLAY;
 					if(FileTime.IsVisible())
-						FileTime.show(g_fileposition / g_secondsize);
+						FileTime.show(g_fileposition / g_secondoffset);
 				}
 				else
 					g_playstate = CMoviePlayerGui::PAUSE;
@@ -3614,7 +3614,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				}
 				else
 				{
-					int pos_sec = g_fileposition / g_secondsize;
+					int pos_sec = g_fileposition / g_secondoffset;
 					if (newComHintBox.isPainted() == true)
 					{
 						// yes, let's get the end pos of the jump forward
@@ -3758,7 +3758,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 							}
 
 					g_InfoViewer->showMovieTitle(g_playstate, infobar_title, subtitle,
-							g_percent, g_fileposition / g_secondsize, (g_filesize - g_fileposition) / g_secondsize,
+							g_percent, g_fileposition / g_secondoffset, (g_filesize - g_fileposition) / g_secondoffset,
 							ac3state, g_numpida > 1);
 				}
 				break;
@@ -3768,7 +3768,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				if(FileTime.IsVisible())
 					FileTime.hide();
 				else
-					FileTime.show(g_fileposition / g_secondsize);
+					FileTime.show(g_fileposition / g_secondoffset);
 				break;
 
 				//-- jump 1/4 minute back --
@@ -3799,7 +3799,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 						newComHintBox.hide();
 						break;
 					}
-					jump_not_until = (g_fileposition / g_secondsize) + 10;  // avoid bookmark jumping for the next 10 seconds, , TODO:  might be moved to another key
+					jump_not_until = (g_fileposition / g_secondoffset) + 10;  // avoid bookmark jumping for the next 10 seconds, , TODO:  might be moved to another key
 				}	
 #endif /* ENABLE_MOVIEBROWSER */
 				if(g_playstate != CMoviePlayerGui::PAUSE)
@@ -3915,7 +3915,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 			case CRCInput::RC_up:
 				if(isMovieBrowser == true)
 				{
-					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondsize, true);
+					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondoffset, true);
 					if(new_pos_sec >= 0)
 					{
 						g_jumpseconds = new_pos_sec;
@@ -3933,7 +3933,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 			case CRCInput::RC_down:
 				if(isMovieBrowser == true)
 				{
-					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondsize, false);
+					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondoffset, false);
 					if(new_pos_sec >= 0)
 					{
 						g_jumpseconds = new_pos_sec ;
@@ -4478,7 +4478,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.189 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.190 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
