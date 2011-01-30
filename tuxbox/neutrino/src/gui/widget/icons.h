@@ -2,7 +2,7 @@
 #define __gui_widget_icons_h__
 
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/gui/widget/icons.h,v 1.27 2010/10/17 11:04:10 dbt Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/gui/widget/icons.h,v 1.28 2011/01/30 20:46:11 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -81,6 +81,7 @@
 #define NEUTRINO_ICON_PROTECTING	"protecting.raw"
 #define NEUTRINO_ICON_QUESTION		"question.raw"
 #define NEUTRINO_ICON_RADIOMODE		"radiomode.raw"
+#define NEUTRINO_ICON_REC		"rec.raw"
 #define NEUTRINO_ICON_RECORDING		"recording.raw"
 #define NEUTRINO_ICON_SETTINGS		"settings.raw"
 #define NEUTRINO_ICON_SHELL		"shell.raw"
