@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.179 2011/01/04 15:49:46 dbt Exp $
+	$Id: menue.cpp,v 1.180 2011/01/30 20:46:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -533,7 +533,7 @@ void CMenuWidget::paintItems()
 
 
 //-------------------------------------------------------------------------------------------------------------------------------
-CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name)
+CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name, const neutrino_msg_t DirectKey, const std::string & IconName)
 {
 	height               = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionName           = name;
@@ -549,6 +549,9 @@ CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name,
 	localized_value_name = special_value_name;
 
 	optionString         = non_localized_name;
+
+	directKey            = DirectKey;
+	iconName             = IconName;
 }
 
 int CMenuOptionNumberChooser::exec(CMenuTarget*)

@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.91 2010/12/08 19:49:30 dbt Exp $
+	$Id: menue.h,v 1.92 2011/01/30 20:46:19 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -229,7 +229,7 @@ class CMenuOptionNumberChooser : public CAbstractMenuOptionChooser
 	neutrino_locale_t  localized_value_name;
 
  public:
-	CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset = 0, const int special_value = 0, const neutrino_locale_t special_value_name = NONEXISTANT_LOCALE, const char * non_localized_name = NULL);
+	CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset = 0, const int special_value = 0, const neutrino_locale_t special_value_name = NONEXISTANT_LOCALE, const char * non_localized_name = NULL, const neutrino_msg_t DirectKey = CRCInput::RC_nokey, const std::string & IconName = "");
 	
 	int paint(bool selected);
 
