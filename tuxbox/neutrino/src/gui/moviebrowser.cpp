@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.54 2011/01/30 20:46:28 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.55 2011/01/30 20:46:39 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.54 2011/01/30 20:46:28 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.55 2011/01/30 20:46:39 dbt Exp $\r\n");
 	init();
 }
 
@@ -1311,7 +1311,10 @@ void CMovieBrowser::refreshMovieInfo(void)
 	}
 	else
 	{
-		m_pcInfo->setText(&m_movieSelectionHandler->epgInfo2);
+		if (m_movieSelectionHandler->epgInfo2.empty())
+			m_pcInfo->setText(&m_movieSelectionHandler->epgInfo1);
+		else
+			m_pcInfo->setText(&m_movieSelectionHandler->epgInfo2);
 	}
 }
 
@@ -3881,7 +3884,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.54 $");
+	return imageinfo.getModulVersion("","$Revision: 1.55 $");
 }
 
 /************************************************************************/
