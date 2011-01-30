@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.296 2011/01/30 20:46:11 dbt Exp $
+	$Id: infoviewer.cpp,v 1.297 2011/01/30 20:46:32 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1190,15 +1190,16 @@ void CInfoViewer::showRadiotext()
 	if (g_Radiotext == NULL) return;
 	showIcon_RadioText(g_Radiotext->haveRadiotext());
 
-	if (g_Radiotext->S_RtOsd) {
-		// dimensions of radiotext window
-		rt_dx = BoxEndX - BoxStartX;
-		rt_dy = 25;
-		rt_x = BoxStartX;
-		rt_y = g_settings.screen_StartY + 10;
-		rt_h = rt_y + 7 + rt_dy*(g_Radiotext->S_RtOsdRows+1)+SHADOW_OFFSET;
-		rt_w = rt_x+rt_dx+SHADOW_OFFSET;
-		
+	// dimensions of radiotext window
+	rt_dx = BoxEndX - BoxStartX;
+	rt_dy = 25;
+	rt_x = BoxStartX;
+	rt_y = g_settings.screen_StartY + 10;
+	rt_h = rt_y + 7 + rt_dy*(g_Radiotext->S_RtOsdRows+1)+SHADOW_OFFSET;
+	rt_w = rt_x+rt_dx+SHADOW_OFFSET;
+
+	if (g_Radiotext->S_RtOsd)
+	{
 		int lines = 0;
 		for (int i = 0; i < g_Radiotext->S_RtOsdRows; i++) {
 			if (g_Radiotext->RT_Text[i][0] != '\0') lines++;
