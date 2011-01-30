@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.22 2010/04/26 19:46:49 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.23 2011/01/30 20:46:36 dbt Exp $
 
 	Kommentar:
 
@@ -466,7 +466,7 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
 		print_buffer += "\n"; 
   		print_buffer += movie_info.productionCountry; 
 		print_buffer += " "; 
-		snprintf(date_char, 12,"%4d",movie_info.productionDate + 1900); 
+		snprintf(date_char, 12,"%4d",movie_info.productionDate); 
 		print_buffer += date_char; 
      }
 
@@ -581,7 +581,7 @@ void CMovieInfo::printDebugMovieInfo(MI_MOVIE_INFO& movie_info)
 	TRACE(" length rec: \t\t%d\r\n", movie_info.rec_length );				// (minutes)
 	TRACE(" quality: \t\t%d\r\n", movie_info.quality ); 				// (3 stars: classics, 2 stars: very good, 1 star: good, 0 stars: OK)
 	TRACE(" productionCount:\t>%s<\r\n", movie_info.productionCountry.c_str() );
-	TRACE(" productionDate: \t%d\r\n", movie_info.productionDate ); 		// (Year)  years since 1900
+	TRACE(" productionDate: \t%d\r\n", movie_info.productionDate ); 		// (year)
 	TRACE(" parentalLockAge: \t\t\t%d\r\n", movie_info.parentalLockAge ); 			// MI_PARENTAL_LOCKAGE (0,6,12,16,18)
 	TRACE(" format: \t\t%d\r\n", movie_info.format );				// MI_VIDEO_FORMAT(16:9, 4:3)
 	TRACE(" audio: \t\t%d\r\n", movie_info.audio );// MI_AUDIO (AC3, Deutsch, Englisch)
@@ -977,7 +977,7 @@ void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO* movie_info)
 	movie_info->length = 0;				// (minutes)
 	movie_info->rec_length = 0;				// (seconds)
 	movie_info->quality = 0; 				// (3 stars: classics, 2 stars: very good, 1 star: good, 0 stars: OK)
-	movie_info->productionDate = 0; 		// (Year)  years since 1900
+	movie_info->productionDate = 0; 		// (year)
 	movie_info->parentalLockAge = 0; 			// MI_PARENTAL_LOCKAGE (0,6,12,16,18)
 	movie_info->format = 0;				// MI_VIDEO_FORMAT(16:9, 4:3)
 	movie_info->audio = 0;// MI_AUDIO (AC3, Deutsch, Englisch)
