@@ -795,7 +795,7 @@ moviebrowser.browser_row_head Spalten Einstellungen
 moviebrowser.browser_row_item Spalteninfo
 moviebrowser.browser_row_nr Anzahl Spalten
 moviebrowser.browser_row_width Spaltenbreite [Punkte]
-moviebrowser.change_view +/- Ansicht wechseln
+moviebrowser.change_view Ansicht wechseln
 moviebrowser.dir Pfad
 moviebrowser.dir_head Zusätzliche Verzeichnisse
 moviebrowser.edit_book Bookmark ändern

@@ -795,7 +795,7 @@ moviebrowser.browser_row_head Row settings
 moviebrowser.browser_row_item Row item
 moviebrowser.browser_row_nr Number of rows
 moviebrowser.browser_row_width Row width
-moviebrowser.change_view +/- Change view
+moviebrowser.change_view Change view
 moviebrowser.dir Path
 moviebrowser.dir_head Additional paths
 moviebrowser.edit_book Bookmark change
