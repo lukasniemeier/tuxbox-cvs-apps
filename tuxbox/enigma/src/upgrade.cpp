@@ -430,7 +430,7 @@ void eUpgrade::setError(int err)
 	{
 		if (current_url.length())
 			errmsg+="\n(URL: " + current_url + ")";
-		eMessageBox::ShowBox(errmsg, _("Error!"), eMessageBox::btOK|eMessageBox::iconError);
+		eMessageBox::ShowBox(errmsg, _("Error"), eMessageBox::btOK|eMessageBox::iconError);
 	}
 }
 
@@ -510,7 +510,7 @@ void eUpgrade::flashImage(int checkmd5)
 		hide();
 		eMessageBox::ShowBox(
 			_("write error while downloading..."),
-			_("Error!"),
+			_("Error"),
 			eMessageBox::btOK|eMessageBox::iconError);
 		show();
 	} else
@@ -521,7 +521,7 @@ void eUpgrade::flashImage(int checkmd5)
 			hide();
 			eMessageBox::ShowBox(
 				_("Data error. The checksum didn't match."),
-				_("Error!"),
+				_("Error"),
 				eMessageBox::btOK|eMessageBox::iconError);
 			show();
 		} else
