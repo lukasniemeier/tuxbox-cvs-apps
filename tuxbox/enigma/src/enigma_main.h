@@ -198,8 +198,9 @@ class eAudioSelector: public eListBoxWindow<AudioStream>
 	void selected(AudioStream *);
 	eAudioDynamicConfig *m_dyncfg;
 	int eventHandler(const eWidgetEvent &);
-	eListBox<eListBoxEntryText> *m_subtitles, *m_stereo_mono;
+	eListBox<eListBoxEntryText> *m_subtitles, *m_stereo_mono, *m_subtitledelay;
 	void subtitleSelected(eListBoxEntryText *entry);
+	void subtitleDelaySelected(eListBoxEntryText *entry);
 	void init_eAudioSelector();
 public:
 	eAudioSelector();

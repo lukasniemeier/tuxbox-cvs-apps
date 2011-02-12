@@ -602,6 +602,27 @@ struct selectCurSubtitleStream
 	}
 };
 
+struct selectCurSubtitleDelay
+{
+	int delay;
+	eListBox<eListBoxEntryText> &lb;
+	selectCurSubtitleDelay( int delay, eListBox<eListBoxEntryText> &lb )
+		:delay(delay), lb(lb)
+	{
+	}
+
+	bool operator()(eListBoxEntryText& entry)
+	{
+		int k = (int)entry.getKey();
+		if ( k == delay )
+		{
+			lb.setCurrent( &entry );
+			return true;
+		}
+		return false;
+	}
+};
+
 AudioStream::AudioStream(eListBox<AudioStream> *listbox, eDVBServiceController::audioStream &stream)
 	:eListBoxEntryText((eListBox<eListBoxEntryText>*)listbox, stream.text)
 	,stream(stream.pmtentry)
@@ -741,6 +762,31 @@ int ePSAudioSelector::eventHandler(const eWidgetEvent &e)
 	return eWindow::eventHandler(e);
 }
 
+void eAudioSelector::subtitleDelaySelected(eListBoxEntryText *entry)
+{
+	if (!entry)
+		return;
+	eServiceHandler *service=eServiceInterface::getInstance()->getService();
+	if (service)
+	{
+		int k = (int)entry->getKey();
+		eSubtitleWidget *i = eSubtitleWidget::getInstance();
+		if (!i)
+			return;
+		eService *sp=eServiceInterface::getInstance()->addRef(eServiceInterface::getInstance()->service);
+		if (sp)
+		{
+			if (sp->dvb)
+			{
+				sp->dvb->set(eServiceDVB::cSubtitleDelay, k);
+			}
+			eServiceInterface::getInstance()->removeRef(eServiceInterface::getInstance()->service);
+		}
+		i->setDelay(k);
+	}
+	close(0);
+}
+
 void eAudioSelector::subtitleSelected(eListBoxEntryText *entry)
 {
 	if (!entry)
@@ -791,6 +837,7 @@ extern eString getISO639Description(char *iso);
 
 void eAudioSelector::addSubtitle(const PMTEntry *entry)
 {
+	m_subtitledelay->show();
 	m_subtitles->show();
 	list.setFlags( eListBoxBase::flagLostFocusOnLast );
 
@@ -892,6 +939,13 @@ int eAudioSelector::eventHandler(const eWidgetEvent &e)
 				addTTXSubtitles();
 			list.forEachEntry(selectCurAudioStream(Decoder::current.apid, list));
 			m_subtitles->forEachEntry(selectCurSubtitleStream(eSubtitleWidget::getInstance()->getCurPid(), *m_subtitles ));
+
+			int delay = 0;
+			eSubtitleWidget *i = eSubtitleWidget::getInstance();
+			if (i)
+			  delay = i->getDelay();
+			m_subtitledelay->forEachEntry(selectCurSubtitleDelay(delay, *m_subtitledelay ));
+
 			setFocus(&list);
 			int curSel = (int)m_stereo_mono->getCurrent()->getKey();
 			int cur = eAVSwitch::getInstance()->getAudioChannel();
@@ -953,6 +1007,17 @@ void eAudioSelector::init_eAudioSelector()
 	m_stereo_mono->selchanged.connect( slot( AudioChannelSelectionChanged ) );
 	ePoint p(0,40);
 	list.move(m_stereo_mono->getPosition()+p);
+	list.resize(eSize(getClientSize().width()-20, getClientSize().height()-120));
+
+	m_subtitledelay = new eListBox<eListBoxEntryText>(this);
+	m_subtitledelay->loadDeco();
+	m_subtitledelay->move(ePoint(10, getClientSize().height()-80));
+	m_subtitledelay->resize(eSize(getClientSize().width()-20, 35));
+	m_subtitledelay->setShortcut("yellow");
+	m_subtitledelay->setFlags(eListBox<eListBoxEntryText>::flagNoUpDownMovement);
+	for (int i = 0; i <= 10; i++)
+		new eListBoxEntryText(m_subtitledelay,(eString)(i ? "< ":"  ") + eString().sprintf("%s : %d",_("subtitle delay"), i) + (eString)(i < 10 ? " >":"  "), (void*) i, (int)eTextPara::dirCenter );
+	CONNECT(m_subtitledelay->selected, eAudioSelector::subtitleDelaySelected);
 
 	m_subtitles = new eListBox<eListBoxEntryText>(this);
 	m_subtitles->loadDeco();
@@ -970,7 +1035,6 @@ void eAudioSelector::init_eAudioSelector()
 	else
 #endif
 	{
-		list.resize(eSize(getClientSize().width()-20, getClientSize().height()-80));
 		m_subtitles->move(ePoint(10, getClientSize().height()-40));
 	}
 
@@ -986,6 +1050,7 @@ void eAudioSelector::clear()
 //	m_stereo_mono->goNext();
 	m_subtitles->clearList();
 	m_subtitles->hide();
+	m_subtitledelay->hide();
 	list.removeFlags( eListBoxBase::flagLostFocusOnLast );
 	new eListBoxEntryText(m_subtitles, _("no subtitles"), 0, eTextPara::dirCenter );
 }
@@ -6613,10 +6678,15 @@ void eZapMain::startService(const eServiceReference &_serviceref, int err)
 			tmp = sp->dvb->get(eServiceDVB::cStereoMono);
 			if ( tmp != -1)
 				eAVSwitch::getInstance()->selectAudioChannel(tmp);
+			int delay = sp->dvb->get(eServiceDVB::cSubtitleDelay);
+			eSubtitleWidget *i = eSubtitleWidget::getInstance();
+			if (i)
+			{
+				i->setDelay(delay);
+			}
 			int tmp2 = sp->dvb->get(eServiceDVB::cSubtitle);
 			if ( tmp2 != -1)
 			{
-				eSubtitleWidget *i = eSubtitleWidget::getInstance();
 				if (i)
 				{
 					std::set<int> pages; pages.insert(-1);
@@ -6626,7 +6696,6 @@ void eZapMain::startService(const eServiceReference &_serviceref, int err)
 			int tmp3 = sp->dvb->get(eServiceDVB::cTTXSubtitle);
 			if ( tmp3 != -1)
 			{
-				eSubtitleWidget *i = eSubtitleWidget::getInstance();
 				if (i)
 				{
 					i->startttx(tmp3);

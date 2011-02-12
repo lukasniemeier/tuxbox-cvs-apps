@@ -112,8 +112,8 @@ void eSubtitleWidget::processPESPacket(unsigned char *pkt, int len)
 		eDebug("enqueue");
 		if (wasempty)
 		{
-			eDebug("setting timer to %lld ms!\n", (pes.pts - current) / 90);
-			timer.start((pes.pts - current) / 90, 1);
+			eDebug("setting timer to %lld ms!\n", ((pes.pts - current) / 90)+delay*1000);
+			timer.start(((pes.pts - current) / 90)+delay*1000, 1);
 		}
 		else
 			eDebug("");
@@ -190,8 +190,8 @@ void eSubtitleWidget::processNext()
 
 	if (!queue.empty()) {
 		signed long long int diff = queue.front().pts - current;
-		timer.start(diff / 90, 1);
-		eDebug("setting timer to %lld ms!\n", diff / 90);
+		timer.start((diff / 90)+delay*1000, 1);
+		eDebug("setting timer to %lld ms!\n", (diff / 90)+delay*1000);
 	}
 	else
 		eDebug("");
@@ -321,7 +321,8 @@ void eSubtitleWidget::startttx(int page)
 	eConfig::getInstance()->getKey("/elitedvb/subtitle/backgroundTransparency", bcktrans);
 	renderinfo.trans_mode = bcktrans/10-1 ;
 	renderinfo.transpmode = 1;
-
+	renderinfo.subtitledelay = delay;
+	
 	renderinfo.fb =fbClass::getInstance()->lock();
 	if (tuxtxt_InitRendering(&renderinfo,0))
 	{
@@ -467,7 +468,7 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 }
 
 eSubtitleWidget::eSubtitleWidget()
-	:timer(eApp), timeout(eApp)
+	:delay(0),timer(eApp), timeout(eApp)
 {
 	init_eSubtitleWidget();
 }
@@ -572,4 +573,11 @@ void eSubtitleWidget::globalFocusHasChanged(const eWidget* newFocus)
 		hide();
 	else
 		show();
+}
+void eSubtitleWidget::setDelay(int delayseconds)
+{
+#ifndef TUXTXT_CFG_STANDALONE
+	renderinfo.subtitledelay = delayseconds;
+#endif
+	delay = delayseconds;
 }

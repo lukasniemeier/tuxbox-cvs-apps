@@ -16,6 +16,7 @@ class eSubtitleWidget: public eWidget
 	int fd;
 	int isvisible;
 	int alpha_original;
+	int delay;
 #ifndef TUXTXT_CFG_STANDALONE
 	int ttxpage;
 	int ttx_running;
@@ -47,6 +48,8 @@ class eSubtitleWidget: public eWidget
 	void globalFocusHasChanged(const eWidget* newFocus);
 	void init_eSubtitleWidget();
 public:
+	void setDelay(int delayseconds);
+	int getDelay() { return delay; }
 	void start(int pid, const std::set<int> &pageids);
 #ifndef TUXTXT_CFG_STANDALONE
 	void startttx(int page);

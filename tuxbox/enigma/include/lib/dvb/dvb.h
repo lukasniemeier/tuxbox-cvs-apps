@@ -374,6 +374,7 @@ public:
 		cPcmDelay, /* not used in e1.. but in e2 */
 		cSubtitle,
 		cTTXSubtitle,
+		cSubtitleDelay,
 		/*
 		please do not simply add any other value to the service cache
 		this breaks binary compatibilty of enigma1 and enigma2 service format
