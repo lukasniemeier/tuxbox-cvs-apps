@@ -14,14 +14,14 @@ POTFILES: $(srcdir)/POTFILES.in
 SUFFIXES = .po .gmo .mo .sed .sin .nop .po-update
 
 .po.mo:
-	@echo "$(MSGFMT) -c -o $@ $<"; \
-	$(MSGFMT) -c -o t-$@ $< && mv t-$@ $@
+	@echo "$(MSGFMT) -c --no-hash -o $@ $<"; \
+	$(MSGFMT) -c --no-hash -o t-$@ $< && mv t-$@ $@
 
 .po.gmo:
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}rm -f $${lang}.gmo && @GMSGFMT@ -c --statistics -o $${lang}.gmo $${lang}.po"; \
-	cd $(srcdir) && rm -f $${lang}.gmo && @GMSGFMT@ -c --statistics -o t-$${lang}.gmo $${lang}.po && (mv t-$${lang}.gmo $${lang}.gmo  || /bin/true)
+	echo "$${cdcmd}rm -f $${lang}.gmo && @GMSGFMT@ -c --no-hash --statistics -o $${lang}.gmo $${lang}.po"; \
+	cd $(srcdir) && rm -f $${lang}.gmo && @GMSGFMT@ -c --no-hash --statistics -o t-$${lang}.gmo $${lang}.po && (mv t-$${lang}.gmo $${lang}.gmo  || /bin/true)
 
 .nop.po-update:
 	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
