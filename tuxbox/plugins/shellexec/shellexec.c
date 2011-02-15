@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.c,v 1.5 2010/09/27 19:40:10 rhabarber1848 Exp $
+ * $Id: shellexec.c,v 1.6 2011/02/15 20:57:01 dbt Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -42,7 +42,7 @@ static char CFG_FILE[128]="/var/tuxbox/config/shellexec.conf";
 #define LCD_CPL 	12
 #define LCD_RDIST 	10
 
-#define SH_VERSION  2.52
+#define SH_VERSION  2.54
 typedef struct {int fnum; FILE *fh[16];} FSTRUCT, *PFSTRUCT;
 
 static int direct[32];
@@ -1473,7 +1473,7 @@ static void ShowInfo(MENU *m, int knew )
 		nosel=(pl->type==TYP_COMMENT) || (pl->type==TYP_INACTIVE);
 		if(!(pl->type==TYP_COMMENT && pl->underline==2))
 		{		
-			RenderString(dstr, 45, my-2, ixw-sbw-65, LEFT, (pl->type==TYP_COMMENT)?SMALL:MED, (((loop%MAX_FUNCS) == (tind%MAX_FUNCS)) && (sbar) && (!nosel))?CMCST:(nosel)?CMCIT:CMCT);
+			RenderString(dstr, 45, my-2, ixw-sbw-50, LEFT, (pl->type==TYP_COMMENT)?SMALL:MED, (((loop%MAX_FUNCS) == (tind%MAX_FUNCS)) && (sbar) && (!nosel))?CMCST:(nosel)?CMCIT:CMCT);
 		}
 		if(pl->type==TYP_MENU)
 		{
@@ -1515,12 +1515,13 @@ static void ShowInfo(MENU *m, int knew )
 			}
 			if(ccenter)
 			{
-				RenderBox(loffs, my+soffs-cloffs-2, ixw-loffs-sbw, my+soffs-cloffs, 0, COL_MENUCONTENT_PLUS_3);     // 1. thin line
-				RenderBox(loffs, my+soffs-cloffs-2+1, ixw-loffs-sbw, my+soffs-cloffs+1, 0, COL_MENUCONTENT_PLUS_1); // 2. thin line
-//				RenderString("X", xoffs - 11, my, ixw-sbw, CENTER, MED, COL_MENUCONTENT_PLUS_0);
-				stlen=GetStringLen(xoffs, dstr)+6;
-				RenderBox((loffs+(ixw-xoffs-sbw))/2 - (stlen/2), my+soffs-ldy, (xoffs+(ixw-loffs-sbw))/2 + (stlen/2)+6, my+soffs, 0, CMC);
-				RenderString(dstr, xoffs - 11, my, ixw-sbw, CENTER, MED, CMCIT);
+				int boffs = 16;
+				RenderBox(loffs, my+soffs-cloffs-2, ixw-loffs-sbw, my+soffs-cloffs, 0, COL_MENUCONTENT_PLUS_3);
+				RenderBox(loffs, my+soffs-cloffs-2+1, ixw-loffs-sbw, my+soffs-cloffs+1, 0, COL_MENUCONTENT_PLUS_1);
+				RenderString("X", loffs, my, ixw-loffs-loffs-sbw, CENTER, MED, COL_MENUCONTENT_PLUS_0);
+				stlen=GetStringLen(xoffs, dstr);
+				RenderBox(loffs+(ixw-loffs-loffs)/2-sbw-stlen/2, my+soffs-ldy, loffs+(ixw-loffs-loffs)/2-sbw+stlen/2+boffs, my+soffs, FILL, CMC);
+				RenderString(dstr, loffs+(sbw ? 0 : boffs>>1), my, ixw-loffs-loffs-sbw, CENTER, MED, CMCIT);
 			}
 			else
 			{
