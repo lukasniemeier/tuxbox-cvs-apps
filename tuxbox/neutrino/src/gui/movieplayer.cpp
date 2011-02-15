@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.192 2011/02/15 20:56:48 dbt Exp $
+  $Id: movieplayer.cpp,v 1.193 2011/02/15 20:56:52 dbt Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -4218,7 +4218,7 @@ CMoviePlayerGui::PlayStream (int streamtype)
 			StreamTime.hide();
 			g_RCInput->postMsg(NeutrinoMessages::SHOW_INFOBAR, data);
 		}
-		else if(msg == CRCInput::RC_green)
+		else if(msg == CRCInput::RC_green || msg == CRCInput::RC_0)
 		{
 			if(g_playstate == CMoviePlayerGui::PLAY) g_playstate = CMoviePlayerGui::RESYNC;
 			StreamTime.hide();
@@ -4283,7 +4283,7 @@ CMoviePlayerGui::PlayStream (int streamtype)
 			g_playstate = CMoviePlayerGui::SKIP;
 			StreamTime.hide();
 		}
-		else if(msg == CRCInput::RC_down)
+		else if(msg == CRCInput::RC_down || msg == CRCInput::RC_5)
 		{
 			char tmp[10+1];
 			bool cancel;
@@ -4472,7 +4472,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.192 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.193 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
