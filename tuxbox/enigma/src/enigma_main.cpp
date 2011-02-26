@@ -918,6 +918,7 @@ void eAudioSelector::addTTXSubtitles()
 		int page = tuxtxt_cache.subtitlepages[i].page;
 		if (page)
 		{
+			m_subtitledelay->show();
 			m_subtitles->show();
 			list.setFlags( eListBoxBase::flagLostFocusOnLast );
 			eString description;
@@ -3754,7 +3755,7 @@ void eZapMain::startSkip(int dir)
 		if(!skipTimer)
 		{ 
 			skipTimer=new eTimer(eApp);
-			skipTimer->start((skipspeed>=0)?250:500,false); // 1/4 sec. forward 1/2 sec. back (but bigger distance)
+			skipTimer->start(250,false); 
 			CONNECT(skipTimer->timeout,eZapMain::skipLoop); // enable timer
 		}
 		if(!skipWidget) // enable view
@@ -3805,7 +3806,7 @@ void eZapMain::skipLoop()
 {
 	// called from skipTimer (eTimer)
 
-	int time,speed,faktor,pos,diff;
+	int time,speed,faktor,pos,diff,ts;
 
 	faktor = (skipspeed<0) ? -1 : 1;
 	speed = skipspeed * faktor;
@@ -3813,16 +3814,16 @@ void eZapMain::skipLoop()
 	switch(speed)
 	{ 
 		case  1: 
-			time = (skipspeed<0) ? 2 : 1;
+			time = (skipspeed<0) ? 4 : 1;
 			break; //Seconds
 		case  2: 
-			time = (skipspeed<0) ? 4 : 2;
+			time = (skipspeed<0) ? 6 : 2;
 			break; //back must more!
 		case  3: 
-			time = (skipspeed<0) ? 8 : 4;
+			time = (skipspeed<0) ? 10 : 6;
 			break;
 		case  4: 
-			time = (skipspeed<0) ? 16 : 8;
+			time = (skipspeed<0) ? 18 : 14;
 			break;
 		default: 
 			time = 0;
@@ -3851,16 +3852,18 @@ void eZapMain::skipLoop()
 				return;
 			}
 
-			if (skipspeed == 1)
-			{
-				eServiceReference &ref = eServiceInterface::getInstance()->service;
-				if(!( ref.type == eServiceReference::idUser &&
-					((ref.data[0] ==  eMP3Decoder::codecMPG) ||
-					 (ref.data[0] ==  eMP3Decoder::codecMP3) ||
-					 (ref.data[0] ==  eMP3Decoder::codecOGG) ) ))
-					return; // normal trickmode forward (ts only)
-			}
-			handler->serviceCommand(eServiceCommand(eServiceCommand::cmdSkip,(time*(faktor<0?1250:1000))*faktor));
+
+			ts = 0;
+			eServiceReference &ref = eServiceInterface::getInstance()->service;
+			if(!( ref.type == eServiceReference::idUser &&
+				((ref.data[0] ==  eMP3Decoder::codecMPG) ||
+				  (ref.data[0] ==  eMP3Decoder::codecMP3) ||
+				  (ref.data[0] ==  eMP3Decoder::codecOGG) ) ))
+				ts = 1;
+			if (skipspeed == 1 && ts)
+				return;
+
+			handler->serviceCommand(eServiceCommand(eServiceCommand::cmdSkip,time*(ts?1000:2000)*faktor));
 
 			seekpos=pos;
 		}
