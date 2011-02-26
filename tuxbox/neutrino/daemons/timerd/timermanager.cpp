@@ -6,7 +6,7 @@
 
 	Copyright (C) 2009 Stefan Seyfried
 
-   $Id: timermanager.cpp,v 1.98 2009/10/30 22:06:03 seife Exp $
+   $Id: timermanager.cpp,v 1.99 2011/02/26 09:39:16 dbt Exp $
 
 	License: GPL
 
@@ -352,7 +352,6 @@ int CTimerManager::modifyEvent(int ev_ID, time_t announceTime, time_t alarmTime,
 		{
 			case CTimerd::TIMER_SHUTDOWN:						
 			case CTimerd::TIMER_NEXTPROGRAM:
-			case CTimerd::TIMER_ZAPTO:
 			case CTimerd::TIMER_STANDBY:
 			case CTimerd::TIMER_REMIND:
 			case CTimerd::TIMER_SLEEPTIMER:
@@ -363,6 +362,11 @@ int CTimerManager::modifyEvent(int ev_ID, time_t announceTime, time_t alarmTime,
 			{
 				(static_cast<CTimerEvent_Record*>(event))->recordingDir = data.recordingDir;
 				(static_cast<CTimerEvent_Record*>(event))->getEpgId(); 
+				break;
+			}
+			case CTimerd::TIMER_ZAPTO:
+			{
+				(static_cast<CTimerEvent_Zapto*>(event))->getEpgId(); 
 				break;
 			}
 			default:
@@ -975,8 +979,9 @@ void CTimerEvent::printEvent(void)
 		case CTimerd::TIMER_ZAPTO :
 			dprintf(" Zapto: "
 				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-				" epg: %llx\n",
+				" epg: %s(%llx)\n",
 				static_cast<CTimerEvent_Zapto*>(this)->eventInfo.channel_id,
+				static_cast<CTimerEvent_Zapto*>(this)->epgTitle.c_str(),
 				static_cast<CTimerEvent_Zapto*>(this)->eventInfo.epgID);
 			break;
 
@@ -1311,6 +1316,12 @@ void CTimerEvent_Zapto::getEpgId()
 			eventInfo.epg_starttime = e->startTime;
 			break;
 		}
+	}
+	if(eventInfo.epgID != 0)
+	{
+		CShortEPGData epgdata;
+		if (sdc.getEPGidShort(eventInfo.epgID, &epgdata))
+			epgTitle=epgdata.title; 
 	}
 }
 //=============================================================
