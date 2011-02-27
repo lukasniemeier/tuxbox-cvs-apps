@@ -1,4 +1,5 @@
 #include <png.h>
+#include <zlib.h>
 #include <stdio.h>
 #include <lib/gdi/epng.h>
 #include <unistd.h>
@@ -37,7 +38,11 @@ gImage *loadPNG(const char *filename)
 	if (!(end_info=png_create_info_struct(png_ptr)))
 		goto pngerror;
 		
+#if (PNG_LIBPNG_VER < 10500)
 	if (setjmp(png_ptr->jmpbuf))
+#else
+	if (setjmp(png_jmpbuf(png_ptr)))
+#endif
 		goto pngerror;
 		
 	png_init_io(png_ptr, fp);
@@ -159,7 +164,11 @@ int savePNG(const char *filename, gPixmap *pixmap)
 		unlink(filename);
 		return -3;
 	}
+#if (PNG_LIBPNG_VER < 10500)
 	if (setjmp(png_ptr->jmpbuf))
+#else
+	if (setjmp(png_jmpbuf(png_ptr)))
+#endif
 	{
 		eDebug("error :/");
 		png_destroy_write_struct(&png_ptr, &info_ptr);

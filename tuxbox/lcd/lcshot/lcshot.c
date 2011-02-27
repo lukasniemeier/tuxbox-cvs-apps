@@ -1,5 +1,5 @@
 /*
- * $Id: lcshot.c,v 1.2 2009/12/06 19:36:41 rhabarber1848 Exp $
+ * $Id: lcshot.c,v 1.3 2011/02/27 14:56:10 rhabarber1848 Exp $
  *
  * lcshot - d-box2 linux project
  *
@@ -37,6 +37,7 @@
 
 #include <sys/vt.h>
 #include <png.h>
+#include <zlib.h>
 #include <linux/fb.h> 
 #include "lcd.h"
 

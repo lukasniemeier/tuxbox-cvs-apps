@@ -1,5 +1,5 @@
 /*
- * $Id: pngw.c,v 1.1 2009/12/19 19:42:49 rhabarber1848 Exp $
+ * $Id: pngw.c,v 1.2 2011/02/27 14:56:10 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -70,7 +70,11 @@ int fh_png_load(const char *name,unsigned char *buffer,int x,int y)
 		fclose(fh); return(FH_ERROR_FORMAT);
 	}
 
+#if (PNG_LIBPNG_VER < 10500)
 	if(setjmp(png_ptr->jmpbuf))
+#else
+	if(setjmp(png_jmpbuf(png_ptr)))
+#endif
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 		fclose(fh); return(FH_ERROR_FORMAT);
@@ -150,7 +154,11 @@ int fh_png_getsize(const char *name,int *x,int *y, int wanted_width, int wanted_
 		fclose(fh); return(FH_ERROR_FORMAT);
 	}
 
+#if (PNG_LIBPNG_VER < 10500)
 	if(setjmp(png_ptr->jmpbuf))
+#else
+	if(setjmp(png_jmpbuf(png_ptr)))
+#endif
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 		fclose(fh); return(FH_ERROR_FORMAT);
