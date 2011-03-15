@@ -948,5 +948,12 @@
 		url="http://www.npr.org/streams/mp3/nprlive24.pls"
 		name="NPR National Public Radio (USA)"
 		/>
-
+	<station
+		url="http://87.106.45.222:8000/listen.pls"	
+		name="MK-Music Live"	
+		/>
+	<station
+		url="http://mkmusic.de/infusions/stream_panel/nachtstream.pls"
+		name="MK-Music Nachtstream"	
+		/>	
 </list>
