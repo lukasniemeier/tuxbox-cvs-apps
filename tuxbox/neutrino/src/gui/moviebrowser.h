@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.15 2010/06/24 19:33:09 dbt Exp $
+	$Id: moviebrowser.h,v 1.16 2011/03/21 18:38:10 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -426,14 +426,6 @@ class CMenuSelector : public CMenuItem
 		int paint(bool selected);
 		int getHeight(void) const{return height;};
 		bool isSelectable(void) const {	return active;}
-};
-
-// CLass to get the menu line selected by the user. There might be better ways to do so.
-class CMenuWidgetSelection : public CMenuWidget
-{
-	public:
-		CMenuWidgetSelection(const neutrino_locale_t Name, const std::string & Icon = "", const int mwidth = 400, const int mheight = 576) : CMenuWidget( Name,Icon,mwidth, mheight){;};
-		int getSelectedLine(void){return selected;};
 };
 
 

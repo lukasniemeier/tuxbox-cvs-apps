@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.55 2011/01/30 20:46:39 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.56 2011/03/21 18:38:10 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.55 2011/01/30 20:46:39 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.56 2011/03/21 18:38:10 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3264,7 +3264,7 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 	
 	char book[MI_MOVIE_BOOK_USER_MAX][20];
 
-	CMenuWidgetSelection startPosSelectionMenu(LOCALE_MOVIEBROWSER_START_HEAD , NEUTRINO_ICON_STREAMING);
+	CMenuWidget startPosSelectionMenu(LOCALE_MOVIEBROWSER_START_HEAD , NEUTRINO_ICON_STREAMING);
 	
 	startPosSelectionMenu.addItem(GenericMenuSeparator);
 	
@@ -3299,8 +3299,7 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 
 	startPosSelectionMenu.exec(NULL, "12345");
 	/* check what menu item was ok'd  and set the appropriate play offset*/
-	//result = startPosSelectionMenu.getSelected();
-	result = startPosSelectionMenu.getSelectedLine();
+	result = startPosSelectionMenu.getSelected();
 	if(result != 0 && result <= MAX_NUMBER_OF_BOOKMARK_ITEMS)
 	{
 		result--;
@@ -3884,7 +3883,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.55 $");
+	return imageinfo.getModulVersion("","$Revision: 1.56 $");
 }
 
 /************************************************************************/
