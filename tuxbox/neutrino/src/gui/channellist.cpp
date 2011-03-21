@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.224 2010/12/05 22:29:15 dbt Exp $
+	$Id: channellist.cpp,v 1.225 2011/03/21 18:35:09 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -1301,7 +1301,7 @@ void CChannelList::paintHead()
 			{
 				snprintf(provstr, 19, "%s", satList_it->satName);
 				provstr[19] = '\0';
-				provstr_len = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getRenderWidth(satList_it->satName, true); // UTF-8
+				provstr_len = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getRenderWidth(provstr, true); // UTF-8
 				break;
 			}
 		}
