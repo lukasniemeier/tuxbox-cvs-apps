@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.3 2010/12/16 08:12:40 dbt Exp $
+	$Id: user_menue_setup.cpp,v 1.4 2011/03/21 18:38:47 rhabarber1848 Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -130,7 +130,7 @@ void CUserMenuSetup::showSetup()
 	char text[10];
 	for(int item = 0; item < SNeutrinoSettings::ITEM_MAX && item <13; item++) // Do not show more than 13 items
 	{
-		snprintf(text,10,"%d:",item);
+		snprintf(text,10,"%d:",item+1);
 		text[9]=0;// terminate for sure
 		ums->addItem( new CMenuOptionChooser(text, &g_settings.usermenu[button][item], USERMENU_ITEM_OPTIONS, USERMENU_ITEM_OPTION_COUNT,true ));
 	}
