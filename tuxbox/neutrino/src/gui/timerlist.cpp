@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.112 2010/12/01 20:28:57 dbt Exp $
+	$Id: timerlist.cpp,v 1.113 2011/03/21 18:43:14 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -593,6 +593,12 @@ void CTimerList::paintItem(int pos)
 	uint8_t    color;
 	fb_pixel_t bgcolor;
 
+	int real_width = width;
+	if (timerlist.size() > listmaxshow)
+	{
+		real_width-=15; //scrollbar
+	}
+
 	if (pos & 1)
 	{
 		color   = COL_MENUCONTENTDARK;
@@ -603,6 +609,7 @@ void CTimerList::paintItem(int pos)
 		color   = COL_MENUCONTENT;
 		bgcolor = COL_MENUCONTENT_PLUS_0;
 	}
+	frameBuffer->paintBoxRel(x, ypos, real_width, 2*fheight, bgcolor);
 
 	if (liststart + pos == selected)
 	{
@@ -610,13 +617,7 @@ void CTimerList::paintItem(int pos)
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 	}
 
-	int real_width=width;
-	if(timerlist.size()>listmaxshow)
-	{
-		real_width-=15; //scrollbar
-	}
-
-	frameBuffer->paintBoxRel(x,ypos, real_width, 2*fheight, bgcolor);
+	frameBuffer->paintBoxRel(x, ypos, real_width, 2*fheight, bgcolor, RADIUS_MID);
 	if(liststart+pos<timerlist.size())
 	{
 		CTimerd::responseGetTimer & timer = timerlist[liststart+pos];
@@ -812,7 +813,7 @@ void CTimerList::paint()
 
 		int sbc= ((timerlist.size()- 1)/ listmaxshow)+ 1;
 
-		frameBuffer->paintBoxRel(x+ width-13, ypos+2+page_nr*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3);
+		frameBuffer->paintBoxRel(x+ width-13, ypos+2+page_nr*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
 	}
 
 	paintFoot();
