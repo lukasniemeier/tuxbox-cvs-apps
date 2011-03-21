@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.234 2011/01/09 17:22:05 zwen Exp $
+  $Id: settings.h,v 1.235 2011/03/21 18:36:26 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -258,7 +258,7 @@ struct SNeutrinoSettings
 	int  recording_server_wakeup;
 	char recording_server_mac[31];
 	int  recording_vcr_no_scart;
-	char recording_splitsize[10];
+	char recording_splitsize_default[10];
 	int  recording_use_o_sync;
 	int  recording_use_fdatasync;
 	unsigned char recording_audio_pids_default;
@@ -270,14 +270,13 @@ struct SNeutrinoSettings
 	int recording_ringbuffers;
 	int recording_in_spts_mode;
 	int recording_choose_direct_rec_dir;
-	int recording_epg_for_filename;
-#define REC_FILENAME_TEMPLATE_NR_OF_ENTRIES 4
-	std::string recording_filename_template[REC_FILENAME_TEMPLATE_NR_OF_ENTRIES];
-	char recording_dir_permissions[REC_FILENAME_TEMPLATE_NR_OF_ENTRIES][4];
+	std::string recording_filename_template_default;
+	char recording_dir_permissions[4];
 	int  recording_zap_on_announce;
-
 #define MAX_RECORDING_DIR 10	
 	std::string recording_dir[MAX_RECORDING_DIR];
+	std::string recording_filename_template[MAX_RECORDING_DIR];
+	char recording_splitsize[MAX_RECORDING_DIR][10];
 	int recording_gen_psi;
 
 	//streaming

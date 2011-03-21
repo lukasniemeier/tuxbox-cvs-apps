@@ -801,11 +801,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	
 	// %C == channel, %T == title, %I == info1, %d == date, %t == time
 	if (FilenameTemplate.empty())
-	{
-		if (g_settings.recording_epg_for_filename)
-			FilenameTemplate = "%C_%T_";
-		FilenameTemplate += "%d_%t";
-	}
+		FilenameTemplate = "%C_%T_%d_%t";
 	
 	std::string expandedTemplate;
 	if (CreateTemplateDirectories)
@@ -820,34 +816,33 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	size_t dataLength = 0;
 	char buf[256];
 	buf[255] = '\0';
-	
-	if (g_settings.recording_epg_for_filename) {
-		appendChannelName(buf,255,channel_id);
-		dataLength = strlen(buf);
-		
-		while ((searchPos = expandedTemplate.find("%C",startAt)) != std::string::npos) {
-			expandedTemplate.erase(searchPos,2);
-			expandedTemplate.insert(searchPos,buf);
-			startAt = searchPos + dataLength;
-		}
-		startAt = 0;
-		appendEPGTitle(buf, 255, epgid, epgTitle);
-		dataLength = strlen(buf);
-		while ((searchPos = expandedTemplate.find("%T",startAt)) != std::string::npos) {
-			expandedTemplate.erase(searchPos,2);
-			expandedTemplate.insert(searchPos,buf);
-			startAt = searchPos + dataLength;
-		}
-		startAt = 0;
-		appendEPGInfo(buf, 255, epgid);
-		dataLength = strlen(buf);
-		while ((searchPos = expandedTemplate.find("%I",startAt)) != std::string::npos) {
-			expandedTemplate.erase(searchPos,2);
-			expandedTemplate.insert(searchPos,buf);
-			startAt = searchPos + dataLength;
-		}
+
+	appendChannelName(buf,255,channel_id);
+	dataLength = strlen(buf);
+	while ((searchPos = expandedTemplate.find("%C",startAt)) != std::string::npos) {
+		expandedTemplate.erase(searchPos,2);
+		expandedTemplate.insert(searchPos,buf);
+		startAt = searchPos + dataLength;
 	}
-	
+
+	startAt = 0;
+	appendEPGTitle(buf, 255, epgid, epgTitle);
+	dataLength = strlen(buf);
+	while ((searchPos = expandedTemplate.find("%T",startAt)) != std::string::npos) {
+		expandedTemplate.erase(searchPos,2);
+		expandedTemplate.insert(searchPos,buf);
+		startAt = searchPos + dataLength;
+	}
+
+	startAt = 0;
+	appendEPGInfo(buf, 255, epgid);
+	dataLength = strlen(buf);
+	while ((searchPos = expandedTemplate.find("%I",startAt)) != std::string::npos) {
+		expandedTemplate.erase(searchPos,2);
+		expandedTemplate.insert(searchPos,buf);
+		startAt = searchPos + dataLength;
+	}
+
 	strftime(buf,11,"%Y-%m-%d",localtime(&t));
 	dataLength = strlen(buf);
 	startAt = 0;
@@ -1010,7 +1005,7 @@ bool CVCRControl::CFileDevice::createRecordingDir(const char *filename)
 			{	
 				if (mkdir(filename,0000) == 0)
 				{
-					mode_t mode = strtoul(g_settings.recording_dir_permissions[0],(char**)NULL,8);
+					mode_t mode = strtoul(g_settings.recording_dir_permissions,(char**)NULL,8);
 					if (chmod(filename,mode) != 0)
 					{
 						perror("[CFileDevice] chmod:");

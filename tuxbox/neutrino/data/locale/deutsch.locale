@@ -1151,9 +1151,9 @@ recordingmenu.apids_alt Alternative Tonspuren aufn.
 recordingmenu.apids_std Standard Tonspur aufnehmen
 recordingmenu.choose_direct_rec_dir Bei Sofortaufn. Verzeichnisauswahl
 recordingmenu.defdir Aufnahmeverzeichnis
+recordingmenu.dir Verzeichnis
 recordingmenu.dir_permissions Verzeichnisrechte
 recordingmenu.dir_permissions_hint Rechte im 'chmod'-Stil
-recordingmenu.epg_for_filename lange Dateinamen (mit EPG-Daten)
 recordingmenu.file Direkt (Datei)
 recordingmenu.filename_template Vorlage für Dateinamen
 recordingmenu.filename_template_hint %C=Kanal, %T=Titel, %I=Info, %d=Datum, %t=Uhrzeit

@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.192 2011/01/09 17:22:05 zwen Exp $
+ * $Id: locals_intern.h,v 1.193 2011/03/21 18:36:26 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1178,9 +1178,9 @@ const char * locale_real_names[] =
 	"recordingmenu.apids_std",
 	"recordingmenu.choose_direct_rec_dir",
 	"recordingmenu.defdir",
+	"recordingmenu.dir",
 	"recordingmenu.dir_permissions",
 	"recordingmenu.dir_permissions_hint",
-	"recordingmenu.epg_for_filename",
 	"recordingmenu.file",
 	"recordingmenu.filename_template",
 	"recordingmenu.filename_template_hint",

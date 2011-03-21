@@ -1150,10 +1150,10 @@ recordingmenu.apids_ac3 Record AC3 Streams
 recordingmenu.apids_alt Record Alternative Streams
 recordingmenu.apids_std Record Standard Stream
 recordingmenu.choose_direct_rec_dir Choose Directory on Recording
-recordingmenu.defdir recording directory
+recordingmenu.defdir Recording Directory
+recordingmenu.dir Directory
 recordingmenu.dir_permissions Directory Permissions
 recordingmenu.dir_permissions_hint permissions in 'chmod' style
-recordingmenu.epg_for_filename Long Filenames (EPG data)
 recordingmenu.file direct (file)
 recordingmenu.filename_template Filename Template
 recordingmenu.filename_template_hint %C=channel, %T=title, %I=info, %d=date, %t=time

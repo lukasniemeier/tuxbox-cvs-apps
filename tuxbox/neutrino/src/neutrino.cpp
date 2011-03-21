@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1053 2011/01/30 20:46:15 dbt Exp $
+	$Id: neutrino.cpp,v 1.1054 2011/03/21 18:36:26 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -597,7 +597,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.recording_server_wakeup = configfile.getInt32( "recording_server_wakeup", 0 );
 	strcpy( g_settings.recording_server_mac, configfile.getString( "recording_server_mac", "11:22:33:44:55:66").c_str() );
 	g_settings.recording_vcr_no_scart = configfile.getInt32( "recording_vcr_no_scart", false);
-	strcpy( g_settings.recording_splitsize, configfile.getString( "recording_splitsize", "2048").c_str() );
+	strcpy( g_settings.recording_splitsize_default, configfile.getString( "recording_splitsize_default", "2048").c_str() );
 	g_settings.recording_use_o_sync            = configfile.getBool("recordingmenu.use_o_sync"           , false);
 	g_settings.recording_use_fdatasync         = configfile.getBool("recordingmenu.use_fdatasync"        , false);
 	g_settings.recording_audio_pids_default    = configfile.getInt32("recording_audio_pids_default", TIMERD_APIDS_STD );
@@ -616,22 +616,19 @@ int CNeutrinoApp::loadSetup()
 			g_settings.recording_ringbuffers = 2;	// --> 2MB
 	}
 	g_settings.recording_choose_direct_rec_dir = configfile.getInt32( "recording_choose_direct_rec_dir", 0 );
-	g_settings.recording_epg_for_filename      = configfile.getBool("recording_epg_for_filename"         , true);
 	g_settings.recording_in_spts_mode          = configfile.getBool("recording_in_spts_mode"         , true);
 	g_settings.recording_zap_on_announce       = configfile.getBool("recording_zap_on_announce"      , false);
-	for(int i=0 ; i < REC_FILENAME_TEMPLATE_NR_OF_ENTRIES; i++)
-	{
-		sprintf(cfg_key, "recording_filename_template_%d", i);
-		g_settings.recording_filename_template[i] = configfile.getString(cfg_key, "%C_%T_%d_%t");
-		sprintf(cfg_key, "recording_dir_permissions_%d", i);
-		strncpy(g_settings.recording_dir_permissions[i], configfile.getString(cfg_key,"755").c_str(),3);
-		g_settings.recording_dir_permissions[i][3] = '\0';
-	}
-
+	g_settings.recording_filename_template_default = configfile.getString("recording_filename_template_default", "%C_%T_%d_%t");
+	strncpy(g_settings.recording_dir_permissions, configfile.getString("recording_dir_permissions", "755").c_str(), 3);
+	g_settings.recording_dir_permissions[3] = '\0';
 	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
 	{
 		sprintf(cfg_key, "recording_dir_%d", i);
 		g_settings.recording_dir[i] = configfile.getString( cfg_key, "" );
+		sprintf(cfg_key, "recording_filename_template_%d", i);
+		g_settings.recording_filename_template[i] = configfile.getString( cfg_key, "" );
+		sprintf(cfg_key, "recording_splitsize_%d", i);
+		strcpy(g_settings.recording_splitsize[i], configfile.getString( cfg_key, "" ).c_str());
 	}
 	g_settings.recording_gen_psi = configfile.getBool("recordingmenu.gen_psi", true);
 
@@ -1153,7 +1150,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ("recording_server_wakeup",             g_settings.recording_server_wakeup);
 	configfile.setString("recording_server_mac",                g_settings.recording_server_mac);
 	configfile.setInt32 ("recording_vcr_no_scart",              g_settings.recording_vcr_no_scart);
-	configfile.setString("recording_splitsize",                 g_settings.recording_splitsize);
+	configfile.setString("recording_splitsize_default",         g_settings.recording_splitsize_default);
 	configfile.setBool  ("recordingmenu.use_o_sync"           , g_settings.recording_use_o_sync           );
 	configfile.setBool  ("recordingmenu.use_fdatasync"        , g_settings.recording_use_fdatasync        );
 	configfile.setInt32 ("recording_audio_pids_default"       , g_settings.recording_audio_pids_default);
@@ -1162,22 +1159,20 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ("recordingmenu.ringbuffers"          , g_settings.recording_ringbuffers);
 	configfile.setBool  ("recordingmenu.gen_psi"              , g_settings.recording_gen_psi);
 	configfile.setInt32 ("recording_choose_direct_rec_dir"    , g_settings.recording_choose_direct_rec_dir);
-	configfile.setBool  ("recording_epg_for_filename"         , g_settings.recording_epg_for_filename     );
 	configfile.setBool  ("recording_in_spts_mode"             , g_settings.recording_in_spts_mode         );
 	configfile.setBool  ("recording_zap_on_announce"          , g_settings.recording_zap_on_announce      );
-	for(int i=0 ; i < REC_FILENAME_TEMPLATE_NR_OF_ENTRIES ; i++)
-	{
-		sprintf(cfg_key, "recording_filename_template_%d", i);
-		configfile.setString( cfg_key, g_settings.recording_filename_template[i] );
-		sprintf(cfg_key, "recording_dir_permissions_%d", i);
-		configfile.setString( cfg_key, g_settings.recording_dir_permissions[i] );
-	}
-
+	configfile.setString("recording_filename_template_default", g_settings.recording_filename_template_default);
+	configfile.setString("recording_dir_permissions"          , g_settings.recording_dir_permissions);
 	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
 	{
 		sprintf(cfg_key, "recording_dir_%d", i);
 		configfile.setString( cfg_key, g_settings.recording_dir[i] );
+		sprintf(cfg_key, "recording_filename_template_%d", i);
+		configfile.setString( cfg_key, g_settings.recording_filename_template[i] );
+		sprintf(cfg_key, "recording_splitsize_%d", i);
+		configfile.setString( cfg_key, g_settings.recording_splitsize[i] );
 	}
+
 	//streaming
 	configfile.setInt32 ( "streaming_type", g_settings.streaming_type );
 	configfile.setString( "streaming_server_ip", g_settings.streaming_server_ip );
@@ -1824,12 +1819,35 @@ bool CNeutrinoApp::doGuiRecord(char * preselectedDir, bool addTimer, char * file
 						fileDevice->CreateTemplateDirectories = false;
 					}
 					fileDevice->Directory = recDir;
+
 					if (filename != NULL) {
 						//printf("CNeutrinoApp::doGuiRecord: given filename: %s\n", filename);
 						fileDevice->FilenameTemplate = filename;
 					}
 					else
-						fileDevice->FilenameTemplate = g_settings.recording_filename_template[0];
+					{
+						fileDevice->FilenameTemplate = g_settings.recording_filename_template_default;
+						for (int i = 0; i < MAX_RECORDING_DIR; i++)
+						{
+							if (!g_settings.recording_filename_template[i].empty() && g_settings.recording_dir[i] == recDir)
+							{
+								fileDevice->FilenameTemplate = g_settings.recording_filename_template[i];
+								break;
+							}
+						}
+					}
+
+					unsigned int splitsize;
+					sscanf(g_settings.recording_splitsize_default, "%u", &splitsize);
+					for (int i = 0; i < MAX_RECORDING_DIR; i++)
+					{
+						if (strlen(g_settings.recording_splitsize[i]) > 0 && g_settings.recording_dir[i] == recDir)
+						{
+							sscanf(g_settings.recording_splitsize[i], "%u", &splitsize);
+							break;
+						}
+					}
+					fileDevice->SplitSize = splitsize;
 				}
 				else
 				{
@@ -1963,7 +1981,7 @@ void CNeutrinoApp::setupRecordingDevice(void)
 	else if (g_settings.recording_type == RECORDING_FILE)
 	{
 		unsigned int splitsize, ringbuffers;
-		sscanf(g_settings.recording_splitsize, "%u", &splitsize);
+		sscanf(g_settings.recording_splitsize_default, "%u", &splitsize);
 		ringbuffers = g_settings.recording_ringbuffers;
 
 		recordingdevice = new CVCRControl::CFileDevice(g_settings.recording_stopplayback, g_settings.recording_stopsectionsd, g_settings.recording_dir[0].c_str(), splitsize, g_settings.recording_use_o_sync, g_settings.recording_use_fdatasync, g_settings.recording_stream_vtxt_pid, g_settings.recording_stream_subtitle_pid, ringbuffers, g_settings.recording_gen_psi, true);
@@ -3826,7 +3844,6 @@ void CNeutrinoApp::startNextRecording()
 				if (!CFSMounter::isMounted(recDir))
 				{
 					printf("[neutrino.cpp] trying to mount %s\n",recDir);
-					doRecord = false;
 					for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
 					{
 						if (strcmp(g_settings.network_nfs_local_dir[i],recDir) == 0)
@@ -3839,7 +3856,6 @@ void CNeutrinoApp::startNextRecording()
 							if (mres == CFSMounter::MRES_OK)
 							{
 								printf("[neutrino.cpp] mount successful\n");
-								doRecord = true;
 							} else {
 								std::string msg = mntRes2Str(mres) + "\nDir: " + nextRecordingInfo->recordingDir;
 								ShowHintUTF(LOCALE_MESSAGEBOX_ERROR, msg.c_str()); // UTF-8
@@ -3850,8 +3866,7 @@ void CNeutrinoApp::startNextRecording()
 					}
 					if (!doRecord)
 					{
-						// recording dir does not seem to exist in config anymore
-						// or an error occured while mounting
+						// an error occured while mounting recording dir
 						// -> try default dir
 						recDir = g_settings.recording_dir[0].c_str();
 						doRecord = true;
@@ -3865,7 +3880,28 @@ void CNeutrinoApp::startNextRecording()
 					if ((fileDevice = dynamic_cast<CVCRControl::CFileDevice*>(recordingdevice)) != NULL)
 					{
 						fileDevice->Directory = recDir;
-						fileDevice->FilenameTemplate = g_settings.recording_filename_template[0];
+
+						fileDevice->FilenameTemplate = g_settings.recording_filename_template_default;
+						for (int i = 0; i < MAX_RECORDING_DIR; i++)
+						{
+							if (!g_settings.recording_filename_template[i].empty() && strcmp(g_settings.recording_dir[i].c_str(), recDir) == 0)
+							{
+								fileDevice->FilenameTemplate = g_settings.recording_filename_template[i];
+								break;
+							}
+						}
+
+						unsigned int splitsize;
+						sscanf(g_settings.recording_splitsize_default, "%u", &splitsize);
+						for (int i = 0; i < MAX_RECORDING_DIR; i++)
+						{
+							if (strlen(g_settings.recording_splitsize[i]) > 0 && strcmp(g_settings.recording_dir[i].c_str(), recDir) == 0)
+							{
+								sscanf(g_settings.recording_splitsize[i], "%u", &splitsize);
+								break;
+							}
+						}
+						fileDevice->SplitSize = splitsize;
 					} else
 					{
 						puts("[neutrino] could not set directory and filename template");

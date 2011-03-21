@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.8 2011/01/09 17:22:05 zwen Exp $
+	$Id: record_setup.cpp,v 1.9 2011/03/21 18:36:26 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -239,34 +239,57 @@ void CRecordSetup::showRecordSetup()
 	apidRecordingSettings->addItem(aoj3);
 
 	// directory menue for direct recording settings
-	CMenuWidget *dirMenu = new CMenuWidget(LOCALE_RECORDINGMENU_DEFDIR, NEUTRINO_ICON_RECORDING, width);
-	dirMenu->addItem(GenericMenuSeparator);
-	CDirChooser* fc1[MAX_RECORDING_DIR];
-	CMenuForwarder* mffc[MAX_RECORDING_DIR];
-	char temp[10];
-	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
-	{
-		fc1[i] = new CDirChooser(&g_settings.recording_dir[i]);
-		snprintf(temp,10,"%d:",i);
-		temp[9]=0;// terminate for sure
-		mffc[i] = new CMenuForwarderNonLocalized(temp, true, g_settings.recording_dir[i],fc1[i]);
-	}
+	CMenuWidget *dirMenu = new CMenuWidget(LOCALE_RECORDINGMENU_FILESETTINGS, NEUTRINO_ICON_RECORDING, width);
+	dirMenu->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_RECORDINGMENU_DEFDIR));
 	dirMenu->addItem(GenericMenuSeparator);
 	dirMenu->addItem(GenericMenuBack);
 	dirMenu->addItem(GenericMenuSeparatorLine);
+	CMenuWidget* dirRecordingSettings;
+	CMenuSeparator* dirRecordingSettings_subhead;
+	CDirChooser* dirRecordingSettings_dirChooser;
+	CStringInput* dirRecordingSettings_filenameTemplate;
+	CStringInput* dirRecordingSettings_splitsize;
+	char temp[10];
 	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
 	{
-		dirMenu->addItem(mffc[i]);
+		// directory menu item
+		snprintf(temp, 10, "%d:", i + 1);
+		temp[9] = 0; // terminate for sure
+		dirRecordingSettings = new CMenuWidget(LOCALE_RECORDINGMENU_FILESETTINGS, NEUTRINO_ICON_RECORDING, width);
+		dirMenu->addItem(new CMenuForwarderNonLocalized(temp, true, g_settings.recording_dir[i], dirRecordingSettings));
+
+		// subhead
+		snprintf(temp, 10, " %d", i + 1);
+		temp[9] = 0; // terminate for sure
+		dirRecordingSettings_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
+		dirRecordingSettings_subhead->setString(std::string(g_Locale->getText(LOCALE_RECORDINGMENU_DEFDIR)) + temp);
+		dirRecordingSettings->addItem(dirRecordingSettings_subhead);
+
+		// intro items
+		dirRecordingSettings->addItem(GenericMenuSeparator);
+		dirRecordingSettings->addItem(GenericMenuBack);
+		dirRecordingSettings->addItem(GenericMenuSeparatorLine);
+
+		// directory
+		dirRecordingSettings_dirChooser = new CDirChooser(&g_settings.recording_dir[i]);
+		dirRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DIR, true, g_settings.recording_dir[i], dirRecordingSettings_dirChooser));
+
+		// filename template
+		dirRecordingSettings_filenameTemplate = new CStringInput(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template[i], 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
+		dirRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template[i], dirRecordingSettings_filenameTemplate));
+
+		// maximum file size
+		dirRecordingSettings_splitsize = new CStringInput(LOCALE_RECORDINGMENU_SPLITSIZE, g_settings.recording_splitsize[i], 6, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, "0123456789 ");
+		dirRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_SPLITSIZE, true, g_settings.recording_splitsize[i], dirRecordingSettings_splitsize));
 	}
 	dirMenu->addItem(GenericMenuSeparator);
 
 	// for direct recording
-	CMenuWidget *directRecordingSettings = new CMenuWidget(LOCALE_RECORDINGMENU_FILESETTINGS, NEUTRINO_ICON_RECORDING, width);
-	
+	CMenuWidget *directRecordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_RECORDING, NEUTRINO_ICON_RECORDING, width);
 	CMenuForwarder* mf7 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILESETTINGS,(g_settings.recording_type == RECORDING_FILE), NULL, directRecordingSettings, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 
-	CStringInput * recordingSettings_splitsize = new CStringInput(LOCALE_RECORDINGMENU_SPLITSIZE, g_settings.recording_splitsize, 6, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, "0123456789 ");
-	CMenuForwarder* mf9 = new CMenuForwarder(LOCALE_RECORDINGMENU_SPLITSIZE, true, g_settings.recording_splitsize, recordingSettings_splitsize);
+	CStringInput * recordingSettings_splitsize = new CStringInput(LOCALE_RECORDINGMENU_SPLITSIZE, g_settings.recording_splitsize_default, 6, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, "0123456789 ");
+	CMenuForwarder* mf9 = new CMenuForwarder(LOCALE_RECORDINGMENU_SPLITSIZE, true, g_settings.recording_splitsize_default, recordingSettings_splitsize);
 
 	CMenuOptionChooser* oj6 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_USE_O_SYNC, &g_settings.recording_use_o_sync, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
@@ -280,15 +303,13 @@ void CRecordSetup::showRecordSetup()
 
 	CMenuOptionChooser* oj10 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_CHOOSE_DIRECT_REC_DIR, &g_settings.recording_choose_direct_rec_dir, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
-	CMenuOptionChooser* oj11 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_EPG_FOR_FILENAME, &g_settings.recording_epg_for_filename, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-
 	CMenuOptionChooser* oj14 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_GEN_PSI, &g_settings.recording_gen_psi, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
-	CStringInput * recordingSettings_filenameTemplate = new CStringInput(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template[0], 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
-	CMenuForwarder* mf11 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template[0],recordingSettings_filenameTemplate);
+	CStringInput * recordingSettings_filenameTemplate = new CStringInput(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template_default, 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
+	CMenuForwarder* mf11 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template_default, recordingSettings_filenameTemplate);
 
-	CStringInput * recordingSettings_dirPermissions = new CStringInput(LOCALE_RECORDINGMENU_DIR_PERMISSIONS, g_settings.recording_dir_permissions[0], 3, LOCALE_RECORDINGMENU_DIR_PERMISSIONS_HINT, LOCALE_IPSETUP_HINT_2, "01234567");
-	CMenuForwarder* mf12 = new CMenuForwarder(LOCALE_RECORDINGMENU_DIR_PERMISSIONS, true, g_settings.recording_dir_permissions[0],recordingSettings_dirPermissions);
+	CStringInput * recordingSettings_dirPermissions = new CStringInput(LOCALE_RECORDINGMENU_DIR_PERMISSIONS, g_settings.recording_dir_permissions, 3, LOCALE_RECORDINGMENU_DIR_PERMISSIONS_HINT, LOCALE_IPSETUP_HINT_2, "01234567");
+	CMenuForwarder* mf12 = new CMenuForwarder(LOCALE_RECORDINGMENU_DIR_PERMISSIONS, true, g_settings.recording_dir_permissions, recordingSettings_dirPermissions);
 
 	CRecordingNotifier *RecordingNotifier = new CRecordingNotifier(mf1,mf2,oj2,mf3,oj3,oj4,oj5,mf7,oj12);
 
@@ -331,24 +352,23 @@ void CRecordSetup::showRecordSetup()
 		timerRecordingSettings->addItem( mf5); //start record correcture
 		timerRecordingSettings->addItem( mf6); //end record correcture
 		timerRecordingSettings->addItem( mf14);//switch correcture
-
 	recordingSettings->addItem( mf13);//audio pid settings
+		//subhead
+		directRecordingSettings->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_RECORDINGMENU_FILESETTINGS));
 		directRecordingSettings->addItem(GenericMenuSeparator);
 		directRecordingSettings->addItem(GenericMenuBack);
 		directRecordingSettings->addItem(GenericMenuSeparatorLine);
 		directRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DEFDIR, true, NULL, dirMenu, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 		directRecordingSettings->addItem(oj10);
+		directRecordingSettings->addItem(mf11);
+		directRecordingSettings->addItem(mf9);
 		directRecordingSettings->addItem(mf12);
 		directRecordingSettings->addItem(GenericMenuSeparatorLine);
 		directRecordingSettings->addItem(oj13); //ringbuffer
-		directRecordingSettings->addItem(mf9);
 		directRecordingSettings->addItem(oj6);
 		directRecordingSettings->addItem(oj7);
 		directRecordingSettings->addItem(oj8);
 		directRecordingSettings->addItem(oj9);
-		directRecordingSettings->addItem(GenericMenuSeparatorLine);
-		directRecordingSettings->addItem(oj11);
-		directRecordingSettings->addItem(mf11);
 		directRecordingSettings->addItem(oj14); //gen_psi
 
 
