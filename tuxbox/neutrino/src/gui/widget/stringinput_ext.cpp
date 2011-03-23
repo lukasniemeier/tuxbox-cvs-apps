@@ -479,7 +479,6 @@ void CDateInput::onBeforeExec()
 	snprintf(value, 20, "%02d.%02d.%04d %02d:%02d", tmTime->tm_mday, tmTime->tm_mon+1,
 				tmTime->tm_year+1900,
 				tmTime->tm_hour, tmTime->tm_min);
-	dst = tmTime->tm_isdst;
 }
 
 void CDateInput::onAfterExec()
@@ -491,7 +490,7 @@ void CDateInput::onAfterExec()
 	tmTime.tm_mon-=1;
 	tmTime.tm_year-=1900;
 	tmTime.tm_sec=0;
-	tmTime.tm_isdst=dst;
+	tmTime.tm_isdst=-1;
 
 	if(tmTime.tm_year>129)
       tmTime.tm_year=129;
