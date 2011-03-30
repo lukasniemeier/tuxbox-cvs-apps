@@ -1,5 +1,5 @@
 /*
-	$Id: audioplayer_setup.cpp,v 1.4 2010/12/06 21:00:15 dbt Exp $
+	$Id: audioplayer_setup.cpp,v 1.5 2011/03/30 19:41:50 dbt Exp $
 
 	audioplayer setup implementation - Neutrino-GUI
 
@@ -144,8 +144,8 @@ void CAudioPlayerSetup::showAudioPlayerSetup()
 	// show playlist y/n
 	audioplayerSetup->addItem(new CMenuOptionChooser(LOCALE_AUDIOPLAYER_SHOW_PLAYLIST, &g_settings.audioplayer_show_playlist, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true ));
 	// screensaver timeout
-	CStringInput * audio_screensaver= new CStringInput(LOCALE_AUDIOPLAYER_SCREENSAVER_TIMEOUT, g_settings.audioplayer_screensaver, 2, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
-	audioplayerSetup->addItem(new CMenuForwarder(LOCALE_AUDIOPLAYER_SCREENSAVER_TIMEOUT, true, g_settings.audioplayer_screensaver, audio_screensaver));
+	CStringInput audio_screensaver(LOCALE_AUDIOPLAYER_SCREENSAVER_TIMEOUT, g_settings.audioplayer_screensaver, 2, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
+	audioplayerSetup->addItem(new CMenuForwarder(LOCALE_AUDIOPLAYER_SCREENSAVER_TIMEOUT, true, g_settings.audioplayer_screensaver, &audio_screensaver));
 	// high decode priority
 	audioplayerSetup->addItem(new CMenuOptionChooser(LOCALE_AUDIOPLAYER_HIGHPRIO , &g_settings.audioplayer_highprio    , MESSAGEBOX_NO_YES_OPTIONS  , MESSAGEBOX_NO_YES_OPTION_COUNT  , true ));
 	// start directory

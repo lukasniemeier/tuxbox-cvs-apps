@@ -1,5 +1,5 @@
 /*
-	$Id: parentallock_setup.cpp,v 1.5 2010/12/05 22:32:12 dbt Exp $
+	$Id: parentallock_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
 
 	parentallock setup implementation - Neutrino-GUI
 
@@ -129,8 +129,8 @@ void CParentalSetup::showParentalSetup()
 
 	plock->addItem(new CMenuOptionChooser(LOCALE_PARENTALLOCK_LOCKAGE, &g_settings.parentallock_lockage, PARENTALLOCK_LOCKAGE_OPTIONS, PARENTALLOCK_LOCKAGE_OPTION_COUNT, !CNeutrinoApp::getInstance()->isParentallocked()));
 
-	CPINChangeWidget * pinChangeWidget = new CPINChangeWidget(LOCALE_PARENTALLOCK_CHANGEPIN, g_settings.parentallock_pincode, 4, LOCALE_PARENTALLOCK_CHANGEPIN_HINT1);
-	plock->addItem( new CMenuForwarder(LOCALE_PARENTALLOCK_CHANGEPIN, true, g_settings.parentallock_pincode, pinChangeWidget));
+	CPINChangeWidget pinChangeWidget(LOCALE_PARENTALLOCK_CHANGEPIN, g_settings.parentallock_pincode, 4, LOCALE_PARENTALLOCK_CHANGEPIN_HINT1);
+	plock->addItem(new CMenuForwarder(LOCALE_PARENTALLOCK_CHANGEPIN, true, g_settings.parentallock_pincode, &pinChangeWidget));
 
 	plock->exec(NULL, "");
 	plock->hide();

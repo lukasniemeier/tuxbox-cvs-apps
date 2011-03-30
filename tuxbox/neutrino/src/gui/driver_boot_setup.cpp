@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.3 2010/12/05 22:32:12 dbt Exp $
+	$Id: driver_boot_setup.cpp,v 1.4 2011/03/30 19:41:50 dbt Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -136,6 +136,8 @@ const driver_setting_files_struct_t driver_setting_files[DRIVER_SETTING_FILES_CO
 
 void CDriverBootSetup::showSetup()
 {
+	// dynamic created objects
+	std::vector<CChangeObserver*> toDelete;
 
 	CMenuWidget * dbs = new CMenuWidget(menue_title, menue_icon, width);
 	dbs->setPreselected(selected);
@@ -150,8 +152,8 @@ void CDriverBootSetup::showSetup()
 	int boxtype = g_Controld->getBoxType();
 
 #ifdef HAVE_DBOX_HARDWARE
-	CSPTSNotifier *sptsNotifier = new CSPTSNotifier;
-	CMenuOptionChooser * oj_spts = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_SPTSMODE, &g_settings.misc_spts, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, sptsNotifier);
+	CSPTSNotifier sptsNotifier;
+	CMenuOptionChooser * oj_spts = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_SPTSMODE, &g_settings.misc_spts, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &sptsNotifier);
 #endif
 
 	CMenuOptionChooser * oj_switches[DRIVER_SETTING_FILES_COUNT];
@@ -176,12 +178,16 @@ void CDriverBootSetup::showSetup()
 		else
 			item_enabled[i] = true;
 
-		oj_switches[i] = new CMenuOptionChooser(driver_setting_files[i].name, &(g_settings.misc_option[i]), driver_setting_files[i].options, 2, item_enabled[i], new CTouchFileNotifier(driver_setting_files[i].filename));
+		CTouchFileNotifier * touchFileNotifier = new CTouchFileNotifier(driver_setting_files[i].filename);
+		toDelete.push_back(touchFileNotifier);
+		oj_switches[i] = new CMenuOptionChooser(driver_setting_files[i].name, &(g_settings.misc_option[i]), driver_setting_files[i].options, 2, item_enabled[i], touchFileNotifier);
 	}
 
 #ifdef HAVE_DBOX_HARDWARE
-	CMenuOptionChooser * oj_boot_console = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FB_DESTINATION, &g_settings.uboot_console, DRIVERSETTINGS_FB_DESTINATION_OPTIONS, DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT, true, new CConsoleDestChangeNotifier);
-	CMenuOptionChooser * oj_dbox_duplex = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FDX_LOAD, &g_settings.uboot_dbox_duplex, DRIVERSETTINGS_FDX_OPTIONS, DRIVERSETTINGS_FDX_OPTION_COUNT, true, new CFdxChangeNotifier);
+	CConsoleDestChangeNotifier consoleDestChangeNotifier;
+	CMenuOptionChooser * oj_boot_console = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FB_DESTINATION, &g_settings.uboot_console, DRIVERSETTINGS_FB_DESTINATION_OPTIONS, DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT, true, &consoleDestChangeNotifier);
+	CFdxChangeNotifier fdxChangeNotifier;
+	CMenuOptionChooser * oj_dbox_duplex = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FDX_LOAD, &g_settings.uboot_dbox_duplex, DRIVERSETTINGS_FDX_OPTIONS, DRIVERSETTINGS_FDX_OPTION_COUNT, true, &fdxChangeNotifier);
 #endif
 
 	//paint items
@@ -206,5 +212,11 @@ void CDriverBootSetup::showSetup()
 	dbs->hide();
 	selected = dbs->getSelected();
 	delete dbs;
+
+	// delete dynamic created objects
+	unsigned int toDeleteSize = toDelete.size();
+	for (unsigned int i = 0; i < toDeleteSize; i++)
+		delete toDelete[i];
+	toDelete.clear();
 }
 

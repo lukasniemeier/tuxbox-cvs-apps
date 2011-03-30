@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.6 2011/01/04 16:51:37 dbt Exp $
+	$Id: software_update.cpp,v 1.7 2011/03/30 19:41:50 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -125,20 +125,17 @@ void CSoftwareUpdate::showSoftwareUpdate()
  	/* show current version */
 	showSoftwareUpdateImageinfo(softUpdate);
 
-//#ifndef DISABLE_INTERNET_UPDATE
-// #ifndef HAVE_DREAMBOX_HARDWARE
-// 	softUpdate->addItem(GenericMenuSeparatorLine);
-// 	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, new CProxySetup(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-// #endif
-// #endif
 	// update check
+	CFlashUpdate* flashUpdate = new CFlashUpdate();
 	softUpdate->addItem(GenericMenuSeparatorLine);
-	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, new CFlashUpdate(), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, flashUpdate, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 
 	softUpdate->exec (NULL, "");
 	softUpdate->hide ();
 	selected = softUpdate->getSelected();
 	delete softUpdate;
+
+	delete flashUpdate;
 }
 
 void CSoftwareUpdate::showSoftwareUpdateExpert()
@@ -162,14 +159,15 @@ void CSoftwareUpdate::showSoftwareUpdateExpert()
 
 #ifndef DISABLE_INTERNET_UPDATE
 	mtdexpert->addItem(GenericMenuSeparatorLine);
-	CStringInputSMS * softUpdate_url_file = new CStringInputSMS(LOCALE_FLASHUPDATE_URL_FILE, g_settings.softupdate_url_file, 30, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz0123456789!""$%&/()=?-. ");
-	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_URL_FILE, true, g_settings.softupdate_url_file, softUpdate_url_file));
+	CStringInputSMS softUpdate_url_file(LOCALE_FLASHUPDATE_URL_FILE, g_settings.softupdate_url_file, 30, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz0123456789!""$%&/()=?-. ");
+	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_URL_FILE, true, g_settings.softupdate_url_file, &softUpdate_url_file));
 #endif /*DISABLE_INTERNET_UPDATE*/
 
 	mtdexpert->exec (NULL, "");
 	mtdexpert->hide ();
 	delete mtdexpert;
 
+	delete fe;
 }
 
 void CSoftwareUpdate::showSoftwareUpdateImageinfo(CMenuWidget * entry)

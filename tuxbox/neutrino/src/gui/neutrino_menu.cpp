@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.125 2010/12/16 08:23:21 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.126 2011/03/30 19:41:50 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -447,6 +447,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 	CEPGplusHandler* tmpEPGplusHandler			= NULL;
 #endif
 	CEPGDataHandler* tmpEPGDataHandler			= NULL;
+#ifdef ENABLE_MOVIEPLAYER
+	CMoviePlayerGui* tmpMoviePlayerGui			= NULL;
+#endif
 	
 	std::string txt = g_settings.usermenu_text[button];
 	if (button == SNeutrinoSettings::BUTTON_RED)
@@ -552,8 +555,10 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_MOVIEPLAYER_TS: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_MOVIEPLAYER_TS;
+				if (tmpMoviePlayerGui == NULL)
+					tmpMoviePlayerGui = new CMoviePlayerGui();
 				keyhelper.get(&key,&icon,CRCInput::RC_green);
-				menu_item = new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, new CMoviePlayerGui()/*this->moviePlayerGui*/, "tsplayback", key, icon);
+				menu_item = new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, tmpMoviePlayerGui, "tsplayback", key, icon);
 				menu->addItem(menu_item, false);
 				break;
 
@@ -562,7 +567,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 				menu_prev = SNeutrinoSettings::ITEM_MOVIEPLAYER_MB;
 				keyhelper.get(&key,&icon,CRCInput::RC_green);
 #ifndef ENABLE_MOVIEPLAYER2
-				menu_item = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, new CMoviePlayerGui(), "tsmoviebrowser", key, icon);
+				if (tmpMoviePlayerGui == NULL)
+					tmpMoviePlayerGui = new CMoviePlayerGui();
+				menu_item = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, tmpMoviePlayerGui, "tsmoviebrowser", key, icon);
 #else
 				menu_item = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, CMovieBrowser::getInstance(), "run", key, icon);
 #endif
@@ -722,6 +729,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 	if(tmpEPGplusHandler)		delete tmpEPGplusHandler;
 #endif
 	if(tmpEPGDataHandler)		delete tmpEPGDataHandler;
+#ifdef ENABLE_MOVIEPLAYER
+	if(tmpMoviePlayerGui)		delete tmpMoviePlayerGui;
+#endif
 	return true;
 }
 

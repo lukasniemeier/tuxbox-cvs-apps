@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.8 2010/12/05 22:32:12 dbt Exp $
+	$Id: movieplayer_menu.cpp,v 1.9 2011/03/30 19:41:50 dbt Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -136,16 +136,24 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
 	//help
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, new CMoviePlayerSetup(), NULL, CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
+	CMoviePlayerSetup* moviePlayerSetup = new CMoviePlayerSetup();
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, moviePlayerSetup, NULL, CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
 
 #ifdef ENABLE_GUI_MOUNT
 	//neutrino mount
-	mpmenue->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, new CNFSSmallMenu(), NULL, CRCInput::RC_setup, NEUTRINO_ICON_BUTTON_DBOX));
+	CNFSSmallMenu* nfsSmallMenu = new CNFSSmallMenu();
+	mpmenue->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, nfsSmallMenu, NULL, CRCInput::RC_setup, NEUTRINO_ICON_BUTTON_DBOX));
 #endif
 
 	mpmenue->exec(NULL, "");
 	mpmenue->hide();
 	selected = mpmenue->getSelected();
 	delete mpmenue;
+
+	delete moviePlayerGui;
+	delete moviePlayerSetup;
+#ifdef ENABLE_GUI_MOUNT
+	delete nfsSmallMenu;
+#endif
 }
 

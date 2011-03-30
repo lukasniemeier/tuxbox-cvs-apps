@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.30 2010/12/16 08:12:40 dbt Exp $
+        $Id: personalize.cpp,v 1.31 2011/03/30 19:41:50 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -241,14 +241,14 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	CMenuWidget* pMenu = new CMenuWidget(LOCALE_PERSONALIZE_HEAD,NEUTRINO_ICON_PROTECTING, width);
 	pMenu->setPreselected(selected);
 
-	CPINChangeWidget * pinChangeWidget = new CPINChangeWidget(LOCALE_PERSONALIZE_PINCODE, g_settings.personalize_pincode, 4, LOCALE_PERSONALIZE_PINHINT);
+	CPINChangeWidget pinChangeWidget(LOCALE_PERSONALIZE_PINCODE, g_settings.personalize_pincode, 4, LOCALE_PERSONALIZE_PINHINT);
 
 	pMenu->addItem(GenericMenuSeparator);
 	pMenu->addItem(GenericMenuBack);
 	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_MENUCONFIGURATION));
 	
 	pMenu->addItem(new CMenuOptionChooser(LOCALE_PERSONALIZE_PINSTATUS, (int *)&g_settings.personalize_pinstatus, PERSONALIZE_YON_OPTIONS, PERSONALIZE_YON_OPTION_COUNT, true));
-	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_PINCODE, true, g_settings.personalize_pincode, pinChangeWidget));
+	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_PINCODE, true, g_settings.personalize_pincode, &pinChangeWidget));
 	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_ACCESS));
 	
 	CMenuForwarderNonLocalized *p_mn[CNeutrinoApp::MENU_MAX];
@@ -265,11 +265,16 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->addItem(new CMenuOptionChooser(LOCALE_INFOVIEWER_STREAMINFO, (int *)&g_settings.personalize_bluebutton, PERSONALIZE_EOD_OPTIONS, PERSONALIZE_EOD_OPTION_COUNT, true));
 	pMenu->addItem(new CMenuOptionChooser(LOCALE_INFOVIEWER_EVENTLIST, (int *)&g_settings.personalize_redbutton, PERSONALIZE_EOD_OPTIONS, PERSONALIZE_EOD_OPTION_COUNT, true));
 
+	CUserMenuSetup* userMenuSetupRed = new CUserMenuSetup(LOCALE_USERMENU_BUTTON_RED, SNeutrinoSettings::BUTTON_RED);
+	CUserMenuSetup* userMenuSetupGreen = new CUserMenuSetup(LOCALE_USERMENU_BUTTON_GREEN, SNeutrinoSettings::BUTTON_GREEN);
+	CUserMenuSetup* userMenuSetupYellow = new CUserMenuSetup(LOCALE_USERMENU_BUTTON_YELLOW, SNeutrinoSettings::BUTTON_YELLOW);
+	CUserMenuSetup* userMenuSetupBlue = new CUserMenuSetup(LOCALE_USERMENU_BUTTON_BLUE, SNeutrinoSettings::BUTTON_BLUE);
+
  	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_USERMENU_HEAD));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_RED, true, NULL, new CUserMenuSetup(LOCALE_USERMENU_BUTTON_RED, SNeutrinoSettings::BUTTON_RED), NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_GREEN, true, NULL, new CUserMenuSetup(LOCALE_USERMENU_BUTTON_GREEN, SNeutrinoSettings::BUTTON_GREEN), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_YELLOW, true, NULL, new CUserMenuSetup(LOCALE_USERMENU_BUTTON_YELLOW, SNeutrinoSettings::BUTTON_YELLOW), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_BLUE, true, NULL, new CUserMenuSetup(LOCALE_USERMENU_BUTTON_BLUE, SNeutrinoSettings::BUTTON_BLUE), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_RED, true, NULL, userMenuSetupRed, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_GREEN, true, NULL, userMenuSetupGreen, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_YELLOW, true, NULL, userMenuSetupYellow, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_BLUE, true, NULL, userMenuSetupBlue, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 
 	pMenu->addItem(GenericMenuSeparatorLine);
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
@@ -278,6 +283,11 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->hide();
 	selected = pMenu->getSelected();
 	delete pMenu;
+
+	delete userMenuSetupRed;
+	delete userMenuSetupGreen;
+	delete userMenuSetupYellow;
+	delete userMenuSetupBlue;
 	
 	if (haveChangedSettings())
 	{

@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.5 2010/12/08 18:03:23 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -165,7 +165,7 @@ void CZapitSetup::showSetup()
 		z->addItem(z_subhead);
 	}
 
-	CZapitSetupNotifier *zapitSetupNotifier = new CZapitSetupNotifier(NULL, NULL);
+	CZapitSetupNotifier zapitSetupNotifier(NULL, NULL);
 
 	//save last channel on/off
 	savelastchannel = g_Zapit->getSaveLastChannel() ? 1 : 0;
@@ -174,23 +174,23 @@ void CZapitSetup::showSetup()
 	CMenuForwarder *c1 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_TV, !savelastchannel, CstartChannelTV, this, "zapit_starttv");
 	//last radio-channel
 	CMenuForwarder *c2 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_RADIO, !savelastchannel, CstartChannelRadio, this, "zapit_startradio");
-	CZapitSetupNotifier *zapitSaveLastNotifier = new CZapitSetupNotifier(c1, c2);
-	CMenuOptionChooser *c0 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_LAST_CHANNEL, &savelastchannel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, zapitSaveLastNotifier);
+	CZapitSetupNotifier zapitSaveLastNotifier(c1, c2);
+	CMenuOptionChooser *c0 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_LAST_CHANNEL, &savelastchannel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &zapitSaveLastNotifier);
 
 	//save audio pids
 	saveaudiopids = g_Zapit->getSaveAudioPIDs() ? 1 : 0;
-	CMenuOptionChooser *c4 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_AUDIO_PID, &saveaudiopids, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, zapitSetupNotifier);
+	CMenuOptionChooser *c4 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_AUDIO_PID, &saveaudiopids, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &zapitSetupNotifier);
 
 	//bouquet other on/off
 	remainingChannelsBouquet = g_Zapit->getRemainingChannelsBouquet() ? 1 : 0;
-	CMenuOptionChooser *c5 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_REMAINING_BOUQUET, &remainingChannelsBouquet, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, zapitSetupNotifier);
+	CMenuOptionChooser *c5 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_REMAINING_BOUQUET, &remainingChannelsBouquet, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &zapitSetupNotifier);
 
 	//uncommitted_switch on/off
 	CMenuOptionChooser *c6 = NULL;
 	if(g_info.delivery_system == DVB_S)
 	{
 		uncommitted_switch = g_Zapit->getUncommittedSwitchMode();
-		c6 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH, &uncommitted_switch, ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTIONS, ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTION_COUNT, true, zapitSetupNotifier);
+		c6 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH, &uncommitted_switch, ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTIONS, ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTION_COUNT, true, &zapitSetupNotifier);
 	}
 
 	//-----------------------------------

@@ -1,5 +1,5 @@
 /*
-	$Id: esd_setup.cpp,v 1.5 2010/12/08 18:03:23 dbt Exp $
+	$Id: esd_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
 
 	esound setup implementation - Neutrino-GUI
 
@@ -104,8 +104,8 @@ void CEsdSetup::showEsdSetup()
 	esdSetup->addItem(GenericMenuSeparatorLine);
 
 	// entry
-	CStringInput * setup_EsoundPort= new CStringInput(LOCALE_ESOUND_PORT, g_settings.esound_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
-	esdSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_PORT, true, g_settings.esound_port, setup_EsoundPort));
+	CStringInput setup_EsoundPort(LOCALE_ESOUND_PORT, g_settings.esound_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
+	esdSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_PORT, true, g_settings.esound_port, &setup_EsoundPort));
 
 	esdSetup->exec(NULL, "");
 	esdSetup->hide();

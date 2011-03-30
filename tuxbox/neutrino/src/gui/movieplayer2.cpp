@@ -334,10 +334,6 @@ CMoviePlayerGui::~CMoviePlayerGui ()
 		INFO("waiting for output thread to terminate...\n");
 		sleep(1);
 	}
-
-	CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
-	g_Zapit->setStandby(false);
-	g_Sectionsd->setPauseScanning(false);
 }
 
 //------------------------------------------------------------------------
@@ -3465,7 +3461,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.75 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.76 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()

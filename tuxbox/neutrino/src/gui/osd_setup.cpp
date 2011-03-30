@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.8 2010/12/16 19:46:34 dbt Exp $
+	$Id: osd_setup.cpp,v 1.9 2011/03/30 19:41:50 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -261,9 +261,9 @@ void COsdSetup::showOsdSetup()
 	//osd settings color sbubmenue
 	CMenuWidget *osd_setup_colors 	= new CMenuWidget(menue_title, menue_icon, width);
 
-
 	// language
-	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, new COsdLangSetup() , NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	COsdLangSetup *osd_lang = new COsdLangSetup();
+	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, osd_lang, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 	
 	//osd color setup forwarder
 	CMenuForwarder *osd_setup_color_sub_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_HEAD, true, NULL, osd_setup_colors, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
@@ -274,12 +274,14 @@ void COsdSetup::showOsdSetup()
 		//osd infobar setup forwarder
 		CMenuForwarder *osd_sbcolor_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_STATUSBAR, true, NULL, this, "show_infobar_color_setup", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 		//osd themes setup forwarder
-		CMenuForwarder *osd_themes_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_THEMESELECT, true, NULL, new CThemes(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+		CThemes *osd_themes = new CThemes();
+		CMenuForwarder *osd_themes_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_THEMESELECT, true, NULL, osd_themes, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 		
 	//osd timeout setup forwarder
 	CMenuForwarder *osd_timeout_fw = new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL,  this, "show_timeout_setup", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 	//osd screen setup
-	CMenuForwarder *osd_screen_fw = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, new CScreenSetup(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+	CScreenSetup *osd_screen = new CScreenSetup();
+	CMenuForwarder *osd_screen_fw = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, osd_screen, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
 	//osd infobar setup
 	CMenuForwarder *osd_infobar_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR, true, NULL, this, "show_infobar_setup", CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
 	//osd channellist setup
@@ -324,6 +326,7 @@ void COsdSetup::showOsdSetup()
 	osd_setup->addItem(osd_chanlist_fw);	//channellist setup
 	osd_setup->addItem(osd_fontsize_fw);	//fontsize setup
 #ifdef HAVE_DBOX_HARDWARE
+	CAlphaSetup* osd_alpha = NULL;
 	if ((g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) || (g_info.box_Type == CControld::TUXBOX_MAKER_SAGEM))
 	{	
 		// eNX
@@ -333,8 +336,8 @@ void COsdSetup::showOsdSetup()
 	else 
 	{
 		//GTX
-		CAlphaSetup* chAlphaSetup = new CAlphaSetup(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA);
-		osd_setup->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA, true, NULL, chAlphaSetup, NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4));
+		osd_alpha = new CAlphaSetup(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA);
+		osd_setup->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA, true, NULL, osd_alpha, NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4));
 	}
 #else 	
 	//Dream and TD
@@ -350,6 +353,14 @@ void COsdSetup::showOsdSetup()
 	osd_setup->hide();
 	selected = osd_setup->getSelected();
 	delete osd_setup;
+
+	delete osd_setup_colors;
+	delete osd_lang;
+	delete osd_themes;
+	delete osd_screen;
+#ifdef HAVE_DBOX_HARDWARE
+	delete osd_alpha;
+#endif
 }
 
 
@@ -363,27 +374,27 @@ void COsdSetup::showOsdMenueColorSetup()
 	ocs->addItem(GenericMenuSeparator);
 	ocs->addItem(GenericMenuBack);
 
-	CColorChooser* chHeadcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Head_red, &g_settings.menu_Head_green, &g_settings.menu_Head_blue,  &g_settings.menu_Head_alpha, colorSetupNotifier);
-	CColorChooser* chHeadTextcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Head_Text_red, &g_settings.menu_Head_Text_green, &g_settings.menu_Head_Text_blue, NULL, colorSetupNotifier);
-	CColorChooser* chContentcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_red, &g_settings.menu_Content_green, &g_settings.menu_Content_blue,&g_settings.menu_Content_alpha, colorSetupNotifier);
-	CColorChooser* chContentTextcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_Text_red, &g_settings.menu_Content_Text_green, &g_settings.menu_Content_Text_blue, NULL, colorSetupNotifier);
-	CColorChooser* chContentSelectedcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_Selected_red, &g_settings.menu_Content_Selected_green, &g_settings.menu_Content_Selected_blue,&g_settings.menu_Content_Selected_alpha, colorSetupNotifier);
-	CColorChooser* chContentSelectedTextcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_Selected_Text_red, &g_settings.menu_Content_Selected_Text_green, &g_settings.menu_Content_Selected_Text_blue,NULL, colorSetupNotifier);
-	CColorChooser* chContentInactivecolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_inactive_red, &g_settings.menu_Content_inactive_green, &g_settings.menu_Content_inactive_blue, &g_settings.menu_Content_inactive_alpha, colorSetupNotifier);
-	CColorChooser* chContentInactiveTextcolor = new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_inactive_Text_red, &g_settings.menu_Content_inactive_Text_green, &g_settings.menu_Content_inactive_Text_blue,NULL, colorSetupNotifier);
+	CColorChooser chHeadcolor(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Head_red, &g_settings.menu_Head_green, &g_settings.menu_Head_blue,  &g_settings.menu_Head_alpha, colorSetupNotifier);
+	CColorChooser chHeadTextcolor(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Head_Text_red, &g_settings.menu_Head_Text_green, &g_settings.menu_Head_Text_blue, NULL, colorSetupNotifier);
+	CColorChooser chContentcolor(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_red, &g_settings.menu_Content_green, &g_settings.menu_Content_blue,&g_settings.menu_Content_alpha, colorSetupNotifier);
+	CColorChooser chContentTextcolor(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_Text_red, &g_settings.menu_Content_Text_green, &g_settings.menu_Content_Text_blue, NULL, colorSetupNotifier);
+	CColorChooser chContentSelectedcolor(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_Selected_red, &g_settings.menu_Content_Selected_green, &g_settings.menu_Content_Selected_blue,&g_settings.menu_Content_Selected_alpha, colorSetupNotifier);
+	CColorChooser chContentSelectedTextcolor(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_Selected_Text_red, &g_settings.menu_Content_Selected_Text_green, &g_settings.menu_Content_Selected_Text_blue,NULL, colorSetupNotifier);
+	CColorChooser chContentInactivecolor(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.menu_Content_inactive_red, &g_settings.menu_Content_inactive_green, &g_settings.menu_Content_inactive_blue, &g_settings.menu_Content_inactive_alpha, colorSetupNotifier);
+	CColorChooser chContentInactiveTextcolor(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.menu_Content_inactive_Text_red, &g_settings.menu_Content_inactive_Text_green, &g_settings.menu_Content_inactive_Text_blue,NULL, colorSetupNotifier);
 
-	ocs->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUHEAD));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, chHeadcolor ));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, chHeadTextcolor ));
-	ocs->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, chContentcolor ));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, chContentTextcolor ));
-	ocs->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT_INACTIVE));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, chContentInactivecolor ));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, chContentInactiveTextcolor));
-	ocs->addItem( new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT_SELECTED));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, chContentSelectedcolor ));
-	ocs->addItem( new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, chContentSelectedTextcolor ));
+	ocs->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUHEAD));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, &chHeadcolor));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chHeadTextcolor));
+	ocs->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, &chContentcolor));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chContentTextcolor));
+	ocs->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT_INACTIVE));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, &chContentInactivecolor));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chContentInactiveTextcolor));
+	ocs->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_COLORMENUSETUP_MENUCONTENT_SELECTED));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, &chContentSelectedcolor));
+	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chContentSelectedTextcolor));
 
 	ocs->exec(NULL, "");
 	ocs->hide();
@@ -397,10 +408,10 @@ void COsdSetup::showOsdInfobarColorSetup()
 	CMenuWidget * ois = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * ois_setup_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_COLORSTATUSBAR_TEXT);
 
-	CColorChooser *chInfobarcolor 		= new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.infobar_red, &g_settings.infobar_green, &g_settings.infobar_blue,  &g_settings.infobar_alpha, colorSetupNotifier);
-	CColorChooser *chInfobarTextcolor_head 	= new CColorChooser(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.infobar_Text_red, &g_settings.infobar_Text_green, &g_settings.infobar_Text_blue, NULL, colorSetupNotifier);
-	CMenuForwarder *fwInfobarBackground 	= new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, chInfobarcolor);
-	CMenuForwarder *fwInfobarTextcolor 	= new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, chInfobarTextcolor_head);
+	CColorChooser chInfobarcolor(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND_HEAD, &g_settings.infobar_red, &g_settings.infobar_green, &g_settings.infobar_blue,  &g_settings.infobar_alpha, colorSetupNotifier);
+	CColorChooser chInfobarTextcolor_head(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR_HEAD, &g_settings.infobar_Text_red, &g_settings.infobar_Text_green, &g_settings.infobar_Text_blue, NULL, colorSetupNotifier);
+	CMenuForwarder *fwInfobarBackground = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, &chInfobarcolor);
+	CMenuForwarder *fwInfobarTextcolor = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chInfobarTextcolor_head);
 
 	ois->addItem(ois_setup_subhead);
 	ois->addItem(GenericMenuSeparator);
@@ -421,6 +432,9 @@ void COsdSetup::showOsdTimeoutSetup()
 {
 	/* note: SetupTiming() is already called in CNeutrinoApp::run */
 
+	// dynamic created objects
+	std::vector<CMenuTarget*> toDelete;
+
 	CMenuWidget * ots = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * ots_setup_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_TIMING_HEAD);
 
@@ -432,6 +446,7 @@ void COsdSetup::showOsdTimeoutSetup()
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
 	{
 		CStringInput * colorSettings_timing_item = new CStringInput(timing_setting[i].name, g_settings.timing_string[i], 3, LOCALE_TIMING_HINT_1, LOCALE_TIMING_HINT_2, "0123456789 ", &timingsettingsnotifier);
+		toDelete.push_back(colorSettings_timing_item);
 		ots->addItem(new CMenuForwarder(timing_setting[i].name, true, g_settings.timing_string[i], colorSettings_timing_item));
 	}
 
@@ -441,6 +456,12 @@ void COsdSetup::showOsdTimeoutSetup()
 	ots->exec(NULL, "");
 	ots->hide();
 	delete ots;
+
+	// delete dynamic created objects
+	unsigned int toDeleteSize = toDelete.size();
+	for (unsigned int i = 0; i < toDeleteSize; i++)
+		delete toDelete[i];
+	toDelete.clear();
 }
 
 #define INFOBAR_EPG_SHOW_OPTIONS_COUNT 3
@@ -491,20 +512,19 @@ void COsdSetup::showOsdInfobarSetup()
 	CMenuOptionChooser *oibs_epgshow_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_SHOW, &g_settings.infobar_show, INFOBAR_EPG_SHOW_OPTIONS, INFOBAR_EPG_SHOW_OPTIONS_COUNT, true);
 
 #ifdef ENABLE_RADIOTEXT
-	CRadiotextNotifier *radiotextNotifier 	= new CRadiotextNotifier;
-	CMenuOptionChooser *oibs_radiotext_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, radiotextNotifier);
+	CRadiotextNotifier radiotextNotifier;
+	CMenuOptionChooser *oibs_radiotext_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &radiotextNotifier);
 #endif
 	CMenuSeparator     *oibs_chanlogo_sep 	= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO);
 	
 	
 	//channel logo
-	COsdSetupChannelLogoNotifier *channelLogoNotifier = NULL;
 	bool activ_logo_opts = g_settings.infobar_show_channellogo != INFOBAR_NO_LOGO ? true : false; 
 	CMenuForwarder 	   *oibs_chanlogo_fw 	= new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_LOGODIR, activ_logo_opts, g_settings.infobar_channel_logodir, this, "channel_logodir");
 	CMenuOptionChooser *oibs_chanlogo_bg_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_BACKGROUND, &g_settings.infobar_channellogo_background, INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS_COUNT, activ_logo_opts);
 
-	channelLogoNotifier = new COsdSetupChannelLogoNotifier(oibs_chanlogo_fw, oibs_chanlogo_bg_ch );
-	CMenuOptionChooser *oibs_chanlogo_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_SHOW, &g_settings.infobar_show_channellogo, INFOBAR_CHANNELLOGO_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_SHOW_OPTIONS_COUNT, true, channelLogoNotifier);
+	COsdSetupChannelLogoNotifier channelLogoNotifier(oibs_chanlogo_fw, oibs_chanlogo_bg_ch);
+	CMenuOptionChooser *oibs_chanlogo_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_SHOW, &g_settings.infobar_show_channellogo, INFOBAR_CHANNELLOGO_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_SHOW_OPTIONS_COUNT, true, &channelLogoNotifier);
 	
 
 
@@ -634,6 +654,9 @@ void COsdSetup::AddFontSettingItem(CMenuWidget *fontSettings, const SNeutrinoSet
 #warning FIXME: change of font is broken since neutrino revision 1.1029, commit: 436fd3af9c66be82728e7b93f0518efa825521f0
 void COsdSetup::showOsdFontSizeSetup()
 {
+	// dynamic created objects
+	std::vector<CMenuTarget*> toDelete;
+
 	CMenuWidget * fontSettings = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * fontSettings_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_FONTMENU_HEAD);
 
@@ -651,6 +674,7 @@ void COsdSetup::showOsdFontSizeSetup()
 	for (int i = 0; i < 5; i++)
 	{
 		CMenuWidget * fontSettingsSubMenu = new CMenuWidget(font_sizes_groups[i].groupname, NEUTRINO_ICON_COLORS, width);
+		toDelete.push_back(fontSettingsSubMenu);
 		fontSettingsSubMenu->addItem(GenericMenuSeparator);
 		fontSettingsSubMenu->addItem(GenericMenuBack);
 		fontSettingsSubMenu->addItem(GenericMenuSeparatorLine);
@@ -672,5 +696,11 @@ void COsdSetup::showOsdFontSizeSetup()
 	fontSettings->exec(NULL, "");
 	fontSettings->hide();
 	delete fontSettings;
+
+	// delete dynamic created objects
+	unsigned int toDeleteSize = toDelete.size();
+	for (unsigned int i = 0; i < toDeleteSize; i++)
+		delete toDelete[i];
+	toDelete.clear();
 }
 

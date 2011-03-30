@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.3 2010/12/05 22:32:12 dbt Exp $
+	$Id: miscsettings_menu.cpp,v 1.4 2011/03/30 19:41:50 dbt Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -173,6 +173,8 @@ void CMiscMenue::showMenue()
 	CMenuWidget *misc_menue_energy 	= new CMenuWidget(LOCALE_MISCSETTINGS_HEAD, menue_icon, width);
 	//epg
 	CMenuWidget *misc_menue_epg 		= new CMenuWidget(LOCALE_MISCSETTINGS_HEAD, menue_icon, width);
+	//zapit
+	CZapitSetup *misc_menue_zapit = new CZapitSetup(LOCALE_MAINSETTINGS_MISC);
 	//filebrowser
 	CMenuWidget *misc_menue_filebrowser 	= new CMenuWidget(LOCALE_MISCSETTINGS_HEAD, menue_icon, width);
 
@@ -193,15 +195,15 @@ void CMiscMenue::showMenue()
 	// epg settings
 	misc_menue->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, 		true, NULL, misc_menue_epg, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 	// zapit settings
-	misc_menue->addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, 		true, NULL, new CZapitSetup(LOCALE_MAINSETTINGS_MISC), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	misc_menue->addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, 		true, NULL, misc_menue_zapit, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 	// filebrowser
 	misc_menue->addItem(new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, 		true, NULL, misc_menue_filebrowser, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 
 	misc_menue->addItem(GenericMenuSeparatorLine);
 #ifndef TUXTXT_CFG_STANDALONE
 	//tutxt cache
-	CTuxtxtCacheNotifier *tuxtxtcacheNotifier = new CTuxtxtCacheNotifier;
-	misc_menue->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_TUXTXT_CACHE, &g_settings.tuxtxt_cache, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, tuxtxtcacheNotifier));
+	CTuxtxtCacheNotifier tuxtxtcacheNotifier;
+	misc_menue->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_TUXTXT_CACHE, &g_settings.tuxtxt_cache, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &tuxtxtcacheNotifier));
 #endif
 	// startmode
 	misc_menue->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_STARTMODE, &g_settings.startmode, MISCSETTINGS_STARTMODE_WITH_OPTIONS, MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT, true));
@@ -221,15 +223,15 @@ void CMiscMenue::showMenue()
 	CMenuOptionChooser *m1 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL_RCDELAY, &g_settings.shutdown_real_rcdelay, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
 	//standby with...
 	CMenuOptionChooser *m5 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH, &g_settings.standby_off_with, REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS, REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS_COUNT, !g_settings.shutdown_real);
-	CShutdownCountNotifier *shutDownCountNotifier = new CShutdownCountNotifier;
 	//shutdown count
-	CStringInput * miscSettings_shutdown_count = new CStringInput(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", shutDownCountNotifier);
-	CMenuForwarder *m4 = new CMenuForwarder(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, !g_settings.shutdown_real, g_settings.shutdown_count, miscSettings_shutdown_count);
+	CShutdownCountNotifier shutDownCountNotifier;
+	CStringInput miscSettings_shutdown_count(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", &shutDownCountNotifier);
+	CMenuForwarder *m4 = new CMenuForwarder(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, !g_settings.shutdown_real, g_settings.shutdown_count, &miscSettings_shutdown_count);
 	//standby save power
 	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STANDBY_SAVE_POWER, &g_settings.standby_save_power, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
-	CMiscNotifier* miscNotifier = new CMiscNotifier(m1, m3, m4, m5);
 	//sutdown real
-	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL, &g_settings.shutdown_real, OPTIONS_OFF1_ON0_OPTIONS, OPTIONS_OFF1_ON0_OPTION_COUNT, true, miscNotifier);
+	CMiscNotifier miscNotifier(m1, m3, m4, m5);
+	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL, &g_settings.shutdown_real, OPTIONS_OFF1_ON0_OPTIONS, OPTIONS_OFF1_ON0_OPTION_COUNT, true, &miscNotifier);
 
 	misc_menue_energy->addItem(m2);
 #ifndef HAVE_TRIPLEDRAGON
@@ -248,19 +250,19 @@ void CMiscMenue::showMenue()
 	misc_menue_epg->addItem(GenericMenuSeparatorLine);
 
 	//epg cache ??is this really usefull??
-	CSectionsdConfigNotifier* sectionsdConfigNotifier = new CSectionsdConfigNotifier;
-	CStringInput * miscSettings_epg_cache = new CStringInput(LOCALE_MISCSETTINGS_EPG_CACHE, &g_settings.epg_cache, 2,LOCALE_MISCSETTINGS_EPG_CACHE_HINT1, LOCALE_MISCSETTINGS_EPG_CACHE_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_CACHE, true, g_settings.epg_cache, miscSettings_epg_cache));
+	CSectionsdConfigNotifier sectionsdConfigNotifier;
+	CStringInput miscSettings_epg_cache(LOCALE_MISCSETTINGS_EPG_CACHE, &g_settings.epg_cache, 2, LOCALE_MISCSETTINGS_EPG_CACHE_HINT1, LOCALE_MISCSETTINGS_EPG_CACHE_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_CACHE, true, g_settings.epg_cache, &miscSettings_epg_cache));
 
 	//extended epg cache
-	CStringInput * miscSettings_epg_extendedcache = new CStringInput(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, &g_settings.epg_extendedcache, 2,LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT1, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, true, g_settings.epg_extendedcache, miscSettings_epg_extendedcache));
+	CStringInput miscSettings_epg_extendedcache(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, &g_settings.epg_extendedcache, 2, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT1, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, true, g_settings.epg_extendedcache, &miscSettings_epg_extendedcache));
 	//old events
-	CStringInput * miscSettings_epg_old_events = new CStringInput(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, &g_settings.epg_old_events, 2,LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, true, g_settings.epg_old_events, miscSettings_epg_old_events));
+	CStringInput miscSettings_epg_old_events(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, &g_settings.epg_old_events, 2, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, true, g_settings.epg_old_events, &miscSettings_epg_old_events));
 	//max epg events
-	CStringInput * miscSettings_epg_max_events = new CStringInput(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, &g_settings.epg_max_events, 5,LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT2 , "0123456789 ", sectionsdConfigNotifier);
-	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, true, g_settings.epg_max_events, miscSettings_epg_max_events));
+	CStringInput miscSettings_epg_max_events(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, &g_settings.epg_max_events, 5, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, true, g_settings.epg_max_events, &miscSettings_epg_max_events));
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_DIR, true, g_settings.epg_dir, this, "epgdir"));
 	
 	//filebrowser
@@ -279,6 +281,11 @@ void CMiscMenue::showMenue()
 	misc_menue->hide();
 	selected = misc_menue->getSelected();
 	delete misc_menue;
+
+	delete misc_menue_energy;
+	delete misc_menue_epg;
+	delete misc_menue_zapit;
+	delete misc_menue_filebrowser;
 }
 
 

@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.4 2011/03/21 18:38:47 rhabarber1848 Exp $
+	$Id: user_menue_setup.cpp,v 1.5 2011/03/30 19:41:50 dbt Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -113,11 +113,10 @@ void CUserMenuSetup::showSetup()
 	ums->setPreselected(selected);
 	ums->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, local));
 
-	CUserMenuNotifier *notify = new CUserMenuNotifier();
-	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß/- ", notify);
-
-	CMenuForwarder *mf = new CMenuForwarder(LOCALE_USERMENU_NAME, true, g_settings.usermenu_text[button],&name);
-	notify->setItem(mf);
+	CUserMenuNotifier notify;
+	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzäöüß/- ", &notify);
+	CMenuForwarder *mf = new CMenuForwarder(LOCALE_USERMENU_NAME, true, g_settings.usermenu_text[button], &name);
+	notify.setItem(mf);
 
 	//-------------------------------------
 	ums->addItem(GenericMenuSeparator);

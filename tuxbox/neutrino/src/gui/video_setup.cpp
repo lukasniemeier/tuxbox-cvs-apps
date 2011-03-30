@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.8 2010/12/05 22:32:12 dbt Exp $
+	$Id: video_setup.cpp,v 1.9 2011/03/30 19:41:50 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -52,6 +52,7 @@ CVideoSetup::CVideoSetup()
 	frameBuffer = CFrameBuffer::getInstance();
 
 	SyncControlerForwarder = NULL;
+	RGBCSyncControler = NULL;
 	VcrVideoOutSignalOptionChooser = NULL;
 
 	width = w_max (500, 100);
@@ -69,6 +70,7 @@ CVideoSetup::CVideoSetup()
 CVideoSetup::~CVideoSetup()
 {
 	delete SyncControlerForwarder;
+	delete RGBCSyncControler;
 	delete VcrVideoOutSignalOptionChooser;
 }
 
@@ -155,7 +157,7 @@ void CVideoSetup::showVideoSetup()
 
 #ifdef HAVE_DBOX_HARDWARE
 	//rgb centering
-	CRGBCSyncControler * RGBCSyncControler = new CRGBCSyncControler(LOCALE_VIDEOMENU_RGB_CENTERING, &g_settings.video_csync);
+	RGBCSyncControler = new CRGBCSyncControler(LOCALE_VIDEOMENU_RGB_CENTERING, &g_settings.video_csync);
 	bool sc_active = ((video_out_signal == CControldClient::VIDEOOUTPUT_RGB) || (video_out_signal == CControldClient::VIDEOOUTPUT_YUV_VBS) || (video_out_signal ==  CControldClient::VIDEOOUTPUT_YUV_CVBS));
 	SyncControlerForwarder = new CMenuForwarder(LOCALE_VIDEOMENU_RGB_CENTERING, sc_active, NULL , RGBCSyncControler, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 #endif

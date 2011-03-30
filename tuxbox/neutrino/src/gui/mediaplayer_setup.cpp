@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.5 2010/12/06 21:00:15 dbt Exp $
+	$Id: mediaplayer_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -123,20 +123,27 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 	// entries
 #ifdef ENABLE_AUDIOPLAYER
 	// audioplayer
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, new CAudioPlayerSetup, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	CAudioPlayerSetup* audioPlayerSetup = new CAudioPlayerSetup();
+	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, audioPlayerSetup, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 #endif
 #ifdef ENABLE_ESD
 	// esound
+	CEsdSetup* esdSetup = NULL;
 	if (access("/bin/esd", X_OK) == 0 || access("/var/bin/esd", X_OK) == 0)
-		mediaSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, new CEsdSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	{
+		esdSetup = new CEsdSetup();
+		mediaSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, esdSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	}
 #endif
 #ifdef ENABLE_MOVIEPLAYER
 	// movieplayer
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_STREAMING, true, NULL, new CMoviePlayerSetup, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	CMoviePlayerSetup* moviePlayerSetup = new CMoviePlayerSetup();
+	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_STREAMING, true, NULL, moviePlayerSetup, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 #endif
 #ifdef ENABLE_PICTUREVIEWER
 	// pictureviewer
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, new CPictureViewerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	CPictureViewerSetup* pictureViewerSetup = new CPictureViewerSetup();
+	mediaSetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, pictureViewerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 #endif
 
 	mediaSetup->exec (NULL, "");
@@ -144,4 +151,16 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 	selected = mediaSetup->getSelected();
 	delete mediaSetup;
 
+#ifdef ENABLE_AUDIOPLAYER
+	delete audioPlayerSetup;
+#endif
+#ifdef ENABLE_ESD
+	delete esdSetup;
+#endif
+#ifdef ENABLE_MOVIEPLAYER
+	delete moviePlayerSetup;
+#endif
+#ifdef ENABLE_PICTUREVIEWER
+	delete pictureViewerSetup;
+#endif
 }
