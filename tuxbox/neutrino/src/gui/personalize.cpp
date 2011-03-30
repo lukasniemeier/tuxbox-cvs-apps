@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.31 2011/03/30 19:41:50 dbt Exp $
+        $Id: personalize.cpp,v 1.32 2011/03/30 20:21:28 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -156,14 +156,7 @@ const CMenuOptionChooser::keyval PERSONALIZE_YON_OPTIONS[PERSONALIZE_YON_OPTION_
 
 CPersonalizeGui::CPersonalizeGui()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-	
 	width 	= w_max (710, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
 
 	selected = -1;
 	shortcut = 0;
@@ -221,12 +214,6 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const std::string & actionKey)
 
 	ShowPersonalizationMenu();                                              // Show main Personalization Menu
 	return res;
-}
-
-
-void CPersonalizeGui::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 
