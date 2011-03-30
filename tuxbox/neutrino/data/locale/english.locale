@@ -220,7 +220,7 @@ bouquetlist.head Bouquets
 cablesetup.provider cable provider
 channellist.epgtext_align_left left
 channellist.epgtext_align_right right
-channellist.extended extended Channellist
+channellist.extended Show progressbars
 channellist.head All Services
 channellist.history Channel history
 channellist.nonefound No channels were found!\nPlease execute a scan\n(dbox-key -> service)
