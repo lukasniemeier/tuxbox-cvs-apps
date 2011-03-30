@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.80 2010/12/05 22:32:12 dbt Exp $
+	$Id: drive_setup.cpp,v 1.81 2011/03/30 19:41:35 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -32,10 +32,6 @@ NOTE: 	This is only beta. There is a lot to do
 
 TODO:
 	- cleanups
-	- add mount options
-	- error messages
-	- kernel 26 support
-	- ....
 
 
 */
@@ -680,12 +676,6 @@ void CDriveSetup::showHddSetupMain()
 		d_settings.drive_activate_ide = IDE_OFF;
 	CMenuOptionChooser *m2	= new CMenuOptionChooser(LOCALE_DRIVE_SETUP_IDE_ACTIVATE, &d_settings.drive_activate_ide, OPTIONS_IDE_ACTIVATE_OPTIONS, OPTIONS_IDE_ACTIVATE_OPTION_COUNT, true);
 
-	//mmc options separator
-	CMenuSeparator * sep_mmc = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC);
-
-	//drive select separator
-	CMenuSeparator *m4	= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_SELECT);
-
 	bool is_mmc_supported = (v_mmc_modules.size()!=0) ? true : false;
 
  	/************show main menue entries***********/
@@ -699,8 +689,10 @@ void CDriveSetup::showHddSetupMain()
 	//---------------------------------------------
 	m->addItem(m2); // show ide options on/off
 	//---------------------------------------------
+	
+	//mmc options separator
 	if (is_mmc_supported) 
-		m->addItem(sep_mmc); //show mmc options separator
+		m->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC)); //show mmc options separator if supported
 
 	// mmc: prepare mmc settings
 	if (is_mmc_supported)  //paint mmc option item only if any modul is available...
@@ -804,7 +796,6 @@ void CDriveSetup::showHddSetupMain()
 		//extended settings: filesystem format options
 		vector<CStringInputSMS*> v_input_fs_options;
 		vector<CMenuItem*> v_fs_item;
-		CMenuSeparator * sep_fs_format_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_FORMAT_OPTIONS);
 		for (int i = 0; i<MAXCOUNT_FSTYPES; i++)
 		{
  			for (uint ii = 0; ii<v_fs_modules.size(); ii++)
@@ -832,7 +823,7 @@ void CDriveSetup::showHddSetupMain()
 		extsettings->addItem (fw_moduldir);		//select prefered modul directory
 		// -----------------------------------------
 		if (v_fs_item.size() > 0)			//separator format options
-			extsettings->addItem(sep_fs_format_options);
+			extsettings->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_FORMAT_OPTIONS));
 		for (uint i = 0; i<v_fs_item.size(); i++)	//format options
 			extsettings->addItem(v_fs_item[i]);
 		//------------------------------------------
@@ -841,10 +832,9 @@ void CDriveSetup::showHddSetupMain()
 
 	//drives:
 	//show select separator, only visible if any device activ
-	if (hdd_count>0 || foundMmc()) 
-	{	
-		m->addItem(m4);
-	}
+	if (hdd_count>0 || foundMmc()) 	
+		m->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_SELECT));
+
 
 	//capacity
 	string s_cap[MAXCOUNT_DRIVE];
@@ -954,7 +944,7 @@ void CDriveSetup::showHddSetupSub()
 
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 	//menue add shares
-	CMenuWidget 	*sub_add_share = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
+	CMenuWidget 	sub_add_share(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
 	CMenuSeparator 	*srv_share_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE);
 
 #ifdef ENABLE_NFSSERVER
@@ -969,9 +959,6 @@ void CDriveSetup::showHddSetupSub()
 	srv_smb_sep->setString("Samba");
 	CSambaSetup smb;
 	bool have_samba = smb.haveSambaSupport();
-	CMenuForwarder *smb_info_fw;
-	//info message
-	smb_info_fw = new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP);
 #endif
 #endif /*defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER*/
 
@@ -997,22 +984,6 @@ void CDriveSetup::showHddSetupSub()
 	//menue sub: prepare sub head
 	string dev_name = g_Locale->getText(mn_data[current_device].entry_locale);
 	CMenuSeparator *subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, mn_data[current_device].entry_locale);
-
-	//menue sub: show settings for spindown and writecache only for hdd, these device numbers are < 2 (MMCARD)
-	CMenuSeparator *sep_hdparm = NULL;
-	CMenuForwarder *spindown = NULL;
-	CMenuOptionChooser *w_cache = NULL;
-	if (current_device < MMCARD) 
-	{ 
-		//menue sub: prepare separator: hdparms
-		sep_hdparm = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_PARAMETERS);
-		//menue sub: prepare spindown settings
-		CStringInput *hdd_sleep = new CStringInput(LOCALE_DRIVE_SETUP_HDD_SLEEP, d_settings.drive_spindown[current_device], 3, LOCALE_DRIVE_SETUP_HDD_SLEEP_STD, LOCALE_DRIVE_SETUP_HDD_SLEEP_HELP, "0123456789 ");
-		spindown = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_SLEEP, true, d_settings.drive_spindown[current_device], hdd_sleep );
-	
-		//menue sub: prepare writecache settings
-		w_cache = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_HDD_CACHE, &d_settings.drive_write_cache[current_device], OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true );
-	}
 
 	//menue sub: generate part items
 	CMenuForwarderNonLocalized *sub_part_entry[MAXCOUNT_PARTS];
@@ -1133,11 +1104,13 @@ void CDriveSetup::showHddSetupSub()
 	sub->addItem(GenericMenuSeparator);
 	sub->addItem(GenericMenuBack);	//back
 	//------------------------
+	CStringInput hdd_sleep(LOCALE_DRIVE_SETUP_HDD_SLEEP, d_settings.drive_spindown[current_device], 3, LOCALE_DRIVE_SETUP_HDD_SLEEP_STD, LOCALE_DRIVE_SETUP_HDD_SLEEP_HELP, "0123456789 ");
 	if (current_device != MMCARD) 	//not for mmc!
 	{
-		sub->addItem(sep_hdparm);//separator
-		sub->addItem(spindown); //spindown
-		sub->addItem(w_cache); 	//writecache
+		sub->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_PARAMETERS));//separator
+		sub->addItem(new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_SLEEP, true, d_settings.drive_spindown[current_device], &hdd_sleep )); //spindown
+		
+		sub->addItem(new CMenuOptionChooser(LOCALE_DRIVE_SETUP_HDD_CACHE, &d_settings.drive_write_cache[current_device], OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true )); //writecache
 		sub->addItem(sep_jobs); //separator jobs
 	}
 	else
@@ -1436,7 +1409,7 @@ void CDriveSetup::showHddSetupSub()
 		#ifdef ENABLE_SAMBASERVER
 			part_srv_shares[i]->addItem(srv_smb_sep);		//samba separator
 			if (!have_samba)
-				part_srv_shares[i]->addItem(smb_info_fw);	//samba info
+				part_srv_shares[i]->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));//samba info
 			part_srv_shares[i]->addItem(smb_chooser[i]);		//samba on/off
 			//------------------------
 			part_srv_shares[i]->addItem(GenericMenuSeparatorLine);	//separator
@@ -1476,30 +1449,30 @@ void CDriveSetup::showHddSetupSub()
 	sub_add->addItem(GenericMenuSeparatorLine);	//separator
 	sub_add->addItem(part_srv_fw[next_part_number]);//sub menue server shares
 		//------------------------
-		sub_add_share->addItem(srv_share_subhead);	//subhead
+		sub_add_share.addItem(srv_share_subhead);	//subhead
 		//------------------------
-		sub_add_share->addItem(GenericMenuSeparator); 	//separator
-		sub_add_share->addItem(GenericMenuSeparatorLine);//separator
-		sub_add_share->addItem(GenericMenuBack);	//back
-		sub_add_share->addItem(srv_path_fw[next_part_number]); 	//separator
+		sub_add_share.addItem(GenericMenuSeparator); 	//separator
+		sub_add_share.addItem(GenericMenuSeparatorLine);//separator
+		sub_add_share.addItem(GenericMenuBack);	//back
+		sub_add_share.addItem(srv_path_fw[next_part_number]); 	//separator
 	#ifdef ENABLE_NFSSERVER
-		sub_add_share->addItem(srv_nfs_sep);				//nfs separator
-		sub_add_share->addItem(nfs_chooser[next_part_number]);		//nfs
-		sub_add_share->addItem(nfs_host_ip_fw[next_part_number]);	//nfs host ip input
+		sub_add_share.addItem(srv_nfs_sep);				//nfs separator
+		sub_add_share.addItem(nfs_chooser[next_part_number]);		//nfs
+		sub_add_share.addItem(nfs_host_ip_fw[next_part_number]);	//nfs host ip input
 		//------------------------
 	#endif
 	#ifdef ENABLE_SAMBASERVER
-		sub_add_share->addItem(srv_smb_sep);				//samba separator
-		sub_add_share->addItem(smb_chooser[next_part_number]);		//samba on/off
-		sub_add_share->addItem(GenericMenuSeparatorLine);		//separator
+		sub_add_share.addItem(srv_smb_sep);				//samba separator
+		sub_add_share.addItem(smb_chooser[next_part_number]);		//samba on/off
+		sub_add_share.addItem(GenericMenuSeparatorLine);		//separator
 		//------------------------
-		sub_add_share->addItem(srv_smb_globals[next_part_number]);	//samba globals
-		sub_add_share->addItem(GenericMenuSeparatorLine);		//separator
+		sub_add_share.addItem(srv_smb_globals[next_part_number]);	//samba globals
+		sub_add_share.addItem(GenericMenuSeparatorLine);		//separator
 		//------------------------
-		sub_add_share->addItem(smb_share_comment_fw[next_part_number]);	//samba share comment
-		sub_add_share->addItem(smb_share_name_fw[next_part_number]);	//samba share name
-		sub_add_share->addItem(smb_ro_chooser[next_part_number]);	//samba readonly
-		sub_add_share->addItem(smb_public_chooser[next_part_number]);	//samba guest ok
+		sub_add_share.addItem(smb_share_comment_fw[next_part_number]);	//samba share comment
+		sub_add_share.addItem(smb_share_name_fw[next_part_number]);	//samba share name
+		sub_add_share.addItem(smb_ro_chooser[next_part_number]);	//samba readonly
+		sub_add_share.addItem(smb_public_chooser[next_part_number]);	//samba guest ok
 		//------------------------
 	#endif
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
@@ -4632,7 +4605,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.80 $");
+	return imageinfo.getModulVersion("","$Revision: 1.81 $");
 }
 
 // returns text for initfile headers
