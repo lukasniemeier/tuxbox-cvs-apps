@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.h,v 1.3 2010/12/08 18:03:23 dbt Exp $
+	$Id: osdlang_setup.h,v 1.4 2011/03/30 19:41:41 dbt Exp $
 
 	OSD-Language Setup implementation - Neutrino-GUI
 
@@ -43,7 +43,7 @@
 #include <string>
 
 
-class COsdLangSetup : public CMenuTarget, CChangeObserver
+class COsdLangSetup : public CMenuTarget
 {	
 	private:
 
@@ -60,15 +60,9 @@ class COsdLangSetup : public CMenuTarget, CChangeObserver
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
-class COsdLangNotifier : public COsdLangSetup
+class COsdLangNotifier : public CChangeObserver
 {
-	private:
-
-		CMenuForwarder* toModifi;
-
 	public:
-		COsdLangNotifier();
-
 		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 

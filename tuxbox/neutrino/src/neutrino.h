@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.240 2010/12/16 08:23:21 dbt Exp $
+	$Id: neutrino.h,v 1.241 2011/03/30 19:41:40 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -249,6 +249,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		CNeutrinoApp();
 
 	public:	
+		bool ChangeFonts(int unicode_locale);
 		void SetupFonts();
 		void SetupTiming();
 		~CNeutrinoApp();

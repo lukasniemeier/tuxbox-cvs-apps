@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.180 2011/01/30 20:46:19 dbt Exp $
+	$Id: menue.cpp,v 1.181 2011/03/30 19:41:41 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -833,6 +833,7 @@ int CMenuOptionStringChooser::paint( bool selected )
 CMenuOptionLanguageChooser::CMenuOptionLanguageChooser(char* OptionValue, CChangeObserver* Observ)
 {
 	height      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+	active      = true;
 	optionValue = OptionValue;
 	observ      = Observ;
 
