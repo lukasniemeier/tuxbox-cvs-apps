@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.81 2011/03/30 19:41:35 dbt Exp $
+	$Id: drive_setup.cpp,v 1.82 2011/04/03 21:56:02 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4605,7 +4605,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.81 $");
+	return imageinfo.getModulVersion("","$Revision: 1.82 $");
 }
 
 // returns text for initfile headers
@@ -5008,7 +5008,7 @@ void CDriveSetup::loadDriveSettings()
 	{
 		//spindown
 		sprintf(c_opt[OPT_SPINDOWN], "drive_%d_spindown", i);
-		strcpy(d_settings.drive_spindown[i], configfile.getString(c_opt[OPT_SPINDOWN],"0").c_str());
+		strcpy(d_settings.drive_spindown[i], configfile.getString(c_opt[OPT_SPINDOWN],"300").c_str());
 		old_drive_spindown[i] = static_cast <string> (d_settings.drive_spindown[i]);
 
 		//write_cache
