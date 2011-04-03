@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.7 2011/03/30 19:41:50 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.8 2011/04/03 21:56:06 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -254,5 +254,4 @@ void CKeybindSetup::showSetup()
 	delete ks_rc;
 	for (int i = 0; i < MAX_NUM_KEYNAMES; i++)
 		delete keychooser[i];
-	delete[] keychooser;
 }
