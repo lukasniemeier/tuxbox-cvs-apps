@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.h,v 1.5 2010/12/05 22:32:12 dbt Exp $
+	$Id: software_update.h,v 1.6 2011/04/03 21:56:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -33,27 +33,21 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
 #include <string>
 
 class CSoftwareUpdate : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
-		int x, y, width, height, hheight, mheight, selected;
+		int width, selected;
 
-		void hide();
 		void showSoftwareUpdate();
 		void showSoftwareUpdateExpert();
 		void showSoftwareUpdateImageinfo(CMenuWidget * entry);
-// 		void showSoftwareUpdateProxySetup(CMenuWidget * entry);
 	
 	public:	
 		CSoftwareUpdate();
 		~CSoftwareUpdate();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 #endif

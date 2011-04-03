@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.h,v 1.35 2010/12/05 22:32:12 dbt Exp $
+	$Id: drive_setup.h,v 1.36 2011/04/03 21:56:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -410,7 +410,6 @@ class CDriveSetup : public CMenuTarget
 		unsigned long long getPartData(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number, const int& info_t_num /*START||END*/, bool refresh_table = true);
 		unsigned long long getPartSize(const int& device_num /*MASTER || SLAVE || MMCARD*/, const int& part_number = -1);
 	
-		void hide();
 		void Init();
 		
 		void loadHddCount();
@@ -567,12 +566,12 @@ class CDriveSetup : public CMenuTarget
 class CDriveSetupFsNotifier : public CChangeObserver
 {
 	private:
-
 	#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 		CMenuForwarder* toDisable[3];
 	#else
 		CMenuForwarder* toDisable[2];
 	#endif
+
 	public:
 		CDriveSetupFsNotifier( 	
 					#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
@@ -592,6 +591,7 @@ class CDriveSetupNFSHostNotifier : public CChangeObserver
 {
 	private:
 		CMenuForwarder* toDisable;
+
 	public:
 		CDriveSetupNFSHostNotifier( CMenuForwarder*);
 		bool changeNotify(const neutrino_locale_t, void * Data);
@@ -604,6 +604,7 @@ class CDriveSetupSambaNotifier : public CChangeObserver
 	private:
 		CMenuForwarder* toDisablefw[2];
 		CMenuOptionChooser* toDisableoj[2];
+
 	public:
 		CDriveSetupSambaNotifier(CMenuForwarder*, CMenuForwarder*, CMenuOptionChooser*, CMenuOptionChooser*);
 		bool changeNotify(const neutrino_locale_t, void * Data);
@@ -614,6 +615,7 @@ class CDriveSetupFstabNotifier : public CChangeObserver
 {
 	private:
 		CMenuOptionChooser* toDisable;
+
 	public:
 		CDriveSetupFstabNotifier( CMenuOptionChooser* );
 		bool changeNotify(const neutrino_locale_t, void * Data);
@@ -623,6 +625,7 @@ class CDriveSetupMmcNotifier : public CChangeObserver
 {
 	private:
 		CMenuForwarder* toModifi;
+
 	public:
 		CDriveSetupMmcNotifier( CMenuForwarder* f1);
 		bool changeNotify(const neutrino_locale_t, void * Data);

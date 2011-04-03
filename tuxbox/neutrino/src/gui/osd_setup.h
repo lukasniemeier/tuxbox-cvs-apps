@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.2 2010/12/05 22:32:12 dbt Exp $
+	$Id: osd_setup.h,v 1.3 2011/04/03 21:56:13 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -33,27 +33,22 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
 #include <system/setting_helpers.h>
 #include <system/settings.h>
 
 #include <string>
 
- class COsdSetup : public CMenuTarget
-{	
+class COsdSetup : public CMenuTarget
+{
 	private:
-
-		CFrameBuffer *frameBuffer;
 		CColorSetupNotifier *colorSetupNotifier;
 		CFontSizeNotifier *fontsizenotifier;
-		
-		int x, y, width, height, menue_width, hheight, mheight, selected;
+
+		int width, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;
 
-		void hide();
 		void showOsdSetup();
 		void showOsdMenueColorSetup();
 		void showOsdThemesSetup();
@@ -85,12 +80,12 @@
 		};
 };
 
-
 class COsdSetupChannelLogoNotifier : public CChangeObserver
 {
 	private:
 		CMenuForwarder* toDisable1;
 		CMenuOptionChooser* toDisable2;
+
 	public:
 		COsdSetupChannelLogoNotifier( CMenuForwarder*, CMenuOptionChooser* );
 		bool changeNotify(const neutrino_locale_t, void * Data);

@@ -1,5 +1,5 @@
 /*
-	$Id: esd_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
+	$Id: esd_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
 
 	esound setup implementation - Neutrino-GUI
 
@@ -52,15 +52,7 @@
 
 CEsdSetup::CEsdSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -83,12 +75,6 @@ int CEsdSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	
 	return res;
 }
-
-void CEsdSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
-}
-
 
 void CEsdSetup::showEsdSetup()
 /*shows the esd setup menue*/

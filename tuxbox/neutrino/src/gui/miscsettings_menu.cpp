@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.4 2011/03/30 19:41:50 dbt Exp $
+	$Id: miscsettings_menu.cpp,v 1.5 2011/04/03 21:56:13 dbt Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -46,18 +46,10 @@
 
 CMiscMenue::CMiscMenue(const neutrino_locale_t title, const char * const IconName)
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_MISCSETTINGS_HEAD;
 	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_SETTINGS;
 
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -65,12 +57,6 @@ CMiscMenue::~CMiscMenue()
 {
 
 }
-
-void CMiscMenue::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
-}
-
 
 int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 {

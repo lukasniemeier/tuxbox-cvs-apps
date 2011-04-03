@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.h,v 1.2 2010/12/08 18:03:23 dbt Exp $
+	$Id: proxyserver_setup.h,v 1.3 2011/04/03 21:56:13 dbt Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -34,29 +34,22 @@
 #include <gui/widget/menue.h>
 #include <gui/widget/icons.h>
 
-#include <driver/framebuffer.h>
-
 #include <string>
 
 class CProxySetup : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
-
-		int x, y, width, height, hheight, mheight, selected;
+		int width, selected;
 
 		neutrino_locale_t menue_title;
 		std::string menue_icon;
 
-		void hide();
 		void showProxySetup();
-
 
 	public:	
 		CProxySetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CProxySetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 #endif

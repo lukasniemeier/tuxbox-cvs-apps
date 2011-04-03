@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.h,v 1.3 2010/12/06 21:00:15 dbt Exp $
+	$Id: movieplayer_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
 
 	movieplaye setup implementation - Neutrino-GUI
 
@@ -33,28 +33,20 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
-
 #include <string>
 
-class CMoviePlayerSetup : public CMenuTarget, CChangeObserver
+class CMoviePlayerSetup : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
-		
-		int x, y, width, height, menue_width, hheight, mheight, selected;
+		int width, selected;
 
-		void hide();
 		void showMoviePlayerSetup();
 		void showMoviePlayerSelectPlugin();
-
 
 	public:	
 		CMoviePlayerSetup();
 		~CMoviePlayerSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 #endif

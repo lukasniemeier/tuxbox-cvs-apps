@@ -1,5 +1,5 @@
 /*
-	$Id: parentallock_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
+	$Id: parentallock_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
 
 	parentallock setup implementation - Neutrino-GUI
 
@@ -49,15 +49,7 @@
 
 CParentalSetup::CParentalSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -80,12 +72,6 @@ int CParentalSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	
 	return res;
 }
-
-void CParentalSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width, height);
-}
-
 
 #if 1
 #define PARENTALLOCK_PROMPT_OPTION_COUNT 3

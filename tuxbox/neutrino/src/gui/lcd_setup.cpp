@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.3 2011/03/30 19:41:50 dbt Exp $
+	$Id: lcd_setup.cpp,v 1.4 2011/04/03 21:56:13 dbt Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -49,18 +49,10 @@
 
 CLcdSetup::CLcdSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_LCDMENU_HEAD;
 	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_LCD;
 
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -68,12 +60,6 @@ CLcdSetup::~CLcdSetup()
 {
 
 }
-
-void CLcdSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
-}
-
 
 int CLcdSetup::exec(CMenuTarget* parent, const std::string &)
 {

@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.h,v 1.3 2010/12/05 22:32:12 dbt Exp $
+	$Id: mediaplayer_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -35,27 +35,19 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
-
 #include <string>
 
-class CMediaPlayerSetup : public CMenuTarget, CChangeObserver
+class CMediaPlayerSetup : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
-		
-		int x, y, width, height, menue_width, hheight, mheight, selected;
+		int width, selected;
 
-		void hide();
 		void showMediaPlayerSetup();
-
 
 	public:	
 		CMediaPlayerSetup();
 		~CMediaPlayerSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 #endif

@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.9 2011/03/30 19:41:50 dbt Exp $
+	$Id: video_setup.cpp,v 1.10 2011/04/03 21:56:13 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -49,19 +49,12 @@
 
 CVideoSetup::CVideoSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	SyncControlerForwarder = NULL;
 	RGBCSyncControler = NULL;
 	VcrVideoOutSignalOptionChooser = NULL;
 
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
 	selected = -1;
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
 
 	video_out_signal = g_Controld->getVideoOutput();
 	vcr_video_out_signal = g_Controld->getVCROutput();
@@ -89,12 +82,6 @@ int CVideoSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	
 	return res;
 }
-
-void CVideoSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
-}
-
 
 #ifdef HAVE_DBOX_HARDWARE
 #define VIDEOMENU_VIDEOSIGNAL_OPTION_COUNT 5

@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.9 2011/03/30 19:41:50 dbt Exp $
+	$Id: osd_setup.cpp,v 1.10 2011/04/03 21:56:13 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -48,6 +48,7 @@
 #include <gui/widget/colorchooser.h>
 #include <gui/widget/stringinput.h>
 
+#include <driver/framebuffer.h>
 #include <driver/screen_max.h>
 
 #include <system/debug.h>
@@ -112,11 +113,9 @@ font_sizes_groups font_sizes_groups[6] =
 
 COsdSetup::COsdSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 #ifdef HAVE_DBOX_HARDWARE
 	if (g_info.box_Type == CControld::TUXBOX_MAKER_NOKIA)
-		frameBuffer->setBlendLevel(g_settings.gtx_alpha1, g_settings.gtx_alpha2);
+		CFrameBuffer::getInstance()->setBlendLevel(g_settings.gtx_alpha1, g_settings.gtx_alpha2);
 #endif
 
 	colorSetupNotifier = new CColorSetupNotifier();
@@ -128,12 +127,6 @@ COsdSetup::COsdSetup(const neutrino_locale_t title, const char * const IconName)
 	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_COLORS;
 
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -142,12 +135,6 @@ COsdSetup::~COsdSetup()
 	delete colorSetupNotifier;
 	delete fontsizenotifier;
 }
-
-void COsdSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
-}
-
 
 int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 {
@@ -651,7 +638,6 @@ void COsdSetup::AddFontSettingItem(CMenuWidget *fontSettings, const SNeutrinoSet
 }
 
 /* font settings  */
-#warning FIXME: change of font is broken since neutrino revision 1.1029, commit: 436fd3af9c66be82728e7b93f0518efa825521f0
 void COsdSetup::showOsdFontSizeSetup()
 {
 	// dynamic created objects

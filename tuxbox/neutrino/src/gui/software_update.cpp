@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.7 2011/03/30 19:41:50 dbt Exp $
+	$Id: software_update.cpp,v 1.8 2011/04/03 21:56:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -53,15 +53,7 @@
 
 CSoftwareUpdate::CSoftwareUpdate()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	width = w_max (710, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -94,11 +86,6 @@ int CSoftwareUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	showSoftwareUpdate();
 	return res;
-}
-
-void CSoftwareUpdate::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 void CSoftwareUpdate::showSoftwareUpdate()

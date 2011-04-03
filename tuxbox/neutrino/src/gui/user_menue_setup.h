@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.h,v 1.2 2010/12/08 18:03:23 dbt Exp $
+	$Id: user_menue_setup.h,v 1.3 2011/04/03 21:56:13 dbt Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -34,22 +34,16 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
 #include <string>
 
- class CUserMenuSetup : public CMenuTarget
-{	
+class CUserMenuSetup : public CMenuTarget
+{
 	private:
-
-		CFrameBuffer *frameBuffer;
-		
-		int x, y, width, height, menue_width, hheight, mheight, selected;
+		int width, selected;
 
 		int button;
 		neutrino_locale_t local;
 
-		void hide();
 		void showSetup();
 
 	public:
@@ -57,6 +51,5 @@
 		~CUserMenuSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 #endif

@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.6 2011/03/30 19:41:50 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -54,18 +54,10 @@ using namespace std;
 
 CZapitSetup::CZapitSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	menue_title = (title != NONEXISTANT_LOCALE) ? title : LOCALE_ZAPITCONFIG_HEAD;
 	menue_icon = IconName != NEUTRINO_ICON_SETTINGS ? IconName : NEUTRINO_ICON_SETTINGS;
 
-	width 	= w_max (550, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
+	width = w_max (550, 100);
 	selected = -1;
 
 	/* These variables need to be defined outside InitZapitSettings,
@@ -127,11 +119,6 @@ int CZapitSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	Init();
 	
 	return res;
-}
-
-void CZapitSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 // init menue
@@ -219,14 +206,14 @@ void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 	CZapitClient::BouquetList bouquetlist;
 	zapit.getBouquets(bouquetlist, false, true, mode); // UTF-8
 	CZapitClient::BouquetList::iterator bouquet = bouquetlist.begin();
-	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width, height);
+	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
 	mctv.addItem(GenericMenuSeparator);
 	mctv.addItem(GenericMenuBack);
 	mctv.addItem(GenericMenuSeparatorLine);
 
 	for(; bouquet != bouquetlist.end();bouquet++)
 	{
-		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width, height);
+		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width);
 		toDelete.push_back(mwtv);
 		CZapitClient::BouquetChannelList channellist;
 		zapit.getBouquetChannels(bouquet->bouquet_nr,channellist,mode, true); // UTF-8

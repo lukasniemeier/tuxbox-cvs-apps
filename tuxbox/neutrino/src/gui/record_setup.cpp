@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.10 2011/03/30 19:41:50 dbt Exp $
+	$Id: record_setup.cpp,v 1.11 2011/04/03 21:56:13 dbt Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -51,26 +51,13 @@
 
 CRecordSetup::CRecordSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
 CRecordSetup::~CRecordSetup()
 {
 
-}
-
-void CRecordSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width, height);
 }
 
 int CRecordSetup::exec(CMenuTarget* parent, const std::string &actionKey)

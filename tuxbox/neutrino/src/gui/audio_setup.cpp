@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.7 2011/03/30 19:41:50 dbt Exp $
+	$Id: audio_setup.cpp,v 1.8 2011/04/03 21:56:13 dbt Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -49,15 +49,8 @@
 
 CAudioSetup::CAudioSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
 	selected = -1;
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
 }
 
 CAudioSetup::~CAudioSetup()
@@ -78,11 +71,6 @@ int CAudioSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	showAudioSetup();
 	
 	return res;
-}
-
-void CAudioSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 

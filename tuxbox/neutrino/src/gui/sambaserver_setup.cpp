@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.11 2011/03/30 19:41:50 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.12 2011/04/03 21:56:13 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -60,18 +60,10 @@ using namespace std;
 
 CSambaSetup::CSambaSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_SAMBASERVER_SETUP;
 	menue_icon = IconName != NEUTRINO_ICON_SETTINGS ? IconName : NEUTRINO_ICON_SETTINGS;
 
-	width 	= w_max (550, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
+	width = w_max (550, 100);
 	selected = -1;
 
 	interface = getInterface();
@@ -95,11 +87,6 @@ int CSambaSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	Init();
 	g_settings.smb_setup_samba_workgroup = upperString(g_settings.smb_setup_samba_workgroup);
 	return res;
-}
-
-void CSambaSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 // init menue

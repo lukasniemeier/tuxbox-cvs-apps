@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.13 2011/04/03 21:55:57 dbt Exp $
+$Id: personalize.h,v 1.14 2011/04/03 21:56:13 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -38,7 +38,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <string>
 #include <vector>
 #include <configfile.h>
-#include <driver/framebuffer.h>
 #include <system/lastchannel.h>
 #include <system/setting_helpers.h>
 

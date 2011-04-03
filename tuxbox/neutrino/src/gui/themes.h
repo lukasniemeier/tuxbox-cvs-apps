@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.7 2010/12/06 21:00:15 dbt Exp $ 
+	$Id: themes.h,v 1.8 2011/04/03 21:56:13 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -26,17 +26,15 @@
 #define __cthemes__
 #include <string>
 #include <configfile.h>
-#include <driver/framebuffer.h>
 #include <system/setting_helpers.h>
 
-class CThemes : public CMenuTarget, CChangeObserver
+class CThemes : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
 		CConfigFile themefile;
 		CColorSetupNotifier *notifier;
 
-		int x, y, width, height, hheight, mheight, selected;
+		int width, selected;
 		int oldThemeValues[40];
 
 		bool hasThemeChanged;
@@ -49,7 +47,6 @@ class CThemes : public CMenuTarget, CChangeObserver
 
 	public:
 		CThemes();
-		void hide();
 		void setupDefaultColors();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };

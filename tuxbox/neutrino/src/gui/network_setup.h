@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.h,v 1.4 2010/12/05 22:32:12 dbt Exp $
+	$Id: network_setup.h,v 1.5 2011/04/03 21:56:13 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -34,21 +34,17 @@
 #include <gui/widget/menue.h>
 #include <gui/widget/messagebox.h>
 
-#include <driver/framebuffer.h>
-
 #include <system/setting_helpers.h>
 #include <system/configure_network.h>
 
 #include <string>
 
-
 class CNetworkSetup : public CMenuTarget, CChangeObserver
 {
 	private:
-		CFrameBuffer *frameBuffer;
  		CNetworkConfig  *networkConfig;
-						
-		int x, y, width, height, hheight, mheight, selected;
+
+		int width, selected;
 
 		int network_dhcp;
 		int network_automatic_start;
@@ -66,7 +62,6 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 		std::string old_network_nameserver;
 		std::string old_network_gateway;
 
-		void hide();
 		void restoreNetworkSettings(bool show_message = false);
 		void prepareSettings();
 
@@ -97,7 +92,6 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 		CNetworkSetup();
 		~CNetworkSetup();
 
-
 		void showNetworkSetup();
 		void applyNetworkSettings();
 		void saveNetworkSettings(bool show_message = false);
@@ -105,6 +99,5 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 		int exec(CMenuTarget* parent, const std::string & actionKey);
  		virtual bool changeNotify(const neutrino_locale_t, void * Data);
 };
-
 
 #endif

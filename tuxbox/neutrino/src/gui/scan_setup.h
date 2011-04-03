@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.h,v 1.6 2010/12/05 22:32:12 dbt Exp $
+	$Id: scan_setup.h,v 1.7 2011/04/03 21:56:13 dbt Exp $
 
 	Copyright (C) 2009 Thilo Graf (dbt)
 	http://www.dbox2-tuning.de
@@ -29,8 +29,6 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
 #include <zapit/settings.h>
 
 #include <string>
@@ -38,13 +36,11 @@
 class CScanSetup : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
-		int x, y, width, height, menue_width, hheight, mheight, selected;
+		int width, selected;
 
 		uint sat_list_size;
 		uint provider_list_size;
 
-		void hide();
 		void showScanService();
 		void showScanModeMenue();
 
@@ -55,6 +51,5 @@ class CScanSetup : public CMenuTarget
 		void initScanSettings();
 		std::string getScanModeString(const int& scan_type);
 };
-
 
 #endif

@@ -1,5 +1,5 @@
 /*
-	$Id: parentallock_setup.h,v 1.3 2010/12/05 22:32:12 dbt Exp $
+	$Id: parentallock_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
 
 	parentallock setup implementation - Neutrino-GUI
 
@@ -33,26 +33,19 @@
 
 #include <gui/widget/menue.h>
 
-#include <driver/framebuffer.h>
-
 #include <string>
 
 class CParentalSetup : public CMenuTarget
 {
 	private:
-		CFrameBuffer *frameBuffer;
-				
-		int x, y, width, height, hheight, mheight, selected;
+		int width, selected;
 
-		void hide();
 		void showParentalSetup();
-
 
 	public:	
 		CParentalSetup();
 		~CParentalSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 #endif

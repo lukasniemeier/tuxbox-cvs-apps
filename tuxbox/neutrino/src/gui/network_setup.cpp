@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.16 2011/03/30 19:41:50 dbt Exp $
+	$Id: network_setup.cpp,v 1.17 2011/04/03 21:56:13 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -65,16 +65,9 @@
 
 CNetworkSetup::CNetworkSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
 	networkConfig = CNetworkConfig::getInstance();
 
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 
 	network_automatic_start = networkConfig->automatic_start;
@@ -144,19 +137,12 @@ int CNetworkSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	return res;
 }
 
-void CNetworkSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width, height);
-}
-
 #define OPTIONS_NTPENABLE_OPTION_COUNT 2
 const CMenuOptionChooser::keyval OPTIONS_NTPENABLE_OPTIONS[OPTIONS_NTPENABLE_OPTION_COUNT] =
 {
 	{ CNetworkSetup::NETWORK_NTP_OFF, LOCALE_OPTIONS_NTP_OFF },
 	{ CNetworkSetup::NETWORK_NTP_ON, LOCALE_OPTIONS_NTP_ON }
 };
-
-
 
 void CNetworkSetup::showNetworkSetup()
 {

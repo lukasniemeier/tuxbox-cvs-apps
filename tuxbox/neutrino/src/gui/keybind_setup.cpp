@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.8 2011/04/03 21:56:06 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.9 2011/04/03 21:56:13 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -50,8 +50,6 @@
 
 CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	frameBuffer = CFrameBuffer::getInstance();
-	
 	keySetupNotifier = new CKeySetupNotifier;
 	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 
@@ -59,12 +57,6 @@ CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const I
 	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_KEYBINDING;
 
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -86,11 +78,6 @@ int CKeybindSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	showSetup();
 	
 	return res;
-}
-
-void CKeybindSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 const neutrino_locale_t keydescription_head[] =

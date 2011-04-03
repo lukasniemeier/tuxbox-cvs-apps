@@ -1,5 +1,5 @@
 /*
-	$Id: pictureviewer_setup.cpp,v 1.5 2011/03/30 19:41:50 dbt Exp $
+	$Id: pictureviewer_setup.cpp,v 1.6 2011/04/03 21:56:13 dbt Exp $
 
 	pictureviewer setup implementation - Neutrino-GUI
 
@@ -53,15 +53,7 @@
 
 CPictureViewerSetup::CPictureViewerSetup()
 {
-	frameBuffer = CFrameBuffer::getInstance();
-
 	width = w_max (500, 100);
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+13*mheight+ 10;
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
-
 	selected = -1;
 }
 
@@ -94,11 +86,6 @@ int CPictureViewerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	showPictureViewerSetup();
 	
 	return res;
-}
-
-void CPictureViewerSetup::hide()
-{
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height);
 }
 
 #define MESSAGEBOX_NO_YES_OPTION_COUNT 2
