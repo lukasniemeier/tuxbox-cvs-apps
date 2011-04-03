@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.241 2011/03/30 19:41:40 dbt Exp $
+	$Id: neutrino.h,v 1.242 2011/04/03 21:55:56 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -45,7 +45,6 @@
 #include <timerdclient/timerdtypes.h>
 #include <gui/channellist.h>          /* CChannelList */
 #include <gui/rc_lock.h>
-#include <gui/personalize.h>
 #include <daemonc/remotecontrol.h>    /* st_rmsg      */
 
 #include <zapit/client/zapitclient.h>
@@ -120,7 +119,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 			DIRECTORMODE_PORTAL	= -3,
 			DIRECTORMODE_TOGGLE	= -2
 		};
-
+	
 		void saveSetup();
 
  private:
@@ -147,7 +146,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 			init_mode_record 	= 2,
 			init_mode_switch 	= 3,
 		};
-
+		
 	enum
 		{
 			STARTMODE_UNKNOWN	= -1,
@@ -160,7 +159,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 			STARTMODE_ESOUND	= 6,
 			STARTMODE_STANDBY	= 7,
 		};
-		
 
 		CConfigFile			configfile;
 		CScanSettings			scanSettings;
@@ -261,8 +259,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		CChannelList			*channelListRADIO;
 		CChannelList			*channelListRecord;
 		
-		CPersonalizeGui			*personalize;
-
 		static CNeutrinoApp* getInstance();
 
 		void channelsInit(int init_mode, int mode = -1);
@@ -290,18 +286,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		int execute_sys_command(const char *command);
 		CConfigFile* getConfigFile() {return &configfile;};
 		
-	friend class CPersonalizeGui;
-	
-		enum
-		{
-			MENU_MAIN,
-			MENU_SETTINGS,
-			MENU_SERVICE,
-			MENU_MAX //= 3
-		};
-		
-		//menues
-		CMenuWidget    *menus[MENU_MAX];
 };
 
 

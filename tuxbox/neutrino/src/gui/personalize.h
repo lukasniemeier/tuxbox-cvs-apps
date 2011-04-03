@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.12 2011/03/30 20:21:28 dbt Exp $
+$Id: personalize.h,v 1.13 2011/04/03 21:55:57 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -44,14 +44,19 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 using namespace std;
 
+typedef struct mn_widget_t
+{
+	const neutrino_locale_t locale_text;
+	const std::string icon;
+	const int width;
+} mn_widget_struct_t;
+
 class CPersonalizeGui : public CMenuTarget
 {
 	private:
-	
-		int width, selected;
+
+		int width, selected, menu_count;
 		void 	ShowHelpPersonalize();
-		
-		std::string action_key[3/*=CNeutrinoApp::MENU_MAX*/];
 		
 		//stuff for settings handlers
 		void	handleSetting(int *setting);
@@ -75,6 +80,8 @@ class CPersonalizeGui : public CMenuTarget
 		};
 		std::vector<menu_item_t> v_item;
 		
+		std::vector<CMenuWidget *> v_menu;
+		
 		void 	ShowPersonalizationMenu();
 		void 	ShowMenuOptions(const int& menu);
 		
@@ -82,8 +89,7 @@ class CPersonalizeGui : public CMenuTarget
 		
 		neutrino_msg_t	getShortcut(const int & shortcut_num, neutrino_msg_t alternate_rc_key = CRCInput::RC_nokey);
 		
-	public:
-
+	public:	
 		enum PERSONALIZE_MODE
 		{
 			PERSONALIZE_MODE_NOTVISIBLE =  0,
@@ -119,9 +125,17 @@ class CPersonalizeGui : public CMenuTarget
 		int shortcut;
 
 		int 	exec(CMenuTarget* parent, const std::string & actionKey);
-				
-		void 	addItem(CMenuWidget *menu, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
-		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const int item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		
+		CMenuWidget& getWidget(const int& id);
+		
+		void 	addWidget(CMenuWidget *widget);
+		void 	addWidgets(const struct mn_widget_t * const widget, const int& widget_count);
+		int 	getWidgetCount() {return menu_count;};
+		int 	getWidgetId(CMenuWidget *widget);
+		void 	addItem(CMenuWidget *menu, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		void 	addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		void 	addSeparator(const int& widget_id, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
 		void 	addPersonalizedItems();
 };
 #endif

@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1055 2011/03/30 19:41:40 dbt Exp $
+	$Id: neutrino.cpp,v 1.1056 2011/04/03 21:55:56 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -98,6 +98,7 @@
 #ifdef ENABLE_GUI_MOUNT
 #include "gui/nfs.h"
 #endif
+#include "gui/personalize.h"
 #include "gui/scan_setup.h"
 #include "gui/esound.h"
 #include "gui/osd_setup.h"
@@ -2264,7 +2265,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	execute_start_file(NEUTRINO_INIT_END_SCRIPT, false);
 
-	RealRun(*menus[MENU_MAIN]);
+	RealRun(CPersonalizeGui::getInstance()->getWidget(0)/**main**/);
 
 	ExitRun(true);
 
