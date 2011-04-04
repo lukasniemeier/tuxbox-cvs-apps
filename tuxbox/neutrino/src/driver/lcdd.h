@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.h,v 1.46 2011/01/22 17:00:44 seife Exp $
+	$Id: lcdd.h,v 1.47 2011/04/04 09:28:05 dbt Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -134,6 +134,7 @@ class CLCD
 
 		static CLCD* getInstance();
 		void init(const char *fontfile, const char *fontfile2 = NULL, const char *fontfile3 = NULL);
+		void reinit(const char *fontfile, const char *fontfile2 = NULL, const char *fontfile3 = NULL);
 
 		void setMode(const MODES m, const char * const title = "");
 		MODES getMode() { return mode; };

@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.181 2011/03/30 19:41:41 dbt Exp $
+	$Id: menue.cpp,v 1.182 2011/04/04 09:28:05 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,6 +41,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 
@@ -174,6 +175,7 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 
 CMenuWidget::CMenuWidget()
 {
+	name = NONEXISTANT_LOCALE;
 	nameString = g_Locale->getText(NONEXISTANT_LOCALE);
 	iconfile="";
 	selected=-1;
@@ -184,6 +186,7 @@ CMenuWidget::CMenuWidget()
 CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon, const int mwidth, const int mheight)
 {
 	frameBuffer = CFrameBuffer::getInstance();
+	name = Name;
 	nameString = g_Locale->getText(Name);
 	iconfile = Icon;
 	preselected = -1;
@@ -199,6 +202,7 @@ CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon,
 CMenuWidget::CMenuWidget(const char* Name, const std::string & Icon, const int mwidth, const int mheight)
 {
 	frameBuffer = CFrameBuffer::getInstance();
+	name = NONEXISTANT_LOCALE;
 	nameString = Name;
 	iconfile = Icon;
 	preselected = -1;
@@ -246,6 +250,13 @@ void CMenuWidget::addItem(CMenuItem* menuItem, const bool defaultselected)
 bool CMenuWidget::hasItem()
 {
 	return !items.empty();
+}
+
+std::string CMenuWidget::getName()
+{
+	if (name != NONEXISTANT_LOCALE)
+		nameString = g_Locale->getText(name);
+	return nameString;
 }
 
 int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
@@ -414,18 +425,19 @@ void CMenuWidget::hide()
 
 void CMenuWidget::paint()
 {
-	const char * l_name = nameString.c_str();
-
-	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, l_name);
-
-	height=wanted_height;
-	if(height > (g_settings.screen_EndY - g_settings.screen_StartY))
-		height = g_settings.screen_EndY - g_settings.screen_StartY;
-
-	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(l_name, true); // UTF-8
-	if (neededWidth> width-48)
-	{
-		width= neededWidth+ 49;
+	if (name != NONEXISTANT_LOCALE)
+		nameString = g_Locale->getText(name);
+ 
+	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, nameString.c_str());
+ 
+ 	height=wanted_height;
+ 	if(height > (g_settings.screen_EndY - g_settings.screen_StartY))
+ 		height = g_settings.screen_EndY - g_settings.screen_StartY;
+ 
+	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(nameString.c_str(), true); // UTF-8
+ 	if (neededWidth> width-48)
+ 	{
+ 		width= neededWidth+ 49;
 		if(width > (g_settings.screen_EndX - g_settings.screen_StartX))
 			width = g_settings.screen_EndX - g_settings.screen_StartX;
 	}
@@ -463,7 +475,7 @@ void CMenuWidget::paint()
 	if(hheight+itemHeightTotal < height)
 		height=hheight+itemHeightTotal;
 
-	y= ( ( ( g_settings.screen_EndY- g_settings.screen_StartY ) - height) >> 1 ) + g_settings.screen_StartY;
+	y= ( ( ( getEndY()- getStartY() ) - height) >> 1 ) + getStartY();
 	x= ( ( ( g_settings.screen_EndX- g_settings.screen_StartX ) - width ) >> 1 ) + g_settings.screen_StartX;
 
 	int sb_width;
@@ -477,7 +489,7 @@ void CMenuWidget::paint()
 	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 	frameBuffer->paintBoxRel(x, y, width + sb_width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+38,y+hheight+1, width-40, l_name, COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+38, y+hheight+1, width-40, nameString.c_str(), COL_MENUHEAD, 0, true); // UTF-8
 	frameBuffer->paintIcon(iconfile, x + 8, y + 5);
 
 	item_start_y = y+hheight;
@@ -716,6 +728,9 @@ int CMenuOptionChooser::paint( bool selected )
 			break;
 		}
 	}
+
+	if (optionName != NONEXISTANT_LOCALE)
+		optionNameString = g_Locale->getText(optionName);
 
 	const char * l_option = g_Locale->getText(option);
 

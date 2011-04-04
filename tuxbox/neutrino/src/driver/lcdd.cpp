@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.89 2011/01/22 17:00:44 seife Exp $
+	$Id: lcdd.cpp,v 1.90 2011/04/04 09:28:05 dbt Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -66,6 +66,7 @@ CLCD::CLCD()
 	m_progressGlobal = 0;
 	m_progressLocal = 0;
 #endif // LCD_UPDATE
+	fontRenderer = NULL;
 	muted = false;
 	percentOver = 0;
 	volume = 0;
@@ -165,6 +166,14 @@ void CLCD::init(const char *fontfile, const char *fontfile2, const char *fontfil
 	}
 }
 
+void CLCD::reinit(const char *fontfile, const char *fontfile2, const char *fontfile3)
+{
+	if (!lcdInit(fontfile, fontfile2, fontfile3))
+	{
+		printf("[lcdd] LCD-Reinit failed!\n");
+	}
+}
+
 enum backgrounds {
 	BACKGROUND_SETUP = 0,
 	BACKGROUND_POWER = 1,
@@ -189,6 +198,9 @@ const char * const background_path[NUMBER_OF_PATHS] = {
 
 bool CLCD::lcdInit(const char *fontfile, const char *fontfile2, const char *fontfile3)
 {
+	if (fontRenderer != NULL)
+		delete fontRenderer;
+
 	fontRenderer = new LcdFontRenderClass(&display);
 	const char * style_name = fontRenderer->AddFont(fontfile);
 	char * font_name =  strdup(fontRenderer->getFamily(fontfile).c_str());

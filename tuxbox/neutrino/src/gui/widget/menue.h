@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.92 2011/01/30 20:46:19 dbt Exp $
+	$Id: menue.h,v 1.93 2011/04/04 09:28:05 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -319,6 +319,7 @@ class CMenuOptionLanguageChooser : public CMenuItem
 class CMenuWidget : public CMenuTarget
 {
 	protected:
+		neutrino_locale_t name;
 		std::string		nameString;
 		CFrameBuffer		*frameBuffer;
 		std::vector<CMenuItem*>	items;
@@ -349,7 +350,7 @@ class CMenuWidget : public CMenuTarget
 		virtual void paint();
 		virtual void hide();
 		virtual int exec(CMenuTarget* parent, const std::string & actionKey);
-		virtual std::string getName(){ return nameString;};
+		virtual std::string getName();
 		virtual void setPreselected(const int &Preselected){ preselected = Preselected; };
 		virtual int getSelected(){ return selected; };
 };
