@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.182 2011/04/04 09:28:05 dbt Exp $
+	$Id: menue.cpp,v 1.183 2011/04/04 18:00:10 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -475,7 +475,7 @@ void CMenuWidget::paint()
 	if(hheight+itemHeightTotal < height)
 		height=hheight+itemHeightTotal;
 
-	y= ( ( ( getEndY()- getStartY() ) - height) >> 1 ) + getStartY();
+	y= ( ( ( g_settings.screen_EndY- g_settings.screen_StartY ) - height) >> 1 ) + g_settings.screen_StartY;
 	x= ( ( ( g_settings.screen_EndX- g_settings.screen_StartX ) - width ) >> 1 ) + g_settings.screen_StartX;
 
 	int sb_width;
