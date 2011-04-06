@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.183 2011/04/04 18:00:10 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.184 2011/04/06 08:49:58 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -191,9 +191,7 @@ CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon,
 	iconfile = Icon;
 	preselected = -1;
 	selected = preselected;
-	width = mwidth;
-	if(width > (g_settings.screen_EndX - g_settings.screen_StartX))
-		width = g_settings.screen_EndX - g_settings.screen_StartX;
+	width = w_max(mwidth, 0);
 	height = mheight; // height(menu_title)+10+...
 	wanted_height=mheight;
 	current_page=0;
@@ -207,9 +205,7 @@ CMenuWidget::CMenuWidget(const char* Name, const std::string & Icon, const int m
 	iconfile = Icon;
 	preselected = -1;
 	selected = preselected;
-	width = mwidth;
-	if(width > (g_settings.screen_EndX - g_settings.screen_StartX))
-		width = g_settings.screen_EndX - g_settings.screen_StartX;
+	width = w_max(mwidth, 0);
 	height = mheight; // height(menu_title)+10+...
 	wanted_height=mheight;
 	current_page=0;
@@ -427,21 +423,17 @@ void CMenuWidget::paint()
 {
 	if (name != NONEXISTANT_LOCALE)
 		nameString = g_Locale->getText(name);
- 
+
 	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, nameString.c_str());
- 
- 	height=wanted_height;
- 	if(height > (g_settings.screen_EndY - g_settings.screen_StartY))
- 		height = g_settings.screen_EndY - g_settings.screen_StartY;
- 
+
+	height = h_max(wanted_height, 0);
+
 	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(nameString.c_str(), true); // UTF-8
- 	if (neededWidth> width-48)
- 	{
- 		width= neededWidth+ 49;
-		if(width > (g_settings.screen_EndX - g_settings.screen_StartX))
-			width = g_settings.screen_EndX - g_settings.screen_StartX;
-	}
+	if (neededWidth > width - 48)
+		width = w_max(neededWidth + 49, 0);
+
 	int hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+
 	int itemHeightTotal=0;
 	int heightCurrPage=0;
 	page_start.clear();
@@ -475,8 +467,8 @@ void CMenuWidget::paint()
 	if(hheight+itemHeightTotal < height)
 		height=hheight+itemHeightTotal;
 
-	y= ( ( ( g_settings.screen_EndY- g_settings.screen_StartY ) - height) >> 1 ) + g_settings.screen_StartY;
-	x= ( ( ( g_settings.screen_EndX- g_settings.screen_StartX ) - width ) >> 1 ) + g_settings.screen_StartX;
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 
 	int sb_width;
 	if(total_pages > 1)
