@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.128 2011/04/12 18:59:01 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.129 2011/04/12 18:59:16 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -157,7 +157,7 @@ void CNeutrinoApp::InitMenuMain()
 	CPersonalizeGui *personalize = CPersonalizeGui::getInstance();
 	
 	// Dynamic renumbering
-	personalize->shortcut = 1;
+	personalize->setShortcut();
 	
 	///CMenuWidget &menu = personalize->getWidget(MENU_MAIN)/**main**/;
 	
@@ -277,7 +277,7 @@ void CNeutrinoApp::InitMenuSettings()
 	///CMenuWidget &menu = personalize->getWidget(MENU_SETTINGS)/**settings**/;
 	
 	// Dynamic renumbering
-	personalize->shortcut = 1;
+	personalize->setShortcut();
 	
 	// back button, no personalized
 	personalize->addIntroItems(MENU_SETTINGS);
@@ -287,7 +287,7 @@ void CNeutrinoApp::InitMenuSettings()
 	
 	// separator line
 	personalize->addItem(MENU_SETTINGS, GenericMenuSeparatorLine, NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
-
+	
 	// video.
 	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_VIDEO, true, NULL, new CVideoSetup()), &g_settings.personalize_video);	
 
@@ -332,7 +332,7 @@ void CNeutrinoApp::InitMenuSettings()
 	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_misc);
 	
 	// personalize - not personalized
-	personalize->addItem(MENU_SETTINGS, new CLockedMenuForwarder(LOCALE_PERSONALIZE_HEAD, g_settings.personalize_pincode, g_settings.personalize_pinstatus, true, NULL, personalize), NULL, false, false);
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_PERSONALIZE_HEAD, true, NULL, personalize), &g_settings.personalize, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 }
 
 const CMenuOptionChooser::keyval OPTIONS_OFF0_ON1_OPTIONS[OPTIONS_OFF0_ON1_OPTION_COUNT] =
@@ -351,7 +351,7 @@ void CNeutrinoApp::InitMenuService()
 	///CMenuWidget &menu = personalize->getWidget(MENU_SERVICE)/**service**/;
 	
 	// Dynamic renumbering
-	personalize->shortcut = 1;
+	personalize->setShortcut();
 
 	// back button, no personalized
 	personalize->addIntroItems(MENU_SERVICE);

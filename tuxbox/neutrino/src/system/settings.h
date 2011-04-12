@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.235 2011/03/21 18:36:26 rhabarber1848 Exp $
+  $Id: settings.h,v 1.236 2011/04/12 18:59:17 dbt Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -248,6 +248,7 @@ struct SNeutrinoSettings
 	int personalize_mediaplayer;
 	int personalize_driver;
 	int personalize_misc;
+	int personalize;
 
 	//recording
 	int  recording_type;

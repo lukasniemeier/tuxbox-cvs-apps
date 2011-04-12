@@ -1071,6 +1071,7 @@ parentallock.onsignal Bei gesendeter Vorsperre
 parentallock.parentallock Jugendschutz
 parentallock.prompt PIN-Eingabe
 personalize.access Zugangsoptionen
+personalize.apply_settings Änderungen übernehmen?
 personalize.disabled deaktiviert
 personalize.enabled aktiviert
 personalize.head Personalisierung
@@ -1092,7 +1093,6 @@ personalize.pincode PIN Code
 personalize.pinhint Personalisierungs PIN Code eingeben
 personalize.pinprotect ja
 personalize.pinstatus mit PIN
-personalize.saverestart Neutrino muss neu starten. Jetzt neu starten?
 personalize.setupmenuwithpin Einstellungen-Menü mit PIN
 personalize.visible sichtbar
 pictureviewer.decode_server_ip Decoding-Server IP

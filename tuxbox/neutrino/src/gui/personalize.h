@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.16 2011/04/12 18:59:01 dbt Exp $
+$Id: personalize.h,v 1.17 2011/04/12 18:59:16 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -41,8 +41,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <system/lastchannel.h>
 #include <system/setting_helpers.h>
 
-using namespace std;
-
 typedef struct mn_widget_t
 {
 	const neutrino_locale_t locale_text;
@@ -54,9 +52,8 @@ class CPersonalizeGui : public CMenuTarget
 {
 	private:
 
-		int width, selected, widget_count;
-		void 	ShowHelpPersonalize();
-		
+		int width, selected, widget_count, shortcut;
+				
 		//stuff for settings handlers
 		void	handleSetting(int *setting);
 		void	restoreSettings();
@@ -83,8 +80,8 @@ class CPersonalizeGui : public CMenuTarget
 		
 		void 	ShowPersonalizationMenu();
 		void 	ShowMenuOptions(const int& menu);
-		
-		void 	SaveAndRestart();
+		void 	ShowHelpPersonalize();
+		void 	SaveAndExit();
 		
 		neutrino_msg_t	getShortcut(const int & shortcut_num, neutrino_msg_t alternate_rc_key = CRCInput::RC_nokey);
 		
@@ -115,13 +112,13 @@ class CPersonalizeGui : public CMenuTarget
 			PERSONALIZE_SHOW_AS_ACCESS_OPTION  =  2,
 			PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU  =  3 //usefull to hide separators in menu, but visible only in personalizing menu
 		};
-
+		
 		CPersonalizeGui();
 		~CPersonalizeGui();
-		
+				
 		static CPersonalizeGui* getInstance();
 		
-		int shortcut;
+		
 
 		int 	exec(CMenuTarget* parent, const std::string & actionKey);
 		
@@ -131,6 +128,7 @@ class CPersonalizeGui : public CMenuTarget
 		void 	addWidgets(const struct mn_widget_t * const widget, const int& widget_count);
 		int 	getWidgetCount() {return widget_count;};
 		int 	getWidgetId(CMenuWidget *widget);
+		void	setShortcut(const int& short_cut = 1) {shortcut = short_cut;};
 		void 	addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
 		void 	addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
 		void	addIntroItems(CMenuWidget *widget);

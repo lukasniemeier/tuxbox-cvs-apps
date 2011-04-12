@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1057 2011/04/04 09:28:05 dbt Exp $
+	$Id: neutrino.cpp,v 1.1058 2011/04/12 18:59:16 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -588,6 +588,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.personalize_mediaplayer = configfile.getInt32("personalize_mediaplayer", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_driver = configfile.getInt32("personalize_driver", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_misc = configfile.getInt32("personalize_misc", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
+	g_settings.personalize = configfile.getInt32("personalize", CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED);
 
 	//recording (server + vcr)
 	g_settings.recording_type = configfile.getInt32("recording_type", RECORDING_OFF);
@@ -1136,6 +1137,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ( "personalize_mediaplayer", g_settings.personalize_mediaplayer );
 	configfile.setInt32 ( "personalize_driver", g_settings.personalize_driver );
 	configfile.setInt32 ( "personalize_misc", g_settings.personalize_misc );
+	configfile.setInt32 ( "personalize", g_settings.personalize );
 
 	// NTP-Server for sectionsd
 	configfile.setString( "network_ntpserver", g_settings.network_ntpserver);
