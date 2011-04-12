@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.93 2011/04/04 09:28:05 dbt Exp $
+	$Id: menue.h,v 1.94 2011/04/12 18:59:02 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -346,6 +346,7 @@ class CMenuWidget : public CMenuTarget
 		~CMenuWidget();
 
 		virtual void addItem(CMenuItem* menuItem, const bool defaultselected = false);
+		virtual void addIntroItems(neutrino_locale_t subhead_text = NONEXISTANT_LOCALE, neutrino_locale_t section_text = NONEXISTANT_LOCALE);
 		bool hasItem();
 		virtual void paint();
 		virtual void hide();

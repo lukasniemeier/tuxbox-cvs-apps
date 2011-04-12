@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.242 2011/04/03 21:55:56 dbt Exp $
+	$Id: neutrino.h,v 1.243 2011/04/12 18:59:01 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -235,8 +235,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void InitMenuMain();
 		void InitMenuSettings();
 		void InitMenuService();
-
-		void addMenueIntroItems(CMenuWidget &item);
 
 		void SetupFrameBuffer();
 		void SelectAPID();

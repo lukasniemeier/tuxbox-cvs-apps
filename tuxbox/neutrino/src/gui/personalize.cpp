@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.36 2011/04/12 18:58:57 dbt Exp $
+        $Id: personalize.cpp,v 1.37 2011/04/12 18:59:01 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -430,12 +430,25 @@ int CPersonalizeGui::getWidgetId(CMenuWidget *widget)
 	return -1;
 }
 
+
+//adds non personalized menu intro items objects with separator, back button and separator line to menu without personalizing parameters
+void CPersonalizeGui::addIntroItems(const int& widget_id)
+{
+	addIntroItems(v_widget[widget_id]);
+}
+void CPersonalizeGui::addIntroItems(CMenuWidget *widget)
+{
+	addItem(widget, GenericMenuSeparator, 		NULL, false, PERSONALIZE_SHOW_NO);
+	addItem(widget, GenericMenuBack, 		NULL, false, PERSONALIZE_SHOW_NO);
+	addItem(widget, GenericMenuSeparatorLine, 	NULL, false, PERSONALIZE_SHOW_NO);
+}
+
+
 //overloaded version from 'addItem', first parameter is an id from widget collection 'v_widget'
 void CPersonalizeGui::addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode)
 {
 	addItem(v_widget[widget_id], menu_Item, personalize_mode, defaultselected, item_mode);
 }
-
 //adds a personalized menu item object to menu with personalizing parameters
 void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode)
 {
