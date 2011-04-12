@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.34 2011/04/03 21:55:57 dbt Exp $
+        $Id: personalize.cpp,v 1.35 2011/04/12 18:58:53 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -41,60 +41,82 @@
         
         Parameters:
 	addItem(CMenuWidget *menu, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool item_mode),
+	addItem(const int& widget_id, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool item_mode),
 	
-	CMenuWidget *menu 		= pointer to menuewidget object
+	CMenuWidget *menu 		= pointer to menue widget object, also to get with 'getWidget(const int& id)'
+	const int& widget_id		= index of widget (overloaded), this index is definied in vector 'v_menu', to get with 'getWidgetId()' 
 	CMenuItem *menuItem		= pointer to a menuitem object, can be forwarder, chooser, separator...all
 	const int *personalize_mode	= optional, default NULL, pointer to a specified personalize setting look at: PERSONALIZE_MODE, this regulates the personalize mode
 	const bool item_mode		= optional, default true, if you don't want to see this item in personalize menue, then set it to false
 	
 	Icon handling:
-	If you define an icon in the item object, this will be shown also in the menu (not the personilazitions menue), otherwise a shortcut will be create
+	If you define an icon in the item object, this will be shown in the personalized menu (not the personilazitions menue itself), otherwise a shortcut will be create
 	
 	Shortcuts.
-	A start- or reset-shortcut you can create with personalize->shortcut = 1;
+	A start- or reset-shortcut you can create with foo->shortcut = 1;
 	
 	Separators:
-	You must add separators with
+	Add separators with
 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text, const bool item_mode)
+	OR
+	addSeparator(const int& widget_id, const neutrino_locale_t locale_text, const bool item_mode)
 	
 		Parameters:
 		CMenuWidget &menu 			= rev to menuewidget object
+		const int& widget_id			= index of widget (overloaded), this index is definied in vector 'v_menu', to get with 'getWidgetId(widget_object)'
+		
 		const neutrino_locale_t locale_text	= optional, default NONEXISTANT_LOCALE, adds a line separator, is defined a locale then adds a text separator
-		const bool item_mode		= optional, default true, if you don't want to see this sparator also in personalize menue, then set it to false, usefull for to much separtors ;-)
+		const bool item_mode			= optional, default true, if you don't want to see this sparator also in personalize menue, then set it to false, usefull for to much separtors ;-)
 		
 	Usage:
 	It's no matter what a kind of menue item (e.g. forwarder, optionchooser ...) you would like to personalize.
 
 	Example:
 	//we need an instance of CPersonalizeGUI()
-	personalize = CPersonalizeGui::getInstance();
+	foo = CPersonalizeGui::getInstance();
 
 	//create start number for shortcuts
-	personalize->shortcut = 1;
+	foo->shortcut = 1;
 
-	//create a menue object, this will be automaticly shown as menu item in your peronalize menu
+	//create a menue widget object, this will be automaticly shown as menu item in your peronalize menu
 	CMenuWidget * mn =  new CMenuWidget(LOCALE_MAINMENU_HEAD, ICON    ,width);
+	OR
+	create a widget struct:
+	const mn_widget_struct_t menu_widgets[count of available widgets] =
+	{
+		{LOCALE_1, 	NEUTRINO_ICON_1, 	width1},
+		{LOCALE_2, 	NEUTRINO_ICON_2, 	width2},
+		{LOCALE_3,	NEUTRINO_ICON_3, 	width3}, 
+	};
 	
-	//add it to widget collection
-	personalize->addWidget(mn);
+	//add it to widget collection as single
+	foo->addWidget(mn);
+	OR as struct
+	foo->addWidgets(widget_struct, count of available widgets);
 
 	//create a forwarder object:
 	CMenuItem *item = new CMenuForwarder(LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 
 	//now you can add this to personalization
-	personalize->addItem(&mn, tvswitch, &g_settings.personalize_tvmode);
-
-	//if you want to add a separator use this function, but this doesn't personalize it, but you must use this anstead addItem(GenericMenuSeparatorLine)  
-	personalize->addSeparator(mn);
+	foo->addItem(&mn, tvswitch, &g_settings.personalize_tvmode);
+	OR with widget id
+	foo->addItem(0, tvswitch, &g_settings.personalize_tvmode);
+	
+	//if you want to add a non personalized separator use this function, you must use this anstead addItem(GenericMenuSeparatorLine)  
+	foo->addSeparator(mn);
+	OR with widget id
+	foo->addSeparator(0);
 	//otherwise you can add a separator at this kind:
-	personalize->addItem(&mn, GenericMenuSeparatorLine);
+	foo->addItem(&mn, GenericMenuSeparatorLine);
+	OR with widget id
+	foo->addItem(0, GenericMenuSeparatorLine);
 
-	//to show the items at screen, we must add the menue items
-	personalize->addPersonalizedItems();
-	//this member makes the same like mn->addItem(...) known from CMenuWidget()-class, but for all collected and evaluated objects
+	//finally add the menue items
+	foo->addPersonalizedItems();
+	//this member makes the same like mn->addItem(...) known from CMenuWidget()-class for all collected and evaluated objects
 	
 	//reset shortcuts:
-	personalize->shortcut = 1;
+	foo->shortcut = 1;
 
 */
 
