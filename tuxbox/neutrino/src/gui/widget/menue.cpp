@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.186 2011/04/12 18:59:05 dbt Exp $
+	$Id: menue.cpp,v 1.187 2011/04/12 18:59:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -248,6 +248,11 @@ void CMenuWidget::resetWidget()
 	items.clear();
 	page_start.clear();
 	selected=-1;
+}
+
+void CMenuWidget::insertItem(const uint& item_id, CMenuItem* menuItem)
+{
+	items.insert(items.begin()+item_id, menuItem);
 }
 
 bool CMenuWidget::hasItem()
