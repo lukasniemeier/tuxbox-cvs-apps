@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.14 2011/04/03 21:56:13 dbt Exp $
+$Id: personalize.h,v 1.15 2011/04/12 18:58:57 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -54,7 +54,7 @@ class CPersonalizeGui : public CMenuTarget
 {
 	private:
 
-		int width, selected, menu_count;
+		int width, selected, widget_count;
 		void 	ShowHelpPersonalize();
 		
 		//stuff for settings handlers
@@ -70,7 +70,7 @@ class CPersonalizeGui : public CMenuTarget
 		
 		typedef struct menu_item_t
 		{
-			CMenuWidget *menu;
+			CMenuWidget *widget;
 			CMenuItem* menuItem;
 			bool default_selected;
 			neutrino_locale_t locale_name;
@@ -79,7 +79,7 @@ class CPersonalizeGui : public CMenuTarget
 		};
 		std::vector<menu_item_t> v_item;
 		
-		std::vector<CMenuWidget *> v_menu;
+		std::vector<CMenuWidget *> v_widget;
 		
 		void 	ShowPersonalizationMenu();
 		void 	ShowMenuOptions(const int& menu);
@@ -129,7 +129,7 @@ class CPersonalizeGui : public CMenuTarget
 		
 		void 	addWidget(CMenuWidget *widget);
 		void 	addWidgets(const struct mn_widget_t * const widget, const int& widget_count);
-		int 	getWidgetCount() {return menu_count;};
+		int 	getWidgetCount() {return widget_count;};
 		int 	getWidgetId(CMenuWidget *widget);
 		void 	addItem(CMenuWidget *menu, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
 		void 	addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
