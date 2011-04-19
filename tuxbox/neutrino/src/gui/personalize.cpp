@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.38 2011/04/12 18:59:16 dbt Exp $
+        $Id: personalize.cpp,v 1.39 2011/04/19 09:59:36 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -551,28 +551,48 @@ void CPersonalizeGui::addSeparator(CMenuWidget &widget, const neutrino_locale_t 
 //this replaces all collected actual and handled "widget->addItem()" tasks at once
 void CPersonalizeGui::addPersonalizedItems()
 {
+	bool allow_sep = true;
+	int old_w_id = 0;
  	for (uint i = 0; i < v_item.size(); i++)
 	{
-		if (v_item[i].item_mode != PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU)
+		if (v_item[i].item_mode != PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU) //skip if item only used in personalize settings
 		{
-			if (v_item[i].personalize_mode != NULL)
+			if (v_item[i].personalize_mode != NULL) //is personalized item
 			{
 				CMenuForwarder *fw = static_cast <CMenuForwarder*> (v_item[i].menuItem);
 				
+				//transform item to locked forwarder and set pin mode if required
 				bool do_ask = false;
 				if (*v_item[i].personalize_mode == PERSONALIZE_MODE_PIN || (*v_item[i].personalize_mode == PROTECT_MODE_PIN_PROTECTED && v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
 					do_ask = true;
-					
 				v_item[i].menuItem = new CLockedMenuForwarder(fw->getTextLocale(), g_settings.personalize_pincode, do_ask, fw->active, NULL, fw->getTarget(), fw->getActionKey().c_str(), fw->directKey, fw->iconName.c_str());
 	
+				//add item if it's set to visible or pin protected and allow to add an forwarder as next
 				if (v_item[i].menuItem->active && (*v_item[i].personalize_mode != PERSONALIZE_MODE_NOTVISIBLE || v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
-					v_item[i].widget->addItem(v_item[i].menuItem, v_item[i].default_selected); //forwarders...		
+				{
+					v_item[i].widget->addItem(v_item[i].menuItem, v_item[i].default_selected); //forwarders...
+					allow_sep = true;
+				}
+				else //if current item the latest of current widget, then allow to add separator as next, ensures that we can add any separator as first of next widget
+				{	
+					allow_sep = old_w_id == getWidgetId(v_item[i].widget) ? allow_sep : false;
+				}
 			}
-			else 
-				v_item[i].widget->addItem(v_item[i].menuItem, v_item[i].default_selected); //separators
+			else //add separator as non personalized item and don't allow to add a separator but allow back button as next
+			{	
+				if (allow_sep || v_item[i].menuItem == GenericMenuBack)
+				{
+					v_item[i].widget->addItem(v_item[i].menuItem, v_item[i].default_selected); //separators
+					allow_sep = v_item[i].menuItem == GenericMenuBack ? true : false;
+				}
+				
+			}
 		}
+		old_w_id = getWidgetId(v_item[i].widget);
+		
 	}
 }
+
 
 // returns RC_key depends of shortcut between key number 1 to 0, 10 returns 0, >10 returns no key
 // parameter alternate_rc_key allows using an alternate key, default key is RC_nokey

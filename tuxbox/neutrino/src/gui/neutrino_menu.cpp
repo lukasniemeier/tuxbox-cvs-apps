@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.129 2011/04/12 18:59:16 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.130 2011/04/19 09:59:36 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -283,7 +283,8 @@ void CNeutrinoApp::InitMenuSettings()
 	personalize->addIntroItems(MENU_SETTINGS);
 	
 	// save
-	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "savesettings", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED), NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
+	int show_save = CPersonalizeGui::PERSONALIZE_MODE_VISIBLE;
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "savesettings", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED), &show_save, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
 	
 	// separator line
 	personalize->addItem(MENU_SETTINGS, GenericMenuSeparatorLine, NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
@@ -330,6 +331,8 @@ void CNeutrinoApp::InitMenuSettings()
 	
 	//yellow (miscSettings)
 	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_misc);
+	
+	personalize->addSeparator(MENU_SETTINGS);
 	
 	// personalize - not personalized
 	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_PERSONALIZE_HEAD, true, NULL, personalize), &g_settings.personalize, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
