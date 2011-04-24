@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: framebuffer.h,v 1.56 2010/11/08 21:33:10 dbt Exp $
+	$Id: framebuffer.h,v 1.57 2011/04/24 12:23:09 dbt Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -130,9 +130,8 @@ class CFrameBuffer
 		~CFrameBuffer();
 
 		static CFrameBuffer* getInstance();
-	
-		int getIconWidth(const char * const filename);	// infos about icon dimensions
-		int getIconHeight(const char * const filename);
+
+		void getIconSize(const char * const filename, int* width, int *height); // infos about icon dimensions
 	
 		void init(const char * const fbDevice = "/dev/fb/0");
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);

@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.57 2011/03/30 20:21:33 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.58 2011/04/24 12:23:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.57 2011/03/30 20:21:33 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.58 2011/04/24 12:23:09 dbt Exp $\r\n");
 	init();
 }
 
@@ -1640,10 +1640,11 @@ void CMovieBrowser::refreshTitle(void)
 								TITLE_FONT_COLOR, 
 								0, 
 								true); // UTF-8
-
+	int iconw = 0, iconh = 0;
+	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
 	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, 
-								m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - CFrameBuffer::getInstance()->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX) -12, 
-								m_cBoxFrameTitleRel.iY+m_cBoxFrameTitleRel.iHeight/2 - CFrameBuffer::getInstance()->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX)/2);
+								m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - iconw - 12, 
+								m_cBoxFrameTitleRel.iY+m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
 }
 
 /************************************************************************
@@ -1709,33 +1710,29 @@ void CMovieBrowser::refreshFoot(void)
 	int ypos_buttontext = m_cBoxFrameFootRel.iY + m_cBoxFrameFootRel.iHeight + 2;
 
 	// draw red (sort)
+	int iconw = 0, iconh = 0;
 	if (m_settings.gui != MB_GUI_LAST_PLAY && m_settings.gui != MB_GUI_LAST_RECORD)
 	{
-		int iconh_red = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_RED);
-		int iconw_red = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_RED);
-
+		framebuffer->getIconSize(NEUTRINO_ICON_BUTTON_RED, &iconw, &iconh);
 		m_pcWindow->paintBoxRel(xpos1, m_cBoxFrameFootRel.iY, width1, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_LEFT);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos1, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_red/2);
-		m_pcWindow->RenderString(m_pcFontFoot, xpos1 + iconw_red + xoffset, ypos_buttontext , width1, sort_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos1, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh/2);
+		m_pcWindow->RenderString(m_pcFontFoot, xpos1 + iconw + xoffset, ypos_buttontext , width1, sort_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 
 	// draw green (filter)
 	if (m_settings.gui != MB_GUI_LAST_PLAY && m_settings.gui != MB_GUI_LAST_RECORD)
 	{
-		int iconh_gr = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_GREEN);
-		int iconw_gr = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_GREEN);
-
+		framebuffer->getIconSize(NEUTRINO_ICON_BUTTON_GREEN, &iconw, &iconh);
 		m_pcWindow->paintBoxRel(xpos2, m_cBoxFrameFootRel.iY, width2, footheight, (CFBWindow::color_t)bgcolor);
-		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos2, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_gr/2);
-		m_pcWindow->RenderString(m_pcFontFoot, xpos2 + iconw_gr + xoffset, ypos_buttontext , width2, filter_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos2, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh/2);
+		m_pcWindow->RenderString(m_pcFontFoot, xpos2 + iconw + xoffset, ypos_buttontext , width2, filter_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 	}
 
 	// draw ok (select/start)
-	int iconh_ok = framebuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY);
-	int iconw_ok = framebuffer->getIconWidth(NEUTRINO_ICON_BUTTON_OKAY);
+	framebuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
 	m_pcWindow->paintBoxRel(xpos3, m_cBoxFrameFootRel.iY, width3, footheight, (CFBWindow::color_t)bgcolor, c_rad_mid, CORNER_BOTTOM_RIGHT);
-	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, xpos3, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh_ok/2);
-	m_pcWindow->RenderString(m_pcFontFoot, xpos3 + iconw_ok + xoffset, ypos_buttontext , width3, ok_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
+	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, xpos3, (m_cBoxFrameFootRel.iY + foot_hmid) - iconh/2);
+	m_pcWindow->RenderString(m_pcFontFoot, xpos3 + iconw + xoffset, ypos_buttontext , width3, ok_text.c_str(), (CFBWindow::color_t)color, 0, true); // UTF-8
 }
 
 /************************************************************************
@@ -3884,7 +3881,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.57 $");
+	return imageinfo.getModulVersion("","$Revision: 1.58 $");
 }
 
 /************************************************************************/

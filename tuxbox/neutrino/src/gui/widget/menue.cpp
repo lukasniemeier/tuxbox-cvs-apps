@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.187 2011/04/12 18:59:09 dbt Exp $
+	$Id: menue.cpp,v 1.188 2011/04/24 12:23:10 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -123,16 +123,15 @@ void CMenuItem::paintItemButton(const int startX, const int frame_height, const 
 	
 	//paint icon
 	//get data for marker icon
-	int m_icon_w = frameBuffer->getIconWidth(NEUTRINO_ICON_RIGHT_MARKER);
-	int m_icon_h = frameBuffer->getIconHeight(NEUTRINO_ICON_RIGHT_MARKER);
+	int m_icon_w = 0, m_icon_h = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_RIGHT_MARKER, &m_icon_w, &m_icon_h);
 	
 	int icon_x = 0;
 	int icon_space = (x+(startX-x)/2);
 
 	if (!icon_name.empty())
 	{
-		icon_w = frameBuffer->getIconWidth(icon_name.c_str());
-		icon_h = frameBuffer->getIconHeight(icon_name.c_str());
+		frameBuffer->getIconSize(icon_name.c_str(), &icon_w, &icon_h);
 		
 		if (active  && icon_w>0 && icon_h>0)
 		{

@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.20 2010/12/05 22:29:15 dbt Exp $
+  $Id: bookmarkmanager.cpp,v 1.21 2011/04/24 12:23:09 dbt Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -230,8 +230,10 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	width = w_max (720, 30);
 	if(g_settings.screen_EndX-g_settings.screen_StartX < width)
 		width=g_settings.screen_EndX-g_settings.screen_StartX-10;
-	
-	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
+
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
+	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	x = getScreenStartX (width);
 	y = getScreenStartY (height + info_height);
@@ -430,12 +432,15 @@ void CBookmarkManager::paintHead()
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 
 	int theight_mid = theight / 2;
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
 
-	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER) / 2);
+	int ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+35,y+theight+0, width- 45, g_Locale->getText(LOCALE_BOOKMARKMANAGER_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
-	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
+	ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
 }
 
@@ -454,7 +459,9 @@ const struct button_label BookmarkmanagerButtonOK[1] =
 void CBookmarkManager::paintFoot()
 {
 	int ButtonWidth = (width - 20) / 4;
-	int footHeight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY), g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
+	int footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 
 	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height, ButtonWidth, 1, BookmarkmanagerButtonOK);

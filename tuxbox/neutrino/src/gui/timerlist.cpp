@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.113 2011/03/21 18:43:14 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.114 2011/04/24 12:23:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -427,7 +427,9 @@ void CTimerList::updateEvents(void)
 
 int CTimerList::show()
 {
-	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
+	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 
 	neutrino_msg_t      msg;
@@ -755,12 +757,14 @@ void CTimerList::paintHead()
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 
 	int theight_mid = theight / 2;
-
-	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_TIMER) / 2);
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
+	int ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight, width - 45, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
-	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
+	ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
 }
 
@@ -779,7 +783,9 @@ const struct button_label TimerListButtonOK[1] =
 void CTimerList::paintFoot()
 {
 	int ButtonWidth = (width - 20) / 4;
-	int footHeight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_OKAY), g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
+	int footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 
 	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 

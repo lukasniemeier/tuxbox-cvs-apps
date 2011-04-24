@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.298 2011/02/15 20:56:57 dbt Exp $
+	$Id: infoviewer.cpp,v 1.299 2011/04/24 12:23:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -309,8 +309,8 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 	else 
 		icon = NEUTRINO_ICON_PLAY;
 	/* calculate play state icon position, useful for using customized icons with other sizes */
-	int icon_h = frameBuffer->getIconHeight(icon);
-	int icon_w = frameBuffer->getIconWidth(icon);
+	int icon_w = 0, icon_h = 0;
+	frameBuffer->getIconSize(icon, &icon_w, &icon_h);
 	int icon_x = BoxStartX + ChanWidth / 2 - icon_w / 2;
 	int icon_y = BoxStartY + ChanHeight / 2 - icon_h / 2;
 	frameBuffer->paintIcon(icon, icon_x, icon_y);
@@ -868,8 +868,8 @@ void CInfoViewer::showSubchan()
 			frameBuffer->paintBoxRel(x, y, dx, dy, COL_MENUCONTENT_PLUS_0, RADIUS_SMALL);
 
 			// take the dimensions only from yellow icon
-			int icon_h = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_YELLOW);
-			int icon_w = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_YELLOW); 
+			int icon_w = 0, icon_h = 0;
+			frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_YELLOW, &icon_w, &icon_h); 
 			if (subchannel == 0)
 				frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_BLUE, x + 16 - (icon_w >> 1), y + 16 - (icon_h >> 1));
 			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(x+10, y+ 30, dx-20, text, COL_MENUCONTENT, 0, subChannelNameIsUTF); // UTF-8
@@ -1792,7 +1792,7 @@ returns mode of painted channel logo,
 			strAbsIconPath,
 			strErrText= "[infoviewer] error while painting channel logo\n -> channel logo too large...use maximal %2dpx%2dpx or change display mode\n -> current logo size: %2dpx%2dpx\n -> current mode: %d\n";	
 
-	int x_mid, y_mid, logo_w, logo_h; 
+	int x_mid, y_mid, logo_w = 0, logo_h = 0; 
 	int logo_x=0, logo_y=0;
 	int res = 0;
 	int start_x = ChanNameX, chan_w = BoxEndX- (start_x+ 20)- time_width- 15;
@@ -1819,8 +1819,8 @@ returns mode of painted channel logo,
 		if (logo_available)
 		{
 			// get logo sizes
-			logo_w = frameBuffer->getIconWidth(strAbsIconPath.c_str());
-			logo_h = frameBuffer->getIconHeight(strAbsIconPath.c_str());
+			frameBuffer->getIconSize(strAbsIconPath.c_str(), &logo_w, &logo_h);
+
 			if ((logo_w == 0) || (logo_h == 0)) // corrupt logo size?
 			{
 				printf("[infoviewer] channel logo: \n -> %s (%s) has no size\n -> please check logo file!\n",strAbsIconPath.c_str(), ChannelName.c_str());

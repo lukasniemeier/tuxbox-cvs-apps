@@ -366,8 +366,8 @@ void CMsgBox::refreshFoot(void)
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
 		// get height/width of icon
-		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_RED);
-		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_RED);
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_RED, &iconw, &iconh);
+
 		m_pcWindow->paintBoxRel(xpos, ypos, ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
 		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos + 22 - (iconw >> 1), ypos + ((m_nFontFootHeight + 2)>>1) - (iconh >> 1));
 		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, ypos + m_nFontFootHeight + 2, ButtonWidth - 53, g_Locale->getText(LOCALE_MESSAGEBOX_YES), (CFBWindow::color_t)color, 0, true); // UTF-8
@@ -389,8 +389,8 @@ void CMsgBox::refreshFoot(void)
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
 		// get height/width of icon
-		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_GREEN);
-		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_GREEN);
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_GREEN, &iconw, &iconh);
+
 		m_pcWindow->paintBoxRel(xpos, ypos, ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
 		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos + 22 - (iconw >> 1), ypos + ((m_nFontFootHeight + 2)>>1) - (iconh >> 1));
 		m_pcWindow->RenderString(m_pcFontFoot, xpos + 43, ypos + m_nFontFootHeight + 2, ButtonWidth- 53, g_Locale->getText(LOCALE_MESSAGEBOX_NO), (CFBWindow::color_t)color, 0, true); // UTF-8
@@ -412,8 +412,7 @@ void CMsgBox::refreshFoot(void)
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
 		// get height/width of icon
-		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HOME);
-		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HOME);
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HOME, &iconw, &iconh);
 		
 		m_pcWindow->paintBoxRel(xpos, ypos, ButtonWidth, m_nFontFootHeight + 2, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
 		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_HOME, xpos + 22 - (iconw >> 1), ypos + ((m_nFontFootHeight + 2)>>1) - (iconh >> 1));

@@ -120,8 +120,8 @@ void DIcon::draw(CFBWindow *window, int x, int y, int /*width*/)
 {
 	frameBuffer = CFrameBuffer::getInstance();
 
-	int iconh = frameBuffer->getIconHeight(m_icon.c_str());
-	int iconw = frameBuffer->getIconWidth(m_icon.c_str());
+	int iconw = 0, iconh = 0;
+	frameBuffer->getIconSize(m_icon.c_str(), &iconw, &iconh);
 
 	window->paintIcon(m_icon.c_str(), x + 12 - (iconw / 2), y + (fheight / 2) - (iconh / 2));
 }

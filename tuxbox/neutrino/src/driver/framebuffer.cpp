@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: framebuffer.cpp,v 1.82 2010/11/08 21:33:10 dbt Exp $
+	$Id: framebuffer.cpp,v 1.83 2011/04/24 12:23:09 dbt Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 				  2003 thegoodguy
@@ -527,52 +527,27 @@ std::string CFrameBuffer::getIconFilePath(const std::string & filename)
 	return res;
 }
 
-int CFrameBuffer::getIconHeight(const char * const filename)
+void CFrameBuffer::getIconSize(const char * const filename, int *width, int *height)
 {
 	struct rawHeader header;
-	uint16_t         height;
 	int              icon_fd;
 	std::string      iconfile = getIconFilePath(filename);
+	*width           = 0;
+	*height          = 0;
 
-	icon_fd = open(iconfile.c_str(), O_RDONLY);
-
-	if (icon_fd == -1)
+	if ((icon_fd = open(iconfile.c_str(), O_RDONLY)) == -1)
 	{
 		printf("[Framebuffer] %s: error while loading icon: %s %s\n", __FUNCTION__, iconfile.c_str(), strerror(errno));
-		return 0;
+		return;
 	}
 	else
 	{	
 		read(icon_fd, &header, sizeof(struct rawHeader));
-		height = (header.height_hi << 8) | header.height_lo;
+		*width  = (header.width_hi << 8)  | header.width_lo;
+		*height = (header.height_hi << 8) | header.height_lo;
 	}
 
 	close(icon_fd);
-	return height;
-}
-
-int CFrameBuffer::getIconWidth(const char * const filename)
-{
-	struct rawHeader header;
-	uint16_t         width;
-	int              icon_fd;
-	std::string      iconfile = getIconFilePath(filename);
-
-	icon_fd = open(iconfile.c_str(), O_RDONLY);
-
-	if (icon_fd == -1)
-	{
-		printf("[Framebuffer] %s: error while loading icon: %s %s\n", __FUNCTION__, iconfile.c_str(), strerror(errno));
-		width = 0;
-	}
-	else
-	{	
-		read(icon_fd, &header, sizeof(struct rawHeader));
-		width = (header.width_hi << 8) | header.width_lo;
-	}
-
-	close(icon_fd);
-	return width;
 }
 
 bool CFrameBuffer::paintIcon8(const std::string & filename, const int x, const int y, const unsigned char offset)

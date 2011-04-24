@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.138 2010/12/05 22:29:15 dbt Exp $
+	$Id: eventlist.cpp,v 1.139 2011/04/24 12:23:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -718,8 +718,8 @@ void EventList::paint()
 
 	if (evtlist[0].eventID != 0)
 	{
-		int iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP);
-		int iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HELP);
+		int iconw = 0, iconh = 0;
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - (iconw + 6) , y + (theight >> 1) - (iconh >> 1));
 	}
 
@@ -753,7 +753,7 @@ void  EventList::showFunctionBar (bool show)
 	int  bx,by;
 	int  cellwidth;		// 5 cells
 	int  space = 8;		// space between buttons
-	int  iconw = 0; //x+4;	// buttonwidht + space between icon and caption
+	int  iconw = 0, iconh = 0; //x+4;	// buttonwidht + space between icon and caption
 
 	CKeyHelper keyhelper;
 	neutrino_msg_t dummy = CRCInput::RC_nokey;
@@ -794,8 +794,8 @@ void  EventList::showFunctionBar (bool show)
 			EventListButtons[0].locale = LOCALE_EVENTLISTBAR_RECORDEVENT;
 		}
 		
-		iconw = frameBuffer->getIconWidth(icon)+4;
-		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
+		frameBuffer->getIconSize(icon, &iconw, &iconh);
+		cellwidth = iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 
 		// paint 1st button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[0]);
@@ -811,8 +811,8 @@ void  EventList::showFunctionBar (bool show)
 		
 		btncaption = g_Locale->getText(LOCALE_EVENTFINDER_SEARCH);
 		
-		iconw = frameBuffer->getIconWidth(icon)+4;
-		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
+		frameBuffer->getIconSize(icon, &iconw, &iconh);
+		cellwidth = iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 	
 		// paint second button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[1]);
@@ -836,8 +836,8 @@ void  EventList::showFunctionBar (bool show)
 			EventListButtons[2].locale = LOCALE_EVENTLISTBAR_CHANNELSWITCH;
 		}
 		
-		iconw = frameBuffer->getIconWidth(icon)+4;
-		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
+		frameBuffer->getIconSize(icon, &iconw, &iconh);
+		cellwidth = iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 
 		// paint 3rd button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[2]);
@@ -852,8 +852,8 @@ void  EventList::showFunctionBar (bool show)
 		
 		btncaption =  g_Locale->getText(LOCALE_EVENTLISTBAR_EVENTSORT);
 		
-		iconw = frameBuffer->getIconWidth(icon)+4;
-		cellwidth = iconw + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
+		frameBuffer->getIconSize(icon, &iconw, &iconh);
+		cellwidth = iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption);
 	
 		// paint 4th button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[3]);

@@ -1,5 +1,5 @@
 /*
- * $Id: buttons.cpp,v 1.10 2010/07/12 08:24:55 dbt Exp $
+ * $Id: buttons.cpp,v 1.11 2011/04/24 12:23:09 dbt Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -72,9 +72,8 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 		unsigned int real_textwidth = font->getRenderWidth(buttontext, true);
 		
 		// get height/width of icon
-		iconh =  frameBuffer->getIconHeight(icon);
-		iconw = frameBuffer->getIconWidth(icon);
-		
+		frameBuffer->getIconSize(icon, &iconw, &iconh);
+
 		// calculate maximal witdh of icons
 		max_iconw = max_iconw>iconw ? max_iconw : iconw; 
 	

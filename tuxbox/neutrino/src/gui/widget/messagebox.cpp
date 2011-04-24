@@ -108,8 +108,7 @@ void CMessageBox::paintButtons()
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
 		// get height/width of icon
-		iconh = frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_RED);
-		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_RED);
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_RED, &iconw, &iconh);
 
 		m_window->paintBoxRel(xpos, ypos, ButtonWidth, m_fheight, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
 		m_window->paintIcon(NEUTRINO_ICON_BUTTON_RED, xpos + 22 - (iconw / 2), buttonY_mid - (iconh / 2) +  offset);
@@ -131,8 +130,7 @@ void CMessageBox::paintButtons()
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
 		// get height/width of icon
-		iconh =  frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_GREEN);
-		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_GREEN);
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_GREEN, &iconw, &iconh);
 
 		m_window->paintBoxRel(xpos, ypos, ButtonWidth, m_fheight, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
 		m_window->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, xpos + 22 - (iconw / 2), buttonY_mid - (iconh / 2) +  offset);
@@ -154,8 +152,7 @@ void CMessageBox::paintButtons()
 			bgcolor = COL_INFOBAR_SHADOW_PLUS_0;
 		}
 		// get height/width of icon
-		iconh =  frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HOME);
-		iconw = frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HOME);
+		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HOME, &iconw, &iconh);
 
 		m_window->paintBoxRel(xpos, ypos, ButtonWidth, m_fheight, (CFBWindow::color_t)bgcolor, RADIUS_SMALL);
 		m_window->paintIcon(NEUTRINO_ICON_BUTTON_HOME, xpos + 22 - (iconw / 2), buttonY_mid - (iconh / 2) +  offset);

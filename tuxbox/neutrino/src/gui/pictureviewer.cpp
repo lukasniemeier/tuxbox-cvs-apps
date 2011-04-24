@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 	
-	$Id: pictureviewer.cpp,v 1.77 2010/12/05 22:29:15 dbt Exp $
+	$Id: pictureviewer.cpp,v 1.78 2011/04/24 12:23:09 dbt Exp $
 
 	MP3Player by Dirch
 	
@@ -130,7 +130,9 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 	sheight      = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	buttonHeight = std::min(25, sheight);
 
-	theight = std::max(frameBuffer->getIconHeight(NEUTRINO_ICON_MP3), g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
+	int iconh = 0, dummy = 0;
+	frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &dummy, &iconh);
+	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	listmaxshow = (height-theight-2*buttonHeight)/(fheight);
 	height = theight+2*buttonHeight+listmaxshow*fheight;	// recalc height
@@ -599,19 +601,23 @@ void CPictureViewerGui::paintItem(int pos)
 void CPictureViewerGui::paintHead()
 {
 //	printf("paintHead{\n");
+	int iconw = 0, iconh = 0;
 	int theight_mid = theight / 2;
-	int ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_MP3) / 2);
+	frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &iconw, &iconh);
+	int ypos = y + theight_mid - (iconh / 2);
 
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 	frameBuffer->paintIcon(NEUTRINO_ICON_MP3, x + 7, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight, width - 45, g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD), COL_MENUHEAD, 0, true); // UTF-8
 
-	int xpos = x + width - frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_HELP) - 6;
-	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_HELP) / 2);
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
+	int xpos = x + width - iconw - 6;
+	ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, xpos, ypos );
 #ifdef ENABLE_GUI_MOUNT
-	xpos -= frameBuffer->getIconWidth(NEUTRINO_ICON_BUTTON_DBOX) + 6;
-	ypos = y + theight_mid - (frameBuffer->getIconHeight(NEUTRINO_ICON_BUTTON_DBOX) / 2);
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
+	xpos -= iconw + 6;
+	ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, xpos, ypos );
 #endif
 //	printf("paintHead}\n");
@@ -734,7 +740,7 @@ void CPictureViewerGui::endView()
 std::string CPictureViewerGui::getPictureViewerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.77 $");
+	return imageinfo.getModulVersion("","$Revision: 1.78 $");
 }
 
 void CPictureViewerGui::showHelp()
