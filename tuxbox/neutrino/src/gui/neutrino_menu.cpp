@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.130 2011/04/19 09:59:36 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.131 2011/04/25 14:10:43 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -156,9 +156,6 @@ void CNeutrinoApp::InitMenuMain()
 	
 	CPersonalizeGui *personalize = CPersonalizeGui::getInstance();
 	
-	// Dynamic renumbering
-	personalize->setShortcut();
-	
 	///CMenuWidget &menu = personalize->getWidget(MENU_MAIN)/**main**/;
 	
 	//top
@@ -180,13 +177,7 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_GAMES, show_games, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_games);
 
 	//separator
-	if (	g_settings.personalize_tvmode		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_radiomode	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_scartmode	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_games		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		personalize->addSeparator(MENU_MAIN, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden
-	else
-		personalize->addSeparator(MENU_MAIN); 
+	personalize->addSeparator(MENU_MAIN); 
 	
 #ifdef ENABLE_AUDIOPLAYER
 	// audioplayer
@@ -230,16 +221,7 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, show_scripts, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), &g_settings.personalize_scripts);
 
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_INTERNETRADIO) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_UPNP)
-	// separator
-	if (	g_settings.personalize_audioplayer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_inetradio	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_esound		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_movieplayer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_pictureviewer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_upnpbrowser	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		;// Stop seperator from appearing when menu entries have been hidden
-	else
-		personalize->addSeparator(MENU_MAIN, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_NO); //don't show this separator in personal menu
+	personalize->addSeparator(MENU_MAIN, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_NO); //don't show this separator in personal menu
 #endif
 
 	// settings, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
@@ -248,13 +230,7 @@ void CNeutrinoApp::InitMenuMain()
 	// service, also as pin protected option in personalize menu, as a result of parameter value CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION
 	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SERVICE, true, NULL, &personalize->getWidget(MENU_SERVICE)/**service**/), &g_settings.personalize_service, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
-	//separator
-	if (	g_settings.personalize_sleeptimer	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_reboot		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_shutdown		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		personalize->addSeparator(MENU_MAIN, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden
-	else
-		personalize->addSeparator(MENU_MAIN);
+	personalize->addSeparator(MENU_MAIN);
 
 	//10. -- only 10 shortcuts (1-9, 0), the next could be the last also!(10. => 0)
 	//sleeptimer
@@ -275,9 +251,6 @@ void CNeutrinoApp::InitMenuSettings()
 	CPersonalizeGui *personalize = CPersonalizeGui::getInstance();
 	
 	///CMenuWidget &menu = personalize->getWidget(MENU_SETTINGS)/**settings**/;
-	
-	// Dynamic renumbering
-	personalize->setShortcut();
 	
 	// back button, no personalized
 	personalize->addIntroItems(MENU_SETTINGS);
@@ -332,10 +305,11 @@ void CNeutrinoApp::InitMenuSettings()
 	//yellow (miscSettings)
 	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_misc);
 	
-	personalize->addSeparator(MENU_SETTINGS);
+	//separator
+ 	personalize->addSeparator(MENU_SETTINGS);
 	
-	// personalize - not personalized
-	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_PERSONALIZE_HEAD, true, NULL, personalize), &g_settings.personalize, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+	//personalize
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_PERSONALIZE_HEAD, true, NULL, personalize), &g_settings.personalize_pinstatus, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 }
 
 const CMenuOptionChooser::keyval OPTIONS_OFF0_ON1_OPTIONS[OPTIONS_OFF0_ON1_OPTION_COUNT] =
@@ -353,9 +327,6 @@ void CNeutrinoApp::InitMenuService()
 
 	///CMenuWidget &menu = personalize->getWidget(MENU_SERVICE)/**service**/;
 	
-	// Dynamic renumbering
-	personalize->setShortcut();
-
 	// back button, no personalized
 	personalize->addIntroItems(MENU_SERVICE);
 
@@ -366,11 +337,7 @@ void CNeutrinoApp::InitMenuService()
 	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_SCANTS, true, NULL, new CScanSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), &g_settings.personalize_scants);
 
 	// separator
-	if (	g_settings.personalize_bouqueteditor	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_scants		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		personalize->addSeparator(MENU_SERVICE, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden;
-	else
-		personalize->addSeparator(MENU_SERVICE); 
+	personalize->addSeparator(MENU_SERVICE); 
 
 	// reload channels
 	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_RELOAD, true, NULL, this, "reloadchannels"), &g_settings.personalize_reload);
@@ -393,15 +360,7 @@ void CNeutrinoApp::InitMenuService()
 	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, DVBInfo), &g_settings.personalize_chan_epg_stat);
 
 	// separator
-	if (	g_settings.personalize_reload		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_getplugins	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_restart		== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_epgrestart	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_ucodecheck	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE && 
-		g_settings.personalize_chan_epg_stat	== CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE)
-		personalize->addSeparator(MENU_SERVICE, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU);// Stop seperator from appearing when menu entries have been hidden
-	else
-		personalize->addSeparator(MENU_SERVICE); 
+	personalize->addSeparator(MENU_SERVICE); 
 
 	//yellow imageinfo
 	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfo(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_imageinfo);
@@ -410,7 +369,7 @@ void CNeutrinoApp::InitMenuService()
 	if(softupdate)
 	{
 		// blue software update
-		personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_update);
+		personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_update, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
  	}
 
 }
