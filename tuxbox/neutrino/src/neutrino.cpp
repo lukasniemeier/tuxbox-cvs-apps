@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1061 2011/04/25 14:10:56 dbt Exp $
+	$Id: neutrino.cpp,v 1.1062 2011/04/25 14:11:04 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -128,7 +128,6 @@ CBouquetList    	* bouquetListTV;
 CBouquetList    	* bouquetListRADIO;
 CBouquetList    	* bouquetListRecord;
 CAPIDChangeExec		* APIDChanger;
-CAudioSetupNotifier	* audioSetupNotifier;
 
 // Globale Variablen - to use import global.h
 static char **global_argv;
@@ -2137,7 +2136,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	g_PluginList->loadPlugins();
 
 
-	audioSetupNotifier		= new CAudioSetupNotifier;
 	APIDChanger			= new CAPIDChangeExec;
 #ifdef HAVE_DBOX_HARDWARE
 	UCodeChecker			= new CUCodeCheckExec;

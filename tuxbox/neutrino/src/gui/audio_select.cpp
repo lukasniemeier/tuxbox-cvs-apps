@@ -41,7 +41,6 @@
 
 extern CRemoteControl		* g_RemoteControl; /* neutrino.cpp */
 extern CAPIDChangeExec		* APIDChanger;
-extern CAudioSetupNotifier	* audioSetupNotifier;
 
 #include <gui/audio_select.h>
 
@@ -109,10 +108,11 @@ int CAudioSelectMenuHandler::doMenu ()
 
 	   AudioSelector.addItem(GenericMenuSeparatorLine);
 
+       CAudioSetupNotifier audioSetupNotifier;
 	   CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOGOUT,
 				&g_settings.audio_AnalogMode,
 				AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT,
-				true, audioSetupNotifier);
+				true, &audioSetupNotifier);
 
 	   AudioSelector.addItem( oj );
 
