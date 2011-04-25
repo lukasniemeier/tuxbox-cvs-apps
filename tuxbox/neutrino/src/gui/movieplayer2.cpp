@@ -409,8 +409,18 @@ CMoviePlayerGui::exec(CMenuTarget *parent, const std::string &actionKey)
 	startBox->hide();
 	delete startBox;
 
-	// Stop sectionsd
-	g_Sectionsd->setPauseScanning(true);
+	// Stop or restart sectionsd according to configuration
+	if (g_settings.streaming_stopsectionsd == 1)
+	{
+		// Stop sectionsd
+		g_Sectionsd->setPauseScanning(true);
+	}
+	else if (g_settings.streaming_stopsectionsd == 2)
+	{
+		// Restart sectionsd (stops automatically)
+		g_Sectionsd->Restart();
+		g_Sectionsd->RegisterNeutrino();
+	}
 
 	isBookmark=false;
 	startfilename = "";
@@ -493,8 +503,17 @@ CMoviePlayerGui::exec(CMenuTarget *parent, const std::string &actionKey)
 	INFO("executing %s\n", MOVIEPLAYER_END_SCRIPT);
 	system(MOVIEPLAYER_END_SCRIPT);
 
-	// Start Sectionsd
-	g_Sectionsd->setPauseScanning(false);
+	// Start sectionsd if stopped or restarted
+	if (g_settings.streaming_stopsectionsd == 1)
+	{
+		g_Sectionsd->setPauseScanning(false);
+	}
+	else if (g_settings.streaming_stopsectionsd == 2)
+	{
+		g_Sectionsd->setPauseScanning(false);
+		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
+		CNeutrinoApp::getInstance()->SendSectionsdConfig();
+	}
 
 	// Restore last mode
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE, m_LastMode);
@@ -3461,7 +3480,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.76 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.77 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
