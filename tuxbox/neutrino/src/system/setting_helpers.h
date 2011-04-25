@@ -1,8 +1,5 @@
-#ifndef __setting_helpers__
-#define __setting_helpers__
-
 /*
-	$Id: setting_helpers.h,v 1.105 2010/07/30 20:54:13 dbt Exp $
+	$Id: setting_helpers.h,v 1.106 2011/04/25 14:11:00 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -326,4 +323,4 @@ class CNetAdapter
 
 
 #endif
-#endif
+
