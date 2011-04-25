@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.299 2011/04/24 12:23:09 dbt Exp $
+	$Id: infoviewer.cpp,v 1.300 2011/04/25 19:32:51 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -718,14 +718,8 @@ requests to sectionsd.
 			}
 			else if ( msg == NeutrinoMessages::EVT_TIMESET )
 			{
-				// Handle anyway!
-				neutrino->handleMsg(msg, data);
-				if (!tsmode)
-				{
-					g_RCInput->postMsg( NeutrinoMessages::SHOW_INFOBAR, 0 );
-					hideIt = false;
-					res = messages_return::cancel_all;
-				}
+				/* handle timeset event in upper layer, ignore here */
+				res = neutrino->handleMsg (msg, data);
 			}
 			else if ( ( msg == NeutrinoMessages::EVT_TIMER ) && ( data == sec_timer_id ) )
 			{
