@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1060 2011/04/25 14:10:39 dbt Exp $
+	$Id: neutrino.cpp,v 1.1061 2011/04/25 14:10:56 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3951,7 +3951,7 @@ void CNeutrinoApp::startNextRecording()
 *          CNeutrinoApp -  exec, menuitem callback (shutdown)                         *
 *                                                                                     *
 **************************************************************************************/
-int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
+int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 {
 	//	printf("ac: %s\n", actionKey.c_str());
 	int returnval = menu_return::RETURN_REPAINT;
