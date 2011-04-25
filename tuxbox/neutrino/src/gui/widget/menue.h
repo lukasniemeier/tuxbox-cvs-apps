@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.96 2011/04/12 18:59:09 dbt Exp $
+	$Id: menue.h,v 1.97 2011/04/25 14:10:47 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -328,7 +328,7 @@ class CMenuWidget : public CMenuTarget
 
 		int			width;
 		int			height;
-		int         wanted_height;
+		int			wanted_height;
 		int			x;
 		int			y;
 		int			preselected;
@@ -350,6 +350,10 @@ class CMenuWidget : public CMenuTarget
 		bool hasItem();
 		void resetWidget();
 		void insertItem(const uint& item_id, CMenuItem* menuItem);
+		void removeItem(const uint& item_id);
+		int getItemId(CMenuItem* menuItem);
+		int getItemsCount(){return items.size();};
+
 		virtual void paint();
 		virtual void hide();
 		virtual int exec(CMenuTarget* parent, const std::string & actionKey);

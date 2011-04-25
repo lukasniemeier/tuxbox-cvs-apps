@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.188 2011/04/24 12:23:10 dbt Exp $
+	$Id: menue.cpp,v 1.189 2011/04/25 14:10:47 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -254,9 +254,23 @@ void CMenuWidget::insertItem(const uint& item_id, CMenuItem* menuItem)
 	items.insert(items.begin()+item_id, menuItem);
 }
 
+void CMenuWidget::removeItem(const uint& item_id)
+{
+	items.erase(items.begin()+item_id);
+}
+
 bool CMenuWidget::hasItem()
 {
 	return !items.empty();
+}
+
+int CMenuWidget::getItemId(CMenuItem* menuItem)
+{
+	for (uint i= 0; i< items.size(); i++)
+	{
+		if (items[i] == menuItem)
+			return i;
+	}
 }
 
 std::string CMenuWidget::getName()
