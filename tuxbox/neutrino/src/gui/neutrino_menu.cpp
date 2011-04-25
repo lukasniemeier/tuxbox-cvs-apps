@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.131 2011/04/25 14:10:43 dbt Exp $
+	$Id: neutrino_menu.cpp,v 1.132 2011/04/25 14:10:52 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -373,15 +373,6 @@ void CNeutrinoApp::InitMenuService()
  	}
 
 }
-
-
-#define INFOBAR_SHOW_OPTIONS_COUNT 3
-const CMenuOptionChooser::keyval  INFOBAR_SHOW_OPTIONS[INFOBAR_SHOW_OPTIONS_COUNT]=
-{
-	{ 0 , LOCALE_OPTIONS_OFF },
-	{ 1 , LOCALE_PICTUREVIEWER_RESIZE_SIMPLE },
-	{ 2 , LOCALE_PICTUREVIEWER_RESIZE_COLOR_AVERAGE }
-};
 
 
 #define MAINMENU_RECORDING_OPTION_COUNT 2
