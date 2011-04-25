@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.58 2011/04/24 12:23:09 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.59 2011/04/25 14:11:13 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.58 2011/04/24 12:23:09 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.59 2011/04/25 14:11:13 dbt Exp $\r\n");
 	init();
 }
 
@@ -1059,6 +1059,13 @@ int CMovieBrowser::exec(const char* path)
 					}
 				}
 				TRACE("[mb] start pos: %d s\r\n",m_currentStartPos);
+
+				if (m_currentStartPos < 0)
+				{
+					refresh();
+					continue;
+				}
+
 #ifndef ENABLE_MOVIEPLAYER2
 				res = true;
 				loop = false;
@@ -3254,6 +3261,8 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 	int result = 0;
 	int menu_nr= 0;
 	int position[MAX_NUMBER_OF_BOOKMARK_ITEMS];
+	CMenuForwarder* startPosItem;
+	bool defaultselected = true;
 	
 	if(m_movieSelectionHandler == NULL) return(result);
 	
@@ -3264,21 +3273,28 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 
 	CMenuWidget startPosSelectionMenu(LOCALE_MOVIEBROWSER_START_HEAD , NEUTRINO_ICON_STREAMING);
 	
-	startPosSelectionMenu.addItem(GenericMenuSeparator);
+	startPosSelectionMenu.addIntroItems();
 	
 	if( m_movieSelectionHandler->bookmarks.start != 0)
 	{
-		startPosSelectionMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART, true, start_pos));
+		startPosItem = new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART, true, start_pos);
+		startPosItem->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+		startPosSelectionMenu.addItem(startPosItem, defaultselected);
+		defaultselected = false;
 		position[menu_nr++] = m_movieSelectionHandler->bookmarks.start;
 	}
 	if( m_movieSelectionHandler->bookmarks.lastPlayStop != 0) 
 	{
-		startPosSelectionMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, true, play_pos));
+		startPosItem = new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, true, play_pos);
+		startPosItem->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+		startPosSelectionMenu.addItem(startPosItem, defaultselected);
+		defaultselected = false;
 		position[menu_nr++] = m_movieSelectionHandler->bookmarks.lastPlayStop;
 	}
-	startPosSelectionMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_START_RECORD_START, true,NULL));
+	startPosItem = new CMenuForwarder(LOCALE_MOVIEBROWSER_START_RECORD_START, true, NULL);
+	startPosItem->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+	startPosSelectionMenu.addItem(startPosItem, defaultselected);
 	position[menu_nr++] = 0;
-	startPosSelectionMenu.addItem(GenericMenuSeparatorLine);
 
 	for(int i =0 ; i < MI_MOVIE_BOOK_USER_MAX && menu_nr < MAX_NUMBER_OF_BOOKMARK_ITEMS; i++ )
 	{
@@ -3290,20 +3306,18 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 				position[menu_nr] = m_movieSelectionHandler->bookmarks.user[i].pos + m_movieSelectionHandler->bookmarks.user[i].length;
 				
 			snprintf(book[i], 19,"%5d min",position[menu_nr]/60);
-			startPosSelectionMenu.addItem(new CMenuForwarderNonLocalized (m_movieSelectionHandler->bookmarks.user[i].name.c_str(), 	true, book[i]));
+			startPosItem = new CMenuForwarderNonLocalized(m_movieSelectionHandler->bookmarks.user[i].name.c_str(), true, book[i]);
+			startPosItem->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+			startPosSelectionMenu.addItem(startPosItem);
 			menu_nr++;
 		}
 	}
 
 	startPosSelectionMenu.exec(NULL, "12345");
 	/* check what menu item was ok'd  and set the appropriate play offset*/
-	result = startPosSelectionMenu.getSelected();
-	if(result != 0 && result <= MAX_NUMBER_OF_BOOKMARK_ITEMS)
-	{
-		result--;
-		if(result > 3) result--;
-		pos = position[result];
-	}
+	result = startPosSelectionMenu.getSelectedLine();
+	if (result >= 3 && result < MAX_NUMBER_OF_BOOKMARK_ITEMS + 3)  // mind the 3 intro items
+		pos = position[result - 3];
 	
 	TRACE("[mb] res = %d,%d \r\n",result,pos);
 	
@@ -3881,7 +3895,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.58 $");
+	return imageinfo.getModulVersion("","$Revision: 1.59 $");
 }
 
 /************************************************************************/
