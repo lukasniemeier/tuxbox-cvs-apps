@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.243 2011/04/12 18:59:01 dbt Exp $
+	$Id: neutrino.h,v 1.244 2011/04/25 14:10:39 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -85,12 +85,6 @@ typedef struct font_sizes_groups
 	const SNeutrinoSettings::FONT_TYPES * const content;
 	const char * const                          actionkey;
 } font_sizes_groups_struct;
-
-typedef struct menu_item_t
-{
-	CMenuItem* menuItem;
-	bool default_selected;
-};
 
 #define FONT_STYLE_REGULAR 0
 #define FONT_STYLE_BOLD    1

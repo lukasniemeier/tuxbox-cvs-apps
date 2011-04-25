@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.17 2011/04/12 18:59:16 dbt Exp $
+$Id: personalize.h,v 1.18 2011/04/25 14:10:39 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -48,6 +48,29 @@ typedef struct mn_widget_t
 	const int width;
 } mn_widget_struct_t;
 
+typedef struct settings_int_t
+{
+	int old_val;
+	int *p_val;
+}settings_int_struct_t;
+
+typedef struct menu_item_t
+{
+	CMenuWidget *widget;
+	CMenuItem* menuItem;
+	bool default_selected;
+	neutrino_locale_t locale_name;
+	int* personalize_mode;
+	int item_mode;
+}menu_item_struct_t;
+
+typedef struct personalize_settings_t
+{
+	const char* personalize_settings_name;
+	int personalize_default_val;
+} personalize_settings_struct_t;
+
+
 class CPersonalizeGui : public CMenuTarget
 {
 	private:
@@ -58,22 +81,10 @@ class CPersonalizeGui : public CMenuTarget
 		void	handleSetting(int *setting);
 		void	restoreSettings();
 		bool	haveChangedSettings();
-		typedef struct settings_int_t
-		{
-			int old_val;
-			int *p_val;
-		};
+
 		std::vector<settings_int_t> v_int_settings;
 		
-		typedef struct menu_item_t
-		{
-			CMenuWidget *widget;
-			CMenuItem* menuItem;
-			bool default_selected;
-			neutrino_locale_t locale_name;
-			int* personalize_mode;
-			int item_mode;
-		};
+
 		std::vector<menu_item_t> v_item;
 		
 		std::vector<CMenuWidget *> v_widget;
@@ -90,7 +101,7 @@ class CPersonalizeGui : public CMenuTarget
 		{
 			PERSONALIZE_MODE_NOTVISIBLE =  0,
 			PERSONALIZE_MODE_VISIBLE  =  1,
-			PERSONALIZE_MODE_PIN  = 2
+			PERSONALIZE_MODE_PIN  = 2,
 		};
 
 		enum PERSONALIZE_PROTECT_MODE

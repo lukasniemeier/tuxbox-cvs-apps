@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.40 2011/04/25 14:10:33 dbt Exp $
+        $Id: personalize.cpp,v 1.41 2011/04/25 14:10:39 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -52,8 +52,8 @@
 	Icon handling:
 	If you define an icon in the item object, this will be shown in the personalized menu but not the personilazitions menue itself, otherwise a shortcut will be create
 	
-	Shortcuts:
-	A start- or reset-shortcut you can create with foo->setShortcut(), 
+	Shortcuts (optional): default is set to '1':
+	A default start-shortcut you can create with foo->setShortcut(), 
 	this sets default value '1', e.g.foo->setShortcut(0) sets value '0'
 	Only values 0-9 are possible, others will be ignored!
 	
@@ -77,8 +77,8 @@
 	//we need an instance of CPersonalizeGUI()
 	foo = CPersonalizeGui::getInstance();
 
-	//create start number for shortcuts
-	foo->setShortcut();
+	//do you need a start shortcut !=1 then set a start number for shortcuts with
+	foo->setShortcut(0...9);
 
 	//create a menue widget object, this will be automaticly shown as menu item in your peronalize menu
 	CMenuWidget * mn =  new CMenuWidget(LOCALE_MAINMENU_HEAD, ICON    ,width);
@@ -121,19 +121,19 @@
 	foo->setShortcut();
 	
 	Enums:
-	PERSONALIZE_MODE use as parameter 'personalize_mode'
+	PERSONALIZE_MODE: use as parameter 'personalize_mode'
 		PERSONALIZE_MODE_NOTVISIBLE 	: not visible in your personalized menue
 		PERSONALIZE_MODE_VISIBLE	: visible in your personalized menue
 		PERSONALIZE_MODE_PIN		: visible in your personalized menue with PIN access
 		
-	PERSONALIZE_PROTECT_MODE		used also as parameter 'personalize_mode'
+	PERSONALIZE_PROTECT_MODE: used also as parameter 'personalize_mode'
 		PROTECT_MODE_NOT_PROTECTED	: visible in personalize settings menue with PIN setup, option 'no'
 		PROTECT_MODE_PIN_PROTECTED	: visible in personalize settings menue with PIN setup, option 'yes'
 		
-	PERSONALIZE_ITEM_MODE			show modes of items in personalize settings menu 
+	PERSONALIZE_ITEM_MODE: use as as parameter 'item_mode items in personalize settings menu 
 		PERSONALIZE_SHOW_NO		: dont'show this item in personalize settings menu
 		PERSONALIZE_SHOW_AS_ITEM_OPTION	: show as item with options 'visible, not visible or PIN'
-		PERSONALIZE_SHOW_AS_ACCESS_OPTION: show as item with options 'PIN on yes or no'
+		PERSONALIZE_SHOW_AS_ACCESS_OPTION: show as item with options 'PIN' with 'yes' or 'no'
 		PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU :usefull to hide separators in menu, but visible only in personalizing menu
 	
 
@@ -204,7 +204,7 @@ CPersonalizeGui::CPersonalizeGui()
 	width 	= w_max (710, 100);
 	widget_count = 0;
 	selected = -1;
-	shortcut = 0;
+	shortcut = 1;
 }
 
 CPersonalizeGui* CPersonalizeGui::getInstance()
@@ -265,8 +265,6 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 //the PIN code feature, as well as determine whether or not the EPG menu/Features menu is accessible.
 void CPersonalizeGui::ShowPersonalizationMenu()
 {
-	handleSetting(&g_settings.personalize_pinstatus);
-
 	CMenuWidget* pMenu = new CMenuWidget(LOCALE_PERSONALIZE_HEAD,NEUTRINO_ICON_PROTECTING, width);
 	pMenu->setPreselected(selected);
 
@@ -479,7 +477,7 @@ void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const i
 
 	CMenuItem *menu_item = menu_Item;
 	
-	if (personalize_mode != NULL)// if we in pinmode, transforming item to LockedMenuForwarder
+	if (personalize_mode != NULL)// if we use a personalized item, transforming item always to LockedMenuForwarder
 	{
 		//if item in pin mode, then use LockedMenuForwarder for no/visible/pin option in personalize menu OR if item in protect mode, then use also LockedMenuForwarder for access option (PinOn/PinOff) in personalize menu
 		if ((*personalize_mode == PERSONALIZE_MODE_PIN && item_mode != PERSONALIZE_SHOW_AS_ACCESS_OPTION) || (*personalize_mode == PROTECT_MODE_PIN_PROTECTED && item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
@@ -488,45 +486,19 @@ void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const i
 	
 	menu_item_t item = {widget, menu_item, defaultselected, fw->getTextLocale(), (int*)personalize_mode, item_mode};
 
-	string icon = item.menuItem->iconName;
-	neutrino_msg_t d_key = item.menuItem->directKey;
-	bool add_shortcut = false;
-	
-	if (icon.empty() &&  d_key == CRCInput::RC_nokey && item.menuItem->active)
-		add_shortcut = true;
-
-	if (add_shortcut)
-		item.menuItem->directKey = getShortcut(shortcut);
-
 	if (item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION)
 	{
-		if (add_shortcut)
-			shortcut++;
-		
 		v_item.push_back(item);
-	
 		handleSetting((int*)personalize_mode);
-	}
-	else if (personalize_mode == NULL)
-	{
-		if (add_shortcut)
-			shortcut++;
-
-		v_item.push_back(item);
 	}
 	else if (personalize_mode != NULL)
 	{
-		if (*personalize_mode != PERSONALIZE_MODE_NOTVISIBLE)
-		{
-			if (add_shortcut)
-				shortcut++;
-		}
-	
 		v_item.push_back(item);
-		
 		if (item_mode != PERSONALIZE_SHOW_NO) //handle only relevant items
 			handleSetting((int*)personalize_mode);
 	}
+	else if (personalize_mode == NULL)
+		v_item.push_back(item);
 }
 
 //overloaded version from 'addSeparator', first parameter is an id from widget collection 'v_widget',
@@ -554,43 +526,77 @@ void CPersonalizeGui::addPersonalizedItems()
 {
 	bool allow_sep = true;
 	int old_w_id = 0;
+	int widget_id = 0;
+	int short_cut = shortcut;
+	int old_p_mode = PERSONALIZE_MODE_NOTVISIBLE;
+	
  	for (uint i = 0; i < v_item.size(); i++)
 	{
-		if (v_item[i].item_mode != PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU) //skip if item only used in personalize settings
+		int i_mode = v_item[i].item_mode;
+			
+		if (i_mode != PERSONALIZE_SHOW_ONLY_IN_PERSONALIZE_MENU) //skip if item only used in personalize settings
 		{
-			if (v_item[i].personalize_mode != NULL) //is personalized item
+			widget_id = getWidgetId(v_item[i].widget);
+					
+			if (old_w_id != widget_id) 
+				short_cut = shortcut; //reset shortcut if widget has changed
+										
+			if (v_item[i].personalize_mode != NULL) //handle personalized item and non separator
 			{
 				CMenuForwarder *fw = static_cast <CMenuForwarder*> (v_item[i].menuItem);
 				
-				//transform item to locked forwarder and set pin mode if required
-				bool do_ask = false;
-				if (*v_item[i].personalize_mode == PERSONALIZE_MODE_PIN || (*v_item[i].personalize_mode == PROTECT_MODE_PIN_PROTECTED && v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
-					do_ask = true;
-				v_item[i].menuItem = new CLockedMenuForwarder(fw->getTextLocale(), g_settings.personalize_pincode, do_ask, fw->active, NULL, fw->getTarget(), fw->getActionKey().c_str(), fw->directKey, fw->iconName.c_str());
-	
-				//add item if it's set to visible or pin protected and allow to add an forwarder as next
-				if (v_item[i].menuItem->active && (*v_item[i].personalize_mode != PERSONALIZE_MODE_NOTVISIBLE || v_item[i].item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
+				bool use_pin 		= false;
+				int p_mode 		= *v_item[i].personalize_mode;
+				neutrino_msg_t d_key 	= fw->directKey;
+				bool add_shortcut 	= false;
+								
+				//get shortcut
+				if (fw->iconName.empty() && fw->active ) //if no icon is defined and item is active, allow to generate a shortcut, 
 				{
+					add_shortcut = true;
+					d_key = getShortcut(short_cut);
+				}					
+				
+				//set pin mode if required
+				if (p_mode == PERSONALIZE_MODE_PIN || (p_mode == PROTECT_MODE_PIN_PROTECTED && i_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
+					use_pin = true;
+				
+				//convert item to locked forwarder and use generated pin mode for usage as ask parameter 
+				v_item[i].menuItem = new CLockedMenuForwarder(fw->getTextLocale(), g_settings.personalize_pincode, use_pin, fw->active, NULL, fw->getTarget(), fw->getActionKey().c_str(), d_key, fw->iconName.c_str());
+				
+				//add item if it's set to visible or pin protected and allow to add an forwarder as next
+				if (v_item[i].menuItem->active && (p_mode != PERSONALIZE_MODE_NOTVISIBLE || i_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
+				{
+					//add item
 					v_item[i].widget->addItem(v_item[i].menuItem, v_item[i].default_selected); //forwarders...
 					allow_sep = true;
+									
+					//generate shortcut for next item
+					if (add_shortcut)
+						short_cut++;
 				}
-				else //if current item the latest of current widget, then allow to add separator as next, ensures that we can add any separator as first of next widget
-				{	
-					allow_sep = old_w_id == getWidgetId(v_item[i].widget) ? true : false;
-				}
+				else if (p_mode == PERSONALIZE_MODE_NOTVISIBLE)
+				{
+					//allow separator as next if personalize mode was changed
+					if (p_mode != old_p_mode)
+					{
+						old_p_mode = p_mode;
+						allow_sep = true;
+					}
+ 				}
+									
+				delete fw;
 			}
-			else //add separator as non personalized item and don't allow to add a separator but allow back button as next
-			{	
+			else //handle and add separator as non personalized item and don't allow to add a separator as next but allow back button as next
+			{						
 				if (allow_sep || v_item[i].menuItem == GenericMenuBack)
 				{
 					v_item[i].widget->addItem(v_item[i].menuItem, v_item[i].default_selected); //separators
 					allow_sep = v_item[i].menuItem == GenericMenuBack ? true : false;
 				}
-				
 			}
 		}
-		old_w_id = getWidgetId(v_item[i].widget);
-		
+		old_w_id = widget_id;
 	}
 }
 
