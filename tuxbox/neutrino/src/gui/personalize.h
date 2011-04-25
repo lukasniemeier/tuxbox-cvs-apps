@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.18 2011/04/25 14:10:39 dbt Exp $
+$Id: personalize.h,v 1.19 2011/04/25 19:32:46 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -101,7 +101,7 @@ class CPersonalizeGui : public CMenuTarget
 		{
 			PERSONALIZE_MODE_NOTVISIBLE =  0,
 			PERSONALIZE_MODE_VISIBLE  =  1,
-			PERSONALIZE_MODE_PIN  = 2,
+			PERSONALIZE_MODE_PIN  = 2
 		};
 
 		enum PERSONALIZE_PROTECT_MODE
