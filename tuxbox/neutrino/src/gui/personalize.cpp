@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.39 2011/04/19 09:59:36 dbt Exp $
+        $Id: personalize.cpp,v 1.40 2011/04/25 14:10:33 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -524,7 +524,8 @@ void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const i
 	
 		v_item.push_back(item);
 		
-		handleSetting((int*)personalize_mode);
+		if (item_mode != PERSONALIZE_SHOW_NO) //handle only relevant items
+			handleSetting((int*)personalize_mode);
 	}
 }
 
@@ -575,7 +576,7 @@ void CPersonalizeGui::addPersonalizedItems()
 				}
 				else //if current item the latest of current widget, then allow to add separator as next, ensures that we can add any separator as first of next widget
 				{	
-					allow_sep = old_w_id == getWidgetId(v_item[i].widget) ? allow_sep : false;
+					allow_sep = old_w_id == getWidgetId(v_item[i].widget) ? true : false;
 				}
 			}
 			else //add separator as non personalized item and don't allow to add a separator but allow back button as next
