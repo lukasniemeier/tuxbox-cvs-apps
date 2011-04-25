@@ -428,11 +428,19 @@ CMoviePlayerGui::exec(CMenuTarget *parent, const std::string &actionKey)
 	isPES=false;
 
 	if (actionKey == "fileplayback")
+	{
 		PlayStream(STREAMTYPE_FILE);
+	}
 	else if (actionKey == "dvdplayback")
+	{
+		CLCD::getInstance()->setMode(CLCD::MODE_MOVIE);
 		PlayStream(STREAMTYPE_DVD);
+	}
 	else if (actionKey == "vcdplayback")
+	{
+		CLCD::getInstance()->setMode(CLCD::MODE_MOVIE);
 		PlayStream(STREAMTYPE_SVCD);
+	}
 	else if (actionKey == "tsplayback")
 	{
 		PlayFile();
@@ -2151,6 +2159,7 @@ OutputThread(void *arg)
 				// PES/PS: need to enable/disable AC3 passthrough...
 				g_playstate = CMoviePlayerGui::SOFTRESET;
 			}
+			CLCD::getInstance()->setMovieAudio(g_currentac3);
 			g_ac3changed = false;
 			g_apidchanged = false;
 		}
@@ -2430,10 +2439,10 @@ OutputThread(void *arg)
 
 //== updateLcd ==
 //===============
-void updateLcd(const std::string &s)
+void updateLcd(const std::string &big, const std::string &small)
 {
 	static int  l_playstate = -1;
-	std::string lcd = s;
+	std::string lcd_small = small;
 	CLCD::AUDIOMODES playmode;
 
 	if (l_playstate == g_playstate)
@@ -2448,9 +2457,11 @@ void updateLcd(const std::string &s)
 		playmode = CLCD::AUDIO_MODE_PLAY;
 		break;
 	}
-	StrSearchReplace(lcd,"_", " ");
+	StrSearchReplace(lcd_small, "_", " ");
+	if (lcd_small.length() > 80)
+		lcd_small = lcd_small.substr(0, 80);
 	CLCD::getInstance()->setMoviePlaymode(playmode);
-	CLCD::getInstance()->setMovieInfo("", lcd);
+	CLCD::getInstance()->setMovieInfo(big, lcd_small);
 }
 
 //== seek to pos with sync to next proper TS packet ==
@@ -2642,7 +2653,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 	neutrino_msg_data_t data;
 
 	static std::string Path = Path_vlc;
-	std::string sel_filename, title;
+	std::string sel_filename, title, subtitle;
 	bool update_info = true, start_play = false, exit = false;
 	bool open_filebrowser = true, cdDvd = false, aborted = false;
 	bool stream = true, from_mb = false;
@@ -2666,7 +2677,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		CFile file;
 		file.Name = mrl_str;
 		filelist.push_back(file);
-		sel_filename = "DVD";
+		title = "DVD";
+		subtitle = "";
 		open_filebrowser = false;
 		start_play = true;
 		cdDvd = true;
@@ -2679,7 +2691,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		CFile file;
 		file.Name = mrl_str;
 		filelist.push_back(file);
-		sel_filename = "(S)VCD";
+		title = "(S)VCD";
+		subtitle = "";
 		open_filebrowser = false;
 		start_play = true;
 		cdDvd = true;
@@ -2713,7 +2726,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				filelist.clear();
 				filelist.push_back(file);
 				autoplaylist = filelist_auto_add(filelist);
-				sel_filename = startfilename;
+				int namepos = startfilename.rfind("/");
+				sel_filename = startfilename.substr(namepos + 1);
 				start_play = true;
 				update_info = true;
 				from_mb = true;
@@ -2895,16 +2909,26 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		{
 			CMovieInfo mi;
 			mi.clearMovieInfo(&movieinfo);
-			title = sel_filename;
 			if (!cdDvd)
 			{
 				movieinfo.file.Name = filename;
 				movieinfo_valid = mi.loadMovieInfo(&movieinfo);
 				if (movieinfo_valid)
+				{
 					title = movieinfo.epgTitle;
+					subtitle = movieinfo.epgInfo1;
+				}
+				else
+				{
+					title = "";
+					subtitle = "";
+				}
 			}
 			update_info = false;
-			updateLcd(title);
+			if (title == "not available" || title.empty())
+				updateLcd("", sel_filename);
+			else
+				updateLcd(title, subtitle);
 		}
 
 		if (start_play)
@@ -2951,7 +2975,6 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				g_currentapid = g_apids[0];
 				g_currentac3 = g_ac3flags[0];
 				g_apidchanged = true;
-				CLCD::getInstance()->setMovieAudio(g_currentac3);
 			}
 			else if (last_apid != -1)
 			{
@@ -2963,7 +2986,6 @@ CMoviePlayerGui::PlayStream(int streamtype)
 						g_currentapid = g_apids[i];
 						g_currentac3 = g_ac3flags[i];
 						g_apidchanged = true;
-						CLCD::getInstance()->setMovieAudio(g_currentac3);
 						break;
 					}
 				}
@@ -3081,8 +3103,6 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			if (g_currentapid == -1) // exit if inital pid is not selected
 				g_playstate = CMoviePlayerGui::STOPPED;
 			g_showaudioselectdialog = false;
-			CLCD::getInstance()->setMovieAudio(g_currentac3);
-			updateLcd(title);
 		}
 
 		g_RCInput->getMsg(&msg, &data, 10);	// 1 secs..
@@ -3298,13 +3318,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		}
 		else if (msg == CRCInput::RC_help || msg == NeutrinoMessages::SHOW_INFOBAR)
 		{
-			std::string sub_title = "";
-			if (movieinfo_valid)
-			{
-				sub_title = movieinfo.epgInfo1;
-				if (sub_title.empty())
-					sub_title = sel_filename;
-			}
+			std::string infobar_title = (title == "not available" || title.empty()) ? sel_filename : title;
 
 			int elapsed_time, remaining_time;
 			if (stream)
@@ -3331,7 +3345,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					}
 			}
 
-			g_InfoViewer->showMovieTitle(g_playstate, title, sub_title,
+			g_InfoViewer->showMovieTitle(g_playstate, infobar_title, subtitle,
 					g_percent, elapsed_time, remaining_time,
 					ac3state, g_numpida > 1);
 		}
@@ -3479,7 +3493,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.78 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.79 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
