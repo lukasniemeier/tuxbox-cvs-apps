@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.189 2011/04/25 14:10:47 dbt Exp $
+	$Id: menue.cpp,v 1.190 2011/04/25 14:11:08 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -194,6 +194,7 @@ CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon,
 	height = mheight; // height(menu_title)+10+...
 	wanted_height=mheight;
 	current_page=0;
+	ok_pressed = false;
 }
 
 CMenuWidget::CMenuWidget(const char* Name, const std::string & Icon, const int mwidth, const int mheight)
@@ -208,6 +209,7 @@ CMenuWidget::CMenuWidget(const char* Name, const std::string & Icon, const int m
 	height = mheight; // height(menu_title)+10+...
 	wanted_height=mheight;
 	current_page=0;
+	ok_pressed = false;
 }
 
 CMenuWidget::~CMenuWidget()
@@ -290,6 +292,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 	std::string oldLcdMenutitle = CLCD::getInstance()->getMenutitle();
 
 	int pos;
+	ok_pressed = false;
 
 	if (parent)
 		parent->hide();
@@ -381,6 +384,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 					//exec this item...
 					if (hasItem())
 					{
+						ok_pressed = true;
 						CMenuItem* item = items[selected];
 						int rv = item->exec(this);
 						switch (rv)
