@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.59 2011/04/25 14:11:13 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.60 2011/04/25 14:11:24 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.59 2011/04/25 14:11:13 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.60 2011/04/25 14:11:24 dbt Exp $\r\n");
 	init();
 }
 
@@ -1081,8 +1081,27 @@ int CMovieBrowser::exec(const char* path)
 				CNeutrinoApp::getInstance()->exec(NULL, actionKey);
 				paint();
 
+				if (m_movieSelectionHandler != NULL)
+					m_movieInfo.loadMovieInfo(m_movieSelectionHandler);
+
+			 	m_prevBrowserSelection = m_currentBrowserSelection;
+				m_prevRecordSelection = m_currentRecordSelection;
+				m_prevPlaySelection = m_currentPlaySelection;
+
+				refreshBrowserList();	
+				refreshLastPlayList();	
+				refreshLastRecordList();
+
+			 	m_currentBrowserSelection = m_prevBrowserSelection;
+				m_currentRecordSelection = m_prevRecordSelection;
+				m_currentPlaySelection = m_prevPlaySelection;
+
+				m_pcBrowser->setSelectedLine(m_currentBrowserSelection);
+				m_pcLastRecord->setSelectedLine(m_currentRecordSelection);
+				m_pcLastPlay->setSelectedLine(m_currentPlaySelection);
+
+				refreshTitle();
 				onSetGUIWindow(m_settings.gui);
-				refresh();
 #endif
 			}
 			else if (msg == CRCInput::RC_home)
@@ -3895,7 +3914,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.59 $");
+	return imageinfo.getModulVersion("","$Revision: 1.60 $");
 }
 
 /************************************************************************/
