@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.42 2011/04/26 19:45:27 dbt Exp $
+        $Id: personalize.cpp,v 1.43 2011/04/26 19:45:31 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -473,18 +473,9 @@ void CPersonalizeGui::addItem(const int& widget_id, CMenuItem *menu_Item, const 
 //adds a personalized menu item object to menu with personalizing parameters
 void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode)
 {
-	CMenuForwarder *fw = static_cast <CMenuForwarder*> (menu_Item);
-
-	CMenuItem *menu_item = menu_Item;
+ 	CMenuForwarder *fw = static_cast <CMenuForwarder*> (menu_Item);
 	
-	if (personalize_mode != NULL)// if we use a personalized item, transforming item always to LockedMenuForwarder
-	{
-		//if item in pin mode, then use LockedMenuForwarder for no/visible/pin option in personalize menu OR if item in protect mode, then use also LockedMenuForwarder for access option (PinOn/PinOff) in personalize menu
-		if ((*personalize_mode == PERSONALIZE_MODE_PIN && item_mode != PERSONALIZE_SHOW_AS_ACCESS_OPTION) || (*personalize_mode == PROTECT_MODE_PIN_PROTECTED && item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION))
-			menu_item = new CLockedMenuForwarder(fw->getTextLocale(), g_settings.personalize_pincode, true, fw->active, NULL, fw->getTarget(), fw->getActionKey().c_str(), fw->directKey, fw->iconName.c_str());
-	}
-	
-	menu_item_t item = {widget, menu_item, defaultselected, fw->getTextLocale(), (int*)personalize_mode, item_mode};
+	menu_item_t item = {widget, menu_Item, defaultselected, fw->getTextLocale(), (int*)personalize_mode, item_mode};
 
 	if (item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION)
 	{
