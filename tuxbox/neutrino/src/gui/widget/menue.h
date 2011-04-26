@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.98 2011/04/25 14:11:08 dbt Exp $
+	$Id: menue.h,v 1.99 2011/04/26 19:45:23 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -355,6 +355,7 @@ class CMenuWidget : public CMenuTarget
 		void removeItem(const uint& item_id);
 		int getItemId(CMenuItem* menuItem);
 		int getItemsCount(){return items.size();};
+		CMenuItem* getItem(const uint& item_id);
 
 		virtual void paint();
 		virtual void hide();
