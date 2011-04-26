@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.41 2011/04/25 14:10:39 dbt Exp $
+        $Id: personalize.cpp,v 1.42 2011/04/26 19:45:27 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -538,8 +538,18 @@ void CPersonalizeGui::addPersonalizedItems()
 		{
 			widget_id = getWidgetId(v_item[i].widget);
 					
-			if (old_w_id != widget_id) 
-				short_cut = shortcut; //reset shortcut if widget has changed
+			if (old_w_id != widget_id)
+			{
+				//reset shortcut if widget has changed
+				short_cut = shortcut; 
+				
+				//normalize previous widget: remove last item, if it is a separator line
+				uint items_count = v_item[old_w_id].widget->getItemsCount(); 
+				if (v_item[old_w_id].widget->getItem(items_count-1) == GenericMenuSeparatorLine)
+					v_item[old_w_id].widget->removeItem(items_count-1);
+				
+				allow_sep = true;
+			}
 										
 			if (v_item[i].personalize_mode != NULL) //handle personalized item and non separator
 			{
