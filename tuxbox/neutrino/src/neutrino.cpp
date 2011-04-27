@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1062 2011/04/25 14:11:04 dbt Exp $
+	$Id: neutrino.cpp,v 1.1063 2011/04/27 20:07:03 dbt Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -570,7 +570,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.personalize_epgrestart = configfile.getInt32("personalize_epgrestart", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_ucodecheck = configfile.getInt32("personalize_ucodecheck", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_imageinfo = configfile.getInt32("personalize_imageinfo", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
-	g_settings.personalize_update = configfile.getInt32("personalize_update", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
+	g_settings.personalize_update = configfile.getInt32("personalize_update", CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED);
 	g_settings.personalize_chan_epg_stat = configfile.getInt32("personalize_chan_epg_stat", CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE);
 #ifdef ENABLE_DRIVE_GUI
 	g_settings.personalize_drive_setup_stat = configfile.getInt32("personalize_drive_setup_stat", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
