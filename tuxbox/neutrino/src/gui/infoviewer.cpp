@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.300 2011/04/25 19:32:51 dbt Exp $
+	$Id: infoviewer.cpp,v 1.301 2011/05/06 17:13:51 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -106,7 +106,9 @@ CInfoViewer::CInfoViewer()
 	frameBuffer      = CFrameBuffer::getInstance();
 
 	BoxStartX        = BoxStartY = BoxEndX = BoxEndY = 0;
+#ifdef ENABLE_RADIOTEXT
 	rt_x             = rt_y      = rt_w    = rt_h    = 0;
+#endif
 	recordModeActive = false;
 	is_visible       = false;
 	showButtonBar    = false;
