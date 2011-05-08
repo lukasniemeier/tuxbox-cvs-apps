@@ -499,6 +499,8 @@ void CPlugins::startPlugin(int number,int param)
 				execPlugin(startparam);
 				dlclose(handle);
 				printf("[CPlugins] exec done...\n");
+				remove("/tmp/lcd.locked");
+				remove("/tmp/rc.locked");
 			}
 		}
 
