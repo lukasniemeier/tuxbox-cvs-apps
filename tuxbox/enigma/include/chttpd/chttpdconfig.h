@@ -1,5 +1,5 @@
 /*
- * $Id: chttpdconfig.h,v 1.2 2005/10/19 16:41:30 digi_casi Exp $
+ * $Id: chttpdconfig.h,v 1.3 2011/05/14 13:34:48 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -26,6 +26,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <config.h>
+#include <stdlib.h>
 #include <string>
 #include <configfile.h>
 

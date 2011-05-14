@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include <lib/gdi/gpixmap.h>
 #include <zlib.h>
 

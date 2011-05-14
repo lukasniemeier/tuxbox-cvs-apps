@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.h,v 1.2 2009/12/27 12:08:02 rhabarber1848 Exp $
+ * $Id: tuxwetter.h,v 1.3 2011/05/14 13:34:53 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -184,7 +184,7 @@ struct fb_var_screeninfo var_screeninfo;
 int startx, starty, sx, ex, sy, ey;
 char online;
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 struct input_event ev;
 

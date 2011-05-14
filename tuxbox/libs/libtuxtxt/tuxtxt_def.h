@@ -2,15 +2,16 @@
  * definitions for plugin and lib                                             *
  ******************************************************************************/
 #ifndef TUXTXT_DEF_H
-
 #define TUXTXT_DEF_H
+
+#include <config.h>
+
 #if defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
  #define TUXTXT_COMPRESS 1 // compress page data: 0 no compression, 1 with zlib, 2 with own algorithm
 #else
  #define TUXTXT_COMPRESS 2
 #endif
 
-#include <config.h>
 #include <sys/time.h>
 #include <pthread.h>
 
@@ -37,7 +38,7 @@
 #include FT_CACHE_SMALL_BITMAPS_H
 #include <linux/fb.h>
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined HAVE_TRIPLEDRAGON && !defined HAVE_GENERIC_HARDWARE
 #include <dbox/avs_core.h>
 #include <dbox/saa7126_core.h>
 #endif
@@ -80,7 +81,7 @@
 #define hold_mosaic         0x1E
 #define release_mosaic      0x1F
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined HAVE_TRIPLEDRAGON && !defined HAVE_GENERIC_HARDWARE
 const int fncmodes[] = {AVS_FNCOUT_EXT43, AVS_FNCOUT_EXT169};
 const int saamodes[] = {SAA_WSS_43F, SAA_WSS_169F};
 #endif

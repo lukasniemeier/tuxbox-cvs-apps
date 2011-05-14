@@ -78,11 +78,11 @@ public:
 	{
 	}
 
-	eZapMessage::eZapMessage()
+	eZapMessage()
 	{
 	}
 
-	eZapMessage::eZapMessage(int type)
+	eZapMessage(int type)
 		: type(type)
 	{
 	}

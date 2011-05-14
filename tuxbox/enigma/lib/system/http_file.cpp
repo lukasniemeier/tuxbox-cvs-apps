@@ -272,7 +272,7 @@ eHTTPDataSource *eHTTPFilePathResolver::getDataSource(eString request, eString p
 			
 			if (strstr(newpath.c_str(), (TEMPLATE_DIR).c_str()) != 0)
 			{
-				char *pch = strrchr(newpath.c_str(), '/');
+				const char *pch = strrchr(newpath.c_str(), '/');
 				eString newpath2 = TEMPLATE_DIR2 + eString(strdup(pch + 1));
 				if (access(newpath2.c_str(), R_OK) == 0)
 					newpath = newpath2;
@@ -280,7 +280,7 @@ eHTTPDataSource *eHTTPFilePathResolver::getDataSource(eString request, eString p
 			
 			if (strstr(newpath.c_str(), (HTDOCS_DIR).c_str()) != 0)
 			{
-				char *pch = strrchr(newpath.c_str(), '/');
+				const char *pch = strrchr(newpath.c_str(), '/');
 				eString newpath2 = HTDOCS_DIR2 + eString(strdup(pch + 1));
 				if (access(newpath2.c_str(), R_OK) == 0)
 					newpath = newpath2;

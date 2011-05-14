@@ -397,7 +397,7 @@ int ControlDaemon(int command, int account, int mailindex)
  * GetRCCode
  ******************************************************************************/
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 int GetRCCode()
 {
@@ -3598,7 +3598,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.50 $";
+	char cvs_revision[] = "$Revision: 1.51 $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;
@@ -3790,7 +3790,7 @@ void plugin_exec(PluginParam *par)
 
 	// remove last key & set rc to blocking mode
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 		read(rc, &ev, sizeof(ev));
 		fcntl(rc, F_SETFL, fcntl(rc, F_GETFL) &~ O_NONBLOCK);

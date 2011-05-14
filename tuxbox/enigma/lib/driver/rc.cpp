@@ -1,8 +1,10 @@
+#include <config.h>
+
 #include <lib/driver/rc.h>
 
-#include <config.h>
 #include <asm/types.h>
 #include <stdio.h>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <linux/input.h>

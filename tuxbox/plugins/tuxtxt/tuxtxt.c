@@ -145,7 +145,7 @@ void dump_page()
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.114 $";
+	char cvs_revision[] = "$Revision: 1.115 $";
 
 #if !TUXTXT_CFG_STANDALONE
 	int initialized = tuxtxt_init();
@@ -539,7 +539,7 @@ int Init()
 
 	/* setup rc */
 	fcntl(rc, F_SETFL, O_NONBLOCK);
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 	ioctl(rc, RC_IOCTL_BCODES, 1);
 #endif
 
@@ -1744,7 +1744,7 @@ void ConfigMenu(int Init)
 
 					memcpy(&menu[Menu_Width*MenuLine[M_SC1] + Menu_Width - 5], &configonoff[menulanguage][renderinfo.screen_mode1  ? 3 : 0], 3);
 					Menu_HighlightLine(menu, MenuLine[menuitem], 1);
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 					ioctl(renderinfo.avs, AVSIOSSCARTPIN8, &fncmodes[renderinfo.screen_mode1]);
 					ioctl(renderinfo.saa, SAAIOSWSS, &saamodes[renderinfo.screen_mode1]);
 #endif
@@ -2342,7 +2342,7 @@ void SwitchTranspMode()
 	else if (renderinfo.transpmode == 1) /* semi-transparent BG with FG text */
 	{
 		/* restore videoformat */
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 		ioctl(renderinfo.avs, AVSIOSSCARTPIN8, &renderinfo.fnc_old);
 		ioctl(renderinfo.saa, SAAIOSWSS, &renderinfo.saa_old);
 #endif
@@ -2352,7 +2352,7 @@ void SwitchTranspMode()
 	else /* TV mode */
 	{
 		/* restore videoformat */
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 		ioctl(renderinfo.avs, AVSIOSSCARTPIN8, &renderinfo.fnc_old);
 		ioctl(renderinfo.saa, SAAIOSWSS, &renderinfo.saa_old);
 #endif

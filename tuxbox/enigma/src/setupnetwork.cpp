@@ -2,6 +2,8 @@
 
 #include <setupnetwork.h>
 
+#include <limits.h>
+
 #include <netinet/in.h>
 #include <linux/route.h>
 

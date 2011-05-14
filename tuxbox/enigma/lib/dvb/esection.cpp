@@ -61,7 +61,7 @@ int eSectionReader::open(int pid, __u8 *data, __u8 *mask, __u8 *mode, int len, i
 		perror(dmxdev);
 		return -errno;
 	}
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 	else
 	{
 		if (::ioctl(handle, DMX_SET_BUFFER_SIZE, 128*1024) < 0 )

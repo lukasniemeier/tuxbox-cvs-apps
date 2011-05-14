@@ -1,5 +1,5 @@
 /*
- * $Id: io.c,v 1.1 2010/03/03 20:47:03 rhabarber1848 Exp $
+ * $Id: io.c,v 1.2 2011/05/14 13:34:51 rhabarber1848 Exp $
  *
  * blockads - d-box2 linux project
  *
@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include "blockads.h"
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 int GetRCCode()
 {

@@ -358,7 +358,7 @@ int ControlDaemon(int command)
  \param   : none
  \return  : rccode or -1 is key is'nt pressed
  ******************************************************************************/
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 int GetRCCode()
 {
    static __u16 rc_last_key = KEY_RESERVED;
@@ -804,7 +804,7 @@ void plugin_exec(PluginParam *par) {
       ControlDaemon(SET_HIDDEN);
    }
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
    read(rc, &ev, sizeof(ev));
 #else
    read(rc, &rccode, sizeof(rccode));

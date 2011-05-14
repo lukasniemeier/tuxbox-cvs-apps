@@ -1,5 +1,5 @@
 /*
- * $Id: io.c,v 1.1 2009/12/19 19:42:49 rhabarber1848 Exp $
+ * $Id: io.c,v 1.2 2011/05/14 13:34:53 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -29,7 +29,7 @@ int RCTranslate(int code);
 time_t t1,t2;
 clock_t tk1=0, tk2;
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 __u16 rc_last_code = KEY_RESERVED;
 
 
@@ -160,7 +160,7 @@ int RCTranslate(int code)
 	
 }
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 int GetCode(void)
 {
 	if(!RCKeyPressed() || (get_instance()>instance))

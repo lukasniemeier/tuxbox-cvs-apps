@@ -559,7 +559,7 @@ int eTextInputField::eventHandler( const eWidgetEvent &event )
 				char newChar = 0;
 				if ( key == lastKey )
 				{
-					char *oldkey = strchr( keys, isotext[curPos] );
+					const char *oldkey = strchr( keys, isotext[curPos] );
 					newChar = oldkey?keys[oldkey-keys+1]:0;
 				}
 
@@ -584,7 +584,7 @@ int eTextInputField::eventHandler( const eWidgetEvent &event )
 					else
 					{
 						nextCharTimer.stop();
-						char *oldkey = strchr( keys, newChar );
+						const char *oldkey = strchr( keys, newChar );
 						newChar=oldkey?keys[oldkey-keys+1]:0;
 						if (!newChar)
 							newChar=keys[0];

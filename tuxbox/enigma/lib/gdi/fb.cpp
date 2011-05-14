@@ -13,7 +13,8 @@
 
 #include <config.h>
 #if HAVE_DVB_API_VERSION >= 3
-#include <dbox/fb.h>
+//#include <dbox/fb.h>
+#define AVIA_GT_GV_SET_BLEV	0	/* blend level (copied from dbox/fb.h) */
 #endif
 
 fbClass *fbClass::instance;

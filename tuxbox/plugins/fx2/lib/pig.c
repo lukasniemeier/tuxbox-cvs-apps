@@ -8,8 +8,6 @@
 #include <sys/ioctl.h>
 #include <config.h>
 
-#include <config.h>
-
 #ifdef HAVE_TRIPLEDRAGON
 // ugly, but works
 int fx2_use_pig = 1;
@@ -44,7 +42,14 @@ void Fx2PigResume(void)
 }
 #else // !TRIPLEDRAGON
 
+static 	int		fd = -1;
+	int		fx2_use_pig = 1;
+static	int		l_x = 0;
+static	int		l_y = 0;
+static	int		l_width = 0;
+static	int		l_height = 0;
 #ifndef i386
+
 #if defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
 	#include <dbox/avia_gt_pig.h>
 	#define PIGDEV "/dev/dbox/pig0"
@@ -56,13 +61,6 @@ void Fx2PigResume(void)
 	#include <linux/videodev.h>
 	static	struct v4l2_format format;
 #endif
-
-static 	int		fd = -1;
-		int		fx2_use_pig = 1;
-static	int		l_x = 0;
-static	int		l_y = 0;
-static	int		l_width = 0;
-static	int		l_height = 0;
 
 void	Fx2SetPig( int x, int y, int width, int height )
 {

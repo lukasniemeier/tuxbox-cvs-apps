@@ -35,7 +35,7 @@
 #include <linux/fb.h>
 #include <zlib.h>
 #include <malloc.h>
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 #include <linux/input.h>
 #endif
 
@@ -136,7 +136,7 @@ char *infomsgclock[] = {
 	"%H:%M"		, "%H:%M:%S" 
 };
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 // longer breaking-line for dBox
 char *http_br = {"**************************************************%0A"};
 #else

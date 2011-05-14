@@ -4401,7 +4401,7 @@ void tuxtxt_SwitchScreenMode(tstRenderInfo* renderinfo,int newscreenmode)
 
 		tuxtxt_setfontwidth(renderinfo,fw);
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined HAVE_TRIPLEDRAGON && !defined HAVE_GENERIC_HARDWARE
 #if HAVE_DVB_API_VERSION < 3
 		avia_pig_hide(renderinfo->pig);
 		avia_pig_set_pos(renderinfo->pig, tx, ty);
@@ -4444,7 +4444,7 @@ void tuxtxt_SwitchScreenMode(tstRenderInfo* renderinfo,int newscreenmode)
 		tuxtxt_setfontwidth(renderinfo,renderinfo->fontwidth_normal);
 		renderinfo->displaywidth= (renderinfo->ex-renderinfo->sx);
 		renderinfo->StartX = renderinfo->sx; //+ (ex-sx - 40*fontwidth) / 2; /* center screen */
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined HAVE_TRIPLEDRAGON && !defined HAVE_GENERIC_HARDWARE
 		ioctl(renderinfo->avs, AVSIOSSCARTPIN8, &fncmodes[renderinfo->screen_mode1]);
 		ioctl(renderinfo->saa, SAAIOSWSS, &saamodes[renderinfo->screen_mode1]);
 #endif
@@ -5477,7 +5477,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 		renderinfo->page_atrb[i].doublew = 0;
 		renderinfo->page_atrb[i].IgnoreAtBlackBgSubst = 0;
 	}
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined HAVE_TRIPLEDRAGON && !defined HAVE_GENERIC_HARDWARE
 	if (setTVFormat)
 	{
 		/* open avs */
@@ -5520,7 +5520,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
 {
 	int i;
-#ifndef HAVE_TRIPLEDRAGON
+#if  !defined HAVE_TRIPLEDRAGON && !defined HAVE_GENERIC_HARDWARE
 	if (renderinfo->pig >= 0)
 		close(renderinfo->pig);
 	renderinfo->pig = -1;

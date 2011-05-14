@@ -1,5 +1,5 @@
 /*
- * $Id: utils.cpp,v 1.13 2009/03/11 20:42:11 rhabarber1848 Exp $
+ * $Id: utils.cpp,v 1.14 2011/05/14 13:34:50 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>

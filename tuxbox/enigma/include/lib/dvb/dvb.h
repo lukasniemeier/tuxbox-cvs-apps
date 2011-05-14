@@ -948,8 +948,8 @@ public:
 	}
 	template <class T> void forEachChannel(T ob)
 	{
-		for (std::map<int,eServiceDVB*>::iterator i(channel_number.begin()); i!=channel_number.end(); ++i)
-			ob(*i->second);
+		for (std::map<int,eServiceReferenceDVB>::iterator i(channel_number.begin()); i!=channel_number.end(); ++i)
+			ob(i->second);
 	}
 
 	eTransponder *getFirstTransponder(int state);

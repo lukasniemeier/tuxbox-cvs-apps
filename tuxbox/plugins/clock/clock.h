@@ -1,5 +1,5 @@
 /*
- * $Id: clock.h,v 1.3 2010/02/21 10:24:13 rhabarber1848 Exp $
+ * $Id: clock.h,v 1.4 2011/05/14 13:34:51 rhabarber1848 Exp $
  *
  * clock - d-box2 linux project
  *
@@ -168,7 +168,7 @@ int startx, starty, sx, ex, sy, ey;
 struct fb_fix_screeninfo fix_screeninfo;
 struct fb_var_screeninfo var_screeninfo;
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 struct input_event ev;
 

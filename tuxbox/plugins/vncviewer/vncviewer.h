@@ -27,7 +27,7 @@
 #include <sys/time.h>
 #include <X11/Xlib.h>
 #include <X11/Xmd.h>
-#include <rfbproto.h>
+#include <rfb/rfbproto.h>
 
 #define ICO_TRANS 4787
 #define ICO_BLACK 0

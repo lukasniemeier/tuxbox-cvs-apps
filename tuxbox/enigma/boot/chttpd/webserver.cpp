@@ -1,5 +1,5 @@
 /*
- * $Id: webserver.cpp,v 1.4 2005/10/18 11:30:19 digi_casi Exp $
+ * $Id: webserver.cpp,v 1.5 2011/05/14 13:34:48 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  * based on nhttpd (C) 2001/2002 Dirk Szymanski
@@ -26,6 +26,8 @@
 #include <arpa/inet.h>
 #include <sys/socket.h> 
 #include <sys/wait.h> 
+#include <string.h>
+#include <stdio.h>
 
 #include "webserver.h"
 #include "request.h"

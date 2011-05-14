@@ -63,7 +63,7 @@ class eTextInputFieldHelpWindow: public eWindow
 {
 public:
 	eTextInputFieldHelpWidget *helpwidget;
-	eTextInputFieldHelpWindow::eTextInputFieldHelpWindow()
+	eTextInputFieldHelpWindow()
 		:eWindow(1)
 	{
 		cresize(eSize(430,255));

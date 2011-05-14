@@ -51,7 +51,7 @@
 #include <linux/fb.h>
 #include <zlib.h>
 #include <malloc.h>
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 #include <linux/input.h>
 #endif
 #include <ft2build.h>
@@ -165,7 +165,7 @@ struct fb_cmap colormap2 = {1, 8, rd2, gn2, bl2, tr2};
 
 int startx, starty, sx, ex, sy, ey;
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 struct input_event ev;
 #endif
 

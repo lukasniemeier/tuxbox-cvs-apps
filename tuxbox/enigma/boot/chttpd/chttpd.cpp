@@ -1,5 +1,5 @@
 /*
- * $Id: chttpd.cpp,v 1.3 2005/10/18 11:30:19 digi_casi Exp $
+ * $Id: chttpd.cpp,v 1.4 2011/05/14 13:34:48 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
   * based on nhttpd (C) 2001/2002 Dirk Szymanski
@@ -26,6 +26,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include <string.h>
 #include <config.h>
 #include "webserver.h"
 #include "debug.h"

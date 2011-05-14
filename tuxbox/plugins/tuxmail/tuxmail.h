@@ -17,7 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <linux/fb.h>
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 #include <linux/input.h>
 #endif
 #include <sys/ioctl.h>
@@ -430,7 +430,7 @@ char maildir[256];
 int mailcache = 0;
 char szInfo[MAXINFOLINES][MAXLINELEN];
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 struct input_event ev;
 

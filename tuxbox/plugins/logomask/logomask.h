@@ -1,5 +1,5 @@
 /*
- * $Id: logomask.h,v 1.2 2010/03/13 09:52:03 rhabarber1848 Exp $
+ * $Id: logomask.h,v 1.3 2011/05/14 13:34:51 rhabarber1848 Exp $
  *
  * logomask - d-box2 linux project
  *
@@ -143,7 +143,7 @@ struct fb_var_screeninfo var_screeninfo;
 int startx, starty, sx, ex, sy, ey;
 char online;
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 struct input_event ev;
 

@@ -111,8 +111,8 @@ protected:
 	//----------------------
 	lpduQueueHeader lpduReceiveQueues[MAXTRANSPORTSESSIONS];
 
-	ptrlpduQueueElem eDVBCI::AllocLpduQueueElem(unsigned char t_c_id);
-	int eDVBCI::lpduQueueElemIsMore(ptrlpduQueueElem curElem);
+	ptrlpduQueueElem AllocLpduQueueElem(unsigned char t_c_id);
+	int lpduQueueElemIsMore(ptrlpduQueueElem curElem);
 
 	//----------------------
 

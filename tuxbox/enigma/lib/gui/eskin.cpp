@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <cstring>
 
 #include <lib/gui/eskin.h>
 #include <lib/gui/ewidget.h>

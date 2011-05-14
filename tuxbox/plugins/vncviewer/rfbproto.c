@@ -31,7 +31,7 @@
 #include <pwd.h>
 #include <vncviewer.h>
 #include <X11/Xatom.h>
-#include <vncauth.h>
+#include <rfb/vncauth.h>
 
 #include "fbgl.h"
 

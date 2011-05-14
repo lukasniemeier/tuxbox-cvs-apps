@@ -718,7 +718,7 @@ void plugin_exec(PluginParam *par)
 	memset(lbb, 0, var_screeninfo.xres*var_screeninfo.yres);
 	RenderBox(0,0,var_screeninfo.xres,var_screeninfo.yres,FILL,BLACK);
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 	//open avs
 	if((avs = open(AVS, O_RDWR)) == -1)
 	{
@@ -780,7 +780,7 @@ void plugin_exec(PluginParam *par)
 
 	SetLanguage();
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 	ioctl(saa, SAAIOGWSS, &saa_old);
 	ioctl(saa, SAAIOSWSS, &saamodes[screenmode]);
 #endif
@@ -1437,7 +1437,7 @@ void plugin_exec(PluginParam *par)
 	// enable keyboard-conversion again
 	unlink(KBLCKFILE);
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 	//restore videoformat
 	ioctl(avs, AVSIOSSCARTPIN8, &fnc_old);
 	ioctl(saa, SAAIOSWSS, &saa_old);
@@ -2285,7 +2285,7 @@ void DoMainMenu()
 								return;
 							case 2:
 								screenmode = 1-screenmode;
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 								ioctl(avs, AVSIOSSCARTPIN8, &fncmodes[screenmode]);
 								ioctl(saa, SAAIOSWSS, &saamodes[screenmode]);
 #endif

@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <lib/dvb/frontend.h>
 #include <errno.h>
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 #include <tuxbox.h>
 #endif
 
@@ -29,7 +29,7 @@ eSystemInfo::eSystemInfo()
 void eSystemInfo::init_eSystemInfo()
 {
 	instance=this;
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 	int fd=::open(DEMOD_DEV, O_RDONLY);
 	fetype = feUnknown;
 	if (fd>=0)

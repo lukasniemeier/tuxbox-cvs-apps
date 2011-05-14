@@ -100,7 +100,7 @@ private:
 public:
 	// the constructor.
 	rssFeed();
-	void rssFeed::selectedItem(eListBoxEntryText *item);
+	void selectedItem(eListBoxEntryText *item);
 	void downloadDone(int err);	
 	void printRSSFeed(eString title);
 };

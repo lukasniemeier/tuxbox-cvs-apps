@@ -1,6 +1,7 @@
 #include <config.h>
 #include <lib/driver/rcinput.h>
 
+#include <string.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 

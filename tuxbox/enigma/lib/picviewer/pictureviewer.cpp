@@ -1,5 +1,5 @@
 /*
- * $Id: pictureviewer.cpp,v 1.47 2009/02/03 18:53:43 dbluelle Exp $
+ * $Id: pictureviewer.cpp,v 1.48 2011/05/14 13:34:50 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -409,7 +409,7 @@ bool ePictureViewer::ShowImage(const std::string& filename, bool unscaled)
 	{
 		fbClass::getInstance()->lock();
 		fbClass::getInstance()->SetMode(720, 576, 16);
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 		fbClass::getInstance()->setTransparency(0);
 #endif
 	}
@@ -457,7 +457,7 @@ int ePictureViewer::eventHandler(const eWidgetEvent &evt)
 				{
 					fbClass::getInstance()->lock();
 					fbClass::getInstance()->SetMode(720, 576, 16);
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 					fbClass::getInstance()->setTransparency(0);
 #endif
 				}

@@ -2136,7 +2136,7 @@ void SigHandler(int signal)
  ******************************************************************************/
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.14 $";
+	char cvs_revision[] = "$Revision: 1.15 $";
 	int param, nodelay = 0;
 	pthread_t thread_id;
 	void *thread_result = 0;

@@ -1,5 +1,5 @@
 /*
- * $Id: enigma_dyn_utils.cpp,v 1.23 2005/11/12 19:44:59 digi_casi Exp $
+ * $Id: enigma_dyn_utils.cpp,v 1.24 2011/05/14 13:34:50 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *
@@ -99,7 +99,7 @@ eString readFile(eString filename)
 	
 	if (strstr(filename.c_str(), (TEMPLATE_DIR).c_str()) != 0)
 	{
-		char *pch = strrchr(filename.c_str(), '/');
+		const char *pch = strrchr(filename.c_str(), '/');
 		eString filename2 = TEMPLATE_DIR2 + eString(strdup(pch + 1));
 		if (access(filename2.c_str(), R_OK) == 0)
 			filename = filename2;
@@ -107,7 +107,7 @@ eString readFile(eString filename)
 			
 	if (strstr(filename.c_str(), (HTDOCS_DIR).c_str()) != 0)
 	{
-		char *pch = strrchr(filename.c_str(), '/');
+		const char *pch = strrchr(filename.c_str(), '/');
 		eString filename2 = HTDOCS_DIR2 + eString(strdup(pch + 1));
 		if (access(filename2.c_str(), R_OK) == 0)
 			filename = filename2;

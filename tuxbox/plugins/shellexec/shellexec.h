@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.h,v 1.4 2010/09/27 19:40:10 rhabarber1848 Exp $
+ * $Id: shellexec.h,v 1.5 2011/05/14 13:34:52 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -211,7 +211,7 @@ extern int instance;
 int get_instance(void);
 void put_instance(int pval);
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 
 struct input_event ev;
 

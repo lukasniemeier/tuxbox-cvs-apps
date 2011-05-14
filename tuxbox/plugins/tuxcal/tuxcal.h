@@ -18,7 +18,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <linux/fb.h>
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 #include <linux/input.h>
 #endif
 #include <sys/ioctl.h>
@@ -154,7 +154,7 @@ char *infomsg[][MAXOSD] = {
 //----------------------------------------------------
 // remote-control and keyboard
 
-#if HAVE_DVB_API_VERSION == 3
+#if HAVE_DVB_API_VERSION >= 3
 struct input_event ev;													//! input event for dBox
 #else
 unsigned char kbcode;														//! keyboard-input for Dreambox
@@ -292,7 +292,7 @@ unsigned short rccode;													//! remote-control code
 
 #define REPKEYDELAY	4
 
-#if HAVE_DVB_API_VERSION == 3												// only for dBox
+#if HAVE_DVB_API_VERSION >= 3												// only for dBox
 // conversion-tables for infrared-keyboard 
 // normal key
 const int rctable[] = 

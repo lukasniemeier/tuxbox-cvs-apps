@@ -15,7 +15,7 @@ public:
 
 		init_eSkinInit();
 	}
-	void eSkinInit::init_eSkinInit()
+	void init_eSkinInit()
 	{
 		if (default_skin.load( CONFIGDIR "/enigma/skins/default.esml"))
 			if (default_skin.load( TUXBOXDATADIR "/enigma/skins/default.esml"))

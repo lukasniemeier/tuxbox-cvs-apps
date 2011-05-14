@@ -1,6 +1,8 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/wait.h>
 #include <lib/base/estring.h>
 #include <enigma_processutils.h>

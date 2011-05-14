@@ -4,6 +4,8 @@
 #include <lib/system/init_num.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <string.h>
+#include <stdlib.h>
 
 eConfig *eConfig::instance;
 

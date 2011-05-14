@@ -1,5 +1,5 @@
 /*
- * $Id: request.cpp,v 1.4 2009/03/11 20:42:11 rhabarber1848 Exp $
+ * $Id: request.cpp,v 1.5 2011/05/14 13:34:48 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
   * based on nhttpd (C) 2001/2002 Dirk Szymanski
@@ -26,6 +26,7 @@
 #include <fcntl.h>
 #include <sys/sendfile.h>
 #include <sys/socket.h>
+#include <string.h>
 #include <unistd.h>
 #include "debug.h"
 #include "helper.h"

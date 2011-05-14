@@ -39,7 +39,7 @@
 #include <sys/stat.h>
 #include <plugin.h>
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 #include <dbox/avs_core.h>
 #include <dbox/saa7126_core.h>
 #define AVS "/dev/dbox/avs0"
@@ -366,7 +366,7 @@ char szTextSearchstring[FILENAME_MAX];
 char szPass[20];
 long commandsize;
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 int fncmodes[] = {AVS_FNCOUT_EXT43, AVS_FNCOUT_EXT169};
 int saamodes[] = {SAA_WSS_43F, SAA_WSS_169F};
 #endif

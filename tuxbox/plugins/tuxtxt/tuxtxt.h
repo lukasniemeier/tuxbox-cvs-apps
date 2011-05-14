@@ -36,7 +36,7 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 #include <dbox/fp.h>
 #include <dbox/lcd-ks0713.h>
 #endif
@@ -228,7 +228,7 @@ struct _pid_table
 }pid_table[128];
 
 unsigned char restoreaudio = 0;
-#ifndef HAVE_TRIPLEDRAGON
+#if !defined(HAVE_TRIPLEDRAGON) && !defined(HAVE_GENERIC_HARDWARE)
 /* 0 Nokia, 1 Philips, 2 Sagem */
 /* typ_vcr/dvb: 	v1 a1 v2 a2 v3 a3 (vcr_only: fblk) */
 const int avstable_ioctl[7] =

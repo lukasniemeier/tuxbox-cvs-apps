@@ -1,5 +1,5 @@
 /*
- * $Id: bootmenue.cpp,v 1.28 2009/05/31 11:18:37 dbluelle Exp $
+ * $Id: bootmenue.cpp,v 1.29 2011/05/14 13:34:48 rhabarber1848 Exp $
  *
  * (C) 2005 by digi_casi <digi_casi@tuxbox.org>
  *          based on dreamflash by mechatron
@@ -91,6 +91,7 @@ void stmenu::rc_event(unsigned short key)
 {
 	CTimer::getInstance()->start(atoi(config->timeoutValue.c_str()));
 	eString skin, pic;
+	unsigned int pos = 0;
 
 	switch (key)
 	{
@@ -117,7 +118,7 @@ void stmenu::rc_event(unsigned short key)
 			if (skinIndex > skinMax)
 				skinIndex = 0;
 			skin = bmgr->skinList[skinIndex];
-			unsigned int pos = skin.find_last_of('/');
+			pos = skin.find_last_of('/');
 			config->skinName = skin.right(skin.length() - pos - 1);
 			config->skinPath = skin.left(pos);
 			loadSkin(skin);

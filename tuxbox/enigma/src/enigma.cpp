@@ -535,14 +535,14 @@ int main(int argc, char **argv)
 					{
 						while(gRC::getInstance().mustDraw())
 							usleep(1000);
-						int fd = open("/tmp/shutdown.raw", O_CREAT|O_WRONLY|O_TRUNC);
+						int fd = open("/tmp/shutdown.raw", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
 						if ( fd >= 0 )
 						{
 							write(fd, pixmap.data, 720*576*pixmap.bpp/8);
 							::close(fd);
 						}
 						struct fb_cmap* cmap = fbClass::getInstance()->CMAP();
-						fd = open("/tmp/cmap", O_WRONLY|O_CREAT|O_TRUNC);
+						fd = open("/tmp/cmap", O_WRONLY|O_CREAT|O_TRUNC, S_IRWXU);
 						if ( fd >= 0 )
 						{
 							write(fd, &cmap->start, sizeof(cmap->start));
@@ -576,7 +576,3 @@ int main(int argc, char **argv)
 //	muntrace();
 }
 
-extern "C" void mkstemps();
-void mkstemps()
-{
-}
