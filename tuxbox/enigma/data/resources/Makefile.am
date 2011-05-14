@@ -1,7 +1,7 @@
-EXTRA_DIST = rcdboxnew.xml rcdboxold.xml rcdboxbuttons.xml help.xml \
-	rcdm7000.xml rcdm5xxx.xml rctrdvb272.xml \
-	rcdreambox_inputdev.xml rcgeneric_inputdev.xml rcdbox_inputdev.xml \
-	keymappings.xml rcdreambox_keyboard.xml
+EXTRA_DIST = $(srcdir)/rcdboxnew.xml $(srcdir)/rcdboxold.xml $(srcdir)/rcdboxbuttons.xml $(srcdir)/help.xml \
+	$(srcdir)/rcdm7000.xml $(srcdir)/rcdm5xxx.xml $(srcdir)/rctrdvb272.xml \
+	$(srcdir)/rcdreambox_inputdev.xml $(srcdir)/rcgeneric_inputdev.xml $(srcdir)/rcdbox_inputdev.xml \
+	$(srcdir)/keymappings.xml $(srcdir)/rcdreambox_keyboard.xml
 
 install-data-local:
 	install -d $(DESTDIR)$(TUXBOXDATADIR)/enigma/resources

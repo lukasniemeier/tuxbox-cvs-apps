@@ -4,9 +4,9 @@ noinst_LTLIBRARIES = sol.la
 
 sol_la_SOURCES = solboard.c somain.c
 
-sol_la_LIBFLAGS = $(top_builddir)/fx2/lib/libfx2.la
+sol_la_LIBADD = $(top_builddir)/fx2/lib/libfx2.la
 
-sol_la_LDFLAGS = -rpath $(PLUGINDIR) -module -avoid-version -lfx2
+sol_la_LDFLAGS = -rpath $(PLUGINDIR) -module -avoid-version
 
 install-exec-local:
 	install -d $(DESTDIR)$(PLUGINDIR)

@@ -4,9 +4,9 @@ noinst_LTLIBRARIES = yahtzee.la
 
 yahtzee_la_SOURCES = yahtzee.c somain.c
 
-yahtzee_la_LIBFLAGS = $(top_builddir)/fx2/lib/libfx2.la
+yahtzee_la_LIBADD = $(top_builddir)/fx2/lib/libfx2.la
 
-yahtzee_la_LDFLAGS = -rpath $(PLUGINDIR) -module -avoid-version -lfx2
+yahtzee_la_LDFLAGS = -rpath $(PLUGINDIR) -module -avoid-version
 
 install-exec-local:
 	install -d $(DESTDIR)$(PLUGINDIR)

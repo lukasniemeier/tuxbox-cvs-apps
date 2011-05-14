@@ -1,16 +1,16 @@
 EXTRA_DIST = \
-	webif.css led_on.gif led_off.gif on.gif off.gif  \
-	speak_off.gif speak_on.gif topbalk.png trans.gif squ.png timer.gif \
-	index.js epg.js trash.gif dm7000.jpg blinking_red.gif \
-	format_on.png format_off.png dolby_on.png dolby_off.png \
-	crypt_on.png crypt_off.png mountMgr.js rc_small.jpg rc_big.jpg \
-	bg.png rc_dbox2.jpg dhtml.js rc_dbox2_small.jpg \
-	mepg_grad.png edit.gif timer.js window.js topbalk2.png topbalk3.png \
-	topbalk4.png zap.js zapdata.js up.gif down.gif topbalk_small.png \
-	webif_small.css topbalk2_small.png topbalk3_small.png \
-	topbalk4_small.png blue.png green.png red.png grey.png yellow.png \
-	locked.png unlocked.png 1rightarrow.gif 1leftarrow.gif player_stop.gif \
-	player_fwd.gif player_rew.gif dvr.gif movieplayer.js
+	$(srcdir)/webif.css $(srcdir)/led_on.gif $(srcdir)/led_off.gif $(srcdir)/on.gif $(srcdir)/off.gif  \
+	$(srcdir)/speak_off.gif $(srcdir)/speak_on.gif $(srcdir)/topbalk.png $(srcdir)/trans.gif $(srcdir)/squ.png $(srcdir)/timer.gif \
+	$(srcdir)/index.js $(srcdir)/epg.js $(srcdir)/trash.gif $(srcdir)/dm7000.jpg $(srcdir)/blinking_red.gif \
+	$(srcdir)/format_on.png $(srcdir)/format_off.png $(srcdir)/dolby_on.png $(srcdir)/dolby_off.png \
+	$(srcdir)/crypt_on.png $(srcdir)/crypt_off.png $(srcdir)/mountMgr.js $(srcdir)/rc_small.jpg $(srcdir)/rc_big.jpg \
+	$(srcdir)/bg.png $(srcdir)/rc_dbox2.jpg $(srcdir)/dhtml.js $(srcdir)/rc_dbox2_small.jpg \
+	$(srcdir)/mepg_grad.png $(srcdir)/edit.gif $(srcdir)/timer.js $(srcdir)/window.js $(srcdir)/topbalk2.png $(srcdir)/topbalk3.png \
+	$(srcdir)/topbalk4.png $(srcdir)/zap.js $(srcdir)/zapdata.js $(srcdir)/up.gif $(srcdir)/down.gif $(srcdir)/topbalk_small.png \
+	$(srcdir)/webif_small.css $(srcdir)/topbalk2_small.png $(srcdir)/topbalk3_small.png \
+	$(srcdir)/topbalk4_small.png $(srcdir)/blue.png $(srcdir)/green.png $(srcdir)/red.png $(srcdir)/grey.png $(srcdir)/yellow.png \
+	$(srcdir)/locked.png $(srcdir)/unlocked.png $(srcdir)/1rightarrow.gif $(srcdir)/1leftarrow.gif $(srcdir)/player_stop.gif \
+	$(srcdir)/player_fwd.gif $(srcdir)/player_rew.gif $(srcdir)/dvr.gif $(srcdir)/movieplayer.js
 
 install-data-local:
 	install -d $(DESTDIR)$(TUXBOXDATADIR)/enigma/htdocs

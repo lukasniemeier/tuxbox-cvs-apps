@@ -113,6 +113,15 @@ if test "$TARGET" = "cdk"; then
 	TUXBOX_APPS_DIRECTORY_ONE(gamesdir,GAMESDIR,localstatedir,/var,/tuxbox/games,
 		[--with-gamesdir=PATH    ],[where games data is stored])
 else
+	datadir="\${prefix}/share"
+	sysconfdir="\${prefix}/etc"
+	localstatedir="\${prefix}/var"
+	libdir="\${prefix}/lib"
+	targetdatadir="\${targetprefix}/share"
+	targetsysconfdir="\${targetprefix}/etc"
+	targetlocalstatedir="\${targetprefix}/var"
+	targetlibdir="\${targetprefix}/lib"
+
 	TUXBOX_APPS_DIRECTORY_ONE(configdir,CONFIGDIR,sysconfdir,/etc,/tuxbox,
 		[--with-configdir=PATH   ],[where to find the config files])
 	

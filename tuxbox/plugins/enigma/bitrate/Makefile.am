@@ -17,7 +17,7 @@ install-exec-local:
 	install -d $(DESTDIR)$(PLUGINDIR)
 	install -d $(DESTDIR)$(CONFIGDIR)/bitrate
 	install .libs/bitrate.so $(DESTDIR)$(PLUGINDIR)
-	install -m 0644 bitrate.cfg $(DESTDIR)$(PLUGINDIR)
+	install -m 0644 $(SRCDIR)bitrate.cfg $(DESTDIR)$(PLUGINDIR)
 
 uninstall-local:
 	-rm $(DESTDIR)$(PLUGINDIR)/bitrate.so

@@ -1,5 +1,5 @@
 EXTRA_DIST = \
-	blank.png blank.skin
+	$(srcdir)/blank.png $(srcdir)/blank.skin
 
 install-data-local:
 	install -d $(DESTDIR)$(TUXBOXDATADIR)/enigma/boot

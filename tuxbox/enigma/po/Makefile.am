@@ -19,32 +19,28 @@ SUFFIXES = .po .gmo .mo .sed .sin .nop .po-update
 
 .po.gmo:
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}rm -f $${lang}.gmo && @GMSGFMT@ -c --no-hash --statistics -o $${lang}.gmo $${lang}.po"; \
-	cd $(srcdir) && rm -f $${lang}.gmo && @GMSGFMT@ -c --no-hash --statistics -o t-$${lang}.gmo $${lang}.po && (mv t-$${lang}.gmo $${lang}.gmo  || /bin/true)
+	echo "rm -f $${lang}.gmo && @GMSGFMT@ -c --no-hash --statistics -o $${lang}.gmo $(srcdir)/$${lang}.po"; \
+	rm -f $${lang}.gmo && @GMSGFMT@ -c --no-hash --statistics -o t-$${lang}.gmo $(srcdir)/$${lang}.po && (mv t-$${lang}.gmo $${lang}.gmo  || /bin/true)
 
 .nop.po-update:
 	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
 	if test "$(PACKAGE)" = "gettext"; then PATH=`pwd`/../src:$$PATH; fi; \
-	tmpdir=`pwd`; \
 	echo "$$lang:"; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}@MSGMERGE@ $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
-	cd $(srcdir); \
-	if @MSGMERGE@ $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
-	  if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
-	    rm -f $$tmpdir/$$lang.new.po; \
+	echo "@MSGMERGE@ $(srcdir)/$$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
+	if @MSGMERGE@ $(srcdir)/$$lang.po $(DOMAIN).pot -o $$lang.new.po; then \
+	  if cmp $(srcdir)/$$lang.po $$lang.new.po >/dev/null 2>&1; then \
+	    rm -f $$lang.new.po; \
 	  else \
-	    if mv -f $$tmpdir/$$lang.new.po $$lang.po; then \
+	    if mv -f $$lang.new.po $$lang.po; then \
 	      :; \
 	    else \
-	      echo "msgmerge for $$lang.po failed: cannot move $$tmpdir/$$lang.new.po to $$lang.po" 1>&2; \
+	      echo "msgmerge for $$lang.po failed: cannot move $$lang.new.po to $$lang.po" 1>&2; \
 	      exit 1; \
 	    fi; \
 	  fi; \
 	else \
 	  echo "msgmerge for $$lang.po failed!" 1>&2; \
-	  rm -f $$tmpdir/$$lang.new.po; \
+	  rm -f $$lang.new.po; \
 	fi
 
 
@@ -63,30 +59,30 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in
 	  --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) \
 	  --files-from=$(srcdir)/POTFILES.in \
 	  --copyright-holder='$(COPYRIGHT_HOLDER)' \
-	  --join-existing
+	  --join-existing \
+	  --output-dir=$(builddir)
 	test ! -f $(DOMAIN).po || { \
-	  if test -f $(srcdir)/$(DOMAIN).pot; then \
-	    sed -e 's/^"POT-Creation-Date: .*\"$$//' < $(srcdir)/$(DOMAIN).pot > $(DOMAIN).1po && \
-	    sed -e 's/^"POT-Creation-Date: .*"$$//' < $(DOMAIN).po > $(DOMAIN).2po && \
-	    if cmp $(DOMAIN).1po $(DOMAIN).2po >/dev/null 2>&1; then \
+	  if test -f $(builddir)/$(DOMAIN).pot; then \
+	    sed -e 's/^"POT-Creation-Date: .*\"$$//' < $(builddir)/$(DOMAIN).pot > $(builddir)/$(DOMAIN).1po && \
+	    sed -e 's/^"POT-Creation-Date: .*"$$//' < $(builddir)/$(DOMAIN).po > $(builddir)/$(DOMAIN).2po && \
+	    if cmp $(builddir)/$(DOMAIN).1po $(builddir)/$(DOMAIN).2po >/dev/null 2>&1; then \
 	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(DOMAIN).po; \
 	    else \
-	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(srcdir)/$(DOMAIN).pot && \
-	      mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
+	      rm -f $(DOMAIN).1po $(DOMAIN).2po $(builddir)/$(DOMAIN).pot && \
+	      mv $(DOMAIN).po $(builddir)/$(DOMAIN).pot; \
 	    fi; \
 	  else \
-	    mv $(DOMAIN).po $(srcdir)/$(DOMAIN).pot; \
+	    mv $(DOMAIN).po $(builddir)/$(DOMAIN).pot; \
 	  fi; \
 	}
 
-$(srcdir)/$(DOMAIN).pot:
+$(DOMAIN).pot:
 	$(MAKE) $(DOMAIN).pot-update
 
-@POFILES@: $(srcdir)/$(DOMAIN).pot
+@POFILES@: $(DOMAIN).pot
 	@lang=`echo $@ | sed -e 's,.*/,,' -e 's/\.po$$//'`; \
-	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$${cdcmd}@MSGMERGE@ --update $${lang}.po $(DOMAIN).pot"; \
-	cd $(srcdir) && @MSGMERGE@ --update $${lang}.po $(DOMAIN).pot
+	echo "@MSGMERGE@ --update $(srcdir)/$${lang}.po $(DOMAIN).pot"; \
+	@MSGMERGE@ --update $(srcdir)/$${lang}.po $(DOMAIN).pot
 
 @DUMMYPOFILES@:
 

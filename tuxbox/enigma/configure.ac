@@ -106,6 +106,10 @@ if test "$enable_sqlite" = "yes" ; then
 fi
 TUXBOX_APPS_LIB_PKGCONFIG(FRIBIDI,fribidi)
 
+if test "$BOXTYPE" = "generic" ; then
+	TUXBOX_APPS_LIB_PKGCONFIG(TUXBOX,tuxbox)
+fi
+
 if test "$BOXTYPE" = "dbox2" ; then
 	TUXBOX_APPS_LIB_PKGCONFIG(TUXBOX,tuxbox)
 	TUXBOX_APPS_LIB_PKGCONFIG(CONFIGFILE,tuxbox-configfile)

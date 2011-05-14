@@ -1,4 +1,4 @@
-EXTRA_DIST = ir_vcr_stop.lirc ir_vcr_start.lirc
+EXTRA_DIST = $(srcdir)/ir_vcr_stop.lirc $(srcdir)/ir_vcr_start.lirc
 
 install-data-local:
 	install -d $(DESTDIR)$(CONFIGDIR)

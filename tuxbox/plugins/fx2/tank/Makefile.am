@@ -4,9 +4,9 @@ noinst_LTLIBRARIES = tank.la
 
 tank_la_SOURCES = board.c somain.c
 
-tank_la_LIBFLAGS = $(top_builddir)/fx2/lib/libfx2.la
+tank_la_LIBADD = $(top_builddir)/fx2/lib/libfx2.la
 
-tank_la_LDFLAGS = -rpath $(PLUGINDIR) -module -avoid-version -lfx2
+tank_la_LDFLAGS = -rpath $(PLUGINDIR) -module -avoid-version
 
 install-exec-local:
 	install -d $(DESTDIR)$(PLUGINDIR)
