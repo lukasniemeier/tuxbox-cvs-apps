@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: hardware.h,v $
+Revision 1.10  2011/05/19 19:54:35  rhabarber1848
+First set of compile fixes for gcc 4.1.2 (zapit, neutrino, lcars, radiobox, ...): http://www.dbox2-tuning.net/forum/viewtopic.php?p=379472#p379472
+
 Revision 1.9  2003/01/05 19:28:45  TheDOC
 lcars should be old-api-compatible again
 
@@ -78,7 +81,7 @@ class hardware
 	int old_fblk;
 public:
 	hardware(settings *s, variables *v);
-	void hardware::setOutputMode(int i);
+	void setOutputMode(int i);
 	void setfblk(int i);
 	int getfblk();
 	bool switch_vcr();

@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: scan.h,v $
+Revision 1.6  2011/05/19 19:54:35  rhabarber1848
+First set of compile fixes for gcc 4.1.2 (zapit, neutrino, lcars, radiobox, ...): http://www.dbox2-tuning.net/forum/viewtopic.php?p=379472#p379472
+
 Revision 1.5  2002/06/15 02:33:03  TheDOC
 some changes + bruteforce-channelscan for cable
 
@@ -61,7 +64,7 @@ class scan
 	tuner *tuner_obj;
 	channels *channels_obj;
 public:
-	scan::scan(settings *s, pat *p1, pmt *p2, nit *n, sdt *s1, osd *o, tuner *t, channels *c);
+	scan(settings *s, pat *p1, pmt *p2, nit *n, sdt *s1, osd *o, tuner *t, channels *c);
 	channels scanChannels(int type = NORMAL, int start_frequency = -1, int start_symbol = -1, int start_polarization = -1, int start_fec = -1);
 	void updateChannels(channels *chan);
 	void readUpdates();

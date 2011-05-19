@@ -1,5 +1,5 @@
 /*
- * $Id: input.h,v 1.1 2009/12/31 14:52:03 rhabarber1848 Exp $
+ * $Id: input.h,v 1.2 2011/05/19 19:54:36 rhabarber1848 Exp $
  *
  * input - d-box2 linux project
  *
@@ -100,7 +100,7 @@ struct fb_fix_screeninfo fix_screeninfo;
 struct fb_var_screeninfo var_screeninfo;
 
 int startx, starty, sx, ex, sy, ey;
-extern unsigned sc[8], tc[8];
+static unsigned sc[8], tc[8];
 extern char *butmsg[3];
 extern int buttons,selection;
 

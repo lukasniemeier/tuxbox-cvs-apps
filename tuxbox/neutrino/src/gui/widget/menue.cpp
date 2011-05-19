@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.191 2011/04/26 19:45:23 dbt Exp $
+	$Id: menue.cpp,v 1.192 2011/05/19 19:54:35 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -388,9 +388,11 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 				}
 
 				case CRCInput::RC_right:
+				{
 					CMenuItem* sel_item = items[selected];
 					if(sel_item == GenericMenuBack || sel_item == GenericMenuCancel)
 						break;
+				}
 				case CRCInput::RC_ok:
 					//exec this item...
 					if (hasItem())

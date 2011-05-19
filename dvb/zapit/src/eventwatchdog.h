@@ -62,12 +62,16 @@ class CAspectRatioNotifier : public CEventWatchdogNotifier
 {
 	public:
 		virtual void aspectRatioChanged( int newAspectRatio ) = 0;
+	protected:
+		virtual ~CAspectRatioNotifier(){};
 };
 
 class CVCRModeNotifier : public CEventWatchdogNotifier
 {
 	public:
 		virtual void VCRModeChanged( int newVCRMode ) = 0;
+	protected:
+		virtual ~CVCRModeNotifier(){};
 };
 
 class CEventWatchDog

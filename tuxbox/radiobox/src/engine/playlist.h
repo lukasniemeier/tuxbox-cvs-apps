@@ -139,8 +139,8 @@ public:
 	std::string		GetLocation( size_t _idx );
 	std::string		GetCurrentLocation() { return GetLocation( GetCurrent() ); }
 	int 			GetPositionPercents();
-	CBaseDec::State	CPlayList::GetState();
-	bool			CPlayList::IsStopped() { return state == STATE_STOP; };
+	CBaseDec::State		GetState();
+	bool			IsStopped() { return state == STATE_STOP; };
 	std::string		GetTimePlayed();
 
 

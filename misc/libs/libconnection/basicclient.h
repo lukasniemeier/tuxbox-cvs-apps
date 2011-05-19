@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/misc/libs/libconnection/basicclient.h,v 1.8 2009/02/24 19:09:06 seife Exp $
+ * $Header: /cvs/tuxbox/apps/misc/libs/libconnection/basicclient.h,v 1.9 2011/05/19 19:54:35 rhabarber1848 Exp $
  *
  * Basic Client Class - The Tuxbox Project
  *
@@ -46,6 +46,8 @@ class CBasicClient
 	void close_connection();
 	
 	CBasicClient();
+
+	virtual ~CBasicClient(){};
 };
 
 #endif

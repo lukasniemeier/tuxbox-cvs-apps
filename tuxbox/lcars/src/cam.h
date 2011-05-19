@@ -6,6 +6,9 @@
  ***************************************************************************/
 /*
 $Log: cam.h,v $
+Revision 1.7  2011/05/19 19:54:35  rhabarber1848
+First set of compile fixes for gcc 4.1.2 (zapit, neutrino, lcars, radiobox, ...): http://www.dbox2-tuning.net/forum/viewtopic.php?p=379472#p379472
+
 Revision 1.6  2002/11/16 02:34:55  obi
 use only one ca file descriptor
 
@@ -52,7 +55,7 @@ public:
 	void setEMM(unsigned short PID) { EMM = PID; }
 	void setPMTentry(pmt_data pmt) { pmt_entry = pmt; }
 
-	void cam::cam_answer();
+	void cam_answer();
 
 	bool isfree();
 

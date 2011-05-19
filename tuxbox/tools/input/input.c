@@ -1,5 +1,5 @@
 /*
- * $Id: input.c,v 1.1 2009/12/31 14:52:03 rhabarber1848 Exp $
+ * $Id: input.c,v 1.2 2011/05/19 19:54:36 rhabarber1848 Exp $
  *
  * input - d-box2 linux project
  *
@@ -49,7 +49,7 @@ unsigned char FONT[]= "/share/fonts/pakenham.ttf";
 unsigned char *lfb = 0, *lbb = 0, *obb = 0;
 unsigned char nstr[512]="";
 unsigned char *trstr;
-unsigned rc,sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={'ä','ö','ü','Ä','Ö','Ü','ß','°'};
+static unsigned rc,sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={'ä','ö','ü','Ä','Ö','Ü','ß','°'};
 int radius;
 
 static void quit_signal(int sig)
