@@ -17,6 +17,10 @@
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
 
+#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
+#define FT_NEW_CACHE_API
+#endif
+
 extern "C"
 {
     #include <mpeg2.h>
@@ -215,7 +219,7 @@ struct fb_cmap colormap = {0, 6, rd2, gn2, bl2, tr2};
 FT_Library	library = 0;
 FTC_Manager	manager = 0;
 FTC_SBitCache	cache;
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
+#if FT_NEW_CACHE_API
 FTC_Image_Desc	desc;
 #else
 FTC_ImageTypeRec desc;
@@ -896,7 +900,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 	    return FAILURE;
 	}
 
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
+#if FT_NEW_CACHE_API
 	if(FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))
 #else
 	if(FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))
@@ -2239,7 +2243,7 @@ void plugin_exec(PluginParam *Parameter)
 	}
 
 	desc.font.face_id = (char*)FONT;
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
+#if FT_NEW_CACHE_API
 	desc.image_type = ftc_image_mono;
 #else
 	desc.flags = FT_LOAD_MONOCHROME;

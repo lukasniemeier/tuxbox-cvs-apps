@@ -1,5 +1,5 @@
 /*
- * $Id: logoset.c,v 1.3 2010/03/13 09:52:03 rhabarber1848 Exp $
+ * $Id: logoset.c,v 1.4 2011/05/22 15:14:18 rhabarber1848 Exp $
  *
  * logomask - d-box2 linux project
  *
@@ -198,11 +198,12 @@ int main (int argc, char **argv)
 
 		use_kerning = FT_HAS_KERNING(face);
 
+#if FT_NEW_CACHE_API
 		desc.font.face_id = FONT;
-#if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
-		desc.image_type = ftc_image_mono;
-#else
 		desc.flags = FT_LOAD_MONOCHROME;
+#else
+		desc.font.face_id = FONT;
+		desc.image_type = ftc_image_mono;
 #endif
 
 

@@ -165,10 +165,10 @@ fbClass::fbClass()
 #else
 	desc.font.face_id = (char*)FONT;
 #endif
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-	desc.type = ftc_image_mono;
-#else
+#if FT_NEW_CACHE_API
 	desc.flags = FT_LOAD_MONOCHROME;
+#else
+	desc.type = ftc_image_mono;
 #endif
 #endif//USEFREETYPEFB
 

@@ -22,16 +22,12 @@ Pixel* ico_keybd_shifted = NULL;
 static	FT_Library		library = NULL;
 static	FTC_Manager		manager = NULL;
 static	FTC_SBitCache		cache;
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-static	FTC_Image_Desc		desc;
-#else
+#if FT_NEW_CACHE_API
 static	FTC_ImageTypeRec	desc;
+#else
+static	FTC_Image_Desc		desc;
 #endif
 static	FT_Face			face;
-
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#  define FT_NEW_CACHE_API
-#endif
 
 extern int sx,ex;
 void
@@ -242,11 +238,11 @@ int RenderChar(Pixel *dest,FT_ULong currentchar, int sx, int sy, int ex, int col
 		return 0;
 	}
 
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-	if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#else
+#if FT_NEW_CACHE_API
 	FTC_Node anode;
 	if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode)))
+#else
+	if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
 #endif
 	{
 		printf("<FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
@@ -1287,14 +1283,10 @@ selectServer(char* szServerNr, int rc_fd)
 	else
 #ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
+	desc.flags = FT_LOAD_MONOCHROME;
 #else
 		desc.font.face_id = FONT;
-#endif
-
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 	desc.image_type = ftc_image_mono;
-#else
-	desc.flags = FT_LOAD_MONOCHROME;
 #endif
     char szServers[MAXSERVERS][256];
     char szServerNrs[MAXSERVERS][10];

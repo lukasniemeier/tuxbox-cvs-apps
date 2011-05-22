@@ -1,5 +1,5 @@
 /*
- * $Id: text.c,v 1.3 2010/09/27 19:40:10 rhabarber1848 Exp $
+ * $Id: text.c,v 1.4 2011/05/22 15:14:18 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -123,11 +123,11 @@ int RenderChar(FT_ULong currentchar, int _sx, int _sy, int _ex, int color)
 			return 0;
 		}
 
-#if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
-		if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#else
+#if FT_NEW_CACHE_API
 		FTC_Node anode;
 		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode)))
+#else
+		if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
 #endif
 		{
 			printf("<FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);

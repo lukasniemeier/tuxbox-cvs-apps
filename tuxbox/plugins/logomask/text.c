@@ -1,5 +1,5 @@
 /*
- * $Id: text.c,v 1.1 2010/03/03 20:28:45 rhabarber1848 Exp $
+ * $Id: text.c,v 1.2 2011/05/22 15:14:18 rhabarber1848 Exp $
  *
  * logomask - d-box2 linux project
  *
@@ -140,10 +140,17 @@ void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int si
 
 		switch (size)
 		{
+#if FT_NEW_CACHE_API
+			case SMALL: desc.width = desc.height = FSIZE_SMALL; break;
+			case MED:   desc.width = desc.height = FSIZE_MED; break;
+			case BIG:   desc.width = desc.height = FSIZE_BIG; break;
+			default :   desc.width = desc.height = size; break;
+#else
 			case SMALL: desc.font.pix_width = desc.font.pix_height = FSIZE_SMALL; break;
 			case MED:   desc.font.pix_width = desc.font.pix_height = FSIZE_MED; break;
 			case BIG:   desc.font.pix_width = desc.font.pix_height = FSIZE_BIG; break;
 			default :   desc.font.pix_width = desc.font.pix_height = size; break;
+#endif
 		}
 		
 	//set alignment

@@ -1,5 +1,5 @@
 /*
- * $Id: ssaver.c,v 1.1 2009/12/30 22:33:29 rhabarber1848 Exp $
+ * $Id: ssaver.c,v 1.2 2011/05/22 15:14:18 rhabarber1848 Exp $
  *
  * ssaver - d-box2 linux project
  *
@@ -350,15 +350,11 @@ int main (int argc, char **argv)
 
 #ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
+		desc.flags = FT_LOAD_MONOCHROME;
 #else
 		desc.font.face_id = FONT;
-#endif
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 		desc.image_type = ftc_image_mono;
-#else
-		desc.flags = FT_LOAD_MONOCHROME;
 #endif
-
 		if(!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
 		{
 			printf("Clock <allocating of Backbuffer failed>\n");

@@ -371,11 +371,12 @@ int OpenFB(void)
       return 8;
    }
    use_kerning = FT_HAS_KERNING(face);
-   desc.font.face_id = FONT;
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-   desc.type = ftc_image_mono;
-#else
+#if FT_NEW_CACHE_API
+   desc.face_id = FONT;
    desc.flags = FT_LOAD_MONOCHROME;
+#else
+   desc.font.face_id = FONT;
+   desc.type = ftc_image_mono;
 #endif
    if ((fb_color_set==-1)||(char_color=-1)||(char_bgcolor=-1)) {
       // search for black and white in FB colortab (same function FindColor() in tuxcal)
@@ -536,7 +537,11 @@ int ShowClock(unsigned char *string)
    int counter;
 
    // set size
+#if FT_NEW_CACHE_API
+   desc.width = desc.height = char_size;
+#else
    desc.font.pix_width = desc.font.pix_height = char_size;
+#endif
 
    prev_glyphindex = 0;                                          // reset kerning
    // paint background
@@ -660,7 +665,7 @@ void *InterfaceThread(void *arg)
  ******************************************************************************/
 int main(int argc, char **argv)
 {
-   char cvs_revision[] = "$Revision: 1.1 $";
+   char cvs_revision[] = "$Revision: 1.2 $";
    int nodelay = 0;
    pthread_t thread_id;
    void *thread_result = 0;

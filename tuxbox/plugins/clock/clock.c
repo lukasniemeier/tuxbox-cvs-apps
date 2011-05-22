@@ -1,5 +1,5 @@
 /*
- * $Id: clock.c,v 1.3 2010/02/21 10:24:13 rhabarber1848 Exp $
+ * $Id: clock.c,v 1.4 2011/05/22 15:14:18 rhabarber1848 Exp $
  *
  * Clock / SSaver - d-box2 linux project
  *
@@ -392,15 +392,11 @@ int main (int argc, char **argv)
 
 #ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
+		desc.flags = FT_LOAD_MONOCHROME;
 #else
 		desc.font.face_id = FONT;
-#endif
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 		desc.image_type = ftc_image_mono;
-#else
-		desc.flags = FT_LOAD_MONOCHROME;
 #endif
-
 		//init backbuffer
 
 		if(!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
