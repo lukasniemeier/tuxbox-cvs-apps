@@ -2629,7 +2629,7 @@ void SaveDatabase(void)
 */
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.12 $";
+	char cvs_revision[] = "$Revision: 1.13 $";
 	FILE *fd_run;
 	FT_Error error;
 
@@ -2748,11 +2748,16 @@ void plugin_exec(PluginParam *par)
 
 #ifdef FT_NEW_CACHE_API
 	desc.face_id = FONT;
-	desc.flags = FT_LOAD_MONOCHROME;
 #else
 	desc.font.face_id = FONT;
-	desc.type = ftc_image_mono;
 #endif
+
+#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
+		desc.type = ftc_image_mono;
+#else
+		desc.flags = FT_LOAD_MONOCHROME;
+#endif
+
 	// init backbuffer
 	if (!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
 	{

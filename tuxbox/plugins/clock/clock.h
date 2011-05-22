@@ -1,5 +1,5 @@
 /*
- * $Id: clock.h,v 1.5 2011/05/22 15:14:18 rhabarber1848 Exp $
+ * $Id: clock.h,v 1.6 2011/05/22 19:34:04 rhabarber1848 Exp $
  *
  * clock - d-box2 linux project
  *
@@ -42,7 +42,8 @@
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
 
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
+/* tested with freetype 2.3.9, and 2.1.4 */
+#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
 #define FT_NEW_CACHE_API
 #endif
 
@@ -116,7 +117,7 @@ FT_Library		library;
 FTC_Manager		manager;
 FTC_SBitCache		cache;
 FTC_SBit		sbit;
-#if FT_NEW_CACHE_API
+#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 FTC_Image_Desc		desc;
 #else
 FTC_ImageTypeRec	desc;

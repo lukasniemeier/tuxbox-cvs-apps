@@ -287,10 +287,10 @@ int OpenFB(int fbdev)
    use_kerning = FT_HAS_KERNING(face);
    desc.font.face_id = FONT;
    // oder ifdef OLDFT
-#if FT_NEW_CACHE_API
-   desc.flags = FT_LOAD_MONOCHROME;
-#else
+#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
    desc.type = ftc_image_mono;
+#else
+   desc.flags = FT_LOAD_MONOCHROME;
 #endif
    return 0;                                                     // all initialized ok
 }
