@@ -1,5 +1,5 @@
 /*
-        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.h,v 1.14 2011/05/22 15:14:17 rhabarber1848 Exp $
+        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.h,v 1.15 2011/05/25 05:25:16 rhabarber1848 Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -39,15 +39,13 @@
 
 #include <asm/types.h>
 
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#endif
+
 
 class LcdFontRenderClass;
 class LcdFont
 {
         CLCDDisplay             *framebuffer;
-#if FT_NEW_CACHE_API
+#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
         FTC_ImageTypeRec        font;
 #else
         FTC_Image_Desc  font;
@@ -85,7 +83,7 @@ class LcdFontRenderClass
 	FTC_SBitCache	sbitsCache;          /* the glyph small bitmaps cache   */
 
 	FTC_FaceID getFaceID(const char *family, const char *style);
-#if FT_NEW_CACHE_API
+#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
 	FT_Error getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit);
 #else
 	FT_Error getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit);

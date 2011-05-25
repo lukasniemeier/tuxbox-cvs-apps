@@ -25,7 +25,8 @@
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
 #define FONT "/share/fonts/pakenham.ttf"
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
+/* tested with freetype 2.3.9, and 2.1.4 */
+#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
 #define FT_NEW_CACHE_API
 #endif
 #endif
@@ -38,12 +39,12 @@ class fbClass
 	FTC_Manager		manager;
 	FTC_SBitCache		cache;
 	FTC_SBit		sbit;
-#if FT_NEW_CACHE_API
-	FTC_ImageTypeRec	desc;
-#else
+#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 	FTC_ImageDesc		desc;
-	FT_Face			face;
+#else
+	FTC_ImageTypeRec	desc;
 #endif
+	FT_Face			face;
 	FT_UInt			prev_glyphindex;
 	int use_kerning;
 	int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int r, int g, int b);

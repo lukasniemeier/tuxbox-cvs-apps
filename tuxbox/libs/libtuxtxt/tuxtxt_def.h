@@ -274,7 +274,7 @@ typedef struct
 	tstPageAttr page_atrb[40 * 25];
 } subtitle_cache;
 
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
+#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
 #define FONTTYPE FTC_ImageTypeRec
 #else
 #define FONTTYPE FTC_Image_Desc

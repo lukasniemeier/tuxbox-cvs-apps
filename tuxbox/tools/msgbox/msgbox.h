@@ -1,5 +1,5 @@
 /*
- * $Id: msgbox.h,v 1.4 2011/05/22 15:14:21 rhabarber1848 Exp $
+ * $Id: msgbox.h,v 1.5 2011/05/25 05:25:18 rhabarber1848 Exp $
  *
  * msgbox - d-box2 linux project
  *
@@ -44,10 +44,10 @@
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
 
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
+/* tested with freetype 2.3.9, and 2.1.4 */
+#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
 #define FT_NEW_CACHE_API
 #endif
-
 
 #include "color.h"
 //freetype stuff
@@ -66,10 +66,10 @@ FT_Library		library;
 FTC_Manager		manager;
 FTC_SBitCache		cache;
 FTC_SBit		sbit;
-#if FT_NEW_CACHE_API
-FTC_ImageTypeRec	desc;
-#else
+#if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
 FTC_Image_Desc		desc;
+#else
+FTC_ImageTypeRec	desc;
 #endif
 FT_Face			face;
 FT_UInt			prev_glyphindex;
