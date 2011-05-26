@@ -94,7 +94,7 @@ tMenu::tMenu()
 tMenuItemIterator MenuGetItem(tMenu *pMenu, int nIndex)
 {
 	if(nIndex < 0 || nIndex > (pMenu->nItemsCount-1))
-		return NULL;
+		return pMenu->MenuItemsList.end();
 
 	int i=0;
 	tMenuItemIterator pMenuItem;
@@ -105,7 +105,7 @@ tMenuItemIterator MenuGetItem(tMenu *pMenu, int nIndex)
 		i++;
 	}
 
-	return NULL;
+	return pMenu->MenuItemsList.end();
 }
 
 // ----------------------------------------------------------------------------
