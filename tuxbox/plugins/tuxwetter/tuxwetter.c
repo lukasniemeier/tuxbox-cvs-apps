@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.c,v 1.5 2011/05/25 05:25:17 rhabarber1848 Exp $
+ * $Id: tuxwetter.c,v 1.6 2011/05/26 18:00:30 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -1178,7 +1178,7 @@ void clear_screen(void)
 
 void show_data(int index)
 {
-char vstr[512],v2str[512],rstr[512],tstr[512],icon[50],*pt1;
+char vstr[512],v2str[512],rstr[512],tstr[512],icon[60],*pt1;
 int col1=60,col2=300,sy=70,dy=26, itmp, tret=0;
 int gxs=30,gxw=560,gys=70,gyw=250,gicw=112,vxs=0;
 int prelate=0;
@@ -1500,7 +1500,7 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				for(i=0; i<5; i++)
 				{
 					prs_get_val(i,PRE_ICON,prelate,vstr);
-					sprintf  (icon,"http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
+					snprintf(icon, sizeof(icon), "http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
 					if (HTTP_downloadFile(icon, ICON_FILE, 0, intype, ctmo, 2) == 0) 
 					{
 						tret=gif_on_data(icon, 72+i*gicw, 430, gicw, gicw, 5, (i)?((i==4)?1:0):2, 0, 0);
@@ -1523,7 +1523,7 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				if(show_icons)
 				{
 					xremove(ICON_FILE);
-					sprintf  (icon,"http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
+					snprintf(icon, sizeof(icon), "http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
 					if (HTTP_downloadFile(icon, ICON_FILE, 0, intype, ctmo, 2) != 0) 
 					{
 						printf("Tuxwetter <unable to get icon>\n");
@@ -1711,7 +1711,7 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				if(show_icons)
 				{
 					xremove(ICON_FILE);
-					sprintf  (icon,"http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
+					snprintf(icon, sizeof(icon), "http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
 					if (HTTP_downloadFile(icon, ICON_FILE,0,intype,ctmo,2) != 0) 
 					{
 						printf("Tuxwetter <unable to get icon file \n");
