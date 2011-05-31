@@ -4,7 +4,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: listframe.cpp,v 1.7 2011/01/04 15:59:19 dbt Exp $
+	$Id: listframe.cpp,v 1.8 2011/05/31 08:40:36 dbt Exp $
 
 	Kommentar:
 
@@ -727,9 +727,7 @@ void CListFrame::scrollLineDown(const int lines)
 			refreshLine(m_nSelectedLine);
 		}
 	} else {
-		m_nCurrentPage = 0;
-		m_nCurrentLine = m_nSelectedLine = 0;
-		refreshList();
+		setSelectedLine(0);
 	}
 }
 
@@ -758,10 +756,7 @@ void CListFrame::scrollLineUp(const int lines)
 			refreshLine(m_nSelectedLine+lines);
 			refreshLine(m_nSelectedLine);
 		}
-	} else if(m_nSelectedLine == 0) {
-		//m_nCurrentPage = m_nNrOfPages - 1;
-		//m_nCurrentLine = m_nSelectedLine = m_nNrOfLines - 1;
-		//refresh();
+	} else {
 		setSelectedLine(m_nNrOfLines - 1);
 	}
 }
