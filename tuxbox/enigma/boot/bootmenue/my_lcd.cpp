@@ -80,13 +80,10 @@ CLCDDisplay::CLCDDisplay()
 
 #ifdef FT_NEW_CACHE_API
 	desc.face_id = (char*)FONT;
+	desc.flags = FT_LOAD_MONOCHROME;
 #else
 	desc.font.face_id = (char*)FONT;
-#endif
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 	desc.type = ftc_image_mono;
-#else
-	desc.flags = FT_LOAD_MONOCHROME;
 #endif
 #endif//USEFREETYPEFB
 
@@ -394,7 +391,6 @@ int CLCDDisplay::RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int st
 	FT_Error error;
 	FT_UInt glyphindex;
 	FT_Vector kerning;
-	FTC_Node anode;
 
 	//load char
 	if(!(glyphindex = FT_Get_Char_Index(face, currentchar)))
@@ -402,7 +398,11 @@ int CLCDDisplay::RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int st
 		printf("TuxMail <FT_Get_Char_Index for Char \"%c\" failed: \"undefined character code\">\n", (int)currentchar);return 0;
 	}
 
-	if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode)))
+#ifdef FT_NEW_CACHE_API
+	if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
+#else
+	if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
+#endif
 	{
 		printf("TuxMail <FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);return 0;
 	}

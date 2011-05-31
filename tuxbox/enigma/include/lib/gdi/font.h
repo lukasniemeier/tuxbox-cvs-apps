@@ -8,8 +8,7 @@
 #include FT_CACHE_SMALL_BITMAPS_H
 #include <vector>
 
-/* tested with freetype 2.3.9, and 2.1.4 */
-#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
+#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
 #define FT_NEW_CACHE_API
 #endif
 

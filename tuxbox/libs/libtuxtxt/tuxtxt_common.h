@@ -4022,7 +4022,7 @@ void tuxtxt_setfontwidth(tstRenderInfo* renderinfo,int newwidth)
 		int i;
 		renderinfo->fontwidth = newwidth;
 		if (renderinfo->usettf)
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 			renderinfo->typettf.width  = (FT_UShort) renderinfo->fontwidth * renderinfo->TTFWidthFactor16 / 16;
 #else
 			renderinfo->typettf.font.pix_width  = (FT_UShort) renderinfo->fontwidth * renderinfo->TTFWidthFactor16 / 16;
@@ -4035,7 +4035,7 @@ void tuxtxt_setfontwidth(tstRenderInfo* renderinfo,int newwidth)
 				newwidth = 22;
 			else
 				newwidth = 23;
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 			renderinfo->typettf.width  = renderinfo->typettf.height = (FT_UShort) newwidth;
 #else
 			renderinfo->typettf.font.pix_width  = renderinfo->typettf.font.pix_height = (FT_UShort) newwidth;
@@ -4127,7 +4127,7 @@ void tuxtxt_RenderCharIntern(tstRenderInfo* renderinfo,int Char, tstPageAttr *At
 		return;
 	}
 
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 	if ((error = FTC_SBitCache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &renderinfo->sbit, NULL)) != 0)
 #else
 	if ((error = FTC_SBit_Cache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &renderinfo->sbit)) != 0)
@@ -4162,7 +4162,7 @@ void tuxtxt_RenderCharIntern(tstRenderInfo* renderinfo,int Char, tstPageAttr *At
 			Char = G2table[0][0x20+ Attribute->diacrit];
 		if ((glyph = FT_Get_Char_Index(renderinfo->face, Char)))
 		{
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 			if ((error = FTC_SBitCache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &sbit_diacrit, NULL)) == 0)
 #else
 			if ((error = FTC_SBit_Cache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &sbit_diacrit)) == 0)
@@ -5322,15 +5322,11 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 		return 0;
 	}
 
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
 	if ((error = FTC_SBitCache_New(renderinfo->manager, &renderinfo->cache)))
-#else
-	if ((error = FTC_SBit_Cache_New(renderinfo->manager, &renderinfo->cache)))
-#endif
 	{
 		FTC_Manager_Done(renderinfo->manager);
 		FT_Done_FreeType(renderinfo->library);
-		printf("TuxTxt <FTC_SBit_Cache_New: 0x%.2X>\n", error);
+		printf("TuxTxt <FTC_SBitCache_New: 0x%.2X>\n", error);
 		return 0;
 	}
 
@@ -5356,7 +5352,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 
 	if (renderinfo->usettf)
 	{
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 		renderinfo->typettf.face_id = (FTC_FaceID) TUXTXTTTFVAR;
 		renderinfo->typettf.height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
 #else
@@ -5366,7 +5362,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 	}
 	else
 	{
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 		renderinfo->typettf.face_id = (FTC_FaceID) TUXTXTOTBVAR;
 		renderinfo->typettf.width  = (FT_UShort) 23;
 		renderinfo->typettf.height = (FT_UShort) 23;
@@ -5377,7 +5373,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 #endif
 	}
 
-#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
+#ifdef FT_NEW_CACHE_API
 	renderinfo->typettf.flags = FT_LOAD_MONOCHROME;
 	if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
 	{

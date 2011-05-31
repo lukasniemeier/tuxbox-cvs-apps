@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.c,v 1.6 2011/05/26 18:00:30 rhabarber1848 Exp $
+ * $Id: tuxwetter.c,v 1.7 2011/05/31 17:19:33 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -2711,14 +2711,10 @@ PLISTENTRY pl=&epl;
 
 #ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
+		desc.flags = FT_LOAD_MONOCHROME;
 #else
 		desc.font.face_id = FONT;
-#endif
-
-#if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
 		desc.image_type = ftc_image_mono;
-#else
-		desc.flags = FT_LOAD_MONOCHROME;
 #endif
 	//init backbuffer
 

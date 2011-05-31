@@ -1,5 +1,5 @@
 /*
-        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.cpp,v 1.20 2011/05/25 05:25:16 rhabarber1848 Exp $        
+        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.cpp,v 1.21 2011/05/31 17:19:30 rhabarber1848 Exp $        
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -26,19 +26,10 @@
 */
 
 #include <config.h>
-
-#include "fontrenderer.h"
-
 #include <stdio.h>
 #include <string.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
-/* tested with freetype 2.3.9, and 2.1.4 */
-#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
-#define FT_NEW_CACHE_API
-#endif
+#include "fontrenderer.h"
 
 FT_Error LcdFontRenderClass::myFTC_Face_Requester(FTC_FaceID  face_id,
                             FT_Library  library,
@@ -139,13 +130,11 @@ std::string LcdFontRenderClass::getFamily(const char *const filename) const
 }
 
 #ifdef FT_NEW_CACHE_API
-FT_Error LcdFontRenderClass::getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit)
-{
+FT_Error LcdFontRenderClass::getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit) {
 	return FTC_SBitCache_Lookup(sbitsCache, font, glyph_index, sbit, NULL);
 }
 #else
-FT_Error LcdFontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit)
-{
+FT_Error LcdFontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit) {
 	return FTC_SBit_Cache_Lookup(sbitsCache, font, glyph_index, sbit);
 }
 #endif
@@ -198,7 +187,7 @@ LcdFont::LcdFont(CLCDDisplay * fb, LcdFontRenderClass *render, FTC_FaceID faceid
 	font.face_id=faceid;
 	font.width  = isize;
 	font.height = isize;
-	font.flags  = FT_LOAD_FORCE_AUTOHINT | FT_LOAD_MONOCHROME;
+	font.flags  = FT_LOAD_TARGET_MONO;
 #else
 	font.font.face_id=faceid;
 	font.font.pix_width  = isize;

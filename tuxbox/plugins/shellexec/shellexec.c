@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.c,v 1.8 2011/05/25 05:25:16 rhabarber1848 Exp $
+ * $Id: shellexec.c,v 1.9 2011/05/31 17:19:31 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -1768,16 +1768,11 @@ unsigned int alpha;
 		use_kerning = FT_HAS_KERNING(face);
 #ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
+		desc.flags = FT_LOAD_MONOCHROME;
 #else
 		desc.font.face_id = FONT;
-#endif
-
-#if FREETYPE_MAJOR == 2 && FREETYPE_MINOR == 0
 		desc.image_type = ftc_image_mono;
-#else
-		desc.flags = FT_LOAD_MONOCHROME;
 #endif
-
 	//init backbuffer
 
 		if(!(lbb = malloc(720*576)))

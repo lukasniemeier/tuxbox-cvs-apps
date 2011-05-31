@@ -116,16 +116,16 @@ FTC_FaceID fontRenderClass::getFaceID(const eString &face)
 }
 
 #ifdef FT_NEW_CACHE_API
-FT_Error fontRenderClass::getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit)
-{
+FT_Error fontRenderClass::getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit) {
 	FT_Error res=FTC_SBitCache_Lookup(sbitsCache, font, glyph_index, sbit, NULL);
-#else
-FT_Error fontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit)
-{
-	FT_Error res=FTC_SBit_Cache_Lookup(sbitsCache, font, glyph_index, sbit);
-#endif
 	return res;
 }
+#else
+FT_Error fontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit) {
+	FT_Error res=FTC_SBit_Cache_Lookup(sbitsCache, font, glyph_index, sbit);
+	return res;
+}
+#endif
 
 eString fontRenderClass::AddFont(const eString &filename, const eString &name, int scale)
 {

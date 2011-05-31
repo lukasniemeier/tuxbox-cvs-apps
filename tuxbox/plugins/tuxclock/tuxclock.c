@@ -287,10 +287,10 @@ int OpenFB(int fbdev)
    use_kerning = FT_HAS_KERNING(face);
    desc.font.face_id = FONT;
    // oder ifdef OLDFT
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-   desc.type = ftc_image_mono;
-#else
+#ifdef FT_NEW_CACHE_API
    desc.flags = FT_LOAD_MONOCHROME;
+#else
+   desc.type = ftc_image_mono;
 #endif
    return 0;                                                     // all initialized ok
 }
@@ -462,13 +462,16 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
    FT_Error error;
    FT_UInt glyphindex;
    FT_Vector kerning;
-   FTC_Node anode;
 
    if (!(glyphindex = FT_Get_Char_Index(face, currentchar))) {
       errorlog(12);
       return 0;
    }
-   if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode))) {
+#ifdef FT_NEW_CACHE_API
+   if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))) {
+#else
+   if ((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))) {
+#endif
       errorlog(13);
       return 0;
    }

@@ -777,7 +777,6 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 	FT_Error error;
 	FT_UInt glyphindex;
 	FT_Vector kerning;
-	FTC_Node anode;
 
 	//load char
 
@@ -788,7 +787,11 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 			return 0;
 		}
 
-		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode)))
+#ifdef FT_NEW_CACHE_API
+		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
+#else
+		if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
+#endif
 		{
 			printf("TuxMail <FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
 
@@ -3598,7 +3601,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.53 $";
+	char cvs_revision[] = "$Revision: 1.54 $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;
@@ -3750,13 +3753,10 @@ void plugin_exec(PluginParam *par)
 
 #ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
+		desc.flags = FT_LOAD_MONOCHROME;
 #else
 		desc.font.face_id = FONT;
-#endif
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-		desc.type = ftc_image_mono;
-#else
-		desc.flags = FT_LOAD_MONOCHROME;
+		desc.image_type = ftc_image_mono;
 #endif
 	// init backbuffer
 

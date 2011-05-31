@@ -1,5 +1,5 @@
 /*
- * $Id: text.c,v 1.1 2009/12/30 22:33:29 rhabarber1848 Exp $
+ * $Id: text.c,v 1.2 2011/05/31 17:19:30 rhabarber1848 Exp $
  *
  * clock - d-box2 linux project
  *
@@ -47,7 +47,6 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 	int row, pitch, bit, x = 0, y = 0;
 	FT_UInt glyphindex;
 	FT_Vector kerning;
-	FTC_Node anode;
 
 	//load char
 
@@ -57,7 +56,11 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 			return 0;
 		}
 
-		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode)))
+#ifdef FT_NEW_CACHE_API
+		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
+#else
+		if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
+#endif
 		{
 //			printf("<FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
 			return 0;

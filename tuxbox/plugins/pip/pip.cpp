@@ -16,10 +16,10 @@
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
 
-/* tested with freetype 2.3.9, and 2.1.4 */
-#if FREETYPE_MAJOR >= 2 && FREETYPE_MINOR >= 3
+#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
 #define FT_NEW_CACHE_API
 #endif
+
 
 extern "C"
 {
@@ -303,7 +303,7 @@ struct fb_cmap colormap = {0, 6, rd2, gn2, bl2, tr2};
 FT_Library	library = 0;
 FTC_Manager	manager = 0;
 FTC_SBitCache	cache;
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
+#ifdef FT_NEW_CACHE_API
 FTC_Image_Desc	desc;
 #else
 FTC_ImageTypeRec desc;
@@ -1158,10 +1158,10 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 	    return FAILURE;
 	}
 
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-	if(FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))
-#else
+#ifdef FT_NEW_CACHE_API
 	if(FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))
+#else
+	if(FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))
 #endif
 	{
 	    return FAILURE;
@@ -2867,13 +2867,10 @@ void plugin_exec(PluginParam *Parameter)
 
 #ifdef FT_NEW_CACHE_API
 	desc.face_id = (char*)FONT;
+	desc.flags = FT_LOAD_MONOCHROME;
 #else
 	desc.font.face_id = (char*)FONT;
-#endif
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
 	desc.image_type = ftc_image_mono;
-#else
-	desc.flags = FT_LOAD_MONOCHROME;
 #endif
 
 	use_kerning = FALSE;//FT_HAS_KERNING(face);

@@ -372,10 +372,10 @@ int OpenFB(void)
    }
    use_kerning = FT_HAS_KERNING(face);
    desc.font.face_id = FONT;
-#if FREETYPE_MAJOR  == 2 && FREETYPE_MINOR == 0
-   desc.type = ftc_image_mono;
-#else
+#ifdef FT_NEW_CACHE_API
    desc.flags = FT_LOAD_MONOCHROME;
+#else
+   desc.type = ftc_image_mono;
 #endif
    if ((fb_color_set==-1)||(char_color=-1)||(char_bgcolor=-1)) {
       // search for black and white in FB colortab (same function FindColor() in tuxcal)
@@ -488,14 +488,17 @@ int RenderChar(FT_ULong currentchar, int cx, int color)
    FT_Error  error;
    FT_UInt   glyphindex;
    FT_Vector kerning;
-   FTC_Node  anode;
 
    //load char
    if (!(glyphindex = FT_Get_Char_Index(face, currentchar))) {
       errorlog(24);
       return -2;
    }
-   if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, &anode))) {
+#ifdef FT_NEW_CACHE_API
+   if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))) {
+#else
+   if ((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))) {
+#endif
       errorlog(25);
       return -2;
    }
@@ -660,7 +663,7 @@ void *InterfaceThread(void *arg)
  ******************************************************************************/
 int main(int argc, char **argv)
 {
-   char cvs_revision[] = "$Revision: 1.3 $";
+   char cvs_revision[] = "$Revision: 1.4 $";
    int nodelay = 0;
    pthread_t thread_id;
    void *thread_result = 0;
