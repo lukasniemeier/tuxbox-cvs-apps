@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.192 2011/05/19 19:54:35 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.193 2011/06/14 10:28:36 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -273,6 +273,8 @@ int CMenuWidget::getItemId(CMenuItem* menuItem)
 		if (items[i] == menuItem)
 			return i;
 	}
+	
+	return 0;
 }
 
 CMenuItem* CMenuWidget::getItem(const uint& item_id)
