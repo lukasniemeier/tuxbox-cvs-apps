@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/daemons/sectionsd/dmx.cpp,v 1.52 2009/10/22 20:48:22 seife Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/daemons/sectionsd/dmx.cpp,v 1.53 2011/06/14 10:28:31 dbt Exp $
  *
  * DMX class (sectionsd) - d-box2 linux project
  *
@@ -366,13 +366,14 @@ int DMX::getSection(char *buf, const unsigned timeoutInMSeconds, int &timeouts)
 				return rc;
 			}
 
+			// the current section
+			sections_id_t s_id = create_sections_id(initial_header->table_id,
+								eh_tbl_extension_id,
+								extended_header->section_number,
+								current_onid,
+								current_tsid);
 			//find current section in list
-			MyDMXOrderUniqueKey::iterator di = myDMXOrderUniqueKey.find(create_sections_id(
-							initial_header->table_id,
-							eh_tbl_extension_id,
-							extended_header->section_number,
-							current_onid,
-							current_tsid));
+			MyDMXOrderUniqueKey::iterator di = myDMXOrderUniqueKey.find(s_id);
 			if (di != myDMXOrderUniqueKey.end())
 			{
 				//the current section was read before
@@ -386,22 +387,12 @@ int DMX::getSection(char *buf, const unsigned timeoutInMSeconds, int &timeouts)
 					//the version number is still up2date
 					if (first_skipped == 0) {
 						//the last section was new - this is the 1st dup
-						first_skipped = create_sections_id(
-								initial_header->table_id,
-								eh_tbl_extension_id,
-								extended_header->section_number,
-								current_onid,
-								current_tsid);
+						first_skipped = s_id;
 					}
 					else {
 						//this is not the 1st new - check if it's the last
 						//or to be more precise only dups occured since
-						if (first_skipped == create_sections_id(
-								initial_header->table_id,
-								eh_tbl_extension_id,
-								extended_header->section_number,
-								current_onid,
-								current_tsid))
+						if (first_skipped == s_id)
 							timeouts = -1;
 					}
 					//since version is still up2date, check if table complete
@@ -435,13 +426,7 @@ int DMX::getSection(char *buf, const unsigned timeoutInMSeconds, int &timeouts)
 								extended_header->section_number);
 #endif
 				//section was not read before - insert in list
-				myDMXOrderUniqueKey.insert(std::make_pair(create_sections_id(
-								initial_header->table_id,
-								eh_tbl_extension_id,
-								extended_header->section_number,
-								current_onid,
-								current_tsid),
-								extended_header->version_number));
+				myDMXOrderUniqueKey.insert(std::make_pair(s_id, extended_header->version_number));
 				//check if table is now complete
 				if (check_complete(initial_header->table_id,
 							eh_tbl_extension_id,

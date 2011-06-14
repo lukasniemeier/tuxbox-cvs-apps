@@ -1,7 +1,7 @@
 #ifndef SISECTIONS_HPP
 #define SISECTIONS_HPP
 //
-//    $Id: SIsections.hpp,v 1.28 2009/07/26 17:02:46 rhabarber1848 Exp $
+//    $Id: SIsections.hpp,v 1.29 2011/06/14 10:28:31 dbt Exp $
 //
 //    classes for SI sections (dbox-II-project)
 //
@@ -539,6 +539,7 @@ protected:
 	void parseComponentDescriptor(const char *buf, SIevent &e, unsigned maxlen);
 	void parseParentalRatingDescriptor(const char *buf, SIevent &e, unsigned maxlen);
 	void parseLinkageDescriptor(const char *buf, SIevent &e, unsigned maxlen);
+	void parsePDCDescriptor(const char *buf, SIevent &e, unsigned maxlen);
 #ifdef ENABLE_FREESATEPG
 	std::string freesatHuffmanDecode(std::string input);
 #endif
