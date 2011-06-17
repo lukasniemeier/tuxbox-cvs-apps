@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.321 2011/06/14 10:28:31 dbt Exp $
+//  $Id: sectionsd.cpp,v 1.322 2011/06/17 20:10:24 dbt Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -101,7 +101,6 @@
 //#define MAX_EVENTS 6000
 static unsigned int max_events;
 // sleep 5 minutes
-//#define HOUSEKEEPING_SLEEP (5 * 60)
 #define HOUSEKEEPING_SLEEP (30 * 60)
 // meta housekeeping after XX housekeepings - every 24h -
 #define META_HOUSEKEEPING (24 * 60 * 60) / HOUSEKEEPING_SLEEP
@@ -155,7 +154,7 @@ static unsigned int max_events;
 #define CHECK_RESTART_DMX_AFTER_TIMEOUTS (2000 / EIT_READ_TIMEOUT) // 2 seconds
 
 // Time in seconds we are waiting for an EIT version number
-#define TIME_EIT_VERSION_WAIT		3
+#define TIME_EIT_VERSION_WAIT		35
 // number of timeouts after which we stop waiting for an EIT version number
 #define TIMEOUTS_EIT_VERSION_WAIT	(2 * CHECK_RESTART_DMX_AFTER_TIMEOUTS)
 
@@ -644,17 +643,21 @@ static void addBouquetFilter(t_bouquet_id bid)
 // Loescht ein Event aus allen Mengen
 static bool deleteEvent(const event_id_t uniqueKey)
 {
-	writeLockEvents();
+	readLockEvents();
 	MySIeventsOrderUniqueKey::iterator e = mySIeventsOrderUniqueKey.find(uniqueKey);
 
 	if (e != mySIeventsOrderUniqueKey.end())
 	{
 		if (e->second->times.size())
 		{
+			unlockEvents();
+			writeLockEvents();
 			mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.erase(e->second);
 			mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.erase(e->second);
 		}
 
+		unlockEvents();
+		writeLockEvents();
 		mySIeventsOrderUniqueKey.erase(uniqueKey);
 		mySIeventsNVODorderUniqueKey.erase(uniqueKey);
 
@@ -733,9 +736,6 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 					dprintf("addevent-cn: added running (%d) event 0x%04x '%s'\n",
 						e->runningStatus(), e->eventID, e->getName().c_str());
 				} else {
-					writeLockMessaging();
-					messaging_got_CN |= 0x01;
-					unlockMessaging();
 					dprintf("addevent-cn: not add runn. (%d) event 0x%04x '%s'\n",
 						e->runningStatus(), e->eventID, e->getName().c_str());
 				}
@@ -753,9 +753,6 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 				} else {
 					dprintf("addevent-cn: not added next(%d) event 0x%04x '%s'\n",
 						e->runningStatus(), e->eventID, e->getName().c_str());
-					writeLockMessaging();
-					messaging_got_CN |= 0x02;
-					unlockMessaging();
 				}
 			}
 			unlockEvents();
@@ -766,14 +763,6 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 	readLockEvents();
 	MySIeventsOrderUniqueKey::iterator si = mySIeventsOrderUniqueKey.find(evt.uniqueKey());
 	bool already_exists = (si != mySIeventsOrderUniqueKey.end());
-
-	if (already_exists && (evt.table_id < si->second->table_id))
-	{
-		/* if the new event has a lower (== more recent) table ID, replace the old one */
-		already_exists = false;
-		dprintf("replacing event %016llx:%02x with %04x:%02x '%.40s'\n", si->second->uniqueKey(),
-			si->second->table_id, evt.eventID, evt.table_id, evt.getName().c_str());
-	}
 
 	/* Check size of some descriptors of the new event before comparing
 	   them with the old ones, because the same event can be complete
@@ -962,7 +951,6 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 	unlockEvents();
 }
 
-#ifdef ENABLE_PPT
 // Fuegt zusaetzliche Zeiten in ein Event ein
 static void addEventTimes(const SIevent &evt, const unsigned table_id)
 {
@@ -1002,7 +990,6 @@ static void addEventTimes(const SIevent &evt, const unsigned table_id)
 		}
 	}
 }
-#endif
 
 static void addNVODevent(const SIevent &evt)
 {
@@ -1188,62 +1175,6 @@ static void removeOldEvents(const long seconds)
 	}	
 	unlockEvents();
 	
-	return;
-}
-
-/* Remove duplicate events (same Service, same start and endtime)
- * with different eventID. Use the one from the lower table_id.
- * This routine could be extended to remove overlapping events also,
- * but let's keep that for later
- */
-static void removeDupEvents(void)
-{
-	MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator e1, e2, del;
-	/* list of event IDs to delete */
-	std::vector<event_id_t>to_delete;
-
-	readLockEvents();
-	e1 = mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.begin();
-
-	while ((e1 != mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.end()) && !messaging_zap_detected)
-	{
-		e2 = e1;
-		e1++;
-		if (e1 == mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.end())
-			break;
-
-		/* check for the same service */
-		if ((*e1)->get_channel_id() != (*e2)->get_channel_id())
-			continue;
-		/* check for same time */
-		if (((*e1)->times.begin()->startzeit != (*e2)->times.begin()->startzeit) ||
-		    ((*e1)->times.begin()->dauer     != (*e2)->times.begin()->dauer))
-			continue;
-
-		if ((*e1)->table_id == (*e2)->table_id)
-		{
-			xprintf("%s: not removing events %llx %llx, t:%02x '%s'\n", __func__,
-				(*e1)->uniqueKey(), (*e2)->uniqueKey(), (*e1)->table_id, (*e1)->getName().c_str());
-			continue;
-		}
-
-		if ((*e1)->table_id > (*e2)->table_id)
-			del = e1;
-		if ((*e1)->table_id < (*e2)->table_id)
-			del = e2;
-
-		xprintf("%s: removing event %llx.%02x '%s'\n", __func__,
-			(*del)->uniqueKey(), (*del)->table_id, (*del)->getName().c_str());
-		/* remember the unique ID for later deletion */
-		to_delete.push_back((*del)->uniqueKey());
-	}
-	unlockEvents();
-
-	/* clean up outside of the iterator loop */
-	for (std::vector<event_id_t>::iterator i = to_delete.begin(); i != to_delete.end(); i++)
-		deleteEvent(*i);
-	to_delete.clear(); /* needed? can't hurt... */
-
 	return;
 }
 
@@ -1885,7 +1816,6 @@ static const SIevent& findNextSIeventForServiceUniqueKey(const t_channel_id serv
 	return nullEvt;
 }
 
-#if 0
 static bool ServiceUniqueKeyHasCurrentNext(const t_channel_id serviceUniqueKey)
 {
 	time_t azeit = time(NULL);
@@ -1934,7 +1864,6 @@ static bool ServiceUniqueKeyHasCurrentNext(const t_channel_id serviceUniqueKey)
 
 	return false;
 }
-#endif
 
 /*
 static const SIevent &findActualSIeventForServiceName(const char * const serviceName, SItime& zeit)
@@ -1969,12 +1898,12 @@ static const SIevent &findNextSIevent(const event_id_t uniqueKey, SItime &zeit)
 			}
 		}
 
-		MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator eNext;
+		MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator eNext;
 
 		//if ((nextnvodtimes != eFirst->second->times.begin()) && (nextnvodtimes != eFirst->second->times.end())) {
 			//Startzeit not first - we can't use the ordered list...
-			for ( MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin(); e !=
-				mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end(); ++e ) {
+			for ( MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin(); e !=
+			 	mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end(); ++e ) {
 				if ((*e)->get_channel_id() == eFirst->second->get_channel_id()) {
 					for (SItimes::iterator t = (*e)->times.begin(); t != (*e)->times.end(); ++t) {
 						if (t->startzeit > zeit.startzeit) {
@@ -2642,7 +2571,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.321 2011/06/14 10:28:31 dbt Exp $\n"
+		"$Id: sectionsd.cpp,v 1.322 2011/06/17 20:10:24 dbt Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -3485,10 +3414,8 @@ static void sendEPG(int connfd, const SIevent& e, const SItime& t, int shortepg 
 
  out:
 	if (writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS))
-	{
 		if (responseHeader.dataLength)
 			writeNbytes(connfd, msgData, responseHeader.dataLength, WRITE_TIMEOUT_IN_SECONDS);
-	}
 	else
 		dputs("[sectionsd] Fehler/Timeout bei write");
 
@@ -3640,10 +3567,8 @@ static void commandGetEPGPrevNext(int connfd, char *data, const unsigned dataLen
 
  out:
 	if (writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS))
-	{
 		if (responseHeader.dataLength)
 			writeNbytes(connfd, msgData, responseHeader.dataLength, WRITE_TIMEOUT_IN_SECONDS);
-	}
 	else
 		dputs("[sectionsd] Fehler/Timeout bei write");
 
@@ -3953,10 +3878,8 @@ static void sendShort(int connfd, const SIevent& e, const SItime& t)
 
  out:
 	if(writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS))
-	{
 		if (responseHeader.dataLength)
 			writeNbytes(connfd, msgData, responseHeader.dataLength, WRITE_TIMEOUT_IN_SECONDS);
-	}
 	else
 		dputs("[sectionsd] Fehler/Timeout bei write");
 
@@ -4463,14 +4386,12 @@ static void *insertEventsfromFile(void *)
 	std::string indexname;
 	std::string filename;
 	std::string epgname;
-	int ev_count = 0;
 
 	indexname = epg_dir + "index.xml";
 
 	xmlDocPtr index_parser = parseXmlFile(indexname.c_str());
 
 	if (index_parser != NULL) {
-		time_t now = time(NULL);
 		dprintf("Reading Information from file %s:\n", indexname.c_str());
 
 		eventfile = xmlDocGetRootElement(index_parser)->xmlChildrenNode;
@@ -4583,7 +4504,6 @@ static void *insertEventsfromFile(void *)
 						}
 						//lockEvents();
 						addEvent(e, 0, 0);
-						ev_count++;
 						//unlockEvents();
 
 						event = event->xmlNextNode;
@@ -4597,8 +4517,7 @@ static void *insertEventsfromFile(void *)
 			eventfile = eventfile->xmlNextNode;
 		}
 
-		dprintf("Reading Information finished after %ld seconds (%d events)\n",
-				time(NULL)-now, ev_count);
+		dprintf("Reading Information finished\n");
 	}
 
 	xmlFreeDoc(index_parser);
@@ -6809,7 +6728,6 @@ static void *timeThread(void *)
 	struct timespec restartWait;
 	struct timeval now;
 	bool time_ntp = false;
-	bool success = true;
 
 	try
 	{
@@ -6848,8 +6766,7 @@ static void *timeThread(void *)
 			}
 			else if (scanning && dvb_time_update)
 			{
-				success = getUTC(&UTC, first_time); // for first time, get TDT, then TOT
-				if (success)
+				if (getUTC(&UTC, true)) // always use TDT, a lot of transponders don't provide a TOT
 				{
 					tim = changeUTCtoCtime((const unsigned char *) &UTC);
 
@@ -6870,6 +6787,7 @@ static void *timeThread(void *)
 					actTime=time(NULL);
 					tmTime = localtime(&actTime);
 					xprintf("[%sThread] - %02d.%02d.%04d %02d:%02d:%02d, tim: %s", "time", tmTime->tm_mday, tmTime->tm_mon+1, tmTime->tm_year+1900, tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec, ctime(&tim));
+					first_time = false;
 					pthread_mutex_lock(&timeIsSetMutex);
 					timeset = true;
 					time_ntp= false;
@@ -6880,19 +6798,15 @@ static void *timeThread(void *)
 			}
 
 			if (timeset && dvb_time_update) {
-				if (first_time)
-					seconds = 5; /* retry a second time immediately */
-				else
-					seconds = ntprefresh * 60;
+				first_time = false;
+				seconds = ntprefresh * 60;
 
 				if(time_ntp){
 					xprintf("[%sThread] Time set via NTP, going to sleep for %d seconds.\n", "time", seconds);
 				}
 				else if (scanning) {
-					xprintf("[%sThread] Time %sset via DVB(%s), going to sleep for %d seconds.\n",
-						"time", success?"":"not ", first_time?"TDT":"TOT", seconds);
+					xprintf("[%sThread] Time set via DVB, going to sleep for %d seconds.\n", "time", seconds);
 				}
-				first_time = false;
 			}
 			else {
 				if (!first_time){
@@ -6955,10 +6869,13 @@ int eit_set_update_filter(int *fd)
 	memset((void*)&dsfp, 0, sizeof(struct dmx_sct_filter_params));
 
 	unsigned char cur_eit = dmxCN.get_eit_version();
-	xprintf("eit_set_update_filter, servicekey = 0x"
-		PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-		", current version 0x%x got events %d\n",
-		messaging_current_servicekey, cur_eit, messaging_have_CN);
+	/* tone down to dprintf later */
+	printdate_ms(stderr);
+	fprintf(stderr, "eit_set_update_filter, servicekey = 0x"
+			PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
+			", current version %d\n",
+			messaging_current_servicekey,
+			cur_eit);
 
 	if (cur_eit == 0xff) {
 		if (*fd >= 0)
@@ -7620,7 +7537,6 @@ static void *cnThread(void *)
 	try
 	{
 		dprintf("[%sThread] pid %d (%lu) start\n", "cn", getpid(), pthread_self());
-		t_channel_id time_trigger_last = 0;
 		int timeoutsDMX = 0;
 		char *static_buf = new char[MAX_SECTION_LENGTH];
 		int rc;
@@ -7646,9 +7562,9 @@ static void *cnThread(void *)
 		{
 			while (!scanning)
 				sleep(1);
+			time_t zeit = time(NULL);
 
 			rc = dmxCN.getSection(static_buf, timeoutInMSeconds, timeoutsDMX);
-			time_t zeit = time(NULL);
 			if (update_eit) {
 				if (dmxCN.get_eit_version() != 0xff) {
 					writeLockMessaging();
@@ -7659,21 +7575,14 @@ static void *cnThread(void *)
 					if (!messaging_need_eit_version) {
 						unlockMessaging();
 						dprintf("waiting for eit_version...\n");
-						zeit = time(NULL);        /* reset so that we don't get negative */
-						eit_waiting_since = zeit; /* and still compensate for getSection */
-						dmxCN.lastChanged = zeit; /* this is ugly - needs somehting better */
-						sendToSleepNow = false;   /* reset after channel change */
+						eit_waiting_since = zeit;
 						writeLockMessaging();
 						messaging_need_eit_version = true;
+						sendToSleepNow = false; // reset after channel change
 					}
 					unlockMessaging();
 					if (zeit - eit_waiting_since > TIME_EIT_VERSION_WAIT) {
 						dprintf("waiting for more than %d seconds - bail out...\n", TIME_EIT_VERSION_WAIT);
-						/* send event anyway, so that we know there is no EPG */
-						eventServer->sendEvent(CSectionsdClient::EVT_GOT_CN_EPG,
-							CEventServer::INITID_SECTIONSD,
-							&messaging_current_servicekey,
-							sizeof(messaging_current_servicekey));
 						writeLockMessaging();
 						messaging_need_eit_version = false;
 						unlockMessaging();
@@ -7695,9 +7604,6 @@ static void *cnThread(void *)
 							CEventServer::INITID_SECTIONSD,
 							&messaging_current_servicekey,
 							sizeof(messaging_current_servicekey));
-				/* we received an event => reset timeout timer... */
-				eit_waiting_since = zeit;
-				dmxCN.lastChanged = zeit; /* this is ugly - needs somehting better */
 				readLockMessaging();
 			}
 			if (messaging_have_CN == 0x03) // current + next
@@ -7754,22 +7660,6 @@ static void *cnThread(void *)
 				messaging_eit_is_busy = false;
 				unlockMessaging();
 
-				/* re-fetch time if transponder changed
-				   Why I'm doing this here and not from commandserviceChanged?
-				   commandserviceChanged is called on zap *start*, not after zap finished
-				   this would lead to often actually fetching the time on the transponder
-				   you are switching away from, not the one you are switching onto.
-				   Doing it here at least gives us a good chance to have actually tuned
-				   to the channel we want to get the time from...
-				 */
-				if (time_trigger_last != (messaging_current_servicekey & 0xFFFFFFFF0000ULL))
-				{
-					time_trigger_last = messaging_current_servicekey & 0xFFFFFFFF0000ULL;
-					pthread_mutex_lock(&timeThreadSleepMutex);
-					pthread_cond_broadcast(&timeThreadSleepCond);
-					pthread_mutex_unlock(&timeThreadSleepMutex);
-				}
-
 				int rs;
 				do {
 					pthread_mutex_lock( &dmxCN.start_stop_mutex );
@@ -7803,15 +7693,7 @@ static void *cnThread(void *)
 			}
 			else if (zeit > dmxCN.lastChanged + TIME_EIT_VERSION_WAIT && !messaging_need_eit_version)
 			{
-				xprintf("zeit > dmxCN.lastChanged + TIME_EIT_VERSION_WAIT\n");
 				sendToSleepNow = true;
-				/* we can get here if we got the EIT version but no events */
-				/* send a "no epg" event anyway before going to sleep */
-				if (messaging_have_CN == 0x00)
-					eventServer->sendEvent(CSectionsdClient::EVT_GOT_CN_EPG,
-							CEventServer::INITID_SECTIONSD,
-							&messaging_current_servicekey,
-							sizeof(messaging_current_servicekey));
 				continue;
 			}
 
@@ -8258,21 +8140,10 @@ static void *houseKeepingThread(void *)
 				print_meminfo();
 				dprintf("Removed %d old events.\n", anzEventsAlt - mySIeventsOrderUniqueKey.size());
 			}
-			anzEventsAlt = mySIeventsOrderUniqueKey.size();
 			unlockEvents();
 //			usleep(100);
 //			lockEvents();
-			dprintf("before removedupevents\n");
-			removeDupEvents();
-			dprintf("after removedupevents\n");
-			readLockEvents();
-			if (mySIeventsOrderUniqueKey.size() != anzEventsAlt)
-			{
-				print_meminfo();
-				dprintf("Removed %d dup events.\n", anzEventsAlt - mySIeventsOrderUniqueKey.size());
-			}
 			anzEventsAlt = mySIeventsOrderUniqueKey.size();
-			unlockEvents();
 			dprintf("before removewasteepg\n");
 			removeWasteEvents(); // Events for channels not in services.xml
 			dprintf("after removewasteepg\n");
@@ -8625,7 +8496,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.321 2011/06/14 10:28:31 dbt Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.322 2011/06/17 20:10:24 dbt Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
