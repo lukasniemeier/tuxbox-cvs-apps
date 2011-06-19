@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.139 2011/04/24 12:23:09 dbt Exp $
+	$Id: eventlist.cpp,v 1.140 2011/06/19 18:00:50 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -173,16 +173,6 @@ void EventList::readEvents(const t_channel_id channel_id)
 	CChannelEventList::iterator e;
 
 	if ( evtlist.size() != 0 ) {
-		// Houdini: dirty workaround for RTL double events, remove them
-		CChannelEventList::iterator e2;
-		for ( e=evtlist.begin(); e!=evtlist.end(); ++e )
-		{
-			e2 = e+1;
-			if ( e2!=evtlist.end() && (e->startTime == e2->startTime)) {
-				evtlist.erase(e2);
-			}
-		}
-
 		CEPGData epgData;
 		// todo: what if there are more than one events in the Portal
 		if (g_Sectionsd->getActualEPGServiceKey(channel_id, &epgData ))

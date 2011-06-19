@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.155 2010/12/05 22:29:15 dbt Exp $
+	$Id: epgview.cpp,v 1.156 2011/06/19 18:00:50 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -864,7 +864,7 @@ void CEpgData::GetPrevNextEPGData( unsigned long long id, time_t* startzeit )
 	{
 		//printf("%d %llx/%llx - %x %x\n", i, evtlist[i].eventID, id, evtlist[i].startTime, *startzeit);
 		if ( ( evtlist[i].eventID == id ) && ( evtlist[i].startTime == *startzeit ) )
-        	{
+		{
 			if ( i > 0 )
 			{
 				prev_id= evtlist[i- 1].eventID;
@@ -877,19 +877,7 @@ void CEpgData::GetPrevNextEPGData( unsigned long long id, time_t* startzeit )
 			}
 			break;
 		}
-    	}
-	/* Houdini: dirty RTL double event workaround, if prev/next event has same starttime as actual event skip it */
-	if ((prev_zeit == *startzeit) && ((i-1) > 0))
-	{
-		prev_id   = evtlist[i- 2].eventID;
-		prev_zeit = evtlist[i- 2].startTime;
 	}
-	if ((next_zeit == *startzeit) && ((i+1) < (evtlist.size()- 1)))
-	{
-		next_id   = evtlist[i+ 2].eventID;
-		next_zeit = evtlist[i+ 2].startTime;
-	}
-
 }
 
 
