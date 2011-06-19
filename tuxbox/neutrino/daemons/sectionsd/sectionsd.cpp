@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.331 2011/06/19 12:27:48 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.332 2011/06/19 12:28:25 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2586,7 +2586,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.331 2011/06/19 12:27:48 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.332 2011/06/19 12:28:25 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -4407,12 +4407,14 @@ static void *insertEventsfromFile(void *)
 	std::string indexname;
 	std::string filename;
 	std::string epgname;
+	int ev_count = 0;
 
 	indexname = epg_dir + "index.xml";
 
 	xmlDocPtr index_parser = parseXmlFile(indexname.c_str());
 
 	if (index_parser != NULL) {
+		time_t now = time(NULL);
 		dprintf("Reading Information from file %s:\n", indexname.c_str());
 
 		eventfile = xmlDocGetRootElement(index_parser)->xmlChildrenNode;
@@ -4525,6 +4527,7 @@ static void *insertEventsfromFile(void *)
 						}
 						//lockEvents();
 						addEvent(e, 0, 0);
+						ev_count++;
 						//unlockEvents();
 
 						event = event->xmlNextNode;
@@ -4538,7 +4541,8 @@ static void *insertEventsfromFile(void *)
 			eventfile = eventfile->xmlNextNode;
 		}
 
-		dprintf("Reading Information finished\n");
+		dprintf("Reading Information finished after %ld seconds (%d events)\n",
+				time(NULL)-now, ev_count);
 	}
 
 	xmlFreeDoc(index_parser);
@@ -8554,7 +8558,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.331 2011/06/19 12:27:48 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.332 2011/06/19 12:28:25 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
