@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.329 2011/06/19 12:26:29 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.330 2011/06/19 12:27:09 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -644,21 +644,17 @@ static void addBouquetFilter(t_bouquet_id bid)
 // Loescht ein Event aus allen Mengen
 static bool deleteEvent(const event_id_t uniqueKey)
 {
-	readLockEvents();
+	writeLockEvents();
 	MySIeventsOrderUniqueKey::iterator e = mySIeventsOrderUniqueKey.find(uniqueKey);
 
 	if (e != mySIeventsOrderUniqueKey.end())
 	{
 		if (e->second->times.size())
 		{
-			unlockEvents();
-			writeLockEvents();
 			mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.erase(e->second);
 			mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.erase(e->second);
 		}
 
-		unlockEvents();
-		writeLockEvents();
 		mySIeventsOrderUniqueKey.erase(uniqueKey);
 		mySIeventsNVODorderUniqueKey.erase(uniqueKey);
 
@@ -2590,7 +2586,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.329 2011/06/19 12:26:29 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.330 2011/06/19 12:27:09 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8558,7 +8554,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.329 2011/06/19 12:26:29 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.330 2011/06/19 12:27:09 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
