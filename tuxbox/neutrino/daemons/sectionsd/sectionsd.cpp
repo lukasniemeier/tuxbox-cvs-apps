@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.323 2011/06/19 12:16:56 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.324 2011/06/19 12:20:36 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -155,7 +155,7 @@ static unsigned int max_events;
 #define CHECK_RESTART_DMX_AFTER_TIMEOUTS (2000 / EIT_READ_TIMEOUT) // 2 seconds
 
 // Time in seconds we are waiting for an EIT version number
-#define TIME_EIT_VERSION_WAIT		35
+#define TIME_EIT_VERSION_WAIT		3
 // number of timeouts after which we stop waiting for an EIT version number
 #define TIMEOUTS_EIT_VERSION_WAIT	(2 * CHECK_RESTART_DMX_AFTER_TIMEOUTS)
 
@@ -737,6 +737,9 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 					dprintf("addevent-cn: added running (%d) event 0x%04x '%s'\n",
 						e->runningStatus(), e->eventID, e->getName().c_str());
 				} else {
+					writeLockMessaging();
+					messaging_got_CN |= 0x01;
+					unlockMessaging();
 					dprintf("addevent-cn: not add runn. (%d) event 0x%04x '%s'\n",
 						e->runningStatus(), e->eventID, e->getName().c_str());
 				}
@@ -754,6 +757,9 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 				} else {
 					dprintf("addevent-cn: not added next(%d) event 0x%04x '%s'\n",
 						e->runningStatus(), e->eventID, e->getName().c_str());
+					writeLockMessaging();
+					messaging_got_CN |= 0x02;
+					unlockMessaging();
 				}
 			}
 			unlockEvents();
@@ -2576,7 +2582,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.323 2011/06/19 12:16:56 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.324 2011/06/19 12:20:36 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -7586,14 +7592,21 @@ static void *cnThread(void *)
 					if (!messaging_need_eit_version) {
 						unlockMessaging();
 						dprintf("waiting for eit_version...\n");
-						eit_waiting_since = zeit;
+						zeit = time(NULL);        /* reset so that we don't get negative */
+						eit_waiting_since = zeit; /* and still compensate for getSection */
+						dmxCN.lastChanged = zeit; /* this is ugly - needs somehting better */
+						sendToSleepNow = false;   /* reset after channel change */
 						writeLockMessaging();
 						messaging_need_eit_version = true;
-						sendToSleepNow = false; // reset after channel change
 					}
 					unlockMessaging();
 					if (zeit - eit_waiting_since > TIME_EIT_VERSION_WAIT) {
 						dprintf("waiting for more than %d seconds - bail out...\n", TIME_EIT_VERSION_WAIT);
+						/* send event anyway, so that we know there is no EPG */
+						eventServer->sendEvent(CSectionsdClient::EVT_GOT_CN_EPG,
+							CEventServer::INITID_SECTIONSD,
+							&messaging_current_servicekey,
+							sizeof(messaging_current_servicekey));
 						writeLockMessaging();
 						messaging_need_eit_version = false;
 						unlockMessaging();
@@ -7615,6 +7628,9 @@ static void *cnThread(void *)
 							CEventServer::INITID_SECTIONSD,
 							&messaging_current_servicekey,
 							sizeof(messaging_current_servicekey));
+				/* we received an event => reset timeout timer... */
+				eit_waiting_since = zeit;
+				dmxCN.lastChanged = zeit; /* this is ugly - needs somehting better */
 				readLockMessaging();
 			}
 			if (messaging_have_CN == 0x03) // current + next
@@ -7704,7 +7720,15 @@ static void *cnThread(void *)
 			}
 			else if (zeit > dmxCN.lastChanged + TIME_EIT_VERSION_WAIT && !messaging_need_eit_version)
 			{
+				xprintf("zeit > dmxCN.lastChanged + TIME_EIT_VERSION_WAIT\n");
 				sendToSleepNow = true;
+				/* we can get here if we got the EIT version but no events */
+				/* send a "no epg" event anyway before going to sleep */
+				if (messaging_have_CN == 0x00)
+					eventServer->sendEvent(CSectionsdClient::EVT_GOT_CN_EPG,
+							CEventServer::INITID_SECTIONSD,
+							&messaging_current_servicekey,
+							sizeof(messaging_current_servicekey));
 				continue;
 			}
 
@@ -8507,7 +8531,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.323 2011/06/19 12:16:56 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.324 2011/06/19 12:20:36 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
