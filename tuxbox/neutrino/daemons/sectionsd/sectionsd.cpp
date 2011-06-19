@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.333 2011/06/19 12:29:54 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.334 2011/06/19 12:30:59 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -857,9 +857,11 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 	}
 
 	if ((already_exists) && (SIlanguage::getMode() == CSectionsdClient::LANGUAGE_MODE_OFF)) {
-		si->second->setName("OFF",evt.getName().c_str());
 		si->second->contentClassification = evt.contentClassification;
 		si->second->userClassification = evt.userClassification;
+		si->second->itemDescription = evt.itemDescription;
+		si->second->item = evt.item;
+		si->second->vps = evt.vps;
 		if ((evt.getExtendedText().length() > 0) &&
 				(evt.times.begin()->startzeit < zeit + secondsExtendedTextCache))
 			si->second->setExtendedText("OFF",evt.getExtendedText().c_str());
@@ -2632,7 +2634,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.333 2011/06/19 12:29:54 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.334 2011/06/19 12:30:59 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8604,7 +8606,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.333 2011/06/19 12:29:54 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.334 2011/06/19 12:30:59 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
