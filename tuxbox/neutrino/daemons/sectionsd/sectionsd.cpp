@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.325 2011/06/19 12:21:19 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.326 2011/06/19 12:21:55 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2582,7 +2582,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.325 2011/06/19 12:21:19 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.326 2011/06/19 12:21:55 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -6886,13 +6886,10 @@ int eit_set_update_filter(int *fd)
 	memset((void*)&dsfp, 0, sizeof(struct dmx_sct_filter_params));
 
 	unsigned char cur_eit = dmxCN.get_eit_version();
-	/* tone down to dprintf later */
-	printdate_ms(stderr);
-	fprintf(stderr, "eit_set_update_filter, servicekey = 0x"
-			PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-			", current version %d\n",
-			messaging_current_servicekey,
-			cur_eit);
+	xprintf("eit_set_update_filter, servicekey = 0x"
+		PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
+		", current version 0x%x got events %d\n",
+		messaging_current_servicekey, cur_eit, messaging_have_CN);
 
 	if (cur_eit == 0xff) {
 		if (*fd >= 0)
@@ -8531,7 +8528,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.325 2011/06/19 12:21:19 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.326 2011/06/19 12:21:55 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
