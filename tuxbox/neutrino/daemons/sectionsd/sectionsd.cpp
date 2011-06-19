@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.328 2011/06/19 12:24:24 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.329 2011/06/19 12:26:29 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -770,6 +770,14 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 	readLockEvents();
 	MySIeventsOrderUniqueKey::iterator si = mySIeventsOrderUniqueKey.find(evt.uniqueKey());
 	bool already_exists = (si != mySIeventsOrderUniqueKey.end());
+
+	if (already_exists && (evt.table_id < si->second->table_id))
+	{
+		/* if the new event has a lower (== more recent) table ID, replace the old one */
+		already_exists = false;
+		dprintf("replacing event %016llx:%02x with %04x:%02x '%.40s'\n", si->second->uniqueKey(),
+			si->second->table_id, evt.eventID, evt.table_id, evt.getName().c_str());
+	}
 
 	/* Check size of some descriptors of the new event before comparing
 	   them with the old ones, because the same event can be complete
@@ -2582,7 +2590,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.328 2011/06/19 12:24:24 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.329 2011/06/19 12:26:29 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8550,7 +8558,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.328 2011/06/19 12:24:24 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.329 2011/06/19 12:26:29 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
