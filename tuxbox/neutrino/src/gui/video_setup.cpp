@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.10 2011/04/03 21:56:13 dbt Exp $
+	$Id: video_setup.cpp,v 1.11 2011/06/19 12:07:26 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -50,7 +50,9 @@
 CVideoSetup::CVideoSetup()
 {
 	SyncControlerForwarder = NULL;
+#ifdef HAVE_DBOX_HARDWARE
 	RGBCSyncControler = NULL;
+#endif
 	VcrVideoOutSignalOptionChooser = NULL;
 
 	width = w_max (500, 100);
@@ -63,7 +65,9 @@ CVideoSetup::CVideoSetup()
 CVideoSetup::~CVideoSetup()
 {
 	delete SyncControlerForwarder;
+#ifdef HAVE_DBOX_HARDWARE
 	delete RGBCSyncControler;
+#endif
 	delete VcrVideoOutSignalOptionChooser;
 }
 

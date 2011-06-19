@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.h,v 1.7 2011/04/03 21:56:13 dbt Exp $
+	$Id: video_setup.h,v 1.8 2011/06/19 12:07:26 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -42,7 +42,9 @@ class CVideoSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		CMenuForwarder *   SyncControlerForwarder;
+#ifdef HAVE_DBOX_HARDWARE
 		CRGBCSyncControler * RGBCSyncControler;
+#endif
  		CMenuOptionChooser * VcrVideoOutSignalOptionChooser;
 
 		int video_out_signal;
