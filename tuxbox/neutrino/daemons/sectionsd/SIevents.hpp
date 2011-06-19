@@ -1,7 +1,7 @@
 #ifndef SIEVENTS_HPP
 #define SIEVENTS_HPP
 //
-// $Id: SIevents.hpp,v 1.31 2011/06/17 20:10:24 dbt Exp $
+// $Id: SIevents.hpp,v 1.32 2011/06/19 12:18:27 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -87,6 +87,14 @@ struct descr_linkage_header {
 	unsigned service_id_hi			: 8;
 	unsigned service_id_lo			: 8;
 	unsigned linkage_type			: 8;
+} __attribute__ ((packed)) ;
+
+struct descr_pdc_header {
+	unsigned descriptor_tag			: 8;
+	unsigned descriptor_length		: 8;
+	unsigned pil0				: 8;
+	unsigned pil1				: 8;
+	unsigned pil2				: 8;
 } __attribute__ ((packed)) ;
 
 class SIlinkage {
@@ -341,6 +349,7 @@ public:
 		original_network_id = 0;
 		transport_stream_id = 0;
 		eventID    = 0;
+		vps = 0;
 //      dauer=0;
 //      startzeit=0;
 	}
@@ -380,6 +389,7 @@ public:
     SIparentalRatings ratings;
     SIlinkage_descs linkage_descs;
     SItimes times;
+    time_t vps;
     // Der Operator zum sortieren
     bool operator < (const SIevent& e) const {
       return uniqueKey()<e.uniqueKey();

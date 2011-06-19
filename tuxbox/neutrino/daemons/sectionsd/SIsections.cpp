@@ -1,5 +1,5 @@
 //
-// $Id: SIsections.cpp,v 1.63 2011/06/17 20:10:24 dbt Exp $
+// $Id: SIsections.cpp,v 1.64 2011/06/19 12:18:27 rhabarber1848 Exp $
 //
 // classes for SI sections (dbox-II-project)
 //
@@ -145,6 +145,30 @@ void SIsectionEIT::parseLinkageDescriptor(const char *buf, SIevent &e, unsigned 
 		SIlinkage l((const struct descr_linkage_header *)buf);
 		e.linkage_descs.insert(e.linkage_descs.end(), l);
 		//printf("LinkName: %s\n", l.name.c_str());
+	}
+}
+
+void SIsectionEIT::parsePDCDescriptor(const char *buf, SIevent &e, unsigned maxlen)
+{
+	if (maxlen >= sizeof(struct descr_pdc_header))
+	{
+		const struct descr_pdc_header *s = (struct descr_pdc_header *)buf;
+		time_t now = time(NULL);
+		struct tm tm_r;
+		struct tm t = *localtime_r(&now, &tm_r); // this initializes the time zone in 't'
+		t.tm_isdst = -1; // makes sure mktime() will determine the correct DST setting
+		int month = t.tm_mon;
+		t.tm_mon = ((s->pil1 >> 3) & 0x0F) - 1;
+		t.tm_mday = ((s->pil0 & 0x0F) << 1) | ((s->pil1 & 0x80) >> 7);
+		t.tm_hour = ((s->pil1 & 0x07) << 2) | ((s->pil2 & 0xC0) >> 6);
+		t.tm_min = s->pil2 & 0x3F;
+		t.tm_sec = 0;
+		if (month == 11 && t.tm_mon == 0) // current month is dec, but event is in jan
+			t.tm_year++;
+		else if (month == 0 && t.tm_mon == 11) // current month is jan, but event is in dec
+			t.tm_year--;
+		e.vps = mktime(&t);
+		// fprintf(stderr, "SIsectionEIT::parsePDCDescriptor: vps: %ld %s", e.vps, ctime(&e.vps));
 	}
 }
 
@@ -409,6 +433,8 @@ void SIsectionEIT::parseDescriptors(const char *des, unsigned len, SIevent &e)
 			parseParentalRatingDescriptor((const char *)desc, e, len);
 		else if(desc->descriptor_tag==0x4A)
 			parseLinkageDescriptor((const char *)desc, e, len);
+		else if(desc->descriptor_tag==0x69)
+			parsePDCDescriptor((const char *)desc, e, len);
 		if((unsigned)(desc->descriptor_length+2)>len)
 			break;
 		len-=desc->descriptor_length+2;

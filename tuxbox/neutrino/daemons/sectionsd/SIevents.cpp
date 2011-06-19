@@ -1,5 +1,5 @@
 //
-// $Id: SIevents.cpp,v 1.37 2011/06/17 20:10:24 dbt Exp $
+// $Id: SIevents.cpp,v 1.38 2011/06/19 12:18:27 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -103,6 +103,7 @@ SIevent::SIevent(const SIevent &e)
 	ratings=e.ratings;
 	linkage_descs=e.linkage_descs;
 	running=e.running;
+	vps = e.vps;
 }
 
 int SIevent::saveXML(FILE *file, const char *serviceName) const
