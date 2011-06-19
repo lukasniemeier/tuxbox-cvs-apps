@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.322 2011/06/17 20:10:24 dbt Exp $
+//  $Id: sectionsd.cpp,v 1.323 2011/06/19 12:16:56 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -101,6 +101,7 @@
 //#define MAX_EVENTS 6000
 static unsigned int max_events;
 // sleep 5 minutes
+//#define HOUSEKEEPING_SLEEP (5 * 60)
 #define HOUSEKEEPING_SLEEP (30 * 60)
 // meta housekeeping after XX housekeepings - every 24h -
 #define META_HOUSEKEEPING (24 * 60 * 60) / HOUSEKEEPING_SLEEP
@@ -951,6 +952,7 @@ static void addEvent(const SIevent &evt, const unsigned table_id, const time_t z
 	unlockEvents();
 }
 
+#ifdef ENABLE_PPT
 // Fuegt zusaetzliche Zeiten in ein Event ein
 static void addEventTimes(const SIevent &evt, const unsigned table_id)
 {
@@ -990,6 +992,7 @@ static void addEventTimes(const SIevent &evt, const unsigned table_id)
 		}
 	}
 }
+#endif
 
 static void addNVODevent(const SIevent &evt)
 {
@@ -1816,6 +1819,7 @@ static const SIevent& findNextSIeventForServiceUniqueKey(const t_channel_id serv
 	return nullEvt;
 }
 
+#if 0
 static bool ServiceUniqueKeyHasCurrentNext(const t_channel_id serviceUniqueKey)
 {
 	time_t azeit = time(NULL);
@@ -1864,6 +1868,7 @@ static bool ServiceUniqueKeyHasCurrentNext(const t_channel_id serviceUniqueKey)
 
 	return false;
 }
+#endif
 
 /*
 static const SIevent &findActualSIeventForServiceName(const char * const serviceName, SItime& zeit)
@@ -2571,7 +2576,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.322 2011/06/17 20:10:24 dbt Exp $\n"
+		"$Id: sectionsd.cpp,v 1.323 2011/06/19 12:16:56 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -3414,8 +3419,10 @@ static void sendEPG(int connfd, const SIevent& e, const SItime& t, int shortepg 
 
  out:
 	if (writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS))
+	{
 		if (responseHeader.dataLength)
 			writeNbytes(connfd, msgData, responseHeader.dataLength, WRITE_TIMEOUT_IN_SECONDS);
+	}
 	else
 		dputs("[sectionsd] Fehler/Timeout bei write");
 
@@ -3567,8 +3574,10 @@ static void commandGetEPGPrevNext(int connfd, char *data, const unsigned dataLen
 
  out:
 	if (writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS))
+	{
 		if (responseHeader.dataLength)
 			writeNbytes(connfd, msgData, responseHeader.dataLength, WRITE_TIMEOUT_IN_SECONDS);
+	}
 	else
 		dputs("[sectionsd] Fehler/Timeout bei write");
 
@@ -3878,8 +3887,10 @@ static void sendShort(int connfd, const SIevent& e, const SItime& t)
 
  out:
 	if(writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS))
+	{
 		if (responseHeader.dataLength)
 			writeNbytes(connfd, msgData, responseHeader.dataLength, WRITE_TIMEOUT_IN_SECONDS);
+	}
 	else
 		dputs("[sectionsd] Fehler/Timeout bei write");
 
@@ -8496,7 +8507,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.322 2011/06/17 20:10:24 dbt Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.323 2011/06/19 12:16:56 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
