@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.324 2011/06/19 12:20:36 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.325 2011/06/19 12:21:19 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2582,7 +2582,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.324 2011/06/19 12:20:36 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.325 2011/06/19 12:21:19 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -7579,9 +7579,9 @@ static void *cnThread(void *)
 		{
 			while (!scanning)
 				sleep(1);
-			time_t zeit = time(NULL);
 
 			rc = dmxCN.getSection(static_buf, timeoutInMSeconds, timeoutsDMX);
+			time_t zeit = time(NULL);
 			if (update_eit) {
 				if (dmxCN.get_eit_version() != 0xff) {
 					writeLockMessaging();
@@ -8531,7 +8531,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.324 2011/06/19 12:20:36 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.325 2011/06/19 12:21:19 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
