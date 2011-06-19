@@ -1,5 +1,5 @@
 //
-// $Id: SIevents.cpp,v 1.38 2011/06/19 12:18:27 rhabarber1848 Exp $
+// $Id: SIevents.cpp,v 1.39 2011/06/19 12:25:18 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -63,6 +63,7 @@ SIevent::SIevent(const struct eit_event *e)
 
 	running = (int)e->running_status;
 
+	table_id = 0xFF; /* not set */
 	service_id = 0;
 	original_network_id = 0;
 	transport_stream_id = 0;
@@ -75,6 +76,7 @@ SIevent::SIevent(const t_original_network_id _original_network_id, const t_trans
 	transport_stream_id = _transport_stream_id;
 	service_id          = _service_id;
 	eventID		    = _event_id;
+	table_id            = 0xFF; /* not set */
 /*	contentClassification = "";
 	userClassification = "";
 	itemDescription = "";
@@ -104,6 +106,7 @@ SIevent::SIevent(const SIevent &e)
 	linkage_descs=e.linkage_descs;
 	running=e.running;
 	vps = e.vps;
+	table_id = e.table_id;
 }
 
 int SIevent::saveXML(FILE *file, const char *serviceName) const

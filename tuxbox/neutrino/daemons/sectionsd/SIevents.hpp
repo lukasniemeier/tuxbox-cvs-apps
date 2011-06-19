@@ -1,7 +1,7 @@
 #ifndef SIEVENTS_HPP
 #define SIEVENTS_HPP
 //
-// $Id: SIevents.hpp,v 1.32 2011/06/19 12:18:27 rhabarber1848 Exp $
+// $Id: SIevents.hpp,v 1.33 2011/06/19 12:25:18 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -350,6 +350,7 @@ public:
 		transport_stream_id = 0;
 		eventID    = 0;
 		vps = 0;
+		table_id = 0xFF; /* 0xFF means "not set" */
 //      dauer=0;
 //      startzeit=0;
 	}
@@ -390,6 +391,7 @@ public:
     SIlinkage_descs linkage_descs;
     SItimes times;
     time_t vps;
+    unsigned char table_id;
     // Der Operator zum sortieren
     bool operator < (const SIevent& e) const {
       return uniqueKey()<e.uniqueKey();
