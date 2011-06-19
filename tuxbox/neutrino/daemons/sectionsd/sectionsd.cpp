@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.330 2011/06/19 12:27:09 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.331 2011/06/19 12:27:48 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -1913,12 +1913,12 @@ static const SIevent &findNextSIevent(const event_id_t uniqueKey, SItime &zeit)
 			}
 		}
 
-		MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator eNext;
+		MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator eNext;
 
 		//if ((nextnvodtimes != eFirst->second->times.begin()) && (nextnvodtimes != eFirst->second->times.end())) {
 			//Startzeit not first - we can't use the ordered list...
-			for ( MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin(); e !=
-			 	mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end(); ++e ) {
+			for ( MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin(); e !=
+				mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end(); ++e ) {
 				if ((*e)->get_channel_id() == eFirst->second->get_channel_id()) {
 					for (SItimes::iterator t = (*e)->times.begin(); t != (*e)->times.end(); ++t) {
 						if (t->startzeit > zeit.startzeit) {
@@ -2586,7 +2586,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.330 2011/06/19 12:27:09 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.331 2011/06/19 12:27:48 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8554,7 +8554,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.330 2011/06/19 12:27:09 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.331 2011/06/19 12:27:48 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
