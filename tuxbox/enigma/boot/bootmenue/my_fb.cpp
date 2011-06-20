@@ -165,7 +165,7 @@ fbClass::fbClass()
 	desc.flags = FT_LOAD_MONOCHROME;
 #else
 	desc.font.face_id = (char*)FONT;
-	desc.type = ftc_image_mono;
+	desc.image_type = ftc_image_mono;
 #endif
 #endif//USEFREETYPEFB
 

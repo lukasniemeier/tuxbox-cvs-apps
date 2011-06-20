@@ -290,7 +290,7 @@ int OpenFB(int fbdev)
 #ifdef FT_NEW_CACHE_API
    desc.flags = FT_LOAD_MONOCHROME;
 #else
-   desc.type = ftc_image_mono;
+   desc.image_type = ftc_image_mono;
 #endif
    return 0;                                                     // all initialized ok
 }

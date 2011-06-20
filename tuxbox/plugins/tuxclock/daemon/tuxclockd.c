@@ -375,7 +375,7 @@ int OpenFB(void)
 #ifdef FT_NEW_CACHE_API
    desc.flags = FT_LOAD_MONOCHROME;
 #else
-   desc.type = ftc_image_mono;
+   desc.image_type = ftc_image_mono;
 #endif
    if ((fb_color_set==-1)||(char_color=-1)||(char_bgcolor=-1)) {
       // search for black and white in FB colortab (same function FindColor() in tuxcal)
@@ -663,7 +663,7 @@ void *InterfaceThread(void *arg)
  ******************************************************************************/
 int main(int argc, char **argv)
 {
-   char cvs_revision[] = "$Revision: 1.4 $";
+   char cvs_revision[] = "$Revision: 1.5 $";
    int nodelay = 0;
    pthread_t thread_id;
    void *thread_result = 0;

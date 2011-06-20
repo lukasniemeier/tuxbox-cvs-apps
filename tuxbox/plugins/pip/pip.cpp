@@ -304,9 +304,9 @@ FT_Library	library = 0;
 FTC_Manager	manager = 0;
 FTC_SBitCache	cache;
 #ifdef FT_NEW_CACHE_API
-FTC_Image_Desc	desc;
-#else
 FTC_ImageTypeRec desc;
+#else
+FTC_Image_Desc	desc;
 #endif
 FT_Face		face;
 FT_UInt		prev_glyphindex;
