@@ -76,7 +76,7 @@ class tsAutomatic: public eWidget
 {
 	eButton *b_start;
 	eComboBox *l_network;
-	eCheckbox *c_onlyFree, *c_nocircular;
+	eCheckbox *c_onlyFree, *c_nocircular, *c_clearList;
 	eLabel *l_status;
 	std::list<eTransponder>::iterator current_tp, last_tp, first_tp;
 	int automatic;

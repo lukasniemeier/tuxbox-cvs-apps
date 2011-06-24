@@ -308,6 +308,8 @@ void tsAutomatic::init_tsAutomatic()
 	}
 	else
 		c_nocircular=0;
+	c_clearList = CreateSkinnedCheckbox("clearlist",0);
+	c_clearList->hide();
 
 	b_start=CreateSkinnedButton("start");
 	b_start->hide();
@@ -355,7 +357,7 @@ void tsAutomatic::init_tsAutomatic()
 void tsAutomatic::start()
 {
 	int snocircular = c_nocircular ? c_nocircular->isChecked() : 0;
-	eConfig::getInstance()->setKey("/elitedvb/DVB/config/nocircular",snocircular);    
+	eConfig::getInstance()->setKey("/elitedvb/DVB/config/nocircular",snocircular);  
 
 	eDVBScanController *sapi=eDVB::getInstance()->getScanAPI();
 	if (!sapi)
@@ -394,7 +396,7 @@ void tsAutomatic::start()
 		sapi->setSkipOtherOrbitalPositions(1);
 		sapi->setOnlyFree(c_onlyFree->isChecked());
 		sapi->setNoCircularPolarization(snocircular);
-//		sapi->setClearList(1);
+		sapi->setClearList(c_clearList->isChecked());
 
 		close(0);
 	}
@@ -434,6 +436,7 @@ void tsAutomatic::dvbEvent(const eDVBEvent &event)
 				if ( c_nocircular )
 					c_nocircular->show();
 				c_onlyFree->show();
+				c_clearList->show();
 				b_start->show();
 				setFocus(c_onlyFree);
 				l_status->setText(_("A valid transponder has been found. Verify that the right network is selected"));
@@ -941,7 +944,7 @@ void TransponderScan::init_TransponderScan()
 	addActionMap(&i_cursorActions->map);
 	setText(_("Transponder Scan"));
 	cmove(ePoint(130, 110));
-	cresize(eSize(460, 400));
+	cresize(eSize(460, 440));
 
 	statusbar=new eStatusBar(this);
 	statusbar->loadDeco();
