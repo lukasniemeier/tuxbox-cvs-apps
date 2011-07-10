@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1063 2011/04/27 20:07:03 dbt Exp $
+	$Id: neutrino.cpp,v 1.1064 2011/07/10 12:53:46 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -587,6 +587,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.personalize_mediaplayer = configfile.getInt32("personalize_mediaplayer", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_driver = configfile.getInt32("personalize_driver", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
 	g_settings.personalize_misc = configfile.getInt32("personalize_misc", CPersonalizeGui::PERSONALIZE_MODE_VISIBLE);
+	g_settings.personalize_true = CPersonalizeGui::PERSONALIZE_MODE_VISIBLE;
 
 	//recording (server + vcr)
 	g_settings.recording_type = configfile.getInt32("recording_type", RECORDING_OFF);
