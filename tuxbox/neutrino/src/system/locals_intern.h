@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.194 2011/04/12 18:59:17 dbt Exp $
+ * $Id: locals_intern.h,v 1.195 2011/07/22 19:46:55 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1063,6 +1063,7 @@ const char * locale_real_names[] =
 	"osdsettings.colormenu.gtx_alpha",
 	"osdsettings.colormenu.head",
 	"osdsettings.colormenu.menucolors",
+	"osdsettings.colormenu.progressbar",
 	"osdsettings.colormenu.statusbar",
 	"osdsettings.colormenu.textcolor",
 	"osdsettings.colormenu.textcolor_head",

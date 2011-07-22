@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.10 2011/04/03 21:56:13 dbt Exp $
+	$Id: osd_setup.cpp,v 1.11 2011/07/22 19:46:55 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -264,6 +264,9 @@ void COsdSetup::showOsdSetup()
 		CThemes *osd_themes = new CThemes();
 		CMenuForwarder *osd_themes_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_THEMESELECT, true, NULL, osd_themes, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 		
+
+	//osd progressbar color
+	CMenuOptionChooser *osd_pbcolor_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_COLORMENU_PROGRESSBAR, &g_settings.progressbar_color, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 	//osd timeout setup forwarder
 	CMenuForwarder *osd_timeout_fw = new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL,  this, "show_timeout_setup", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 	//osd screen setup
@@ -301,6 +304,7 @@ void COsdSetup::showOsdSetup()
 		osd_setup_colors->addItem(GenericMenuSeparatorLine);
 		osd_setup_colors->addItem(osd_menucolor_fw);	//menue colors
 		osd_setup_colors->addItem(osd_sbcolor_fw);	//infobar colors
+		osd_setup_colors->addItem(osd_pbcolor_ch);	//progressbar colors
 		//--------------------------------------------
 		osd_setup_colors->addItem(GenericMenuSeparatorLine);
 		osd_setup_colors->addItem(osd_themes_fw);	//themes setup

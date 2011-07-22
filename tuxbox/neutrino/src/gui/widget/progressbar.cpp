@@ -29,14 +29,26 @@
 #include "icons.h"
 #include "progressbar.h"
 
+#define ITEMW 4
+#define POINT 2
 
-CProgressBar::CProgressBar()
+CProgressBar::CProgressBar(const bool bl, const int w, const int h,
+			   const int r, const int g, const int b, const bool inv)
 {
 	frameBuffer 	= CFrameBuffer::getInstance();
 	font_pbar = SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
 	
 	// frame width around active bar
 	frame_widht = 2;		
+	blink = bl;
+	invert = inv;
+	red = r;
+	green = g;
+	yellow = b;
+	width = w;
+	height = h;
+	last_width = -1;
+	bl_changed = g_settings.progressbar_color;
 }
 
 CProgressBar::~CProgressBar()
@@ -59,12 +71,51 @@ void CProgressBar::paintProgressBar (	const int pos_x,
 					const char * iconfile,
 					bool paintZero)
 {
+	width = pb_width;
+	height = pb_height;
+	realpaint(pos_x, pos_y, value, max_value,
+		  activebar_col, passivebar_col, backgroundbar_col, shadowbar_col,
+		  upper_labeltext, uppertext_col, iconfile, paintZero);
+}
+
+void CProgressBar::paintProgressBar2(const int pos_x, const int pos_y,
+				     const int value, const int max_value,
+				     const fb_pixel_t activebar_col, const fb_pixel_t passivebar_col,
+				     const fb_pixel_t frame_col, const fb_pixel_t shadowbar_col,
+				     const char * upper_labeltext, const uint8_t uppertext_col,
+				     const char * iconfile, bool paintZero)
+{
+	if (height < 0 || width < 0)
+	{
+		fprintf(stderr, "CProgressBar::paintProgressBar2 height or width not set!\n");
+		return;
+	}
+	realpaint(pos_x, pos_y, value, max_value,
+		  activebar_col, passivebar_col, frame_col, shadowbar_col,
+		  upper_labeltext, uppertext_col, iconfile, paintZero);
+}
+
+void CProgressBar::realpaint(const int pos_x, const int pos_y,
+			     const int value, const int max_value,
+			     const fb_pixel_t activebar_col,
+			     const fb_pixel_t passivebar_col,
+			     const fb_pixel_t backgroundbar_col,
+			     const fb_pixel_t shadowbar_col,
+			     const char *upper_labeltext,
+			     const uint8_t uppertext_col,
+			     const char *iconfile,
+			     bool paintZero)
+{
 	
 	// set colors
 	fb_pixel_t active_col = activebar_col != 0 ? activebar_col : COL_INFOBAR_PLUS_7;
 	fb_pixel_t passive_col = passivebar_col != 0 ? passivebar_col : COL_INFOBAR_PLUS_3;
 	
 	int c_rad = RADIUS_SMALL;								
+
+	/* if the bar is too small, do not draw the borders around it */
+	if (height / 2 <= frame_widht || (blink && g_settings.progressbar_color) || backgroundbar_col == 0)
+		frame_widht = 0;							
 	
 	// get icon size
 	int icon_w = 0, icon_h = 0;
@@ -77,37 +128,96 @@ void CProgressBar::paintProgressBar (	const int pos_x,
 	int start_y = pos_y + frame_widht;
 	
 	// width active bar for current value
-	int active_pb_width = (pb_width - icon_w - 2*frame_widht) * value/max_value;	
+	int active_pb_width = (width - icon_w - 2*frame_widht) * value/max_value;	
 	
 	// max width active/passive bar	
-	int pb_max_width = icon_w != 0 ? (pb_width - 2*frame_widht) - icon_w - frame_widht : pb_width - 2*frame_widht ;	 
+	int pb_max_width = icon_w != 0 ? (width - 2*frame_widht) - icon_w - frame_widht : width - 2*frame_widht ;
 
-	// max height progressbar bar, if icon height larger than pb_height then get height from icon 
-	int pb_max_height = icon_h > pb_height ? icon_h + 2* frame_widht : pb_height;
+	// max height progressbar bar, if icon height larger than pb_height then get height from icon
+	int pb_max_height = icon_h > height ? icon_h + 2* frame_widht : height;
+
+	if (!blink || !g_settings.progressbar_color)
+	{
+		// max height of active/passive bar	
+		int bar_height = pb_max_height - 2*frame_widht;
 	
-	// max height of active/passive bar	
-	int bar_height = pb_max_height - 2*frame_widht;		
+		// start_x passive bar
+		int start_x_passive_bar = start_x + active_pb_width;
 	
-	// start_x passive bar
-	int start_x_passive_bar = start_x + active_pb_width;
+		// width passive bar	
+		int width_passive_bar =  pb_max_width - active_pb_width;		
 	
-	// width passive bar	
-	int width_passive_bar =  pb_max_width - active_pb_width;		
+		// shadow
+		if (shadowbar_col !=0)
+			frameBuffer->paintBoxRel(pos_x+SHADOW_OFFSET,pos_y+SHADOW_OFFSET, width, pb_max_height, shadowbar_col, c_rad); // shadow
 	
-	
-	// shadow
-	if (shadowbar_col !=0)
-		frameBuffer->paintBoxRel(pos_x+SHADOW_OFFSET,pos_y+SHADOW_OFFSET, pb_width, pb_max_height, shadowbar_col, c_rad); // shadow
-	
-	// background = frame
-	if (backgroundbar_col != 0){
-		// we must paint background as frame, because of flicker effects at screen on fast changing values
-		frameBuffer->paintBoxRel(pos_x,pos_y, 10, pb_max_height, backgroundbar_col, c_rad, CORNER_LEFT);
-		frameBuffer->paintBoxRel(pos_x+pb_width-10,pos_y, 10, pb_max_height, backgroundbar_col, c_rad, CORNER_RIGHT);
-		frameBuffer->paintBoxRel(pos_x+10,pos_y, pb_width-20, frame_widht, backgroundbar_col);
-		frameBuffer->paintBoxRel(pos_x+10,pos_y+pb_max_height-frame_widht, pb_width-20, frame_widht, backgroundbar_col);
+		// background = frame
+		if (backgroundbar_col != 0){
+			// we must paint background as frame, because of flicker effects at screen on fast changing values
+			frameBuffer->paintBoxRel(pos_x,pos_y, 10, pb_max_height, backgroundbar_col, c_rad, CORNER_LEFT);
+			frameBuffer->paintBoxRel(pos_x+width-10,pos_y, 10, pb_max_height, backgroundbar_col, c_rad, CORNER_RIGHT);
+			frameBuffer->paintBoxRel(pos_x+10,pos_y, width-20, frame_widht, backgroundbar_col);
+			frameBuffer->paintBoxRel(pos_x+10,pos_y+pb_max_height-frame_widht, width-20, frame_widht, backgroundbar_col);
+		}
+
+		frameBuffer->paintBoxRel(start_x,  start_y, active_pb_width, bar_height, active_col); // active bar
+		frameBuffer->paintBoxRel(start_x_passive_bar, start_y, width_passive_bar, bar_height, passive_col); // passive bar
+		if ((paintZero) && (value ==0))
+			frameBuffer->paintLine(pos_x+2 , pos_y+2, pos_x+width-3, pos_y+height-3, active_col); // zero line
 	}
-			
+	else
+	{
+		/* red, yellow, green are given in percent */
+		int rd = red * width / (100 * ITEMW);		/* how many POINTs red */
+		int yw = yellow * width / (100 * ITEMW);	/* how many POINTs yellow */
+		int gn = green * width / (100 * ITEMW);		/* how many POINTs green */
+
+		int hcnt = height / ITEMW;		/* how many POINTs is the bar high */
+		int maxi = active_pb_width / ITEMW;	/* how many POINTs is the active bar */
+		int total = width / ITEMW;		/* total number of POINTs */
+
+		int i, j;
+		uint32_t rgb;
+
+		if (last_width == -1 && backgroundbar_col != 0) /* first paint */
+		{
+			frameBuffer->paintBoxRel(pos_x + POINT, pos_y, width - POINT, pb_max_height + ITEMW, backgroundbar_col);
+			if (shadowbar_col != 0)
+				frameBuffer->paintBoxRel(pos_x + POINT + POINT, pos_y + POINT, width - POINT, pb_max_height + ITEMW, shadowbar_col);
+		} 
+
+		if (active_pb_width != last_width) {
+			if (active_pb_width > last_width) {
+				for (i = 1; (i < rd) && (i < maxi); i++) {
+					if (invert)
+						rgb = COL_LIME;
+					else
+						rgb = COL_RED;
+					for(j = 0; j <= hcnt; j++)
+						frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, rgb);
+				}
+				for (; (i < yw) && (i < maxi); i++) {
+					rgb = COL_YELLOW;
+					for(j = 0; j <= hcnt; j++)
+						frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, rgb);
+				}
+				for (; (i < gn) && (i < maxi); i++) {
+					if (invert)
+						rgb = COL_RED;
+					else
+						rgb = COL_LIME;
+					for(j = 0; j <= hcnt; j++)
+						frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, rgb);
+				}
+			}
+			for(i = maxi; i < total; i++) {
+				for(j = 0; j <= hcnt; j++)
+					frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, COL_INFOBAR_PLUS_3);//fill passive
+			}
+			last_width = active_pb_width;
+ 		}	
+ 	}
+
 	// paint icon if present
 	if (iconfile != NULL){		
 			int icon_y = pos_y + (pb_max_height/2) - (icon_h/2);
@@ -119,17 +229,12 @@ void CProgressBar::paintProgressBar (	const int pos_x,
 	if (upper_labeltext != NULL) 	{		
 		g_Font[font_pbar]->RenderString( start_x +2,
 						upper_labeltext_y,
-						pb_width,
+						width,
 						upper_labeltext,
 						uppertext_col != 0 ? uppertext_col : COL_INFOBAR,
-						pb_height,
+						height,
 						true); // UTF8
 	}	
-		
-	frameBuffer->paintBoxRel(start_x,  start_y, active_pb_width, bar_height, active_col); // active bar
-	frameBuffer->paintBoxRel(start_x_passive_bar, start_y, width_passive_bar, bar_height, passive_col); // passive bar
-	if ((paintZero) && (value ==0))
-		frameBuffer->paintLine(pos_x+2 , pos_y+2, pos_x+pb_width-3, pos_y+pb_height-3, active_col); // zero line
 }
 
 

@@ -21,7 +21,7 @@
  
 #ifndef __gui_widget_progressbar_h__
 #define __gui_widget_progressbar_h__
- 
+#include "config.h"
 #include <gui/color.h>
 #include <driver/framebuffer.h>
 #include <driver/fontrenderer.h>
@@ -35,9 +35,37 @@ class CProgressBar
 		CFrameBuffer * frameBuffer;
 		int font_pbar;
 		int frame_widht;
+
+		int last_width;
+		int red, green, yellow;
+		bool blink, invert, bl_changed;
+		int width, height;
+		void realpaint(const int pos_x, const int pos_y,
+			       const int value, const int max_value,
+			       const fb_pixel_t activebar_col,
+			       const fb_pixel_t passivebar_col,
+			       const fb_pixel_t backgroundbar_col,
+			       const fb_pixel_t shadowbar_col,
+			       const char *upper_labeltext,
+			       const uint8_t uppertext_col,
+			       const char *iconfile,
+			       bool paintZero);
 	
 	public:
-		CProgressBar();
+		/* parameters:
+		   blinkenligts: true if you want code to follow progressbar_color. needed, no default.
+		   w, h: width / height of bar. Can later be set with paintProgressbar.
+		         paintProgressBar2 can oly be used if w and h are set.
+		   r, g, b: percentage of the bar where red/green/yellow is used.
+		         only used if blinkenlights == true.
+		   inv:  false => red on the left side, true: red on right side. */
+		CProgressBar(const bool blinkenlights,
+			     const int w = -1,
+			     const int h = -1,
+			     const int r = 40,
+			     const int g = 100,
+			     const int b = 70,
+			     const bool inv = false);
 		~CProgressBar();
 
 /// void paintProgressBar(...)	
@@ -73,6 +101,19 @@ class CProgressBar
 					const int pb_height,
 					const int value,
 					const int max_value,
+					const fb_pixel_t activebar_col = 0,
+					const fb_pixel_t passivebar_col = 0,
+					const fb_pixel_t frame_col = 0,
+					const fb_pixel_t shadowbar_col = 0,
+					const char * upper_labeltext = NULL,
+					const uint8_t uppertext_col = 0,
+					const char * iconfile = NULL,
+					bool paintZero = false);
+
+		void paintProgressBar2 (const int pos_x,
+					const int pos_y,
+					const int value,
+					const int max_value = 100,
 					const fb_pixel_t activebar_col = 0,
 					const fb_pixel_t passivebar_col = 0,
 					const fb_pixel_t frame_col = 0,

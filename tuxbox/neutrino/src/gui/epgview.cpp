@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.156 2011/06/19 18:00:50 rhabarber1848 Exp $
+	$Id: epgview.cpp,v 1.157 2011/07/22 19:46:55 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -610,7 +610,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 
 	if ( epg_done!= -1 )	//show event progressbar
 	{		
- 		CProgressBar pb;
+ 		CProgressBar pb(true, -1, -1, 30, 100, 70, true);
 		pb.paintProgressBarDefault (sx + 10 + widthl + 10 + ((ox-104-widthr-widthl-10-10-20)>>1), sy+oy-height, 104, height-6, epg_done, 104);	
 	}
 

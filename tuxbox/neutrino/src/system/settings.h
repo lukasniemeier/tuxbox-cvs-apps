@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.238 2011/07/10 12:53:46 rhabarber1848 Exp $
+  $Id: settings.h,v 1.239 2011/07/22 19:46:55 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -67,6 +67,7 @@ struct SNeutrinoSettings
 	int tuxtxt_cache;
 #endif
 	int virtual_zap_mode;
+	int progressbar_color;
 	int infobar_show;
 	int show_mute_icon;
 	int channellist_epgtext_align_right;

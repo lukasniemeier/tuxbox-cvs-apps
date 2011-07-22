@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.225 2011/03/21 18:35:09 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.226 2011/07/22 19:46:55 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -1188,7 +1188,7 @@ void CChannelList::paintItem(int pos)
 		else
 			snprintf(nameAndDescription, sizeof(nameAndDescription), "%s", ZapitTools::UTF8_to_Latin1(chan->name.c_str()).c_str());
 
-		CProgressBar pb;
+		CProgressBar pb(false); /* never colored */
 		int pb_space = prg_offset - title_offset;
 		int pb_max = pb_space - 4;
 		

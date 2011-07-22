@@ -1036,6 +1036,7 @@ osdsettings.colormenu.font Font Size
 osdsettings.colormenu.gtx_alpha Transparency (GTX)
 osdsettings.colormenu.head Colors
 osdsettings.colormenu.menucolors Menu Colors
+osdsettings.colormenu.progressbar Progressbar LED
 osdsettings.colormenu.statusbar Infobar
 osdsettings.colormenu.textcolor Textcolor
 osdsettings.colormenu.textcolor_head Textcolor

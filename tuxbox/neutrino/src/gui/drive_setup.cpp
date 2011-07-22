@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.84 2011/05/19 19:54:35 rhabarber1848 Exp $
+	$Id: drive_setup.cpp,v 1.85 2011/07/22 19:46:55 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -513,7 +513,7 @@ void CDriveSetup::Init()
 {
  	cout<<"[drive_setup] init drive setup " << getDriveSetupVersion()<<endl;
 		
-	CProgressBar pb;
+	CProgressBar pb(false);
 
 	fb_pixel_t * pixbuf = new fb_pixel_t[pb_w * pb_h];
 	if (pixbuf != NULL)
@@ -1511,7 +1511,7 @@ void CDriveSetup::setStartCylinder()
 // show progress status
 void CDriveSetup::showStatus(const int& progress_val, const string& msg, const int& max)
 {
-	CProgressBar pb;
+	CProgressBar pb(false);
 	string s_info = msg;
 	cout<<"[drive setup] "<<msg<<endl;
 	frameBuffer->paintBoxRel(pb_x, pb_y, pb_w, pb_h, COL_MENUCONTENT_PLUS_0, RADIUS_MID);
@@ -1840,7 +1840,7 @@ bool CDriveSetup::initIdeDrivers(const bool irq6)
 	if (unloadIdeDrivers()) // unload previously loaded modules
 		printf("[drive setup] ide modules unloaded...\n");
 
-	CProgressBar 	pb;
+	CProgressBar pb(false);
 	bool ret = true;
 	string err_msg;
 
@@ -1904,7 +1904,7 @@ bool CDriveSetup::initFsDrivers(bool do_unload_first)
 	// reset
 	v_init_fs_L_cmds.clear();
 
-	CProgressBar 	pb;
+	CProgressBar pb(false);
 
 	fb_pixel_t * pixbuf = new fb_pixel_t[pb_w * pb_h];
 	if (pixbuf != NULL)
@@ -2034,7 +2034,7 @@ bool CDriveSetup::unloadFsDrivers()
 {
 	err[ERR_INIT_FSDRIVERS] = "";
 
-	CProgressBar 	pb;
+	CProgressBar pb(false);
 
 	fb_pixel_t * pixbuf = new fb_pixel_t[pb_w * pb_h];
 	if (pixbuf != NULL)
@@ -2078,7 +2078,7 @@ bool CDriveSetup::unloadIdeDrivers()
 {
 	err[ERR_UNLOAD_IDEDRIVERS] = "";
 
-	CProgressBar pb;
+	CProgressBar pb(false);
 
 	bool ret = true;
 	string err_msg;
@@ -3889,7 +3889,7 @@ bool CDriveSetup::chkFs(const int& device_num, const int& part_number,  const st
 	err[ERR_CHKFS] = "";
 	//TODO show correct progress or message
 	showStatus(50, "creating Filesystem, please wait...", 100);
-	CProgressBar pb;
+	CProgressBar pb(false);
 
 	// get partition name (dev/hda1...4)
 	string partname = partitions[device_num][part_number];
@@ -4602,7 +4602,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.84 $");
+	return imageinfo.getModulVersion("","$Revision: 1.85 $");
 }
 
 // returns text for initfile headers

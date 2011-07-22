@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.301 2011/05/06 17:13:51 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.302 2011/07/22 19:46:55 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -76,6 +76,10 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 #define BOTTOM_BAR_FONT_OFFSET 5
 #define borderwidth 4
 
+#define RED_BAR 70
+#define YELLOW_BAR 80
+#define GREEN_BAR 100
+
 // in us
 #define FADE_TIME 40000
 
@@ -134,6 +138,74 @@ void CInfoViewer::start()
 	time_width = time_left_width* 2+ time_dot_width;
 
 	lcdUpdateTimer = g_RCInput->addTimer( LCD_UPDATE_TIME_TV_MODE, false, true );
+}
+
+void CInfoViewer::showSatfind()
+{
+ 	if (!g_settings.infobar_sat_display || !is_visible || !showButtonBar)
+		return;
+
+	CProgressBar pbsig(true, -1, -1, RED_BAR, GREEN_BAR, YELLOW_BAR, false);
+	CProgressBar pbsnr(true, -1, -1, RED_BAR, GREEN_BAR, YELLOW_BAR, false);
+
+	CZapitClient::responseFESignal s;
+	g_Zapit->getFESignal(s);
+
+	signal.sig = s.sig & 0xFFFF;
+	signal.snr = s.snr & 0xFFFF;
+	signal.ber = (s.ber < 0x3FFFF) ? s.ber : 0x3FFFF;
+
+	char freq[20];
+	char percent[10];
+	char pos[4];
+	int sig;
+	int snr;
+	int ber;
+
+	sig = signal.sig * 100 / 65535;
+	snr = signal.snr * 100 / 65535;
+
+	if ((signal.ber > 0) && (signal.ber < 400))
+		ber = 1;
+	else
+		ber = signal.ber * 100 / 40000;
+
+	// Sometimes the Ber is larger than the Max Ber so therefore needs to be stopped here if (bar > max ber)
+	if (ber > 99)
+		ber = 100;
+
+	// only update if required
+	if ((lastsig != sig) || (lastsnr != snr) || (lastber != ber))
+	{
+		lastsig = sig;
+		lastsnr = snr;
+		lastber = ber;
+
+		CZapitClient::CCurrentServiceInfo si = g_Zapit->getCurrentServiceInfo();
+		sprintf (freq, "%d.%d MHz %c", si.tsfrequency / 1000, si.tsfrequency % 1000,
+			(g_info.delivery_system == DVB_S) ? (((si.polarisation > 0) && (si.polarisation < 4)) ? 'V' : 'H') : ' ');
+
+		frameBuffer->paintBoxRel(ChanInfoX, BoxEndY, BoxEndX-ChanInfoX, 30, COL_INFOBAR_PLUS_0);
+
+		sprintf (percent, "sig %d%%", sig);
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 10, BoxEndY+ 25, BoxEndX, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		pbsig.paintProgressBar(ChanInfoX+ 72,  BoxEndY+ 7, 60, 15, sig, 100, 0, 0, COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
+
+		sprintf (percent, "snr %d%%", snr);
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 140, BoxEndY+ 25, BoxEndX, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		pbsnr.paintProgressBar(ChanInfoX+202 ,  BoxEndY+ 7, 60, 15, snr, 100, 0, 0, COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
+
+		sprintf (percent, "ber %d%%", ber);
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 270, BoxEndY+ 25, BoxEndX, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 350, BoxEndY+ 25, BoxEndX, freq, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+
+		if (satpos != 0 && (g_info.delivery_system == DVB_S))
+		{
+			sprintf (pos, "%d.%d%c", satpos < 0 ? -satpos / 10 : satpos / 10, satpos < 0 ? -satpos % 10 : satpos % 10, satpos < 0 ? 'W' : 'E');
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(BoxEndX- 60, BoxEndY+ 25, BoxEndX, pos, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		}
+	}
 }
 
 void CInfoViewer::paintTime( bool show_dot, bool firstPaint )
@@ -273,7 +345,7 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 					*/
 	playstate = _playstate;
 	const int mode = playmode;
-	InfoHeightY_Info = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BOTTOM_BAR_FONT_OFFSET;
+	InfoHeightY_Info = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BOTTOM_BAR_FONT_OFFSET + (g_settings.infobar_sat_display ? 30 : 0);
 	showButtonBar = true;
 	bool fadeIn = (g_info.box_Type != CControld::TUXBOX_MAKER_NOKIA) && // dreambox and eNX only 
 		g_settings.widget_fade && (!is_visible);
@@ -353,7 +425,9 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, const t_satellite_position satellitePosition, const t_channel_id new_channel_id, const bool calledFromNumZap, int epgpos)
 {
 	/* reset the "last shown eventid" markers */
-	InfoHeightY_Info = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BOTTOM_BAR_FONT_OFFSET;
+	InfoHeightY_Info = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BOTTOM_BAR_FONT_OFFSET + (g_settings.infobar_sat_display ? 30 : 0);
+
+	lastsig = lastsnr = lastber = -1;
 	last_curr_id = last_next_id = 0;
 	showButtonBar = !calledFromNumZap;
 	ChannelName = Channel;
@@ -434,6 +508,8 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 	// sat display
 	if (g_settings.infobar_sat_display)
 	{
+		satpos = satellitePosition;
+/* satname not used in numberbox, use satpos bottom of infobar instead
 		for (CZapitClient::SatelliteList::const_iterator satList_it = satList.begin(); satList_it != satList.end(); satList_it++)
 			if (satList_it->satPosition == satellitePosition)
 			{
@@ -446,6 +522,7 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 
 				break;
 			}
+*/
 	}
 	
 /* paint channel number, channelname or/and channellogo */
@@ -481,6 +558,7 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 
 		showButton(SNeutrinoSettings::BUTTON_BLUE); // button blue // USERMENU
 		showInfoIcons();
+		showSatfind();
 	}
 
 	g_Sectionsd->getCurrentNextServiceKey(channel_id, info_CurrentNext);
@@ -728,7 +806,8 @@ requests to sectionsd.
 				paintTime( show_dot, false );
 				showRecordIcon(show_dot);
 				show_dot = !show_dot;
-
+				if (show_dot && !tsmode)
+					showSatfind();
 #ifdef ENABLE_RADIOTEXT
 				if ((g_settings.radiotext_enable) && (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_radio))
 					showRadiotext();
@@ -940,7 +1019,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 {
 	const char* txt = NULL;
 	int bx = BoxStartX + (ChanWidth / 3);
-	int by = BoxEndY + (InfoHeightY_Info >> 3);
+	int by = BoxEndY + (InfoHeightY_Info >> 3) + ((g_settings.infobar_sat_display && !calledFromMPlayer) ? 25 : 0);
 	int startX = bx;
 	int xoffset = 0;
 	bool paint = true;
@@ -1068,7 +1147,7 @@ void CInfoViewer::showIcon_RadioText(bool rt_available) const
 					rt_icon = rt_available ? "radiotextget.raw" : "radiotextwait.raw";
 				}
 		}
-		frameBuffer->paintIcon(rt_icon, BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),BoxEndY + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+		frameBuffer->paintIcon(rt_icon, BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6), BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 	}
 }
 #endif
@@ -1080,7 +1159,7 @@ void CInfoViewer::showIcon_16_9() const
 #endif
 	frameBuffer->paintIcon((aspectRatio != 0) ? NEUTRINO_ICON_16_9 : NEUTRINO_ICON_16_9_GREY,
 				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-				BoxEndY + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::showIcon_VTXT() const
@@ -1088,7 +1167,7 @@ void CInfoViewer::showIcon_VTXT() const
 	int vtpid=g_RemoteControl->current_PIDs.PIDs.vtxtpid;
 	frameBuffer->paintIcon((vtpid != 0) ? NEUTRINO_ICON_VTXT : NEUTRINO_ICON_VTXT_GREY,
 				BoxEndX - (ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-				BoxEndY + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 #ifndef TUXTXT_CFG_STANDALONE
 	if(g_settings.tuxtxt_cache && !CNeutrinoApp::getInstance ()->recordingstatus)
 	{
@@ -1118,7 +1197,7 @@ void CInfoViewer::showIcon_SubT() const
 
 	frameBuffer->paintIcon((subpid != 0) ? "subt.raw" : "subt_gray.raw",
 				BoxEndX - (ICON_SMALL_WIDTH + 6),
-				BoxEndY + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::showIcon_Audio(const int ac3state) const
@@ -1140,7 +1219,7 @@ void CInfoViewer::showIcon_Audio(const int ac3state) const
 
 	frameBuffer->paintIcon(dd_icon,
 			       BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-			       BoxEndY + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+			       BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::showInfoIcons()
@@ -1526,9 +1605,27 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 		int pb_h = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() - 4;
 		if (pb_p > pb_w)
 			pb_p = pb_w;
-		CProgressBar pb;
-		pb.paintProgressBar(BoxEndX - pb_w - SHADOW_OFFSET, BoxStartY + 12, pb_w, pb_h, pb_p, pb_w,
-				    0, 0, COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
+/*
+ 		// EXAMPLE PROGRESS BARS
+
+		// MULTICOLOURED progressbar 30% red, 100% green, 70% yellow
+		CProgressBar pb(true, -1, -1, 30, GREEN_BAR, 70, true);
+
+		// RED progressbar
+		CProgressBar pb(true, -1, -1, 100, 0, 0, false);
+
+		// GREEN progressbar
+		CProgressBar pb(true, -1, -1, 100, 0, 0, true);
+
+		// YELLOW progressbar
+		CProgressBar pb(true, -1, -1, 0, 0, 100, true);
+
+		// STANDARD progressbar
+		CProgressBar pb(false);
+*/
+		CProgressBar pb(true, -1, -1, 100, 0, 0, true);
+		pb.paintProgressBar(BoxEndX - pb_w - SHADOW_OFFSET, ChanNameY - (pb_h + 10) , pb_w, pb_h, pb_p, pb_w, 
+				    0, 0, g_settings.progressbar_color ? COL_INFOBAR_SHADOW_PLUS_0 : COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
 	}
 
 	int currTimeW = 0;
@@ -1758,7 +1855,7 @@ void CInfoViewer::showIcon_CA_Status() const
 {
 	frameBuffer->paintIcon((CA_Status) ? "ca.raw" : "fta.raw",
 				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-				BoxEndY + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::Set_CA_Status(int Status)
@@ -1827,7 +1924,7 @@ returns mode of painted channel logo,
 				if (g_settings.infobar_show_channellogo == 1) // paint logo in numberbox
 				{
 					// calculate mid of numberbox
-					int satNameHeight = g_settings.infobar_sat_display ? 8 : 0; // consider sat display and set an offset for y if exists
+					int satNameHeight = 0; // no sat name display now, picon doesnt need to set an offset for y
 					x_mid = BoxStartX+ChanWidth/2;
 					y_mid = (BoxStartY+satNameHeight)+ChanHeight/2;
 						

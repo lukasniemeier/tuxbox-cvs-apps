@@ -1,5 +1,5 @@
 /*
-	$Id: progresswindow.cpp,v 1.22 2009/03/28 14:48:58 seife Exp $
+	$Id: progresswindow.cpp,v 1.23 2011/07/22 19:46:55 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -83,7 +83,7 @@ void CProgressWindow::showGlobalStatus(const unsigned int prog)
 		if (global_progress > max_val)
 			global_progress = max_val;
 	
-		CProgressBar pb;
+		CProgressBar pb(false);
 		pb.paintProgressBarDefault (progressbar_x, globalstatusY, progressbar_w, progressbar_h, global_progress, max_val);
 	}
 		
@@ -105,7 +105,7 @@ void CProgressWindow::showLocalStatus(const unsigned int prog)
 		if (local_progress > max_val)
 			local_progress = max_val;
 	
-	CProgressBar pb;
+	CProgressBar pb(false);
 	pb.paintProgressBarDefault (progressbar_x, localstatusY, progressbar_w, progressbar_h, local_progress, max_val);
 	}
 	
