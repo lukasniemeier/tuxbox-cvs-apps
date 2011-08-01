@@ -1,5 +1,5 @@
 /*
- * $Id: frontend.h,v 1.38 2009/11/03 20:13:59 rhabarber1848 Exp $
+ * $Id: frontend.h,v 1.39 2011/08/01 19:31:01 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -132,6 +132,7 @@ class CFrontend
 #endif
 		void 				setCurrentSatellitePosition(int32_t satellitePosition) {currentSatellitePosition = satellitePosition; }
 
+		void 				gotoXX(t_satellite_position pos);
 		void 				positionMotor(uint8_t motorPosition);
 		void				sendMotorCommand(uint8_t cmdtype, uint8_t address, uint8_t command, uint8_t num_parameters, uint8_t parameter1, uint8_t parameter2);
 };

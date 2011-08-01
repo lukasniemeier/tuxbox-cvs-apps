@@ -1,5 +1,5 @@
 /*
- * $Id: scan.cpp,v 1.170 2009/09/30 17:34:20 seife Exp $
+ * $Id: scan.cpp,v 1.171 2011/08/01 19:31:02 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -94,6 +94,7 @@ static bool service_wr = false;
 extern CEventServer *eventServer;
 extern diseqc_t diseqcType;
 
+extern int useGotoXX;
 extern int motorRotationSpeed;
 TP_map_t TP_scanmap;
 
@@ -131,11 +132,14 @@ t_satellite_position driveMotorToSatellitePosition(const char * const providerNa
 			printf("[scan] scanning now: %s\n", providerName);
 			printf("[scan] currentSatellitePosition = %d, scanSatellitePosition = %d\n", currentSatellitePosition, satellite_position);
 			printf("[scan] motorPosition = %d\n", motorPositions[satellite_position]);
-			if ((currentSatellitePosition != satellite_position) && (motorPositions[satellite_position] != 0))
+			if ((currentSatellitePosition != satellite_position) && ((useGotoXX == 1) || (motorPositions[satellite_position] != 0)))
 			{
 				printf("[scan] start_scanthread: moving satellite dish from satellite position %d to %d\n", currentSatellitePosition, satellite_position);
 				printf("[scan] motorPosition = %d\n", motorPositions[satellite_position]);
-				frontend->positionMotor(motorPositions[satellite_position]);
+				if (useGotoXX == 1)
+					frontend->gotoXX(satellite_position);
+				else
+					frontend->positionMotor(motorPositions[satellite_position]);
 				waitForMotor = abs(satellite_position - currentSatellitePosition) / motorRotationSpeed;
 				printf("[zapit] waiting %d seconds for motor to turn satellite dish.\n", waitForMotor);
 				eventServer->sendEvent(CZapitClient::EVT_ZAP_MOTOR, CEventServer::INITID_ZAPIT, &waitForMotor, sizeof(waitForMotor));

@@ -44,6 +44,7 @@
 #include <gui/widget/messagebox.h>
 #include <gui/widget/icons.h>
 
+#include "gui/widget/hintbox.h"
 #include <system/settings.h>
 
 #include <global.h>
@@ -208,6 +209,12 @@ printf("[neutrino] TP_scan %d TP_freq %s TP_rate %s TP_fec %d TP_pol %d TP_mod %
 		ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, success ? LOCALE_SCANTS_FINISHED : LOCALE_SCANTS_FAILED, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 
 	hide();
+
+	CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SERVICEMENU_RELOAD_HINT));
+	hintBox->paint();
+	g_Zapit->reinitChannels();
+	hintBox->hide();
+	delete hintBox;
 
 	puts("[scan.cpp] executing " SCAN_END_SCRIPT ".");
 	if (system(SCAN_END_SCRIPT) != 0)

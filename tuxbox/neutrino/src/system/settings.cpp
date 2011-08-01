@@ -1,6 +1,6 @@
 /*
 
-        $Id: settings.cpp,v 1.53 2010/09/03 22:47:41 dbt Exp $
+        $Id: settings.cpp,v 1.54 2011/08/01 19:31:03 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -186,6 +186,15 @@ void CScanSettings::useDefaults(const delivery_system_t _delivery_system)
 	scanType	= CZapitClient::ST_ALL;
 	diseqcMode	= NO_DISEQC;
 	diseqcRepeat	= 0;
+	scan_mode	= 1;
+
+	motorRotationSpeed = 8;
+	useGotoXX = 0;
+	gotoXXLatitude = 00.000000;
+	gotoXXLongitude = 00.000000;
+	gotoXXLaDirection = 1;
+	gotoXXLoDirection = 1;
+
 #ifdef HAVE_TRIPLEDRAGON
 	TP_mod		= 0;
 #elif HAVE_DVB_API_VERSION >= 3
@@ -228,6 +237,13 @@ bool CScanSettings::loadSettings(const char * const fileName, const delivery_sys
 	bouquetMode = (CZapitClient::bouquetMode) configfile.getInt32("bouquetMode" , bouquetMode);
 	scanType=(CZapitClient::scanType) configfile.getInt32("scanType", scanType);
 	strcpy(satNameNoDiseqc, configfile.getString("satNameNoDiseqc", satNameNoDiseqc).c_str());
+
+	motorRotationSpeed = configfile.getInt32("motorRotationSpeed", 8);
+	useGotoXX = configfile.getInt32("useGotoXX", 0);
+	gotoXXLatitude = strtod(configfile.getString("gotoXXLatitude", "00.000000").c_str(), NULL);
+	gotoXXLongitude = strtod(configfile.getString("gotoXXLongitude", "00.000000").c_str(), NULL);
+	gotoXXLaDirection = configfile.getInt32("gotoXXLaDirection", 1);
+	gotoXXLoDirection = configfile.getInt32("gotoXXLoDirection", 1);
 
 	if (1/*diseqcMode != NO_DISEQC*/)
 	{
@@ -283,6 +299,16 @@ bool CScanSettings::saveSettings(const char * const fileName)
 	configfile.setInt32( "scanType", scanType );
 	configfile.setString( "satNameNoDiseqc", satNameNoDiseqc );
 	
+	char tempd[12];
+	configfile.setInt32("motorRotationSpeed", motorRotationSpeed);
+	configfile.setInt32("useGotoXX", useGotoXX);
+	sprintf(tempd, "%02.6f", gotoXXLatitude);
+	configfile.setString("gotoXXLatitude", tempd);
+	sprintf(tempd, "%02.6f", gotoXXLongitude);
+	configfile.setString("gotoXXLongitude", tempd);
+	configfile.setInt32("gotoXXLaDirection", gotoXXLaDirection);
+	configfile.setInt32("gotoXXLoDirection", gotoXXLoDirection);
+
 	if (1/*diseqcMode != NO_DISEQC*/)	
 	{
 		char tmp[20];

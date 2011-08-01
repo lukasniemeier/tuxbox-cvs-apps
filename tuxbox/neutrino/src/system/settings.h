@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.239 2011/07/22 19:46:55 rhabarber1848 Exp $
+  $Id: settings.h,v 1.240 2011/08/01 19:31:03 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -589,6 +589,13 @@ class CScanSettings
 	delivery_system_t         delivery_system;
 
 	int		scanSectionsd;
+
+	int motorRotationSpeed;
+	int useGotoXX;
+	double gotoXXLatitude;
+	double gotoXXLongitude;
+	int gotoXXLaDirection;
+	int gotoXXLoDirection;
 
 	int		scan_mode;
 	int		TP_scan;

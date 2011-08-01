@@ -1224,14 +1224,24 @@ satsetup.diseqc10 DiSEqC 1.0
 satsetup.diseqc11 DiSEqC 1.1
 satsetup.diseqc12 DiSEqC 1.2
 satsetup.diseqcrepeat DiSEqC-repeats
+satsetup.east East
 satsetup.extended DiSEqC-Settings
 satsetup.extended_motor Motor-Settings
+satsetup.ladir Latitude Direction
+satsetup.lat Latitude Location
+satsetup.lodir Longitude Direction
+satsetup.long Longitude Location
 satsetup.minidiseqc Mini-DiSEqC
 satsetup.motorcontrol Manual Motor-Setup
+satsetup.motorspeed Motor Delay Speed
 satsetup.nodiseqc no DiSEqC
+satsetup.north North
 satsetup.satellite Satellite
 satsetup.savesettingsnow save settings now
 satsetup.smatvremote SMATV Remote Tuning
+satsetup.south South
+satsetup.usegotoxx Use GotoXX
+satsetup.west West
 scantp.fec FEC
 scantp.fec_1_2 1/2
 scantp.fec_2_3 2/3

@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/client/msgtypes.h,v 1.40 2010/08/01 16:59:42 seife Exp $
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/client/msgtypes.h,v 1.41 2011/08/01 19:31:02 rhabarber1848 Exp $
  *
  * types used for clientlib <-> zapit communication - d-box2 linux project
  *
@@ -157,6 +157,7 @@ class CZapitMessages
 
 			CMD_SET_UNCOMMITTED_SWITCH_MODE    = 96,
 			CMD_GET_UNCOMMITTED_SWITCH_MODE    = 97,
+			CMD_LOADSCANSETTINGS               = 98,
 
 #ifdef HAVE_TRIPLEDRAGON
 			CMD_SET_ZOOMLEVEL		   = 120,

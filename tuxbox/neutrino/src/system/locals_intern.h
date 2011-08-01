@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.195 2011/07/22 19:46:55 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.196 2011/08/01 19:31:02 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1251,14 +1251,24 @@ const char * locale_real_names[] =
 	"satsetup.diseqc11",
 	"satsetup.diseqc12",
 	"satsetup.diseqcrepeat",
+	"satsetup.east",
 	"satsetup.extended",
 	"satsetup.extended_motor",
+	"satsetup.ladir",
+	"satsetup.lat",
+	"satsetup.lodir",
+	"satsetup.long",
 	"satsetup.minidiseqc",
 	"satsetup.motorcontrol",
+	"satsetup.motorspeed",
 	"satsetup.nodiseqc",
+	"satsetup.north",
 	"satsetup.satellite",
 	"satsetup.savesettingsnow",
 	"satsetup.smatvremote",
+	"satsetup.south",
+	"satsetup.usegotoxx",
+	"satsetup.west",
 	"scantp.fec",
 	"scantp.fec_1_2",
 	"scantp.fec_2_3",

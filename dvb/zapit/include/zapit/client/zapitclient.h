@@ -404,6 +404,9 @@ class CZapitClient:public CBasicClient
 	/* tell zapit stored satellite positions in diseqc 1.2 motor */
 	void setScanMotorPosList( ScanMotorPosList& motorPosList );
 
+	/* load scansetup configuration */
+	void loadScanSetupSettings();
+
 	/* set diseqcType*/
 	void setDiseqcType(const diseqc_t diseqc);
 

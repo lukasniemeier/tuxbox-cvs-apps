@@ -1,5 +1,5 @@
 /*
- * $Id: frontend.cpp,v 1.70 2009/11/03 20:14:00 rhabarber1848 Exp $
+ * $Id: frontend.cpp,v 1.71 2011/08/01 19:31:02 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -26,6 +26,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include <cmath>
 /* zapit */
 #include <zapit/debug.h>
 #include <zapit/frontend.h>
@@ -41,6 +42,16 @@
 #define modulation QAM
 #define FE_SET_VOLTAGE SEC_SET_VOLTAGE
 #endif
+
+#define SOUTH	0
+#define NORTH	1
+#define EAST	0
+#define WEST	1
+
+extern double gotoXXLatitude;
+extern double gotoXXLongitude;
+extern int gotoXXLaDirection;
+extern int gotoXXLoDirection;
 
 CFrontend::CFrontend(int _uncommitted_switch_mode, int _auto_fec)
 {
@@ -1055,3 +1066,256 @@ void CFrontend::sendUncommittedSwitchesCommand(uint8_t usCommand)
 	}
 	//DBG"[frontend] uncommitted switches command (0x%x) sent", cmd.msg[3]);
 }
+
+static const int gotoXTable[10] = { 0x00, 0x02, 0x03, 0x05, 0x06, 0x08, 0x0A, 0x0B, 0x0D, 0x0E };
+
+/*----------------------------------------------------------------------------*/
+double factorial_div(double value, int x)
+{
+	if (!x)
+		return 1;
+	else {
+		while (x > 1) {
+			value = value / x--;
+		}
+	}
+	return value;
+}
+
+/*----------------------------------------------------------------------------*/
+double powerd(double x, int y)
+{
+	int i = 0;
+	double ans = 1.0;
+
+	if (!y)
+		return 1.000;
+	else {
+		while (i < y) {
+			i++;
+			ans = ans * x;
+		}
+	}
+	return ans;
+}
+
+/*----------------------------------------------------------------------------*/
+double SIN(double x)
+{
+	int i = 0;
+	int j = 1;
+	int sign = 1;
+	double y1 = 0.0;
+	double diff = 1000.0;
+
+	if (x < 0.0) {
+		x = -1 * x;
+		sign = -1;
+	}
+
+	while (x > 360.0 * M_PI / 180) {
+		x = x - 360 * M_PI / 180;
+	}
+
+	if (x > (270.0 * M_PI / 180)) {
+		sign = sign * -1;
+		x = 360.0 * M_PI / 180 - x;
+	} else if (x > (180.0 * M_PI / 180)) {
+		sign = sign * -1;
+		x = x - 180.0 * M_PI / 180;
+	} else if (x > (90.0 * M_PI / 180)) {
+		x = 180.0 * M_PI / 180 - x;
+	}
+
+	while (powerd(diff, 2) > 1.0E-16) {
+		i++;
+		diff = j * factorial_div(powerd(x, (2 * i - 1)), (2 * i - 1));
+		y1 = y1 + diff;
+		j = -1 * j;
+	}
+	return (sign * y1);
+}
+
+double COS(double x)
+{
+	return SIN(90 * M_PI / 180 - x);
+}
+
+double ATAN(double x)
+{
+	int i = 0;		/* counter for terms in binomial series */
+	int j = 1;		/* sign of nth term in series */
+	int k = 0;
+	int sign = 1;		/* sign of the input x */
+	double y = 0.0;		/* the output */
+	double deltay = 1.0;	/* the value of the next term in the series */
+	double addangle = 0.0;	/* used if arctan > 22.5 degrees */
+
+	if (x < 0.0) {
+		x = -1 * x;
+		sign = -1;
+	}
+
+	while (x > 0.3249196962) {
+		k++;
+		x = (x - 0.3249196962) / (1 + x * 0.3249196962);
+	}
+	addangle = k * 18.0 * M_PI / 180;
+
+	while (powerd(deltay, 2) > 1.0E-16) {
+		i++;
+		deltay = j * powerd(x, (2 * i - 1)) / (2 * i - 1);
+		y = y + deltay;
+		j = -1 * j;
+	}
+	return (sign * (y + addangle));
+}
+
+double ASIN(double x)
+{
+	return 2 * ATAN(x / (1 + std::sqrt(1.0 - x * x)));
+}
+
+double Radians(double number)
+{
+	return number * M_PI / 180;
+}
+
+double Deg(double number)
+{
+	return number * 180 / M_PI;
+}
+
+double Rev(double number)
+{
+	return number - std::floor(number / 360.0) * 360;
+}
+
+double calcElevation(double SatLon, double SiteLat, double SiteLon, int Height_over_ocean = 0)
+{
+	const double a0 = 0.58804392, a1 = -0.17941557, a2 = 0.29906946E-1, a3 = -0.25187400E-2, a4 = 0.82622101E-4;
+	const double f = 1.00 / 298.257;	// Earth flattning factor
+	const double r_sat = 42164.57;		// Distance from earth centre to satellite
+	const double r_eq = 6378.14;		// Earth radius
+	double sinRadSiteLat = SIN(Radians(SiteLat)), cosRadSiteLat = COS(Radians(SiteLat));
+	double Rstation = r_eq / (std::sqrt(1.00 - f * (2.00 - f) * sinRadSiteLat * sinRadSiteLat));
+	double Ra = (Rstation + Height_over_ocean) * cosRadSiteLat;
+	double Rz = Rstation * (1.00 - f) * (1.00 - f) * sinRadSiteLat;
+	double alfa_rx = r_sat * COS(Radians(SatLon - SiteLon)) - Ra;
+	double alfa_ry = r_sat * SIN(Radians(SatLon - SiteLon));
+	double alfa_rz = -Rz, alfa_r_north = -alfa_rx * sinRadSiteLat + alfa_rz * cosRadSiteLat;
+	double alfa_r_zenith = alfa_rx * cosRadSiteLat + alfa_rz * sinRadSiteLat;
+	double El_geometric = Deg(ATAN(alfa_r_zenith / std::sqrt(alfa_r_north * alfa_r_north + alfa_ry * alfa_ry)));
+	double x = std::fabs(El_geometric + 0.589);
+	double refraction = std::fabs(a0 + a1 * x + a2 * x * x + a3 * x * x * x + a4 * x * x * x * x);
+	double El_observed = 0.00;
+
+	if (El_geometric > 10.2)
+		El_observed = El_geometric + 0.01617 * (COS(Radians(std::fabs(El_geometric))) / SIN(Radians(std::fabs(El_geometric))));
+	else {
+		El_observed = El_geometric + refraction;
+	}
+
+	if (alfa_r_zenith < -3000)
+		El_observed = -99;
+
+	return El_observed;
+}
+
+double calcAzimuth(double SatLon, double SiteLat, double SiteLon, int Height_over_ocean = 0)
+{
+	const double f = 1.00 / 298.257;	// Earth flattning factor
+	const double r_sat = 42164.57;		// Distance from earth centre to satellite
+	const double r_eq = 6378.14;		// Earth radius
+
+	double sinRadSiteLat = SIN(Radians(SiteLat)), cosRadSiteLat = COS(Radians(SiteLat));
+	double Rstation = r_eq / (std::sqrt(1 - f * (2 - f) * sinRadSiteLat * sinRadSiteLat));
+	double Ra = (Rstation + Height_over_ocean) * cosRadSiteLat;
+	double Rz = Rstation * (1 - f) * (1 - f) * sinRadSiteLat;
+	double alfa_rx = r_sat * COS(Radians(SatLon - SiteLon)) - Ra;
+	double alfa_ry = r_sat * SIN(Radians(SatLon - SiteLon));
+	double alfa_rz = -Rz;
+	double alfa_r_north = -alfa_rx * sinRadSiteLat + alfa_rz * cosRadSiteLat;
+	double Azimuth = 0.00;
+
+	if (alfa_r_north < 0)
+		Azimuth = 180 + Deg(ATAN(alfa_ry / alfa_r_north));
+	else
+		Azimuth = Rev(360 + Deg(ATAN(alfa_ry / alfa_r_north)));
+
+	return Azimuth;
+}
+
+double calcDeclination(double SiteLat, double Azimuth, double Elevation)
+{
+	return Deg(ASIN(SIN(Radians(Elevation)) * SIN(Radians(SiteLat)) + COS(Radians(Elevation)) * COS(Radians(SiteLat)) + COS(Radians(Azimuth))
+		   )
+	    );
+}
+
+double calcSatHourangle(double Azimuth, double Elevation, double Declination, double Lat)
+{
+	double a = -COS(Radians(Elevation)) * SIN(Radians(Azimuth));
+	double b = SIN(Radians(Elevation)) * COS(Radians(Lat)) - COS(Radians(Elevation)) * SIN(Radians(Lat)) * COS(Radians(Azimuth));
+
+	// Works for all azimuths (northern & sourhern hemisphere)
+	double returnvalue = 180 + Deg(ATAN(a / b));
+
+	(void)Declination;
+
+	if (Azimuth > 270) {
+		returnvalue = ((returnvalue - 180) + 360);
+		if (returnvalue > 360)
+			returnvalue = 360 - (returnvalue - 360);
+	}
+
+	if (Azimuth < 90)
+		returnvalue = (180 - returnvalue);
+
+	return returnvalue;
+}
+
+void CFrontend::gotoXX(t_satellite_position pos)
+{
+	int RotorCmd;
+	int satDir = pos < 0 ? WEST : EAST;
+	double SatLon = abs(pos) / 10.00;
+	double SiteLat = gotoXXLatitude;
+	double SiteLon = gotoXXLongitude;
+
+	if (gotoXXLaDirection == SOUTH)
+		SiteLat = -SiteLat;
+	if (gotoXXLoDirection == WEST)
+		SiteLon = 360 - SiteLon;
+	if (satDir == WEST)
+		SatLon = 360 - SatLon;
+	printf("siteLatitude = %f, siteLongitude = %f, %f degrees\n", SiteLat, SiteLon, SatLon);
+
+	double azimuth = calcAzimuth(SatLon, SiteLat, SiteLon);
+	double elevation = calcElevation(SatLon, SiteLat, SiteLon);
+	double declination = calcDeclination(SiteLat, azimuth, elevation);
+	double satHourAngle = calcSatHourangle(azimuth, elevation, declination, SiteLat);
+	printf("azimuth=%f, elevation=%f, declination=%f, PolarmountHourAngle=%f\n", azimuth, elevation, declination, satHourAngle);
+	if (SiteLat >= 0) {
+		int tmp = (int)round(fabs(180 - satHourAngle) * 10.0);
+		RotorCmd = (tmp / 10) * 0x10 + gotoXTable[tmp % 10];
+		if (satHourAngle < 180)	// the east
+			RotorCmd |= 0xE000;
+		else
+			RotorCmd |= 0xD000;
+	} else {
+		if (satHourAngle < 180) {
+			int tmp = (int)round(fabs(satHourAngle) * 10.0);
+			RotorCmd = (tmp / 10) * 0x10 + gotoXTable[tmp % 10];
+			RotorCmd |= 0xD000;
+		} else {
+			int tmp = (int)round(fabs(360 - satHourAngle) * 10.0);
+			RotorCmd = (tmp / 10) * 0x10 + gotoXTable[tmp % 10];
+			RotorCmd |= 0xE000;
+		}
+	}
+
+	printf("RotorCmd = %04x\n", RotorCmd);
+	sendMotorCommand(0xE0, 0x31, 0x6E, 2, ((RotorCmd & 0xFF00) / 0x100), RotorCmd & 0xFF);
+}
+

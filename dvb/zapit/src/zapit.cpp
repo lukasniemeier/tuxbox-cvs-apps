@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.453 2010/10/26 20:10:42 dbt Exp $
+ * $Id: zapit.cpp,v 1.454 2011/08/01 19:31:02 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -89,6 +89,7 @@
 CCam *cam = NULL;
 /* the configuration file */
 CConfigFile config(',', false);
+CConfigFile scanconfig(',', false);
 /* the event server */
 CEventServer *eventServer = NULL;
 /* the dvb audio device */
@@ -133,6 +134,12 @@ int debug = 0;
 int waitForMotor = 0;
 int motorRotationSpeed = 0; //in 0.1 degrees per second
 diseqc_t diseqcType;
+
+int useGotoXX;
+double gotoXXLatitude;
+double gotoXXLongitude;
+int gotoXXLaDirection;
+int gotoXXLoDirection;
 
 /* near video on demand */
 tallchans nvodchannels;         //  tallchans defined in "bouquets.h"
@@ -868,13 +875,16 @@ int zapit(const t_channel_id channel_id, bool in_nvod, transponder_id_t transpon
 #endif
 
 	/* have motor move satellite dish to satellite's position if necessary */
-	if ((diseqcType == DISEQC_1_2) && (motorPositions[cc->getSatellitePosition()] != 0))
+	if ((diseqcType == DISEQC_1_2) && ((useGotoXX == 1) || (motorPositions[cc->getSatellitePosition()] != 0)))
 	{
 		if ((frontend->getCurrentSatellitePosition() != cc->getSatellitePosition()))
 		{
 			printf("[zapit] currentSatellitePosition = %d, satellitePosition = %d\n", frontend->getCurrentSatellitePosition(), cc->getSatellitePosition());
 			printf("[zapit] motorPosition = %d\n", motorPositions[cc->getSatellitePosition()]);
-			frontend->positionMotor(motorPositions[cc->getSatellitePosition()]);
+			if (useGotoXX == 1)
+				frontend->gotoXX(cc->getSatellitePosition());
+			else
+				frontend->positionMotor(motorPositions[cc->getSatellitePosition()]);
 
 			waitForMotor = abs(cc->getSatellitePosition() - frontend->getCurrentSatellitePosition()) / motorRotationSpeed; //assuming 1.8 degrees/second motor rotation speed for the time being...
 			printf("[zapit] waiting %d seconds for motor to turn satellite dish.\n", waitForMotor);
@@ -2367,6 +2377,12 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 		break;
 	}
 
+	case CZapitMessages::CMD_LOADSCANSETTINGS:
+	{
+		loadScanSettings();
+		break;
+	}
+
 	case CZapitMessages::CMD_GET_CHANNEL_NAME:
 	{
 		t_channel_id                           requested_channel_id;
@@ -3009,7 +3025,7 @@ void leaveStandby(void)
 		case FE_QPSK:
 			frontend->setCurrentSatellitePosition(config.getInt32("lastSatellitePosition", 192));
 			frontend->setDiseqcRepeats(config.getInt32("diseqcRepeats", 0));
-			motorRotationSpeed = config.getInt32("motorRotationSpeed", 18); // default: 1.8 degrees per second
+			//motorRotationSpeed = scanconfig.getInt32("motorRotationSpeed", 8); // default: 0.8 degrees per second
 			diseqcType = (diseqc_t)config.getInt32("diseqcType", NO_DISEQC);
 			frontend->setDiseqcType(diseqcType);
 
@@ -3103,9 +3119,24 @@ void signal_handler(int signum)
 	}
 }
 
+void loadScanSettings(void)
+{
+	/* load gotoxx settings from scansetup configuration */
+	if (!scanconfig.loadConfig(SCANCONFIGFILE))
+		WARN("%s not found", SCANCONFIGFILE);
+
+	motorRotationSpeed = scanconfig.getInt32("motorRotationSpeed", 8);
+	useGotoXX = scanconfig.getInt32("useGotoXX", 0);
+	gotoXXLatitude = strtod(scanconfig.getString("gotoXXLatitude", "00.000000").c_str(), NULL);
+	gotoXXLongitude = strtod(scanconfig.getString("gotoXXLongitude", "00.000000").c_str(), NULL);
+	gotoXXLaDirection = scanconfig.getInt32("gotoXXLaDirection", 1);
+	gotoXXLoDirection = scanconfig.getInt32("gotoXXLoDirection", 1);
+	printf("[zapit] Load ScanSetup Setting: %d %f %f %d %d %d \n", useGotoXX, gotoXXLatitude, gotoXXLongitude, gotoXXLaDirection, gotoXXLoDirection, motorRotationSpeed);
+}
+
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.453 2010/10/26 20:10:42 dbt Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.454 2011/08/01 19:31:02 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
@@ -3219,6 +3250,8 @@ int main(int argc, char **argv)
 	found_channels = 0;
 	curr_sat = -1;
 
+	loadScanSettings();
+				
 	/* load configuration or set defaults if no configuration file exists */
 	if (!config.loadConfig(CONFIGFILE))
 		WARN("%s not found", CONFIGFILE);

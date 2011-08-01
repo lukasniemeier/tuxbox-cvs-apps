@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/lib/zapitclient.cpp,v 1.128 2010/08/01 16:59:42 seife Exp $ *
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/lib/zapitclient.cpp,v 1.129 2011/08/01 19:31:02 rhabarber1848 Exp $ *
  *
  * Zapit client interface - DBoxII-Project
  *
@@ -739,6 +739,13 @@ void CZapitClient::setScanMotorPosList( ScanMotorPosList& motorPosList )
 	{
 		send_data((char*)&motorPosList[i], sizeof(motorPosList[i]));
 	}
+	close_connection();
+}
+
+/* load scansetup configuration*/
+void CZapitClient::loadScanSetupSettings()
+{
+	send(CZapitMessages::CMD_LOADSCANSETTINGS);
 	close_connection();
 }
 
