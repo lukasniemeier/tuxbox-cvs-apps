@@ -135,12 +135,12 @@ void CProgressBar::realpaint(const int pos_x, const int pos_y,
 
 	// max height progressbar bar, if icon height larger than pb_height then get height from icon
 	int pb_max_height = icon_h > height ? icon_h + 2* frame_widht : height;
+	
+	// max height of active/passive bar
+	int bar_height = pb_max_height - 2*frame_widht;
 
 	if (!blink || !g_settings.progressbar_color)
 	{
-		// max height of active/passive bar	
-		int bar_height = pb_max_height - 2*frame_widht;
-	
 		// start_x passive bar
 		int start_x_passive_bar = start_x + active_pb_width;
 	
@@ -186,47 +186,56 @@ void CProgressBar::realpaint(const int pos_x, const int pos_y,
 				frameBuffer->paintBoxRel(pos_x + POINT + POINT, pos_y + POINT, width - POINT, pb_max_height + ITEMW, shadowbar_col);
 		} 
 
-		if (active_pb_width != last_width) {
-			if (active_pb_width > last_width) {
-				for (i = 1; (i < rd) && (i < maxi); i++) {
+		if (active_pb_width != last_width) 
+		{
+			if (active_pb_width > last_width) 
+			{
+				for (i = 1; (i < rd) && (i < maxi); i++) 
+				{ //green section
 					if (invert)
 						rgb = COL_LIME;
 					else
 						rgb = COL_RED;
-					for(j = 0; j <= hcnt; j++)
-						frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, rgb);
+					
+					frameBuffer->paintBoxRel(pos_x + i * ITEMW,start_y, POINT, bar_height, rgb);
 				}
-				for (; (i < yw) && (i < maxi); i++) {
+				for (; (i < yw) && (i < maxi); i++) 
+				{ //yello section
 					rgb = COL_YELLOW;
-					for(j = 0; j <= hcnt; j++)
-						frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, rgb);
+					
+					frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, rgb);
 				}
-				for (; (i < gn) && (i < maxi); i++) {
+				for (; (i < gn) && (i < maxi); i++) 
+				{ //red section
 					if (invert)
 						rgb = COL_RED;
 					else
 						rgb = COL_LIME;
-					for(j = 0; j <= hcnt; j++)
-						frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, rgb);
+					
+					frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, rgb);
 				}
 			}
-			for(i = maxi; i < total; i++) {
+			for(i = maxi; i < total; i++) 
+			{
 				for(j = 0; j <= hcnt; j++)
-					frameBuffer->paintBoxRel(pos_x + i * ITEMW, pos_y + j * ITEMW, POINT, POINT, COL_INFOBAR_PLUS_3);//fill passive
+					frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, COL_INFOBAR_PLUS_3);//fill passive
 			}
+
 			last_width = active_pb_width;
  		}	
  	}
 
 	// paint icon if present
-	if (iconfile != NULL){		
-			int icon_y = pos_y + (pb_max_height/2) - (icon_h/2);
-			frameBuffer->paintIcon(iconfile, pos_x + frame_widht, icon_y);
-		}
+	if (iconfile != NULL)
+	{		
+		int icon_y = pos_y + (pb_max_height/2) - (icon_h/2);
+		frameBuffer->paintIcon(iconfile, pos_x + frame_widht, icon_y);
+	}
 					
 	// upper text
 	int upper_labeltext_y = start_y - frame_widht ;
-	if (upper_labeltext != NULL) 	{		
+	if (upper_labeltext != NULL) 	
+	{		
 		g_Font[font_pbar]->RenderString( start_x +2,
 						upper_labeltext_y,
 						width,
