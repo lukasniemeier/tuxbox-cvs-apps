@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.302 2011/07/22 19:46:55 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.303 2011/08/05 23:49:45 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -189,11 +189,11 @@ void CInfoViewer::showSatfind()
 
 		sprintf (percent, "sig %d%%", sig);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 10, BoxEndY+ 25, BoxEndX, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
-		pbsig.paintProgressBar(ChanInfoX+ 72,  BoxEndY+ 7, 60, 15, sig, 100, 0, 0, COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
+		pbsig.paintProgressBar(ChanInfoX+ 72,  BoxEndY+ 7, 60, 15, sig, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
 
 		sprintf (percent, "snr %d%%", snr);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 140, BoxEndY+ 25, BoxEndX, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
-		pbsnr.paintProgressBar(ChanInfoX+202 ,  BoxEndY+ 7, 60, 15, snr, 100, 0, 0, COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
+		pbsnr.paintProgressBar(ChanInfoX+202 ,  BoxEndY+ 7, 60, 15, snr, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
 
 		sprintf (percent, "ber %d%%", ber);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 270, BoxEndY+ 25, BoxEndX, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
