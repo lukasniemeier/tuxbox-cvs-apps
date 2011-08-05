@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.13 2011/08/01 19:31:02 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.14 2011/08/05 23:49:53 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -293,7 +293,7 @@ void CScanSetup::showScanService()
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 
 		//motorspeed (how long to set wait timer for dish to travel to correct position) 
-		extMotorSettings->addItem(new CMenuOptionNumberChooser(LOCALE_SATSETUP_MOTORSPEED, (int *)&scanSettings.motorRotationSpeed, true, 0, 64, NULL));
+		extMotorSettings->addItem(new CMenuOptionNumberChooser(LOCALE_SATSETUP_MOTORSPEED, (int *)&scanSettings.motorRotationSpeed, true, 0, 64)) ;
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 
 		//gotoxx settings
