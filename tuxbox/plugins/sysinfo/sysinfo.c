@@ -1,5 +1,5 @@
 /*
- * $Id: sysinfo.c,v 1.8 2011/05/31 17:19:31 rhabarber1848 Exp $
+ * $Id: sysinfo.c,v 1.9 2011/08/23 17:53:12 rhabarber1848 Exp $
  *
  * sysinfo - d-box2 linux project
  *
@@ -35,7 +35,7 @@
 #include "color.h"
 
 
-#define S_VERSION 1.76
+#define S_VERSION 1.77
 
 //#define NET_DEBUG
 
@@ -102,13 +102,13 @@ char mtds[10][256]	={"","","","","","","","","",""};
 int mtd_count		=0;
 
 
-char IP_ADRESS[25]	={ "192.168.0.1" };
-char MAC_ADRESS[25]	={ "00:11:22:33:44:55" };
-char BC_ADRESS[25]	={ "192.168.0.255" };
-char MASK_ADRESS[25]	={ "255.255.255.0" };
-char BASE_ADRESS[10]	={ "0x000" };
-char GATEWAY_ADRESS[25]	={ "192.168.0.1" };
-char NAMES_ADRESS[25]	={ "192.168.0.1" };
+char IP_ADRESS[25]	={ "n.a." };
+char MAC_ADRESS[25]	={ "n.a." };
+char BC_ADRESS[25]	={ "n.a." };
+char MASK_ADRESS[25]	={ "n.a." };
+char BASE_ADRESS[10]	={ "n.a." };
+char GATEWAY_ADRESS[25]	={ "n.a." };
+char NAMES_ADRESS[25]	={ "n.a." };
 
 long long read_akt		=0;
 long long read_old		=0;
@@ -139,6 +139,8 @@ int Read_Neutrino_Cfg(char *entry);
 void render_koord (char ver);
 void up_full (char sel);
 void up_net (void);
+static void quit_signal(int sig);
+void closedown(void);
 
 unsigned char *lfb = 0, *lbb = 0;
 unsigned char title[256];
@@ -147,6 +149,7 @@ unsigned char *trstr;
 int mloop=1;
 
 char INST_FILE[]="/tmp/rc.locked";
+char IFNAME[10]="eth0";
 int instance=0;
 
 int get_instance(void)
@@ -178,13 +181,6 @@ FILE *fh;
 	{
 		remove(INST_FILE);
 	}
-}
-
-static void quit_signal(int sig)
-{
-	put_instance(get_instance()-1);
-	printf("sysinfo Version %.2f killed\n",S_VERSION);
-	exit(1);
 }
 
 int init_fb (void)
@@ -371,7 +367,7 @@ void daten_auslesen(char *buffer, char *ergebnis, char symbol)
 		i++;
 		count++;
 	}
-	ergebnis[i]=0;
+	ergebnis[i]='\0';
 }	
 
 int get_date (void)
@@ -550,10 +546,10 @@ int get_df(void)
 		FS_count=0;
 		while((fgets(line,512, f)!=NULL))
 		{
-			got=sscanf(line,"%s %s %s %s %s %s ", &Filesystem[FS_count], &FS_total[FS_count], &FS_used[FS_count], &FS_free[FS_count], &FS_percent[FS_count], &FS_mount[FS_count]);
+			got=sscanf(line,"%s %s %s %s %s %s ", Filesystem[FS_count], FS_total[FS_count], FS_used[FS_count], FS_free[FS_count], FS_percent[FS_count], FS_mount[FS_count]);
 			if(got==1)
 				if(fgets(line+strlen(line),512-strlen(line),f)!=0)
-					got=sscanf(line,"%s %s %s %s %s %s ", &Filesystem[FS_count], &FS_total[FS_count], &FS_used[FS_count], &FS_free[FS_count], &FS_percent[FS_count], &FS_mount[FS_count]);
+					got=sscanf(line,"%s %s %s %s %s %s ", Filesystem[FS_count], FS_total[FS_count], FS_used[FS_count], FS_free[FS_count], FS_percent[FS_count], FS_mount[FS_count]);
 			if (got==6 && isdigit(FS_used[FS_count][0])) FS_count++;
 		}
 		fclose(f);
@@ -1232,12 +1228,12 @@ void get_net_traf(void)
 	{
 		while (fgets(line_buffer, sizeof(line_buffer), file))
 		{
-			if((ptr = strstr(line_buffer, "eth0:"))!=NULL)
+			if((ptr = strstr(line_buffer, IFNAME))!=NULL)
 			{
 #if defined NET_DEBUG2
 				printf("Procline=%s\n",line_buffer); fflush(stdout);
 #endif
-				sscanf(ptr+5,"%Ld%ld%ld%ld%ld%ld%ld%ld%Ld%ld",&read_akt,&read_packet,&dummy,&dummy,&dummy,&dummy,&dummy,&dummy,&write_akt,&write_packet);
+				sscanf(ptr+strlen(IFNAME)+1,"%Ld%ld%ld%ld%ld%ld%ld%ld%Ld%ld",&read_akt,&read_packet,&dummy,&dummy,&dummy,&dummy,&dummy,&dummy,&write_akt,&write_packet);
 #if defined NET_DEBUG2
 				printf("Read=%Ld\n",read_akt);
 				printf("Write=%Ld\n",write_akt); fflush(stdout);
@@ -1479,10 +1475,48 @@ void perf_full(void)
 void get_network (void)
 {
 	FILE *file=NULL;
-	char 	*ptr;
+	char 	*ptr, *eptr;
 	char 	line_buffer[256]	="";
 	char 	temp_line[256]		="";
-	system ("ifconfig eth0 > /tmp/.sys_net");
+
+	sprintf(temp_line,"route -n | grep UG > /tmp/.sys_net");
+	system(temp_line);
+	if ((file = fopen("/tmp/.sys_net","r"))==NULL)
+	{
+		printf("Sysinfo: Netfile konnte nicht geoeffnet werden\n"); fflush(stdout);
+	}
+	else
+	{
+		if (fgets(line_buffer, sizeof(line_buffer), file))
+		{
+			if ((ptr=strchr(line_buffer,' '))!=NULL)
+			{
+				while (*ptr && (*ptr<=' '))
+					++ptr;
+				if ((eptr=strchr(ptr,' '))!=NULL)
+				{
+					*eptr=0;
+					strncpy(GATEWAY_ADRESS,ptr,sizeof(GATEWAY_ADRESS));
+#if defined NET_DEBUG
+					printf("GATEWAY_ADRESS=%s\n",GATEWAY_ADRESS); fflush(stdout);
+#endif
+					ptr=eptr+1;
+					if ((eptr=strrchr(ptr,' '))!=NULL)
+					{
+						while (*(ptr+strlen(ptr)-1)<'0')
+							*(ptr+strlen(ptr)-1)=0;
+						strncpy(IFNAME,eptr+1,sizeof(IFNAME));
+#if defined NET_DEBUG
+						printf("IFNAME=%s\n",IFNAME); fflush(stdout);
+#endif
+					}
+				}
+			}
+		}
+		fclose (file);
+	}
+	sprintf(temp_line,"ifconfig %s > /tmp/.sys_net",IFNAME);
+	system(temp_line);
 	if ((file = fopen("/tmp/.sys_net","r"))==NULL)
 	{
 		printf("Sysinfo: Netfile konnte nicht geoeffnet werden\n"); fflush(stdout);
@@ -1535,43 +1569,7 @@ void get_network (void)
 		}
 		fclose (file);
 	}
-	sprintf(temp_line,"gateway ");
-	if ((file = fopen(NETWORKFILE_VAR,"r"))==NULL)
-	{
-		if ((file = fopen(NETWORKFILE_ETC,"r"))==NULL)
-		{		
-			printf("Sysinfo: Interface-File konnten nicht gefunden werden\n"); fflush(stdout);
-		}
-		else
-		{
-			while (fgets(line_buffer, sizeof(line_buffer), file))
-			{
-				if((ptr = strstr(line_buffer, temp_line))!=NULL)
-				{
-					corr(GATEWAY_ADRESS,(ptr+strlen(temp_line)));
-					
-#if defined NET_DEBUG
-					printf("GATEWAY_ADRESS ETC=%s\n",GATEWAY_ADRESS); fflush(stdout);
-#endif
-				}	
-			}
-			fclose(file);
-		}
-	}
-	else
-	{
-		while (fgets(line_buffer, sizeof(line_buffer), file))
-		{
-			if((ptr = strstr(line_buffer, temp_line))!=NULL) 
-			{
-				corr(GATEWAY_ADRESS,(ptr+strlen(temp_line)));
-#if defined NET_DEBUG
-				printf("GATEWAY_ADRESS VAR=%s\n",GATEWAY_ADRESS); fflush(stdout);
-#endif
-			}
-		}
-		fclose(file);
-	}
+
 	sprintf(temp_line,"nameserver ");
 	if ((file = fopen(RESOLVEFILE_VAR,"r"))==NULL)
 	{
@@ -1619,7 +1617,7 @@ void get_network (void)
 	printf("NAMES_ADRESS=%s\n",NAMES_ADRESS); fflush(stdout);
 #endif
 	
-	
+	remove("/tmp/.sys_net");
 	
 }
 
@@ -1746,7 +1744,6 @@ void show_network (void)
 	}
 	v_abs+=v_dist;
 
-		
 	RenderString("Box MAC:", (stx+40), (linie_oben+v_abs), maxwidth, LEFT, size, CMHT);
 	RenderString(MAC_ADRESS, (abs_links), (linie_oben+v_abs), maxwidth, LEFT, size, CMCT);
 	v_abs+=v_dist;
@@ -1903,11 +1900,24 @@ int main (void)
 			system (systemp);
 		}
 	}
+	closedown();
+	return 0;
+}
 
-	memset(lbb, 0, var_screeninfo.xres*var_screeninfo.yres);
-	memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
+static void quit_signal(int sig)
+{
+	closedown();
+	printf("Sysinfo Version %.2f killed, SIG %d\n",S_VERSION, sig);
+	exit(1);
+}
+
+void closedown(void)
+{
 	FTC_Manager_Done(manager);
 	FT_Done_FreeType(library);
+	memset(lbb, 0, var_screeninfo.xres*var_screeninfo.yres);
+	memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
+
 	free(line_buffer);
 	free(trstr);
 	free(lbb);
@@ -1917,5 +1927,4 @@ int main (void)
 	close(rc);
 	remove ("/tmp/systmp");
 	put_instance(get_instance()-1);
-	return 0;
 }
