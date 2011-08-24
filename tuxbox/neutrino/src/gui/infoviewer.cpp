@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.303 2011/08/05 23:49:45 dbt Exp $
+	$Id: infoviewer.cpp,v 1.304 2011/08/24 08:07:49 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1708,12 +1708,12 @@ void CInfoViewer::show_Data(bool calledFromEvent)
 	time_t jetzt=time(NULL);
 	if (info_CurrentNext.flags & CSectionsdClient::epgflags::has_current)
 	{
-		int seit = (jetzt - info_CurrentNext.current_zeit.startzeit + 30) / 60;
-		int rest = (info_CurrentNext.current_zeit.dauer / 60) - seit ;
-		if (seit< 0)
+		int seit = (abs(jetzt - info_CurrentNext.current_zeit.startzeit) + 30) / 60;
+		int rest = (info_CurrentNext.current_zeit.dauer / 60) - seit;
+		if (jetzt < info_CurrentNext.current_zeit.startzeit)
 		{
 			progressbarPos = 0;
-			sprintf((char*)&runningRest, "in %d min", -seit);
+			sprintf((char*)&runningRest, "in %d min", seit);
 		}
 		else
 		{
