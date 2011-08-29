@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.158 2011/08/05 23:49:49 dbt Exp $
+	$Id: epgview.cpp,v 1.159 2011/08/29 19:48:54 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -611,7 +611,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	if ( epg_done!= -1 )	//show event progressbar
 	{		
  		CProgressBar pb(true, -1, -1, 100, 0, 0, true); //only green color 
-		pb.paintProgressBarDefault (sx + 10 + widthl + 10 + ((ox-104-widthr-widthl-10-10-20)>>1), sy+oy-height, 104, height-6, epg_done, 104);	
+		pb.paintProgressBarDefault (sx + 10 + widthl + 10 + ((ox-104-widthr-widthl-10-10-20)>>1), sy+oy-height, 104, height-6, epg_done, 100);	
 	}
 
 	GetPrevNextEPGData( epgData.eventID, &epgData.epg_times.startzeit );
