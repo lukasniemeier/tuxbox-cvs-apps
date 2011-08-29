@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.304 2011/08/24 08:07:49 dbt Exp $
+	$Id: infoviewer.cpp,v 1.305 2011/08/29 19:48:37 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -345,7 +345,7 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 					*/
 	playstate = _playstate;
 	const int mode = playmode;
-	InfoHeightY_Info = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BOTTOM_BAR_FONT_OFFSET + (g_settings.infobar_sat_display ? 30 : 0);
+	InfoHeightY_Info = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BOTTOM_BAR_FONT_OFFSET;
 	showButtonBar = true;
 	bool fadeIn = (g_info.box_Type != CControld::TUXBOX_MAKER_NOKIA) && // dreambox and eNX only 
 		g_settings.widget_fade && (!is_visible);
@@ -1154,12 +1154,15 @@ void CInfoViewer::showIcon_RadioText(bool rt_available) const
 
 void CInfoViewer::showIcon_16_9() const
 {
+	int mode = CNeutrinoApp::getInstance()->getMode();
+	bool tsmode = (mode == NeutrinoMessages::mode_ts);
+
 #ifdef ENABLE_RADIOTEXT
-	if (CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_radio)
+	if (mode != NeutrinoMessages::mode_radio)
 #endif
 	frameBuffer->paintIcon((aspectRatio != 0) ? NEUTRINO_ICON_16_9 : NEUTRINO_ICON_16_9_GREY,
-				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + (tsmode ? 0 : 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH) + 6),
+				BoxEndY + (g_settings.infobar_sat_display && !tsmode ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::showIcon_VTXT() const
@@ -1217,9 +1220,11 @@ void CInfoViewer::showIcon_Audio(const int ac3state) const
 			break;
 	}
 
+	bool tsmode = (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_ts);
+
 	frameBuffer->paintIcon(dd_icon,
-			       BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-			       BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+			       BoxEndX - (ICON_LARGE_WIDTH + (tsmode ? 0 : 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH) + 6),
+			       BoxEndY + (g_settings.infobar_sat_display && !tsmode ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::showInfoIcons()
