@@ -172,7 +172,6 @@ void CProgressBar::realpaint(const int pos_x, const int pos_y,
 		int yw = yellow * width / (100 * ITEMW);	/* how many POINTs yellow */
 		int gn = green * width / (100 * ITEMW);		/* how many POINTs green */
 
-		int hcnt = height / ITEMW;		/* how many POINTs is the bar high */
 		int maxi = active_pb_width / ITEMW;	/* how many POINTs is the active bar */
 		int total = width / ITEMW;		/* total number of POINTs */
 
@@ -181,23 +180,26 @@ void CProgressBar::realpaint(const int pos_x, const int pos_y,
 
 		if (last_width == -1 && backgroundbar_col != 0) /* first paint */
 		{
-			frameBuffer->paintBoxRel(pos_x + POINT, pos_y, width - POINT, pb_max_height + ITEMW, backgroundbar_col);
+			// shadow
 			if (shadowbar_col != 0)
-				frameBuffer->paintBoxRel(pos_x + POINT + POINT, pos_y + POINT, width - POINT, pb_max_height + ITEMW, shadowbar_col);
+				frameBuffer->paintBoxRel(pos_x + SHADOW_OFFSET, pos_y + SHADOW_OFFSET, width, pb_max_height, shadowbar_col);
+
+			// background
+			frameBuffer->paintBoxRel(pos_x, pos_y, width, pb_max_height, backgroundbar_col);
 		} 
 
 		if (active_pb_width != last_width) 
 		{
 			if (active_pb_width > last_width) 
 			{
-				for (i = 1; (i < rd) && (i < maxi); i++) 
+				for (i = 0; (i < rd) && (i < maxi); i++) 
 				{ //green section
 					if (invert)
 						rgb = COL_LIME;
 					else
 						rgb = COL_RED;
 					
-					frameBuffer->paintBoxRel(pos_x + i * ITEMW,start_y, POINT, bar_height, rgb);
+					frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, rgb);
 				}
 				for (; (i < yw) && (i < maxi); i++) 
 				{ //yello section
@@ -215,11 +217,8 @@ void CProgressBar::realpaint(const int pos_x, const int pos_y,
 					frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, rgb);
 				}
 			}
-			for(i = maxi; i < total; i++) 
-			{
-				for(j = 0; j <= hcnt; j++)
-					frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, COL_INFOBAR_PLUS_3);//fill passive
-			}
+			for (i = maxi; i < total; i++) 
+				frameBuffer->paintBoxRel(pos_x + i * ITEMW, start_y, POINT, bar_height, COL_INFOBAR_PLUS_3); //fill passive
 
 			last_width = active_pb_width;
  		}	
