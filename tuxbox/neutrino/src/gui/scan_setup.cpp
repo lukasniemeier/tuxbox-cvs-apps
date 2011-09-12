@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.14 2011/08/05 23:49:53 dbt Exp $
+	$Id: scan_setup.cpp,v 1.15 2011/09/12 17:30:28 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -241,6 +241,8 @@ void CScanSetup::showScanService()
 	//prepare sat-lnb-settings
 	CMenuWidget* extSatSettings = NULL;
 	CMenuWidget* extMotorSettings = NULL;
+	CStringInput* toff_lat = NULL;
+	CStringInput* toff_long = NULL;
 	CSatDiseqcNotifier* satDiseqcNotifier = NULL;
 	CScanSettingsSatManNotifier* scanSettingsSatManNotifier = NULL;
 
@@ -299,17 +301,16 @@ void CScanSetup::showScanService()
 		//gotoxx settings
 		extMotorSettings->addItem(new CMenuOptionChooser(LOCALE_SATSETUP_USEGOTOXX,  (int *)&scanSettings.useGotoXX, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
 
-		CStringInput * toff;
 		sprintf(zapit_lat, "%02.6f", scanSettings.gotoXXLatitude);
 		sprintf(zapit_long, "%02.6f", scanSettings.gotoXXLongitude);
 
 		extMotorSettings->addItem(new CMenuOptionChooser(LOCALE_SATSETUP_LADIR,  (int *)&scanSettings.gotoXXLaDirection, OPTIONS_SOUTH0_NORTH1_OPTIONS, OPTIONS_SOUTH0_NORTH1_OPTION_COUNT, true));
-		toff = new CStringInput(LOCALE_SATSETUP_LAT, (char *) zapit_lat, 10, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789.");
-		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_LAT, true, zapit_lat, toff));
+		toff_lat = new CStringInput(LOCALE_SATSETUP_LAT, (char *) zapit_lat, 10, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789.");
+		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_LAT, true, zapit_lat, toff_lat));
 
 		extMotorSettings->addItem(new CMenuOptionChooser(LOCALE_SATSETUP_LODIR,  (int *)&scanSettings.gotoXXLoDirection, OPTIONS_EAST0_WEST1_OPTIONS, OPTIONS_EAST0_WEST1_OPTION_COUNT, true));
-		toff = new CStringInput(LOCALE_SATSETUP_LONG, (char *) zapit_long, 10, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789.");
-		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_LONG, true, zapit_long, toff));
+		toff_long = new CStringInput(LOCALE_SATSETUP_LONG, (char *) zapit_long, 10, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789.");
+		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_LONG, true, zapit_long, toff_long));
 
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 		
@@ -432,6 +433,8 @@ void CScanSetup::showScanService()
 
 	delete extSatSettings;
 	delete extMotorSettings;
+	delete toff_lat;
+	delete toff_long;
 	delete satDiseqcNotifier;
 	delete scanSettingsSatManNotifier;
 	delete scanTs;
