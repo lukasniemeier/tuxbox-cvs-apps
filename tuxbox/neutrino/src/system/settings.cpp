@@ -1,6 +1,6 @@
 /*
 
-        $Id: settings.cpp,v 1.54 2011/08/01 19:31:03 rhabarber1848 Exp $
+        $Id: settings.cpp,v 1.55 2011/09/12 17:34:03 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -186,7 +186,6 @@ void CScanSettings::useDefaults(const delivery_system_t _delivery_system)
 	scanType	= CZapitClient::ST_ALL;
 	diseqcMode	= NO_DISEQC;
 	diseqcRepeat	= 0;
-	scan_mode	= 1;
 
 	motorRotationSpeed = 8;
 	useGotoXX = 0;
