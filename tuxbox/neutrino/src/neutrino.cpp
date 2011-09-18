@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1066 2011/09/18 20:51:58 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1067 2011/09/18 21:05:38 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -677,6 +677,8 @@ int CNeutrinoApp::loadSetup()
 
 	g_settings.key_quickzap_up = (neutrino_msg_t)configfile.getInt32("key_quickzap_up", CRCInput::RC_up);
 	g_settings.key_quickzap_down = (neutrino_msg_t)configfile.getInt32("key_quickzap_down", CRCInput::RC_down);
+	g_settings.key_volume_up = (neutrino_msg_t)configfile.getInt32("key_volume_up", CRCInput::RC_plus);
+	g_settings.key_volume_down = (neutrino_msg_t)configfile.getInt32("key_volume_down", CRCInput::RC_minus);
 	g_settings.key_bouquet_up = (neutrino_msg_t)configfile.getInt32("key_bouquet_up", CRCInput::RC_right);
 	g_settings.key_bouquet_down = (neutrino_msg_t)configfile.getInt32("key_bouquet_down", CRCInput::RC_left);
 	g_settings.key_subchannel_up = (neutrino_msg_t)configfile.getInt32("key_subchannel_up", CRCInput::RC_right);
@@ -1215,6 +1217,8 @@ void CNeutrinoApp::saveSetup()
 
 	configfile.setInt32( "key_quickzap_up", (int)g_settings.key_quickzap_up );
 	configfile.setInt32( "key_quickzap_down", (int)g_settings.key_quickzap_down );
+	configfile.setInt32( "key_volume_up", (int)g_settings.key_volume_up );
+	configfile.setInt32( "key_volume_down", (int)g_settings.key_volume_down );
 	configfile.setInt32( "key_bouquet_up", (int)g_settings.key_bouquet_up );
 	configfile.setInt32( "key_bouquet_down", (int)g_settings.key_bouquet_down );
 	configfile.setInt32( "key_subchannel_up", (int)g_settings.key_subchannel_up );
@@ -2711,8 +2715,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 
 		if (mode == mode_standby && msg <= CRCInput::RC_MaxRC)
 			return messages_return::handled; // don't process RC events in standby mode
-		else if ((msg == CRCInput::RC_plus) ||
-			 (msg == CRCInput::RC_minus) ||
+		else if ((msg == g_settings.key_volume_up) ||
+			 (msg == g_settings.key_volume_down) ||
 			 (msg == NeutrinoMessages::EVT_VOLCHANGED))
 		{
 			setVolume(msg, (mode != mode_scart));
@@ -3492,7 +3496,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 	{
 		if (msg <= CRCInput::RC_MaxRC)
 		{
-			if (msg_repeatok == CRCInput::RC_plus)
+			if (msg_repeatok == g_settings.key_volume_up)
 			{
 #ifdef ENABLE_LIRC
 				if (lirc)
@@ -3508,7 +3512,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 						current_volume = 100;
 				}
 			}
-			else if (msg_repeatok == CRCInput::RC_minus)
+			else if (msg_repeatok == g_settings.key_volume_down)
 			{
 #ifdef ENABLE_LIRC
 				if (lirc)
@@ -3524,8 +3528,8 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 						current_volume = 0;
 				}
 			}
-			else if (msg != (CRCInput::RC_minus|CRCInput::RC_Release) &&	// ignore release of all the keys
-				 msg != (CRCInput::RC_plus|CRCInput::RC_Release) &&	// that have triggered setVolume()
+			else if (msg != (g_settings.key_volume_down|CRCInput::RC_Release) &&	// ignore release of all the keys
+				 msg != (g_settings.key_volume_up|CRCInput::RC_Release) &&	// that have triggered setVolume()
 				 msg != (CRCInput::RC_ok|CRCInput::RC_Release))		// "OK" triggers in ost/lirc/avs settings
 			{
 				g_RCInput->postMsg(msg, data);
@@ -3537,7 +3541,7 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 
 			/* the doShowMuteIcon code checks for the real volume,
 			   so we must do this after g_Controld->setVolume() */
-			if (current_muted && msg_repeatok == CRCInput::RC_plus)
+			if (current_muted && msg_repeatok == g_settings.key_volume_up)
 				AudioMute(false); // switch off mute on pressing the plus button
 #ifdef ENABLE_LIRC
 			if (lirc)

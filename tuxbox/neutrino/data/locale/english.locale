@@ -634,6 +634,10 @@ keybindingmenu.subchannelup subchannel up
 keybindingmenu.subchannelup_head key subchannel up
 keybindingmenu.tvradiomode TV/Radio-mode
 keybindingmenu.tvradiomode_head TV/Radio-mode
+keybindingmenu.volumedown volume down
+keybindingmenu.volumedown_head Keysetup volume down
+keybindingmenu.volumeup volume up
+keybindingmenu.volumeup_head Keysetup volume up
 keybindingmenu.zaphistory Channel History Bouquet
 keybindingmenu.zaphistory_head Channel History Bouquet
 keychooser.head Setup new Key

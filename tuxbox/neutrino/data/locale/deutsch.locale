@@ -634,6 +634,10 @@ keybindingmenu.subchannelup Unterkanal weiter
 keybindingmenu.subchannelup_head Unterkanal weiter
 keybindingmenu.tvradiomode Fernseh-/Radio-Modus
 keybindingmenu.tvradiomode_head Fernseh-/Radio-Modus
+keybindingmenu.volumedown Lautstärke minus
+keybindingmenu.volumedown_head Lautstärke minus
+keybindingmenu.volumeup Lautstärke plus
+keybindingmenu.volumeup_head Lautstärke plus
 keybindingmenu.zaphistory Zapping-History Bouquet
 keybindingmenu.zaphistory_head Zapping-History Bouquet
 keychooser.head Neue Taste einstellen

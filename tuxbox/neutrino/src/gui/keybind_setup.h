@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
+	$Id: keybind_setup.h,v 1.5 2011/09/18 21:05:38 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -53,6 +53,8 @@ class CKeybindSetup : public CMenuTarget
 			VIRTUALKEY_RELOAD,
 			VIRTUALKEY_CHANNEL_UP,
 			VIRTUALKEY_CHANNEL_DOWN,
+			VIRTUALKEY_VOLUME_UP,
+			VIRTUALKEY_VOLUME_DOWN,
 			VIRTUALKEY_BOUQUET_UP,
 			VIRTUALKEY_BOUQUET_DOWN,
 			VIRTUALKEY_SUBCHANNEL_UP,

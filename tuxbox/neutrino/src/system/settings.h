@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.240 2011/08/01 19:31:03 rhabarber1848 Exp $
+  $Id: settings.h,v 1.241 2011/09/18 21:05:38 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -320,6 +320,8 @@ struct SNeutrinoSettings
 
 	neutrino_msg_t key_quickzap_up;
 	neutrino_msg_t key_quickzap_down;
+	neutrino_msg_t key_volume_up;
+	neutrino_msg_t key_volume_down;
 	neutrino_msg_t key_bouquet_up;
 	neutrino_msg_t key_bouquet_down;
 	neutrino_msg_t key_subchannel_up;

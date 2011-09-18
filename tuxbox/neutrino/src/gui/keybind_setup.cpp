@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.9 2011/04/03 21:56:13 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.10 2011/09/18 21:05:38 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -93,6 +93,8 @@ const neutrino_locale_t keydescription_head[] =
 	LOCALE_KEYBINDINGMENU_RELOAD_HEAD,
 	LOCALE_KEYBINDINGMENU_CHANNELUP_HEAD,
 	LOCALE_KEYBINDINGMENU_CHANNELDOWN_HEAD,
+	LOCALE_KEYBINDINGMENU_VOLUMEUP_HEAD,
+	LOCALE_KEYBINDINGMENU_VOLUMEDOWN_HEAD,
 	LOCALE_KEYBINDINGMENU_BOUQUETUP_HEAD,
 	LOCALE_KEYBINDINGMENU_BOUQUETDOWN_HEAD,
 	LOCALE_KEYBINDINGMENU_SUBCHANNELUP_HEAD,
@@ -115,6 +117,8 @@ const neutrino_locale_t keydescription[] =
 	LOCALE_KEYBINDINGMENU_RELOAD,
 	LOCALE_KEYBINDINGMENU_CHANNELUP,
 	LOCALE_KEYBINDINGMENU_CHANNELDOWN,
+	LOCALE_KEYBINDINGMENU_VOLUMEUP,
+	LOCALE_KEYBINDINGMENU_VOLUMEDOWN,
 	LOCALE_KEYBINDINGMENU_BOUQUETUP,
 	LOCALE_KEYBINDINGMENU_BOUQUETDOWN,
 	LOCALE_KEYBINDINGMENU_SUBCHANNELUP,
@@ -156,6 +160,8 @@ void CKeybindSetup::showSetup()
 			&g_settings.key_channelList_reload,
 			&g_settings.key_quickzap_up,
 			&g_settings.key_quickzap_down,
+			&g_settings.key_volume_up,
+			&g_settings.key_volume_down,
 			&g_settings.key_bouquet_up,
 			&g_settings.key_bouquet_down,
 			&g_settings.key_subchannel_up,
