@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.11 2011/06/19 12:07:26 rhabarber1848 Exp $
+	$Id: video_setup.cpp,v 1.12 2011/09/18 20:44:49 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -40,6 +40,9 @@
 
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
+#ifdef HAVE_DBOX_HARDWARE
+#include <gui/widget/rgbcsynccontroler.h>
+#endif
 
 #include <driver/screen_max.h>
 
@@ -50,9 +53,6 @@
 CVideoSetup::CVideoSetup()
 {
 	SyncControlerForwarder = NULL;
-#ifdef HAVE_DBOX_HARDWARE
-	RGBCSyncControler = NULL;
-#endif
 	VcrVideoOutSignalOptionChooser = NULL;
 
 	width = w_max (500, 100);
@@ -64,11 +64,7 @@ CVideoSetup::CVideoSetup()
 
 CVideoSetup::~CVideoSetup()
 {
-	delete SyncControlerForwarder;
-#ifdef HAVE_DBOX_HARDWARE
-	delete RGBCSyncControler;
-#endif
-	delete VcrVideoOutSignalOptionChooser;
+
 }
 
 int CVideoSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
@@ -148,7 +144,7 @@ void CVideoSetup::showVideoSetup()
 
 #ifdef HAVE_DBOX_HARDWARE
 	//rgb centering
-	RGBCSyncControler = new CRGBCSyncControler(LOCALE_VIDEOMENU_RGB_CENTERING, &g_settings.video_csync);
+	CRGBCSyncControler * RGBCSyncControler = new CRGBCSyncControler(LOCALE_VIDEOMENU_RGB_CENTERING, &g_settings.video_csync);
 	bool sc_active = ((video_out_signal == CControldClient::VIDEOOUTPUT_RGB) || (video_out_signal == CControldClient::VIDEOOUTPUT_YUV_VBS) || (video_out_signal ==  CControldClient::VIDEOOUTPUT_YUV_CVBS));
 	SyncControlerForwarder = new CMenuForwarder(LOCALE_VIDEOMENU_RGB_CENTERING, sc_active, NULL , RGBCSyncControler, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 #endif
@@ -173,8 +169,6 @@ void CVideoSetup::showVideoSetup()
 		VcrVideoOutSignalOptionChooser = new CMenuOptionChooser(LOCALE_VIDEOMENU_VCRSIGNAL, &vcr_video_out_signal, VIDEOMENU_VCRSIGNAL_OPTIONS, VIDEOMENU_VCRSIGNAL_OPTION_COUNT, vo_active, this);
 		videosetup->addItem(VcrVideoOutSignalOptionChooser);
 	}
-	else
-		VcrVideoOutSignalOptionChooser = NULL;
 
 	//video vcr switch
 	videosetup->addItem(new CMenuOptionChooser(LOCALE_VIDEOMENU_VCRSWITCH, &g_settings.vcr_AutoSwitch, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true)); //video vcr switch
@@ -183,6 +177,10 @@ void CVideoSetup::showVideoSetup()
 	videosetup->hide();
 	selected = videosetup->getSelected();
 	delete videosetup;
+
+#ifdef HAVE_DBOX_HARDWARE
+	delete RGBCSyncControler;
+#endif
 }
 
 bool CVideoSetup::changeNotify(const neutrino_locale_t OptionName, void *)
