@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1065 2011/07/22 19:46:55 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1066 2011/09/18 20:51:58 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2823,8 +2823,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		{
 			if (g_settings.standby_save_power && mode == mode_standby)
 			{
-				standbyMode(false);
 				standbyAfterRecord = true;
+				standbyMode(false);
 			}
 			execute_start_file(NEUTRINO_RECORDING_START_SCRIPT);
 			/* set nextRecordingInfo to current event (replace other scheduled recording if available) */
@@ -2975,8 +2975,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		{
 			if (g_settings.standby_save_power && mode == mode_standby)
 			{
-				standbyMode(false);
 				standbyAfterRecord = true;
+				standbyMode(false);
 			}
 			execute_start_file(NEUTRINO_RECORDING_TIMER_SCRIPT);
 
@@ -3762,9 +3762,12 @@ void CNeutrinoApp::standbyMode( bool bOnOff )
 		execute_start_file(NEUTRINO_LEAVE_STANDBY_SCRIPT);
 
 #ifdef ENABLE_LIRC
-		//Send ir
-		CIRSend irs("sboff");
-		irs.Send();
+		if (!standbyAfterRecord)
+		// execute sboff only if standby was left due to start of timer recording
+		{	//Send ir
+			CIRSend irs("sboff");
+			irs.Send();
+		}
 #endif
 
 		mode = mode_unknown;
