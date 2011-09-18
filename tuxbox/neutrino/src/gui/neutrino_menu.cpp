@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.133 2011/07/10 12:53:46 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.134 2011/09/18 20:49:27 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -46,15 +46,8 @@
 #include <driver/vcrcontrol.h>
 
 #include "gui/bedit/bouqueteditor_bouquets.h"
-#include "gui/widget/colorchooser.h"
-#include "gui/widget/dirchooser.h"
 #include "gui/widget/icons.h"
-#include "gui/widget/keychooser.h"
-#include "gui/widget/rgbcsynccontroler.h"
-#include "gui/widget/stringinput.h"
-#include "gui/widget/stringinput_ext.h"
 
-#include "movieplayer_setup.h"
 #include "audio_setup.h"
 #include "video_setup.h"
 #include "audio_select.h"
