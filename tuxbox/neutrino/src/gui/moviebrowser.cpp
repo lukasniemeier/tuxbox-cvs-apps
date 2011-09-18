@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.60 2011/04/25 14:11:24 dbt Exp $
+	$Id: moviebrowser.cpp,v 1.61 2011/09/18 20:42:48 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.60 2011/04/25 14:11:24 dbt Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.61 2011/09/18 20:42:48 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -915,8 +915,8 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if(actionKey == "reload_movie_info")
 	{
-		loadMovies();
-		refresh();
+		loadMovies(false);
+		updateMovieSelection();
 	}
 	else if(actionKey == "run")
 	{
@@ -2874,7 +2874,7 @@ bool CMovieBrowser::addDir(std::string& dirname, int* used)
 /************************************************************************
 
 ************************************************************************/
-void CMovieBrowser::loadMovies(void)
+void CMovieBrowser::loadMovies(bool doRefresh)
 {
 		time_t time_start = time(NULL);
 		clock_t clock_start = clock()/10000; // CLOCKS_PER_SECOND
@@ -2902,14 +2902,18 @@ void CMovieBrowser::loadMovies(void)
 
 		loadBox.hide();
 
-		clock_act = clock()/10000;TRACE("[mb] *5: time %9ld  clock %6ld  dclock %6ld*\n",(long)time(NULL),clock_act,clock_act - clock_prev);clock_prev = clock_act; 
-		refreshBrowserList();	
-		clock_act = clock()/10000;TRACE("[mb] *6: time %9ld  clock %6ld  dclock %6ld*\n",(long)time(NULL),clock_act,clock_act - clock_prev);clock_prev = clock_act; 
-		refreshLastPlayList();	
-		refreshLastRecordList();
-		refreshFilterList();
-		refreshMovieInfo();	// is done by refreshBrowserList if needed
-		clock_act = clock()/10000;TRACE("[mb] *7: time %9ld  clock %6ld  dclock %6ld*\n",(long)time(NULL),clock_act,clock_act - clock_prev);clock_prev = clock_act; 
+		if (doRefresh)
+		{
+			clock_act = clock()/10000;TRACE("[mb] *5: time %9ld  clock %6ld  dclock %6ld*\n",(long)time(NULL),clock_act,clock_act - clock_prev);clock_prev = clock_act; 
+			refreshBrowserList();	
+			clock_act = clock()/10000;TRACE("[mb] *6: time %9ld  clock %6ld  dclock %6ld*\n",(long)time(NULL),clock_act,clock_act - clock_prev);clock_prev = clock_act; 
+			refreshLastPlayList();	
+			refreshLastRecordList();
+			refreshFilterList();
+			refreshMovieInfo();	// is done by refreshBrowserList if needed
+			clock_act = clock()/10000;TRACE("[mb] *7: time %9ld  clock %6ld  dclock %6ld*\n",(long)time(NULL),clock_act,clock_act - clock_prev);clock_prev = clock_act; 
+		}
+
 		TRACE("[mb] ***Total:time %ld clock %ld***\n",(time(NULL)-time_start), clock_act-clock_start);
 }
 /************************************************************************
@@ -3250,6 +3254,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 	refreshLastPlayList();
 	refreshLastRecordList();
 	refreshFilterList();
+	refreshMovieInfo();
 	refresh();
 	for(i=0; i<MB_MAX_DIRS ;i++)
 	{
@@ -3914,7 +3919,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.60 $");
+	return imageinfo.getModulVersion("","$Revision: 1.61 $");
 }
 
 /************************************************************************/

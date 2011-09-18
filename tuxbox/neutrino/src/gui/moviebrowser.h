@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.16 2011/03/21 18:38:10 rhabarber1848 Exp $
+	$Id: moviebrowser.h,v 1.17 2011/09/18 20:42:48 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -366,7 +366,7 @@ class CMovieBrowser : public CMenuTarget
 		void defaultSettings(MB_SETTINGS* settings);
 		
 		///// EPG_DATA /XML /////////////////////////////// 
-		void loadMovies();
+		void loadMovies(bool doRefresh = true);
 		void loadAllMovieInfo(void); // P1
 		void saveMovieInfo(std::string* filename, MI_MOVIE_INFO* movie_info); // P2
 	
