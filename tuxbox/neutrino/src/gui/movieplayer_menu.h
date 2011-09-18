@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.h,v 1.6 2011/04/03 21:56:13 dbt Exp $
+	$Id: movieplayer_menu.h,v 1.7 2011/09/18 20:47:00 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -40,6 +40,7 @@
 class CMoviePlayerMenue : public CMenuTarget
 {
 	private:
+		CMenuTarget* moviePlayerSetup;
 		int width, selected;
 
 		void showMoviePlayerMenue();
