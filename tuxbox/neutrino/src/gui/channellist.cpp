@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.226 2011/07/22 19:46:55 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.227 2011/09/18 20:40:05 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -1245,8 +1245,6 @@ void CChannelList::paintItem(int pos)
 				}
 			}
 
-			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x + 5 + numwidth + 10 +prg_offset, ypos + fheight, width - numwidth - 20 - 15 - prg_offset, nameAndDescription, color);
-
 			if (g_settings.channellist_epgtext_align_right){
 				// align right
 				g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x + width - 20 - ch_desc_len, ypos + fheight, ch_desc_len, p_event->description, color);
@@ -1258,6 +1256,7 @@ void CChannelList::paintItem(int pos)
 			
 		}
 		else
+		{
 			// progressbar with diagonal zero line
 			if(g_settings.channellist_extended)
 			{
@@ -1272,8 +1271,10 @@ void CChannelList::paintItem(int pos)
 				}
 				pb.paintProgressBar(x+5+numwidth + title_offset, ypos + fheight/4, pb_space + 2, fheight/2, 0, pb_max, pbz_activeCol, pbz_passiveCol, pbz_activeCol, 0, NULL, 0, NULL, true);
 			}
-			// name
-			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x + 5 + numwidth + 10 + prg_offset, ypos + fheight, width- numwidth - 20 - 15 - prg_offset, nameAndDescription, color);
+		}
+
+		// name
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x + 5 + numwidth + 10 + prg_offset, ypos + fheight, width - numwidth - 20 - 15 - prg_offset, nameAndDescription, color);
 	}
 }
 
