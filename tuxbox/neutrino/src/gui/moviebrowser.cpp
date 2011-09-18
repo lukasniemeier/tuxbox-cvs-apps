@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.61 2011/09/18 20:42:48 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.62 2011/09/18 21:54:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.61 2011/09/18 20:42:48 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.62 2011/09/18 21:54:12 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3090,7 +3090,7 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 {
 	/* first clear screen */
-	m_pcWindow->paintBoxRel(    0,	0, m_cBoxFrame.iWidth, m_cBoxFrame.iHeight, (CFBWindow::color_t)COL_BACKGROUND);
+	m_pcWindow->paintBoxRel(0, 0, m_cBoxFrame.iWidth, m_cBoxFrame.iHeight + 10, (CFBWindow::color_t)COL_BACKGROUND);
 	int i;
 /********************************************************************/
 /**  directory menu ******************************************************/
@@ -3919,7 +3919,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.61 $");
+	return imageinfo.getModulVersion("","$Revision: 1.62 $");
 }
 
 /************************************************************************/
