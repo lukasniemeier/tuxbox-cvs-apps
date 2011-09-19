@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.197 2011/09/18 21:05:38 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.198 2011/09/19 18:54:46 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1193,6 +1193,7 @@ const char * locale_real_names[] =
 	"recordingmenu.gen_psi",
 	"recordingmenu.head",
 	"recordingmenu.help",
+	"recordingmenu.max_rectime",
 	"recordingmenu.no_scart",
 	"recordingmenu.off",
 	"recordingmenu.record_in_spts_mode",

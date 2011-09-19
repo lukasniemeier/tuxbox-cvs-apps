@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.11 2011/04/03 21:56:13 dbt Exp $
+	$Id: record_setup.cpp,v 1.12 2011/09/19 18:54:46 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -298,6 +298,8 @@ void CRecordSetup::showRecordSetup()
 
 	CMenuOptionChooser* oj14 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_GEN_PSI, &g_settings.recording_gen_psi, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
+	CMenuOptionNumberChooser* oj15 = new CMenuOptionNumberChooser(LOCALE_RECORDINGMENU_MAX_RECTIME, &g_settings.recording_max_rectime, true, 1, 8);
+
 	CStringInput recordingSettings_filenameTemplate(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template_default, 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
 	CMenuForwarder* mf11 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template_default, &recordingSettings_filenameTemplate);
 
@@ -353,6 +355,7 @@ void CRecordSetup::showRecordSetup()
 		directRecordingSettings->addItem(GenericMenuSeparatorLine);
 		directRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DEFDIR, true, NULL, dirMenu, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 		directRecordingSettings->addItem(oj10);
+		directRecordingSettings->addItem(oj15); //max. recording time
 		directRecordingSettings->addItem(mf11);
 		directRecordingSettings->addItem(mf9);
 		directRecordingSettings->addItem(mf12);

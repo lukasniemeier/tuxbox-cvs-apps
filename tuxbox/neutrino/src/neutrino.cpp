@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1067 2011/09/18 21:05:38 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1068 2011/09/19 18:54:46 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -599,6 +599,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.recording_server_wakeup = configfile.getInt32( "recording_server_wakeup", 0 );
 	strcpy( g_settings.recording_server_mac, configfile.getString( "recording_server_mac", "11:22:33:44:55:66").c_str() );
 	g_settings.recording_vcr_no_scart = configfile.getInt32( "recording_vcr_no_scart", false);
+	g_settings.recording_max_rectime = configfile.getInt32( "recording_max_rectime", 4 );
 	strcpy( g_settings.recording_splitsize_default, configfile.getString( "recording_splitsize_default", "2048").c_str() );
 	g_settings.recording_use_o_sync            = configfile.getBool("recordingmenu.use_o_sync"           , false);
 	g_settings.recording_use_fdatasync         = configfile.getBool("recordingmenu.use_fdatasync"        , false);
@@ -1156,6 +1157,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ("recording_server_wakeup",             g_settings.recording_server_wakeup);
 	configfile.setString("recording_server_mac",                g_settings.recording_server_mac);
 	configfile.setInt32 ("recording_vcr_no_scart",              g_settings.recording_vcr_no_scart);
+	configfile.setInt32 ("recording_max_rectime",               g_settings.recording_max_rectime);
 	configfile.setString("recording_splitsize_default",         g_settings.recording_splitsize_default);
 	configfile.setBool  ("recordingmenu.use_o_sync"           , g_settings.recording_use_o_sync           );
 	configfile.setBool  ("recordingmenu.use_fdatasync"        , g_settings.recording_use_fdatasync        );
@@ -1887,8 +1889,12 @@ bool CNeutrinoApp::doGuiRecord(char * preselectedDir, bool addTimer, char * file
 			else if (addTimer)
 			{
 				time_t now = time(NULL);
-				recording_id = g_Timerd->addImmediateRecordTimerEvent(eventinfo.channel_id, now, now+4*60*60,
-											eventinfo.epgID, eventinfo.epg_starttime,
+				recording_id = g_Timerd->addImmediateRecordTimerEvent(
+											eventinfo.channel_id,
+											now,
+											now + g_settings.recording_max_rectime * 60 * 60,
+											eventinfo.epgID,
+											eventinfo.epg_starttime,
 											eventinfo.apids);
 			}
 		}

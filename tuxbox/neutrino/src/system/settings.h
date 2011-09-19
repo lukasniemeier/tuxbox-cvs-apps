@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.241 2011/09/18 21:05:38 rhabarber1848 Exp $
+  $Id: settings.h,v 1.242 2011/09/19 18:54:46 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -260,6 +260,7 @@ struct SNeutrinoSettings
 	int  recording_server_wakeup;
 	char recording_server_mac[31];
 	int  recording_vcr_no_scart;
+	int  recording_max_rectime;
 	char recording_splitsize_default[10];
 	int  recording_use_o_sync;
 	int  recording_use_fdatasync;
