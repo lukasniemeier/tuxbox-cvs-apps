@@ -101,6 +101,7 @@ struct NeutrinoMessages {
 		/* sectionsd */
 		EVT_SERVICES_UPD                         = CRCInput::RC_Events + 38,
 		EVT_SI_FINISHED                          = CRCInput::RC_Events + 39,
+		EVT_PMT_CHANGED                          = CRCInput::RC_Events + 40,
 
 
 		EVT_CURRENTEPG                           = CRCInput::RC_WithData +  1,

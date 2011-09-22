@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1068 2011/09/19 18:54:46 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1069 2011/09/22 19:12:09 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2178,7 +2178,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 
 	g_Sectionsd->RegisterNeutrino();
 
-#define ZAPIT_EVENT_COUNT 26
+#define ZAPIT_EVENT_COUNT 27
 	const CZapitClient::events zapit_event[ZAPIT_EVENT_COUNT] =
 	{
 			CZapitClient::EVT_ZAP_COMPLETE,
@@ -2207,6 +2207,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 			CZapitClient::EVT_SCAN_FOUND_TV_CHAN,
 			CZapitClient::EVT_SCAN_FOUND_RADIO_CHAN,
 			CZapitClient::EVT_SCAN_FOUND_DATA_CHAN,
+			CZapitClient::EVT_PMT_CHANGED
 	};
 
 	for (int i = 0; i < ZAPIT_EVENT_COUNT; i++)
@@ -2896,6 +2897,20 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 			}
 			delete [] (unsigned char*) data;
 			return messages_return::handled;
+		}
+		else if (msg == NeutrinoMessages::EVT_PMT_CHANGED)
+		{
+			res = messages_return::handled;
+#if 0 // debug
+			printf("NeutrinoMessages::EVT_PMT_CHANGED: vpid %x apids(%d): ", g_RemoteControl->current_PIDs.PIDs.vpid, g_RemoteControl->current_PIDs.APIDs.size());
+			for(unsigned int i = 0; i < g_RemoteControl->current_PIDs.APIDs.size(); i++)
+				printf("%x ", g_RemoteControl->current_PIDs.APIDs[i].pid);
+			printf("\n");
+#endif
+			/******************
+				reserved
+			 ******************/
+			return res;
 		}
 		else if( msg == NeutrinoMessages::ZAPTO)
 		{

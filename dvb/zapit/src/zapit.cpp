@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.454 2011/08/01 19:31:02 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.455 2011/09/22 19:12:08 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -3136,7 +3136,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.454 2011/08/01 19:31:02 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.455 2011/09/22 19:12:08 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
@@ -3367,12 +3367,38 @@ int main(int argc, char **argv)
 				}
 				lastlockcheck = time(NULL);
 			}
-			if (pmt_update_fd != -1) {
+
+			if (pmt_update_fd != -1)
+			{
 				pfd.fd = pmt_update_fd;
 				pfd.events = (POLLIN | POLLPRI);
-				if (poll(&pfd, 1, 0) > 0) {
+
+				if (poll(&pfd, 1, 0) > 0)
+				{
 					if (pfd.fd == pmt_update_fd)
-						zapit(cc->getChannelID(), current_is_nvod, 0);
+					{
+						pmt_stop_update_filter(&pmt_update_fd);
+						pmt_update_fd = -1;
+
+						if(cc)
+						{
+							int vpid = cc->getVideoPid();
+							parse_pmt(cc);
+							if (vpid != cc->getVideoPid())
+							{
+								zapit(cc->getChannelID(), current_is_nvod, 0);
+							}
+							else
+							{
+								if (1 /*event_mode*/)
+								{
+									t_channel_id channel_id = cc->getChannelID();
+									eventServer->sendEvent(CZapitClient::EVT_PMT_CHANGED, CEventServer::INITID_ZAPIT, &channel_id, sizeof(channel_id));
+								}
+								pmt_set_update_filter(cc, &pmt_update_fd);
+							}
+						}
+					}
 				}
 			}
 			/* yuck, don't waste that much cpu time :) */

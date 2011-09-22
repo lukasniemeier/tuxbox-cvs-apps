@@ -1467,6 +1467,10 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, unsigne
 							*msg  = NeutrinoMessages::EVT_ZAP_MOTOR;
 							*data = *(unsigned*) p;
 							break;
+						case CZapitClient::EVT_PMT_CHANGED:
+							*msg  = NeutrinoMessages::EVT_PMT_CHANGED;
+							*data = 0;
+							break;
 						default:
 							printf("[neutrino] event INITID_ZAPIT - unknown eventID 0x%x\n",  emsg.eventID );
 						}

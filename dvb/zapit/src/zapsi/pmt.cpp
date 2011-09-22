@@ -1,5 +1,5 @@
 /*
- * $Id: pmt.cpp,v 1.59 2009/11/10 11:36:53 rhabarber1848 Exp $
+ * $Id: pmt.cpp,v 1.60 2011/09/22 19:12:08 rhabarber1848 Exp $
  *
  * (C) 2002 by Andreas Oberritter <obi@tuxbox.org>
  * (C) 2002 by Frank Bormann <happydude@berlios.de>
@@ -379,6 +379,12 @@ int parse_pmt(CZapitChannel * const channel)
 	caPmt->current_next_indicator = buffer[5] & 0x01;
 	caPmt->reserved2 = buffer[10] >> 4;
 
+	if(channel->getCaPmt() != 0) {
+		if(channel->getCaPmt()->version_number != caPmt->version_number) {
+			channel->resetPids();
+		}
+	}
+
 	/* pmt */
 	section_length = ((buffer[1] & 0x0F) << 8) + buffer[2];
 	channel->setPcrPid(((buffer[8] & 0x1F) << 8) + buffer[9]);
@@ -466,6 +472,8 @@ int pmt_set_update_filter(CZapitChannel * const channel, int *fd)
 #endif // TRIPLEDRAGON
 	dsfp.pid = channel->getPmtPid();
 	dsfp.timeout = 0;
+
+	printf("[pmt] set update filter, sid 0x%x pid 0x%x version %x\n", channel->getServiceId(), channel->getPmtPid(), channel->getCaPmt()->version_number);
 
 	if (ioctl(*fd, DMX_SET_FILTER, &dsfp) < 0) {
 		perror("DMX_SET_FILTER");

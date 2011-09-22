@@ -1,5 +1,5 @@
 /*
- * $Id: channel.cpp,v 1.23 2009/09/30 18:22:47 seife Exp $
+ * $Id: channel.cpp,v 1.24 2011/09/22 19:12:08 rhabarber1848 Exp $
  *
  * (C) 2002 by Steffen Hehn <mcclean@berlios.de>
  * (C) 2002, 2003 by Andreas Oberritter <obi@tuxbox.org>
@@ -34,6 +34,7 @@ CZapitChannel::CZapitChannel(const std::string & p_name, t_service_id p_sid, t_t
 	satellitePosition = p_satellite_position;
 	frequency = p_frequency;
 	caPmt = NULL;
+	pmtPid = 0;
 	resetPids();
 }
 
@@ -74,8 +75,11 @@ int CZapitChannel::addAudioChannel(const unsigned short pid, const bool isAc3, c
 	std::vector <CZapitAudioChannel *>::iterator aI;
 
 	for (aI = audioChannels.begin(); aI != audioChannels.end(); aI++)
-		if ((* aI)->pid == pid)
+		if ((* aI)->pid == pid) {
+			(* aI)->description = description;
+            (* aI)->componentTag = componentTag;
 			return -1;
+		}
 
 	CZapitAudioChannel *tmp = new CZapitAudioChannel();
 	tmp->pid = pid;
@@ -105,9 +109,10 @@ void CZapitChannel::resetPids(void)
 	currentSub = 0;
 
 	pcrPid = 0;
-	pmtPid = 0;
+//	pmtPid = 0;   // pmt_set_update_Filter will fail !!!
 	teletextPid = 0;
 	videoPid = 0;
+
 	privatePid = 0;
 
 	pidsFlag = false;
