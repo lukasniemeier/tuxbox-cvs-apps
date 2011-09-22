@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1069 2011/09/22 19:12:09 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1070 2011/09/22 19:53:53 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3007,10 +3007,10 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 
 			if( g_settings.recording_server_wakeup )
 			{
-				std::string command = "etherwake ";
+				std::string command = "ether-wake ";
 				command += g_settings.recording_server_mac;
 				if(system(command.c_str()) != 0)
-					perror("etherwake failed");
+					perror("ether-wake failed");
 			}
 			if (g_settings.recording_type == RECORDING_FILE)
 			{
@@ -3020,10 +3020,10 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 					if (strcmp(g_settings.network_nfs_local_dir[i],recDir) == 0)
 					{
 						printf("[neutrino] waking up %s (%s)\n",g_settings.network_nfs_ip[i].c_str(),recDir);
-						std::string command = "etherwake ";
+						std::string command = "ether-wake ";
 						command += g_settings.network_nfs_mac[i];
 						if(system(command.c_str()) != 0)
-							perror("etherwake failed");
+							perror("ether-wake failed");
 						break;
 					}
 				}

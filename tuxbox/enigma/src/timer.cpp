@@ -668,10 +668,10 @@ void eTimerManager::actionHandler()
 				char *serverMAC=0;
 				if ( !eConfig::getInstance()->getKey("/elitedvb/network/hwaddress", serverMAC ) )
 				{
-					if ( system( eString().sprintf("etherwake -i eth0 %s", serverMAC ).c_str() ) )
+					if ( system( eString().sprintf("ether-wake %s", serverMAC ).c_str() ) )
 					{
-						writeToLogfile("could not execute etherwake");
-						eDebug("[eTimerManager] could not execute etherwake");
+						writeToLogfile("could not execute ether-wake");
+						eDebug("[eTimerManager] could not execute ether-wake");
 					}
 					else
 					{

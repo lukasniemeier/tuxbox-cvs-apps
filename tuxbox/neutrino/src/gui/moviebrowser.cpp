@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.62 2011/09/18 21:54:12 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.63 2011/09/22 19:53:53 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.62 2011/09/18 21:54:12 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.63 2011/09/22 19:53:53 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3800,11 +3800,11 @@ int CDirMenu::exec(CMenuTarget* parent, const std::string & actionKey)
 		{
 			if(dirState[number] == DIR_STATE_SERVER_DOWN)
 			{
-				std::string command = "etherwake ";
+				std::string command = "ether-wake ";
 				command += g_settings.network_nfs_mac[dirNfsMountNr[number]];
 				printf("try to start server: %s\n",command.c_str());
 				if(system(command.c_str()) != 0)
-					perror("etherwake failed");
+					perror("ether-wake failed");
 
 				dirOptionText[number]="STARTE SERVER";
 			}
@@ -3919,7 +3919,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.62 $");
+	return imageinfo.getModulVersion("","$Revision: 1.63 $");
 }
 
 /************************************************************************/
