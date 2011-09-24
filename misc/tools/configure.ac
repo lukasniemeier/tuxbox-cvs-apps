@@ -7,6 +7,11 @@ TUXBOX_BOXTYPE
 AC_PROG_CC
 AM_PROG_LIBTOOL
 
+AC_ARG_WITH(etherwake,
+	AS_HELP_STRING(--with-etherwake,replace Busybox applet ether-wake with original version),
+	[enable_etherwake="$withval"],[enable_etherwake=no])
+AM_CONDITIONAL(ENABLE_ETHERWAKE,test "$enable_etherwake" = "yes")
+
 AC_OUTPUT([
 Makefile
 etherwake/Makefile
