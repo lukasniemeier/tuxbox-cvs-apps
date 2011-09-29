@@ -6,7 +6,7 @@
 
 	Copyright (C) 2009 Stefan Seyfried
 
-   $Id: timermanager.cpp,v 1.99 2011/02/26 09:39:16 dbt Exp $
+   $Id: timermanager.cpp,v 1.100 2011/09/29 17:03:10 rhabarber1848 Exp $
 
 	License: GPL
 
@@ -741,14 +741,13 @@ bool CTimerManager::shutdown()
 		}
 	}
 
-#ifndef HAVE_TRIPLEDRAGON
+#if defined HAVE_DBOX_HARDWARE || defined HAVE_DREAMBOX_HARDWARE
 	if(nextAnnounceTime!=0)
 	{
 		int minutes=((nextAnnounceTime-time(NULL))/60)-3; //Wakeup 3 min befor next announce
 		if(minutes<1)
 			minutes=1; //1 minute is minimum
 
-#if defined HAVE_DBOX_HARDWARE || defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
 		int fd = open("/dev/dbox/fp0", O_RDWR);
 		if (ioctl(fd, FP_IOCTL_SET_WAKEUP_TIMER, &minutes) < 0)
 		{
@@ -760,7 +759,6 @@ bool CTimerManager::shutdown()
 			dprintf("wakeup in %d min. programmed\n",minutes);
 			status=true;
 		}
-#endif
 	}
 #endif
 	pthread_mutex_unlock(&tm_eventsMutex);
