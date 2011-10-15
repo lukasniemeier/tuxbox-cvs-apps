@@ -1140,11 +1140,109 @@ void ShowMailHeader(char* szAction)
 	
 }
 
+/*
+** Translation Table to decode (created by author)
+*/
+static const char cd64[]="|$$$}rstuvwxyz{$$$$$$$>?@ABCDEFGHIJKLMNOPQRSTUVW$$$$$$XYZ[\\]^_`abcdefghijklmnopq";
+
+/*
+** decodeblock
+**
+** decode 4 '6-bit' characters into 3 8-bit binary bytes
+*/
+void decodeblock( unsigned char in[4], unsigned char out[3] )
+{
+    out[ 0 ] = (unsigned char ) (in[0] << 2 | in[1] >> 4);
+    out[ 1 ] = (unsigned char ) (in[1] << 4 | in[2] >> 2);
+    out[ 2 ] = (unsigned char ) (((in[2] << 6) & 0xc0) | in[3]);
+}
+
+/*
+** decode
+**
+** decode a base64 encoded stream discarding padding, line breaks and noise
+*/
+void decode( FILE *infile, FILE *outfile )
+{
+    unsigned char in[4], out[3], v;
+    int i, len;
+
+    while( !feof( infile ) ) {
+        for( len = 0, i = 0; i < 4 && !feof( infile ); i++ ) {
+            v = 0;
+            while( !feof( infile ) && v == 0 ) {
+                v = (unsigned char) getc( infile );
+                v = (unsigned char) ((v < 43 || v > 122) ? 0 : cd64[ v - 43 ]);
+                if( v ) {
+                    v = (unsigned char) ((v == '$') ? 0 : v - 61);
+                }
+            }
+            if( !feof( infile ) ) {
+                len++;
+                if( v ) {
+                    in[ i ] = (unsigned char) (v - 1);
+                }
+            }
+            else {
+                in[i] = 0;
+            }
+        }
+        if( len ) {
+            decodeblock( in, out );
+            for( i = 0; i < len - 1; i++ ) {
+                putc( out[i], outfile );
+            }
+        }
+    }
+}
+
+void convertbase64(char * quelle, int forcebase64){
+	char	ziel[256];
+	char 	line[256];
+	int 	fChars = 83;
+	FILE *	in;
+	FILE *	out;
+
+	sprintf(ziel,"%s.tmp",quelle);
+	in = fopen(quelle,"r");
+	if (in==NULL){
+		return;
+	}
+	out= fopen(ziel,"w");
+	if (out==NULL){
+		fclose(in);
+		return;
+	}
+	if (forcebase64==1)
+	{
+		decode( in, out );
+	}
+	else
+	{
+		while( fgets( line, fChars, in ))
+		{
+			if ( ((strstr(line, "base64")!=NULL)||(strstr(line, "BASE64")!=NULL)))
+			{
+				decode( in, out );
+			}
+			else
+			{
+				fputs( line, out );
+			}
+		}
+	}
+	fclose(out);
+	fclose(in);
+	remove(quelle);
+	rename(ziel, quelle);
+}
+
+
 /******************************************************************************
  * ShowMailFile
  ******************************************************************************/
 
-void ShowMailFile(char* filename, char* szAction)
+void ShowMailFile(char* filename, char* szAction, char* szEncoding)
 {
 	// Code from splugin (with some modifications...)
 	char *p;
@@ -1159,7 +1257,11 @@ void ShowMailFile(char* filename, char* szAction)
 	int fHeight = FONTHEIGHT_SMALL;
 	int fAssign = LEFT;
   int iRetfgets;
+	int	isbase64=0;
+	int	forcebase64=0;
+	
 	FILE* pipe;
+
 	pipe = fopen(filename,"r");
 
 	if  (pipe == NULL)
@@ -1175,6 +1277,11 @@ void ShowMailFile(char* filename, char* szAction)
 	// calculate number of pages
 	while( fgets( line, fChars, pipe ))
 	{
+		if ((strstr(line, "base64")!=NULL)||(strstr(line, "BASE64")!=NULL))
+		{ 
+			isbase64=1;
+			break;
+		}
 		if ( ++row > (fLines) )
 		{
 			row = 0;
@@ -1183,6 +1290,41 @@ void ShowMailFile(char* filename, char* szAction)
 				iMaxPages ++;
 			}
 		}
+	}
+	iMaxPages ++;
+
+	if ((strstr(szEncoding, "base64")!=NULL)||(strstr(szEncoding, "BASE64")!=NULL))
+	{
+		isbase64=1;
+		forcebase64=1;
+	}
+
+	if (isbase64==1){
+		fclose(pipe);
+		convertbase64(filename, forcebase64);
+
+		pipe = fopen(filename,"r");
+
+		if  (pipe == NULL)
+		{
+			return;
+		}
+		row = 0;
+		iMaxPages=0;
+		
+		// calculate number of pages
+		while( fgets( line, fChars, pipe ))
+		{
+		if ( ++row > (fLines) )
+		{
+				if ((strstr(line, "base64")!=NULL)||(strstr(line, "BASE64")!=NULL)) isbase64=1;
+			row = 0;
+			if( !feof(pipe) )
+			{
+				iMaxPages ++;
+			}
+		}
+	}
 	}
 	iMaxPages ++;
 	
@@ -3081,7 +3223,7 @@ void ViewMail(int account, int mailindex)
 						sprintf(mailfile,"%stuxmail.idx%u.%u",maildir,account,idx1);
 						sprintf(szInfo, "%s\n%s\n%s %s\n", maildb[account].mailinfo[mailindex].from, maildb[account].mailinfo[mailindex].subj, maildb[account].mailinfo[mailindex].date, maildb[account].mailinfo[mailindex].time);
 //						printf("cached file: %s",mailfile);
-						ShowMailFile(mailfile, szInfo);
+						ShowMailFile(mailfile, szInfo, maildb[account].mailinfo[mailindex].enco);
 						free(stored_uids);
 						fclose(fd_mailidx);
 						SaveAndReloadDB(0);
@@ -3102,7 +3244,7 @@ void ViewMail(int account, int mailindex)
 		{
 			char szInfo[256];
 			sprintf(szInfo, "%s\n%s\n%s %s\n", maildb[account].mailinfo[mailindex].from, maildb[account].mailinfo[mailindex].subj, maildb[account].mailinfo[mailindex].date, maildb[account].mailinfo[mailindex].time);
-			ShowMailFile(POP3FILE, szInfo);
+			ShowMailFile(POP3FILE, szInfo, maildb[account].mailinfo[mailindex].enco);
 		}
 		SaveAndReloadDB(0);
 	}
@@ -3202,6 +3344,15 @@ void FillDB(int account)
 			else
 			{
 				strcpy(maildb[account].mailinfo[line].subj, (osd == 'G') ? "TuxMail: DB-Eintrag defekt!" : "TuxMail: DB-Entry broken!");
+			}
+
+			if((entrystart = strtok(NULL, "|")))
+			{
+				strncpy(maildb[account].mailinfo[line].enco, entrystart, sizeof(maildb[account].mailinfo[line].enco));
+			}
+			else
+			{
+				strcpy(maildb[account].mailinfo[line].enco, "????");
 			}
 
 //			maildb[account].mailinfo[line].save[0] = maildb[account].mailinfo[line].type[0];
@@ -3601,7 +3752,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.54 $";
+	char cvs_revision[] = "$Revision: 1.55 $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;

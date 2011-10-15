@@ -2000,7 +2000,7 @@ int SendIMAPCommand(int command, char *param, char *param2)
 
 			case FETCH:
 
-				sprintf(send_buffer, "? FETCH %s (FLAGS BODY[HEADER.FIELDS (DATE FROM SUBJECT)])\r\n",param);
+				sprintf(send_buffer, "? FETCH %s (FLAGS BODY[HEADER.FIELDS (DATE FROM SUBJECT CONTENT-TRANSFER-ENCODING)])\r\n",param);
 
 				break;
 
@@ -2410,6 +2410,23 @@ int SendIMAPCommand(int command, char *param, char *param2)
 						memcpy(&header[stringindex], "-?-|", 4);
 						stringindex += 4;
 					}
+
+					if((ptr = strstr(recv_buffer, "\nContent-Transfer-Encoding:")))
+					{
+						ptr += 27;
+
+						while(*ptr == ' ')
+						{
+							ptr++;
+						}
+						ptr1 = &header[stringindex];
+						while(*ptr != '\r')
+						{
+							memcpy(&header[stringindex++], ptr++, 1);
+						}
+					}
+					memcpy(&header[stringindex], "|", 1);
+					stringindex += 1;
 
 					header[stringindex] = '\0';
 
@@ -4539,7 +4556,7 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.50 $";
+	char cvs_revision[] = "$Revision: 1.51 $";
 	int param, nodelay = 0, account, mailstatus, unread_mailstatus;
 	pthread_t thread_id;
 	void *thread_result = 0;

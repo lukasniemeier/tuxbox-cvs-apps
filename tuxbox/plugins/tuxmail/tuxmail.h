@@ -354,6 +354,7 @@ struct mi
 	char time[6];	/* 00:00 */
 	char from[256];
 	char subj[256];
+	char enco[64];
 };
 
 struct
