@@ -17,6 +17,7 @@ class eSubtitleWidget: public eWidget
 	int isvisible;
 	int alpha_original;
 	int delay;
+	int forcehide;
 #ifndef TUXTXT_CFG_STANDALONE
 	int ttxpage;
 	int ttx_running;
@@ -56,6 +57,7 @@ public:
 	void stopttx();
 #endif
 	void stop();
+	void setForceHide(bool bhide);
 	int getCurPid();
 	eSubtitleWidget();
 	~eSubtitleWidget();

@@ -3083,6 +3083,10 @@ void eZapMain::toggleMute()
 
 void eZapMain::showMainMenu()
 {
+	bool bInSubtitle = subtitle && subtitle->isVisible();
+	
+	if (bInSubtitle)
+		subtitle->setForceHide(true);
 	hide();
 
 	eMainMenu mm;
@@ -3096,6 +3100,9 @@ void eZapMain::showMainMenu()
 	mm.show();
 	int res = mm.exec();
 	mm.hide();
+
+	if (bInSubtitle)
+		subtitle->setForceHide(false);
 
 	if (!doHideInfobar())
 		showInfobar();

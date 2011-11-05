@@ -571,7 +571,7 @@ void eSubtitleWidget::globalFocusHasChanged(const eWidget* newFocus)
 		return; 
 	if ( newFocus )
 		hide();
-	else
+	else if (!forcehide)
 		show();
 }
 void eSubtitleWidget::setDelay(int delayseconds)
@@ -580,4 +580,17 @@ void eSubtitleWidget::setDelay(int delayseconds)
 	renderinfo.subtitledelay = delayseconds;
 #endif
 	delay = delayseconds;
+}
+void eSubtitleWidget::setForceHide(bool bhide)
+{
+	if (bhide)
+	{
+		forcehide = 1;
+		hide();
+	}
+	else
+	{
+		forcehide = 0;
+		show();
+	}
 }
