@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.306 2011/08/29 19:48:45 dbt Exp $
+	$Id: infoviewer.cpp,v 1.307 2011/11/12 15:15:55 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2094,7 +2094,7 @@ void CInfoViewer::showEpgInfo()   //message on event change
  			{
 				std::string event = eventname + "\n" + g_Locale->getText(LOCALE_INFOVIEWER_MESSAGE_TO) + nextStart;
 				std::string event_message =  ZapitTools::Latin1_to_UTF8(event.c_str());
-				ShowHintUTF(LOCALE_INFOVIEWER_MESSAGE_NOW, event_message.c_str(), 420 , 6, "epginfo.raw"); 
+				ShowHintUTF(LOCALE_INFOVIEWER_MESSAGE_NOW, event_message.c_str(), 420 , 6, NEUTRINO_ICON_EPGINFO);
 			}
 		}
 		else if (g_settings.infobar_show == 2) // complex message, show infobar
