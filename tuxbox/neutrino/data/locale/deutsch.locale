@@ -1358,6 +1358,7 @@ streaming.write_error_open Die Aufnahme wurde abgebrochen,da die Datei\nnicht zu
 streamingmenu.352x288 352x288
 streamingmenu.352x576 352x576
 streamingmenu.480x576 480x576
+streamingmenu.704x288 704x288
 streamingmenu.704x576 704x576
 streamingmenu.filebrowser_allow_multiselect Mehrfachauswahl im Browser
 streamingmenu.head Movieplayer Einstellungen
@@ -1382,6 +1383,7 @@ streamingmenu.streaming_transcode_video_codec MPEG Video Codec
 streamingmenu.streaming_type Streamingserver
 streamingmenu.streaming_use_buffer Verwende Buffer (WabberQueue)
 streamingmenu.streaming_videorate Datenrate Video
+streamingmenu.streaming_vlc10 Nutze VLC 1.x
 streamingserver.noconnect Keine Verbindung zum Streamingserver.\nAufnahme wird abgebrochen.
 stringinput.caps Groß-/Kleinbuchstaben
 stringinput.clear Alles löschen

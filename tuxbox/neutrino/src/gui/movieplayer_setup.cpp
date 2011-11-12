@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.8 2011/04/03 21:56:13 dbt Exp $
+	$Id: movieplayer_setup.cpp,v 1.9 2011/11/12 15:26:25 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -98,13 +98,14 @@ const CMenuOptionChooser::keyval STREAMINGMENU_STREAMING_TRANSCODE_VIDEO_CODEC_O
 	{ 1, LOCALE_STREAMINGMENU_MPEG2 }
 };
 
-#define STREAMINGMENU_STREAMING_RESOLUTION_OPTION_COUNT 4
+#define STREAMINGMENU_STREAMING_RESOLUTION_OPTION_COUNT 5
 const CMenuOptionChooser::keyval STREAMINGMENU_STREAMING_RESOLUTION_OPTIONS[STREAMINGMENU_STREAMING_RESOLUTION_OPTION_COUNT] =
 {
 	{ 0, LOCALE_STREAMINGMENU_352X288 },
 	{ 1, LOCALE_STREAMINGMENU_352X576 },
 	{ 2, LOCALE_STREAMINGMENU_480X576 },
-	{ 3, LOCALE_STREAMINGMENU_704X576 }
+	{ 3, LOCALE_STREAMINGMENU_704X576 },
+	{ 4, LOCALE_STREAMINGMENU_704X288 }
 };
 
 #define STREAMINGMENU_STREAMING_TYPE_OPTION_COUNT 2
@@ -164,7 +165,9 @@ void CMoviePlayerSetup::showMoviePlayerSetup()
 
 	CMenuOptionChooser* oj5 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_RESOLUTION           , &g_settings.streaming_resolution           , STREAMINGMENU_STREAMING_RESOLUTION_OPTIONS, STREAMINGMENU_STREAMING_RESOLUTION_OPTION_COUNT, g_settings.streaming_type);
 
-	CStreamingNotifier StreamingNotifier(mf1,mf2,mf3,mf4,mf5,mf6,oj1,oj2,oj3,oj4,oj5);
+	CMenuOptionChooser* oj10 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_VLC10               , &g_settings.streaming_vlc10                , MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, g_settings.streaming_type);
+
+	CStreamingNotifier StreamingNotifier(mf1,mf2,mf3,mf4,mf5,mf6,oj1,oj2,oj3,oj4,oj5,oj10);
 
 #ifndef ENABLE_MOVIEPLAYER2
 	CIntInput mp_setup_buffer_size(LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE, (long&)g_settings.streaming_buffer_segment_size,3, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT1, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT2);
@@ -190,6 +193,7 @@ void CMoviePlayerSetup::showMoviePlayerSetup()
 	mp_setup->addItem( oj3);				//transcode
 	mp_setup->addItem( oj4);				//codec
 	mp_setup->addItem( oj5);				//definition
+	mp_setup->addItem( oj10);				//vlc10
 	mp_setup->addItem(GenericMenuSeparatorLine);	//separator
 	mp_setup->addItem( mf5);				//Audiorate
 	mp_setup->addItem( oj1);				//transcode audio

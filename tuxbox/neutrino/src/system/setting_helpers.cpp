@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.191 2010/09/04 13:42:07 dbt Exp $
+	$Id: setting_helpers.cpp,v 1.192 2011/11/12 15:26:26 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -161,7 +161,7 @@ bool CDHCPNotifier::changeNotify(const neutrino_locale_t, void * data)
 	return true;
 }
 
-CStreamingNotifier::CStreamingNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4, CMenuItem* i5, CMenuItem* i6, CMenuItem* i7, CMenuItem* i8, CMenuItem* i9, CMenuItem* i10, CMenuItem* i11)
+CStreamingNotifier::CStreamingNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4, CMenuItem* i5, CMenuItem* i6, CMenuItem* i7, CMenuItem* i8, CMenuItem* i9, CMenuItem* i10, CMenuItem* i11, CMenuItem* i12)
 {
 	toDisable[0]=i1;
 	toDisable[1]=i2;
@@ -174,18 +174,19 @@ CStreamingNotifier::CStreamingNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem*
 	toDisable[8]=i9;
 	toDisable[9]=i10;
 	toDisable[10]=i11;
+	toDisable[11]=i12;
 }
 
 bool CStreamingNotifier::changeNotify(const neutrino_locale_t, void *)
 {
 	if(g_settings.streaming_type==0)
 	{
-		for (int i=0; i<=10; i++)
+		for (int i=0; i<=11; i++)
 			toDisable[i]->setActive(false);
 	}
 	else if(g_settings.streaming_type==1)
 	{
-		for (int i=0; i<=10; i++)
+		for (int i=0; i<=11; i++)
 			toDisable[i]->setActive(true);
 	}
 	return true;

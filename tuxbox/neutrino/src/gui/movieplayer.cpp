@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.194 2011/03/30 19:41:50 dbt Exp $
+  $Id: movieplayer.cpp,v 1.195 2011/11/12 15:26:25 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -595,6 +595,10 @@ bool VlcRequestStream(char* mrl, int  transcodeVideo, int transcodeAudio)
 			res_horiz = "704";
 			res_vert = "576";
 			break;
+		case 4:
+			res_horiz = "704";
+			res_vert = "288";
+			break;
 		default:
 			res_horiz = "352";
 			res_vert = "288";
@@ -609,10 +613,21 @@ bool VlcRequestStream(char* mrl, int  transcodeVideo, int transcodeAudio)
 			souturl += (transcodeVideo == TRANSCODE_VIDEO_MPEG1) ? "mpgv" : "mp2v";
 			souturl += ",vb=";
 			souturl += g_settings.streaming_videorate;
-			souturl += ",width=";
-			souturl += res_horiz;
-			souturl += ",height=";
-			souturl += res_vert;
+			if (g_settings.streaming_vlc10 != 0)
+			{
+				souturl += ",scale=1,vfilter=canvas{padd,width=";
+				souturl += res_horiz;
+				souturl += ",height=";
+				souturl += res_vert;
+				souturl += ",aspect=4:3}";
+			}
+			else
+			{
+				souturl += ",width=";
+				souturl += res_horiz;
+				souturl += ",height=";
+				souturl += res_vert;
+			}
 			souturl += ",fps=25";
 		}
 		if(transcodeAudio!=0)
@@ -4468,7 +4483,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.194 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.195 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

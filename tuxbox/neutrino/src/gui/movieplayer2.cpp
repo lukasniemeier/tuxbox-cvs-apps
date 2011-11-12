@@ -726,6 +726,10 @@ bool VlcRequestStream(std::string mrl, int transcodeVideo, int transcodeAudio)
 			res_horiz = "704";
 			res_vert = "576";
 			break;
+		case 4:
+			res_horiz = "704";
+			res_vert = "288";
+			break;
 		default:
 			res_horiz = "352";
 			res_vert = "288";
@@ -740,10 +744,21 @@ bool VlcRequestStream(std::string mrl, int transcodeVideo, int transcodeAudio)
 			souturl += (transcodeVideo == TRANSCODE_VIDEO_MPEG1) ? "mpgv" : "mp2v";
 			souturl += ",vb=";
 			souturl += g_settings.streaming_videorate;
-			souturl += ",width=";
-			souturl += res_horiz;
-			souturl += ",height=";
-			souturl += res_vert;
+			if (g_settings.streaming_vlc10 != 0)
+			{
+				souturl += ",scale=1,vfilter=canvas{padd,width=";
+				souturl += res_horiz;
+				souturl += ",height=";
+				souturl += res_vert;
+				souturl += ",aspect=4:3}";
+			}
+			else
+			{
+				souturl += ",width=";
+				souturl += res_horiz;
+				souturl += ",height=";
+				souturl += res_vert;
+			}
 			souturl += ",fps=25";
 		}
 		if (transcodeAudio != 0)
@@ -3493,7 +3508,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.79 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.80 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()

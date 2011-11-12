@@ -1358,6 +1358,7 @@ streaming.write_error_open The recording was aborted,\nbecause the target file c
 streamingmenu.352x288 352x288
 streamingmenu.352x576 352x576
 streamingmenu.480x576 480x576
+streamingmenu.704x288 704x288
 streamingmenu.704x576 704x576
 streamingmenu.filebrowser_allow_multiselect Multiselect in Filebrowser
 streamingmenu.head Movie Player Settings
@@ -1382,6 +1383,7 @@ streamingmenu.streaming_transcode_video_codec MPEG video codec
 streamingmenu.streaming_type Streaming Server
 streamingmenu.streaming_use_buffer Use buffer (WabberQueue)
 streamingmenu.streaming_videorate Datarate Video
+streamingmenu.streaming_vlc10 Use VLC 1.x
 streamingserver.noconnect No connection to streamingserver.\nRecording canceled.
 stringinput.caps caps / no caps
 stringinput.clear clear all

@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.106 2011/04/25 14:11:00 dbt Exp $
+	$Id: setting_helpers.h,v 1.107 2011/11/12 15:26:26 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -91,9 +91,9 @@ class CDHCPNotifier : public CChangeObserver
 class CStreamingNotifier : public CChangeObserver
 {
 	private:
-		CMenuItem* toDisable[11];
+		CMenuItem* toDisable[12];
 	public:
-		CStreamingNotifier( CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
+		CStreamingNotifier( CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 

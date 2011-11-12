@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1070 2011/09/22 19:53:53 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1071 2011/11/12 15:26:25 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -648,6 +648,7 @@ int CNeutrinoApp::loadSetup()
 	g_settings.streaming_transcode_video_codec = configfile.getInt32( "streaming_transcode_video_codec", 0 );
 	g_settings.streaming_force_avi_rawaudio = configfile.getInt32( "streaming_force_avi_rawaudio", 0 );
 	g_settings.streaming_resolution = configfile.getInt32( "streaming_resolution", 0 );
+	g_settings.streaming_vlc10 = configfile.getInt32( "streaming_vlc10", 0);
 	g_settings.streaming_use_buffer = configfile.getInt32("streaming_use_buffer", 1);
 	g_settings.streaming_buffer_segment_size = configfile.getInt32("streaming_buffer_segment_size", 24);
 	g_settings.streaming_stopsectionsd = configfile.getInt32("streaming_stopsectionsd", 1);
@@ -1194,6 +1195,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32 ( "streaming_force_transcode_video", g_settings.streaming_force_transcode_video );
 	configfile.setInt32 ( "streaming_transcode_video_codec", g_settings.streaming_transcode_video_codec );
 	configfile.setInt32 ( "streaming_resolution", g_settings.streaming_resolution );
+	configfile.setInt32 ( "streaming_vlc10", g_settings.streaming_vlc10 );
 	configfile.setInt32 ( "streaming_use_buffer", g_settings.streaming_use_buffer);
 	configfile.setInt32 ( "streaming_buffer_segment_size", g_settings.streaming_buffer_segment_size);
 	configfile.setInt32 ( "streaming_stopsectionsd", g_settings.streaming_stopsectionsd);

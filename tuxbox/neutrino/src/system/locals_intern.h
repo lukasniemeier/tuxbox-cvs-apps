@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.198 2011/09/19 18:54:46 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.199 2011/11/12 15:26:26 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1385,6 +1385,7 @@ const char * locale_real_names[] =
 	"streamingmenu.352x288",
 	"streamingmenu.352x576",
 	"streamingmenu.480x576",
+	"streamingmenu.704x288",
 	"streamingmenu.704x576",
 	"streamingmenu.filebrowser_allow_multiselect",
 	"streamingmenu.head",
@@ -1409,6 +1410,7 @@ const char * locale_real_names[] =
 	"streamingmenu.streaming_type",
 	"streamingmenu.streaming_use_buffer",
 	"streamingmenu.streaming_videorate",
+	"streamingmenu.streaming_vlc10",
 	"streamingserver.noconnect",
 	"stringinput.caps",
 	"stringinput.clear",

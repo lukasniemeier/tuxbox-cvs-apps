@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.242 2011/09/19 18:54:46 rhabarber1848 Exp $
+  $Id: settings.h,v 1.243 2011/11/12 15:26:26 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -295,6 +295,7 @@ struct SNeutrinoSettings
 	int streaming_force_transcode_video;
 	int streaming_transcode_video_codec;
 	int streaming_resolution;
+	int streaming_vlc10;
 	int streaming_use_buffer;
 	int streaming_buffer_segment_size;
 	int streaming_stopsectionsd;
