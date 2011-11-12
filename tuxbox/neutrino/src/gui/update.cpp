@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.144 2010/06/06 10:29:29 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.145 2011/11/12 15:18:48 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -660,7 +660,7 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 		showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_READY)); // UTF-8
 		sleep(1);
 		hide();
-		ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_FLASHREADYREBOOT)); // UTF-8
+		ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_FLASHREADYREBOOT), 450, -1, NULL); // UTF-8
 		ft.reboot();
 	}
 }
