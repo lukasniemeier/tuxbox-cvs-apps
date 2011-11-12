@@ -28,6 +28,7 @@ TUXBOX_APPS_LIB_PKGCONFIG(UCODES,tuxbox-ucodes)
 TUXBOX_APPS_LIB_PKGCONFIG(ZAPIT,tuxbox-zapit)
 TUXBOX_APPS_LIB_PKGCONFIG(MPEGTOOLS,tuxbox-mpegtools)
 TUXBOX_APPS_LIB_PKGCONFIG(XMLTREE,tuxbox-xmltree)
+TUXBOX_APPS_LIB_PKGCONFIG(MD5SUM,tuxbox-md5sum)
 
 AC_ARG_ENABLE(kernel26,
 	AS_HELP_STRING(--enable-kernel26,include kernel 2.6.x support),

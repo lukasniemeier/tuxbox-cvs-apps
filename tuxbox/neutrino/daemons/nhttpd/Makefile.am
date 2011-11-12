@@ -26,6 +26,7 @@ nhttpd_LDADD = \
 	@CONFIGFILE_LIBS@ \
 	@CONNECTION_LIBS@ \
 	@ZAPIT_LIBS@ \
+	@EVENTSERVER_LIBS@ \
 	-lpthread
 
 $(top_builddir)/lib/timerdclient/libtimerdclient.la:
