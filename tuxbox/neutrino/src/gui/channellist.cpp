@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.227 2011/09/18 20:40:05 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.228 2011/11/13 19:30:21 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -280,6 +280,7 @@ int CChannelList::show()
 
 	displayNext = false;
 	paintHead();
+	paintFoot(); // remove to re-paint buttons
 //	updateEvents();
 	paint();
 
@@ -428,13 +429,15 @@ int CChannelList::show()
 //
 //			}
 			paintHead();
+			paintFoot(); // remove to re-paint buttons
 			paint();
 
 		}
 		else if ( msg == CRCInput::RC_blue )
 		{
 			displayNext = !displayNext;
-			paintHead(); // update button bar
+			paintHead(); // update button bar when lines marked to "remove to re-paint buttons" are removed
+			paintFoot(); // remove to re-paint buttons
 			paint();
 		}
 		else if ( msg == CRCInput::RC_help )
@@ -458,6 +461,7 @@ int CChannelList::show()
 			}
 
 		paintHead();
+		paintFoot(); // remove to re-paint buttons
 		paint();
 
 		}
@@ -1320,7 +1324,7 @@ void CChannelList::paintHead()
 		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+width-10-timestr_len, y+theight+0, timestr_len+1, timestr, COL_MENUHEAD, 0, true); // UTF-8
 	}
 
-	paintFoot();
+	// paintFoot(); // activate to re-paint buttons
 }
 
 struct button_label CChannelListButtons[] =
