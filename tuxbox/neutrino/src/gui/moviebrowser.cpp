@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.63 2011/09/22 19:53:53 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.64 2011/11/13 19:17:23 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.63 2011/09/22 19:53:53 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.64 2011/11/13 19:17:23 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3054,7 +3054,6 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_SAVE,     true, NULL, this, "save_movie_info", CRCInput::RC_red,   NEUTRINO_ICON_BUTTON_RED), true);
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_HEAD_UPDATE, true, NULL,      &movieInfoMenuUpdate, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_HEAD,	true, NULL,      &bookmarkMenu, NULL, CRCInput::RC_yellow,  NEUTRINO_ICON_BUTTON_YELLOW));
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_TITLE,          true, movie_info->epgTitle,  &titelUserInput,NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_SERIE,          true, movie_info->serieName, &serieMenu,NULL, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2));
@@ -3072,6 +3071,8 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_PREVPLAYDATE,   false, dateUserDateInput.getValue()));//LOCALE_FLASHUPDATE_CURRENTVERSIONDATE
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_RECORDDATE,     false, recUserDateInput.getValue()));//LOCALE_FLASHUPDATE_CURRENTVERSIONDATE
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_SIZE,           false, size,     NULL));
+	movieInfoMenu.addItem(GenericMenuSeparatorLine);
+	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_HEAD,	true, NULL,      &bookmarkMenu, NULL, CRCInput::RC_yellow,  NEUTRINO_ICON_BUTTON_YELLOW));
 
 	movieInfoMenu.exec(NULL,"");
 
@@ -3919,7 +3920,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.63 $");
+	return imageinfo.getModulVersion("","$Revision: 1.64 $");
 }
 
 /************************************************************************/
