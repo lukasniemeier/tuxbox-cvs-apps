@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.h,v 1.5 2011/09/18 21:05:38 rhabarber1848 Exp $
+	$Id: keybind_setup.h,v 1.6 2011/11/14 21:10:59 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -62,6 +62,8 @@ class CKeybindSetup : public CMenuTarget
 			VIRTUALKEY_SUBCHANNEL_TOGGLE,
 			VIRTUALKEY_ZAP_HISTORY,
 			VIRTUALKEY_LASTCHANNEL,
+			VIRTUALKEY_MENU_PAGE_UP,
+			VIRTUALKEY_MENU_PAGE_DOWN,
 		
 			MAX_NUM_KEYNAMES
 		};

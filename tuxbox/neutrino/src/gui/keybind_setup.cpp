@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.10 2011/09/18 21:05:38 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.11 2011/11/14 21:10:59 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -101,7 +101,9 @@ const neutrino_locale_t keydescription_head[] =
 	LOCALE_KEYBINDINGMENU_SUBCHANNELDOWN_HEAD,
 	LOCALE_KEYBINDINGMENU_SUBCHANNELTOGGLE_HEAD,
 	LOCALE_KEYBINDINGMENU_ZAPHISTORY_HEAD,
-	LOCALE_KEYBINDINGMENU_LASTCHANNEL_HEAD
+	LOCALE_KEYBINDINGMENU_LASTCHANNEL_HEAD,
+	LOCALE_KEYBINDINGMENU_PAGEUP_HEAD,
+	LOCALE_KEYBINDINGMENU_PAGEDOWN_HEAD
 };
 
 const neutrino_locale_t keydescription[] =
@@ -125,7 +127,9 @@ const neutrino_locale_t keydescription[] =
 	LOCALE_KEYBINDINGMENU_SUBCHANNELDOWN,
 	LOCALE_KEYBINDINGMENU_SUBCHANNELTOGGLE,
 	LOCALE_KEYBINDINGMENU_ZAPHISTORY,
-	LOCALE_KEYBINDINGMENU_LASTCHANNEL
+	LOCALE_KEYBINDINGMENU_LASTCHANNEL,
+	LOCALE_KEYBINDINGMENU_PAGEUP,
+	LOCALE_KEYBINDINGMENU_PAGEDOWN
 };
 
 #define KEYBINDINGMENU_BOUQUETHANDLING_OPTION_COUNT 3
@@ -168,7 +172,9 @@ void CKeybindSetup::showSetup()
 			&g_settings.key_subchannel_down,
 			&g_settings.key_subchannel_toggle,
 			&g_settings.key_zaphistory,
-			&g_settings.key_lastchannel
+			&g_settings.key_lastchannel,
+			&g_settings.key_menu_pageup,
+			&g_settings.key_menu_pagedown
 		};
 
 	CKeyChooser * keychooser[MAX_NUM_KEYNAMES];
@@ -200,9 +206,9 @@ void CKeybindSetup::showSetup()
 
 	//quickzap
 	CMenuSeparator * ks_qz_sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_QUICKZAP);
-	CMenuForwarder * ks_qz_fw1 = new CMenuForwarder(keydescription[VIRTUALKEY_SUBCHANNEL_TOGGLE], 	true, NULL, keychooser[VIRTUALKEY_SUBCHANNEL_TOGGLE]);
-	CMenuForwarder * ks_qz_fw2 = new CMenuForwarder(keydescription[VIRTUALKEY_ZAP_HISTORY], 	true, NULL, keychooser[VIRTUALKEY_ZAP_HISTORY]);
-	CMenuForwarder * ks_qz_fw3 = new CMenuForwarder(keydescription[VIRTUALKEY_LASTCHANNEL], 	true, NULL, keychooser[VIRTUALKEY_LASTCHANNEL]);
+
+	//menu navigation
+	CMenuSeparator * ks_mn_sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_MENU);
 	
 
 	//paint items
@@ -233,11 +239,13 @@ void CKeybindSetup::showSetup()
 		//----------------------------------
 		//show quickzap items
 		ks_rc->addItem(ks_qz_sep);
-		for (int i = VIRTUALKEY_CHANNEL_UP; i <= VIRTUALKEY_SUBCHANNEL_DOWN; i++)
+		for (int i = VIRTUALKEY_CHANNEL_UP; i <= VIRTUALKEY_LASTCHANNEL; i++)
 			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
-		ks_rc->addItem(ks_qz_fw1);
-		ks_rc->addItem(ks_qz_fw2);
-		ks_rc->addItem(ks_qz_fw3);
+		//----------------------------------
+		//show menu navigation items
+		ks_rc->addItem(ks_mn_sep);
+		for (int i = VIRTUALKEY_MENU_PAGE_UP; i <= VIRTUALKEY_MENU_PAGE_DOWN; i++)
+			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
 
 	ks->exec(NULL, "");
 	ks->hide();

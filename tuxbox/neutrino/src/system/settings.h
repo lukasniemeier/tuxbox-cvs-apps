@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.243 2011/11/12 15:26:26 rhabarber1848 Exp $
+  $Id: settings.h,v 1.244 2011/11/14 21:11:01 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -331,6 +331,9 @@ struct SNeutrinoSettings
 	neutrino_msg_t key_subchannel_toggle;
 	neutrino_msg_t key_zaphistory;
 	neutrino_msg_t key_lastchannel;
+
+	neutrino_msg_t key_menu_pageup;
+	neutrino_msg_t key_menu_pagedown;
 
 	char repeat_blocker[4];
 	char repeat_genericblocker[4];

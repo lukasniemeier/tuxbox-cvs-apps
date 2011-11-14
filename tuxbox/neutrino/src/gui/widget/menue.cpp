@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.193 2011/06/14 10:28:36 dbt Exp $
+	$Id: menue.cpp,v 1.194 2011/11/14 21:11:00 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -434,10 +434,91 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 					break;
 
 				default:
-					if (CNeutrinoApp::getInstance()->handleMsg(msg, data) & messages_return::cancel_all)
+					// handle configurable keys
+					if (msg == g_settings.key_menu_pageup)
 					{
-						retval = menu_return::RETURN_EXIT_ALL;
-						msg = CRCInput::RC_timeout;
+						if (current_page)
+						{
+							pos = (int)page_start[current_page] - 1;
+							for (unsigned int count = pos; count > 0; count--)
+							{
+								CMenuItem* item = items[pos];
+								if (item->isSelectable())
+								{
+									if ((pos < (int)page_start[current_page + 1]) && (pos >= (int)page_start[current_page]))
+									{
+										items[selected]->paint(false);
+										item->paint(true);
+										selected = pos;
+									}
+									else
+									{
+										selected = pos;
+										paintItems();
+									}
+									break;
+								}
+								pos--;
+							}
+						}
+						else
+						{
+							pos = 0;
+							for (unsigned int count = 0; count < items.size(); count++)
+							{
+								CMenuItem* item = items[pos];
+								if (item->isSelectable())
+								{
+									if ((pos < (int)page_start[current_page + 1]) && (pos >= (int)page_start[current_page]))
+									{
+										items[selected]->paint(false);
+										item->paint(true);
+										selected = pos;
+									}
+									else
+									{
+										selected = pos;
+										paintItems();
+									}
+									break;
+								}
+								pos++;
+							}
+						}
+					}
+					else if (msg == g_settings.key_menu_pagedown)
+					{
+						pos = (int)page_start[current_page + 1];
+						if (pos >= (int)items.size())
+							pos = items.size() - 1;
+						for (unsigned int count = pos; count < items.size(); count++)
+						{
+							CMenuItem* item = items[pos];
+							if (item->isSelectable())
+							{
+								if ((pos < (int)page_start[current_page + 1]) && (pos >= (int)page_start[current_page]))
+								{
+									items[selected]->paint(false);
+									item->paint(true);
+									selected = pos;
+								}
+								else
+								{
+									selected = pos;
+									paintItems();
+								}
+								break;
+							}
+							pos++;
+						}
+					}
+					else
+					{
+						if (CNeutrinoApp::getInstance()->handleMsg(msg, data) & messages_return::cancel_all)
+						{
+							retval = menu_return::RETURN_EXIT_ALL;
+							msg = CRCInput::RC_timeout;
+						}
 					}
 			}
 

@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1071 2011/11/12 15:26:25 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1072 2011/11/14 21:10:59 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -689,6 +689,9 @@ int CNeutrinoApp::loadSetup()
 	g_settings.key_zaphistory = (neutrino_msg_t)configfile.getInt32("key_zaphistory", CRCInput::RC_home);
 	g_settings.key_lastchannel = (neutrino_msg_t)configfile.getInt32("key_lastchannel", CRCInput::RC_0);
 
+	g_settings.key_menu_pageup = (neutrino_msg_t)configfile.getInt32("key_menu_pageup", CRCInput::RC_page_up);
+	g_settings.key_menu_pagedown = (neutrino_msg_t)configfile.getInt32("key_menu_pagedown", CRCInput::RC_page_down);
+
 #ifdef HAVE_DBOX_HARDWARE
 	strcpy(g_settings.repeat_blocker, configfile.getString("repeat_blocker", g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS ? "150" : "25").c_str());
 	strcpy(g_settings.repeat_genericblocker, configfile.getString("repeat_genericblocker", g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS ? "25" : "0").c_str());
@@ -1230,6 +1233,9 @@ void CNeutrinoApp::saveSetup()
 	configfile.setInt32( "key_subchannel_toggle", (int)g_settings.key_subchannel_toggle );
 	configfile.setInt32( "key_zaphistory", (int)g_settings.key_zaphistory );
 	configfile.setInt32( "key_lastchannel", (int)g_settings.key_lastchannel );
+
+	configfile.setInt32( "key_menu_pageup", (int)g_settings.key_menu_pageup );
+	configfile.setInt32( "key_menu_pagedown", (int)g_settings.key_menu_pagedown );
 
 	configfile.setString( "repeat_blocker", g_settings.repeat_blocker );
 	configfile.setString( "repeat_genericblocker", g_settings.repeat_genericblocker );

@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.199 2011/11/12 15:26:26 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.200 2011/11/14 21:11:01 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -641,6 +641,7 @@ const char * locale_real_names[] =
 	"keybindingmenu.head",
 	"keybindingmenu.lastchannel",
 	"keybindingmenu.lastchannel_head",
+	"keybindingmenu.menu",
 	"keybindingmenu.modechange",
 	"keybindingmenu.pagedown",
 	"keybindingmenu.pagedown_head",

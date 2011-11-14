@@ -614,6 +614,7 @@ keybindingmenu.channelup_head Keysetup channel up
 keybindingmenu.head Keybinding Setup
 keybindingmenu.lastchannel Quick Zap
 keybindingmenu.lastchannel_head Quick Zap
+keybindingmenu.menu Menu
 keybindingmenu.modechange Modechange
 keybindingmenu.pagedown page down
 keybindingmenu.pagedown_head Keysetup page down
