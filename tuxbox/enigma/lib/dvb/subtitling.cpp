@@ -468,7 +468,7 @@ static void subtitle_set_palette(struct subtitle_clut *pal, int subpal)
 }
 
 eSubtitleWidget::eSubtitleWidget()
-	:delay(0),timer(eApp), timeout(eApp)
+	:delay(0),forcehide(0),timer(eApp), timeout(eApp)
 {
 	init_eSubtitleWidget();
 }
