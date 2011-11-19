@@ -352,7 +352,8 @@ private:
 	bool FixOverlapping(std::pair<eventMap,timeMap> &, time_t, int, const timeMap::iterator &, const uniqueEPGKey &);
 	int sectionRead(__u8 *data, int source);
 	static eEPGCache *instance;
-
+	int epgcachedays;
+	
 	eventCache eventDB;
 	updateMap serviceLastUpdated;
 	tmpMap temp;

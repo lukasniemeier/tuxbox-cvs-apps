@@ -442,7 +442,7 @@ int eventData::save(FILE *f)
 }
 
 eEPGCache::eEPGCache()
-	:messages(this,1), paused(0), firstStart(1)
+	:messages(this,1), paused(0), firstStart(1),epgcachedays(14)
 	,CleanTimer(this), zapTimer(this), abortTimer(this)
 {
 	init_eEPGCache();
@@ -916,8 +916,7 @@ int eEPGCache::sectionRead(__u8 *data, int source)
 			if ( TM == 3599 )
 				goto next;
 #endif
-	
-			if ( TM != 3599 && (TM+duration < now || TM > now+14*24*60*60) )
+			if ( TM != 3599 && (TM+duration < now || TM > now+epgcachedays*24*60*60) )
 				goto next;
 
 			if ( now <= (TM+duration) || TM == 3599 /*NVOD Service*/ )  // old events should not be cached
@@ -1543,6 +1542,7 @@ void eEPGCache::startEPG()
 		Lock();
 		temp.clear();
 
+		eConfig::getInstance()->getKey("/extras/epgcachedays", epgcachedays );
 		int cachebouquets = 1;
 		eConfig::getInstance()->getKey("/extras/cachebouquets", cachebouquets );
 		if (cachebouquets)

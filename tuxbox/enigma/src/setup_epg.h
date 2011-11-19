@@ -4,6 +4,7 @@
 
 #include <lib/gui/ebutton.h>
 #include <lib/gui/textinput.h>
+#include <lib/gui/enumber.h>
 #include <lib/gui/elabel.h>
 #include <lib/gui/emessage.h>
 #include <lib/gui/echeckbox.h>
@@ -14,6 +15,7 @@ class eEPGSetup: public eWindow
 	eButton *bt_seldir;
 	eCheckbox *cb_cachebouquets, *cb_infobarcache;
 	eTextInputField *tb_path, *tb_file;
+	eNumber *tb_epgcachedays;
 
 	void selectDir();
 	void clearCache();

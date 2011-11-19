@@ -20,6 +20,10 @@ void eEPGSetup::init_eEPGSetup()
 
 	cb_infobarcache=CreateSkinnedCheckbox("infobarcache",0,"/ezap/osd/useEPGCache");
 
+	int t = 14;
+	eConfig::getInstance()->getKey("/extras/epgcachedays", t);
+	tb_epgcachedays = CreateSkinnedNumberWithLabel("epgcachedays",t, 1, 1, 99, 2, 0, 0, "lepgcachedays");
+	
 	CONNECT(CreateSkinnedButton("clear")->selected, eEPGSetup::clearCache);
 	CONNECT(CreateSkinnedButton("store")->selected, eEPGSetup::storePressed);
 
@@ -57,6 +61,7 @@ void eEPGSetup::storePressed()
 {
 	eConfig::getInstance()->setKey("/extras/cachebouquets", cb_cachebouquets->isChecked()?255:0 );
 	eConfig::getInstance()->setKey("/ezap/osd/useEPGCache", cb_infobarcache->isChecked()?255:0 );
+	eConfig::getInstance()->setKey("/extras/epgcachedays", tb_epgcachedays->getNumber());
 
 	eString startPath =tb_path->getText();
 	if (startPath.empty() || startPath[startPath.length() -1] != '/')
