@@ -1,5 +1,5 @@
 /*
-	$Id: epgplus.cpp,v 1.61 2011/04/24 12:23:09 dbt Exp $
+	$Id: epgplus.cpp,v 1.62 2011/11/22 07:30:00 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1706,7 +1706,7 @@ int EpgPlus::MenuTargetAddRecordTimer::exec(CMenuTarget*, const std::string&)
 			std::cout << "add record timer 3" << std::endl;
 #endif
 			std::string recDir = g_settings.recording_dir[0];
-			if (g_settings.recording_choose_direct_rec_dir)
+			if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
 			{
 				CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_SETTINGS, NULL, &recDir);
 				epgPlus->hide();

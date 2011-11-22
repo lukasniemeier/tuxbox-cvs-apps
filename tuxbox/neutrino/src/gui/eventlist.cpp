@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.140 2011/06/19 18:00:50 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.141 2011/11/22 07:30:00 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -401,7 +401,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 				if(timerdclient.isTimerdAvailable() && !(is_timer & EventList::TIMER_RECORD))
 				{
 					std::string recDir = g_settings.recording_dir[0];
-					if (g_settings.recording_choose_direct_rec_dir)
+					if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
 					{
 						CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,NULL,&recDir);
 						hide();

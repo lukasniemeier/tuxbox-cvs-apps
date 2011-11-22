@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.159 2011/08/29 19:48:54 dbt Exp $
+	$Id: epgview.cpp,v 1.160 2011/11/22 07:30:00 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -694,7 +694,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 						if(timerdclient.isTimerdAvailable())
 						{
 							std::string recDir = g_settings.recording_dir[0];
-							if (g_settings.recording_choose_direct_rec_dir)
+							if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
 							{
 								CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,NULL,&recDir);
 								hide();
