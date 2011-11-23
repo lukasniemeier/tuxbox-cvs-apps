@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.11 2011/11/14 21:10:59 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.12 2011/11/23 18:15:38 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -198,7 +198,7 @@ void CKeybindSetup::showSetup()
 
 	//mode change
 	CMenuSeparator * ks_mc_sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_MODECHANGE);
-	CMenuForwarder * ks_mc_fw = new CMenuForwarder(keydescription[VIRTUALKEY_TV_RADIO_MODE], true, NULL, keychooser[VIRTUALKEY_TV_RADIO_MODE]);
+	CMenuForwarder * ks_mc_fw = new CMenuForwarder(keydescription[VIRTUALKEY_TV_RADIO_MODE], true, keychooser[VIRTUALKEY_TV_RADIO_MODE]->getKeyName(), keychooser[VIRTUALKEY_TV_RADIO_MODE]);
 
 	//channellist
 	CMenuSeparator * ks_cl_sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_CHANNELLIST);
@@ -235,17 +235,17 @@ void CKeybindSetup::showSetup()
 		ks_rc->addItem(ks_cl_sep);
 		ks_rc->addItem(ks_cl_oj);
 		for (int i = VIRTUALKEY_PAGE_UP; i <= VIRTUALKEY_RELOAD; i++)
-			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
+			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, keychooser[i]->getKeyName(), keychooser[i]));
 		//----------------------------------
 		//show quickzap items
 		ks_rc->addItem(ks_qz_sep);
 		for (int i = VIRTUALKEY_CHANNEL_UP; i <= VIRTUALKEY_LASTCHANNEL; i++)
-			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
+			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, keychooser[i]->getKeyName(), keychooser[i]));
 		//----------------------------------
 		//show menu navigation items
 		ks_rc->addItem(ks_mn_sep);
 		for (int i = VIRTUALKEY_MENU_PAGE_UP; i <= VIRTUALKEY_MENU_PAGE_DOWN; i++)
-			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, NULL, keychooser[i]));
+			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, keychooser[i]->getKeyName(), keychooser[i]));
 
 	ks->exec(NULL, "");
 	ks->hide();
