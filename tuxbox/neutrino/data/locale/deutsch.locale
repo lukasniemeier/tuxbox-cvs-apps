@@ -223,7 +223,7 @@ channellist.epgtext_align_right rechts
 channellist.extended Sendungsfortschritt anzeigen
 channellist.head Alle Kanäle
 channellist.history Programmverlauf
-channellist.nonefound Es wurden keine Kanäle gefunden!\nFühren Sie bitte eine Kanalsuche durch\n(dbox-Taste -> Service)
+channellist.nonefound Es wurden keine Kanäle gefunden!\nFühren Sie bitte eine Kanalsuche durch\n(d-box-Taste -> Service)
 channellist.since seit %02d:%02d
 channellist.start ab %02d:%02d
 colorchooser.alpha alpha
@@ -469,7 +469,7 @@ flashupdate.experimentalimage Sie haben einen Snapshot ausgewählt, bitte beacht
 flashupdate.expertfunctions Experten-Funktionen
 flashupdate.fileis0bytes die Dateigröße ist 0 Byte
 flashupdate.fileselector Datei-Auswahl
-flashupdate.flashreadyreboot Das Image wurde erfolgreich geflasht.\nIhre DBox wird jetzt neu gestartet.
+flashupdate.flashreadyreboot Das Image wurde erfolgreich geflasht.\nIhre d-box wird jetzt neu gestartet.
 flashupdate.getinfofile lade Versioninfo
 flashupdate.getinfofileerror kann Info nicht laden
 flashupdate.getupdatefile lade Update
@@ -496,8 +496,8 @@ flashupdate.proxyusername_hint2 Ein leerer Eintrag bedeutet keine Authentifizier
 flashupdate.readflash ganzes Flashimage auslesen
 flashupdate.readflashmtd einzelne Partition auslesen
 flashupdate.ready fertig
-flashupdate.reallyflashchipset Wollen Sie den Flashvorgang wirklich durchführen?\n\nFalls ein Fehler auftritt oder das Image nicht\nfunktionsfähig ist, wird Ihre DBox nicht mehr booten.\nVerwenden Sie nur Images vom Typ: %s\ngewähltes Image: %s\nZiel: %s
-flashupdate.reallyflashmtd Wollen Sie den Flashvorgang wirklich durchführen?\n\nFalls ein Fehler auftritt oder das Image nicht\nfunktionsfähig ist, wird Ihre DBox nicht mehr booten.\n\ngewähltes Image: %s\nZiel: %s
+flashupdate.reallyflashchipset Wollen Sie den Flashvorgang wirklich durchführen?\n\nFalls ein Fehler auftritt oder das Image nicht\nfunktionsfähig ist, wird Ihre d-box nicht mehr booten.\nVerwenden Sie nur Images vom Typ: %s\ngewähltes Image: %s\nZiel: %s
+flashupdate.reallyflashmtd Wollen Sie den Flashvorgang wirklich durchführen?\n\nFalls ein Fehler auftritt oder das Image nicht\nfunktionsfähig ist, wird Ihre d-box nicht mehr booten.\n\ngewähltes Image: %s\nZiel: %s
 flashupdate.savesuccess Das Image wurde erfolgreich unter dem\nDateinamen %s gespeichert.
 flashupdate.selectimage Verfügbare Updates
 flashupdate.squashfs.noversion Bei SquashFS Updates werden Versionsüberprüfungen\nderzeit nur bei Online-Updates unterstützt.\nWollen Sie das ausgewählte Image wirklich installieren?
@@ -1143,7 +1143,7 @@ ping.unreachable ist nicht erreichbar (unreachable)
 pinprotection.head PIN-Abfrage
 pinprotection.wrongcode Geben Sie den Code nocheinmal ein!
 plugins.result Pluginausgabe
-rclock.lockmsg Die Fernbedienung der dbox2 wird gesperrt.\nUm die Sperre aufzuheben, bitte\n<ROT> und <DBOX> auf der Fernbedienung\ndrücken.
+rclock.lockmsg Die Fernbedienung der d-box wird gesperrt.\nUm die Sperre aufzuheben, bitte\n<ROT> und <d-box> auf der Fernbedienung\ndrücken.
 rclock.menueadd FB sperren
 rclock.title Fernbedienung sperren
 rclock.unlockmsg Fernbedienung reaktiviert...
@@ -1332,7 +1332,7 @@ shutdown.recoding_query Aufnahme läuft. Trotzdem runterfahren?
 shutdowntimer.announce Die Box wird in 1 Min. runtergefahren.\nShutdown abbrechen?
 sleeptimerbox.announce Sleeptimer in 1 Min.
 sleeptimerbox.hint1 Ausschaltzeit in Min. (000=aus)
-sleeptimerbox.hint2 Die dbox2 schaltet sich nach dieser Zeit aus.
+sleeptimerbox.hint2 Die d-box schaltet sich nach dieser Zeit aus.
 sleeptimerbox.title Sleeptimer
 streamfeatures.head Features
 streaminfo.aratio Verhältnis:
@@ -1482,7 +1482,7 @@ ucodecheck.avia600 Avia 600
 ucodecheck.cam-alpha Cam-Alpha
 ucodecheck.head UCode Überprüfung
 ucodecheck.ucode UCode
-ucodes.failure Achtung, die µCodes wurden NICHT gefunden!\n\nBitte per FTP (oder DBox-BootManager)\nuploaden, und die DBox neu starten!
+ucodes.failure Achtung, die µCodes wurden NICHT gefunden!\n\nBitte per FTP (oder DBox-BootManager)\nuploaden, und die d-box neu starten!
 upnpbrowser.head UPnP Browser
 upnpbrowser.noservers keine UPnP Server gefunden
 upnpbrowser.rescan Erneut suchen
