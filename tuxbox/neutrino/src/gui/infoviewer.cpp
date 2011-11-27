@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.309 2011/11/27 16:02:56 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.310 2011/11/27 19:25:02 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -164,9 +164,9 @@ void CInfoViewer::showSatfind()
 
 	sig = signal.sig * 100 / 65535;
 	snr = signal.snr * 100 / 65535;
-	ber = signal.ber / 2622;
+	ber = signal.ber / 2621;
 
-	if ((signal.ber > 0) && (signal.ber < 2622))
+	if ((signal.ber > 0) && (signal.ber < 2621))
 		ber = 1;
 
 	// only update if required
