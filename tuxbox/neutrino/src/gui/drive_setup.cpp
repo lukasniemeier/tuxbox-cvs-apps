@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.85 2011/07/22 19:46:55 rhabarber1848 Exp $
+	$Id: drive_setup.cpp,v 1.86 2011/12/01 10:38:40 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2835,10 +2835,11 @@ bool CDriveSetup::mkFstab()
 				string mount_entry;
 				if (isSwapPartition(partname)) 
 				{
+					string swap_size = iToString(getPartSize(i,ii)/1024/1024);
 					mount_entry = partname;
 					mount_entry += " none swap sw 0 0\n"; // TODO setup for fstab swap options
 					mount_entry += "tmpfs /tmp tmpfs size=";
-					mount_entry += d_settings.drive_partition_size[i][ii];
+					mount_entry += swap_size ; //use real size of partition for swap size, not setting /*d_settings.drive_partition_size[i][ii]*/
 					mount_entry += "M,remount 0 0\n";
 					v_fstab_entries.push_back(mount_entry);
 				}
@@ -4397,7 +4398,8 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 			else
 			{	
 				char size_opt[10];
-				snprintf(size_opt, 10, "size=%sM", d_settings.drive_partition_size[device_num][part_number]);
+				//use real size of partition for swap size, not setting /*d_settings.drive_partition_size[device_num][part_number]*/
+				snprintf(size_opt, 10, "size=%sM", iToString(getPartSize(device_num,part_number)/1024/1024).c_str()); 
 				if (mount("tmpfs", "/tmp" , NULL, MS_MGC_VAL | MS_REMOUNT, size_opt) !=0 )
 				{
 					cerr<<"[drive setup] "<<__FUNCTION__ <<":  mount: "<<strerror(errno)<<endl;
@@ -4602,7 +4604,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.85 $");
+	return imageinfo.getModulVersion("","$Revision: 1.86 $");
 }
 
 // returns text for initfile headers
@@ -4649,7 +4651,8 @@ string CDriveSetup::getInitFileMountEntries()
 			{
 				if (!d_settings.drive_use_fstab)
 				{
-					swapon_entries += "\t\t" SWAPON + partname + " && " + MOUNT + "-n -t tmpfs tmpfs /tmp -o size=" + d_settings.drive_partition_size[i][ii] + "M,remount\n";
+					string swap_size = iToString(getPartSize(i,ii)/1024/1024); //use real size of partition for swap size /*d_settings.drive_partition_size[i][ii]*/
+					swapon_entries += "\t\t" SWAPON + partname + " && " + MOUNT + "-n -t tmpfs tmpfs /tmp -o size=" + swap_size  + "M,remount\n";
 					swapoff_entries += "\t\t" SWAPOFF + partname + "\n";
 				}
 			}
