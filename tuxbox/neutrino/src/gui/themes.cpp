@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.20 2011/04/03 21:56:13 dbt Exp $ 
+	$Id: themes.cpp,v 1.21 2011/12/09 22:36:28 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -90,7 +90,7 @@ int CThemes::exec(CMenuTarget* parent, const std::string & actionKey)
 	if ( !hasThemeChanged )
 		rememberOldTheme( true );
 
-	Show();
+	res = Show();
 	return res;
 }
 
@@ -138,7 +138,7 @@ void CThemes::readThemes(CMenuWidget &themes)
 	}
 }
 
-void CThemes::Show()
+int CThemes::Show()
 {
 	std::string file_name = "";
 
@@ -172,7 +172,7 @@ void CThemes::Show()
 		printf("[neutrino theme] error accessing %s\n", USERDIR);
 	}
 
-	themes.exec(NULL, "");
+	int res = themes.exec(NULL, "");
 	themes.hide();
 	selected = themes.getSelected();
 
@@ -186,6 +186,8 @@ void CThemes::Show()
 		else
 			hasThemeChanged = false;
 	}
+
+	return res;
 }
 
 void CThemes::rememberOldTheme(bool remember)

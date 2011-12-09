@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.h,v 1.9 2011/09/18 20:44:49 rhabarber1848 Exp $
+	$Id: video_setup.h,v 1.10 2011/12/09 22:36:28 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -48,7 +48,7 @@ class CVideoSetup : public CMenuTarget, CChangeObserver
 
  		virtual bool changeNotify(const neutrino_locale_t OptionName, void *);
 
-		void showVideoSetup();
+		int showVideoSetup();
 
 	public:	
 		CVideoSetup();

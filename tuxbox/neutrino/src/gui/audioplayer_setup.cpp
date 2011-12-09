@@ -1,5 +1,5 @@
 /*
-	$Id: audioplayer_setup.cpp,v 1.6 2011/04/03 21:56:13 dbt Exp $
+	$Id: audioplayer_setup.cpp,v 1.7 2011/12/09 22:36:27 dbt Exp $
 
 	audioplayer setup implementation - Neutrino-GUI
 
@@ -72,11 +72,6 @@ int CAudioPlayerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		parent->hide();
 	}
 
-	if(actionKey == "save") {
-		CNeutrinoApp::getInstance()->saveSetup(); // Save the settings !
-		return res;
-	}
-
 	if(actionKey == "audioplayerdir")
 	{
 		parent->hide();
@@ -87,7 +82,7 @@ int CAudioPlayerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return res;
 	}
 
-	showAudioPlayerSetup();
+	res = showAudioPlayerSetup();
 	
 	return res;
 }
@@ -108,10 +103,9 @@ const CMenuOptionChooser::keyval AUDIOPLAYER_DISPLAY_ORDER_OPTIONS[AUDIOPLAYER_D
 };
 
 
-void CAudioPlayerSetup::showAudioPlayerSetup()
+int CAudioPlayerSetup::showAudioPlayerSetup()
 /*shows the audio setup menue*/
 {
-
 	CMenuWidget* audioplayerSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	audioplayerSetup->setPreselected(selected);
 	audioplayerSetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINMENU_AUDIOPLAYER));
@@ -141,9 +135,10 @@ void CAudioPlayerSetup::showAudioPlayerSetup()
 	// shoutcast metadata parsing y/n
 	audioplayerSetup->addItem(new CMenuOptionChooser(LOCALE_AUDIOPLAYER_ENABLE_SC_METADATA, &g_settings.audioplayer_enable_sc_metadata, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true ));
 
-	audioplayerSetup->exec (NULL, "");
-	audioplayerSetup->hide ();
+	int res = audioplayerSetup->exec(NULL, "");
+	audioplayerSetup->hide();
 	selected = audioplayerSetup->getSelected();
 	delete audioplayerSetup;
 
+	return res;
 }

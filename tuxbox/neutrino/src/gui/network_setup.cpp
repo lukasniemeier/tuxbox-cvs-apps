@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.17 2011/04/03 21:56:13 dbt Exp $
+	$Id: network_setup.cpp,v 1.18 2011/12/09 22:36:28 dbt Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -132,7 +132,7 @@ int CNetworkSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 
 	printf("[neutrino] init network setup...\n");
-	showNetworkSetup();
+	res = showNetworkSetup();
 	
 	return res;
 }
@@ -144,9 +144,10 @@ const CMenuOptionChooser::keyval OPTIONS_NTPENABLE_OPTIONS[OPTIONS_NTPENABLE_OPT
 	{ CNetworkSetup::NETWORK_NTP_ON, LOCALE_OPTIONS_NTP_ON }
 };
 
-void CNetworkSetup::showNetworkSetup()
+int CNetworkSetup::showNetworkSetup()
 {
 	bool loop = true;
+	int res = menu_return::RETURN_REPAINT;
 
 	while (loop)
 	{		
@@ -259,7 +260,7 @@ void CNetworkSetup::showNetworkSetup()
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SAMBA, true, NULL, sambaSetup, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
 	#endif
 
-		networkSettings->exec(NULL, "");
+		res = networkSettings->exec(NULL, "");
 		networkSettings->hide();
 		selected = networkSettings->getSelected();
 		delete networkSettings;
@@ -283,6 +284,7 @@ void CNetworkSetup::showNetworkSetup()
  		loop = settingsChanged();
  	}
 
+	return res;
 }
 
 //returns true, if any settings were changed

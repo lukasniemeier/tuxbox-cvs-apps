@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.6 2011/04/03 21:56:13 dbt Exp $
+	$Id: user_menue_setup.cpp,v 1.7 2011/12/09 22:36:28 dbt Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -89,12 +89,12 @@ int CUserMenuSetup::exec(CMenuTarget* parent, const std::string &)
 	if(parent != NULL)
 		parent->hide();
 
-	showSetup();
-	
-	return menu_return::RETURN_REPAINT;	
+	int res = showSetup();
+
+	return res;
 }
 
-void CUserMenuSetup::showSetup()
+int CUserMenuSetup::showSetup()
 {
 	CMenuWidget * ums = new CMenuWidget(LOCALE_PERSONALIZE_HEAD, NEUTRINO_ICON_PROTECTING, width);
 	ums->setPreselected(selected);
@@ -121,9 +121,11 @@ void CUserMenuSetup::showSetup()
 		ums->addItem( new CMenuOptionChooser(text, &g_settings.usermenu[button][item], USERMENU_ITEM_OPTIONS, USERMENU_ITEM_OPTION_COUNT,true ));
 	}
 
-	ums->exec(NULL, "");
+	int res = ums->exec(NULL, "");
 	ums->hide();
 	selected = ums->getSelected();
 	delete ums;
+
+	return res;
 }
 

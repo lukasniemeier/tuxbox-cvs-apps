@@ -1,5 +1,5 @@
 /*
-	$Id: esd_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
+	$Id: esd_setup.cpp,v 1.8 2011/12/09 22:36:27 dbt Exp $
 
 	esound setup implementation - Neutrino-GUI
 
@@ -71,12 +71,12 @@ int CEsdSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-	showEsdSetup();
+	res = showEsdSetup();
 	
 	return res;
 }
 
-void CEsdSetup::showEsdSetup()
+int CEsdSetup::showEsdSetup()
 /*shows the esd setup menue*/
 {
 	CMenuWidget* esdSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
@@ -93,8 +93,10 @@ void CEsdSetup::showEsdSetup()
 	CStringInput setup_EsoundPort(LOCALE_ESOUND_PORT, g_settings.esound_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
 	esdSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_PORT, true, g_settings.esound_port, &setup_EsoundPort));
 
-	esdSetup->exec(NULL, "");
+	int res = esdSetup->exec(NULL, "");
 	esdSetup->hide();
 	selected = esdSetup->getSelected();
 	delete esdSetup;
+
+	return res;
 }

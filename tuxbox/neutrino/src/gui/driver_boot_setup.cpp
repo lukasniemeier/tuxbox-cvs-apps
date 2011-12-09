@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.5 2011/04/03 21:56:13 dbt Exp $
+	$Id: driver_boot_setup.cpp,v 1.6 2011/12/09 22:36:27 dbt Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -65,9 +65,9 @@ int CDriverBootSetup::exec(CMenuTarget* parent, const std::string &)
 	if(parent != NULL)
 		parent->hide();
 
-	showSetup();
+	int res = showSetup();
 	
-	return menu_return::RETURN_REPAINT;	
+	return res;
 }
 
 #define OPTIONS_OFF1_ON0_OPTION_COUNT 2
@@ -120,7 +120,7 @@ const driver_setting_files_struct_t driver_setting_files[DRIVER_SETTING_FILES_CO
 };
 
 
-void CDriverBootSetup::showSetup()
+int CDriverBootSetup::showSetup()
 {
 	// dynamic created objects
 	std::vector<CChangeObserver*> toDelete;
@@ -194,7 +194,7 @@ void CDriverBootSetup::showSetup()
 	dbs->addItem(oj_dbox_duplex);
 #endif
 
-	dbs->exec(NULL, "");
+	int res = dbs->exec(NULL, "");
 	dbs->hide();
 	selected = dbs->getSelected();
 	delete dbs;
@@ -204,5 +204,7 @@ void CDriverBootSetup::showSetup()
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
 	toDelete.clear();
+
+	return res;
 }
 

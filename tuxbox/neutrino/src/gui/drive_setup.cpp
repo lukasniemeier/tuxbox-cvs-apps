@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.86 2011/12/01 10:38:40 dbt Exp $
+	$Id: drive_setup.cpp,v 1.87 2011/12/09 22:36:27 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -251,6 +251,7 @@ CDriveSetup::CDriveSetup():configfile('\t')
 	}
 
 	have_apply_errors = false;
+	exit_res = menu_return::RETURN_REPAINT;
 }
 
 CDriveSetup* CDriveSetup::getInstance()
@@ -493,6 +494,7 @@ int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
 	}
 
 	Init();
+	res = exit_res;
 
 	//left menue with user message
 	if (ApplySetup())
@@ -858,7 +860,7 @@ void CDriveSetup::showHddSetupMain()
 	//help
 	m->addItem(m_help);
 
-	m->exec (NULL, "");
+	exit_res = m->exec (NULL, "");
 	m->hide ();
 	selected_main = m->getSelected();
 	delete m;
@@ -4604,7 +4606,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.86 $");
+	return imageinfo.getModulVersion("","$Revision: 1.87 $");
 }
 
 // returns text for initfile headers

@@ -1,5 +1,5 @@
 /*
-$Id: personalize.h,v 1.19 2011/04/25 19:32:46 dbt Exp $
+$Id: personalize.h,v 1.20 2011/12/09 22:36:28 dbt Exp $
 
 Customization Menu - Neutrino-GUI
 
@@ -89,7 +89,7 @@ class CPersonalizeGui : public CMenuTarget
 		
 		std::vector<CMenuWidget *> v_widget;
 		
-		void 	ShowPersonalizationMenu();
+		int 	ShowPersonalizationMenu();
 		void 	ShowMenuOptions(const int& menu);
 		void 	ShowHelpPersonalize();
 		void 	SaveAndExit();

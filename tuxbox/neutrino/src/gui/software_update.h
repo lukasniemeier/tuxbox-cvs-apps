@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.h,v 1.6 2011/04/03 21:56:13 dbt Exp $
+	$Id: software_update.h,v 1.7 2011/12/09 22:36:28 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -40,8 +40,8 @@ class CSoftwareUpdate : public CMenuTarget
 	private:
 		int width, selected;
 
-		void showSoftwareUpdate();
-		void showSoftwareUpdateExpert();
+		int showSoftwareUpdate();
+		int showSoftwareUpdateExpert();
 		void showSoftwareUpdateImageinfo(CMenuWidget * entry);
 	
 	public:	

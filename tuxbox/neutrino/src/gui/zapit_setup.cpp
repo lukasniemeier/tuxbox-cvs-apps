@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.8 2011/12/09 22:36:28 dbt Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -115,19 +115,20 @@ int CZapitSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		g_RCInput->postMsg(CRCInput::RC_timeout, 0);
 		return menu_return::RETURN_EXIT;	
 	}
-	
-	Init();
-	
+
+	res = Init();
+
 	return res;
 }
 
 // init menue
-void CZapitSetup::Init()
+int CZapitSetup::Init()
 {
 	printf("[neutrino] init zapit menu\n");
 	strcpy(CstartChannelRadio,g_Zapit->getChannelNrName(g_Zapit->getStartChannelRadio(), CZapitClient::MODE_RADIO).c_str());
 	strcpy(CstartChannelTV,g_Zapit->getChannelNrName(g_Zapit->getStartChannelTV(), CZapitClient::MODE_TV).c_str());
-	showSetup();
+	int res = showSetup();
+	return res;
 }
 
 
@@ -139,7 +140,7 @@ const CMenuOptionChooser::keyval ZAPITSETTINGS_UNCOMMITTED_SWITCH_MODE_OPTIONS[Z
 	{ 2, LOCALE_ZAPITCONFIG_UNCOMMITTED_SWITCH_MODE2 }
 };
 
-void CZapitSetup::showSetup()
+int CZapitSetup::showSetup()
 {
 	//init
 	CMenuWidget * z = new CMenuWidget(menue_title, menue_icon, width);
@@ -193,10 +194,12 @@ void CZapitSetup::showSetup()
 	if(c6 != NULL)
 		z->addItem(c6);		//uncommitted_switch on/off
 
-	z->exec(NULL, "");
+	int res = z->exec(NULL, "");
 	z->hide();
 	selected = z->getSelected();
 	delete z;
+
+	return res;
 }
 
 void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)

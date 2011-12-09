@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.5 2011/04/03 21:56:13 dbt Exp $
+	$Id: miscsettings_menu.cpp,v 1.6 2011/12/09 22:36:27 dbt Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -83,10 +83,9 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 
-
-	showMenue();
+	int res = showMenue();
 	
-	return menu_return::RETURN_REPAINT;	
+	return res;
 }
 
 #define MESSAGEBOX_NO_YES_OPTION_COUNT 2
@@ -149,7 +148,7 @@ const CMenuOptionChooser::keyval  MISCSETTINGS_STARTMODE_WITH_OPTIONS[MISCSETTIN
 };
 
 //show misc settings menue
-void CMiscMenue::showMenue()
+int CMiscMenue::showMenue()
 {
 	//misc settings
 	CMenuWidget *misc_menue 		= new CMenuWidget(menue_title, menue_icon, width);
@@ -263,7 +262,7 @@ void CMiscMenue::showMenue()
 	misc_menue_filebrowser->addItem(new CMenuOptionChooser(LOCALE_FILEBROWSER_DENYDIRECTORYLEAVE, &g_settings.filebrowser_denydirectoryleave, MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true ));
 
 
-	misc_menue->exec(NULL, "");
+	int res = misc_menue->exec(NULL, "");
 	misc_menue->hide();
 	selected = misc_menue->getSelected();
 	delete misc_menue;
@@ -272,7 +271,7 @@ void CMiscMenue::showMenue()
 	delete misc_menue_epg;
 	delete misc_menue_zapit;
 	delete misc_menue_filebrowser;
+
+	return res;
 }
-
-
 

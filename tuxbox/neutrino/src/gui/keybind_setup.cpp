@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.12 2011/11/23 18:15:38 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.13 2011/12/09 22:36:27 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -75,7 +75,7 @@ int CKeybindSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-	showSetup();
+	res = showSetup();
 	
 	return res;
 }
@@ -140,7 +140,7 @@ const CMenuOptionChooser::keyval KEYBINDINGMENU_BOUQUETHANDLING_OPTIONS[KEYBINDI
 	{ 2, LOCALE_KEYBINDINGMENU_ALLCHANNELS_ON_OK     }
 };
 
-void CKeybindSetup::showSetup()
+int CKeybindSetup::showSetup()
 {
 	CMenuWidget * ks = new CMenuWidget(menue_title, menue_icon, width);
 	ks->setPreselected(selected);
@@ -247,7 +247,7 @@ void CKeybindSetup::showSetup()
 		for (int i = VIRTUALKEY_MENU_PAGE_UP; i <= VIRTUALKEY_MENU_PAGE_DOWN; i++)
 			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, keychooser[i]->getKeyName(), keychooser[i]));
 
-	ks->exec(NULL, "");
+	int res = ks->exec(NULL, "");
 	ks->hide();
 	selected = ks->getSelected();
 	delete ks;
@@ -255,4 +255,6 @@ void CKeybindSetup::showSetup()
 	delete ks_rc;
 	for (int i = 0; i < MAX_NUM_KEYNAMES; i++)
 		delete keychooser[i];
+
+	return res;
 }

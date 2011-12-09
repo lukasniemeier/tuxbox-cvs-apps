@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.15 2011/09/12 17:30:28 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.16 2011/12/09 22:36:28 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -96,9 +96,8 @@ int CScanSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_EXIT;
 	}
 
+	res = showScanService();
 
-	showScanService();
-	
 	return res;
 }
 
@@ -211,7 +210,7 @@ const CMenuOptionChooser::keyval OPTIONS_EAST0_WEST1_OPTIONS[OPTIONS_EAST0_WEST1
 	{ 1, LOCALE_SATSETUP_WEST }
 };
 
-void CScanSetup::showScanService()
+int CScanSetup::showScanService()
 {
 	dprintf(DEBUG_DEBUG, "init scansettings\n");
 	initScanSettings();
@@ -426,7 +425,7 @@ void CScanSetup::showScanService()
 	CScanTs* scanTs = new CScanTs();
 	scansetup->addItem(new CMenuForwarder(LOCALE_SCANTS_STARTNOW, true, NULL, scanTs, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 
-	scansetup->exec(NULL, "");
+	int res = scansetup->exec(NULL, "");
 	scansetup->hide();
 	selected = scansetup->getSelected();
 	delete scansetup;
@@ -438,6 +437,8 @@ void CScanSetup::showScanService()
 	delete satDiseqcNotifier;
 	delete scanSettingsSatManNotifier;
 	delete scanTs;
+
+	return res;
 }
 
 //sub menue scanmode

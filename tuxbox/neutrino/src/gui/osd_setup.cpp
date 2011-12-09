@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.12 2011/07/22 21:28:19 dbt Exp $
+	$Id: osd_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -145,33 +145,33 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if (actionKey=="show_menue_color_setup")
 	{
-		showOsdMenueColorSetup();
-		return menu_return::RETURN_REPAINT;
+		int res = showOsdMenueColorSetup();
+		return res;
 	}
 	else if (actionKey=="show_infobar_color_setup")
 	{
-		showOsdInfobarColorSetup();
-		return menu_return::RETURN_REPAINT;
+		int res = showOsdInfobarColorSetup();
+		return res;
 	}
 	else if (actionKey=="show_timeout_setup")
 	{
-		showOsdTimeoutSetup();
-		return menu_return::RETURN_REPAINT;
+		int res = showOsdTimeoutSetup();
+		return res;
 	}
 	else if (actionKey=="show_infobar_setup")
 	{
-		showOsdInfobarSetup();
-		return menu_return::RETURN_REPAINT;
+		int res = showOsdInfobarSetup();
+		return res;
 	}
 	else if (actionKey=="show_channellist_setup")
 	{
-		showOsdChannelListSetup();
-		return menu_return::RETURN_REPAINT;
+		int res = showOsdChannelListSetup();
+		return res;
 	}
 	else if (actionKey=="show_fontsize_setup")
 	{
-		showOsdFontSizeSetup();
-		return menu_return::RETURN_REPAINT;
+		int res = showOsdFontSizeSetup();
+		return res;
 	}
 	else if(strncmp(actionKey.c_str(), "fontsize.d", 10) == 0)
 	{
@@ -205,9 +205,9 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 
-	showOsdSetup();
+	int res = showOsdSetup();
 	
-	return menu_return::RETURN_REPAINT;	
+	return res;
 }
 
 /* for color settings menu */
@@ -239,7 +239,7 @@ const CMenuOptionChooser::keyval  SHOW_MUTE_ICON_OPTIONS[SHOW_MUTE_ICON_OPTIONS_
 };
 
 //show osd setup
-void COsdSetup::showOsdSetup()
+int COsdSetup::showOsdSetup()
 {
 	//osd main settings
 	CMenuWidget *osd_setup 		= new CMenuWidget(menue_title, menue_icon, width);
@@ -340,7 +340,7 @@ void COsdSetup::showOsdSetup()
 	osd_setup->addItem(osd_volumbarpos_ch);	//volumebar
 	osd_setup->addItem(osd_mute_icon_ch);	//mute icon
 
-	osd_setup->exec(NULL, "");
+	int res = osd_setup->exec(NULL, "");
 	osd_setup->hide();
 	selected = osd_setup->getSelected();
 	delete osd_setup;
@@ -352,11 +352,13 @@ void COsdSetup::showOsdSetup()
 #ifdef HAVE_DBOX_HARDWARE
 	delete osd_alpha;
 #endif
+
+	return res;
 }
 
 
 //show menue colorsetup
-void COsdSetup::showOsdMenueColorSetup()
+int COsdSetup::showOsdMenueColorSetup()
 {
 	CMenuWidget * ocs = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * ocs_setup_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_OSDSETTINGS_COLORMENU_MENUCOLORS);
@@ -387,14 +389,16 @@ void COsdSetup::showOsdMenueColorSetup()
 	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_BACKGROUND, true, NULL, &chContentSelectedcolor));
 	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chContentSelectedTextcolor));
 
-	ocs->exec(NULL, "");
+	int res = ocs->exec(NULL, "");
 	ocs->hide();
 	delete ocs;
+
+	return res;
 }
 
 
 /* infobar colors */
-void COsdSetup::showOsdInfobarColorSetup()
+int COsdSetup::showOsdInfobarColorSetup()
 {
 	CMenuWidget * ois = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * ois_setup_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_COLORSTATUSBAR_TEXT);
@@ -412,14 +416,16 @@ void COsdSetup::showOsdInfobarColorSetup()
 	ois->addItem(fwInfobarBackground);
 	ois->addItem(fwInfobarTextcolor);
 
-	ois->exec(NULL, "");
+	int res = ois->exec(NULL, "");
 	ois->hide();
 	delete ois;
+
+	return res;
 }
 
 
 /* OSD timeouts */
-void COsdSetup::showOsdTimeoutSetup()
+int COsdSetup::showOsdTimeoutSetup()
 {
 	/* note: SetupTiming() is already called in CNeutrinoApp::run */
 
@@ -444,7 +450,7 @@ void COsdSetup::showOsdTimeoutSetup()
 	ots->addItem(GenericMenuSeparatorLine);
 	ots->addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, "osd.def"));
 
-	ots->exec(NULL, "");
+	int res = ots->exec(NULL, "");
 	ots->hide();
 	delete ots;
 
@@ -453,6 +459,8 @@ void COsdSetup::showOsdTimeoutSetup()
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
 	toDelete.clear();
+
+	return res;
 }
 
 #define INFOBAR_EPG_SHOW_OPTIONS_COUNT 3
@@ -491,7 +499,7 @@ const CMenuOptionChooser::keyval  INFOBAR_SUBCHAN_DISP_POS_OPTIONS[INFOBAR_SUBCH
 };
 
 //infobar settings
-void COsdSetup::showOsdInfobarSetup()
+int COsdSetup::showOsdInfobarSetup()
 {
 	CMenuWidget * oibs = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * oibs_setup_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_OSDSETTINGS_INFOBAR);
@@ -538,10 +546,13 @@ void COsdSetup::showOsdInfobarSetup()
 	oibs->addItem(oibs_chanlogo_fw);
 	oibs->addItem(oibs_chanlogo_bg_ch);
 
-	oibs->exec(NULL, "");
+	int res = oibs->exec(NULL, "");
 	oibs->hide();
 	delete oibs;
+
+	return res;
 }
+
 #include <iostream>
 // class COsdSetupChannelLogoNotifier
 //enable disable entry for channel logo path 
@@ -574,7 +585,7 @@ const CMenuOptionChooser::keyval  CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS[CHANNE
 };
 
 //channellist
-void COsdSetup::showOsdChannelListSetup()
+int COsdSetup::showOsdChannelListSetup()
 {
 	CMenuWidget * ocls = new CMenuWidget(menue_title, menue_icon, width);
 	CMenuSeparator * ocls_setup_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_CHANNELLIST);
@@ -591,9 +602,11 @@ void COsdSetup::showOsdChannelListSetup()
 	ocls->addItem(ocls_align_ch);
 	ocls->addItem(ocls_ext_ch);
 
-	ocls->exec(NULL, "");
+	int res = ocls->exec(NULL, "");
 	ocls->hide();
 	delete ocls;
+
+	return res;
 }
 
 
@@ -642,7 +655,7 @@ void COsdSetup::AddFontSettingItem(CMenuWidget *fontSettings, const SNeutrinoSet
 }
 
 /* font settings  */
-void COsdSetup::showOsdFontSizeSetup()
+int COsdSetup::showOsdFontSizeSetup()
 {
 	// dynamic created objects
 	std::vector<CMenuTarget*> toDelete;
@@ -683,7 +696,7 @@ void COsdSetup::showOsdFontSizeSetup()
 	fontSettings->addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[5].actionkey));
 
 
-	fontSettings->exec(NULL, "");
+	int res = fontSettings->exec(NULL, "");
 	fontSettings->hide();
 	delete fontSettings;
 
@@ -692,5 +705,7 @@ void COsdSetup::showOsdFontSizeSetup()
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
 	toDelete.clear();
+
+	return res;
 }
 

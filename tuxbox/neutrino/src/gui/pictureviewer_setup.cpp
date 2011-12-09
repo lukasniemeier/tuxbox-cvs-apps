@@ -1,5 +1,5 @@
 /*
-	$Id: pictureviewer_setup.cpp,v 1.6 2011/04/03 21:56:13 dbt Exp $
+	$Id: pictureviewer_setup.cpp,v 1.7 2011/12/09 22:36:28 dbt Exp $
 
 	pictureviewer setup implementation - Neutrino-GUI
 
@@ -83,7 +83,7 @@ int CPictureViewerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		return res;
 	}
 
-	showPictureViewerSetup();
+	res = showPictureViewerSetup();
 	
 	return res;
 }
@@ -105,10 +105,9 @@ const CMenuOptionChooser::keyval PICTUREVIEWER_SCALING_OPTIONS[PICTUREVIEWER_SCA
 };
 
 
-void CPictureViewerSetup::showPictureViewerSetup()
+int CPictureViewerSetup::showPictureViewerSetup()
 /*shows the setup menue*/
 {
-
 	CMenuWidget* picviewsetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	picviewsetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_PICTUREVIEWER_HEAD));
 	picviewsetup->setPreselected(selected);
@@ -131,8 +130,10 @@ void CPictureViewerSetup::showPictureViewerSetup()
 	CStringInput picViewSettings_DecServerPort(LOCALE_PICTUREVIEWER_DECODE_SERVER_PORT, g_settings.picviewer_decode_server_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
 	picviewsetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_DECODE_SERVER_PORT, true, g_settings.picviewer_decode_server_port, &picViewSettings_DecServerPort));
 
-	picviewsetup->exec(NULL, "");
+	int res = picviewsetup->exec(NULL, "");
 	picviewsetup->hide();
 	selected = picviewsetup->getSelected();
 	delete picviewsetup;
+
+	return res;
 }

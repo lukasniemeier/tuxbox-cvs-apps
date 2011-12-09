@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.11 2011/09/18 20:47:00 rhabarber1848 Exp $
+	$Id: movieplayer_menu.cpp,v 1.12 2011/12/09 22:36:27 dbt Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -73,13 +73,12 @@ int CMoviePlayerMenue::exec(CMenuTarget* parent, const std::string &/*actionKey*
 		parent->hide();
 	}
 
-	showMoviePlayerMenue();
+	res = showMoviePlayerMenue();
 
-	
 	return res;
 }
 
-void CMoviePlayerMenue::showMoviePlayerMenue()
+int CMoviePlayerMenue::showMoviePlayerMenue()
 {
 	CMenuTarget* 	moviePlayerGui = new CMoviePlayerGui();
 
@@ -133,7 +132,7 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, nfsSmallMenu, NULL, CRCInput::RC_setup, NEUTRINO_ICON_BUTTON_DBOX));
 #endif
 
-	mpmenue->exec(NULL, "");
+	int res = mpmenue->exec(NULL, "");
 	mpmenue->hide();
 	selected = mpmenue->getSelected();
 	delete mpmenue;
@@ -142,5 +141,7 @@ void CMoviePlayerMenue::showMoviePlayerMenue()
 #ifdef ENABLE_GUI_MOUNT
 	delete nfsSmallMenu;
 #endif
+
+	return res;
 }
 

@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.3 2011/04/03 21:56:13 dbt Exp $
+	$Id: osd_setup.h,v 1.4 2011/12/09 22:36:28 dbt Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -49,14 +49,13 @@ class COsdSetup : public CMenuTarget
 		neutrino_locale_t menue_title;
 		std::string menue_icon;
 
-		void showOsdSetup();
-		void showOsdMenueColorSetup();
-		void showOsdThemesSetup();
-		void showOsdInfobarColorSetup();
-		void showOsdTimeoutSetup();
-		void showOsdInfobarSetup();
-		void showOsdChannelListSetup();
-		void showOsdFontSizeSetup();
+		int showOsdSetup();
+		int showOsdMenueColorSetup();
+		int showOsdInfobarColorSetup();
+		int showOsdTimeoutSetup();
+		int showOsdInfobarSetup();
+		int showOsdChannelListSetup();
+		int showOsdFontSizeSetup();
 		void AddFontSettingItem(CMenuWidget *fontSettings, const SNeutrinoSettings::FONT_TYPES number_of_fontsize_entry);
 
 	public:

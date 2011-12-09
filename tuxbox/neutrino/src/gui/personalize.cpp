@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.43 2011/04/26 19:45:31 dbt Exp $
+        $Id: personalize.cpp,v 1.44 2011/12/09 22:36:28 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -255,7 +255,7 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 		return menu_return::RETURN_EXIT_ALL;
 	}
 	
-	ShowPersonalizationMenu();                                              // Show main Personalization Menu
+	res = ShowPersonalizationMenu();                                        // Show main Personalization Menu
 	SaveAndExit();
 	return res;
 }
@@ -263,7 +263,7 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 
 //This is the main personalization menu. From here we can go to the other sub-menu's and enable/disable
 //the PIN code feature, as well as determine whether or not the EPG menu/Features menu is accessible.
-void CPersonalizeGui::ShowPersonalizationMenu()
+int CPersonalizeGui::ShowPersonalizationMenu()
 {
 	CMenuWidget* pMenu = new CMenuWidget(LOCALE_PERSONALIZE_HEAD,NEUTRINO_ICON_PROTECTING, width);
 	pMenu->setPreselected(selected);
@@ -307,7 +307,7 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->addItem(GenericMenuSeparatorLine);
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
 
-	pMenu->exec(NULL, "");
+	int res = pMenu->exec(NULL, "");
 	pMenu->hide();
 	selected = pMenu->getSelected();
 	delete pMenu;
@@ -316,6 +316,8 @@ void CPersonalizeGui::ShowPersonalizationMenu()
 	delete userMenuSetupGreen;
 	delete userMenuSetupYellow;
 	delete userMenuSetupBlue;
+
+	return res;
 }
 
 //Here we give the user the option to enable, disable, or PIN protect items on the Main Menu.

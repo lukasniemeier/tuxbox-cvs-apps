@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.h,v 1.3 2011/04/03 21:56:13 dbt Exp $
+	$Id: user_menue_setup.h,v 1.4 2011/12/09 22:36:28 dbt Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -44,7 +44,7 @@ class CUserMenuSetup : public CMenuTarget
 		int button;
 		neutrino_locale_t local;
 
-		void showSetup();
+		int showSetup();
 
 	public:
 		CUserMenuSetup(neutrino_locale_t menue_title, int menue_button);

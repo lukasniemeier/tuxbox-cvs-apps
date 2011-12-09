@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.12 2011/04/03 21:56:13 dbt Exp $
+	$Id: sambaserver_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -83,19 +83,22 @@ int CSambaSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-
-	Init();
+	res = Init();
 	g_settings.smb_setup_samba_workgroup = upperString(g_settings.smb_setup_samba_workgroup);
 	return res;
 }
 
 // init menue
-void CSambaSetup::Init()
+int CSambaSetup::Init()
 {
+	int res = menu_return::RETURN_REPAINT;
+
 	if (!haveSambaSupport())
 		DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_MSG_NOT_INSTALLED));
 	else
-		showSambaSetup();
+		res = showSambaSetup();
+
+	return res;
 }
 
 
@@ -107,7 +110,7 @@ const CMenuOptionChooser::keyval SMB_YES_NO_OPTIONS[SMB_YES_NO_OPTION_COUNT] =
 };
 
 /* shows entries for samba settings */
-void CSambaSetup::showSambaSetup()
+int CSambaSetup::showSambaSetup()
 {
 	//init
 	CMenuWidget * sm = new CMenuWidget(menue_title, menue_icon, width);
@@ -149,10 +152,12 @@ void CSambaSetup::showSambaSetup()
 	sm->addItem(sm_fw_domain);		//workgroup/domain input
 	sm->addItem(sm_fw_interface);		//interface
 
-	sm->exec(NULL, "");
+	int res = sm->exec(NULL, "");
 	sm->hide();
 	selected = sm->getSelected();
 	delete sm;
+
+	return res;
 }
 
 

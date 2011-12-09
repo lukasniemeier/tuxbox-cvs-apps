@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.12 2011/09/19 18:54:46 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -82,7 +82,7 @@ int CRecordSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 
 	if (!CNeutrinoApp::getInstance()->recordingstatus)
-		showRecordSetup();
+		res = showRecordSetup();
 	else
 		DisplayInfoMessage(g_Locale->getText(LOCALE_RECORDINGMENU_RECORD_IS_RUNNING));
 	
@@ -129,7 +129,7 @@ const CMenuOptionChooser::keyval RECORDINGMENU_RINGBUFFER_SIZES[RECORDINGMENU_RI
 	{ 4, LOCALE_RECORDINGMENU_RINGBUFFERS_8M }
 };
 
-void CRecordSetup::showRecordSetup()
+int CRecordSetup::showRecordSetup()
 {
 	// dynamic created objects
 	std::vector<CMenuTarget*> toDelete;
@@ -367,8 +367,7 @@ void CRecordSetup::showRecordSetup()
 		directRecordingSettings->addItem(oj9);
 		directRecordingSettings->addItem(oj14); //gen_psi
 
-
-	recordingSettings->exec(NULL, "");
+	int res = recordingSettings->exec(NULL, "");
 	recordingSettings->hide();
 	selected = recordingSettings->getSelected();
 	delete recordingSettings;
@@ -378,6 +377,7 @@ void CRecordSetup::showRecordSetup()
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
 	toDelete.clear();
-}
 
+	return res;
+}
 

@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.8 2011/04/03 21:56:13 dbt Exp $ 
+	$Id: themes.h,v 1.9 2011/12/09 22:36:28 dbt Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -39,7 +39,7 @@ class CThemes : public CMenuTarget
 
 		bool hasThemeChanged;
 
-		void Show();
+		int Show();
 		void readFile(char* themename);
 		void saveFile(char* themename);
 		void readThemes(CMenuWidget &);

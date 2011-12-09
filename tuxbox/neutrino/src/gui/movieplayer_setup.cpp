@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.9 2011/11/12 15:26:25 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.10 2011/12/09 22:36:28 dbt Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -74,10 +74,11 @@ int CMoviePlayerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 	
 	if(actionKey == "movieplugin")
 	{
-		showMoviePlayerSelectPlugin();
+		res = showMoviePlayerSelectPlugin();
  		return res;
 	}
-	showMoviePlayerSetup();
+
+	res = showMoviePlayerSetup();
 	
 	return res;
 }
@@ -123,7 +124,7 @@ const CMenuOptionChooser::keyval STREAMINGMENU_STOPSECTIONSD_OPTIONS[STREAMINGME
 	{ 2, LOCALE_RECORDINGMENU_SECTIONSD_RESTART }
 };
 
-void CMoviePlayerSetup::showMoviePlayerSetup()
+int CMoviePlayerSetup::showMoviePlayerSetup()
 {
 	CMenuWidget* mp_setup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	mp_setup->setPreselected(selected);
@@ -210,13 +211,15 @@ void CMoviePlayerSetup::showMoviePlayerSetup()
 	mp_setup->addItem( oj8 );				//tv in browser
 	mp_setup->addItem( oj9 );				//mutltiselect in filebrowser
 
-	mp_setup->exec (NULL, "");
-	mp_setup->hide ();
+	int res = mp_setup->exec(NULL, "");
+	mp_setup->hide();
 	selected = mp_setup->getSelected();
 	delete mp_setup;
+
+	return res;
 }
 
-void CMoviePlayerSetup::showMoviePlayerSelectPlugin()
+int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 {
 	CMenuWidget * MoviePluginSelector = new CMenuWidget(LOCALE_MAINSETTINGS_STREAMING, NEUTRINO_ICON_FEATURES, width);
 	MoviePluginSelector->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MOVIEPLAYER_DEFPLUGIN));
@@ -242,8 +245,10 @@ void CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 		}
 	}
 
-	MoviePluginSelector->exec(NULL, "");
-	MoviePluginSelector->hide ();
+	int res = MoviePluginSelector->exec(NULL, "");
+	MoviePluginSelector->hide();
 	delete MoviePluginSelector;
 	delete MoviePluginChanger;
+
+	return res;
 }

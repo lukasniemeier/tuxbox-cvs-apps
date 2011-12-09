@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.12 2011/09/18 20:44:49 rhabarber1848 Exp $
+	$Id: video_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -77,9 +77,8 @@ int CVideoSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-	showVideoSetup();
+	res = showVideoSetup();
 
-	
 	return res;
 }
 
@@ -120,7 +119,7 @@ const CMenuOptionChooser::keyval VIDEOMENU_VIDEOFORMAT_OPTIONS[VIDEOMENU_VIDEOFO
 	{ CControldClient::VIDEOFORMAT_AUTO, LOCALE_VIDEOMENU_VIDEOFORMAT_AUTODETECT }
 };
 
-void CVideoSetup::showVideoSetup()
+int CVideoSetup::showVideoSetup()
 {
 	//init
 	CMenuWidget * videosetup = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
@@ -173,7 +172,7 @@ void CVideoSetup::showVideoSetup()
 	//video vcr switch
 	videosetup->addItem(new CMenuOptionChooser(LOCALE_VIDEOMENU_VCRSWITCH, &g_settings.vcr_AutoSwitch, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true)); //video vcr switch
 
-	videosetup->exec(NULL, "");
+	int res = videosetup->exec(NULL, "");
 	videosetup->hide();
 	selected = videosetup->getSelected();
 	delete videosetup;
@@ -181,6 +180,8 @@ void CVideoSetup::showVideoSetup()
 #ifdef HAVE_DBOX_HARDWARE
 	delete RGBCSyncControler;
 #endif
+
+	return res;
 }
 
 bool CVideoSetup::changeNotify(const neutrino_locale_t OptionName, void *)

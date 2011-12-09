@@ -1,5 +1,5 @@
 /*
-	$Id: parentallock_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
+	$Id: parentallock_setup.cpp,v 1.8 2011/12/09 22:36:28 dbt Exp $
 
 	parentallock setup implementation - Neutrino-GUI
 
@@ -68,7 +68,7 @@ int CParentalSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-	showParentalSetup();
+	res = showParentalSetup();
 	
 	return res;
 }
@@ -97,7 +97,7 @@ const CMenuOptionChooser::keyval PARENTALLOCK_LOCKAGE_OPTIONS[PARENTALLOCK_LOCKA
 	{ 18, LOCALE_PARENTALLOCK_LOCKAGE18 }
 };
 
-void CParentalSetup::showParentalSetup()
+int CParentalSetup::showParentalSetup()
 {
 	//menue init
 	CMenuWidget* plock = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_LOCK, width);
@@ -118,8 +118,10 @@ void CParentalSetup::showParentalSetup()
 	CPINChangeWidget pinChangeWidget(LOCALE_PARENTALLOCK_CHANGEPIN, g_settings.parentallock_pincode, 4, LOCALE_PARENTALLOCK_CHANGEPIN_HINT1);
 	plock->addItem(new CMenuForwarder(LOCALE_PARENTALLOCK_CHANGEPIN, true, g_settings.parentallock_pincode, &pinChangeWidget));
 
-	plock->exec(NULL, "");
+	int res = plock->exec(NULL, "");
 	plock->hide();
 	selected = plock->getSelected();
 	delete plock;
+
+	return res;
 }

@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.7 2011/04/03 21:56:13 dbt Exp $
+	$Id: mediaplayer_setup.cpp,v 1.8 2011/12/09 22:36:27 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -87,16 +87,14 @@ int CMediaPlayerSetup::exec(CMenuTarget* parent, const std::string & /*actionKey
 		parent->hide();
 	}
 
-
-	showMediaPlayerSetup();
+	res = showMediaPlayerSetup();
 	
 	return res;
 }
 
-void CMediaPlayerSetup::showMediaPlayerSetup()
+int CMediaPlayerSetup::showMediaPlayerSetup()
 /*shows media setup menue entries*/
 {
-
 	CMenuWidget* mediaSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	mediaSetup->setPreselected(selected);
 	mediaSetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MEDIAPLAYERSETTINGS_GENERAL));
@@ -132,8 +130,8 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 	mediaSetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, pictureViewerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 #endif
 
-	mediaSetup->exec (NULL, "");
-	mediaSetup->hide ();
+	int res = mediaSetup->exec(NULL, "");
+	mediaSetup->hide();
 	selected = mediaSetup->getSelected();
 	delete mediaSetup;
 
@@ -149,4 +147,6 @@ void CMediaPlayerSetup::showMediaPlayerSetup()
 #ifdef ENABLE_PICTUREVIEWER
 	delete pictureViewerSetup;
 #endif
+
+	return res;
 }

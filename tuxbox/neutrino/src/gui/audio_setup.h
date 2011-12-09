@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
+	$Id: audio_setup.h,v 1.5 2011/12/09 22:36:27 dbt Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -40,7 +40,7 @@ class CAudioSetup : public CMenuTarget
 	private:
 		int width, selected;
 
-		void showAudioSetup();
+		int showAudioSetup();
 
 	public:	
 		CAudioSetup();

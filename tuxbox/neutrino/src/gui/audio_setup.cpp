@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.8 2011/04/03 21:56:13 dbt Exp $
+	$Id: audio_setup.cpp,v 1.9 2011/12/09 22:36:27 dbt Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -68,7 +68,7 @@ int CAudioSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-	showAudioSetup();
+	res = showAudioSetup();
 	
 	return res;
 }
@@ -121,7 +121,7 @@ const CMenuOptionChooser::keyval AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE_OPTIONS[A
 };
 
 /* audio settings menu */
-void CAudioSetup::showAudioSetup()
+int CAudioSetup::showAudioSetup()
 {
 	CAudioSetupNotifier audioSetupNotifier;
 
@@ -173,9 +173,10 @@ void CAudioSetup::showAudioSetup()
 	CMenuForwarder *as = new CMenuForwarder(LOCALE_AUDIOMENU_VOLUMEBAR_AUDIOSTEPS, true, g_settings.audio_step, &audio_step);
 	audioSettings->addItem(as);
 
-
-	audioSettings->exec(NULL, "");
+	int res = audioSettings->exec(NULL, "");
 	audioSettings->hide();
 	selected = audioSettings->getSelected();
 	delete audioSettings;
+
+	return res;
 }

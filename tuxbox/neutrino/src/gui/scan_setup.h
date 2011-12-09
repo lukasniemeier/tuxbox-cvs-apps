@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.h,v 1.7 2011/04/03 21:56:13 dbt Exp $
+	$Id: scan_setup.h,v 1.8 2011/12/09 22:36:28 dbt Exp $
 
 	Copyright (C) 2009 Thilo Graf (dbt)
 	http://www.dbox2-tuning.de
@@ -41,7 +41,7 @@ class CScanSetup : public CMenuTarget
 		uint sat_list_size;
 		uint provider_list_size;
 
-		void showScanService();
+		int showScanService();
 		void showScanModeMenue();
 
 	public:	

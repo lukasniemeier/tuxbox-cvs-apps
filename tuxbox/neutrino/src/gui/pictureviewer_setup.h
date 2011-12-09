@@ -1,5 +1,5 @@
 /*
-	$Id: pictureviewer_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
+	$Id: pictureviewer_setup.h,v 1.5 2011/12/09 22:36:28 dbt Exp $
 
 	pictureviewer setup implementation - Neutrino-GUI
 
@@ -40,7 +40,7 @@ class CPictureViewerSetup : public CMenuTarget
 	private:
 		int width, selected;
 
-		void showPictureViewerSetup();
+		int showPictureViewerSetup();
 
 	public:	
 		CPictureViewerSetup();

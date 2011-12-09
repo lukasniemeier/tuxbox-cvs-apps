@@ -224,6 +224,11 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 				}
 			}
 		}
+		else if (msg == CRCInput::RC_setup)
+		{
+			res = menu_return::RETURN_EXIT_ALL;
+			loop = false;
+		}
 		else if( (msg== CRCInput::RC_red) ||
 				 (msg==CRCInput::RC_green) ||
 				 (msg==CRCInput::RC_yellow) ||

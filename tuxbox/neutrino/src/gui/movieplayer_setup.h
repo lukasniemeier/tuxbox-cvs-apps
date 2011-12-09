@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.h,v 1.4 2011/04/03 21:56:13 dbt Exp $
+	$Id: movieplayer_setup.h,v 1.5 2011/12/09 22:36:28 dbt Exp $
 
 	movieplaye setup implementation - Neutrino-GUI
 
@@ -40,8 +40,8 @@ class CMoviePlayerSetup : public CMenuTarget
 	private:
 		int width, selected;
 
-		void showMoviePlayerSetup();
-		void showMoviePlayerSelectPlugin();
+		int showMoviePlayerSetup();
+		int showMoviePlayerSelectPlugin();
 
 	public:	
 		CMoviePlayerSetup();

@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.cpp,v 1.5 2011/04/03 21:56:13 dbt Exp $
+	$Id: proxyserver_setup.cpp,v 1.6 2011/12/09 22:36:28 dbt Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -65,14 +65,13 @@ int CProxySetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 		parent->hide();
 	}
 
-	showProxySetup();
+	res = showProxySetup();
 
-	
 	return res;
 }
 
 /* shows entries for proxy settings */
-void CProxySetup::showProxySetup()
+int CProxySetup::showProxySetup()
 {
 	//init
 	CMenuWidget * mn = new CMenuWidget(menue_title, menue_icon, width);
@@ -97,9 +96,11 @@ void CProxySetup::showProxySetup()
 	CStringInputSMS softUpdate_proxypass(LOCALE_FLASHUPDATE_PROXYPASSWORD, g_settings.softupdate_proxypassword, 20, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT1, LOCALE_FLASHUPDATE_PROXYPASSWORD_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-. ");
 	mn->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYPASSWORD, true, g_settings.softupdate_proxypassword, &softUpdate_proxypass, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 
-	mn->exec(NULL, "");
+	int res = mn->exec(NULL, "");
 	mn->hide();
 	selected = mn->getSelected();
 	delete mn;
+
+	return res;
 }
 

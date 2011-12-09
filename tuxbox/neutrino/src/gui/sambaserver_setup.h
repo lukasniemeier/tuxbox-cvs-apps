@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.h,v 1.6 2011/04/03 21:56:13 dbt Exp $
+	$Id: sambaserver_setup.h,v 1.7 2011/12/09 22:36:28 dbt Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -60,8 +60,8 @@ class CSambaSetup : public CMenuTarget
 		//helper
 		std::string upperString(const std::string& to_upper_str);
 
-		void showSambaSetup();
-		void Init();
+		int showSambaSetup();
+		int Init();
 
 	public:	
 		CSambaSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);

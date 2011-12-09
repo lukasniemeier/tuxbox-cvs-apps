@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.4 2011/04/03 21:56:13 dbt Exp $
+	$Id: lcd_setup.cpp,v 1.5 2011/12/09 22:36:27 dbt Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -67,9 +67,9 @@ int CLcdSetup::exec(CMenuTarget* parent, const std::string &)
 	if(parent != NULL)
 		parent->hide();
 
-	showSetup();
+	int res = showSetup();
 	
-	return menu_return::RETURN_REPAINT;	
+	return res;
 }
 
 /* for lcd settings menu*/
@@ -102,9 +102,8 @@ const CMenuOptionChooser::keyval LCDMENU_EPGALIGN_OPTIONS[LCDMENU_EPGALIGN_OPTIO
 };
 
 
-void CLcdSetup::showSetup()
+int CLcdSetup::showSetup()
 {
-
 	CMenuWidget * lcds = new CMenuWidget(menue_title, menue_icon, width);
 	lcds->setPreselected(selected);
 
@@ -180,11 +179,13 @@ void CLcdSetup::showSetup()
 	lcds->addItem(oj_epg);
 	lcds->addItem(oj_align);
 
-	lcds->exec(NULL, "");
+	int res = lcds->exec(NULL, "");
 	lcds->hide();
 	selected = lcds->getSelected();
 	delete lcds;
 
 	delete lcdsliders;
+
+	return res;
 }
 

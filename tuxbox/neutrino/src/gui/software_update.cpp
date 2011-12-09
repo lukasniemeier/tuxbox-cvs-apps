@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.8 2011/04/03 21:56:13 dbt Exp $
+	$Id: software_update.cpp,v 1.9 2011/12/09 22:36:28 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -80,15 +80,15 @@ int CSoftwareUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	}
 
 	if(actionKey=="experts") {  // expert functions
-		showSoftwareUpdateExpert();
+		res = showSoftwareUpdateExpert();
 		return res;
 	}
 
-	showSoftwareUpdate();
+	res = showSoftwareUpdate();
 	return res;
 }
 
-void CSoftwareUpdate::showSoftwareUpdate()
+int CSoftwareUpdate::showSoftwareUpdate()
 /* shows the menue and options for software update */
 {
 	CMenuWidget* softUpdate = new CMenuWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE, width);
@@ -117,15 +117,17 @@ void CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate->addItem(GenericMenuSeparatorLine);
 	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, flashUpdate, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 
-	softUpdate->exec (NULL, "");
+	int res = softUpdate->exec (NULL, "");
 	softUpdate->hide ();
 	selected = softUpdate->getSelected();
 	delete softUpdate;
 
 	delete flashUpdate;
+
+	return res;
 }
 
-void CSoftwareUpdate::showSoftwareUpdateExpert()
+int CSoftwareUpdate::showSoftwareUpdateExpert()
 /* shows experts-functions to read/write to the mtd */
 {
 	CFlashExpert* fe = new CFlashExpert();
@@ -150,11 +152,13 @@ void CSoftwareUpdate::showSoftwareUpdateExpert()
 	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_URL_FILE, true, g_settings.softupdate_url_file, &softUpdate_url_file));
 #endif /*DISABLE_INTERNET_UPDATE*/
 
-	mtdexpert->exec (NULL, "");
+	int res = mtdexpert->exec (NULL, "");
 	mtdexpert->hide ();
 	delete mtdexpert;
 
 	delete fe;
+
+	return res;
 }
 
 void CSoftwareUpdate::showSoftwareUpdateImageinfo(CMenuWidget * entry)
