@@ -505,16 +505,16 @@ void Font::RenderString(int x, int y, const int width, const char *text, const u
 			continue;
 		}
 
-		// width clip
-		if (x + glyph->xadvance + spread_by > left + width)
-			break;
-
 		//kerning
 		if(use_kerning)
 		{
 			FT_Get_Kerning(size->face, lastindex, index, 0, &kerning);
 			x+=(kerning.x+32)>>6; // kerning!
 		}
+
+		// width clip
+		if (x + glyph->xadvance + spread_by > left + width)
+			break;
 
 		int stride  = frameBuffer->getStride();
 		uint8_t * d = ((uint8_t *)frameBuffer->getFrameBufferPointer()) + (x + glyph->left) * sizeof(fb_pixel_t) + stride * (y - glyph->top);
