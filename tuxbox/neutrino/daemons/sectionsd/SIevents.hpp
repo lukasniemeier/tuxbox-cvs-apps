@@ -1,7 +1,7 @@
 #ifndef SIEVENTS_HPP
 #define SIEVENTS_HPP
 //
-// $Id: SIevents.hpp,v 1.33 2011/06/19 12:25:18 rhabarber1848 Exp $
+// $Id: SIevents.hpp,v 1.34 2011/12/17 14:43:41 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -106,6 +106,8 @@ public:
 		serviceId = (link->service_id_hi << 8) | link->service_id_lo;
 		if (link->descriptor_length > sizeof(struct descr_linkage_header) - 2)
 			name = std::string(((const char *)link) + sizeof(struct descr_linkage_header), link->descriptor_length - (sizeof(struct descr_linkage_header) - 2));
+		else
+			name = "";
 	}
 
 	// Std-copy
@@ -123,7 +125,7 @@ public:
 		transportStreamId = 0;
 		originalNetworkId = 0;
 		serviceId = 0;
-//		name = ;
+		name = "";
 	}
 	
 	// Der Operator zum sortieren
@@ -181,6 +183,8 @@ class SIcomponent {
       componentTag=comp->component_tag;
       if(comp->descriptor_length>sizeof(struct descr_component_header)-2)
         component=std::string(((const char *)comp)+sizeof(struct descr_component_header), comp->descriptor_length-(sizeof(struct descr_component_header)-2));
+      else
+        component="";
     }
     // Std-copy
     SIcomponent(const SIcomponent &c) {
@@ -194,6 +198,7 @@ class SIcomponent {
       streamContent=0;
       componentType=0;
       componentTag=0;      
+      component="";
     }
     // Der Operator zum sortieren
     bool operator < (const SIcomponent& c) const {

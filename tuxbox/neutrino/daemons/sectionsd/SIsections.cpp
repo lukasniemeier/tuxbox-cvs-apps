@@ -1,5 +1,5 @@
 //
-// $Id: SIsections.cpp,v 1.65 2011/06/19 12:25:18 rhabarber1848 Exp $
+// $Id: SIsections.cpp,v 1.66 2011/12/17 14:43:41 rhabarber1848 Exp $
 //
 // classes for SI sections (dbox-II-project)
 //
@@ -143,6 +143,16 @@ void SIsectionEIT::parseLinkageDescriptor(const char *buf, SIevent &e, unsigned 
 	if(maxlen>=sizeof(struct descr_linkage_header))
 	{
 		SIlinkage l((const struct descr_linkage_header *)buf);
+		if (!l.name.empty())
+		{
+			// filter optional code table, because sectionsd just delivers Latin1
+			if (l.name[0] == 0x10)
+				l.name.erase(0,3);
+			else if (l.name[0] == 0x1f)
+				l.name.erase(0,2);
+			else if (l.name[0] < 0x20)
+				l.name.erase(0,1);
+		}
 		e.linkage_descs.insert(e.linkage_descs.end(), l);
 		//printf("LinkName: %s\n", l.name.c_str());
 	}
@@ -175,7 +185,20 @@ void SIsectionEIT::parsePDCDescriptor(const char *buf, SIevent &e, unsigned maxl
 void SIsectionEIT::parseComponentDescriptor(const char *buf, SIevent &e, unsigned maxlen)
 {
 	if(maxlen>=sizeof(struct descr_component_header))
-		e.components.insert(SIcomponent((const struct descr_component_header *)buf));
+	{
+		SIcomponent c((const struct descr_component_header *)buf);
+		if (!c.component.empty())
+		{
+			// filter optional code table, because sectionsd just delivers Latin1
+			if (c.component[0] == 0x10)
+				c.component.erase(0,3);
+			else if (c.component[0] == 0x1f)
+				c.component.erase(0,2);
+			else if (c.component[0] < 0x20)
+				c.component.erase(0,1);
+		}
+		e.components.insert(c);
+	}
 }
 
 void SIsectionEIT::parseContentDescriptor(const char *buf, SIevent &e, unsigned maxlen)
@@ -221,7 +244,18 @@ void SIsectionEIT::parseExtendedEventDescriptor(const char *buf, SIevent &e, uns
 		// Should I make language filter those as well?  Arzka
 
 		if(*items) {
-			if(*(items+1) < 0x06) { // other code table
+			// filter optional code table, because sectionsd just delivers Latin1
+			if(*(items+1) == 0x10) {
+				// 21.07.2005 - collect all extended events in one
+				// string, delimit multiple entries with a newline
+				e.itemDescription.append(std::string((const char *)(items+4), min(maxlen-((const char *)items+4-buf), (*items)-3)));
+				e.itemDescription.append("\n");
+			} else if(*(items+1) == 0x1f) {
+				// 21.07.2005 - collect all extended events in one
+				// string, delimit multiple entries with a newline
+				e.itemDescription.append(std::string((const char *)(items+3), min(maxlen-((const char *)items+3-buf), (*items)-2)));
+				e.itemDescription.append("\n");
+			} else if(*(items+1) < 0x20) {
 				// 21.07.2005 - collect all extended events in one
 				// string, delimit multiple entries with a newline
 				e.itemDescription.append(std::string((const char *)(items+2), min(maxlen-((const char *)items+2-buf), (*items)-1)));
@@ -247,7 +281,12 @@ void SIsectionEIT::parseExtendedEventDescriptor(const char *buf, SIevent &e, uns
 //	printf("Item: %s\n", e.item.c_str());
 //  }
 	if(*items) {
-		if(*(items+1) < 0x06) { // other code table
+		// filter optional code table, because sectionsd just delivers Latin1
+		if(*(items+1) == 0x10) {
+			e.appendExtendedText(language, std::string((const char *)(items+4), min(maxlen-((const char *)items+4-buf), (*items)-3)));
+		} else if(*(items+1) == 0x1f) {
+			e.appendExtendedText(language, std::string((const char *)(items+3), min(maxlen-((const char *)items+3-buf), (*items)-2)));
+		} else if(*(items+1) < 0x20) {
 			e.appendExtendedText(language, std::string((const char *)(items+2), min(maxlen-((const char *)items+2-buf), (*items)-1)));
 		} else {
 			e.appendExtendedText(language, std::string((const char *)(items+1), min(maxlen-((const char *)items+1-buf), *items)));
@@ -359,7 +398,7 @@ std::string SIsectionEIT::freesatHuffmanDecode(std::string input)
 				uncompressed.resize(p);
         return uncompressed;
     }
-    else return input;
+    else return input.erase(0,2);
 }
 #endif
 
@@ -374,35 +413,37 @@ void SIsectionEIT::parseShortEventDescriptor(const char *buf, SIevent &e, unsign
 
 	buf+=sizeof(struct descr_short_event_header);
 	if(evt->event_name_length) {
-		if(*buf < 0x06) { // other code table
+		// filter optional code table, because sectionsd just delivers Latin1
+		if(*buf == 0x10) {
+			e.setName(language, std::string(buf+3, evt->event_name_length-3));
+		} else if(*buf == 0x1f) {
 #ifdef ENABLE_FREESATEPG
-			e.setName(language, buf[1] == 0x1f ? freesatHuffmanDecode(std::string(buf+1, evt->event_name_length-1)) : std::string(buf+1, evt->event_name_length-1));
+			e.setName(language, freesatHuffmanDecode(std::string(buf, evt->event_name_length)));
 #else
+			e.setName(language, std::string(buf+2, evt->event_name_length-2));
+#endif
+		} else if(*buf < 0x20) {
 			e.setName(language, std::string(buf+1, evt->event_name_length-1));
-#endif
 		} else {
-#ifdef ENABLE_FREESATEPG
-			e.setName(language, buf[0] == 0x1f ? freesatHuffmanDecode(std::string(buf, evt->event_name_length)) : std::string(buf, evt->event_name_length));
-#else
 			e.setName(language, std::string(buf, evt->event_name_length));
-#endif
 		}
 	}
 	buf+=evt->event_name_length;
 	unsigned char textlength=*((unsigned char *)buf);
-	if(textlength > 2) {
-		if(*(buf+1) < 0x06) {// other code table
+	if(textlength > 4) {
+		// filter optional code table, because sectionsd just delivers Latin1
+		if(*(buf+1) == 0x10) {
+			e.setText(language, std::string((++buf)+3, textlength-3));
+		} else if(*(buf+1) == 0x1f) {
 #ifdef ENABLE_FREESATEPG
-			e.setText(language, buf[2] == 0x1f ? freesatHuffmanDecode(std::string((++buf)+1, textlength-1)) : std::string((++buf)+1, textlength-1));
+			e.setText(language, freesatHuffmanDecode(std::string(++buf, textlength)));
 #else
+			e.setText(language, std::string((++buf)+2, textlength-2));
+#endif
+		} else if(*(buf+1) < 0x20) {
 			e.setText(language, std::string((++buf)+1, textlength-1));
-#endif
 		} else {
-#ifdef ENABLE_FREESATEPG
-			e.setText(language, buf[1] == 0x1f ? freesatHuffmanDecode(std::string(++buf, textlength)) : std::string(++buf, textlength));
-#else
 			e.setText(language, std::string(++buf, textlength));
-#endif
 		}
 	}
 
@@ -541,7 +582,12 @@ void SIsectionPPT::parseExtendedEventDescriptor(const char *buf, SIevent &e, uns
   unsigned char *items=(unsigned char *)(buf+sizeof(struct descr_extended_event_header));
   while(items<(unsigned char *)(buf+sizeof(struct descr_extended_event_header)+evt->length_of_items)) {
     if(*items) {
-      if(*(items+1) < 0x06) // other code table
+      // filter optional code table, because sectionsd just delivers Latin1
+      if(*(items+1) == 0x10)
+        e.itemDescription=std::string((const char *)(items+4), min(maxlen-((const char *)items+4-buf), (*items)-3));
+      else if(*(items+1) == 0x1f)
+        e.itemDescription=std::string((const char *)(items+3), min(maxlen-((const char *)items+3-buf), (*items)-2));
+      else if(*(items+1) < 0x20)
         e.itemDescription=std::string((const char *)(items+2), min(maxlen-((const char *)items+2-buf), (*items)-1));
       else
         e.itemDescription=std::string((const char *)(items+1), min(maxlen-((const char *)items+1-buf), *items));
@@ -555,8 +601,13 @@ void SIsectionPPT::parseExtendedEventDescriptor(const char *buf, SIevent &e, uns
     items+=1+*items;
   }
   if(*items) {
-    if(*(items+1) < 0x06) // other code table
-      e.appendExtendedText(language, std::string((const char *)(items+2),min(maxlen-((const char *)items+2-buf), (*items)-1)));
+    // filter optional code table, because sectionsd just delivers Latin1
+    if(*(items+1) == 0x10)
+      e.appendExtendedText(language, std::string((const char *)(items+4), min(maxlen-((const char *)items+4-buf), (*items)-3)));
+    else if(*(items+1) == 0x1f)
+      e.appendExtendedText(language, std::string((const char *)(items+3), min(maxlen-((const char *)items+3-buf), (*items)-2)));
+    else if(*(items+1) < 0x20)
+      e.appendExtendedText(language, std::string((const char *)(items+2), min(maxlen-((const char *)items+2-buf), (*items)-1)));
     else
       e.appendExtendedText(language, std::string((const char *)(items+1), min(maxlen-((const char *)items+1-buf), *items)));
 //    printf("Extended Text: %s\n", e.extendedText.c_str());
@@ -574,7 +625,12 @@ void SIsectionPPT::parseShortEventDescriptor(const char *buf, SIevent &e, unsign
 
   buf+=sizeof(struct descr_short_event_header);
   if(evt->event_name_length) {
-    if(*buf < 0x06) // other code table
+    // filter optional code table, because sectionsd just delivers Latin1
+    if(*buf == 0x10)
+      e.setName(language, std::string(buf+3, evt->event_name_length-3));
+    else if(*buf == 0x1f)
+      e.setName(language, std::string(buf+2, evt->event_name_length-2));
+    else if(*buf < 0x20)
       e.setName(language, std::string(buf+1, evt->event_name_length-1));
     else
       e.setName(language, std::string(buf, evt->event_name_length));
@@ -582,8 +638,13 @@ void SIsectionPPT::parseShortEventDescriptor(const char *buf, SIevent &e, unsign
 
   buf+=evt->event_name_length;
   unsigned char textlength=*((unsigned char *)buf);
-  if(textlength > 2) {
-    if(*(buf+1) < 0x06) // other code table
+  if(textlength > 4) {
+    // filter optional code table, because sectionsd just delivers Latin1
+    if(*(buf+1) == 0x10)
+      e.setText(language, std::string((++buf)+3, textlength-3));
+    else if(*(buf+1) == 0x1f)
+      e.setText(language, std::string((++buf)+2, textlength-2));
+    else if(*(buf+1) < 0x20)
       e.setText(language, std::string((++buf)+1, textlength-1));
     else
       e.setText(language, std::string(++buf, textlength));
