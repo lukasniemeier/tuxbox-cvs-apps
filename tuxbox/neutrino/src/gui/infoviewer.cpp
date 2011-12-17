@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.310 2011/11/27 19:25:02 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.311 2011/12/17 14:50:51 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -177,8 +177,10 @@ void CInfoViewer::showSatfind()
 		lastber = ber;
 
 		CZapitClient::CCurrentServiceInfo si = g_Zapit->getCurrentServiceInfo();
-		sprintf (freq, "%d.%d MHz %c", si.tsfrequency / 1000, si.tsfrequency % 1000,
-			(g_info.delivery_system == DVB_S) ? (((si.polarisation > 0) && (si.polarisation < 4)) ? 'V' : 'H') : ' ');
+		if (g_info.delivery_system == DVB_S)
+			sprintf (freq, "%d.%03d MHz (%c)", si.tsfrequency / 1000, si.tsfrequency % 1000, (si.polarisation == HORIZONTAL) ? 'h' : 'v');
+		else
+			sprintf (freq, "%d.%06d MHz", si.tsfrequency / 1000000, si.tsfrequency % 1000000);
 
 		frameBuffer->paintBoxRel(ChanInfoX, BoxEndY, BoxEndX-ChanInfoX, 30, COL_INFOBAR_PLUS_0);
 

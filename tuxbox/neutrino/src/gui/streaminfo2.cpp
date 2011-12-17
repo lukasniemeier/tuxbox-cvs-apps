@@ -1,5 +1,5 @@
 /*
-	$Id: streaminfo2.cpp,v 1.47 2010/08/01 17:02:41 seife Exp $
+	$Id: streaminfo2.cpp,v 1.48 2011/12/17 14:50:51 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -635,16 +635,10 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	
 	//tsfrequenz
 	ypos+= sheight-5; //blank line
-	int q;
-	if (g_info.delivery_system==1)		{
-		q = 1000; 
-		}
-	else		{
-		q = 1000000;
-		}
-	int written = sprintf((char*) buf, "%d.%d MHz", si.tsfrequency/q, si.tsfrequency%1000);
-	if (si.polarisation != 2) /* only satellite has polarisation */
-		sprintf((char*) buf+written, " (%c)", (si.polarisation == HORIZONTAL) ? 'h' : 'v');
+	if (g_info.delivery_system == DVB_S)
+		sprintf((char*) buf, "%d.%03d MHz (%c)", si.tsfrequency / 1000, si.tsfrequency % 1000, (si.polarisation == HORIZONTAL) ? 'h' : 'v');
+	else
+		sprintf((char*) buf, "%d.%06d MHz", si.tsfrequency / 1000000, si.tsfrequency % 1000000);
 	g_Font[font_small]->RenderString(xpos, ypos, width-10, "Freq:" , COL_MENUCONTENT, 0, true); // UTF-8
 	g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8	
 
@@ -799,8 +793,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 
 	//satellite
 	ypos += 5;
-	const char* pr_sys;
-	if (g_info.delivery_system == 1? pr_sys= "Satellite: %s":pr_sys="Provider: %s")
+	const char* pr_sys = (g_info.delivery_system == DVB_S ? "Satellite: %s" : "Provider: %s");
 	sprintf((char*) buf, pr_sys ,CNeutrinoApp::getInstance()->getScanSettings().satOfDiseqc(si.diseqc));
 	std::cout<<"[streaminfo] "<< buf <<std::endl;
 	g_Font[font_small]->RenderString(xpos, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8
@@ -817,7 +810,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 std::string CStreamInfo2Misc::getStreamInfoVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.47 $");
+	return imageinfo.getModulVersion("","$Revision: 1.48 $");
 }
 
 int CStreamInfo2Handler::exec(CMenuTarget* parent, const std::string &)

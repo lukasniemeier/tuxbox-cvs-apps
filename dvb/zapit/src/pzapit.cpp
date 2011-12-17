@@ -1,5 +1,5 @@
 /*
- * $Id: pzapit.cpp,v 1.69 2010/08/01 16:59:42 seife Exp $
+ * $Id: pzapit.cpp,v 1.70 2011/12/17 14:50:51 rhabarber1848 Exp $
  *
  * simple commandline client for zapit
  *
@@ -794,17 +794,15 @@ int main (int argc, char** argv)
 		CZapitClient::CCurrentServiceInfo si;
 		si = zapit.getCurrentServiceInfo();
 
-		printf("frequency = %d.%d MHz", si.tsfrequency/1000, si.tsfrequency%1000);
-
 		if (si.polarisation != 2) /* only satellite has polarisation */
 		{
-			printf(" (%c)\n", (si.polarisation == HORIZONTAL) ? 'h' : 'v');
+			printf("frequency = %d.%03d MHz (%c)\n", si.tsfrequency / 1000, si.tsfrequency % 1000, (si.polarisation == HORIZONTAL) ? 'h' : 'v');
 			//satellite
 			printf("diseqc = %d\n", si.diseqc);
 		}
 		else
 		{
-			printf("\n");
+			printf("frequency = %d.%06d MHz\n", si.tsfrequency / 1000000, si.tsfrequency % 1000000);
 		}
 		printf("onid = 0x%04x\n", si.onid);
 		printf("sid = 0x%04x\n", si.sid);
