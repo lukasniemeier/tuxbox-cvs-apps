@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.17 2011/09/18 20:42:48 rhabarber1848 Exp $
+	$Id: moviebrowser.h,v 1.18 2011/12/17 14:48:32 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -357,7 +357,7 @@ class CMovieBrowser : public CMenuTarget
 		
 		///// Menu //////////////////////////////////// 
 		bool showMenu(MI_MOVIE_INFO* movie_info); // P2
-		void showMovieInfoMenu(MI_MOVIE_INFO* movie_info); // P2
+		int  showMovieInfoMenu(MI_MOVIE_INFO* movie_info); // P2
 		int  showStartPosSelectionMenu(void); // P2
 		
 		///// settings /////////////////////////////////// 
@@ -454,7 +454,7 @@ class CDirMenu : public CMenuWidget
 	public:
 		CDirMenu(std::vector<MB_DIR>* dir_list);
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void show(void);
+		int show(void);
 		bool isChanged(){return changed;};
 };
 

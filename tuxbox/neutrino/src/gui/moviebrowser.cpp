@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.65 2011/12/17 14:37:24 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.66 2011/12/17 14:48:32 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.65 2011/12/17 14:37:24 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.66 2011/12/17 14:48:32 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -864,7 +864,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 	else if(actionKey == "show_movie_info_menu")
 	{
 		if(m_movieSelectionHandler != NULL)
-			showMovieInfoMenu(m_movieSelectionHandler);
+			returnval = showMovieInfoMenu(m_movieSelectionHandler);
 	}
 	else if(actionKey == "save_movie_info")
 	{
@@ -2943,7 +2943,7 @@ void CMovieBrowser::showHelp(void)
 /************************************************************************
 
 ************************************************************************/
-void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
+int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 {
 	/********************************************************************/
 	/**  MovieInfo menu ******************************************************/
@@ -2967,8 +2967,8 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_CLEAR_ALL, true, NULL, this, "book_clear_all",CRCInput::RC_red,   NEUTRINO_ICON_BUTTON_RED));
 	bookmarkMenu.addItem(GenericMenuSeparatorLine);
 	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART,    true, bookStartIntInput.getValue(), &bookStartIntInput));
-	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIEEND,      true, bookLastIntInput.getValue(),  &bookLastIntInput));
-	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, true, bookEndIntInput.getValue(),   &bookEndIntInput));
+	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIEEND,      true, bookEndIntInput.getValue(),   &bookEndIntInput));
+	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, true, bookLastIntInput.getValue(),  &bookLastIntInput));
 	bookmarkMenu.addItem(GenericMenuSeparatorLine);
 
 	for(int i =0 ; i < MI_MOVIE_BOOK_USER_MAX && i < MAX_NUMBER_OF_BOOKMARK_ITEMS; i++ )
@@ -3074,7 +3074,7 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_HEAD,	true, NULL,      &bookmarkMenu, NULL, CRCInput::RC_yellow,  NEUTRINO_ICON_BUTTON_YELLOW));
 
-	movieInfoMenu.exec(NULL,"");
+	int returnval = movieInfoMenu.exec(NULL,"");
 
 	for(int i =0 ; i < MI_MOVIE_BOOK_USER_MAX && i < MAX_NUMBER_OF_BOOKMARK_ITEMS; i++ )
 	{
@@ -3083,6 +3083,8 @@ void CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		delete pBookTypeIntInput[i];
 		delete pBookItemMenu[i];
 	}
+
+	return returnval;
 }
 
 /************************************************************************
@@ -3791,7 +3793,7 @@ int CDirMenu::exec(CMenuTarget* parent, const std::string & actionKey)
 			parent->hide();
 
 		changed = false;
-		show();
+		returnval = show();
 	}
 	else if(actionKey.size() == 1)
 	{
@@ -3920,15 +3922,17 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.65 $");
+	return imageinfo.getModulVersion("","$Revision: 1.66 $");
 }
 
 /************************************************************************/
-void CDirMenu::show(void)
+int CDirMenu::show(void)
 /************************************************************************/
 {
+	int returnval = menu_return::RETURN_REPAINT;
+
 	if(dirList->empty())
-		return;
+		return returnval;
 
 	char tmp[20];
 
@@ -3945,9 +3949,9 @@ void CDirMenu::show(void)
 		tmp[1]=0;
 		dirMenu.addItem( new CMenuForwarderNonLocalized ( (*dirList)[i].name.c_str(),	   (dirState[i] != DIR_STATE_UNKNOWN), dirOptionText[i],       this,tmp), i == 0 ? true:false);
 	}
-	dirMenu.exec(NULL," ");
-  return;
 
+	returnval = dirMenu.exec(NULL," ");
+	return returnval;
 }
 
 /************************************************************************/
