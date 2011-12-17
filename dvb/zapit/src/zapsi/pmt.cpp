@@ -1,5 +1,5 @@
 /*
- * $Id: pmt.cpp,v 1.60 2011/09/22 19:12:08 rhabarber1848 Exp $
+ * $Id: pmt.cpp,v 1.61 2011/12/17 14:45:17 rhabarber1848 Exp $
  *
  * (C) 2002 by Andreas Oberritter <obi@tuxbox.org>
  * (C) 2002 by Frank Bormann <happydude@berlios.de>
@@ -248,7 +248,7 @@ unsigned short parse_ES_info(const unsigned char * const buffer, CZapitChannel *
 	case 0x03:
 	case 0x04:
 		if (description.empty())
-			description = esInfo->elementary_PID;
+			description = "unknown";
 		channel->addAudioChannel(esInfo->elementary_PID, false, description, componentTag);
 		descramble = true;
 		break;
@@ -288,7 +288,7 @@ unsigned short parse_ES_info(const unsigned char * const buffer, CZapitChannel *
 		{
 			if (description.empty())
 			{
-				description = esInfo->elementary_PID;
+				description = "unknown";
 				if (isAc3)
 					description += " (AC3)";
 				else if (isDts)
