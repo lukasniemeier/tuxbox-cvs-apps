@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.192 2011/11/12 15:26:26 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.193 2011/12/17 14:52:43 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -748,7 +748,7 @@ void testNetworkSettings(const char* ip, const char* netmask, const char* broadc
 	char our_nameserver[16];
 	std::string text, ethID, testsite;
 	//set default testdomain and wiki-IP
-	std::string defaultsite = "www.google.de", wiki_IP = "88.198.50.98";
+	std::string defaultsite = "www.google.de", wiki_IP = "91.224.67.93";
 	
 	//set physical adress
 	static CNetAdapter netadapter; ethID=netadapter.getMacAddr();
