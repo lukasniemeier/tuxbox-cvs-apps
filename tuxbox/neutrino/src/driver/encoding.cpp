@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/driver/encoding.cpp,v 1.4 2009/10/01 20:02:17 seife Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/driver/encoding.cpp,v 1.5 2011/12/17 14:41:45 rhabarber1848 Exp $
  *
  * conversion of character encodings - d-box2 linux project
  *
@@ -34,7 +34,7 @@ std::string Latin1_to_UTF8(const std::string & s)
 			r += '\n';
 		else if (c < 0x80)
 			r += c;
-		else
+		else if (c > 0x9f)
 		{
 			unsigned char d = 0xc0 | (c >> 6);
 			r += d;
@@ -80,4 +80,4 @@ bool isUTF8(const char *text, int len) // returns true if text is UTF-8
 bool isUTF8(const std::string &text)
 {
 	return (isUTF8(text.c_str(), text.length()));
-};
+}
