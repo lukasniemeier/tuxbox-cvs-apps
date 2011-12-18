@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.66 2011/12/17 14:48:32 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.67 2011/12/18 12:08:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.66 2011/12/17 14:48:32 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.67 2011/12/18 12:08:12 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -2144,7 +2144,7 @@ void CMovieBrowser::onDeleteFile(MI_MOVIE_INFO& movieSelectionHandler)
 {
 	//TRACE( "[onDeleteFile] ");
 	int test = movieSelectionHandler.file.Name.rfind(".ts");
-	if (test == -1 || test != movieSelectionHandler.file.Name.length() - 3) 
+	if (test == -1 || test != (int)movieSelectionHandler.file.Name.length() - 3) 
 	{ 
 		// not a TS file, return!!!!! 
 		TRACE( "show_ts_info: not a TS file ");
@@ -2557,7 +2557,7 @@ bool CMovieBrowser::loadTsFileNamesFromDir(const std::string & dirname)
 			else
 			{
 				int test = flist[i].getFileName().rfind(".ts");
-				if (test == -1 || test != flist[i].getFileName().length() - 3)
+				if (test == -1 || test != (int)flist[i].getFileName().length() - 3)
 				{
 					//TRACE("[mb] other file: '%s'\r\n",movieInfo.file.Name.c_str());
 				}
@@ -3922,7 +3922,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.66 $");
+	return imageinfo.getModulVersion("","$Revision: 1.67 $");
 }
 
 /************************************************************************/
