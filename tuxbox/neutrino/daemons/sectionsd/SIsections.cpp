@@ -1,5 +1,5 @@
 //
-// $Id: SIsections.cpp,v 1.66 2011/12/17 14:43:41 rhabarber1848 Exp $
+// $Id: SIsections.cpp,v 1.67 2011/12/18 12:10:49 rhabarber1848 Exp $
 //
 // classes for SI sections (dbox-II-project)
 //
@@ -430,7 +430,7 @@ void SIsectionEIT::parseShortEventDescriptor(const char *buf, SIevent &e, unsign
 	}
 	buf+=evt->event_name_length;
 	unsigned char textlength=*((unsigned char *)buf);
-	if(textlength > 4) {
+	if(textlength) {
 		// filter optional code table, because sectionsd just delivers Latin1
 		if(*(buf+1) == 0x10) {
 			e.setText(language, std::string((++buf)+3, textlength-3));
@@ -638,7 +638,7 @@ void SIsectionPPT::parseShortEventDescriptor(const char *buf, SIevent &e, unsign
 
   buf+=evt->event_name_length;
   unsigned char textlength=*((unsigned char *)buf);
-  if(textlength > 4) {
+  if(textlength) {
     // filter optional code table, because sectionsd just delivers Latin1
     if(*(buf+1) == 0x10)
       e.setText(language, std::string((++buf)+3, textlength-3));
