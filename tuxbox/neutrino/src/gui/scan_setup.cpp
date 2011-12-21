@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.16 2011/12/09 22:36:28 dbt Exp $
+	$Id: scan_setup.cpp,v 1.17 2011/12/21 21:03:49 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -86,13 +86,19 @@ int CScanSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		scanSettings.gotoXXLongitude = strtod(zapit_long, NULL);
 		CNeutrinoApp::getInstance()->exec(NULL, "savesettings");
 		g_Zapit->loadScanSetupSettings();
-		showScanService();
+		res = showScanService();
+		if (res == menu_return::RETURN_EXIT_ALL)
+			return menu_return::RETURN_EXIT_ALL;
 		return menu_return::RETURN_EXIT;
 	}
 	else if (actionKey == "show_scanmodes")
 	{
-		showScanModeMenue();
-		showScanService();
+		res = showScanModeMenue();
+		if (res == menu_return::RETURN_EXIT_ALL)
+			return menu_return::RETURN_EXIT_ALL;
+		res = showScanService();
+		if (res == menu_return::RETURN_EXIT_ALL)
+			return menu_return::RETURN_EXIT_ALL;
 		return menu_return::RETURN_EXIT;
 	}
 
@@ -442,7 +448,7 @@ int CScanSetup::showScanService()
 }
 
 //sub menue scanmode
-void CScanSetup::showScanModeMenue()
+int CScanSetup::showScanModeMenue()
 {
 	CMenuWidget* scanmode = new CMenuWidget(LOCALE_SERVICEMENU_SCANTS, NEUTRINO_ICON_SETTINGS, width);
 
@@ -496,12 +502,14 @@ void CScanSetup::showScanModeMenue()
 	scanmode->addItem(Rate);
 	scanmode->addItem(fec);
 
-	scanmode->exec(NULL, "");
+	int res = scanmode->exec(NULL, "");
 	scanmode->hide();
 	delete scanmode;
 
 	delete freq;
 	delete TP_scanNotifier;
+
+	return res;
 }
 
 void CScanSetup::initScanSettings()

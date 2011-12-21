@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.8 2011/12/09 22:36:28 dbt Exp $
+	$Id: zapit_setup.cpp,v 1.9 2011/12/21 21:03:50 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -84,12 +84,12 @@ int CZapitSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if(actionKey == "zapit_starttv")
 	{
-		InitZapitChannelHelper(CZapitClient::MODE_TV);
+		res = InitZapitChannelHelper(CZapitClient::MODE_TV);
 		return res;
 	}
 	else if(actionKey == "zapit_startradio")
 	{
-		InitZapitChannelHelper(CZapitClient::MODE_RADIO);
+		res = InitZapitChannelHelper(CZapitClient::MODE_RADIO);
 		return res;
 	}
 	// set new start channel settings for...
@@ -202,7 +202,7 @@ int CZapitSetup::showSetup()
 	return res;
 }
 
-void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
+int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 {
 	std::vector<CMenuWidget *> toDelete;
 	CZapitClient zapit;
@@ -239,8 +239,9 @@ void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 			mctv.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwtv));
 		channellist.clear();
 	}
-	mctv.exec (NULL, "");
-	mctv.hide ();
+
+	int res = mctv.exec(NULL, "");
+	mctv.hide();
 
 	// delete dynamic created objects
 	for(unsigned int count=0;count<toDelete.size();count++)
@@ -248,6 +249,8 @@ void CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 		delete toDelete[count];
 	}
 	toDelete.clear();
+
+	return res;
 }
 
 CZapitSetupNotifier::CZapitSetupNotifier(CMenuForwarder* i1, CMenuForwarder* i2)

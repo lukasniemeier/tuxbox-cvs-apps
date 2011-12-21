@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.h,v 1.6 2011/12/09 22:36:28 dbt Exp $
+	$Id: zapit_setup.h,v 1.7 2011/12/21 21:03:50 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -58,7 +58,7 @@ class CZapitSetup : public CMenuTarget
 		~CZapitSetup();
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-		void InitZapitChannelHelper(CZapitClient::channelsMode mode);
+		int InitZapitChannelHelper(CZapitClient::channelsMode mode);
 };
 
 class CZapitSetupNotifier : public CChangeObserver
