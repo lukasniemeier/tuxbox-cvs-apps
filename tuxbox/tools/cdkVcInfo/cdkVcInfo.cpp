@@ -1,7 +1,7 @@
 /*
  * Tool for printing some image information during bootup.
  *
- * $Id: cdkVcInfo.cpp,v 1.9 2010/10/12 11:31:58 rhabarber1848 Exp $
+ * $Id: cdkVcInfo.cpp,v 1.10 2011/12/21 21:05:27 rhabarber1848 Exp $
  *
  * cdkVcInfo - d-box2 linux project
  *
@@ -89,7 +89,6 @@ int main (int argc, char **argv)
 	int release_type = -1;
 	int imageversion = 0;
 	int imagesubver = 0;
-	char imagesubver2[BUFFERSIZE] = "0";
 	int year = 9999;
 	int month = 99;
 	int day = 99;
@@ -114,7 +113,7 @@ int main (int argc, char **argv)
 	char gateway[BUFFERSIZE];
 	char null[BUFFERSIZE] = "";
 	char versioninfo[20];
-	char cvs_revision[] = "$Revision: 1.9 $";
+	char cvs_revision[] = "$Revision: 1.10 $";
 	sscanf(cvs_revision, "%*s %s", versioninfo);
 
 	while ((opt = getopt(argc, argv, "hgdn:")) != -1)
@@ -162,8 +161,8 @@ int main (int argc, char **argv)
 	if (fv1)
 	{
 		while (fgets(buf, BUFFERSIZE, fv1)) {
-			sscanf(buf, "version=%1d%1d%1d%1s%4d%2d%2d%2d%2d", 
-			&release_type, &imageversion, &imagesubver, (char *) &imagesubver2,
+			sscanf(buf, "version=%1d%1d%2d%4d%2d%2d%2d%2d", 
+			&release_type, &imageversion, &imagesubver,
 			&year, &month, &day, &hour, &minute);
 			sscanf(buf, "creator=%[^\n]", (char *) &creator);
 			sscanf(buf, "imagename=%[^\n]", (char *) &imagename);
@@ -251,7 +250,7 @@ int main (int argc, char **argv)
 	sprintf(message,
 		"\n\n\n\n"
 		"\t\t    ---------- Image Information ----------\n\n"
-		"\t\t    %s %d.%d.%s\n"						//Image Version
+		"\t\t    %s %d.%d\n"						//Image Version
 		"\t\t    %s %s\n\n"							//Image Typ
 		"\t\t    %s %02d.%02d.%d\n"					//Date
 		"\t\t    %s %d:%02d\n"						//Time
@@ -270,7 +269,7 @@ int main (int argc, char **argv)
 		"\t\t    %s (%s, %s %s\n "					//Linux Version, gcc Version
 		"\t\t    %s %s\n\n"						//User, PC			
 		"\t\t\t\t%s",
-		info[VERSION][id], imageversion, imagesubver, imagesubver2, 
+		info[VERSION][id], imageversion, imagesubver,
 		info[TYPE][id], release_type == 0 ? "Release" 
 						: release_type == 1 ? "Snapshot" 
 						: release_type == 2 ? "Intern" 
