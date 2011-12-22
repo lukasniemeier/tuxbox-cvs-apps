@@ -659,8 +659,16 @@ std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, s
 	hh->ParamList["apid"] = itoh(serviceinfo.apid);
 	hh->ParamList["vtxtpid"] = (serviceinfo.vtxtpid != 0)?itoh(serviceinfo.vtxtpid):"nicht verf&uuml;gbar";
 	hh->ParamList["pmtpid"] = (serviceinfo.pmtpid != 0)?itoh(serviceinfo.pmtpid):"nicht verf&uuml;gbar";
-	hh->ParamList["tsfrequency"] = string_printf("%d.%d MHz", serviceinfo.tsfrequency/1000, serviceinfo.tsfrequency%1000);
-	hh->ParamList["polarisation"] = serviceinfo.polarisation==1?"h":"v";
+	if (serviceinfo.polarisation != 2) /* only satellite has polarisation */
+	{
+		hh->ParamList["tsfrequency"] = string_printf("%d.%03d MHz", serviceinfo.tsfrequency / 1000, serviceinfo.tsfrequency % 1000);
+		hh->ParamList["polarisation"] = (serviceinfo.polarisation == HORIZONTAL) ? "h" : "v";
+	}
+	else
+	{
+		hh->ParamList["tsfrequency"] = string_printf("%d.%06d MHz", serviceinfo.tsfrequency / 1000000, serviceinfo.tsfrequency % 1000000);
+		hh->ParamList["polarisation"] = "-";
+	}
 	hh->ParamList["ServiceName"] = NeutrinoAPI->GetServiceName(NeutrinoAPI->Zapit->getCurrentServiceID());
 	NeutrinoAPI->GetStreamInfo(bitInfo);
 	
