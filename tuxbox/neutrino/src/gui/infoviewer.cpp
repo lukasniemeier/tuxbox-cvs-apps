@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.311 2011/12/17 14:50:51 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.312 2011/12/22 18:57:06 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -157,7 +157,7 @@ void CInfoViewer::showSatfind()
 
 	char freq[20];
 	char percent[10];
-	char pos[4];
+	char pos[6];
 	int sig;
 	int snr;
 	int ber;
