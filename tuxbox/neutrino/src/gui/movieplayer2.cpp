@@ -3030,6 +3030,9 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				sprintf(apidnumber, "%d", count+1);
 				sprintf(show_pid_number, "%u", g_apids[count]);
 
+				apidtitle.append(show_pid_number);
+				apidtitle.append(" : ");
+
 				if (movieinfo_valid)
 				{
 					for (unsigned int i = 0; i < movieinfo.audioPids.size(); i++)
@@ -3043,11 +3046,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					}
 				}
 				if (!mi_found)
-					apidtitle = "Stream ";
-
-				apidtitle.append(" [");
-				apidtitle.append(show_pid_number);
-				apidtitle.append("]");
+					apidtitle.append("Stream");
 
 				if (g_currentapid == -1 && g_apids[count] == 0)
 					current = true;
@@ -3073,6 +3072,9 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				sprintf(apidnumber, "%d", count+1);
 				sprintf(show_pid_number, "%u", g_apids[count]);
 
+				apidtitle.append(show_pid_number);
+				apidtitle.append(" : ");
+
 				if (movieinfo_valid)
 				{
 					for (unsigned int i = 0; i < movieinfo.audioPids.size(); i++)
@@ -3086,11 +3088,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					}
 				}
 				if (!mi_found)
-					apidtitle = "Stream ";
-
-				apidtitle.append(" [");
-				apidtitle.append(show_pid_number);
-				apidtitle.append("]");
+					apidtitle.append("Stream");
 
 				if (g_ac3flags[count] == 1 && apidtitle.find("AC3") == std::string::npos)
 					apidtitle.append(" (AC3)");
@@ -3508,7 +3506,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.81 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.82 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()

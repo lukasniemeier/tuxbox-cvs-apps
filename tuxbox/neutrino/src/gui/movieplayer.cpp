@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.195 2011/11/12 15:26:25 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.196 2011/12/31 09:02:08 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -203,9 +203,11 @@ bool get_movie_info_apid_name(int apid,MI_MOVIE_INFO* movie_info,std::string* ap
        if( movie_info->audioPids[i].epgAudioPid == apid && 
           !movie_info->audioPids[i].epgAudioPidName.empty())
        {
-            char show_pid_number[4];
+            char show_pid_number[5];
             sprintf(show_pid_number, "%u", apid);
-            *apidtitle = movie_info->audioPids[i].epgAudioPidName + " [" + show_pid_number + "]";
+            apidtitle->assign(show_pid_number);
+            apidtitle->append(" : ");
+            apidtitle->append(movie_info->audioPids[i].epgAudioPidName);
             return true;
        }
     }
@@ -3511,12 +3513,13 @@ void CMoviePlayerGui::PlayFile (int parental)
 			// show the normal audio pids first
 			for( unsigned int count=0; count<g_numpida; count++ )
 			{
-				char apidnumber[3],show_pid_number[4];
+				char apidnumber[3],show_pid_number[5];
 				sprintf(apidnumber, "%d", count+1);
 				sprintf(show_pid_number, "%u", g_apids[count]);
 
-				std::string apidtitle = "Stream ";
+				std::string apidtitle = "";
 				apidtitle.append(show_pid_number);
+				apidtitle.append(" : Stream");
 
 				if(g_ac3flags[count] == 0)
 				{
@@ -3528,12 +3531,13 @@ void CMoviePlayerGui::PlayFile (int parental)
 			// then show the other audio pids (AC3/teletex)
 			for( unsigned int count=0; count<g_numpida; count++ )
 			{
-				char apidnumber[3],show_pid_number[4];
+				char apidnumber[3],show_pid_number[5];
 				sprintf(apidnumber, "%d", count+1);
 				sprintf(show_pid_number, "%u", g_apids[count]);
 
-				std::string apidtitle = "Stream ";
+				std::string apidtitle = "";
 				apidtitle.append(show_pid_number);
+				apidtitle.append(" : Stream");
 
 				if(g_ac3flags[count] == 2)
 				{
@@ -4483,7 +4487,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.195 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.196 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
