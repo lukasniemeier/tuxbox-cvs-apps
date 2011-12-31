@@ -3020,6 +3020,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			g_apidchanged = false;
 			pidt = 0;
 			CAPIDSelectExec *APIDChanger = new CAPIDSelectExec;
+			unsigned int digit = 0;
 			char apidnumber[3], show_pid_number[5];
 
 			// show the normal audio pids first
@@ -3061,7 +3062,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				APIDSelector.addItem(
 					new CMenuForwarderNonLocalized(apidtitle.c_str(), true,
 						NULL, APIDChanger, apidnumber,
-						CRCInput::convertDigitToKey(count+1)),
+						CRCInput::convertDigitToKey(++digit)),
 					current); // select current stream
 			}
 
@@ -3111,7 +3112,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				APIDSelector.addItem(
 					new CMenuForwarderNonLocalized(apidtitle.c_str(), true,
 						NULL, APIDChanger, apidnumber,
-						CRCInput::convertDigitToKey(count+1)),
+						CRCInput::convertDigitToKey(++digit)),
 					current); // select current stream
 			}
 			APIDSelector.exec(NULL, ""); // otherwise use Dialog
@@ -3509,7 +3510,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.83 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.84 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()

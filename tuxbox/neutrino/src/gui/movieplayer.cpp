@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.197 2011/12/31 09:03:39 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.198 2011/12/31 09:05:15 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3512,6 +3512,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 			g_apidchanged = 0;
 			pidt=0;
 			CAPIDSelectExec *APIDChanger = new CAPIDSelectExec;
+			unsigned int digit = 0;
 
 			// show the normal audio pids first
 			for( unsigned int count=0; count<g_numpida; count++ )
@@ -3527,7 +3528,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				if(g_ac3flags[count] == 0)
 				{
 					get_movie_info_apid_name(g_apids[count],p_movie_info,&apidtitle);
-					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), true, NULL, APIDChanger, apidnumber,CRCInput::convertDigitToKey(count+1)), g_apids[count] == g_currentapid);
+					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), true, NULL, APIDChanger, apidnumber, CRCInput::convertDigitToKey(++digit)), g_apids[count] == g_currentapid);
 				}
 			}
 
@@ -3546,7 +3547,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				{
 					apidtitle.append(" (Teletext)");
 					pidt=g_apids[count];
-					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), false, NULL, APIDChanger, apidnumber,CRCInput::convertDigitToKey(count+1)), g_apids[count] == g_currentapid);
+					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), false, NULL, APIDChanger, apidnumber, CRCInput::convertDigitToKey(++digit)), g_apids[count] == g_currentapid);
 				}
 
 				if(g_ac3flags[count] == 1)
@@ -3554,7 +3555,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 					get_movie_info_apid_name(g_apids[count],p_movie_info,&apidtitle);
 					if((int)apidtitle.find("AC3") < 0) //std::nopos)
 						apidtitle.append(" (AC3)");
-					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), true, NULL, APIDChanger, apidnumber,CRCInput::convertDigitToKey(count+1)), g_apids[count] == g_currentapid);
+					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), true, NULL, APIDChanger, apidnumber, CRCInput::convertDigitToKey(++digit)), g_apids[count] == g_currentapid);
 				}
 			}
 
@@ -4490,7 +4491,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.197 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.198 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
