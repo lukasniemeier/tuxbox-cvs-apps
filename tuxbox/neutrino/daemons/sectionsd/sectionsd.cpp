@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.336 2011/08/30 19:14:23 dbt Exp $
+//  $Id: sectionsd.cpp,v 1.337 2011/12/31 08:48:17 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2649,7 +2649,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.336 2011/08/30 19:14:23 dbt Exp $\n"
+		"$Id: sectionsd.cpp,v 1.337 2011/12/31 08:48:17 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -3554,7 +3554,8 @@ static void commandActualEPGchannelID(int connfd, char *data, const unsigned dat
 
 	readLockEvents();
 	if (*uniqueServiceKey == messaging_current_servicekey) {
-		if (myCurrentEvent) {
+		/* current event is uptodate only if sectionsd is scanning */
+		if (scanning && myCurrentEvent) {
 			evt = *myCurrentEvent;
 			zeit.startzeit = evt.times.begin()->startzeit;
 			zeit.dauer = evt.times.begin()->dauer;
@@ -8620,7 +8621,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.336 2011/08/30 19:14:23 dbt Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.337 2011/12/31 08:48:17 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
