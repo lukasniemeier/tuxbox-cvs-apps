@@ -1,5 +1,5 @@
 /*
-	$Id: epgplus.cpp,v 1.62 2011/11/22 07:30:00 rhabarber1848 Exp $
+	$Id: epgplus.cpp,v 1.63 2011/12/31 08:53:35 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -45,7 +45,6 @@
 #include <gui/widget/dirchooser.h>
 #include "bouquetlist.h"
 
-#include <zapit/client/zapittools.h> /* ZapitTools::UTF8_to_Latin1 */
 #include <driver/rcinput.h>
 #include <driver/screen_max.h>
 
@@ -391,7 +390,7 @@ void EpgPlus::ChannelEventEntry::paint(bool _isSelected, bool toggleColor)
 					(_isSelected ? selectionColor : (toggleColor ? normalColor1 : normalColor2)));
 
 	font->RenderString(x + 2, y + font->getHeight(), width - 4 > 0 ? width - 4 : 0, channelEvent.description,
-			   _isSelected ? selectionColor : (toggleColor ? normalColor1 : normalColor2), false);
+			   _isSelected ? selectionColor : (toggleColor ? normalColor1 : normalColor2), 0, false);
 
 	// paint the separation line
 	if (separationLineHeight > 0)
@@ -442,7 +441,7 @@ EpgPlus::ChannelEntry::ChannelEntry(const CChannelList::CChannel* _channel, int 
 	{
 		std::stringstream tmpName;
 		tmpName << _index + 1 << " " << channel->getName();
-		displayName  = ZapitTools::UTF8_to_Latin1(tmpName.str().c_str());
+		displayName = tmpName.str();
 	}
 
 	index = _index;
@@ -476,7 +475,7 @@ void EpgPlus::ChannelEntry::paint(bool isSelected, time_t selectedTime)
 #endif
 
 	frameBuffer->paintBoxRel(x, y, width, font->getHeight(), isSelected ? selectionColor : normalColor);
-	font->RenderString(x + 2, y + font->getHeight(), width - 4, displayName, isSelected ? selectionColor : normalColor, true);
+	font->RenderString(x + 2, y + font->getHeight(), width - 4, displayName, isSelected ? selectionColor : normalColor, 0, true); // UTF-8
 
 	if (isSelected)
 	{
@@ -490,8 +489,7 @@ void EpgPlus::ChannelEntry::paint(bool isSelected, time_t selectedTime)
 #endif
 				if ((*bouquet->channelList)[j]->number == channel->number)
 				{
-					footer->setBouquetChannelName(bouquet->channelList->getName(),
-								      ZapitTools::UTF8_to_Latin1(channel->getName().c_str()));
+					footer->setBouquetChannelName(bouquet->channelList->getName(), channel->getName());
 					bouquet = NULL;
 					break;
 				}
@@ -567,7 +565,7 @@ void EpgPlus::Footer::paintEventDetails(const std::string& description, const st
 	frameBuffer->paintBoxRel(x, yPos, width, height, color);
 	yPos += height;
 	// display new text
-	fontBouquetChannelName->RenderString(x + 10, yPos, width - 20, currentBouquetName + " : " + currentChannelName, color, 0, false);
+	fontBouquetChannelName->RenderString(x + 10, yPos, width - 20, currentBouquetName + " : " + currentChannelName, color, 0, true); // UTF-8
 
 	height = fontEventDescription->getHeight();
 	// clear the region
