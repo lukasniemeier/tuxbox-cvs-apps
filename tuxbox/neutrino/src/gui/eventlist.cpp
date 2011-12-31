@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.141 2011/11/22 07:30:00 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.142 2011/12/31 08:51:25 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -666,23 +666,33 @@ void EventList::paintItem(unsigned int pos)
 
 		if(is_timer == (EventList::CONFLICT<<4))
 		{
-			frameBuffer->paintIcon("conflict.raw", x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_CONFLICT, x+203, ypos);
 		}
 		else if(is_timer == EventList::TIMER_RECORD)
 		{
-			frameBuffer->paintIcon("record.raw", x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_RECORD, x+203, ypos);
 		}
 		else if(is_timer == (EventList::TIMER_RECORD | (EventList::CONFLICT<<4) ))
 		{
-			frameBuffer->paintIcon("record_conflict.raw", x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_RECORD_CONFLICT, x+203, ypos);
 		}
 		else if(is_timer == EventList::TIMER_ZAPTO)
 		{
-			frameBuffer->paintIcon("zapto.raw", x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_ZAPTO, x+203, ypos);
 		}
 		else if(is_timer == (EventList::TIMER_ZAPTO | (EventList::CONFLICT<<4) ))
 		{
-			frameBuffer->paintIcon("zapto_conflict.raw", x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_ZAPTO_CONFLICT, x+203, ypos);
+		}
+		else if(is_timer == (EventList::TIMER_RECORD | EventList::TIMER_ZAPTO))
+		{
+			frameBuffer->paintIcon(NEUTRINO_ICON_RECORD, x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_ZAPTO, x+223, ypos);
+		}
+		else if(is_timer == (EventList::TIMER_RECORD | EventList::TIMER_ZAPTO | (EventList::CONFLICT<<4) ))
+		{
+			frameBuffer->paintIcon(NEUTRINO_ICON_RECORD_CONFLICT, x+203, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_ZAPTO_CONFLICT, x+223, ypos);
 		}
 	}
 }

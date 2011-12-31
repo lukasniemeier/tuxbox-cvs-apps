@@ -2,7 +2,7 @@
 #define __gui_widget_icons_h__
 
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/gui/widget/icons.h,v 1.28 2011/01/30 20:46:11 dbt Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/gui/widget/icons.h,v 1.29 2011/12/31 08:51:25 rhabarber1848 Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -61,6 +61,7 @@
 #define NEUTRINO_ICON_16_9_GREY		"16_9_gray.raw"
 #define NEUTRINO_ICON_AUDIO		"audio.raw"
 #define NEUTRINO_ICON_COLORS		"colors.raw"
+#define NEUTRINO_ICON_CONFLICT		"conflict.raw"
 #define NEUTRINO_ICON_DD		"dd.raw"
 #define NEUTRINO_ICON_DD_AVAIL		"dd_avail.raw"
 #define NEUTRINO_ICON_DD_GREY		"dd_gray.raw"
@@ -82,6 +83,8 @@
 #define NEUTRINO_ICON_QUESTION		"question.raw"
 #define NEUTRINO_ICON_RADIOMODE		"radiomode.raw"
 #define NEUTRINO_ICON_REC		"rec.raw"
+#define NEUTRINO_ICON_RECORD		"record.raw"
+#define NEUTRINO_ICON_RECORD_CONFLICT	"record_conflict.raw"
 #define NEUTRINO_ICON_RECORDING		"recording.raw"
 #define NEUTRINO_ICON_SETTINGS		"settings.raw"
 #define NEUTRINO_ICON_SHELL		"shell.raw"
@@ -98,6 +101,8 @@
 #define NEUTRINO_ICON_VOLUMESLIDER2RED		"volumeslider2red.raw"
 #define NEUTRINO_ICON_VTXT		"vtxt.raw"
 #define NEUTRINO_ICON_VTXT_GREY		"vtxt_gray.raw"
+#define NEUTRINO_ICON_ZAPTO		"zapto.raw"
+#define NEUTRINO_ICON_ZAPTO_CONFLICT	"zapto_conflict.raw"
 #define NEUTRINO_ICON_PARTITION		"partition.raw"
 #define NEUTRINO_ICON_LCD		"lcd.raw"
 #define NEUTRINO_ICON_VOLUME		"volume.raw"
