@@ -3014,6 +3014,9 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		{
 			CMenuWidget APIDSelector(LOCALE_APIDSELECTOR_HEAD, NEUTRINO_ICON_AUDIO, 400);
 			APIDSelector.addItem(GenericMenuSeparator);
+			APIDSelector.addItem(GenericMenuCancel);
+			APIDSelector.addItem(GenericMenuSeparatorLine);
+
 			g_apidchanged = false;
 			pidt = 0;
 			CAPIDSelectExec *APIDChanger = new CAPIDSelectExec;
@@ -3506,7 +3509,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.82 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.83 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
