@@ -3092,7 +3092,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				apidtitle.append(show_pid_number);
 				apidtitle.append("]");
 
-				if (g_ac3flags[count] == 1)
+				if (g_ac3flags[count] == 1 && apidtitle.find("AC3") == std::string::npos)
 					apidtitle.append(" (AC3)");
 				if (g_ac3flags[count] == 2)
 				{
@@ -3508,7 +3508,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.80 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.81 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
