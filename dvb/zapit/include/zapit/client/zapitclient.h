@@ -169,7 +169,7 @@ class CZapitClient:public CBasicClient
 	struct responseGetAPIDs
 	{
 		uint    pid;
-		char    desc[25];
+		char    desc[32];
 		int     is_ac3;
 		int     component_tag;
 	};
