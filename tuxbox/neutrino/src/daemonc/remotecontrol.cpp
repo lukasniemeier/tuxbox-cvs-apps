@@ -389,18 +389,26 @@ void CRemoteControl::processAPIDnames()
 		{
 			has_unresolved_ctags= true;
 		}
+
 		if ( strlen( current_PIDs.APIDs[count].desc ) == 3 )
 		{
 			// unaufgeloeste Sprache...
 			// getISO639Description returns its argument if nothing is found, so...
 			const char *p = getISO639Description(current_PIDs.APIDs[count].desc);
 			if (p != current_PIDs.APIDs[count].desc) // ...check, because arguments of strcpy must not overlap
-				strcpy(current_PIDs.APIDs[count].desc, p);
+			{
+				size_t desc_maxlen = sizeof(current_PIDs.APIDs[count].desc) - 1;
+				if (current_PIDs.APIDs[count].is_ac3)
+					desc_maxlen -= 6;
+
+				strncpy(current_PIDs.APIDs[count].desc, p, desc_maxlen);
+				current_PIDs.APIDs[count].desc[desc_maxlen] = 0;
+			}
 		}
 
 		if ( current_PIDs.APIDs[count].is_ac3 )
 		{
-			strncat(current_PIDs.APIDs[count].desc, " (AC3)", 25);
+			strncat(current_PIDs.APIDs[count].desc, " (AC3)", 6);
 			has_ac3 = true;
 		}
 	}
@@ -424,9 +432,15 @@ void CRemoteControl::processAPIDnames()
 							// workaround for buggy ZDF ctags / or buggy sectionsd/drivers , who knows...
 							if(!tags[i].component.empty())
 							{
-								strncpy(current_PIDs.APIDs[j].desc, (Latin1_to_UTF8(tags[i].component)).c_str(), 25);
+								size_t desc_maxlen = sizeof(current_PIDs.APIDs[j].desc) - 1;
 								if (current_PIDs.APIDs[j].is_ac3)
-									strncat(current_PIDs.APIDs[j].desc, " (AC3)", 25);
+									desc_maxlen -= 6;
+
+								strncpy(current_PIDs.APIDs[j].desc, (Latin1_to_UTF8(tags[i].component)).c_str(), desc_maxlen);
+								current_PIDs.APIDs[j].desc[desc_maxlen] = 0;
+
+								if (current_PIDs.APIDs[j].is_ac3)
+									strncat(current_PIDs.APIDs[j].desc, " (AC3)", 6);
 							}
 							current_PIDs.APIDs[j].component_tag = -1;
 							break;

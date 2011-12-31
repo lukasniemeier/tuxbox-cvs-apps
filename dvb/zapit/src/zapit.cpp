@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.455 2011/09/22 19:12:08 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.456 2011/12/31 08:56:15 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -2672,8 +2672,11 @@ void sendAPIDs(int connfd)
 	for (uint32_t i = 0; i < cc->getAudioChannelCount(); i++)
 	{
 		CZapitClient::responseGetAPIDs response;
+		size_t desc_maxlen = sizeof(response.desc) - 1;
+
 		response.pid = cc->getAudioPid(i);
-		strncpy(response.desc, cc->getAudioChannel(i)->description.c_str(), 25);
+		strncpy(response.desc, cc->getAudioChannel(i)->description.c_str(), desc_maxlen);
+		response.desc[desc_maxlen] = 0;
 		response.is_ac3 = cc->getAudioChannel(i)->isAc3;
 		response.component_tag = cc->getAudioChannel(i)->componentTag;
 
@@ -3136,7 +3139,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.455 2011/09/22 19:12:08 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.456 2011/12/31 08:56:15 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;

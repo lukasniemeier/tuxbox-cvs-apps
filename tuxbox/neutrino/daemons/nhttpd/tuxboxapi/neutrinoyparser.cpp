@@ -552,7 +552,9 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler */*
 					{
 						if(!(init_iso))
 						{
-							strcpy( pids.APIDs[j].desc, getISO639Description( pids.APIDs[j].desc ) );
+							size_t desc_maxlen = sizeof( pids.APIDs[j].desc ) - 1;
+							strncpy( pids.APIDs[j].desc, getISO639Description( pids.APIDs[j].desc ), desc_maxlen );
+							pids.APIDs[j].desc[desc_maxlen] = 0;
 						}
 			 			yresult += string_printf("<option value=%05u>%s %s</option>\r\n",idx_as_id ? j : pids.APIDs[j].pid,encodeString(std::string(pids.APIDs[j].desc)).c_str(),pids.APIDs[j].is_ac3 ? " (AC3)": " ");
 					}
@@ -569,7 +571,9 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler */*
 		{
 			if(!(init_iso))
 			{
-				strcpy( pids.APIDs[i].desc, getISO639Description( pids.APIDs[i].desc ) );
+				size_t desc_maxlen = sizeof( pids.APIDs[i].desc ) - 1;
+				strncpy( pids.APIDs[i].desc, getISO639Description( pids.APIDs[i].desc ), desc_maxlen );
+				pids.APIDs[i].desc[desc_maxlen] = 0;
 			}
  			yresult += string_printf("<option value=%05u>%s %s</option>\r\n",idx_as_id ? i : it->pid,pids.APIDs[i].desc,pids.APIDs[i].is_ac3 ? " (AC3)": " ");
 			i++;
