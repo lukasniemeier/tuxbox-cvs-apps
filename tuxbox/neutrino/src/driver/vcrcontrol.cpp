@@ -452,7 +452,7 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 
 std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channel_id channel_id,
 								  const event_id_t epgid, const time_t epg_time,
-								  unsigned char apids, const bool stream_vtxt_pid)
+								  unsigned char apids, const bool save_vtxt_pid)
 {
 	std::string extMessage;
 	CMovieInfo cMovieInfo;
@@ -528,7 +528,7 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 		movieInfo.audioPids.push_back(audio_pids);
 	}
 
-	if (stream_vtxt_pid)
+	if (save_vtxt_pid)
 		movieInfo.epgVTXPID = si.vtxtpid;
 
 	cMovieInfo.encodeMovieInfoXml(&extMessage,movieInfo);
@@ -769,9 +769,12 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	
 	CZapitClient::responseGetPIDs allpids;
 	g_Zapit->getPIDS(allpids);
+	bool save_vtxt_pid = false;
+
 	if ((StreamVTxtPid) && (si.vtxtpid != 0))
 	{
 		pids[numpids++] = si.vtxtpid;
+		save_vtxt_pid = true;
 	}
 
 	if ((StreamSubtitlePid) && (allpids.SubPIDs.size() > 0)) {
@@ -788,6 +791,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 				txtdone = si.vtxtpid;
 			}
 		}
+		save_vtxt_pid = (txtdone > 0);
 	}
 	
 	char filename[512]; // UTF-8
@@ -878,7 +882,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	} else
 	{
 		error_msg = ::start_recording(filename,
-					      getMovieInfoString(channel_id, epgid, epg_time, apids, StreamVTxtPid).c_str(),
+					      getMovieInfoString(channel_id, epgid, epg_time, apids, save_vtxt_pid).c_str(),
 					      mode,
 					      Use_O_Sync,
 					      Use_Fdatasync,
