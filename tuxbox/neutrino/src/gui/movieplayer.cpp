@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.199 2012/01/02 18:17:17 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.200 2012/01/02 18:22:50 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -282,7 +282,6 @@ CurlDummyWrite (void *ptr, size_t size, size_t nmemb, void *data)
 
 int CAPIDSelectExec::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 {
-	g_apidchanged = 0;
 	unsigned int sel= atoi(actionKey.c_str());
 	if(g_currentapid != g_apids[sel-1] )
 	{
@@ -2610,6 +2609,27 @@ if(g_settings.streaming_use_buffer)
 //==================== 
 void mp_selectAudio(MP_CTX *ctx)
 {
+	if(!g_currentapid)
+	{
+		ctx->pida = g_apids[0];
+		ctx->ac3 = g_ac3flags[0];
+		if(ctx->ac3 > 1)
+		{
+			for(unsigned int i = 1; i < g_numpida; i++)
+			{
+				if(g_ac3flags[i] < 2)
+				{
+					ctx->pida = g_apids[i];
+					ctx->ac3 = g_ac3flags[i];
+					break;
+				}
+			}
+		}
+
+		g_currentapid = ctx->pida;
+		g_currentac3 = ctx->ac3;
+	}
+
 	if(g_numpida > 1)
 	{
 		g_showaudioselectdialog = true;
@@ -2620,21 +2640,12 @@ void mp_selectAudio(MP_CTX *ctx)
 		}
 	}
 
-	if(!g_currentapid)
+	if(g_apidchanged)
 	{
-		ctx->pida   = g_apids[0];
-		ctx->ac3    = g_ac3flags[0];
-
-		g_currentapid = ctx->pida;
-		g_currentac3  = ctx->ac3;
+		ctx->pida = g_currentapid;
+		ctx->ac3 = g_currentac3;
+		g_apidchanged = 0;
 	}
-	else
-	{
-		ctx->pida   = g_currentapid;
-		ctx->ac3    = g_currentac3;
-	}
-
-	g_apidchanged = 0;
 }
 
 //== TCP I/O ==
@@ -3500,7 +3511,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 		// ouptut: g_currentapid (may be remain 0,   --
 		//           if nothing happened)            --
 		//         g_currentac3                      --
-		//         g_apidchanged (0/1, but not used) --
+		//         g_apidchanged (0/1)               --
 		//---------------------------------------------
 		if(g_showaudioselectdialog)
 		{
@@ -3509,7 +3520,6 @@ void CMoviePlayerGui::PlayFile (int parental)
 			APIDSelector.addItem(GenericMenuCancel);
 			APIDSelector.addItem(GenericMenuSeparatorLine);
 
-			g_apidchanged = 0;
 			pidt=0;
 			CAPIDSelectExec *APIDChanger = new CAPIDSelectExec;
 			unsigned int digit = 0;
@@ -4491,7 +4501,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.199 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.200 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
