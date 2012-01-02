@@ -514,6 +514,7 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 
 	EPG_AUDIO_PIDS audio_pids;
 	// super hack :-), der einfachste weg an die apid descriptions ranzukommen
+	g_RemoteControl->current_EPGid = epgid;
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
 
@@ -637,6 +638,7 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	extMessage += apids_selected;
 	extMessage += "\">\n";
 	// super hack :-), der einfachste weg an die apid descriptions ranzukommen
+	g_RemoteControl->current_EPGid = epgid;
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
 	for(unsigned int i= 0; i< pids.APIDs.size(); i++)
