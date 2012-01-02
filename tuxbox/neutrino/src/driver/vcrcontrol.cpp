@@ -451,7 +451,8 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 }
 
 std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channel_id channel_id,
-								  const event_id_t epgid, const time_t epg_time)
+								  const event_id_t epgid, const time_t epg_time,
+								  unsigned char apids, const bool stream_vtxt_pid)
 {
 	std::string extMessage;
 	CMovieInfo cMovieInfo;
@@ -518,13 +519,17 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
 
-	for(unsigned int i= 0; i< pids.APIDs.size(); i++)
+	APIDList apid_list;
+	getAPIDs(apids,apid_list);
+	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
 	{
-		audio_pids.epgAudioPid = pids.APIDs[i].pid;
-		audio_pids.epgAudioPidName = g_RemoteControl->current_PIDs.APIDs[i].desc;
+		audio_pids.epgAudioPid = it->apid;
+		audio_pids.epgAudioPidName = g_RemoteControl->current_PIDs.APIDs[it->index].desc;
 		movieInfo.audioPids.push_back(audio_pids);
 	}
-	movieInfo.epgVTXPID = si.vtxtpid;
+
+	if (stream_vtxt_pid)
+		movieInfo.epgVTXPID = si.vtxtpid;
 
 	cMovieInfo.encodeMovieInfoXml(&extMessage,movieInfo);
 	
@@ -641,13 +646,13 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	g_RemoteControl->current_EPGid = epgid;
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
-	for(unsigned int i= 0; i< pids.APIDs.size(); i++)
+	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
 	{
 		extMessage += "\t\t\t<audio pid=\"";
-		sprintf(tmp, "%u", pids.APIDs[i].pid);
+		sprintf(tmp, "%u", it->apid);
 		extMessage += tmp;
 		extMessage += "\" name=\"";
-		extMessage += ZapitTools::UTF8_to_UTF8XML(g_RemoteControl->current_PIDs.APIDs[i].desc);
+		extMessage += ZapitTools::UTF8_to_UTF8XML(g_RemoteControl->current_PIDs.APIDs[it->index].desc);
 		extMessage += "\"/>\n";
 	}
 	extMessage += 
@@ -873,7 +878,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	} else
 	{
 		error_msg = ::start_recording(filename,
-					      getMovieInfoString(channel_id, epgid, epg_time).c_str(),
+					      getMovieInfoString(channel_id, epgid, epg_time, apids, StreamVTxtPid).c_str(),
 					      mode,
 					      Use_O_Sync,
 					      Use_Fdatasync,
