@@ -1,10 +1,11 @@
 /*
- * $Id: saa.c,v 1.16 2008/01/01 15:49:31 houdini Exp $
+ * $Id: saa.c,v 1.17 2012/01/05 08:25:17 seife Exp $
  *
  * Test tool for the SAA 7126H/7127H-driver
  *
  * Copyright (C) 2000-2001 Gillem <htoa@gmx.net>
  * Copyright (C) 2004 Carsten Juttner <carjay@gmx.net>
+ * Copyright (C) 2012 Stefan Seyfried <seife@tuxbox-git.slipkontur.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,11 +76,36 @@ void help(char *prog_name) {
 		"                      none get teletext reinsertion state\n"
 		"                      0    turned off\n"
 		"                      1    turned on\n"
+		" -S, --csync <x>      RGB CSYNC parameter\n"
+		"                      none get CSYNC\n"
+		"                      0-31 set CSYNC\n"
 		"\n"
 		"Expert Options:\n"
 		"-rd <X>               read register 0x<X>\n"
 		"-wr <X> <D>           write 0x<D> to register 0x<X>\n"
 	);
+}
+
+int read_csync()
+{
+	int arg=0;
+	int fd;
+
+	if ((fd = open(SAA7126_DEVICE,O_RDWR|O_NONBLOCK)) < 0) {
+		perror("SAA DEVICE: ");
+		return -1;
+	}
+
+	if ((ioctl(fd,SAAIOGCSYNC, &arg) < 0)) {
+		perror("IOCTL: ");
+		close(fd);
+		return -1;
+	}
+
+	printf("SAA7126 CSYNC value: %d\n", arg);
+
+	close(fd);
+	return 0;
 }
 
 int read_powersave()
@@ -349,6 +375,15 @@ int main(int argc, char **argv)
 		} else {
 			arg = atoi(argv[count+1]);
 			mode = SAAIOSTTX;
+		}
+	}
+	else if ((strcmp("-S",argv[count]) == 0) || (strcmp("--csync",argv[count]) == 0) ) {
+		if (argc<3) {
+			read_csync();
+			return 0;
+		} else {
+			arg = atoi(argv[count+1]);
+			mode = SAAIOSCSYNC;
 		}
 	}
 	else {
