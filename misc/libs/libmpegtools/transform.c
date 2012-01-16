@@ -1129,6 +1129,7 @@ void find_all_avpids(int fd, uint16_t *vpid, uint16_t *apids, unsigned short *ac
         int count;
         int i;
         int off =0;
+        int off2 = 0;
         int j=0;
         *numpida = 0;
         uint16_t temppida = 0;
@@ -1145,6 +1146,8 @@ void find_all_avpids(int fd, uint16_t *vpid, uint16_t *apids, unsigned short *ac
                                         off = 0;
                                         if ( buf[3+i] & 0x20)//adapt field?
                                                 off = buf[4+i] + 1;
+                                        if (i + 7 + off >= count) /* buffer overrun? */
+                                                break;
                                         switch(buf[i+7+off]){
                                         case VIDEO_STREAM_S ... VIDEO_STREAM_E:
                                                 *vpid = get_pid(buf+i+1);
@@ -1156,7 +1159,12 @@ void find_all_avpids(int fd, uint16_t *vpid, uint16_t *apids, unsigned short *ac
                                                         temppida=0;
                                                     }
                                                 }
-                                                if (temppida != 0 && buf[i+12+off] != 0x24) {
+                                                if (temppida == 0)
+                                                        break;
+                                                off2 = buf[i + 12 + off] + i + off + 12 + 1;
+                                                if (off2 + 1 >= count)
+                                                        break;
+                                                if (buf[off2] == 0x0B && buf[off2 + 1] == 0x77) { /* AC3 streams don't seem to have a subid when in TS ??? */
                                                     *(apids+j) = temppida;
                                                     *(ac3flags+j) = 1;
                                                     //printf("[transform.c] apid[%d]=0x%04X, ac3=%d\n",j,*(apids+j),*(ac3flags+j));
@@ -1164,14 +1172,21 @@ void find_all_avpids(int fd, uint16_t *vpid, uint16_t *apids, unsigned short *ac
                                                     (*numpida)++;
                                                     //printf("[transform.c] numpida=%d\n",*numpida);
                                                 };
-						
-                                                if (temppida != 0 && buf[i+12+off] == 0x24) {
+
+                                                if ((buf[off2] & 0xF0) == 0x10) { /* 0x10-0x1f */
                                                     *(apids+j) = temppida;
                                                     *(ac3flags+j) = 2; // TTX PID found
                                                     //printf("[transform.c] apid[%d]=0x%04X, ac3=%d\n",j,*(apids+j),*(ac3flags+j));
                                                     j++;
                                                     (*numpida)++;
                                                     //printf("[transform.c] numpida=%d\n",*numpida);
+                                                };
+
+                                                if (buf[off2] == 0x20) {
+                                                    *(apids+j) = temppida;
+                                                    *(ac3flags+j) = 3; // Subtitle PID found
+                                                    j++;
+                                                    (*numpida)++;
                                                 };
                                                 break;
                                         case AUDIO_STREAM_S ... AUDIO_STREAM_E:
