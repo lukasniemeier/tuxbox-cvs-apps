@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.23 2011/01/30 20:46:36 dbt Exp $
+	$Id: movieinfo.cpp,v 1.24 2012/01/21 18:42:06 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -189,6 +189,20 @@ bool CMovieInfo::encodeMovieInfoXml(std::string* extMessage,MI_MOVIE_INFO &movie
 		*extMessage += "\t\t</"MI_XML_TAG_AUDIOPIDS">\n";
 	}
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VTXTPID,			movie_info.epgVTXPID);//%u
+	if(movie_info.subPids.size() > 0)
+	{
+		*extMessage += "\t\t<"MI_XML_TAG_SUBPIDS">\n";
+		for(unsigned int i = 0; i < movie_info.subPids.size(); i++)
+		{
+			*extMessage += "\t\t\t<"MI_XML_TAG_SUB" "MI_XML_TAG_PID"=\"";
+			sprintf(tmp, "%u", movie_info.subPids[i].subPid);
+			*extMessage += tmp;
+			*extMessage += "\" "MI_XML_TAG_NAME"=\"";
+			*extMessage += ZapitTools::UTF8_to_UTF8XML(movie_info.subPids[i].subPidName.c_str());
+			*extMessage += "\"/>\n";
+		}
+		*extMessage += "\t\t</"MI_XML_TAG_SUBPIDS">\n";
+	}
 	/*****************************************************
 	 *	new tags										*/
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_GENRE_MAJOR,		movie_info.genreMajor);
@@ -398,7 +412,23 @@ bool CMovieInfo::parseXmlTree (char* /*text*/, MI_MOVIE_INFO* /*movie_info*/)
 						}
 					}
 				}
+
 				XML_GET_DATA_INT	(xam1, MI_XML_TAG_VTXTPID,			movie_info->epgVTXPID);//%u
+
+				if (!strcmp(xam1->GetType(), MI_XML_TAG_SUBPIDS))
+				{
+					for (XMLTreeNode *xam2=xam1->GetChild(); xam2; xam2=xam2->GetNext())
+					{
+						if (!strcmp(xam2->GetType(), MI_XML_TAG_SUB))
+						{
+							SUB_PIDS pids;
+							pids.subPid = atoi(xam2->GetAttributeValue(MI_XML_TAG_PID));
+							pids.subPidName = xam2->GetAttributeValue(MI_XML_TAG_NAME);
+							movie_info->subPids.push_back(pids);
+						}
+					}
+				}
+
 				/*****************************************************
 				 *	new tags										*/
 				XML_GET_DATA_INT	(xam1, MI_XML_TAG_GENRE_MAJOR,		movie_info->genreMajor);
@@ -599,6 +629,12 @@ void CMovieInfo::printDebugMovieInfo(MI_MOVIE_INFO& movie_info)
 		TRACE(" audioName(%d): \t\t>%s<\r\n", i, movie_info.audioPids[i].epgAudioPidName.c_str() );
 	}
 
+	for(unsigned int i = 0; i < movie_info.subPids.size(); i++) 
+	{
+		TRACE(" subPid (%d): \t\t%d\r\n", i, movie_info.subPids[i].subPid); 
+		TRACE(" subName(%d): \t\t>%s<\r\n", i, movie_info.subPids[i].subPidName.c_str());
+	}
+
 	TRACE(" epgTitle: \t\t>%s<\r\n", movie_info.epgTitle.c_str() );	
 	TRACE(" epgInfo1:\t\t>%s<\r\n", movie_info.epgInfo1.c_str() );		//epgInfo1		
 //	TRACE(" epgInfo2:\t\t\t>%s<\r\n", movie_info.epgInfo2.c_str() );		//epgInfo2
@@ -691,6 +727,7 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 	int pos = 0;
 
 	EPG_AUDIO_PIDS audio_pids;
+	SUB_PIDS sub_pids;
 
 	while( (pos = find_next_char('<',text,pos,bytes)) != -1)
 	{
@@ -754,6 +791,52 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 			}
 			movie_info->audioPids.push_back(audio_pids); 
 		}
+
+		if(strncmp(&text[pos], MI_XML_TAG_SUBPIDS, sizeof(MI_XML_TAG_SUBPIDS)-1) == 0)
+			pos += sizeof(MI_XML_TAG_SUBPIDS);
+
+		/* parse subtitle pids */
+		if(strncmp(&text[pos], MI_XML_TAG_SUB, sizeof(MI_XML_TAG_SUB)-1) == 0)
+		{
+			pos += sizeof(MI_XML_TAG_SUB);
+
+			int pos2;
+
+			pos2 = strcspn(&text[pos], MI_XML_TAG_PID);
+			if(pos2 >= 0)
+			{
+				pos2 += sizeof(MI_XML_TAG_PID); 
+				while(text[pos+pos2] != '\"' && text[pos+pos2] != 0 && text[pos+pos2] != '/')
+					pos2++;
+				if(text[pos+pos2] == '\"')
+					sub_pids.subPid = atoi(&text[pos+pos2+1]);
+			}
+			else
+				sub_pids.subPid = 0;
+
+			sub_pids.subPidName = "";
+			pos2 = strcspn(&text[pos], MI_XML_TAG_NAME);
+			if(pos2 >= 0)
+			{
+				pos2 += sizeof(MI_XML_TAG_PID); 
+				while(text[pos+pos2] != '\"' && text[pos+pos2] != 0 && text[pos+pos2] != '/')
+					pos2++;
+				if(text[pos+pos2] == '\"') 
+				{
+					int pos3 = pos2 + 1;
+					while(text[pos+pos3] != '\"' && text[pos+pos3] != 0 && text[pos+pos3] != '/')
+						pos3++;
+					if(text[pos+pos3] == '\"')
+					{
+						sub_pids.subPidName.append(&text[pos+pos2+1], pos3-pos2-1);
+						sub_pids.subPidName = decodeXmlSpecialChars(sub_pids.subPidName);
+					}
+				}
+			}
+
+			movie_info->subPids.push_back(sub_pids); 
+		}
+
 		/* parse bookmarks */
 		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_BOOKMARK_START,	movie_info->bookmarks.start)		
 		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_BOOKMARK_END,	movie_info->bookmarks.end)		
@@ -989,6 +1072,7 @@ void CMovieInfo::clearMovieInfo(MI_MOVIE_INFO* movie_info)
 	movie_info->epgVTXPID = 0;
 
 	movie_info->audioPids.clear();
+	movie_info->subPids.clear();
 
 	movie_info->productionCountry = "";
 	movie_info->epgTitle = "";	

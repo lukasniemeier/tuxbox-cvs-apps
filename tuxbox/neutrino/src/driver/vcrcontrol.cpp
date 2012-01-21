@@ -452,7 +452,8 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 
 std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channel_id channel_id,
 								  const event_id_t epgid, const time_t epg_time,
-								  unsigned char apids, const bool save_vtxt_pid)
+								  unsigned char apids, const bool save_vtxt_pid,
+								  const bool save_sub_pids)
 {
 	std::string extMessage;
 	CMovieInfo cMovieInfo;
@@ -518,7 +519,6 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	g_RemoteControl->current_EPGid = epgid;
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
-
 	APIDList apid_list;
 	getAPIDs(apids,apid_list);
 	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
@@ -530,6 +530,20 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 
 	if (save_vtxt_pid)
 		movieInfo.epgVTXPID = si.vtxtpid;
+
+	if (save_sub_pids)
+	{
+		SUB_PIDS sub_pids;
+		for (unsigned int i = 0; i < pids.SubPIDs.size(); i++)
+		{
+			if (pids.SubPIDs[i].pid != si.vtxtpid)
+			{
+				sub_pids.subPid = pids.SubPIDs[i].pid;
+				sub_pids.subPidName = getISO639Description(pids.SubPIDs[i].desc);
+				movieInfo.subPids.push_back(sub_pids);
+			}
+		}
+	}
 
 	cMovieInfo.encodeMovieInfoXml(&extMessage,movieInfo);
 	
@@ -660,8 +674,26 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 		"\t\t<vtxtpid>";
 	sprintf(tmp, "%u", si.vtxtpid);
 	extMessage += tmp;
+	extMessage += "</vtxtpid>\n";
+	tmpstring = "";
+	for (unsigned int i = 0; i < pids.SubPIDs.size(); i++)
+	{
+		if (pids.SubPIDs[i].pid != si.vtxtpid)
+		{
+			if (tmpstring.empty())
+				tmpstring += "\t\t<subpids>\n";
+			tmpstring += "\t\t\t<sub pid=\"";
+			sprintf(tmp, "%u", pids.SubPIDs[i].pid);
+			tmpstring += tmp;
+			tmpstring += "\" name=\"";
+			tmpstring += ZapitTools::UTF8_to_UTF8XML(getISO639Description(pids.SubPIDs[i].desc));
+			tmpstring += "\"/>\n";
+		}
+	}
+	if (!tmpstring.empty())
+		tmpstring += "\t\t</subpids>\n";
+	extMessage += tmpstring;
 	extMessage +=
-		"</vtxtpid>\n"
 		"\t</record>\n"
 		"</neutrino>\n";
 
@@ -770,6 +802,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	CZapitClient::responseGetPIDs allpids;
 	g_Zapit->getPIDS(allpids);
 	bool save_vtxt_pid = false;
+	bool save_sub_pids = false;
 
 	if ((StreamVTxtPid) && (si.vtxtpid != 0))
 	{
@@ -786,6 +819,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		for (unsigned ii = 0 ; ii < allpids.SubPIDs.size() ; ++ii) {
 			if (allpids.SubPIDs[ii].pid != txtdone) {
 				pids[numpids++] = allpids.SubPIDs[ii].pid;
+				save_sub_pids = true;
 			}
 			if (allpids.SubPIDs[ii].pid == si.vtxtpid) {
 				txtdone = si.vtxtpid;
@@ -882,7 +916,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	} else
 	{
 		error_msg = ::start_recording(filename,
-					      getMovieInfoString(channel_id, epgid, epg_time, apids, save_vtxt_pid).c_str(),
+					      getMovieInfoString(channel_id, epgid, epg_time, apids, save_vtxt_pid, save_sub_pids).c_str(),
 					      mode,
 					      Use_O_Sync,
 					      Use_Fdatasync,
