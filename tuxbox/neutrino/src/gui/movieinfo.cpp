@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.24 2012/01/21 18:42:06 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.25 2012/01/21 18:44:57 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -559,6 +559,18 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
 	    }
 		print_buffer.erase(print_buffer.size()-2);
      }
+	if(movie_info.subPids.size() > 0)
+	{
+		print_buffer += "\n";
+		print_buffer += g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_SUBTITLES);
+		print_buffer += ": ";
+		for(unsigned int i = 0; i < movie_info.subPids.size(); i++)
+		{
+			print_buffer += movie_info.subPids[i].subPidName;
+			print_buffer += ", ";
+		}
+		print_buffer.erase(print_buffer.size() - 2);
+	}
      
     print_buffer += "\n\n"; 
    	print_buffer += g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_PREVPLAYDATE);
