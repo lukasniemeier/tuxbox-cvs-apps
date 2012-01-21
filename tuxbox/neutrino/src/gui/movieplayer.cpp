@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.200 2012/01/02 18:22:50 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.201 2012/01/21 18:40:35 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3773,7 +3773,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 
 				//-- request for audio selector --
 			case CRCInput::RC_green:
-				g_playstate = CMoviePlayerGui::AUDIOSELECT;
+				g_playstate = (g_playstate != CMoviePlayerGui::PAUSE) ? CMoviePlayerGui::AUDIOSELECT : CMoviePlayerGui::SOFTRESET;
 				break;
 
 				//-- show infobar --
@@ -3821,7 +3821,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				FileTime.hide();
 				break;
 
-				//-- resync A/V or soft reset --
+				//-- resync A/V --
 			case CRCInput::RC_0:
 #ifdef ENABLE_MOVIEBROWSER
 				if(isMovieBrowser == true)
@@ -3838,11 +3838,6 @@ void CMoviePlayerGui::PlayFile (int parental)
 #endif /* ENABLE_MOVIEBROWSER */
 				if(g_playstate != CMoviePlayerGui::PAUSE)
 					g_playstate = CMoviePlayerGui::RESYNC;
-				else
-				{
-					g_playstate = CMoviePlayerGui::SOFTRESET;
-					FileTime.hide();
-				}
 				break;
 
 				//-- jump 1 minute back --
@@ -4501,7 +4496,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.200 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.201 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
