@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.201 2012/01/21 18:40:35 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.202 2012/01/21 18:43:38 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -208,6 +208,28 @@ bool get_movie_info_apid_name(int apid,MI_MOVIE_INFO* movie_info,std::string* ap
             apidtitle->assign(show_pid_number);
             apidtitle->append(" : ");
             apidtitle->append(movie_info->audioPids[i].epgAudioPidName);
+            return true;
+       }
+    }
+    return false;
+}
+
+//------------------------------------------------------------------------
+bool get_movie_info_subpid_name(int subpid, MI_MOVIE_INFO* movie_info, std::string* subpidtitle)
+{
+    if(movie_info == NULL || subpidtitle == NULL)
+        return false;
+
+    for(unsigned int i = 0; i < movie_info->subPids.size(); i++)
+    {
+       if( movie_info->subPids[i].subPid == subpid && 
+          !movie_info->subPids[i].subPidName.empty())
+       {
+            char show_pid_number[5];
+            sprintf(show_pid_number, "%u", subpid);
+            subpidtitle->assign(show_pid_number);
+            subpidtitle->append(" : ");
+            subpidtitle->append(movie_info->subPids[i].subPidName);
             return true;
        }
     }
@@ -3553,6 +3575,13 @@ void CMoviePlayerGui::PlayFile (int parental)
 				apidtitle.append(show_pid_number);
 				apidtitle.append(" : Stream");
 
+				if(g_ac3flags[count] == 3)
+				{
+					get_movie_info_subpid_name(g_apids[count], p_movie_info, &apidtitle);
+					apidtitle.append(" (Subtitle)");
+					APIDSelector.addItem(new CMenuForwarderNonLocalized(apidtitle.c_str(), false, NULL, APIDChanger, apidnumber, CRCInput::convertDigitToKey(++digit)), g_apids[count] == g_currentapid);
+				}
+
 				if(g_ac3flags[count] == 2)
 				{
 					apidtitle.append(" (Teletext)");
@@ -4496,7 +4525,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.201 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.202 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

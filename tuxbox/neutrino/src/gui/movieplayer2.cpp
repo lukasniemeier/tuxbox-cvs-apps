@@ -3026,7 +3026,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			// show the normal audio pids first
 			for (unsigned int count = 0; count < g_numpida; count++)
 			{
-				if (g_ac3flags[count] != 0) // AC3 or Teletext
+				if (g_ac3flags[count] != 0) // AC3, Teletext or Subtitle
 					continue;
 
 				std::string apidtitle = "";
@@ -3066,11 +3066,12 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					current); // select current stream
 			}
 
-			// then show the other audio pids (AC3/teletex)
+			// then show the other audio pids (AC3/Teletext/Subtitle)
 			for (unsigned int count = 0; count < g_numpida; count++)
 			{
 				if (g_ac3flags[count] == 0) // already handled...
 					continue;
+
 				std::string apidtitle = "";
 				bool mi_found = false, current = false;
 				sprintf(apidnumber, "%d", count+1);
@@ -3090,6 +3091,19 @@ CMoviePlayerGui::PlayStream(int streamtype)
 							break;
 						}
 					}
+
+					if (!mi_found)
+					{
+						for (unsigned int i = 0; i < movieinfo.subPids.size(); i++)
+						{
+							if (movieinfo.subPids[i].subPid == g_apids[count])
+							{
+								apidtitle.append(movieinfo.subPids[i].subPidName);
+								mi_found = true;
+								break;
+							}
+						}
+					}
 				}
 				if (!mi_found)
 					apidtitle.append("Stream");
@@ -3101,6 +3115,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					apidtitle.append(" (Teletext)");
 					pidt = g_apids[count];
 				}
+				if (g_ac3flags[count] == 3)
+					apidtitle.append(" (Subtitle)");
 
 				if (g_currentapid == -1 && g_apids[count] == 0)
 					current = true;
@@ -3510,7 +3526,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.84 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.85 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
