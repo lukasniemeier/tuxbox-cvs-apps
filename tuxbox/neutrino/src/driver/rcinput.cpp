@@ -69,7 +69,8 @@
 #include <fstream>		// used for reading conf file
 
 #if defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
-const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/rawir2"};
+const char * const RC_EVENT_DEVICE[NUMBER_OF_EVENT_DEVICES] = {"/dev/rawir2", "/dev/dbox/fpkeys0"};
+int bu_read=0;
 #define RC_standby_release (KEY_MAX + 1)
 typedef struct { __u16 code; } t_input_event;
 #elif defined(HAVE_TRIPLEDRAGON)
@@ -1615,7 +1616,15 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, unsigne
 				while (read(fd_rc[i], &ev, sizeof(t_input_event)) == sizeof(t_input_event))
 					count++;
 				if (count)
-#else
+#endif
+#ifdef HAVE_DREAMBOX_HARDWARE
+				if(i==1)
+				{
+					//read was from fpkeys device
+					bu_read=1;
+				}
+#endif
+#ifndef HAVE_TRIPLEDRAGON
 				if (read(fd_rc[i], &ev, sizeof(t_input_event)) == sizeof(t_input_event))
 #endif
 				{
@@ -2253,65 +2262,79 @@ int CRCInput::translate(int code)
 	return RC_nokey;
 #endif
 #ifdef HAVE_DREAMBOX_HARDWARE
-	switch (code&0xFF)
+	if (bu_read == 1)
 	{
-		case 0x00: return RC_0;
-		case 0x01: return RC_1;
-		case 0x02: return RC_2;
-		case 0x03: return RC_3;
-		case 0x04: return RC_4;
-		case 0x05: return RC_5;
-		case 0x06: return RC_6;
-		case 0x07: return RC_7;
-		case 0x08: return RC_8;
-		case 0x09: return RC_9;
-		case 0x0a: return RC_plus;
-		case 0x0b: return RC_minus;
-		case 0x0d: return RC_page_up;
-		case 0x0e: return RC_page_down;
-		case 0x0f: return RC_standby;
-		case 0x20: return RC_setup;
-		case 0x21: return RC_up;
-		case 0x22: return RC_down;
-		case 0x25: return RC_ok;
-		case 0x26: return RC_audio;
-		case 0x27: return RC_video;
-		case 0x28: return RC_help;
-		case 0x40: return RC_red;
-		case 0x41: return RC_green;
-		case 0x42: return RC_yellow;
-		case 0x43: return RC_blue;
-		case 0x45: return RC_text;
-		case 0x53: return RC_radio;
-		/* TODO: we need a better way than hard coding box models here */
+		/* frontpanel code */
+		switch (code&0xFF)
+		{
+			case 0x03: { bu_read=0; return RC_down; break; }
+			case 0x05: { bu_read=0; return RC_up; break; }
+			case 0x06: { bu_read=0; return RC_standby; break; }
+			case 0x07: { bu_read=0; break; } //we just exit here. from fpkeys, 0x07 is key_release
+		}
+	}
+	else
+		/* remotecontrol code */
+		switch (code&0xFF)
+		{
+			case 0x00: return RC_0;
+			case 0x01: return RC_1;
+			case 0x02: return RC_2;
+			case 0x03: return RC_3;
+			case 0x04: return RC_4;
+			case 0x05: return RC_5;
+			case 0x06: return RC_6;
+			case 0x07: return RC_7;
+			case 0x08: return RC_8;
+			case 0x09: return RC_9;
+			case 0x0a: return RC_plus;
+			case 0x0b: return RC_minus;
+			case 0x0d: return RC_page_up;
+			case 0x0e: return RC_page_down;
+			case 0x0f: return RC_standby;
+			case 0x20: return RC_setup;
+			case 0x21: return RC_up;
+			case 0x22: return RC_down;
+			case 0x25: return RC_ok;
+			case 0x26: return RC_audio;
+			case 0x27: return RC_video;
+			case 0x28: return RC_help;
+			case 0x40: return RC_red;
+			case 0x41: return RC_green;
+			case 0x42: return RC_yellow;
+			case 0x43: return RC_blue;
+			case 0x45: return RC_text;
+			case 0x53: return RC_radio;
+			/* TODO: we need a better way than hard coding box models here */
 #ifdef BOXMODEL_DM500
-		case 0x0c: return RC_spkr;	// MUTE key
-		case 0x23: return RC_left;
-		case 0x24: return RC_right;
-		case 0x44: return RC_tv;	// TV   key
-		case 0x50: return RC_plus;	// ">"	key, used as "volume up"
-		case 0x51: return RC_minus;	// "<"	key, used as "volume down"
-		case 0x52: return RC_help;	// HELP key
-		case 0x54: return RC_home;	// EXIT key
+			case 0x0c: return RC_spkr;	// MUTE key
+			case 0x23: return RC_left;
+			case 0x24: return RC_right;
+			case 0x44: return RC_tv;	// TV   key
+			case 0x50: return RC_plus;	// ">"	key, used as "volume up"
+			case 0x51: return RC_minus;	// "<"	key, used as "volume down"
+			case 0x52: return RC_help;	// HELP key
+			case 0x54: return RC_home;	// EXIT key
 #elif defined BOXMODEL_DM56x0
-		case 0x0c: return RC_spkr;	// MUTE	key
-		case 0x23: return RC_minus;	// "<"	key, used as "volume down"
-		case 0x24: return RC_plus;	// ">"	key, used as "volume up"
-		case 0x44: return RC_tv;	// TV	key
-		case 0x50: return RC_right;	// vol+	key, used as "right"
-		case 0x51: return RC_left;	// vol-	key, used as "left"
-		case 0x52: return RC_help;	// INFO	key
-		case 0x54: return RC_home;	// EXIT	key
+			case 0x0c: return RC_spkr;	// MUTE	key
+			case 0x23: return RC_minus;	// "<"	key, used as "volume down"
+			case 0x24: return RC_plus;	// ">"	key, used as "volume up"
+			case 0x44: return RC_tv;	// TV	key
+			case 0x50: return RC_right;	// vol+	key, used as "right"
+			case 0x51: return RC_left;	// vol-	key, used as "left"
+			case 0x52: return RC_help;	// INFO	key
+			case 0x54: return RC_home;	// EXIT	key
 #else
-		case 0x0c: return RC_tv;
-		case 0x23: return RC_left;
-		case 0x24: return RC_right;
-		case 0x44: return RC_spkr;
-		case 0x50: return RC_prev;
-		case 0x51: return RC_next;
-		case 0x52: return RC_home;
-		case 0x54: return RC_help;
+			case 0x0c: return RC_tv;
+			case 0x23: return RC_left;
+			case 0x24: return RC_right;
+			case 0x44: return RC_spkr;
+			case 0x50: return RC_prev;
+			case 0x51: return RC_next;
+			case 0x52: return RC_home;
+			case 0x54: return RC_help;
 #endif
+		}
 	}
 	return RC_nokey;
 #else

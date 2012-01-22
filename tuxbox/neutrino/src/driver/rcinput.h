@@ -127,12 +127,13 @@ class CRCInput
 
 		int 		fd_pipe_high_priority[2];
 		int 		fd_pipe_low_priority[2];
-#if defined(OLD_RC_API) || defined(HAVE_TRIPLEDRAGON)
+#if defined(HAVE_TRIPLEDRAGON)
 #define NUMBER_OF_EVENT_DEVICES 1
-#else /* OLD_RC_API */
+#else
 #define NUMBER_OF_EVENT_DEVICES 2
-#endif /* OLD_RC_API */
+#endif
 		int         	fd_rc[NUMBER_OF_EVENT_DEVICES];
+		int		fd_bu;
 		int		fd_keyb;
 		int		fd_event;
 
