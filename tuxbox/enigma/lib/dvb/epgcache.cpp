@@ -1530,6 +1530,30 @@ void eEPGCache::startEPG()
 		paused++;
 		return;
 	}
+	int cachebouquets = 1;
+	eConfig::getInstance()->getKey("/extras/cachebouquets", cachebouquets );
+	if (cachebouquets)
+	{
+		bouquetservicelist.clear();
+		if ( cached_service )
+		{
+			uniqueEPGKey key(cached_service);
+			bouquetservicelist.push_back(key);
+		}
+		std::list<ePlaylistEntry> servicelist;
+		eZapMain::getInstance()->getAllBouquetServices(servicelist);
+		for ( std::list<ePlaylistEntry>::const_iterator it ( servicelist.begin() );
+			it != servicelist.end(); ++it)
+		{
+			if ( it->service.type == eServiceReference::idDVB )
+			{
+				uniqueEPGKey key((eServiceReferenceDVB&)(it->service));
+				bouquetservicelist.push_back(key);
+			}
+		}
+		eDebug("[cachebouquets] fillbouquetlist:%d",bouquetservicelist.size());
+
+	}
 	if (eDVB::getInstance()->time_difference)
 	{
 		if ( firstStart )
@@ -1543,24 +1567,6 @@ void eEPGCache::startEPG()
 		temp.clear();
 
 		eConfig::getInstance()->getKey("/extras/epgcachedays", epgcachedays );
-		int cachebouquets = 1;
-		eConfig::getInstance()->getKey("/extras/cachebouquets", cachebouquets );
-		if (cachebouquets)
-		{
-			std::list<ePlaylistEntry> servicelist;
-			eZapMain::getInstance()->getAllBouquetServices(servicelist);
-			for ( std::list<ePlaylistEntry>::const_iterator it ( servicelist.begin() );
-				it != servicelist.end(); ++it)
-			{
-				if ( it->service.type == eServiceReference::idDVB )
-				{
-					uniqueEPGKey key((eServiceReferenceDVB&)(it->service));
-					bouquetservicelist.push_back(key);
-				}
-			}
-			//eDebug("[cachebouquets] fillbouquetlist:%d",bouquetservicelist.size());
-
-		}
 
 		for (int i=0; i < 3; ++i)
 		{
@@ -1676,16 +1682,6 @@ void eEPGCache::abortNonAvail()
 
 void eEPGCache::enterService(const eServiceReferenceDVB& ref, int err)
 {
-	int cachebouquets = 1;
-	eConfig::getInstance()->getKey("/extras/cachebouquets", cachebouquets );
-	if (cachebouquets)
-	{
-		bouquetservicelist.clear();
-		uniqueEPGKey key(ref);
-		bouquetservicelist.push_back(key);
-		eDebug("[cachebouquets]entering service:%d,%d,%d",key.sid,key.onid,key.tsid);
-	}
-
 	if ( ref.path )
 		err = 2222;
 	else if ( ref.getServiceType() == 7 )
