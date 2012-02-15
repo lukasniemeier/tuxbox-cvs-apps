@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.312 2011/12/22 18:57:06 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.313 2012/02/15 20:37:06 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1495,7 +1495,8 @@ int CInfoViewer::handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data)
 		CLCD::getInstance()->setEPGTitle(eventname);
 		return messages_return::handled;
 	}
-	else if (msg == NeutrinoMessages::EVT_ZAP_FAILED)
+	else if ((msg == NeutrinoMessages::EVT_ZAP_FAILED) ||
+	         (msg == NeutrinoMessages::EVT_ZAP_SUB_FAILED))
 	{
 		if ((*(t_channel_id *)data) == channel_id)
 		{
