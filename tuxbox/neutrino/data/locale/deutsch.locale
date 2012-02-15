@@ -1389,6 +1389,7 @@ streamingmenu.streaming_vlc10 Nutze VLC 1.x
 streamingserver.noconnect Keine Verbindung zum Streamingserver.\nAufnahme wird abgebrochen.
 stringinput.caps Groß-/Kleinbuchstaben
 stringinput.clear Alles löschen
+subtitles.head Untertitel
 timer.eventrecord.msg Die Sendung wurde zur Aufnahme vorgemerkt.
 timer.eventrecord.title Aufnahme vormerken
 timer.eventtimed.msg Die Sendung wurde vorgemerkt.

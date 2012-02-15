@@ -118,11 +118,12 @@ class CPlugins
 		inline       int           getType             (const int number) const { return plugin_list[number].type              ; }
 		inline       bool          isHidden            (const int number) const { return plugin_list[number].hide              ; }
 
-		void startPlugin(int number,int param);
+		void startPlugin(int number, int param = 0, int param2 = 0);
 		void start_plugin_by_name(const std::string & filename,int param);// start plugins by "name=" in .cfg
 		void startScriptPlugin(int number);
 
-		void startPlugin(const char * const filename); // start plugins also by name
+		void startPlugin(const char * const filename, int param = 0, int param2 = 0); // start plugins also by name
+		bool hasPlugin(const char * const filename);
 		bool hasPlugin(CPlugins::p_type_t type);
 
 		const std::string& getScriptOutput() const;

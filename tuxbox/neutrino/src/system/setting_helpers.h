@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.107 2011/11/12 15:26:26 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.108 2012/02/15 20:43:16 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -270,12 +270,6 @@ class CRecAPIDSettingsNotifier : public CChangeObserver
 {
 	public:
 		bool changeNotify(const neutrino_locale_t OptionName, void*);
-};
-
-class CAPIDChangeExec : public CMenuTarget
-{
-	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
 void showSubchan(const std::string & subChannelName);

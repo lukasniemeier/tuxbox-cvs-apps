@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.193 2011/12/17 14:52:43 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.194 2012/02/15 20:43:16 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -570,18 +570,6 @@ bool CRecAPIDSettingsNotifier::changeNotify(const neutrino_locale_t, void *)
 	return true;
 }
 
-int CAPIDChangeExec::exec(CMenuTarget*, const std::string & actionKey)
-{
-	//    printf("CAPIDChangeExec exec: %s\n", actionKey.c_str());
-	unsigned int sel= atoi(actionKey.c_str());
-	if (g_RemoteControl->current_PIDs.PIDs.selected_apid!= sel )
-	{
-		g_RemoteControl->setAPID(sel);
-	}
-	return menu_return::RETURN_EXIT;
-}
-
-
 int CNVODChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	//    printf("CNVODChangeExec exec: %s\n", actionKey.c_str());
@@ -608,7 +596,7 @@ int CStreamFeaturesChangeExec::exec(CMenuTarget* parent, const std::string & act
 	// } else
 	if (sel>=0)
 	{
-		g_PluginList->startPlugin(sel,0);
+		g_PluginList->startPlugin(sel);
 	}
 
 	return menu_return::RETURN_EXIT;

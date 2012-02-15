@@ -293,11 +293,11 @@ void CPlugins::start_plugin_by_name(const std::string & filename,int param)
 	}
 }
 
-void CPlugins::startPlugin(const char * const name)
+void CPlugins::startPlugin(const char * const name, int param, int param2)
 {
 	int pluginnr = find_plugin(name);
 	if (pluginnr > -1)
-		startPlugin(pluginnr,0);
+		startPlugin(pluginnr, param, param2);
 	else
 		printf("[CPlugins] could not find %s\n", name);
 
@@ -331,7 +331,7 @@ void CPlugins::startScriptPlugin(int number)
 }
 
 
-void CPlugins::startPlugin(int number,int param)
+void CPlugins::startPlugin(int number, int param, int param2)
 {
 	// always delete old output
 	delScriptOutput();
@@ -418,6 +418,8 @@ void CPlugins::startPlugin(int number,int param)
 		if(param>0)
 			vtpid=param;
 		startparam = makeParam(P_ID_VTXTPID, vtpid, startparam);
+		if (param2 > 0)
+			startparam = makeParam(P_ID_VTXTPAGE, param2, startparam);
 	}
 	if (plugin_list[number].subpid)
 	{
@@ -426,8 +428,11 @@ void CPlugins::startPlugin(int number,int param)
 				g_RemoteControl->current_PIDs.PIDs.vtxtpid)
 			{
 				subpid = g_RemoteControl->current_PIDs.SubPIDs[j].pid;
+				break;
 			}
 		}
+		if (param > 0)
+			subpid = param;
 		startparam = makeParam(P_ID_SUBPID, subpid , startparam);
 	}
 	if (plugin_list[number].needoffset)
@@ -576,6 +581,11 @@ void CPlugins::startPlugin(int number,int param)
 		par = par->next;
 		delete tmp;
 	}
+}
+
+bool CPlugins::hasPlugin(const char * const filename)
+{
+	return plugin_exists(filename);
 }
 
 bool CPlugins::hasPlugin(CPlugins::p_type_t type)

@@ -182,7 +182,7 @@ bool bufferfilled;
 bool bufferreset = false;
 int g_percent = 0;	// percentage of the file position
 
-unsigned short pida, pidv, pidt;
+unsigned short pida, pidv;
 CHintBox *hintBox;
 CHintBox *bufferingBox;
 std::string startfilename;
@@ -225,6 +225,7 @@ bool           g_apidchanged = false;
 bool           g_ac3changed = false;
 unsigned int   g_has_ac3 = 0;
 unsigned short g_prozent=0;
+int            g_currentsub = 0;
 
 time_t g_pts = 0;
 time_t g_startpts = -1;
@@ -235,6 +236,8 @@ video_size_t   g_size;
 #endif // HAVE_DVB_API_VERSION >=3
 
 bool  g_showaudioselectdialog = false;
+bool  g_showTuxtxtPlugin = false;
+bool  g_showDvbsubPlugin = false;
 
 // Function prototypes for helper functions
 static void checkAspectRatio (int vdec, bool init);
@@ -257,18 +260,37 @@ static off_t mf_getsize(void);
 
 int CAPIDSelectExec::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 {
-	g_apidchanged = false;
-	g_ac3changed = false;
-	unsigned int sel= atoi(actionKey.c_str());
-	if (g_currentapid != g_apids[sel-1])
+	std::istringstream iss(actionKey);
+	std::string type = "";
+	iss >> type;
+
+	if (type == "AUD:")
 	{
-		g_currentapid = g_apids[sel-1];
-		if (g_currentac3 != g_ac3flags[sel-1])
-			g_ac3changed = true;
-		g_currentac3 = g_ac3flags[sel-1];
-		g_apidchanged = true;
-		printf("[movieplayer.cpp] apid changed to %d\n",g_currentapid);
+		unsigned int sel = 0;
+		iss >> sel;
+		g_apidchanged = false;
+		g_ac3changed = false;
+		if (g_currentapid != g_apids[sel])
+		{
+			g_currentapid = g_apids[sel];
+			if (g_currentac3 != g_ac3flags[sel])
+				g_ac3changed = true;
+			g_currentac3 = g_ac3flags[sel];
+			g_apidchanged = true;
+			printf("[movieplayer.cpp] apid changed to %d\n", g_currentapid);
+		}
 	}
+	else if (type == "TTX:")
+	{
+		iss >> std::hex >> g_currentsub;
+		g_showTuxtxtPlugin = true;
+	}
+	else if (type == "DVB:")
+	{
+		iss >> g_currentsub;
+		g_showDvbsubPlugin = true;
+	}
+
 	return menu_return::RETURN_EXIT;
 }
 
@@ -2669,6 +2691,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 
 	static std::string Path = Path_vlc;
 	std::string sel_filename, title, subtitle;
+	int vtxtpid = 0, subpid = 0;
 	bool update_info = true, start_play = false, exit = false;
 	bool open_filebrowser = true, cdDvd = false, aborted = false;
 	bool stream = true, from_mb = false;
@@ -2681,6 +2704,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 	bool movieinfo_valid = false;
 	bool autoplaylist = false; // auto-playlist of foo.001.ts, foo.002.ts,... or 001.vdr, 002.vdr,...
 	int last_apid = -1; // for auto-playlists...
+	bool hasTuxtxtPlugin = g_PluginList->hasPlugin("tuxtxt");
+	bool hasDvbsubPlugin = g_PluginList->hasPlugin("dvbsub");
 	hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MOVIEPLAYER_PLEASEWAIT)); // UTF-8
 
 	if (streamtype == STREAMTYPE_DVD)
@@ -2694,6 +2719,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		filelist.push_back(file);
 		title = "DVD";
 		subtitle = "";
+		vtxtpid = 0;
+		subpid = 0;
 		open_filebrowser = false;
 		start_play = true;
 		cdDvd = true;
@@ -2708,6 +2735,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		filelist.push_back(file);
 		title = "(S)VCD";
 		subtitle = "";
+		vtxtpid = 0;
+		subpid = 0;
 		open_filebrowser = false;
 		start_play = true;
 		cdDvd = true;
@@ -2938,6 +2967,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					title = "";
 					subtitle = "";
 				}
+				vtxtpid = 0;
+				subpid = 0;
 			}
 			update_info = false;
 			if (title == "not available" || title.empty())
@@ -2982,6 +3013,18 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			g_playstate = CMoviePlayerGui::SOFTRESET;
 		}
 
+		if (g_showTuxtxtPlugin)
+		{
+			g_PluginList->startPlugin("tuxtxt", vtxtpid, g_currentsub);
+			g_showTuxtxtPlugin = false;
+		}
+
+		if (g_showDvbsubPlugin)
+		{
+			g_PluginList->startPlugin("dvbsub", g_currentsub);
+			g_showDvbsubPlugin = false;
+		}
+
 #ifndef AUDIO_STREAM_AUTOSELECT
 		if (bufferfilled && g_currentapid == -1)
 		{
@@ -3018,25 +3061,23 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			APIDSelector.addItem(GenericMenuSeparatorLine);
 
 			g_apidchanged = false;
-			pidt = 0;
 			CAPIDSelectExec *APIDChanger = new CAPIDSelectExec;
 			unsigned int digit = 0;
-			char apidnumber[3], show_pid_number[5];
+			char show_pid_number[5];
+			std::string apidtitle = "";
+			bool sep_added = false;
 
 			// show the normal audio pids first
 			for (unsigned int count = 0; count < g_numpida; count++)
 			{
-				if (g_ac3flags[count] != 0) // AC3, Teletext or Subtitle
+				if (g_ac3flags[count] != 0)
 					continue;
 
-				std::string apidtitle = "";
 				bool mi_found = false, current = false;
-				sprintf(apidnumber, "%d", count+1);
 				sprintf(show_pid_number, "%u", g_apids[count]);
 
-				apidtitle.append(show_pid_number);
+				apidtitle.assign(show_pid_number);
 				apidtitle.append(" : ");
-
 				if (movieinfo_valid)
 				{
 					for (unsigned int i = 0; i < movieinfo.audioPids.size(); i++)
@@ -3059,27 +3100,29 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					current = true;
 					apidtitle.append(" *"); // current stream.
 				}
-				APIDSelector.addItem(
-					new CMenuForwarderNonLocalized(apidtitle.c_str(), true,
-						NULL, APIDChanger, apidnumber,
-						CRCInput::convertDigitToKey(++digit)),
-					current); // select current stream
+
+				std::ostringstream actionKey;
+				actionKey << "AUD: " << count;
+
+				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+						true, NULL, APIDChanger, actionKey.str().c_str(),
+						CRCInput::convertDigitToKey(++digit));
+				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+				APIDSelector.addItem(fw, current); // select current stream
 			}
 
-			// then show the other audio pids (AC3/Teletext/Subtitle)
+			// then show the AC3 audio pids
 			for (unsigned int count = 0; count < g_numpida; count++)
 			{
-				if (g_ac3flags[count] == 0) // already handled...
+				if (g_ac3flags[count] != 1)
 					continue;
 
-				std::string apidtitle = "";
 				bool mi_found = false, current = false;
-				sprintf(apidnumber, "%d", count+1);
 				sprintf(show_pid_number, "%u", g_apids[count]);
 
-				apidtitle.append(show_pid_number);
+				apidtitle.assign(show_pid_number);
 				apidtitle.append(" : ");
-
 				if (movieinfo_valid)
 				{
 					for (unsigned int i = 0; i < movieinfo.audioPids.size(); i++)
@@ -3091,32 +3134,11 @@ CMoviePlayerGui::PlayStream(int streamtype)
 							break;
 						}
 					}
-
-					if (!mi_found)
-					{
-						for (unsigned int i = 0; i < movieinfo.subPids.size(); i++)
-						{
-							if (movieinfo.subPids[i].subPid == g_apids[count])
-							{
-								apidtitle.append(movieinfo.subPids[i].subPidName);
-								mi_found = true;
-								break;
-							}
-						}
-					}
 				}
 				if (!mi_found)
 					apidtitle.append("Stream");
-
-				if (g_ac3flags[count] == 1 && apidtitle.find("AC3") == std::string::npos)
+				if (apidtitle.find("AC3") == std::string::npos)
 					apidtitle.append(" (AC3)");
-				if (g_ac3flags[count] == 2)
-				{
-					apidtitle.append(" (Teletext)");
-					pidt = g_apids[count];
-				}
-				if (g_ac3flags[count] == 3)
-					apidtitle.append(" (Subtitle)");
 
 				if (g_currentapid == -1 && g_apids[count] == 0)
 					current = true;
@@ -3125,12 +3147,102 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					current = true;
 					apidtitle.append(" *"); // current stream.
 				}
-				APIDSelector.addItem(
-					new CMenuForwarderNonLocalized(apidtitle.c_str(), true,
-						NULL, APIDChanger, apidnumber,
-						CRCInput::convertDigitToKey(++digit)),
-					current); // select current stream
+
+				std::ostringstream actionKey;
+				actionKey << "AUD: " << count;
+
+				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+						true, NULL, APIDChanger, actionKey.str().c_str(),
+						CRCInput::convertDigitToKey(++digit));
+				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+				APIDSelector.addItem(fw, current); // select current stream
 			}
+
+			// then show the teletext subtitle pages
+			for (unsigned int count = 0; count < g_numpida; count++)
+			{
+				if (!movieinfo_valid)
+					break;
+				if (g_ac3flags[count] != 2)
+					continue;
+
+				vtxtpid = g_apids[count];
+				sprintf(show_pid_number, "%d", vtxtpid);
+
+				for (unsigned int i = 0; i < movieinfo.subPids.size(); i++)
+				{
+					if (movieinfo.subPids[i].subPid == vtxtpid)
+					{
+						if (!sep_added)
+						{
+							APIDSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_SUBTITLES_HEAD));
+							sep_added = true;
+						}
+
+						apidtitle.assign(show_pid_number);
+						apidtitle.append(" : ");
+						apidtitle.append(movieinfo.subPids[i].subName);
+						apidtitle.append(" (TTX)");
+
+						std::ostringstream actionKey;
+						actionKey << "TTX: " << movieinfo.subPids[i].subPage;
+
+						CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+								hasTuxtxtPlugin, NULL, APIDChanger, actionKey.str().c_str(),
+								CRCInput::convertDigitToKey(++digit));
+						fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+						APIDSelector.addItem(fw);
+					}
+				}
+			}
+
+			// finally show the DVB subtitle pids
+			for (unsigned int count = 0; count < g_numpida; count++)
+			{
+				if (g_ac3flags[count] != 3)
+					continue;
+
+				bool mi_found = false;
+				subpid = g_apids[count];
+				sprintf(show_pid_number, "%d", subpid);
+
+				if (!sep_added)
+				{
+					APIDSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_SUBTITLES_HEAD));
+					sep_added = true;
+				}
+
+				apidtitle.assign(show_pid_number);
+				apidtitle.append(" : ");
+				if (movieinfo_valid)
+				{
+					for (unsigned int i = 0; i < movieinfo.subPids.size(); i++)
+					{
+						if (movieinfo.subPids[i].subPid == subpid)
+						{
+							apidtitle.append(movieinfo.subPids[i].subName);
+							mi_found = true;
+							break;
+						}
+					}
+				}
+				if (!mi_found)
+					apidtitle.append("Stream");
+				apidtitle.append(" (DVB)");
+
+				std::ostringstream actionKey;
+				actionKey << "DVB: " << subpid;
+
+				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+						hasDvbsubPlugin, NULL, APIDChanger, actionKey.str().c_str(),
+						CRCInput::convertDigitToKey(++digit));
+				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+				APIDSelector.addItem(fw);
+			}
+
 			APIDSelector.exec(NULL, ""); // otherwise use Dialog
 			delete APIDChanger;
 			if (g_currentapid == -1) // exit if inital pid is not selected
@@ -3155,7 +3267,24 @@ CMoviePlayerGui::PlayStream(int streamtype)
 		}
 		else if (msg == CRCInput::RC_red)
 		{
-			g_PluginList->start_plugin_by_name(g_settings.movieplayer_plugin.c_str(),pidt);
+			int param = 0;
+
+			if (g_settings.movieplayer_plugin == "Teletext")
+			{
+				if (movieinfo_valid)
+					param = (vtxtpid == 0) ? movieinfo.epgVTXPID : vtxtpid;
+				else
+					param = vtxtpid;
+			}
+			else if (g_settings.movieplayer_plugin == "DVB Subtitle Viewer")
+			{
+				if (movieinfo_valid && movieinfo.subPids.size() > 0)
+					param = (subpid == 0) ? movieinfo.subPids[0].subPid : subpid;
+				else
+					param = subpid;
+			}
+
+			g_PluginList->start_plugin_by_name(g_settings.movieplayer_plugin.c_str(), param);
 		}
 #if defined HAVE_DREAMBOX_HARDWARE || defined HAVE_DBOX_HARDWARE || defined BOXMODEL_IP200
 		else if (msg == CRCInput::RC_home && g_playstate >= CMoviePlayerGui::PLAY)
@@ -3380,7 +3509,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 
 			g_InfoViewer->showMovieTitle(g_playstate, infobar_title, subtitle,
 					g_percent, elapsed_time, remaining_time,
-					ac3state, g_numpida > 1);
+					ac3state, vtxtpid, subpid, g_numpida > 1);
 		}
 		else if (msg == CRCInput::RC_ok)
 		{
@@ -3526,7 +3655,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.85 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.86 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()

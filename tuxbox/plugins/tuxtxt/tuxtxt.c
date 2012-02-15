@@ -145,7 +145,7 @@ void dump_page()
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.115 $";
+	char cvs_revision[] = "$Revision: 1.116 $";
 
 #if !TUXTXT_CFG_STANDALONE
 	int initialized = tuxtxt_init();
@@ -165,6 +165,8 @@ void plugin_exec(PluginParam *par)
 	{
 		if (!strcmp(par->id, P_ID_VTXTPID))
 			tuxtxt_cache.vtxtpid = atoi(par->val);
+		else if (!strcmp(par->id, P_ID_VTXTPAGE))
+			tuxtxt_cache.page = atoi(par->val);
 		else if (!strcmp(par->id, P_ID_FBUFFER))
 			renderinfo.fb = atoi(par->val);
 		else if (!strcmp(par->id, P_ID_LCD))

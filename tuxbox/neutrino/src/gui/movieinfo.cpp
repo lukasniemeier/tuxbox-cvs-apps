@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.25 2012/01/21 18:44:57 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.26 2012/02/15 20:43:16 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -197,8 +197,11 @@ bool CMovieInfo::encodeMovieInfoXml(std::string* extMessage,MI_MOVIE_INFO &movie
 			*extMessage += "\t\t\t<"MI_XML_TAG_SUB" "MI_XML_TAG_PID"=\"";
 			sprintf(tmp, "%u", movie_info.subPids[i].subPid);
 			*extMessage += tmp;
+			*extMessage += "\" "MI_XML_TAG_PAGE"=\"";
+			sprintf(tmp, "%u", movie_info.subPids[i].subPage);
+			*extMessage += tmp;
 			*extMessage += "\" "MI_XML_TAG_NAME"=\"";
-			*extMessage += ZapitTools::UTF8_to_UTF8XML(movie_info.subPids[i].subPidName.c_str());
+			*extMessage += ZapitTools::UTF8_to_UTF8XML(movie_info.subPids[i].subName.c_str());
 			*extMessage += "\"/>\n";
 		}
 		*extMessage += "\t\t</"MI_XML_TAG_SUBPIDS">\n";
@@ -423,7 +426,8 @@ bool CMovieInfo::parseXmlTree (char* /*text*/, MI_MOVIE_INFO* /*movie_info*/)
 						{
 							SUB_PIDS pids;
 							pids.subPid = atoi(xam2->GetAttributeValue(MI_XML_TAG_PID));
-							pids.subPidName = xam2->GetAttributeValue(MI_XML_TAG_NAME);
+							pids.subPage = atoi(xam2->GetAttributeValue(MI_XML_TAG_PAGE));
+							pids.subName = xam2->GetAttributeValue(MI_XML_TAG_NAME);
 							movie_info->subPids.push_back(pids);
 						}
 					}
@@ -566,7 +570,11 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
 		print_buffer += ": ";
 		for(unsigned int i = 0; i < movie_info.subPids.size(); i++)
 		{
-			print_buffer += movie_info.subPids[i].subPidName;
+			print_buffer += movie_info.subPids[i].subName;
+			if(movie_info.subPids[i].subPid == movie_info.epgVTXPID)
+				print_buffer += " (TTX)";
+			else
+				print_buffer += " (DVB)";
 			print_buffer += ", ";
 		}
 		print_buffer.erase(print_buffer.size() - 2);
@@ -644,7 +652,8 @@ void CMovieInfo::printDebugMovieInfo(MI_MOVIE_INFO& movie_info)
 	for(unsigned int i = 0; i < movie_info.subPids.size(); i++) 
 	{
 		TRACE(" subPid (%d): \t\t%d\r\n", i, movie_info.subPids[i].subPid); 
-		TRACE(" subName(%d): \t\t>%s<\r\n", i, movie_info.subPids[i].subPidName.c_str());
+		TRACE(" subPage(%d): \t\t%d\r\n", i, movie_info.subPids[i].subPage); 
+		TRACE(" subName(%d): \t\t>%s<\r\n", i, movie_info.subPids[i].subName.c_str());
 	}
 
 	TRACE(" epgTitle: \t\t>%s<\r\n", movie_info.epgTitle.c_str() );	
@@ -772,9 +781,11 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 		{
 			pos += sizeof(MI_XML_TAG_AUDIO);
 
+			char* ptr;
 			int pos2;
 
-			pos2 = strcspn(&text[pos],MI_XML_TAG_PID);
+			ptr = strstr(&text[pos], MI_XML_TAG_PID);
+			pos2 = ptr ? ptr - &text[pos] : -1;
 			if( pos2 >= 0 )
 			{
 				pos2 += sizeof(MI_XML_TAG_PID); 
@@ -785,10 +796,11 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 				audio_pids.epgAudioPid = 0;
 
 			audio_pids.epgAudioPidName = "";
-			pos2 = strcspn(&text[pos],MI_XML_TAG_NAME);
+			ptr = strstr(&text[pos], MI_XML_TAG_NAME);
+			pos2 = ptr ? ptr - &text[pos] : -1;
 			if( pos2 >= 0 )
 			{
-				pos2 += sizeof(MI_XML_TAG_PID); 
+				pos2 += sizeof(MI_XML_TAG_NAME); 
 				while(text[pos+pos2] != '\"' && text[pos+pos2] != 0 && text[pos+pos2] != '/')pos2++;
 				if(text[pos+pos2] == '\"') 
 				{
@@ -812,9 +824,11 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 		{
 			pos += sizeof(MI_XML_TAG_SUB);
 
+			char* ptr;
 			int pos2;
 
-			pos2 = strcspn(&text[pos], MI_XML_TAG_PID);
+			ptr = strstr(&text[pos], MI_XML_TAG_PID);
+			pos2 = ptr ? ptr - &text[pos] : -1;
 			if(pos2 >= 0)
 			{
 				pos2 += sizeof(MI_XML_TAG_PID); 
@@ -826,11 +840,25 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 			else
 				sub_pids.subPid = 0;
 
-			sub_pids.subPidName = "";
-			pos2 = strcspn(&text[pos], MI_XML_TAG_NAME);
+			ptr = strstr(&text[pos], MI_XML_TAG_PAGE);
+			pos2 = ptr ? ptr - &text[pos] : -1;
 			if(pos2 >= 0)
 			{
-				pos2 += sizeof(MI_XML_TAG_PID); 
+				pos2 += sizeof(MI_XML_TAG_PAGE); 
+				while(text[pos+pos2] != '\"' && text[pos+pos2] != 0 && text[pos+pos2] != '/')
+					pos2++;
+				if(text[pos+pos2] == '\"')
+					sub_pids.subPage = atoi(&text[pos+pos2+1]);
+			}
+			else
+				sub_pids.subPage = 0;
+
+			sub_pids.subName = "";
+			ptr = strstr(&text[pos], MI_XML_TAG_NAME);
+			pos2 = ptr ? ptr - &text[pos] : -1;
+			if(pos2 >= 0)
+			{
+				pos2 += sizeof(MI_XML_TAG_NAME); 
 				while(text[pos+pos2] != '\"' && text[pos+pos2] != 0 && text[pos+pos2] != '/')
 					pos2++;
 				if(text[pos+pos2] == '\"') 
@@ -840,8 +868,8 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 						pos3++;
 					if(text[pos+pos3] == '\"')
 					{
-						sub_pids.subPidName.append(&text[pos+pos2+1], pos3-pos2-1);
-						sub_pids.subPidName = decodeXmlSpecialChars(sub_pids.subPidName);
+						sub_pids.subName.append(&text[pos+pos2+1], pos3-pos2-1);
+						sub_pids.subName = decodeXmlSpecialChars(sub_pids.subName);
 					}
 				}
 			}

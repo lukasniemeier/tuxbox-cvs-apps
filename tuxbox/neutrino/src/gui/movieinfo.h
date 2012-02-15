@@ -79,6 +79,7 @@
 #define MI_XML_TAG_VTXTPID	        "vtxtpid"
 #define MI_XML_TAG_SUBPIDS	        "subpids"
 #define MI_XML_TAG_SUB 		        "sub"
+#define MI_XML_TAG_PAGE		        "page"
 #define MI_XML_TAG_GENRE_MAJOR 		"genremajor"
 #define MI_XML_TAG_GENRE_MINOR 		"genreminor"
 #define MI_XML_TAG_SERIE_NAME 		"seriename"
@@ -137,7 +138,8 @@ typedef struct
 typedef struct
 {
 	int subPid;				// subtitle pid nr, usually filled by VCR
-	std::string subPidName;	// subtitle pid name, usually filled by VCR
+	int subPage;			// subtitle page nr, usually filled by VCR
+	std::string subName;	// subtitle name, usually filled by VCR
 }SUB_PIDS;
 
 /************************************************************************/
@@ -172,7 +174,7 @@ typedef struct
 	uint64_t epgEpgId;		// off_t currently not used, we just do not want to loose this info if movie info is saved backed
 	int  epgMode;			// currently not used, we just do not want to loose this info if movie info is saved backed
 	int  epgVideoPid; 		// currently not used, we just do not want to loose this info if movie info is saved backed
-	int	 epgVTXPID;			// currently not used, we just do not want to loose this info if movie info is saved backed 
+	int	 epgVTXPID;			// teletext pid, usually filled by VCR
 }MI_MOVIE_INFO;
 
 

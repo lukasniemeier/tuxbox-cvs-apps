@@ -1389,6 +1389,7 @@ streamingmenu.streaming_vlc10 Use VLC 1.x
 streamingserver.noconnect No connection to streamingserver.\nRecording canceled.
 stringinput.caps caps / no caps
 stringinput.clear clear all
+subtitles.head Subtitles
 timer.eventrecord.msg   ... TO be DONE, or not to be done
 timer.eventrecord.title Schedule Record
 timer.eventtimed.msg The event is scheduled.\nThe dbox2 will power on and \nswitch to this channel at the given time.

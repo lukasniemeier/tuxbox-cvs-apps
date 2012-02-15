@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.201 2012/01/21 18:44:57 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.202 2012/02/15 20:43:16 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1416,6 +1416,7 @@ const char * locale_real_names[] =
 	"streamingserver.noconnect",
 	"stringinput.caps",
 	"stringinput.clear",
+	"subtitles.head",
 	"timer.eventrecord.msg",
 	"timer.eventrecord.title",
 	"timer.eventtimed.msg",

@@ -23,6 +23,7 @@ typedef int	(*PluginExec)( PluginParam *par );
 #define	P_ID_LCD		"fd_lcd"
 #define	P_ID_NOPIG		"no_pig"		// 1: plugin dont show internal pig
 #define P_ID_VTXTPID	"pid_vtxt"
+#define P_ID_VTXTPAGE	"page_vtxt"
 #define P_ID_PROXY		"proxy"			// set proxy for save into highscore
 #define P_ID_PROXY_USER	"proxy_user"	// format "user:pass"
 #define P_ID_HSCORE		"hscore"		// highscore-server (as url)

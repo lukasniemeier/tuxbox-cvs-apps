@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1072 2011/11/14 21:10:59 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1073 2012/02/15 20:43:16 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -127,7 +127,6 @@ CBouquetList    	* bouquetList;
 CBouquetList    	* bouquetListTV;
 CBouquetList    	* bouquetListRADIO;
 CBouquetList    	* bouquetListRecord;
-CAPIDChangeExec		* APIDChanger;
 
 // Globale Variablen - to use import global.h
 static char **global_argv;
@@ -2156,8 +2155,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	// script is available
 	g_PluginList->loadPlugins();
 
-
-	APIDChanger			= new CAPIDChangeExec;
 #ifdef HAVE_DBOX_HARDWARE
 	UCodeChecker			= new CUCodeCheckExec;
 #endif

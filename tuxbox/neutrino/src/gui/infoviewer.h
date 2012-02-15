@@ -118,10 +118,10 @@ class CInfoViewer
 	
     void showButton(const int button, const bool calledFromMPlayer = false, const int mode = TS_MODE) const;
 	
-	void showIcon_16_9()      const;
+	void showIcon_16_9() const;
 	void showIcon_CA_Status() const;
-	void showIcon_VTXT()      const;
-	void showIcon_SubT()      const;
+	void showIcon_VTXT(const int VTxtPid = -1) const;
+	void showIcon_SubT(const int SubPid = -1) const;
 	void showIcon_Audio(const int ac3state) const;
 	void showRecordIcon(const bool show);
 
@@ -164,7 +164,8 @@ class CInfoViewer
 	void	showTitle(const int ChanNum, const std::string & Channel, const t_satellite_position satellitePosition, const t_channel_id new_channel_id = 0, const bool calledFromNumZap = false, int epgpos = 0); // Channel must be UTF-8 encoded
 	void	showMovieTitle(const int playstate, const std::string &title, const std::string &sub_title,
 			       const int percent = 0, const time_t time_elapsed = 0, const time_t time_remaining = 0,
-			       const int ac3state = NO_AC3, const bool show_button_green = false, const int playmode = TS_MODE);
+			       const int ac3state = NO_AC3, const int vtxtpid = 0, const int subpid = 0,
+			       const bool show_button_green = false, const int playmode = TS_MODE);
 	void	lookAheadEPG(const int ChanNum, const std::string & Channel, const t_channel_id new_channel_id = 0, const bool calledFromNumZap = false); //alpha: fix for nvod subchannel update
 	void	killTitle();
 	void	getEPG(const t_channel_id for_channel_id, CSectionsdClient::CurrentNextInfo &info);

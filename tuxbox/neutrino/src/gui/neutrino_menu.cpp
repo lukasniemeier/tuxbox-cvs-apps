@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.134 2011/09/18 20:49:27 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.135 2012/02/15 20:43:16 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -594,7 +594,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_AUDIO_SELECT: 
 				// -- new Audio Selector Menu (rasc 2005-08-30)
 				if (g_settings.audio_left_right_selectable ||
-				    g_RemoteControl->current_PIDs.APIDs.size() > 1)
+				    g_RemoteControl->current_PIDs.APIDs.size() > 1 ||
+				    g_RemoteControl->current_PIDs.SubPIDs.size() > 0)
 				{
 					menu_items++;
 					menu_prev = SNeutrinoSettings::ITEM_AUDIO_SELECT;

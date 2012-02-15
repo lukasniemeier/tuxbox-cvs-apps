@@ -33,14 +33,12 @@
 #include <config.h>
 #endif
 
+#include <sstream>
 
 #include <global.h>
 #include <neutrino.h>
 #include <gui/widget/icons.h>
 #include <gui/widget/menue.h>
-
-extern CRemoteControl		* g_RemoteControl; /* neutrino.cpp */
-extern CAPIDChangeExec		* APIDChanger;
 
 #include <gui/audio_select.h>
 
@@ -65,42 +63,79 @@ const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT
 
 
 
-int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &)
+int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &actionKey)
 {
 	int           res = menu_return::RETURN_EXIT_ALL;
-
 
 	if (parent) {
 		parent->hide();
 	}
 
-	doMenu ();
+	if (actionKey != "-1")
+	{
+		std::istringstream iss(actionKey);
+		std::string type = "";
+		iss >> type;
+
+		if (type == "AUD:")
+		{
+			unsigned int sel = 0;
+			iss >> sel;
+			if (g_RemoteControl->current_PIDs.PIDs.selected_apid != sel)
+				g_RemoteControl->setAPID(sel);
+		}
+		else if (type == "TTX:")
+		{
+			int vtxtpage = 0;
+			iss >> std::hex >> vtxtpage;
+			CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
+			g_PluginList->startPlugin("tuxtxt", 0, vtxtpage);
+		}
+		else if (type == "DVB:")
+		{
+			int subpid = 0;
+			iss >> subpid;
+			CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
+			g_PluginList->startPlugin("dvbsub", subpid);
+		}
+
+		return res;
+	}
+
+	res = doMenu();
 	return res;
 }
 
 
 
-int CAudioSelectMenuHandler::doMenu ()
+int CAudioSelectMenuHandler::doMenu()
 {
 	CMenuWidget AudioSelector(LOCALE_AUDIOSELECTMENUE_HEAD, NEUTRINO_ICON_AUDIO, 360);
+	AudioSelector.addItem(GenericMenuSeparator);
+	AudioSelector.addItem(GenericMenuCancel);
+
+	unsigned int numberOfAPIDs = g_RemoteControl->current_PIDs.APIDs.size();
+	unsigned int numberOfSubPIDs = g_RemoteControl->current_PIDs.SubPIDs.size();
+	unsigned int digit = 0;
 
 	// -- setup menue due to Audio PIDs
-	if (g_RemoteControl->current_PIDs.APIDs.size() > 1) 
+	if (numberOfAPIDs > 1) 
 	{
-		uint p_count = g_RemoteControl->current_PIDs.APIDs.size();
-		CMenuForwarderNonLocalized* fw[p_count];
-		AudioSelector.addItem(GenericMenuSeparator);
-		AudioSelector.addItem(GenericMenuCancel);
 		AudioSelector.addItem(GenericMenuSeparatorLine);
 
-	  	for( uint count=0; count < p_count; count++ ) 
+		for (unsigned int i = 0; i < numberOfAPIDs; i++) 
 		{
-			char apid[5];
-			sprintf(apid, "%d", count);
-			fw[count] = new CMenuForwarderNonLocalized(g_RemoteControl->current_PIDs.APIDs[count].desc, true, NULL, APIDChanger, apid, CRCInput::convertDigitToKey(count + 1));
-			fw[count]->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
-			AudioSelector.addItem(fw[count], (count == g_RemoteControl->current_PIDs.PIDs.selected_apid));
-	   	}
+			std::ostringstream actionKey;
+			actionKey << "AUD: " << i;
+
+			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(
+					g_RemoteControl->current_PIDs.APIDs[i].desc,
+					true, NULL, this, actionKey.str().c_str(),
+					CRCInput::convertDigitToKey(++digit));
+			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+			AudioSelector.addItem(fw, (i == g_RemoteControl->current_PIDs.PIDs.selected_apid));
+		}
 	}
 
 	// -- setup menue for to Dual Channel Stereo
@@ -116,6 +151,44 @@ int CAudioSelectMenuHandler::doMenu ()
 
 	   AudioSelector.addItem( oj );
 
+	}
+
+	// -- setup menue due to Subtitle PIDs
+	if (numberOfSubPIDs > 0)
+	{
+		AudioSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_SUBTITLES_HEAD));
+
+		bool hasTuxtxtPlugin = g_PluginList->hasPlugin("tuxtxt");
+		bool hasDvbsubPlugin = g_PluginList->hasPlugin("dvbsub");
+
+		std::string text = "";
+		bool active = false;
+
+		for (unsigned int i = 0; i < numberOfSubPIDs; i++)
+		{
+			std::ostringstream actionKey;
+
+			if (g_RemoteControl->current_PIDs.SubPIDs[i].pid == g_RemoteControl->current_PIDs.PIDs.vtxtpid)
+			{
+				text.assign("TTX: ");
+				active = hasTuxtxtPlugin;
+				actionKey << "TTX: " << g_RemoteControl->current_PIDs.SubPIDs[i].composition_page;
+			}
+			else
+			{
+				text.assign("DVB: ");
+				active = hasDvbsubPlugin;
+				actionKey << "DVB: " << g_RemoteControl->current_PIDs.SubPIDs[i].pid;
+			}
+			text.append(getISO639Description(g_RemoteControl->current_PIDs.SubPIDs[i].desc));
+
+			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(text.c_str(),
+					active, NULL, this, actionKey.str().c_str(),
+					CRCInput::convertDigitToKey(++digit));
+			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+			AudioSelector.addItem(fw);
+		}
 	}
 
 	return AudioSelector.exec(NULL, "");

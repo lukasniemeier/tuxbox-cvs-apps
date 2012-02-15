@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.313 2012/02/15 20:37:06 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.314 2012/02/15 20:43:16 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -335,7 +335,8 @@ void CInfoViewer::paintBackground(int col_NumBox)
 
 void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title, const std::string &sub_title,
 				 const int percent, const time_t time_elapsed, const time_t time_remaining,
-				 const int ac3state, const bool show_button_green, const int playmode)
+				 const int ac3state, const int vtxtpid, const int subpid,
+				 const bool show_button_green, const int playmode)
 {
 					/* playmode is optional and only need for mp1 to show
 					 correct caption for red and green button
@@ -411,6 +412,8 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 	aspectRatio = g_Controld->getAspectRatio();
 	showIcon_16_9();
 	showIcon_Audio(ac3state);
+	showIcon_VTXT(vtxtpid);
+	showIcon_SubT(subpid);
 
 	char runningRest[32]; // %d can be 10 digits max...
 	sprintf(runningRest, "%ld / %ld min", (time_elapsed + 30) / 60, (time_remaining + 30) / 60);
@@ -1066,7 +1069,8 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 				uint count = g_RemoteControl->current_PIDs.APIDs.size();
 				if (!g_settings.usermenu_text[SNeutrinoSettings::BUTTON_GREEN].empty())
 					txt = g_settings.usermenu_text[SNeutrinoSettings::BUTTON_GREEN].c_str();
-				else if (g_settings.audio_left_right_selectable || count > 1)
+				else if (g_settings.audio_left_right_selectable || count > 1 ||
+				         g_RemoteControl->current_PIDs.SubPIDs.size() > 0)
 					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_INFOVIEWER_LANGUAGES;
 				else
 					paint = false;
@@ -1161,16 +1165,18 @@ void CInfoViewer::showIcon_16_9() const
 	if (mode != NeutrinoMessages::mode_radio)
 #endif
 	frameBuffer->paintIcon((aspectRatio != 0) ? NEUTRINO_ICON_16_9 : NEUTRINO_ICON_16_9_GREY,
-				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + (tsmode ? 0 : 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH) + 6),
+				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
 				BoxEndY + (g_settings.infobar_sat_display && !tsmode ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
-void CInfoViewer::showIcon_VTXT() const
+void CInfoViewer::showIcon_VTXT(const int VTxtPid) const
 {
-	int vtpid=g_RemoteControl->current_PIDs.PIDs.vtxtpid;
+	int vtpid = (VTxtPid > -1) ? VTxtPid : g_RemoteControl->current_PIDs.PIDs.vtxtpid;
+
 	frameBuffer->paintIcon((vtpid != 0) ? NEUTRINO_ICON_VTXT : NEUTRINO_ICON_VTXT_GREY,
 				BoxEndX - (ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
-				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndY + (g_settings.infobar_sat_display && VTxtPid < 0 ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+
 #ifndef TUXTXT_CFG_STANDALONE
 	if(g_settings.tuxtxt_cache && !CNeutrinoApp::getInstance ()->recordingstatus)
 	{
@@ -1186,7 +1192,7 @@ void CInfoViewer::showIcon_VTXT() const
 #endif
 }
 
-void CInfoViewer::showIcon_SubT() const
+void CInfoViewer::showIcon_SubT(const int SubPid) const
 {
 	int subpid = 0;
 
@@ -1195,12 +1201,16 @@ void CInfoViewer::showIcon_SubT() const
 		if (g_RemoteControl->current_PIDs.SubPIDs[i].pid !=
 			g_RemoteControl->current_PIDs.PIDs.vtxtpid) {
 			subpid = g_RemoteControl->current_PIDs.SubPIDs[i].pid;
+			break;
 		}
 	}
 
+	if (SubPid > -1)
+		subpid = SubPid;
+
 	frameBuffer->paintIcon((subpid != 0) ? "subt.raw" : "subt_gray.raw",
 				BoxEndX - (ICON_SMALL_WIDTH + 6),
-				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
+				BoxEndY + (g_settings.infobar_sat_display && SubPid < 0 ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 
 void CInfoViewer::showIcon_Audio(const int ac3state) const
@@ -1223,7 +1233,7 @@ void CInfoViewer::showIcon_Audio(const int ac3state) const
 	bool tsmode = (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_ts);
 
 	frameBuffer->paintIcon(dd_icon,
-			       BoxEndX - (ICON_LARGE_WIDTH + (tsmode ? 0 : 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH) + 6),
+			       BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
 			       BoxEndY + (g_settings.infobar_sat_display && !tsmode ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
 

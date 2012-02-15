@@ -536,12 +536,10 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 		SUB_PIDS sub_pids;
 		for (unsigned int i = 0; i < pids.SubPIDs.size(); i++)
 		{
-			if (pids.SubPIDs[i].pid != si.vtxtpid)
-			{
-				sub_pids.subPid = pids.SubPIDs[i].pid;
-				sub_pids.subPidName = getISO639Description(pids.SubPIDs[i].desc);
-				movieInfo.subPids.push_back(sub_pids);
-			}
+			sub_pids.subPid = pids.SubPIDs[i].pid;
+			sub_pids.subPage = pids.SubPIDs[i].composition_page;
+			sub_pids.subName = getISO639Description(pids.SubPIDs[i].desc);
+			movieInfo.subPids.push_back(sub_pids);
 		}
 	}
 
@@ -678,17 +676,17 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	tmpstring = "";
 	for (unsigned int i = 0; i < pids.SubPIDs.size(); i++)
 	{
-		if (pids.SubPIDs[i].pid != si.vtxtpid)
-		{
-			if (tmpstring.empty())
-				tmpstring += "\t\t<subpids>\n";
-			tmpstring += "\t\t\t<sub pid=\"";
-			sprintf(tmp, "%u", pids.SubPIDs[i].pid);
-			tmpstring += tmp;
-			tmpstring += "\" name=\"";
-			tmpstring += ZapitTools::UTF8_to_UTF8XML(getISO639Description(pids.SubPIDs[i].desc));
-			tmpstring += "\"/>\n";
-		}
+		if (tmpstring.empty())
+			tmpstring += "\t\t<subpids>\n";
+		tmpstring += "\t\t\t<sub pid=\"";
+		sprintf(tmp, "%u", pids.SubPIDs[i].pid);
+		tmpstring += tmp;
+		tmpstring += "\" page=\"";
+		sprintf(tmp, "%u", pids.SubPIDs[i].composition_page);
+		tmpstring += tmp;
+		tmpstring += "\" name=\"";
+		tmpstring += ZapitTools::UTF8_to_UTF8XML(getISO639Description(pids.SubPIDs[i].desc));
+		tmpstring += "\"/>\n";
 	}
 	if (!tmpstring.empty())
 		tmpstring += "\t\t</subpids>\n";
@@ -819,13 +817,13 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		for (unsigned ii = 0 ; ii < allpids.SubPIDs.size() ; ++ii) {
 			if (allpids.SubPIDs[ii].pid != txtdone) {
 				pids[numpids++] = allpids.SubPIDs[ii].pid;
-				save_sub_pids = true;
 			}
 			if (allpids.SubPIDs[ii].pid == si.vtxtpid) {
 				txtdone = si.vtxtpid;
 			}
 		}
 		save_vtxt_pid = (txtdone > 0);
+		save_sub_pids = true;
 	}
 	
 	char filename[512]; // UTF-8
