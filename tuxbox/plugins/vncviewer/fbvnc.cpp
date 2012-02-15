@@ -1410,18 +1410,13 @@ extern "C" {
 		int panning = 0;
 		int readfd[2];	/* pnmfd and/or rfbsock */
 		static int pnmfd = -1;
-		int lcd;
 
-		fb_fd = lcd = rc_fd = sx = ex = sy = ey = -1;
+		fb_fd = rc_fd = sx = ex = sy = ey = -1;
 		for(; par; par = par->next)
 		{
 			if(!strcmp(par->id, P_ID_FBUFFER))
 			{
 				fb_fd = atoi(par->val);
-			}
-			else if(!strcmp(par->id, P_ID_LCD))
-			{
-				lcd = atoi(par->val);
 			}
 			else if(!strcmp(par->id, P_ID_RCINPUT))
 			{
@@ -1444,7 +1439,7 @@ extern "C" {
 				ey = atoi(par->val);
 			}
 		}
-		if(fb_fd == -1 || lcd == -1 || rc_fd == -1 || sx == -1 || ex == -1 || sy == -1 || ey == -1)
+		if(fb_fd == -1 || rc_fd == -1 || sx == -1 || ex == -1 || sy == -1 || ey == -1)
 		{
 			printf("FBVNC <Invalid Param(s)>\n");
 			return;
