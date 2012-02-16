@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.203 2012/02/15 20:43:16 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.204 2012/02/16 20:51:42 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3647,12 +3647,14 @@ void CMoviePlayerGui::PlayFile (int parental)
 			// then show the teletext subtitle pages
 			for( unsigned int count=0; count<g_numpida; count++ )
 			{
-				if(p_movie_info == NULL)
-					break;
 				if(g_ac3flags[count] != 2)
 					continue;
 
 				vtxtpid = g_apids[count];
+
+				if(p_movie_info == NULL)
+					break; // only one teletext pid possible
+
 				sprintf(show_pid_number, "%d", vtxtpid);
 
 				for(unsigned int i = 0; i < p_movie_info->subPids.size(); i++)
@@ -3681,6 +3683,8 @@ void CMoviePlayerGui::PlayFile (int parental)
 						APIDSelector.addItem(fw);
 					}
 				}
+
+				break; // only one teletext pid possible
 			}
 
 			// finally show the DVB subtitle pids
@@ -4660,7 +4664,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.203 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.204 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

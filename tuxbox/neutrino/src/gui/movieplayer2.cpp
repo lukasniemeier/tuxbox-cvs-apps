@@ -3162,12 +3162,14 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			// then show the teletext subtitle pages
 			for (unsigned int count = 0; count < g_numpida; count++)
 			{
-				if (!movieinfo_valid)
-					break;
 				if (g_ac3flags[count] != 2)
 					continue;
 
 				vtxtpid = g_apids[count];
+
+				if (!movieinfo_valid)
+					break; // only one teletext pid possible
+
 				sprintf(show_pid_number, "%d", vtxtpid);
 
 				for (unsigned int i = 0; i < movieinfo.subPids.size(); i++)
@@ -3196,6 +3198,8 @@ CMoviePlayerGui::PlayStream(int streamtype)
 						APIDSelector.addItem(fw);
 					}
 				}
+
+				break; // only one teletext pid possible
 			}
 
 			// finally show the DVB subtitle pids
@@ -3655,7 +3659,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.86 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.87 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
