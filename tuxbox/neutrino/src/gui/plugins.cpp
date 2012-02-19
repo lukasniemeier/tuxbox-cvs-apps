@@ -585,7 +585,13 @@ void CPlugins::startPlugin(int number, int param, int param2)
 
 bool CPlugins::hasPlugin(const char * const filename)
 {
-	return plugin_exists(filename);
+	for (std::vector<plugin>::iterator it = plugin_list.begin();
+		 it != plugin_list.end(); it++)
+	{
+		if (it->filename.compare(filename) == 0)
+			return pluginfile_exists(it->pluginfile);
+	}
+	return false;
 }
 
 bool CPlugins::hasPlugin(CPlugins::p_type_t type)
