@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.10 2011/12/09 22:36:28 dbt Exp $
+	$Id: movieplayer_setup.cpp,v 1.11 2012/02/19 16:29:38 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -230,18 +230,23 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 
 	CMoviePluginChangeExec *MoviePluginChanger = new CMoviePluginChangeExec;
 
+	std::string pluginName;
 	char id[5];
-	int cnt = 0;
 	int enabled_count = 0;
 	for(unsigned int count=0;count < (unsigned int) g_PluginList->getNumberOfPlugins();count++)
 	{
 		if (g_PluginList->getType(count)== CPlugins::P_TYPE_TOOL && !g_PluginList->isHidden(count))
 		{
 			// zB vtxt-plugins
+			pluginName = g_PluginList->getName(count);
 			sprintf(id, "%d", count);
 			enabled_count++;
-			MoviePluginSelector->addItem(new CMenuForwarderNonLocalized(g_PluginList->getName(count), true, NULL, MoviePluginChanger, id, CRCInput::convertDigitToKey(count)), (cnt == 0));
-			cnt++;
+
+			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(pluginName.c_str(),
+				true, NULL, MoviePluginChanger, id, CRCInput::convertDigitToKey(enabled_count));
+			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+
+			MoviePluginSelector->addItem(fw, (g_settings.movieplayer_plugin.compare(pluginName) == 0));
 		}
 	}
 
