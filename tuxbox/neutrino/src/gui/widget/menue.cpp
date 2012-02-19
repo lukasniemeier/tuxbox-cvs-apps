@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.194 2011/11/14 21:11:00 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.195 2012/02/19 16:25:26 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -541,7 +541,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 
 void CMenuWidget::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x, y, width + 15, height + CORNER_RADIUS_MID * 2 + 1);
+	frameBuffer->paintBackgroundBoxRel(x, y, width + 15 + SHADOW_OFFSET, height + CORNER_RADIUS_MID * 2 + 1 + SHADOW_OFFSET);
 }
 
 void CMenuWidget::paint()
@@ -603,6 +603,7 @@ void CMenuWidget::paint()
 
 	int c_rad_mid = RADIUS_MID;
 	
+	frameBuffer->paintBoxRel(x + SHADOW_OFFSET, y + SHADOW_OFFSET, width + sb_width, height + (c_rad_mid / 3 * 2), COL_MENUCONTENTDARK_PLUS_0, c_rad_mid);
 	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 	frameBuffer->paintBoxRel(x, y, width + sb_width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 
