@@ -48,6 +48,8 @@ class CNFSMountGui : public CMenuTarget
 	char       m_entry[NETWORK_NFS_NR_OF_ENTRIES][200];
 	char       ISO_8859_1_entry[NETWORK_NFS_NR_OF_ENTRIES][200];
 
+	CMenuForwarderNonLocalized* mountMenuEntry[NETWORK_NFS_NR_OF_ENTRIES];
+
 	CFSMounter::FS_Support m_nfs_sup;
 	CFSMounter::FS_Support m_cifs_sup;
 	CFSMounter::FS_Support m_lufs_sup;
