@@ -1479,6 +1479,7 @@ timing.infobar_radio Infobar/Radio
 timing.menu Menu
 timing.numericzap Numeric Zap
 timing.volumebar Volume Control
+timing.zaphistory Add to channel history
 ucodecheck.avia500 Avia 500
 ucodecheck.avia600 Avia 600
 ucodecheck.cam-alpha Cam-Alpha

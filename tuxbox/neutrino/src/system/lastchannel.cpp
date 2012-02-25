@@ -22,6 +22,7 @@ nicht gespeichert werden.
 
 #include <sys/time.h>
 #include <unistd.h>
+#include <global.h>
 
 #include "lastchannel.h"
 
@@ -31,8 +32,7 @@ nicht gespeichert werden.
 //
 
 CLastChannel::CLastChannel (void)
-: secs_diff_before_store(3)
-, maxSize(11)
+: maxSize(11)
 , shallRemoveEqualChannel(true)
 {
 }
@@ -75,7 +75,7 @@ void CLastChannel::store (int channel, t_channel_id channel_id, bool forceStoreT
     lastTimestamp  = this->lastChannels.front().timestamp;
   }
 
-  if (    ( (forceStoreToLastChannels || (tv.tv_sec - lastTimestamp) > secs_diff_before_store))
+  if (    ( (forceStoreToLastChannels || (int)(tv.tv_sec - lastTimestamp) > (g_settings.timing[SNeutrinoSettings::TIMING_ZAPHISTORY])))
 	        && (lastChannel != channel) )
 	{
     if (this->shallRemoveEqualChannel && (this->lastChannels.size() > 1))

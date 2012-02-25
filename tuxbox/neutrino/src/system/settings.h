@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.244 2011/11/14 21:11:01 rhabarber1848 Exp $
+  $Id: settings.h,v 1.245 2012/02/25 22:02:14 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -109,7 +109,7 @@ struct SNeutrinoSettings
 	char language[25];
 
 	//timing
-#define TIMING_SETTING_COUNT 9
+#define TIMING_SETTING_COUNT 10
 	enum TIMING_SETTINGS {
 		TIMING_MENU        = 0,
 		TIMING_CHANLIST    = 1,
@@ -119,7 +119,8 @@ struct SNeutrinoSettings
 		TIMING_INFOBAR_MOVIE = 5,
 		TIMING_VOLUMEBAR   = 6, 
 		TIMING_FILEBROWSER = 7,
-		TIMING_NUMERICZAP  = 8
+		TIMING_NUMERICZAP  = 8,
+		TIMING_ZAPHISTORY  = 9
 	};
 
 	int  timing       [TIMING_SETTING_COUNT]   ;
@@ -541,7 +542,8 @@ const time_settings_struct_t timing_setting[TIMING_SETTING_COUNT] =
 	{ 6,    LOCALE_TIMING_INFOBAR_MOVIEPLAYER},
 	{ 3,    LOCALE_TIMING_VOLUMEBAR   },
 	{ 60,   LOCALE_TIMING_FILEBROWSER },
-	{ 3,    LOCALE_TIMING_NUMERICZAP  }
+	{ 3,    LOCALE_TIMING_NUMERICZAP  },
+	{ 3,    LOCALE_TIMING_ZAPHISTORY  }
 };
 
 // lcdd
