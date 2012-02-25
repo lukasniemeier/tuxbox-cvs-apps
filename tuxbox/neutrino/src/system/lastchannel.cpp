@@ -22,9 +22,10 @@ nicht gespeichert werden.
 
 #include <sys/time.h>
 #include <unistd.h>
-#include <global.h>
 
 #include "lastchannel.h"
+
+#include <global.h>
 
 
 //
@@ -75,7 +76,7 @@ void CLastChannel::store (int channel, t_channel_id channel_id, bool forceStoreT
     lastTimestamp  = this->lastChannels.front().timestamp;
   }
 
-  if (    ( (forceStoreToLastChannels || (int)(tv.tv_sec - lastTimestamp) > (g_settings.timing[SNeutrinoSettings::TIMING_ZAPHISTORY])))
+  if (    ( (forceStoreToLastChannels || (int)(tv.tv_sec - lastTimestamp) > g_settings.timing[SNeutrinoSettings::TIMING_ZAPHISTORY]))
 	        && (lastChannel != channel) )
 	{
     if (this->shallRemoveEqualChannel && (this->lastChannels.size() > 1))
@@ -160,23 +161,5 @@ int CLastChannel::getlast (int n)
   }
 
   return -1;
-}
-
-
-//
-// -- set delaytime in secs, for accepting a new value
-// -- get returns the value
-//
-
-void CLastChannel::set_store_difftime (int secs)
-
-{
-	secs_diff_before_store = secs;
-}
-
-int CLastChannel::get_store_difftime (void) const
-
-{
-	return    secs_diff_before_store;
 }
 

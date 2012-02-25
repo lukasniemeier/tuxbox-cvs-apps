@@ -39,7 +39,6 @@ class CLastChannel
 
     std::list<_LastCh> lastChannels;
 
-		unsigned long  secs_diff_before_store;
     unsigned int maxSize;
     bool shallRemoveEqualChannel;
 
@@ -50,8 +49,6 @@ class CLastChannel
 		int  getlast (int n);
     unsigned int size () const;
 		void clear_storedelay (void);
-		void set_store_difftime (int secs);
-		int  get_store_difftime (void) const;
 };
 
 
