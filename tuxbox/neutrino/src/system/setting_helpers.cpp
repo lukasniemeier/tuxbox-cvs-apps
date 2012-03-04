@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.195 2012/02/15 20:45:28 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.196 2012/03/04 08:41:21 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -620,17 +620,26 @@ int CUCodeCheckExec::exec(CMenuTarget*, const std::string &)
 	std::stringstream text;
 	char res[60];
 
-	text << g_Locale->getText(LOCALE_UCODECHECK_AVIA500) << ": ";
-	checkFile(UCODEDIR "/avia500.ux", (char*) &res);
-	text << (std::string)res + '\n' + g_Locale->getText(LOCALE_UCODECHECK_AVIA600) << ": ";
-	checkFile(UCODEDIR "/avia600.ux", (char*) &res);
-	text << (std::string)res + '\n' + g_Locale->getText(LOCALE_UCODECHECK_UCODE) << ": ";
+	switch (g_info.avia_chip)
+	{
+		case CControld::TUXBOX_AVIACHIP_AVIA500:
+			text << g_Locale->getText(LOCALE_UCODECHECK_AVIA500) << ": ";
+			checkFile(UCODEDIR "/avia500.ux", (char*) &res);
+			text << res << "\n";
+			break;
+		case CControld::TUXBOX_AVIACHIP_AVIA600:
+			text << g_Locale->getText(LOCALE_UCODECHECK_AVIA600) << ": ";
+			checkFile(UCODEDIR "/avia600.ux", (char*) &res);
+			text << res << "\n";
+			break;
+	}
+	text << g_Locale->getText(LOCALE_UCODECHECK_UCODE) << ": ";
 	checkFile(UCODEDIR "/ucode.bin", (char*) &res);
 	if (strcmp("not found", res) == 0)
 		text << "ucode_0014 (built-in)";
 	else
 		text << res;
-	text << (std::string)"\n" + g_Locale->getText(LOCALE_UCODECHECK_CAM_ALPHA) << ": ";
+	text << "\n" << g_Locale->getText(LOCALE_UCODECHECK_CAM_ALPHA) << ": ";
 	checkFile(UCODEDIR "/cam-alpha.bin", (char*) &res);
 	text << res;
 
