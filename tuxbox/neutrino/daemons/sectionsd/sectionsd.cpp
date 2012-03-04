@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.338 2012/03/04 08:44:27 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.339 2012/03/04 08:45:01 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2651,7 +2651,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.338 2012/03/04 08:44:27 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.339 2012/03/04 08:45:01 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -4468,8 +4468,8 @@ static void *insertEventsfromFile(void *)
 	t_original_network_id onid = 0;
 	t_transport_stream_id tsid = 0;
 	t_service_id sid = 0;
-	char cclass[20];
-	char cuser[20];
+	char cclass[20] = {0};
+	char cuser[20] = {0};
 	std::string indexname;
 	std::string filename;
 	std::string epgname;
@@ -4557,12 +4557,14 @@ static void *insertEventsfromFile(void *)
 							node = node->xmlNextNode;
 						}
 
-						int count = 0;
+						unsigned int count = 0;
 						while (xmlGetNextOccurence(node, "content") != NULL) {
 							cclass[count] = xmlGetNumericAttribute(node, "class", 16);
 							cuser[count] = xmlGetNumericAttribute(node, "user", 16);
 							node = node->xmlNextNode;
 							count++;
+							if (count > sizeof(cclass) - 1)
+								break;
 						}
 						e.contentClassification = std::string(cclass, count);
 						e.userClassification = std::string(cuser, count);
@@ -8623,7 +8625,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.338 2012/03/04 08:44:27 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.339 2012/03/04 08:45:01 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
