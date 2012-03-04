@@ -1,5 +1,5 @@
 /*
-	$Id: imageinfo.cpp,v 1.37 2010/08/13 19:50:10 dbt Exp $
+	$Id: imageinfo.cpp,v 1.38 2012/03/04 08:35:46 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -100,6 +100,9 @@ CImageInfo::CImageInfo()
 
 	// read partition info
 	partitions = readFile("/proc/mtd");
+
+	// read chip info
+	chiptype = getChipInfo();
 }
 
 CImageInfo::~CImageInfo()
@@ -242,7 +245,7 @@ void CImageInfo::paintSupport(int y_startposition)
 	
 	y_startposition += sheight;
 	paintContent(font_small, xpos, y_startposition, g_Locale->getText(LOCALE_IMAGEINFO_CHIPSET) );
-	paintContent(font_small, xpos+x_offset_large+60,y_startposition, getChipInfo().c_str());		
+	paintContent(font_small, xpos+x_offset_large+60, y_startposition, chiptype.c_str());
 #endif
 
 
@@ -317,7 +320,7 @@ void CImageInfo::paintRevisionInfos(int y_startposition)
 	
 	y_startposition += sheight;
 	paintContent(font_small, xpos, y_startposition, "Imageinfo:", COL_MENUCONTENTINACTIVE );
-	paintContent(font_small, xpos+x_offset_large, y_startposition, getModulVersion("","$Revision: 1.37 $").c_str());
+	paintContent(font_small, xpos+x_offset_large, y_startposition, getModulVersion("","$Revision: 1.38 $").c_str());
 	
 #ifdef ENABLE_MOVIEBROWSER
 	y_startposition += sheight;
@@ -435,36 +438,18 @@ string CImageInfo::getSysInfo(string infotag, bool reverse)
 
 string CImageInfo::getChipInfo()
 {
-	std::string::size_type spos, rpos;
-	string line;
-
-	chiptype=g_Locale->getText(LOCALE_FLASHUPDATE_GETINFOFILEERROR);
-	spos = 0;
-	while (spos < partitions.length())
+	switch (g_info.chip_info)
 	{
-		rpos = partitions.find("\n",spos);
-		if (rpos == string::npos) // must not happen!
+		case CControld::TUXBOX_CHIPINFO_2X:
+			return "2x";
 			break;
-		line = partitions.substr(spos, rpos - spos);
-		string::size_type n = line.find("BR bootloader" ,0);
-		if (n != string::npos) {
-			// printf("Bootloader found: %s\n", line.c_str());
-			// printf("character at n-6: %s\n", line.substr(n-6, 1).c_str());
-			/* the 1xI boxen have mtd0: 00020000 00020000 "BR bootloader"
-			   the 2xI boxen have mtd0: 00020000 00004000 "BR bootloader"
-			                                  (n-6)--^     ^--(n)
-			   This is at least as reliable as the old method of grepping
-			   through dmesg output... */
-			if (line.substr(n - 6, 1) == "4")
-				chiptype = "2xI";
-			else
-				chiptype = "1xI";
+		case CControld::TUXBOX_CHIPINFO_1X:
+			return "1x";
 			break;
-		}
-		spos = rpos + 1;
+		default:
+			return g_Locale->getText(LOCALE_FLASHUPDATE_GETINFOFILEERROR);
+			break;
 	}
-
-	return chiptype;
 }
 
 void CImageInfo::LoadImageInfo(void)
@@ -627,16 +612,16 @@ void CImageInfo::paint()
 
 /* 	usefull stuff for version informations * getModulVersion()
  * 	returns a numeric version string for better version handling from any module without 	
- * 	special characters like "$" or the complete string "Revision" ->> eg: "$Revision: 1.37 $" becomes "1.xx", 
+ * 	special characters like "$" or the complete string "Revision" ->> eg: "$Revision: 1.38 $" becomes "1.xx", 
  * 	argument prefix can be empty or a replacement for "Revision"-string eg. "Version: " or "v." as required,
  * 	argument ID_string must be a CVS-keyword like "$ Revision $", used and changed by 
  * 	cvs-committs or a version data string eg: "1.xxx" by yourself
  * 	Note for imagemakers: Keywords will working only with CVS without local -kx options,
  *	if you are using an other CMS like Git or so..., you must change these entries manually
  * 	some examples:
- * 	getModulVersion("Version: ","$Revision: 1.37 $")	 returns "Version: 1.x"	
- * 	getModulVersion("v.","$Revision: 1.37 $")			 returns "v.1.x"
- *  	getModulVersion("","$Revision: 1.37 $")		 		 returns "1.x"
+ * 	getModulVersion("Version: ","$Revision: 1.38 $")	 returns "Version: 1.x"	
+ * 	getModulVersion("v.","$Revision: 1.38 $")			 returns "v.1.x"
+ *  	getModulVersion("","$Revision: 1.38 $")		 		 returns "1.x"
  */
 std::string CImageInfo::getModulVersion(const std::string &prefix_string, std::string ID_string)
 {
