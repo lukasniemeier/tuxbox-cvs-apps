@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.6 2011/12/09 22:36:27 dbt Exp $
+	$Id: driver_boot_setup.cpp,v 1.7 2012/03/04 08:34:29 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -135,7 +135,6 @@ int CDriverBootSetup::showSetup()
 	}
 
 	bool item_enabled[DRIVER_SETTING_FILES_COUNT];
-	int boxtype = g_Controld->getBoxType();
 
 #ifdef HAVE_DBOX_HARDWARE
 	CSPTSNotifier sptsNotifier;
@@ -155,18 +154,21 @@ int CDriverBootSetup::showSetup()
 		else
 			g_settings.misc_option[i] = 0;
 		
-		if (!strcmp(driver_setting_files[i].filename, "/var/etc/.philips_rc_patch") && (boxtype == 1)) // usefully for Philips RC and sometimes for Sagem RC
+		if (!strcmp(driver_setting_files[i].filename, "/var/etc/.philips_rc_patch") && (g_info.box_Type == CControld::TUXBOX_MAKER_NOKIA)) // useful for Philips RC and sometimes for Sagem RC
 			item_enabled[i] = false;
-		else if (!strcmp(driver_setting_files[i].filename, "/var/etc/.no_enxwatchdog") && (boxtype == 1)) // not for Nokia
+		else if (!strcmp(driver_setting_files[i].filename, "/var/etc/.no_enxwatchdog") && (g_info.box_Type == CControld::TUXBOX_MAKER_NOKIA)) // not for Nokia
 			item_enabled[i] = false;
-		else if (!strcmp(driver_setting_files[i].filename, "/var/etc/.sptsfix") && (boxtype != 1)) // only Nokia has Avia500
+		else if (!strcmp(driver_setting_files[i].filename, "/var/etc/.sptsfix") && (g_info.avia_chip != CControld::TUXBOX_AVIACHIP_AVIA500)) // only Avia500
 			item_enabled[i] = false;
 		else
 			item_enabled[i] = true;
 
-		CTouchFileNotifier * touchFileNotifier = new CTouchFileNotifier(driver_setting_files[i].filename);
-		toDelete.push_back(touchFileNotifier);
-		oj_switches[i] = new CMenuOptionChooser(driver_setting_files[i].name, &(g_settings.misc_option[i]), driver_setting_files[i].options, 2, item_enabled[i], touchFileNotifier);
+		if (item_enabled[i])
+		{
+			CTouchFileNotifier * touchFileNotifier = new CTouchFileNotifier(driver_setting_files[i].filename);
+			toDelete.push_back(touchFileNotifier);
+			oj_switches[i] = new CMenuOptionChooser(driver_setting_files[i].name, &(g_settings.misc_option[i]), driver_setting_files[i].options, 2, true, touchFileNotifier);
+		}
 	}
 
 #ifdef HAVE_DBOX_HARDWARE
@@ -186,7 +188,8 @@ int CDriverBootSetup::showSetup()
 #endif
 	//-----------------------------------------
 	for (int i = 0; i < DRIVER_SETTING_FILES_COUNT; i++)
-		dbs->addItem(oj_switches[i]);
+		if (item_enabled[i])
+			dbs->addItem(oj_switches[i]);
 #ifdef HAVE_DBOX_HARDWARE
 	dbs->addItem(GenericMenuSeparatorLine);
 	//-----------------------------------------
