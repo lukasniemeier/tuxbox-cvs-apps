@@ -1,5 +1,5 @@
 /*
- * $Id: frontend.cpp,v 1.71 2011/08/01 19:31:02 rhabarber1848 Exp $
+ * $Id: frontend.cpp,v 1.72 2012/03/04 08:24:09 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -25,6 +25,7 @@
 #include <sys/poll.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include <cmath>
 /* zapit */

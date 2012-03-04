@@ -22,6 +22,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <string.h>
 #include <xmltree.h>
 #include <sys/types.h>
 #include <sys/socket.h>
