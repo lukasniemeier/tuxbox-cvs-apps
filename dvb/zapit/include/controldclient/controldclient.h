@@ -142,6 +142,16 @@ class CControldClient:private CBasicClient
 		CControld::tuxbox_maker_t getBoxType();
 
 		/*
+			get chip info (1x or 2x)
+		*/
+		CControld::tuxbox_chipinfo_t getChipInfo();
+
+		/*
+			get type of AVIA chip (AVIA 500 or AVIA 600)
+		*/
+		CControld::tuxbox_aviachip_t getAviaChip();
+
+		/*
 			setScartMode(char) : Scartmode ( an / aus )
 			Parameter: SCARTMODE_ON  = auf scartinput schalten
 			           SCARTMODE_OFF = wieder dvb anzeigen

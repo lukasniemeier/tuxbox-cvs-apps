@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1073 2012/02/15 20:43:16 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1074 2012/03/04 08:32:08 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2124,8 +2124,12 @@ int CNeutrinoApp::run(int argc, char **argv)
 	CLCD::getInstance()->setMuted(g_Controld->getMute((CControld::volume_type)g_settings.audio_avs_Control));
 
 	g_info.box_Type = g_Controld->getBoxType();
+	g_info.chip_info = g_Controld->getChipInfo();
+	g_info.avia_chip = g_Controld->getAviaChip();
 
 	dprintf( DEBUG_DEBUG, "[neutrino] box_Type: %d\n", g_info.box_Type);
+	dprintf( DEBUG_DEBUG, "[neutrino] chip_info: %d\n", g_info.chip_info);
+	dprintf( DEBUG_DEBUG, "[neutrino] avia_chip: %d\n", g_info.avia_chip);
 
 	SetupTiming();
 

@@ -63,6 +63,10 @@ class CControldMsg : public CBasicMessage
 			CMD_SETBOXTYPE,
 			CMD_GETBOXTYPE,
 
+			CMD_GETCHIPINFO,
+
+			CMD_GETAVIACHIP,
+
 			CMD_SETSCARTMODE,
 			CMD_GETSCARTMODE,
 
@@ -147,6 +151,16 @@ class CControldMsg : public CBasicMessage
 		struct responseBoxType
 		{
 			CControld::tuxbox_maker_t boxtype;
+		};
+
+		struct responseChipInfo
+		{
+			CControld::tuxbox_chipinfo_t chipinfo;
+		};
+
+		struct responseAviaChip
+		{
+			CControld::tuxbox_aviachip_t aviachip;
 		};
 
 		struct responseScartMode

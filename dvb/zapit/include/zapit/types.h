@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/types.h,v 1.10 2009/03/22 22:06:15 rhabarber1848 Exp $
+ * $Header: /cvs/tuxbox/apps/dvb/zapit/include/zapit/types.h,v 1.11 2012/03/04 08:32:07 rhabarber1848 Exp $
  *
  * zapit's types - d-box2 linux project
  * these types are used by the clientlib and zapit itself
@@ -59,6 +59,8 @@ struct Ssettings
 	int  csync;
 	CControld::volume_type volume_type;
 	CControld::tuxbox_maker_t boxtype; // not part of the config - set by setBoxType()
+	CControld::tuxbox_chipinfo_t chipinfo; // not part of the config - set by setChipInfo()
+	CControld::tuxbox_aviachip_t aviachip; // not part of the config - set by setAviaChip()
 	int  wss;	// use wss or not?
 	int  pin8;	// 0/6/12
 	bool vcr;

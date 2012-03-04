@@ -7,6 +7,8 @@ extern CConfigFile * controldconfig;
 // function prototypes
 void setvideooutput(CControld::video_format format, bool bSaveSettings = true);
 void setBoxType();
+void setChipInfo();
+void setAviaChip();
 void setScartMode(bool onoff);
 void setRGBCsync(int val);
 char getRGBCsync();

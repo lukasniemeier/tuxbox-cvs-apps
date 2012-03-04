@@ -36,8 +36,22 @@ public:
 		TUXBOX_MAKER_PHILIPS			= 2,
 		TUXBOX_MAKER_SAGEM			= 3,
 		TUXBOX_MAKER_DREAM_MM			= 4,
-		TUXBOX_MAKER_TECHNOTREND		= 5,
+		TUXBOX_MAKER_TECHNOTREND		= 5
 	} tuxbox_maker_t;
+
+	typedef enum tuxbox_chipinfo
+	{
+		TUXBOX_CHIPINFO_UNKNOWN = 0,
+		TUXBOX_CHIPINFO_1X = 1,
+		TUXBOX_CHIPINFO_2X = 2
+	} tuxbox_chipinfo_t;
+
+	typedef enum tuxbox_aviachip
+	{
+		TUXBOX_AVIACHIP_UNKNOWN = 0,
+		TUXBOX_AVIACHIP_AVIA500 = 1,
+		TUXBOX_AVIACHIP_AVIA600 = 2
+	} tuxbox_aviachip_t;
 
 	enum volume_type
         {  

@@ -921,6 +921,32 @@ void setBoxType()
 #endif
 }
 
+void setChipInfo()
+{
+#ifdef USE_LIBTUXBOX
+	const char * chipinfo = tuxbox_get_chipinfo();
+	if (strcmp(chipinfo, "2") == 0)
+		settings.chipinfo = CControld::TUXBOX_CHIPINFO_2X;
+	else if (strcmp(chipinfo, "1") == 0)
+		settings.chipinfo = CControld::TUXBOX_CHIPINFO_1X;
+	else
+#endif
+		settings.chipinfo = CControld::TUXBOX_CHIPINFO_UNKNOWN;
+}
+
+void setAviaChip()
+{
+#ifdef USE_LIBTUXBOX
+	const char * aviachip = tuxbox_get_avia();
+	if (strcmp(aviachip, "avia500") == 0)
+		settings.aviachip = CControld::TUXBOX_AVIACHIP_AVIA500;
+	else if (strcmp(aviachip, "avia600") == 0)
+		settings.aviachip = CControld::TUXBOX_AVIACHIP_AVIA600;
+	else
+#endif
+		settings.aviachip = CControld::TUXBOX_AVIACHIP_UNKNOWN;
+}
+
 void controld_main(void)
 {
 	/* load configuration */
@@ -944,6 +970,8 @@ void controld_main(void)
 	settings.csync                 = controldconfig->getInt32("csync", 0);
 	settings.volume_type           = (CControld::volume_type) controldconfig->getInt32("volume_type", CControld::TYPE_OST);
 	setBoxType(); // dummy set - liest den aktuellen Wert aus!
+	setChipInfo(); // dummy set - liest den aktuellen Wert aus!
+	setAviaChip(); // dummy set - liest den aktuellen Wert aus!
 
 	watchDog = new CEventWatchDog();
 	aspectRatioNotifier = new CControldAspectRatioNotifier();

@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.245 2012/02/25 22:02:14 rhabarber1848 Exp $
+  $Id: settings.h,v 1.246 2012/03/04 08:32:08 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -563,6 +563,8 @@ const time_settings_struct_t timing_setting[TIMING_SETTING_COUNT] =
 struct SglobalInfo
 {
 	unsigned char     box_Type;
+	unsigned char     chip_info;
+	unsigned char     avia_chip;
 	delivery_system_t delivery_system;
 };
 

@@ -76,6 +76,34 @@ CControld::tuxbox_maker_t CControldClient::getBoxType()
 	return rmsg.boxtype;
 }
 
+CControld::tuxbox_chipinfo_t CControldClient::getChipInfo()
+{
+	CControldMsg::responseChipInfo rmsg;
+
+	send(CControldMsg::CMD_GETCHIPINFO);
+
+	if (!receive_data((char*)&rmsg, sizeof(rmsg)))
+		rmsg.chipinfo = CControld::TUXBOX_CHIPINFO_UNKNOWN;
+
+	close_connection();
+
+	return rmsg.chipinfo;
+}
+
+CControld::tuxbox_aviachip_t CControldClient::getAviaChip()
+{
+	CControldMsg::responseAviaChip rmsg;
+
+	send(CControldMsg::CMD_GETAVIACHIP);
+
+	if (!receive_data((char*)&rmsg, sizeof(rmsg)))
+		rmsg.aviachip = CControld::TUXBOX_AVIACHIP_UNKNOWN;
+
+	close_connection();
+
+	return rmsg.aviachip;
+}
+
 void CControldClient::setScartMode(bool mode)
 {
 	CControldMsg::commandScartMode msg2;

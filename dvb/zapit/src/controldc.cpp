@@ -134,6 +134,8 @@ main(int argc, char *argv[]) {
   GETCOMMAND("getVCROutput", getVCROutput)
   NOTIMPLEMENTED("setBoxType", setBoxType)
   GETCOMMAND("getBoxType", getBoxType)
+  GETCOMMAND("getChipInfo", getChipInfo)
+  GETCOMMAND("getAviaChip", getAviaChip)
   SETCOMMAND("setScartMode", setScartMode)
   GETCOMMAND("getScartMode", getScartMode)
   SETCOMMAND("videoPowerDown", videoPowerDown)
@@ -179,6 +181,8 @@ void usage(char *myname) {
 	  "getVCROutput\n"
 	  "setBoxType [0,1,2,3,4,5]\n"
 	  "getBoxType\n"
+	  "getChipInfo\n"
+	  "getAviaChip\n"
 	  "setScartMode [0,1]\n"
 	  "getScartMode\n"
 	  "videoPowerDown [0,1]\n"

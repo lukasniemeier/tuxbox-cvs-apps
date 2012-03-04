@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.457 2012/03/04 08:24:09 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.458 2012/03/04 08:32:08 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -1427,6 +1427,18 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 			CControldMsg::responseBoxType msg0;
 			msg0.boxtype = settings.boxtype;
 			CBasicServer::send_data(connfd,&msg0,sizeof(msg0));
+			break;
+		case CControldMsg::CMD_GETCHIPINFO:
+			//printf("[controld] get chipinfo\n");
+			CControldMsg::responseChipInfo msgci;
+			msgci.chipinfo = settings.chipinfo;
+			CBasicServer::send_data(connfd,&msgci,sizeof(msgci));
+			break;
+		case CControldMsg::CMD_GETAVIACHIP:
+			//printf("[controld] get aviachip\n");
+			CControldMsg::responseAviaChip msgac;
+			msgac.aviachip = settings.aviachip;
+			CBasicServer::send_data(connfd,&msgac,sizeof(msgac));
 			break;
 
 		case CControldMsg::CMD_SETCSYNC:
@@ -3141,7 +3153,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.457 2012/03/04 08:24:09 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.458 2012/03/04 08:32:08 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
