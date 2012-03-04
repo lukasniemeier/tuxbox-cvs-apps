@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: tuxinfo.c,v 1.7 2009/02/11 21:29:13 rhabarber1848 Exp $
+ * $Id: tuxinfo.c,v 1.8 2012/03/04 08:25:35 rhabarber1848 Exp $
  */
 
 #include <stdio.h>
@@ -38,6 +38,7 @@ int main(int argc, char **argv)
 	unsigned char show_submodel_str = 0;
 	unsigned char show_tuner = 0;
 	unsigned char show_chipinfo = 0;
+	unsigned char show_avia = 0;
 	unsigned char show_vendor = 0;
 	unsigned char show_vendor_str = 0;
 	unsigned char show_eval = 0;
@@ -48,11 +49,14 @@ int main(int argc, char **argv)
 	
 		int c;
 		
-		if ((c = getopt(argc, argv, "cC:tfmMnNsSvVe")) < 0)
+		if ((c = getopt(argc, argv, "acC:tfmMnNsSvVe")) < 0)
 			break;
 			
 		switch (c) {
 		
+			case 'a':
+				show_avia++;
+				break;
 			case 'c':
 				show_capabilities++;
 				break;
@@ -70,6 +74,7 @@ int main(int argc, char **argv)
 				show_vendor_str++;
 				show_tuner++;
 				show_chipinfo++;
+				show_avia++;
 				break;
 			case 'm':
 				show_model++;
@@ -158,6 +163,12 @@ int main(int argc, char **argv)
 		if (show_eval)
 			printf("FLASHCHIPS=");
 		printf ("%s\n", tuxbox_get_chipinfo ());
+	}
+
+	if (show_avia) {
+		if (show_eval)
+			printf("AVIACHIP=");
+		printf ("%s\n", tuxbox_get_avia ());
 	}
 
 	return 0;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: tuxbox.c,v 1.10 2009/02/11 21:29:13 rhabarber1848 Exp $
+ * $Id: tuxbox.c,v 1.11 2012/03/04 08:25:35 rhabarber1848 Exp $
  */
 
 #ifdef HAVE_CONFIG_H
@@ -177,6 +177,33 @@ const char *tuxbox_get_chipinfo (void)
 			  return "1";
 		  }
 		  
+	  }
+	  fclose(fp);
+	}
+
+	return "unknown";
+}
+
+const char *tuxbox_get_avia (void)
+{
+	char line[8];
+	FILE* fp;
+
+	fp = fopen("/proc/bus/avia_version", "r");
+	if (fp)
+	{
+	  if (fgets(line, 8, fp) != NULL)
+	  {
+		if (strstr(line, "avia500"))
+		{
+			fclose (fp);
+			return "avia500";
+		}
+		if (strstr(line, "avia600"))
+		{
+			fclose (fp);
+			return "avia600";
+		}
 	  }
 	  fclose(fp);
 	}
