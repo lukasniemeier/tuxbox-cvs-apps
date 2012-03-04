@@ -1,7 +1,7 @@
 #ifndef SINETWORKS_HPP
 #define SINETWORKS_HPP
 //
-// $Id: SInetworks.hpp,v 1.3 2006/02/08 21:15:50 houdini Exp $
+// $Id: SInetworks.hpp,v 1.4 2012/03/04 08:44:27 rhabarber1848 Exp $
 //
 // classes SIservices and SIservices (dbox-II-project)
 //
@@ -135,6 +135,8 @@ public:
 		network_id		= _network_id;
 		original_network_id	= _original_network_id;
 		transport_stream_id	= _transport_stream_id;
+		delivery_type = 0;
+		is_actual = false;
 	}
 	// Std-Copy
 	SInetwork(const SInetwork &s) {

@@ -1,7 +1,7 @@
 #ifndef SISERVICES_HPP
 #define SISERVICES_HPP
 //
-// $Id: SIservices.hpp,v 1.15 2009/02/24 19:09:10 seife Exp $
+// $Id: SIservices.hpp,v 1.16 2012/03/04 08:44:27 rhabarber1848 Exp $
 //
 // classes SIservices and SIservices (dbox-II-project)
 //
@@ -129,7 +129,7 @@ public:
 		flags.EIT_present_following_flag = s->EIT_present_following_flag;
 		flags.running_status = s->running_status;
 		flags.free_CA_mode = s->free_CA_mode;
-		is_actual = false;
+		is_actual = 0;
 	}
 	// Um einen service zum Suchen zu erstellen
 	SIservice(const t_service_id _service_id, const t_original_network_id _original_network_id, const t_transport_stream_id _transport_stream_id)
@@ -138,6 +138,7 @@ public:
 		original_network_id = _original_network_id;
 		transport_stream_id = _transport_stream_id;
 		serviceTyp=0;
+		is_actual = 0;
 		memset(&flags, 0, sizeof(flags));
 	}
 	// Std-Copy

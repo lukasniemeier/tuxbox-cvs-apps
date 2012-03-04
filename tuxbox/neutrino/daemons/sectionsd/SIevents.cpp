@@ -1,5 +1,5 @@
 //
-// $Id: SIevents.cpp,v 1.39 2011/06/19 12:25:18 rhabarber1848 Exp $
+// $Id: SIevents.cpp,v 1.40 2012/03/04 08:44:27 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -77,6 +77,7 @@ SIevent::SIevent(const t_original_network_id _original_network_id, const t_trans
 	service_id          = _service_id;
 	eventID		    = _event_id;
 	table_id            = 0xFF; /* not set */
+	running             = 0;
 /*	contentClassification = "";
 	userClassification = "";
 	itemDescription = "";

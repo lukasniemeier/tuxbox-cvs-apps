@@ -1,5 +1,5 @@
 //
-// $Id: SIsections.cpp,v 1.67 2011/12/18 12:10:49 rhabarber1848 Exp $
+// $Id: SIsections.cpp,v 1.68 2012/03/04 08:44:27 rhabarber1848 Exp $
 //
 // classes for SI sections (dbox-II-project)
 //
@@ -1515,13 +1515,13 @@ int SIsections :: readSections(const unsigned short pid, const unsigned char fil
 	// Jetzt erstellen wir eine Liste der fehlenden Sections
 	unsigned short actualTableIDextension = (unsigned short) -1;
 	unsigned char actualTableID = (unsigned char) -1;
-	unsigned char maxNr = 0;
+	//unsigned char maxNr = 0;
 	unsigned char lastNr = 0;
 
 	for (SIsections::iterator k = begin(); k != end(); k++) {
 		if ((k->tableIDextension() != actualTableIDextension) || (k->tableID() != actualTableID)) {
 			// Neue Table-ID-Extension
-			maxNr = k->lastSectionNumber();
+			//maxNr = k->lastSectionNumber();
 			actualTableIDextension = k->tableIDextension();
 			actualTableID = k->tableID();
 		}

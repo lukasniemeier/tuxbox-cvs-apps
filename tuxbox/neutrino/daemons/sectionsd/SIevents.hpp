@@ -1,7 +1,7 @@
 #ifndef SIEVENTS_HPP
 #define SIEVENTS_HPP
 //
-// $Id: SIevents.hpp,v 1.34 2011/12/17 14:43:41 rhabarber1848 Exp $
+// $Id: SIevents.hpp,v 1.35 2012/03/04 08:44:27 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -356,6 +356,7 @@ public:
 		eventID    = 0;
 		vps = 0;
 		table_id = 0xFF; /* 0xFF means "not set" */
+		running = 0;
 //      dauer=0;
 //      startzeit=0;
 	}

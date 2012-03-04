@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.337 2011/12/31 08:48:17 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.338 2012/03/04 08:44:27 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2204,12 +2204,14 @@ static void findPrevNextSIevent(const event_id_t uniqueKey, SItime &zeit, SIeven
 // handles incoming requests
 //---------------------------------------------------------------------
 
+#if 0
 struct connectionData
 {
 	int connectionSocket;
 
 	struct sockaddr_in clientAddr;
 };
+#endif
 
 static void commandPauseScanning(int connfd, char *data, const unsigned dataLength)
 {
@@ -2649,7 +2651,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.337 2011/12/31 08:48:17 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.338 2012/03/04 08:44:27 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8621,7 +8623,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.337 2011/12/31 08:48:17 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.338 2012/03/04 08:44:27 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
