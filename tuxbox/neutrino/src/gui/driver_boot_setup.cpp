@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.7 2012/03/04 08:34:29 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.8 2012/03/07 18:31:52 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -107,7 +107,7 @@ const driver_setting_files_struct_t driver_setting_files[DRIVER_SETTING_FILES_CO
 #if HAVE_DVB_API_VERSION == 1
 	{LOCALE_DRIVERSETTINGS_STARTBHDRIVER , "/var/etc/.bh"            , OPTIONS_OFF0_ON1_OPTIONS },
 #endif
-	{LOCALE_DRIVERSETTINGS_HWSECTIONS    , "/var/etc/.hw_sections"   , OPTIONS_OFF1_ON0_OPTIONS },
+	{LOCALE_DRIVERSETTINGS_HWSECTIONS    , "/var/etc/.hwsections"    , OPTIONS_OFF0_ON1_OPTIONS },
 	{LOCALE_DRIVERSETTINGS_NOAVIAWATCHDOG, "/var/etc/.no_watchdog"   , OPTIONS_OFF1_ON0_OPTIONS },
 	{LOCALE_DRIVERSETTINGS_NOENXWATCHDOG , "/var/etc/.no_enxwatchdog", OPTIONS_OFF1_ON0_OPTIONS },
 	{LOCALE_DRIVERSETTINGS_PHILIPSRCPATCH, "/var/etc/.philips_rc_patch", OPTIONS_OFF0_ON1_OPTIONS },

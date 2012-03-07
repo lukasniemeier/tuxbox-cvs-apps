@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * $Id: setup_extra.cpp,v 1.87 2011/01/05 13:57:08 dbluelle Exp $
+ * $Id: setup_extra.cpp,v 1.88 2012/03/07 18:31:52 rhabarber1848 Exp $
  */
 #include <enigma.h>
 #include <setup_extra.h>
@@ -219,11 +219,11 @@ void eExpertSetup::init_eExpertSetup()
 	eConfig::getInstance()->setKey("/extras/bootinfo", bootInfo);
 	CONNECT_2_1((new eListBoxEntryCheck(&list, _("Show Boot-Info"), "/extras/bootinfo", _("Show Boot-Infos (IP, etc.)")))->selected, eExpertSetup::fileToggle,"/var/etc/.boot_info");
 //HW-Sections
-	int hwSectionsDisable = 0;
-	if (access("/var/etc/.hw_sections", R_OK) == 0)
-		hwSectionsDisable = 1;
+	int hwSectionsDisable = 1;
+	if (access("/var/etc/.hwsections", R_OK) == 0)
+		hwSectionsDisable = 0;
 	eConfig::getInstance()->setKey("/extras/hw_sections_disable", hwSectionsDisable);
-	CONNECT_2_1((new eListBoxEntryCheck(&list, _("Disable HW_Sections"), "/extras/hw_sections_disable", _("don't use hardware section filtering")))->selected, eExpertSetup::fileToggle,"/var/etc/.hw_sections");
+	CONNECT_2_1((new eListBoxEntryCheck(&list, _("Disable HW_Sections"), "/extras/hw_sections_disable", _("don't use hardware section filtering")))->selected, eExpertSetup::fileToggle,"/var/etc/.hwsections");
 //Watchdog
 	int watchdogDisable = 0;
 	if (access("/var/etc/.no_watchdog", R_OK) == 0)
