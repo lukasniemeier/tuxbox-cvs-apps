@@ -6,7 +6,7 @@
 
 	Copyright (C) 2009 Stefan Seyfried
 
-   $Id: timermanager.cpp,v 1.100 2011/09/29 17:03:10 rhabarber1848 Exp $
+   $Id: timermanager.cpp,v 1.101 2012/03/07 19:33:59 rhabarber1848 Exp $
 
 	License: GPL
 
@@ -1171,6 +1171,7 @@ CTimerEvent_Record::CTimerEvent_Record(CConfigFile *config, int iId):
 //------------------------------------------------------------
 void CTimerEvent_Record::fireEvent()
 {
+	Refresh();
 	CTimerd::RecordingInfo ri=eventInfo;
 	ri.eventID=eventID;
 	strcpy(ri.recordingDir, recordingDir.substr(0,sizeof(ri.recordingDir)-1).c_str());						
