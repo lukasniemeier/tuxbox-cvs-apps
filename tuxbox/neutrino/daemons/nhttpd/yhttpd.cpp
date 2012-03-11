@@ -4,6 +4,7 @@
 //=============================================================================
 
 // system
+#include <cstdio>
 #include <csignal>
 #include <unistd.h>
 #include <pwd.h>

@@ -7,6 +7,7 @@
 #include <cstdarg>
 #include <cstring>
 #include <cstdlib>
+#include <stdio.h>
 
 #include "mod_weblog.h"
 #include "helper.h"
@@ -111,8 +112,7 @@ bool CmWebLog::printf(const char *fmt, ...)
 		pthread_mutex_lock(&WebLog_mutex); // yeah, its mine
 		va_list arglist;
 		va_start( arglist, fmt );
-		if(arglist)
-			vsnprintf( buffer, bufferlen, fmt, arglist );
+		vsnprintf( buffer, bufferlen, fmt, arglist );
 		va_end(arglist);
 		unsigned int len = strlen(buffer);
 		success = (fwrite(buffer, len, 1, WebLogFile) == len);
