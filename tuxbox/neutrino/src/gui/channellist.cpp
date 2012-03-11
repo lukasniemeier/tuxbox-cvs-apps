@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.228 2011/11/13 19:30:21 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.229 2012/03/11 08:38:26 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -1298,7 +1298,7 @@ void CChannelList::paintHead()
 		timestr_len = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(timestr, true); // UTF-8
 	}
 	
-	if (g_info.delivery_system == 1)
+	if (g_info.delivery_system == DVB_S)
 	{
 		for (CZapitClient::SatelliteList::const_iterator satList_it = satList.begin(); satList_it != satList.end(); satList_it++)
 		{
@@ -1315,7 +1315,7 @@ void CChannelList::paintHead()
 	frameBuffer->paintBoxRel(x,y, width,theight+0, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+0, width-10-timestr_len-10, name, COL_MENUHEAD, 0, true); // UTF-8
 	
-	if ((g_info.delivery_system == 1) && (provstr_len > 0))
+	if ((g_info.delivery_system == DVB_S) && (provstr_len > 0))
 	{
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+width-10-timestr_len-10-provstr_len-10,y+fheight+5, provstr_len+1, provstr, COL_MENUHEAD, 0, true); // UTF-8
 	}
