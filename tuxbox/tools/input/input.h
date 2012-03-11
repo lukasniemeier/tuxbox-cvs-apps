@@ -1,5 +1,5 @@
 /*
- * $Id: input.h,v 1.5 2011/05/31 17:19:33 rhabarber1848 Exp $
+ * $Id: input.h,v 1.6 2012/03/11 12:11:29 rhabarber1848 Exp $
  *
  * input - d-box2 linux project
  *
@@ -42,6 +42,7 @@
 #include FT_CACHE_SMALL_BITMAPS_H
 #if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
 #define FT_NEW_CACHE_API
+#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
 #endif
 
 

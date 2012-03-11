@@ -18,6 +18,7 @@
 
 #if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
 #define FT_NEW_CACHE_API
+#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
 #endif
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id: sysinfo.h,v 1.7 2011/05/31 17:19:31 rhabarber1848 Exp $
+ * $Id: sysinfo.h,v 1.8 2012/03/11 12:11:28 rhabarber1848 Exp $
  *
  * sysinfo - d-box2 linux project
  *
@@ -46,6 +46,7 @@
 
 #if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
 #define FT_NEW_CACHE_API
+#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
 #endif
 
 #define NCFFILE "/var/tuxbox/config/neutrino.conf"
