@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.22 2012/03/13 21:11:31 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.23 2012/03/14 20:43:05 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -70,7 +70,7 @@ int CThemes::exec(CMenuTarget* parent, const std::string & actionKey)
 			notifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 			delete notifier;
 		}
-				else
+		else
 		{
 			std::string themeFile = actionKey;
 			if ( strstr(themeFile.c_str(), "{U}") != 0 ) 
@@ -127,9 +127,9 @@ void CThemes::readThemes(CMenuWidget &themes)
 					*pos = '\0';
 					if ( p == 1 ) {
 						userThemeFile = "{U}" + (std::string)file;
-						oj = new CMenuForwarderNonLocalized((char*)file, true, "", this, userThemeFile.c_str());
+						oj = new CMenuForwarderNonLocalized(file, true, "", this, userThemeFile.c_str());
 					} else
-						oj = new CMenuForwarderNonLocalized((char*)file, true, "", this, file);
+						oj = new CMenuForwarderNonLocalized(file, true, "", this, file);
 					themes.addItem( oj );
 				}
 				free(themelist[count]);
