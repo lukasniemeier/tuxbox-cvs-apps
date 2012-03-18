@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.23 2012/03/14 20:43:05 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.24 2012/03/18 11:12:07 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -130,6 +130,7 @@ void CThemes::readThemes(CMenuWidget &themes)
 						oj = new CMenuForwarderNonLocalized(file, true, "", this, userThemeFile.c_str());
 					} else
 						oj = new CMenuForwarderNonLocalized(file, true, "", this, file);
+					oj->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 					themes.addItem( oj );
 				}
 				free(themelist[count]);
