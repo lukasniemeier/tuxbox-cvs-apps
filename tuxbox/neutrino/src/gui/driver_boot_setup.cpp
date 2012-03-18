@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.8 2012/03/07 18:31:52 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.9 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -209,5 +209,46 @@ int CDriverBootSetup::showSetup()
 	toDelete.clear();
 
 	return res;
+}
+
+bool CConsoleDestChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
+{
+	g_settings.uboot_console = *(int *)Data;
+
+	return true;
+}
+
+bool CFdxChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
+{
+	g_settings.uboot_dbox_duplex = *(int *)Data;
+
+	return true;
+}
+
+#ifdef HAVE_DBOX_HARDWARE
+bool CSPTSNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	if (g_settings.misc_spts)
+		g_Zapit->PlaybackSPTS();
+	else
+		g_Zapit->PlaybackPES();
+
+	return true;
+}
+#endif
+
+bool CTouchFileNotifier::changeNotify(const neutrino_locale_t, void * data)
+{
+	if ((*(int *)data) != 0)
+	{
+		FILE * fd = fopen(filename, "w");
+		if (fd)
+			fclose(fd);
+		else
+			return false;
+	}
+	else
+		remove(filename);
+	return true;
 }
 

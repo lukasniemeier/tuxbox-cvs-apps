@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
+	$Id: osd_setup.cpp,v 1.14 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -36,7 +36,6 @@
 
 #include "osd_setup.h"
 #include "alphasetup.h"
-#include "themes.h"
 #include "screensetup.h"
 #include "osdlang_setup.h"
 #include "filebrowser.h"
@@ -46,6 +45,7 @@
 
 #include <gui/widget/icons.h>
 #include <gui/widget/colorchooser.h>
+#include <gui/widget/hintbox.h>
 #include <gui/widget/stringinput.h>
 
 #include <driver/framebuffer.h>
@@ -707,5 +707,53 @@ int COsdSetup::showOsdFontSizeSetup()
 	toDelete.clear();
 
 	return res;
+}
+
+bool CFontSizeNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FONTSIZE_HINT)); // UTF-8
+	hintBox.paint();
+
+	CNeutrinoApp::getInstance()->SetupFonts();
+
+	hintBox.hide();
+
+	return true;
+}
+
+#ifdef ENABLE_RADIOTEXT
+bool CRadiotextNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	if (g_settings.radiotext_enable)
+	{
+		if (g_Radiotext == NULL)
+			g_Radiotext = new CRadioText;
+		if (g_Radiotext && ((CNeutrinoApp::getInstance()->getMode()) == NeutrinoMessages::mode_radio))
+			g_Radiotext->setPid(g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].pid);
+	}
+	else
+	{
+		// stop radiotext PES decoding
+		if (g_Radiotext)
+			g_Radiotext->radiotext_stop();
+		delete g_Radiotext;
+		g_Radiotext = NULL;
+	}
+
+	return true;
+}
+#endif
+
+bool CTimingSettingsNotifier::changeNotify(const neutrino_locale_t OptionName, void *)
+{
+	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
+	{
+		if (ARE_LOCALES_EQUAL(OptionName, timing_setting[i].name))
+		{
+			g_settings.timing[i] = atoi(g_settings.timing_string[i]);
+			return true;
+		}
+	}
+	return false;
 }
 

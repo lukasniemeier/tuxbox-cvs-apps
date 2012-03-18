@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.h,v 1.5 2011/12/09 22:36:28 dbt Exp $
+	$Id: record_setup.h,v 1.6 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -47,6 +47,42 @@ class CRecordSetup : public CMenuTarget
 		CRecordSetup();
 		~CRecordSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+};
+
+class CRecAPIDSettingsNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t OptionName, void*);
+};
+
+class CRecordingNotifier : public CChangeObserver
+{
+	private:
+		CMenuItem* toDisable[9];
+	public:
+		CRecordingNotifier(CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
+		bool changeNotify(const neutrino_locale_t OptionName, void*);
+};
+
+class CRecordingNotifier2 : public CChangeObserver
+{
+	private:
+		CMenuItem* toDisable[1];
+	public:
+		CRecordingNotifier2( CMenuItem*);
+		bool changeNotify(const neutrino_locale_t, void *);
+};
+
+class CRecordingSafetyNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void *);
+};
+
+class CZaptoSafetyNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void *);
 };
 
 #endif

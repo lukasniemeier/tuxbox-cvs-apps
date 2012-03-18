@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.244 2011/04/25 14:10:39 dbt Exp $
+	$Id: neutrino.h,v 1.245 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -180,7 +180,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		bool				skipShutdownTimer;
 
-		CShutdownCountNotifier		*shutdownCountNotifier;
 		CNetworkSetup 			*networksetup;
 		CNVODChangeExec         	*NVODChanger;
 #ifdef HAVE_DBOX_HARDWARE

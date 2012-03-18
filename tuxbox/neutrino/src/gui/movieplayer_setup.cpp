@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.11 2012/02/19 16:29:38 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.12 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -256,4 +256,46 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 	delete MoviePluginChanger;
 
 	return res;
+}
+
+int CMoviePluginChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
+{
+	int sel= atoi(actionKey.c_str());
+	parent->hide();
+	if (sel>=0)
+	{
+		g_settings.movieplayer_plugin=g_PluginList->getName(sel);
+	}
+	return menu_return::RETURN_EXIT;
+}
+
+CStreamingNotifier::CStreamingNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4, CMenuItem* i5, CMenuItem* i6, CMenuItem* i7, CMenuItem* i8, CMenuItem* i9, CMenuItem* i10, CMenuItem* i11, CMenuItem* i12)
+{
+	toDisable[0]=i1;
+	toDisable[1]=i2;
+	toDisable[2]=i3;
+	toDisable[3]=i4;
+	toDisable[4]=i5;
+	toDisable[5]=i6;
+	toDisable[6]=i7;
+	toDisable[7]=i8;
+	toDisable[8]=i9;
+	toDisable[9]=i10;
+	toDisable[10]=i11;
+	toDisable[11]=i12;
+}
+
+bool CStreamingNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	if(g_settings.streaming_type==0)
+	{
+		for (int i=0; i<=11; i++)
+			toDisable[i]->setActive(false);
+	}
+	else if(g_settings.streaming_type==1)
+	{
+		for (int i=0; i<=11; i++)
+			toDisable[i]->setActive(true);
+	}
+	return true;
 }

@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.13 2011/12/09 22:36:27 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.14 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -257,4 +257,10 @@ int CKeybindSetup::showSetup()
 		delete keychooser[i];
 
 	return res;
+}
+
+bool CKeySetupNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	g_RCInput->setRepeat(atoi(g_settings.repeat_blocker), atoi(g_settings.repeat_genericblocker));
+	return false;
 }

@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.17 2011/12/21 21:03:49 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.18 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -573,4 +573,71 @@ std::string CScanSetup::getScanModeString(const int& scan_type)
 	int st = scan_type;
 	return g_Locale->getText(scan_mode[st].locale);
 
+}
+
+bool CSatDiseqcNotifier::changeNotify(const neutrino_locale_t, void * Data)
+{
+	if (*((int*) Data) == NO_DISEQC)
+	{
+		satMenu->setActive(true);
+		extMenu->setActive(false);
+		extMotorMenu->setActive(false);
+		repeatMenu->setActive(false);
+	}
+	else
+	if (*((int*) Data) == DISEQC_1_2)
+	{
+		satMenu->setActive(true);
+		extMenu->setActive(true);
+		extMotorMenu->setActive(true);
+		repeatMenu->setActive(true);
+	}
+	else
+	{
+		satMenu->setActive(false);
+		extMenu->setActive(true);
+		extMotorMenu->setActive(false);
+		repeatMenu->setActive((*((int*) Data) != DISEQC_1_0));
+	}
+	return true;
+}
+
+CTP_scanNotifier::CTP_scanNotifier(CMenuOptionChooser* i1, CMenuOptionChooser* i2, CMenuForwarder* i3, CMenuForwarder* i4, CMenuOptionStringChooser* i5)
+{
+	toDisable1[0]=i1;
+	toDisable1[1]=i2;
+	toDisable2[0]=i3;
+	toDisable2[1]=i4;
+	toDisable3[0]=i5;
+}
+
+bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
+{
+	int tp_scan_mode = CNeutrinoApp::getInstance()->getScanSettings().TP_scan;
+	bool set_true_false = tp_scan_mode;
+
+	if ((*((int*) Data) == 0) || (*((int*) Data) == 2)) // all sats || one sat
+		set_true_false = false;
+
+	for (int i=0; i<2; i++)
+	{
+		if (toDisable1[i]) toDisable1[i]->setActive(set_true_false);
+		if (toDisable2[i]) toDisable2[i]->setActive(set_true_false);
+	}
+
+	if (toDisable3[0]) {
+		if (*((int*) Data) == 0) // all sat
+			toDisable3[0]->setActive(false);
+		else
+			toDisable3[0]->setActive(true);
+	}
+
+	return true;
+}
+
+bool CScanSettingsSatManNotifier::changeNotify(const neutrino_locale_t, void *Data)
+{
+	(CNeutrinoApp::getInstance()->ScanSettings()).TP_diseqc =
+		 *((CNeutrinoApp::getInstance()->ScanSettings()).diseqscOfSat((char*)Data));
+	return true;
 }

@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.9 2011/12/09 22:36:27 dbt Exp $
+	$Id: audio_setup.cpp,v 1.10 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -179,4 +179,38 @@ int CAudioSetup::showAudioSetup()
 	delete audioSettings;
 
 	return res;
+}
+
+bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void *)
+{
+	//printf("notify: %d\n", OptionName);
+
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_PCMOFFSET))
+	{
+		if (g_settings.audio_avs_Control == 2)   //lirc
+			g_Controld->setVolume(100 - atoi(g_settings.audio_PCMOffset), CControld::TYPE_OST);
+	}
+
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOGOUT))
+	{
+		g_Zapit->setAudioMode(g_settings.audio_AnalogMode);
+	}
+	return true;
+}
+
+CAudioSetupNotifier2::CAudioSetupNotifier2( CMenuItem* i1)
+{
+	toDisable[0]=i1;
+}
+
+bool CAudioSetupNotifier2::changeNotify(const neutrino_locale_t, void *)
+{
+	toDisable[0]->setActive(g_settings.audio_avs_Control == 2);
+
+	if (g_settings.audio_avs_Control == 2)
+		g_Controld->setVolume(100 - atoi(g_settings.audio_PCMOffset), CControld::TYPE_OST);
+	// tell controld the new volume_type
+	g_Controld->setVolume(g_Controld->getVolume((CControld::volume_type)g_settings.audio_avs_Control),
+									 (CControld::volume_type)g_settings.audio_avs_Control);
+	return true;
 }

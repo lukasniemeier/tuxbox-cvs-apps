@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.108 2012/02/15 20:43:16 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.109 2012/03/18 11:20:15 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -36,7 +36,6 @@
 
 #include <config.h>
 #include <gui/widget/menue.h>
-#include <zapit/client/zapitclient.h>
 
 #include <string>
 
@@ -44,58 +43,6 @@ unsigned long long getcurrenttime();
 std::string getPidof(const std::string& process_name);
 std::string getFileEntryString(const char* filename, const std::string& filter_entry, const int& column_num);
 std::string getInterface();
-
-// extern char CstartChannelRadio[30]; /* defined in setting_helpers.cpp */
-// extern char CstartChannelTV[30];
-
-class CSatDiseqcNotifier : public CChangeObserver
-{
-	private:
-		CMenuItem* satMenu;
-		CMenuItem* extMenu;
-		CMenuItem* extMotorMenu;
-		CMenuItem* repeatMenu;
-	protected:
-		CSatDiseqcNotifier( ) : CChangeObserver(){};  // prevent calling constructor without data we need
-	public:
-		CSatDiseqcNotifier( CMenuItem* SatMenu, CMenuItem* ExtMenu, CMenuItem* ExtMotorMenu, CMenuItem* RepeatMenu) : CChangeObserver()
-		{ satMenu = SatMenu; extMenu = ExtMenu; extMotorMenu = ExtMotorMenu; repeatMenu = RepeatMenu;};
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-
-class CTP_scanNotifier : public CChangeObserver
-{
-	private:
-		CMenuOptionChooser* toDisable1[2];
-		CMenuForwarder* toDisable2[2];
-		CMenuOptionStringChooser* toDisable3[1];		
-	public:
-		CTP_scanNotifier(CMenuOptionChooser*, CMenuOptionChooser*, CMenuForwarder*, CMenuForwarder*, CMenuOptionStringChooser*);
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CScanSettingsSatManNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *Data);
-};
-
-class CDHCPNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder* toDisable[5];
-	public:
-		CDHCPNotifier( CMenuForwarder*, CMenuForwarder*, CMenuForwarder*, CMenuForwarder*, CMenuForwarder*);
-		bool changeNotify(const neutrino_locale_t, void * data);
-};
-class CStreamingNotifier : public CChangeObserver
-{
-	private:
-		CMenuItem* toDisable[12];
-	public:
-		CStreamingNotifier( CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
-		bool changeNotify(const neutrino_locale_t, void *);
-};
 
 class COnOffNotifier : public CChangeObserver
 {
@@ -105,51 +52,6 @@ class COnOffNotifier : public CChangeObserver
 	public:
 		COnOffNotifier (CMenuItem* a1,CMenuItem* a2 = NULL,CMenuItem* a3 = NULL,CMenuItem* a4 = NULL,CMenuItem* a5 = NULL);
 		bool changeNotify(const neutrino_locale_t, void *Data);
-};
-
-class CRecordingNotifier : public CChangeObserver
-{
-	private:
-		CMenuItem* toDisable[9];
-	public:
-		CRecordingNotifier(CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
-		bool changeNotify(const neutrino_locale_t OptionName, void*);
-};
-
-class CRecordingSafetyNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CZaptoSafetyNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CRecordingNotifier2 : public CChangeObserver
-{
-	private:
-		CMenuItem* toDisable[1];
-	public:
-		CRecordingNotifier2( CMenuItem*);
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CMiscNotifier : public CChangeObserver
-{
-	private:
-		CMenuItem* toDisable[4];
-	public:
-		CMiscNotifier( CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem* );
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CLcdNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
 };
 
 #ifndef TUXTXT_CFG_STANDALONE
@@ -165,111 +67,11 @@ class CPauseSectionsdNotifier : public CChangeObserver
 	public:
 		bool changeNotify(const neutrino_locale_t, void * Data);
 };
-
-#ifdef ENABLE_RADIOTEXT
-class CRadiotextNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-#endif
-
-#ifdef HAVE_DBOX_HARDWARE
-class CSPTSNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-#endif
 		
 class CSectionsdConfigNotifier : public CChangeObserver
 {
 	public:
 		bool changeNotify(const neutrino_locale_t, void * );
-};
-
-class CTouchFileNotifier : public CChangeObserver
-{
-	const char * filename;
- public:
-	inline CTouchFileNotifier(const char * file_to_modify)
-		{
-			filename = file_to_modify;
-		};
-	bool changeNotify(const neutrino_locale_t, void * data);
-};
-
-class CColorSetupNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CAudioSetupNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t OptionName, void *);
-};
-
-class CAudioSetupNotifier2 : public CChangeObserver
-{
-	private:
-		CMenuItem* toDisable[1];
-	public:
-		CAudioSetupNotifier2( CMenuItem* );
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CUserMenuNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder *menuitem;
-	public:
-		CUserMenuNotifier(CMenuForwarder *item = NULL);
-		void setItem(CMenuForwarder *item);
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CKeySetupNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CShutdownCountNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CConsoleDestChangeNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-
-class CFdxChangeNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-
-class CTimingSettingsNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t OptionName, void *);
-};
-
-class CFontSizeNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CRecAPIDSettingsNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t OptionName, void*);
 };
 
 void showSubchan(const std::string & subChannelName);
@@ -285,18 +87,11 @@ class CStreamFeaturesChangeExec : public CMenuTarget
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
-class CMoviePluginChangeExec : public CMenuTarget
-{
-	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
 class CUCodeCheckExec : public CMenuTarget
 {
 	public:
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
-
 
 class CDVBInfoExec : public CMenuTarget
 {
@@ -313,8 +108,6 @@ class CNetAdapter
 	public:
 		std::string getMacAddr(void);
 };
-
-
 
 #endif
 

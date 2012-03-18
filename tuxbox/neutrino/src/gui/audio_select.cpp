@@ -41,6 +41,7 @@
 #include <gui/widget/menue.h>
 
 #include <gui/audio_select.h>
+#include <gui/audio_setup.h>
 
 
 

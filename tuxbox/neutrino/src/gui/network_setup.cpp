@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.18 2011/12/09 22:36:28 dbt Exp $
+	$Id: network_setup.cpp,v 1.19 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -454,5 +454,22 @@ bool CNetworkSetup::changeNotify(const neutrino_locale_t, void * Data)
 
 	networkConfig->netmask = (_ip[0] == 10) ? "255.0.0.0" : "255.255.255.0";
 	network_netmask = networkConfig->netmask;
+	return true;
+}
+
+CDHCPNotifier::CDHCPNotifier( CMenuForwarder* a1, CMenuForwarder* a2, CMenuForwarder* a3, CMenuForwarder* a4, CMenuForwarder* a5)
+{
+	toDisable[0] = a1;
+	toDisable[1] = a2;
+	toDisable[2] = a3;
+	toDisable[3] = a4;
+	toDisable[4] = a5;
+}
+
+bool CDHCPNotifier::changeNotify(const neutrino_locale_t, void * data)
+{
+	CNetworkConfig::getInstance()->inet_static = ((*(int*)(data)) == 0);
+	for(int x=0;x<5;x++)
+		toDisable[x]->setActive(CNetworkConfig::getInstance()->inet_static);	
 	return true;
 }

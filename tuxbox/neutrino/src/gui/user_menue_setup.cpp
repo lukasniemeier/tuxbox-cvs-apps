@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.7 2011/12/09 22:36:28 dbt Exp $
+	$Id: user_menue_setup.cpp,v 1.8 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -127,5 +127,24 @@ int CUserMenuSetup::showSetup()
 	delete ums;
 
 	return res;
+}
+
+CUserMenuNotifier::CUserMenuNotifier(CMenuForwarder *item)
+{
+	menuitem = item;
+}
+
+void CUserMenuNotifier::setItem(CMenuForwarder *item)
+{
+	menuitem = item;
+}
+
+bool CUserMenuNotifier::changeNotify(const neutrino_locale_t, void *Data)
+{
+	if (menuitem) {
+		char *data = (char *)Data;
+		menuitem->setOption(data);
+	}
+	return true;
 }
 

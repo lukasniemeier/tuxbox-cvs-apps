@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.h,v 1.7 2011/12/09 22:36:27 dbt Exp $
+	$Id: keybind_setup.h,v 1.8 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -34,9 +34,13 @@
 #include <gui/widget/menue.h>
 #include <gui/widget/icons.h>
 
-#include <system/setting_helpers.h>
-
 #include <string>
+
+class CKeySetupNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void *);
+};
 
 class CKeybindSetup : public CMenuTarget
 {

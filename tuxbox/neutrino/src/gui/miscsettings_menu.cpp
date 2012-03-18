@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.6 2011/12/09 22:36:27 dbt Exp $
+	$Id: miscsettings_menu.cpp,v 1.7 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -273,5 +273,28 @@ int CMiscMenue::showMenue()
 	delete misc_menue_filebrowser;
 
 	return res;
+}
+
+CMiscNotifier::CMiscNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4)
+{
+	toDisable[0]=i1;
+	toDisable[1]=i2;
+	toDisable[2]=i3;
+	toDisable[3]=i4;
+}
+
+bool CMiscNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	toDisable[0]->setActive(!g_settings.shutdown_real);
+	toDisable[1]->setActive(!g_settings.shutdown_real);
+	toDisable[2]->setActive(!g_settings.shutdown_real);
+	toDisable[3]->setActive(!g_settings.shutdown_real);
+	return true;
+}
+
+bool CShutdownCountNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	printf("[neutrino] shutdown counter changed to %d minutes\n", atoi(g_settings.shutdown_count));
+	return true;
 }
 

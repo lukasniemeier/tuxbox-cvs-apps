@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.24 2012/03/18 11:12:07 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.25 2012/03/18 11:20:14 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -33,10 +33,10 @@
 #include <global.h>
 #include <neutrino.h>
 #include "widget/menue.h"
-#include <system/setting_helpers.h>
 #include <gui/widget/stringinput.h>
 #include <gui/widget/stringinput_ext.h>
 #include <gui/widget/messagebox.h>
+#include <driver/framebuffer.h>
 #include <driver/screen_max.h>
 
 #include <sys/stat.h>
@@ -441,5 +441,55 @@ void CThemes::setupDefaultColors()
 	g_settings.infobar_Text_blue  = 0x64;
 }
 
+bool CColorSetupNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	CFrameBuffer *frameBuffer = CFrameBuffer::getInstance();
+//	unsigned char r,g,b;
+	//setting colors-..
+	frameBuffer->paletteGenFade(COL_MENUHEAD,
+	                              convertSetupColor2RGB(g_settings.menu_Head_red, g_settings.menu_Head_green, g_settings.menu_Head_blue),
+	                              convertSetupColor2RGB(g_settings.menu_Head_Text_red, g_settings.menu_Head_Text_green, g_settings.menu_Head_Text_blue),
+	                              8, convertSetupAlpha2Alpha( g_settings.menu_Head_alpha ) );
 
+	frameBuffer->paletteGenFade(COL_MENUCONTENT,
+	                              convertSetupColor2RGB(g_settings.menu_Content_red, g_settings.menu_Content_green, g_settings.menu_Content_blue),
+	                              convertSetupColor2RGB(g_settings.menu_Content_Text_red, g_settings.menu_Content_Text_green, g_settings.menu_Content_Text_blue),
+	                              8, convertSetupAlpha2Alpha(g_settings.menu_Content_alpha) );
+
+
+	frameBuffer->paletteGenFade(COL_MENUCONTENTDARK,
+	                              convertSetupColor2RGB(int(g_settings.menu_Content_red*0.6), int(g_settings.menu_Content_green*0.6), int(g_settings.menu_Content_blue*0.6)),
+	                              convertSetupColor2RGB(g_settings.menu_Content_Text_red, g_settings.menu_Content_Text_green, g_settings.menu_Content_Text_blue),
+	                              8, convertSetupAlpha2Alpha(g_settings.menu_Content_alpha) );
+
+	frameBuffer->paletteGenFade(COL_MENUCONTENTSELECTED,
+	                              convertSetupColor2RGB(g_settings.menu_Content_Selected_red, g_settings.menu_Content_Selected_green, g_settings.menu_Content_Selected_blue),
+	                              convertSetupColor2RGB(g_settings.menu_Content_Selected_Text_red, g_settings.menu_Content_Selected_Text_green, g_settings.menu_Content_Selected_Text_blue),
+	                              8, convertSetupAlpha2Alpha(g_settings.menu_Content_Selected_alpha) );
+
+	frameBuffer->paletteGenFade(COL_MENUCONTENTINACTIVE,
+	                              convertSetupColor2RGB(g_settings.menu_Content_inactive_red, g_settings.menu_Content_inactive_green, g_settings.menu_Content_inactive_blue),
+	                              convertSetupColor2RGB(g_settings.menu_Content_inactive_Text_red, g_settings.menu_Content_inactive_Text_green, g_settings.menu_Content_inactive_Text_blue),
+	                              8, convertSetupAlpha2Alpha(g_settings.menu_Content_inactive_alpha) );
+
+	frameBuffer->paletteGenFade(COL_INFOBAR,
+	                              convertSetupColor2RGB(g_settings.infobar_red, g_settings.infobar_green, g_settings.infobar_blue),
+	                              convertSetupColor2RGB(g_settings.infobar_Text_red, g_settings.infobar_Text_green, g_settings.infobar_Text_blue),
+	                              8, convertSetupAlpha2Alpha(g_settings.infobar_alpha) );
+
+/*	frameBuffer->paletteSetColor( COL_INFOBAR_SHADOW,
+	                                convertSetupColor2RGB(
+	                                    int(g_settings.infobar_red*0.4),
+	                                    int(g_settings.infobar_green*0.4),
+	                                    int(g_settings.infobar_blue*0.4)),
+	                                g_settings.infobar_alpha);
+*/
+	frameBuffer->paletteGenFade(COL_INFOBAR_SHADOW,
+	                              convertSetupColor2RGB(int(g_settings.infobar_red*0.4), int(g_settings.infobar_green*0.4), int(g_settings.infobar_blue*0.4)),
+	                              convertSetupColor2RGB(g_settings.infobar_Text_red, g_settings.infobar_Text_green, g_settings.infobar_Text_blue),
+	                              8, convertSetupAlpha2Alpha(g_settings.infobar_alpha) );
+	
+	frameBuffer->paletteSet();
+	return false;
+}
 

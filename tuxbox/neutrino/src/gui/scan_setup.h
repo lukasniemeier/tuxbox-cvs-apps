@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.h,v 1.9 2011/12/21 21:03:50 rhabarber1848 Exp $
+	$Id: scan_setup.h,v 1.10 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	Copyright (C) 2009 Thilo Graf (dbt)
 	http://www.dbox2-tuning.de
@@ -50,6 +50,38 @@ class CScanSetup : public CMenuTarget
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 		void initScanSettings();
 		std::string getScanModeString(const int& scan_type);
+};
+
+class CSatDiseqcNotifier : public CChangeObserver
+{
+	private:
+		CMenuItem* satMenu;
+		CMenuItem* extMenu;
+		CMenuItem* extMotorMenu;
+		CMenuItem* repeatMenu;
+	protected:
+		CSatDiseqcNotifier( ) : CChangeObserver(){};  // prevent calling constructor without data we need
+	public:
+		CSatDiseqcNotifier( CMenuItem* SatMenu, CMenuItem* ExtMenu, CMenuItem* ExtMotorMenu, CMenuItem* RepeatMenu) : CChangeObserver()
+		{ satMenu = SatMenu; extMenu = ExtMenu; extMotorMenu = ExtMotorMenu; repeatMenu = RepeatMenu;};
+		bool changeNotify(const neutrino_locale_t, void * Data);
+};
+
+class CTP_scanNotifier : public CChangeObserver
+{
+	private:
+		CMenuOptionChooser* toDisable1[2];
+		CMenuForwarder* toDisable2[2];
+		CMenuOptionStringChooser* toDisable3[1];		
+	public:
+		CTP_scanNotifier(CMenuOptionChooser*, CMenuOptionChooser*, CMenuForwarder*, CMenuForwarder*, CMenuOptionStringChooser*);
+		bool changeNotify(const neutrino_locale_t, void *);
+};
+
+class CScanSettingsSatManNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void *Data);
 };
 
 #endif

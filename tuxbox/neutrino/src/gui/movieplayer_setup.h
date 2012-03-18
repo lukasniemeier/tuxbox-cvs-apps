@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.h,v 1.5 2011/12/09 22:36:28 dbt Exp $
+	$Id: movieplayer_setup.h,v 1.6 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	movieplaye setup implementation - Neutrino-GUI
 
@@ -47,6 +47,21 @@ class CMoviePlayerSetup : public CMenuTarget
 		CMoviePlayerSetup();
 		~CMoviePlayerSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+};
+
+class CMoviePluginChangeExec : public CMenuTarget
+{
+	public:
+		int exec(CMenuTarget* parent, const std::string & actionKey);
+};
+
+class CStreamingNotifier : public CChangeObserver
+{
+	private:
+		CMenuItem* toDisable[12];
+	public:
+		CStreamingNotifier( CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
+		bool changeNotify(const neutrino_locale_t, void *);
 };
 
 #endif

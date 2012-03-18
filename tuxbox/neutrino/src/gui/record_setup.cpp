@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
+	$Id: record_setup.cpp,v 1.14 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -379,5 +379,95 @@ int CRecordSetup::showRecordSetup()
 	toDelete.clear();
 
 	return res;
+}
+
+bool CRecAPIDSettingsNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	g_settings.recording_audio_pids_default = ( (g_settings.recording_audio_pids_std ? TIMERD_APIDS_STD : 0) |
+						  (g_settings.recording_audio_pids_alt ? TIMERD_APIDS_ALT : 0) |
+						  (g_settings.recording_audio_pids_ac3 ? TIMERD_APIDS_AC3 : 0));
+	return true;
+}
+
+CRecordingNotifier::CRecordingNotifier(CMenuItem* i1 , CMenuItem* i2 , CMenuItem* i3 ,
+                                       CMenuItem* i4 , CMenuItem* i5 , CMenuItem* i6 ,
+                                       CMenuItem* i7 , CMenuItem* i8 , CMenuItem* i9)
+{
+	toDisable[ 0] = i1;
+	toDisable[ 1] = i2;
+	toDisable[ 2] = i3;
+	toDisable[ 3] = i4;
+	toDisable[ 4] = i5;
+	toDisable[ 5] = i6;
+	toDisable[ 6] = i7;
+	toDisable[ 7] = i8;
+	toDisable[ 8] = i9;
+}
+
+bool CRecordingNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	if ((g_settings.recording_type == CNeutrinoApp::RECORDING_OFF) ||
+		(g_settings.recording_type == CNeutrinoApp::RECORDING_FILE))
+	{
+		for(int i = 0; i < 9; i++)
+			toDisable[i]->setActive(false);
+
+		if (g_settings.recording_type == CNeutrinoApp::RECORDING_FILE)
+		{
+			   toDisable[4]->setActive(true);
+			   toDisable[5]->setActive(true);
+			   toDisable[7]->setActive(true);
+			   toDisable[8]->setActive(true);
+		}
+	}
+	else if (g_settings.recording_type == CNeutrinoApp::RECORDING_SERVER)
+	{
+		toDisable[0]->setActive(true);
+		toDisable[1]->setActive(true);
+		toDisable[2]->setActive(true);
+		toDisable[3]->setActive(g_settings.recording_server_wakeup==1);
+		toDisable[4]->setActive(true);
+		toDisable[5]->setActive(true);
+		toDisable[6]->setActive(false);
+		toDisable[7]->setActive(false);
+		toDisable[8]->setActive(true);
+	}
+	else if (g_settings.recording_type == CNeutrinoApp::RECORDING_VCR)
+	{
+		toDisable[0]->setActive(false);
+		toDisable[1]->setActive(false);
+		toDisable[2]->setActive(false);
+		toDisable[3]->setActive(false);
+		toDisable[4]->setActive(false);
+		toDisable[5]->setActive(false);
+		toDisable[6]->setActive(true);
+		toDisable[7]->setActive(false);
+		toDisable[8]->setActive(false);
+	}
+
+	return true;
+}
+
+CRecordingNotifier2::CRecordingNotifier2( CMenuItem* i)
+{
+	toDisable[0]=i;
+}
+
+bool CRecordingNotifier2::changeNotify(const neutrino_locale_t, void *)
+{
+	toDisable[0]->setActive(g_settings.recording_server_wakeup==1);
+	return true;
+}
+
+bool CRecordingSafetyNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	g_Timerd->setRecordingSafety(atoi(g_settings.record_safety_time_before)*60, atoi(g_settings.record_safety_time_after)*60);
+	return true;
+}
+
+bool CZaptoSafetyNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	g_Timerd->setZaptoSafety(atoi(g_settings.zapto_safety_time_before)*60);
+	return true;
 }
 

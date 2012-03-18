@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.9 2011/12/09 22:36:28 dbt Exp $ 
+	$Id: themes.h,v 1.10 2012/03/18 11:20:14 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -26,7 +26,12 @@
 #define __cthemes__
 #include <string>
 #include <configfile.h>
-#include <system/setting_helpers.h>
+
+class CColorSetupNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void *);
+};
 
 class CThemes : public CMenuTarget
 {

@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.4 2011/12/09 22:36:28 dbt Exp $
+	$Id: osd_setup.h,v 1.5 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -33,10 +33,17 @@
 
 #include <gui/widget/menue.h>
 
-#include <system/setting_helpers.h>
 #include <system/settings.h>
 
+#include "themes.h"
+
 #include <string>
+
+class CFontSizeNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void *);
+};
 
 class COsdSetup : public CMenuTarget
 {
@@ -88,6 +95,20 @@ class COsdSetupChannelLogoNotifier : public CChangeObserver
 	public:
 		COsdSetupChannelLogoNotifier( CMenuForwarder*, CMenuOptionChooser* );
 		bool changeNotify(const neutrino_locale_t, void * Data);
+};
+
+#ifdef ENABLE_RADIOTEXT
+class CRadiotextNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t, void * Data);
+};
+#endif
+
+class CTimingSettingsNotifier : public CChangeObserver
+{
+	public:
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 #endif

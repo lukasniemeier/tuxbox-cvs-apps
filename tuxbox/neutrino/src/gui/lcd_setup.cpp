@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.5 2011/12/09 22:36:27 dbt Exp $
+	$Id: lcd_setup.cpp,v 1.6 2012/03/18 11:20:14 rhabarber1848 Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -187,5 +187,12 @@ int CLcdSetup::showSetup()
 	delete lcdsliders;
 
 	return res;
+}
+
+bool CLcdNotifier::changeNotify(const neutrino_locale_t, void *)
+{
+	CLCD::getInstance()->setlcdparameter();
+	CLCD::getInstance()->setAutoDimm(g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM]);
+	return true;
 }
 
