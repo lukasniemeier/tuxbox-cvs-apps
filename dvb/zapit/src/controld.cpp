@@ -469,7 +469,7 @@ void setvideooutput(CControld::video_format format, bool bSaveSettings)
 }
 #endif
 
-#if defined HAVE_GENERIC_HARDWARE || defined HAVE_COOL_HARDWARE
+#if defined HAVE_GENERIC_HARDWARE || defined HAVE_COOL_HARDWARE || defined HAVE_SPARK_HARDWARE
 /* not implemented yet */
 void setvideooutput(CControld::video_format, bool)
 {

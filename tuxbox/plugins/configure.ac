@@ -42,7 +42,14 @@ TUXBOX_APPS_LIB_PKGCONFIG(MD5SUM,tuxbox-md5sum)
 TUXBOX_APPS_LIB_PKGCONFIG(UCODES,tuxbox-ucodes)
 
 # needed by tuxtxt
+AC_ARG_ENABLE(tuxtxt,
+        AS_HELP_STRING(--disable-tuxtxt,[disable Tuxtxt]),
+        ,[enable_tuxtxt=yes])
+AM_CONDITIONAL(ENABLE_TUXTXT,test "$enable_tuxtxt" = "yes")
+
+if test "enable_tuxtxt" = "yes"; then
 TUXBOX_APPS_LIB_PKGCONFIG(TUXTXT,tuxbox-tuxtxt)
+fi
 
 CPPFLAGS="$CPPFLAGS $TUXTXT_CFLAGS"
 CFLAGS="$CFLAGS $TUXTXT_CFLAGS"
