@@ -1,5 +1,5 @@
 /*  
-	$Id: dirchooser.cpp,v 1.7 2010/06/27 21:17:13 dbt Exp $
+	$Id: dirchooser.cpp,v 1.8 2012/03/24 11:27:57 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 	
@@ -197,7 +197,9 @@ void CRecDirChooser::initMenu(void)
 				dirOptionText[i]=tmp;
 			}
 			snprintf(indexStr,10,"MID:%d",i);
-			addItem(new CMenuForwarderNonLocalized(	g_settings.recording_dir[i].c_str(), true, dirOptionText[i], this, indexStr), i == 0 ? true:false); //firs
+			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(g_settings.recording_dir[i].c_str(), true, dirOptionText[i], this, indexStr);
+			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+			addItem(fw, i == 0); // select first item
 		}
 	}
 	addItem(GenericMenuSeparatorLine);

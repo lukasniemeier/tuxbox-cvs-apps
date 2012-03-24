@@ -53,6 +53,8 @@ class CKeyChooser : public CMenuWidget
 		std::string		keyName;
 		CKeyChooserItem		*keyChooser;
 		CKeyChooserItemNoKey	*keyDeleter;
+		CMenuForwarder		*keyChooserForwarder;
+		CMenuForwarder		*keyDeleterForwarder;
 
 	public:
 		CKeyChooser(neutrino_msg_t * const Key, const neutrino_locale_t title, const std::string & Icon = "");

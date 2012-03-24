@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.14 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: osd_setup.cpp,v 1.15 2012/03/24 11:27:57 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -448,7 +448,9 @@ int COsdSetup::showOsdTimeoutSetup()
 	}
 
 	ots->addItem(GenericMenuSeparatorLine);
-	ots->addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, "osd.def"));
+	CMenuForwarder * ots_defaults_fw = new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, "osd.def");
+	ots_defaults_fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+	ots->addItem(ots_defaults_fw);
 
 	int res = ots->exec(NULL, "");
 	ots->hide();
@@ -686,15 +688,18 @@ int COsdSetup::showOsdFontSizeSetup()
 			AddFontSettingItem(fontSettingsSubMenu, font_sizes_groups[i].content[j]);
 		}
 		fontSettingsSubMenu->addItem(GenericMenuSeparatorLine);
-		fontSettingsSubMenu->addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[i].actionkey));
+		CMenuForwarder * fontSettingsSubMenu_loadDefaults = new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[i].actionkey);
+		fontSettingsSubMenu_loadDefaults->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+		fontSettingsSubMenu->addItem(fontSettingsSubMenu_loadDefaults);
 
 		fontSettings->addItem(new CMenuForwarder(font_sizes_groups[i].groupname, true, NULL, fontSettingsSubMenu));
 	}
 
 	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM);
 	fontSettings->addItem(GenericMenuSeparatorLine);
-	fontSettings->addItem(new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[5].actionkey));
-
+	CMenuForwarder * fontSettings_loadDefaults = new CMenuForwarder(LOCALE_OPTIONS_DEFAULT, true, NULL, this, font_sizes_groups[5].actionkey);
+	fontSettings_loadDefaults->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+	fontSettings->addItem(fontSettings_loadDefaults);
 
 	int res = fontSettings->exec(NULL, "");
 	fontSettings->hide();

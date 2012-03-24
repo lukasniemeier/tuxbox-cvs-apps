@@ -69,13 +69,16 @@ CKeyChooser::CKeyChooser(neutrino_msg_t * const Key, const neutrino_locale_t tit
 	keyName = CRCInput::getKeyName(*key);
 	keyChooser = new CKeyChooserItem(LOCALE_KEYCHOOSER_HEAD, key);
 	keyDeleter = new CKeyChooserItemNoKey(key);
+	keyChooserForwarder = new CMenuForwarder(LOCALE_KEYCHOOSERMENU_SETNEW, true, NULL, keyChooser);
+	keyDeleterForwarder = new CMenuForwarder(LOCALE_KEYCHOOSERMENU_SETNONE, true, NULL, keyDeleter);
+	keyDeleterForwarder->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 
 	addItem(new CKeyValue());
 	addItem(GenericMenuSeparatorLine);
 	addItem(GenericMenuBack);
 	addItem(GenericMenuSeparatorLine);
-	addItem(new CMenuForwarder(LOCALE_KEYCHOOSERMENU_SETNEW , true, NULL, keyChooser));
-	addItem(new CMenuForwarder(LOCALE_KEYCHOOSERMENU_SETNONE, true, NULL, keyDeleter));
+	addItem(keyChooserForwarder);
+	addItem(keyDeleterForwarder);
 }
 
 

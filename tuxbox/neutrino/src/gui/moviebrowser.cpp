@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.67 2011/12/18 12:08:12 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.68 2012/03/24 11:27:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.67 2011/12/18 12:08:12 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.68 2012/03/24 11:27:57 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3922,7 +3922,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.67 $");
+	return imageinfo.getModulVersion("","$Revision: 1.68 $");
 }
 
 /************************************************************************/
@@ -3947,7 +3947,9 @@ int CDirMenu::show(void)
 	{
 		sprintf(tmp,"%d",i);
 		tmp[1]=0;
-		dirMenu.addItem( new CMenuForwarderNonLocalized ( (*dirList)[i].name.c_str(),	   (dirState[i] != DIR_STATE_UNKNOWN), dirOptionText[i],       this,tmp), i == 0 ? true:false);
+		CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized((*dirList)[i].name.c_str(), (dirState[i] != DIR_STATE_UNKNOWN), dirOptionText[i], this, tmp);
+		fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+		dirMenu.addItem(fw, i == 0);
 	}
 
 	returnval = dirMenu.exec(NULL," ");

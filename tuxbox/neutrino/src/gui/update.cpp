@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.145 2011/11/12 15:18:48 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.146 2012/03/24 11:27:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -211,7 +211,9 @@ bool CFlashUpdate::selectHttpImage(void)
 
 				descriptions.push_back(description); /* workaround since CMenuForwarder does not store the Option String itself */
 
-				SelectionWidget.addItem(new CMenuForwarderNonLocalized(names[i].c_str(), true, descriptions[i].c_str(), new CUpdateMenuTarget(i, &selected)));
+				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(names[i].c_str(), true, descriptions[i].c_str(), new CUpdateMenuTarget(i, &selected));
+				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+				SelectionWidget.addItem(fw);
 				i++;
 			}
 		}
@@ -708,7 +710,9 @@ void CFlashExpert::showFileSelector(const std::string & actionkey)
 			   || (int(filen.find(".flfs")) != -1)
 			   )
 			{
-				fileselector->addItem(new CMenuForwarderNonLocalized(filen.c_str(), true, NULL, this, (actionkey + filen).c_str()));
+				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(filen.c_str(), true, NULL, this, (actionkey + filen).c_str());
+				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+				fileselector->addItem(fw);
 #warning TODO: make sure filen is UTF-8 encoded
 			}
 			free(namelist[count]);
