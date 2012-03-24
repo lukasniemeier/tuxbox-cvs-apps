@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.195 2012/02/19 16:25:26 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.196 2012/03/24 11:26:22 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -971,83 +971,6 @@ int CMenuOptionStringChooser::paint( bool selected )
 
 	return y+height;
 }
-
-
-//-------------------------------------------------------------------------------------------------------------------------------
-
-CMenuOptionLanguageChooser::CMenuOptionLanguageChooser(char* OptionValue, CChangeObserver* Observ)
-{
-	height      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	active      = true;
-	optionValue = OptionValue;
-	observ      = Observ;
-
-	directKey   = CRCInput::RC_nokey;
-	iconName    = "";
-}
-
-
-CMenuOptionLanguageChooser::~CMenuOptionLanguageChooser()
-{
-	options.clear();
-}
-
-void CMenuOptionLanguageChooser::addOption(const char * const value)
-{
-	options.push_back(std::string(value));
-}
-
-int CMenuOptionLanguageChooser::exec(CMenuTarget*)
-{
-	bool wantsRepaint = false;
-
-	//select value
-	for(unsigned int count = 0; count < options.size(); count++)
-	{
-		if (strcmp(options[count].c_str(), optionValue) == 0)
-		{
-			strcpy(g_settings.language, options[(count + 1) % options.size()].c_str());
-			break;
-		}
-	}
-
-	paint(true);
-	if(observ)
-	{
-		wantsRepaint = observ->changeNotify(LOCALE_LANGUAGESETUP_SELECT, optionValue);
-	}
-	if ( wantsRepaint )
-		return menu_return::RETURN_REPAINT;
-	else
-		return menu_return::RETURN_NONE;
-}
-
-int CMenuOptionLanguageChooser::paint( bool selected )
-{
-	unsigned char color   = COL_MENUCONTENT;
-	fb_pixel_t    bgcolor = COL_MENUCONTENT_PLUS_0;
-	if (selected)
-	{
-		color   = COL_MENUCONTENTSELECTED;
-		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
-	}
-
-	CFrameBuffer::getInstance()->paintBoxRel(x, y, dx, height, bgcolor, RADIUS_SMALL);
-
-	// 	int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(optionValue);//unused variable
-	int stringstartposOption = x + offx + 10;
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), optionValue, color);
-
-	paintItemButton(stringstartposOption, height, selected, NEUTRINO_ICON_BUTTON_OKAY);
-
-	if (selected)
-	{
-		CLCD::getInstance()->showMenuText(1, optionValue);
-	}
-
-	return y+height;
-}
-
 
 
 //-------------------------------------------------------------------------------------------------------------------------------

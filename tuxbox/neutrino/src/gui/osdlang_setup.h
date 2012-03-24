@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.h,v 1.6 2011/12/09 22:36:28 dbt Exp $
+	$Id: osdlang_setup.h,v 1.7 2012/03/24 11:26:21 rhabarber1848 Exp $
 
 	OSD-Language Setup implementation - Neutrino-GUI
 
@@ -51,12 +51,6 @@ class COsdLangSetup : public CMenuTarget
 		COsdLangSetup();
 		~COsdLangSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-class COsdLangNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 
 #endif

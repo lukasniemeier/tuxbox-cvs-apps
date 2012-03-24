@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.99 2011/04/26 19:45:23 dbt Exp $
+	$Id: menue.h,v 1.100 2012/03/24 11:26:22 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -286,31 +286,6 @@ class CMenuOptionStringChooser : public CMenuItem
 		bool isSelectable(void) const
 		{
 			return active;
-		}
-
-		int exec(CMenuTarget* parent);
-};
-
-class CMenuOptionLanguageChooser : public CMenuItem
-{
-		int                      height;
-		char *                   optionValue;
-		std::vector<std::string> options;
-		CChangeObserver *        observ;
-
-	public:
-		CMenuOptionLanguageChooser(char* OptionValue, CChangeObserver* Observ = NULL);
-		~CMenuOptionLanguageChooser();
-
-		void addOption(const char * value);
-		int paint(bool selected);
-		int getHeight(void) const
-		{
-			return height;
-		}
-		bool isSelectable(void) const
-		{
-			return true;
 		}
 
 		int exec(CMenuTarget* parent);

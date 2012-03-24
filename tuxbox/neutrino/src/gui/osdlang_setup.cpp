@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.cpp,v 1.6 2011/12/09 22:36:28 dbt Exp $
+	$Id: osdlang_setup.cpp,v 1.7 2012/03/24 11:26:21 rhabarber1848 Exp $
 
 	OSD-Language Setup  implementation - Neutrino-GUI
 
@@ -62,9 +62,21 @@ COsdLangSetup::~COsdLangSetup()
 }
 
 
-int COsdLangSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
+int COsdLangSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	dprintf(DEBUG_DEBUG, "init font setup\n");
+
+	if(!actionKey.empty())
+	{
+		const char * locale = actionKey.c_str();
+		strcpy(g_settings.language, locale);
+
+		int unicode_locale = g_Locale->loadLocale(locale);
+		if(CNeutrinoApp::getInstance()->ChangeFonts(unicode_locale))
+			return menu_return::RETURN_REPAINT;
+		else
+			return menu_return::RETURN_NONE;
+	}
 
 	if(parent != NULL)
 		parent->hide();
@@ -83,8 +95,6 @@ int COsdLangSetup::showSetup()
 	osdl_setup->addItem(GenericMenuSeparator);
 	osdl_setup->addItem(GenericMenuBack);
 	osdl_setup->addItem(GenericMenuSeparatorLine);
-
-	COsdLangNotifier osdLangNotifier;
 
 	//search available languages....
 
@@ -105,17 +115,15 @@ int COsdLangSetup::showSetup()
 		{
 			for(int count=0;count<n;count++)
 			{
-				char * locale = strdup(namelist[count]->d_name);
+				char * locale = namelist[count]->d_name;
 				char * pos = strstr(locale, ".locale");
 				if(pos != NULL)
 				{
 					*pos = '\0';
-					CMenuOptionLanguageChooser* oj = new CMenuOptionLanguageChooser((char*)locale, &osdLangNotifier);
-					oj->addOption(locale);
-					osdl_setup->addItem( oj );
+					CMenuForwarderNonLocalized* oj = new CMenuForwarderNonLocalized(locale, true, "", this, locale);
+					oj->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+					osdl_setup->addItem(oj, strcmp(g_settings.language, locale) == 0);
 				}
-				else
-					free(locale);
 				free(namelist[count]);
 			}
 			free(namelist);
@@ -128,16 +136,5 @@ int COsdLangSetup::showSetup()
 	delete osdl_setup;
 
 	return res;
-}
-
-
-bool COsdLangNotifier::changeNotify(const neutrino_locale_t, void * /*Data*/)
-{
-	bool ret = false;
-
-	int unicode_locale = g_Locale->loadLocale(g_settings.language);
-	ret = CNeutrinoApp::getInstance()->ChangeFonts(unicode_locale);
-
-	return ret;
 }
 
