@@ -1,5 +1,5 @@
 /*
-	$Id: menue.h,v 1.100 2012/03/24 11:26:22 rhabarber1848 Exp $
+	$Id: menue.h,v 1.101 2012/04/06 18:52:52 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -312,7 +312,6 @@ class CMenuWidget : public CMenuTarget
 		unsigned int         item_start_y;
 		unsigned int         current_page;
 		unsigned int         total_pages;
-		bool ok_pressed;
 
 		virtual void paintItems();
 
@@ -338,7 +337,6 @@ class CMenuWidget : public CMenuTarget
 		virtual std::string getName();
 		virtual void setPreselected(const int &Preselected){ preselected = Preselected; };
 		virtual int getSelected(){ return selected; };
-		int getSelectedLine(){ return ok_pressed ? selected : -1; };
 };
 
 class CPINProtection
