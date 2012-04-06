@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.87 2011/04/24 12:23:09 dbt Exp $
+  $Id: audioplayer.cpp,v 1.88 2012/04/06 18:50:22 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -672,27 +672,26 @@ int CAudioPlayerGui::show()
 					CMenuWidget InputSelector(LOCALE_AUDIOPLAYER_LOAD_RADIO_STATIONS, NEUTRINO_ICON_AUDIO, 400);
 					int count = 0;
 					int select = -1;
-					CMenuSelectorTarget *InetRadioInputChanger = new CMenuSelectorTarget(&select);
+					CMenuSelectorTarget InetRadioInputChanger(&select);
 					// -- setup menue for inetradio input
 					sprintf(cnt, "%d", count);
 					InputSelector.addItem(GenericMenuSeparator);
 					InputSelector.addItem(GenericMenuBack);
 					InputSelector.addItem(GenericMenuSeparatorLine);
 					InputSelector.addItem(new CMenuForwarder(
-						LOCALE_AUDIOPLAYER_ADD_LOC, true, NULL, InetRadioInputChanger,
+						LOCALE_AUDIOPLAYER_ADD_LOC, true, NULL, &InetRadioInputChanger,
 						cnt, CRCInput::convertDigitToKey(count + 1)), true);
 	
 					sprintf(cnt, "%d", ++count);
 					InputSelector.addItem(new CMenuForwarder(
-						LOCALE_AUDIOPLAYER_ADD_SC, true, NULL, InetRadioInputChanger,
+						LOCALE_AUDIOPLAYER_ADD_SC, true, NULL, &InetRadioInputChanger,
 						cnt, CRCInput::convertDigitToKey(count + 1)), false);
 
 					sprintf(cnt, "%d", ++count);
 					InputSelector.addItem(new CMenuForwarder(
-						LOCALE_AUDIOPLAYER_ADD_IC, true, NULL, InetRadioInputChanger,
+						LOCALE_AUDIOPLAYER_ADD_IC, true, NULL, &InetRadioInputChanger,
 						cnt, CRCInput::convertDigitToKey(count + 1)), false);
 
-					InputSelector.addItem(GenericMenuSeparator);
 					hide();
 					InputSelector.exec(NULL, "");
 					switch (select) {
