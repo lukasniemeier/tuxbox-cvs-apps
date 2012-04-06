@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.14 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.15 2012/04/06 18:48:47 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -274,7 +274,6 @@ int CRecordSetup::showRecordSetup()
 		toDelete.push_back(dirRecordingSettings_splitsize);
 		dirRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_SPLITSIZE, true, g_settings.recording_splitsize[i], dirRecordingSettings_splitsize));
 	}
-	dirMenu->addItem(GenericMenuSeparator);
 
 	// for direct recording
 	CMenuWidget *directRecordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_RECORDING, NEUTRINO_ICON_RECORDING, width);

@@ -1,5 +1,5 @@
 /*  
-	$Id: dirchooser.cpp,v 1.8 2012/03/24 11:27:57 rhabarber1848 Exp $
+	$Id: dirchooser.cpp,v 1.9 2012/04/06 18:48:47 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 	
@@ -204,7 +204,6 @@ void CRecDirChooser::initMenu(void)
 	}
 	addItem(GenericMenuSeparatorLine);
 	addItem(new CMenuForwarder(LOCALE_RECDIRCHOOSER_USER_DIR, true, NULL, this, "dirChooser"));
-	addItem(GenericMenuSeparator);
 }
 
 /**********************************************************************/
