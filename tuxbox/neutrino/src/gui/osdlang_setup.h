@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.h,v 1.7 2012/03/24 11:26:21 rhabarber1848 Exp $
+	$Id: osdlang_setup.h,v 1.8 2012/04/06 18:46:28 rhabarber1848 Exp $
 
 	OSD-Language Setup implementation - Neutrino-GUI
 
@@ -35,8 +35,6 @@
 #include <neutrino.h>
 
 #include <gui/widget/menue.h>
-
-#include <system/setting_helpers.h>
 
 #include <string>
 
