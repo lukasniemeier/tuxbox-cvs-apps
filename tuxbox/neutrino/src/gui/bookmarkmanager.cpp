@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.22 2012/04/10 13:03:49 rhabarber1848 Exp $
+  $Id: bookmarkmanager.cpp,v 1.23 2012/04/10 13:06:10 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -441,9 +441,11 @@ void CBookmarkManager::paintHead()
 	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+35,y+theight+0, width- 45, g_Locale->getText(LOCALE_BOOKMARKMANAGER_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
+#if 0
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 	ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
+#endif
 }
 
 const struct button_label BookmarkmanagerButtons[2] =
