@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.19 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.20 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -213,9 +213,9 @@ int CNetworkSetup::showNetworkSetup()
 		//ntp
 		//prepare ntp input
 		CSectionsdConfigNotifier sectionsdConfigNotifier;
-		CStringInputSMS networkSettings_NtpServer(LOCALE_NETWORKMENU_NTPSERVER, &g_settings.network_ntpserver, 30, LOCALE_NETWORKMENU_NTPSERVER_HINT1, LOCALE_NETWORKMENU_NTPSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-. ", &sectionsdConfigNotifier);
+		CStringInputSMS networkSettings_NtpServer(LOCALE_NETWORKMENU_NTPSERVER, &g_settings.network_ntpserver, 30, false, LOCALE_NETWORKMENU_NTPSERVER_HINT1, LOCALE_NETWORKMENU_NTPSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-. ", &sectionsdConfigNotifier);
 	
-		CStringInput networkSettings_NtpRefresh(LOCALE_NETWORKMENU_NTPREFRESH, &g_settings.network_ntprefresh, 3,LOCALE_NETWORKMENU_NTPREFRESH_HINT1, LOCALE_NETWORKMENU_NTPREFRESH_HINT2 , "0123456789 ", &sectionsdConfigNotifier);
+		CStringInput networkSettings_NtpRefresh(LOCALE_NETWORKMENU_NTPREFRESH, &g_settings.network_ntprefresh, 3, false, LOCALE_NETWORKMENU_NTPREFRESH_HINT1, LOCALE_NETWORKMENU_NTPREFRESH_HINT2 , "0123456789 ", &sectionsdConfigNotifier);
 
 		CMenuWidget* ntp = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_NTPTITLE, true, NULL, ntp, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));

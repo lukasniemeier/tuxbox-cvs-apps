@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.87 2011/12/09 22:36:27 dbt Exp $
+	$Id: drive_setup.cpp,v 1.88 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -719,7 +719,7 @@ void CDriveSetup::showHddSetupMain()
 		//prepare mmc parameter input
 		for (uint i=0; i < MAXCOUNT_MMC_MODULES; i++)
 		{
-			input_mmc_parameters[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_mmc_modul_parameter[i], 20, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_MMC_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "1231467890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-= ");
+			input_mmc_parameters[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_mmc_modul_parameter[i], 20, false, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_MMC_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "1234567890abcdefghijklmnopqrstuvwxyz-= ");
 			
 			string m_name = have_mmc_modul[i] ? mmc_modules[i]: mmc_modules[i] + " " + g_Locale->getText(LOCALE_DRIVE_SETUP_MMC_MODUL_NOT_INSTALLED);	
 			
@@ -779,7 +779,7 @@ void CDriveSetup::showHddSetupMain()
 		//extended settings: load options
 		CMenuSeparator * sep_load_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
 		sep_load_options->setString(LOAD);
-		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_command_load_options, 20, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- ");
+		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_command_load_options, 20, false, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- ");
 		CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_command_load_options, input_load_options);
 
 		//extended settings: custom modul dir
@@ -800,7 +800,7 @@ void CDriveSetup::showHddSetupMain()
  				if (v_fs_modules[ii] != fstype[i].fsname)
 					continue;
 				
-				v_input_fs_options.push_back(new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, d_settings.drive_fs_format_option[i], 32, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz- "));
+				v_input_fs_options.push_back(new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, d_settings.drive_fs_format_option[i], 32, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- "));
 				v_fs_item.push_back(new CMenuForwarderNonLocalized(fstype[i].fsname.c_str(), true, d_settings.drive_fs_format_option[i], v_input_fs_options.back()));
  			}
 		}
@@ -1293,7 +1293,7 @@ void CDriveSetup::showHddSetupSub()
  			srv_smb_globals[i]= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP,  d_settings.drive_partition_samba[current_device][i], NULL, new CSambaSetup(LOCALE_DRIVE_SETUP_HEAD, msg_icon), NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
 
 			//prepare share name
-			smb_share_name_input[i] = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, &d_settings.drive_partition_samba_share_name[current_device][i], 20, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT1, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""§$%&/()=?-_. ");
+			smb_share_name_input[i] = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, &d_settings.drive_partition_samba_share_name[current_device][i], 20, false, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT1, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""\xA7$%&/()=?-_. ");
 			smb_share_name_fw[i] = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, d_settings.drive_partition_samba[current_device][i], d_settings.drive_partition_samba_share_name[current_device][i], smb_share_name_input[i], NULL, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
 			
 			//prepare comment and set a default comment if no comment was found
@@ -4606,7 +4606,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.87 $");
+	return imageinfo.getModulVersion("","$Revision: 1.88 $");
 }
 
 // returns text for initfile headers

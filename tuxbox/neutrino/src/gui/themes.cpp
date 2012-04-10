@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.25 2012/03/18 11:20:14 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.26 2012/04/10 13:03:49 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -155,7 +155,7 @@ int CThemes::Show()
 
 	readThemes(themes);
 
-	CStringInputSMS nameInput(LOCALE_COLORTHEMEMENU_NAME, &file_name, 30, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz0123456789- ");
+	CStringInputSMS nameInput(LOCALE_COLORTHEMEMENU_NAME, &file_name, 30, false, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz0123456789- ");
 	CMenuForwarder *m1 = new CMenuForwarder(LOCALE_COLORTHEMEMENU_SAVE, true , NULL, &nameInput);
 
 	// Don't show SAVE if UserDir does'nt exist

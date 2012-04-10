@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.18 2011/12/17 14:48:32 rhabarber1848 Exp $
+	$Id: moviebrowser.h,v 1.19 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -379,6 +379,16 @@ class CMovieBrowser : public CMenuTarget
 		void updateFilterSelection(void);
 		void updateSerienames(void);
 		void autoFindSerie(void);
+};
+
+class CBookItemMenuForwarderNotifier : public CChangeObserver
+{
+	private:
+		CMenuForwarderNonLocalized* menuForwarder;
+	public:
+		CBookItemMenuForwarderNotifier(CMenuForwarderNonLocalized* MenuForwarder = NULL);
+		void setItem(CMenuForwarderNonLocalized* MenuForwarder);
+		bool changeNotify(const neutrino_locale_t, void* Data);
 };
 
 // Class to show Moviebrowser Information, to be used by menu

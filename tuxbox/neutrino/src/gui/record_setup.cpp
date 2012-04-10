@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.15 2012/04/06 18:48:47 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.16 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -265,7 +265,7 @@ int CRecordSetup::showRecordSetup()
 		dirRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DIR, true, g_settings.recording_dir[i], dirRecordingSettings_dirChooser));
 
 		// filename template
-		CStringInput* dirRecordingSettings_filenameTemplate = new CStringInput(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template[i], 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
+		CStringInput* dirRecordingSettings_filenameTemplate = new CStringInput(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template[i], 21, false, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
 		toDelete.push_back(dirRecordingSettings_filenameTemplate);
 		dirRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template[i], dirRecordingSettings_filenameTemplate));
 
@@ -299,7 +299,7 @@ int CRecordSetup::showRecordSetup()
 
 	CMenuOptionNumberChooser* oj15 = new CMenuOptionNumberChooser(LOCALE_RECORDINGMENU_MAX_RECTIME, &g_settings.recording_max_rectime, true, 1, 8);
 
-	CStringInput recordingSettings_filenameTemplate(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template_default, 21, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
+	CStringInput recordingSettings_filenameTemplate(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template_default, 21, false, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
 	CMenuForwarder* mf11 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template_default, &recordingSettings_filenameTemplate);
 
 	CStringInput recordingSettings_dirPermissions(LOCALE_RECORDINGMENU_DIR_PERMISSIONS, g_settings.recording_dir_permissions, 3, LOCALE_RECORDINGMENU_DIR_PERMISSIONS_HINT, LOCALE_IPSETUP_HINT_2, "01234567");

@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.70 2012/04/06 18:52:52 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.71 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -362,7 +362,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.70 2012/04/06 18:52:52 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.71 2012/04/10 13:03:49 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -2804,7 +2804,7 @@ void CMovieBrowser::updateFilterSelection(void)
 	else if(m_settings.filter.item == MB_INFO_INFO2)
 	{
 		std::string text;
-		CStringInputSMS stringInputSMS(LOCALE_MOVIEBROWSER_INFO_INFO2,&text, 20, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
+		CStringInputSMS stringInputSMS(LOCALE_MOVIEBROWSER_INFO_INFO2, &text, 20, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 		stringInputSMS.exec(NULL,"");
 		m_settings.filter.optionString = text;
 		refreshFilterList(); 
@@ -2954,6 +2954,8 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CIntInput*          pBookPosIntInput[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 	CIntInput*	    pBookTypeIntInput[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 	CMenuWidget*        pBookItemMenu[MAX_NUMBER_OF_BOOKMARK_ITEMS];
+	CMenuForwarderNonLocalized* pBookItemMenuForwarder[MAX_NUMBER_OF_BOOKMARK_ITEMS];
+	CBookItemMenuForwarderNotifier* pBookItemMenuForwarderNotifier[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 
 	CIntInput bookStartIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (long&)movie_info->bookmarks.start,        5, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
 	CIntInput bookLastIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK,  (long&)movie_info->bookmarks.lastPlayStop, 5, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
@@ -2973,7 +2975,9 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 
 	for(int i =0 ; i < MI_MOVIE_BOOK_USER_MAX && i < MAX_NUMBER_OF_BOOKMARK_ITEMS; i++ )
 	{
-		pBookNameInput[i] =    new CStringInputSMS (LOCALE_MOVIEBROWSER_EDIT_BOOK, &movie_info->bookmarks.user[i].name, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO2, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
+		pBookItemMenuForwarderNotifier[i] = new CBookItemMenuForwarderNotifier();
+
+		pBookNameInput[i] =    new CStringInputSMS (LOCALE_MOVIEBROWSER_EDIT_BOOK, &movie_info->bookmarks.user[i].name, 20, true, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO2, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ", pBookItemMenuForwarderNotifier[i]);
 		pBookPosIntInput[i] =  new CIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (long&) movie_info->bookmarks.user[i].pos, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
 		pBookTypeIntInput[i] = new CIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (long&) movie_info->bookmarks.user[i].length, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO2);
 
@@ -2985,12 +2989,15 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_POSITION, true,  pBookPosIntInput[i]->getValue(), pBookPosIntInput[i]));
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE,     true,  pBookTypeIntInput[i]->getValue(),pBookTypeIntInput[i]));
 
-		bookmarkMenu.addItem( new CMenuForwarderNonLocalized (movie_info->bookmarks.user[i].name.c_str(),   true, pBookPosIntInput[i]->getValue(),pBookItemMenu[i]));
+		pBookItemMenuForwarder[i] = new CMenuForwarderNonLocalized(movie_info->bookmarks.user[i].name.c_str(), true, pBookPosIntInput[i]->getValue(), pBookItemMenu[i]);
+		pBookItemMenuForwarderNotifier[i]->setItem(pBookItemMenuForwarder[i]);
+
+		bookmarkMenu.addItem(pBookItemMenuForwarder[i]);
 	}
 
 /********************************************************************/
 /**  serie******************************************************/
-	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
+	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 
 	CMenuWidget serieMenu (LOCALE_MOVIEBROWSER_SERIE_HEAD, NEUTRINO_ICON_STREAMING);
 	serieMenu.addItem(GenericMenuSeparator);
@@ -3038,13 +3045,13 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		snprintf(size,BUFFER_SIZE,"%5llu",movie_info->file.Size>>20);
 	}
 
-	CStringInputSMS titelUserInput(LOCALE_MOVIEBROWSER_INFO_TITLE,            &movie_info->epgTitle, MAX_STRING, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
-	CStringInputSMS channelUserInput(LOCALE_MOVIEBROWSER_INFO_CHANNEL,        &movie_info->epgChannel, MAX_STRING, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
-	CStringInputSMS epgUserInput(LOCALE_MOVIEBROWSER_INFO_INFO1,              &movie_info->epgInfo1, MAX_STRING, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
+	CStringInputSMS titelUserInput(LOCALE_MOVIEBROWSER_INFO_TITLE,            &movie_info->epgTitle, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
+	CStringInputSMS channelUserInput(LOCALE_MOVIEBROWSER_INFO_CHANNEL,        &movie_info->epgChannel, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
+	CStringInputSMS epgUserInput(LOCALE_MOVIEBROWSER_INFO_INFO1,              &movie_info->epgInfo1, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 	CDateInput   dateUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,        &movie_info->dateOfLastPlay, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 	CDateInput   recUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,         &movie_info->file.Time, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 	CIntInput    lengthUserIntInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,       (long&)movie_info->length, 3, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
-	CStringInputSMS countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    &movie_info->productionCountry, 11, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
+	CStringInputSMS countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    &movie_info->productionCountry, 11, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 	CIntInput    yearUserIntInput(LOCALE_MOVIEBROWSER_INFO_PRODYEAR,       (long&)movie_info->productionDate, 4, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 
 	CMenuWidget movieInfoMenu (LOCALE_MOVIEBROWSER_INFO_HEAD, NEUTRINO_ICON_STREAMING,m_cBoxFrame.iWidth);
@@ -3082,6 +3089,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		delete pBookPosIntInput[i] ;
 		delete pBookTypeIntInput[i];
 		delete pBookItemMenu[i];
+		delete pBookItemMenuForwarderNotifier[i];
 	}
 
 	return returnval;
@@ -3655,6 +3663,30 @@ void CMovieBrowser::autoFindSerie(void)
 
 ************************************************************************/
 
+CBookItemMenuForwarderNotifier::CBookItemMenuForwarderNotifier(CMenuForwarderNonLocalized* MenuForwarder)
+{
+	menuForwarder = MenuForwarder;
+}
+
+void CBookItemMenuForwarderNotifier::setItem(CMenuForwarderNonLocalized* MenuForwarder)
+{
+	menuForwarder = MenuForwarder;
+}
+
+bool CBookItemMenuForwarderNotifier::changeNotify(const neutrino_locale_t, void* Data)
+{
+	if (menuForwarder)
+	{
+		char* text = (char*)Data;
+		menuForwarder->setText(text);
+	}
+	return true;
+}
+
+/************************************************************************
+
+************************************************************************/
+
 CMenuSelector::CMenuSelector(const char * OptionName, const bool Active , char * OptionValue, int* ReturnInt ,int ReturnIntValue ) : CMenuItem()
 {
 	height     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
@@ -3932,7 +3964,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.70 $");
+	return imageinfo.getModulVersion("","$Revision: 1.71 $");
 }
 
 /************************************************************************/

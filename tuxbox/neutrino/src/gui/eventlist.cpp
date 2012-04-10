@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.142 2011/12/31 08:51:25 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.143 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -950,7 +950,7 @@ int EventList::findEvents(void)
 			current_event = 0;
 		selected= current_event;
 		
-		name = (std::string)g_Locale->getText(LOCALE_EVENTFINDER_SEARCH) + ": '" + m_search_keyword + "'";
+		name = (std::string)g_Locale->getText(LOCALE_EVENTFINDER_SEARCH) + ": '" + ZapitTools::Latin1_to_UTF8(m_search_keyword.c_str()) + "'";
 	}
 	paintHead();
 	paint();
@@ -1103,7 +1103,7 @@ int CEventFinderMenu::showMenu(void)
 		m_search_channelname = "";
 	}
 	
-	CStringInputSMS stringInput(LOCALE_EVENTFINDER_KEYWORD,m_search_keyword, 20, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.: ");
+	CStringInputSMS stringInput(LOCALE_EVENTFINDER_KEYWORD, m_search_keyword, 20, false, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 	
 	CMenuForwarder* mf0 		= new CMenuForwarder(LOCALE_EVENTFINDER_KEYWORD ,true, *m_search_keyword, &stringInput, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1 );
 	CMenuOptionChooser* mo0 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST , m_search_list, SEARCH_LIST_OPTIONS, SEARCH_LIST_OPTION_COUNT, true, NULL, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);

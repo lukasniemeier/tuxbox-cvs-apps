@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.197 2012/04/06 18:52:52 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.198 2012/04/10 13:03:50 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -39,6 +39,7 @@
 
 #include <gui/widget/menue.h>
 
+#include <driver/encoding.h>
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
 #include <driver/screen_max.h>
@@ -1056,6 +1057,7 @@ int CMenuForwarder::paint(bool selected)
 	int stringstartposX = x + offx + 10;
 
 	const char * option_text = getOption();
+	bool option_text_is_utf8 = (option_text != NULL) ? isUTF8(option_text, strlen(option_text)) : false;
 
 	if (selected)
 	{
@@ -1063,7 +1065,7 @@ int CMenuForwarder::paint(bool selected)
 		lcd->showMenuText(0, l_text, -1, true); // UTF-8
 
 		if (option_text != NULL)
-			lcd->showMenuText(1, option_text);
+			lcd->showMenuText(1, option_text, -1, option_text_is_utf8);
 		else
 			lcd->showMenuText(1, "", -1, true); // UTF-8
 	}
@@ -1088,11 +1090,11 @@ int CMenuForwarder::paint(bool selected)
 
 	if (option_text != NULL)
 	{
-		int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(option_text);
-		int stringstartposOption = std::max(stringstartposX + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_text) + 10,
+		int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(option_text, option_text_is_utf8);
+		int stringstartposOption = std::max(stringstartposX + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_text, true) + 10,
 											x + dx - stringwidth - 10); //+ offx
 
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption- x),  option_text, color);
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y + height, dx - (stringstartposOption - x),  option_text, color, 0, option_text_is_utf8);
 	}
 
 	return y+ height;

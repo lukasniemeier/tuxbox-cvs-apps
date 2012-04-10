@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.114 2011/04/24 12:23:09 dbt Exp $
+	$Id: timerlist.cpp,v 1.115 2012/04/10 13:03:49 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -708,7 +708,7 @@ void CTimerList::paintItem(int pos)
 				}
 			case CTimerd::TIMER_REMIND :
 				{
-					zAddData = timer.message; // must be UTF-8 encoded !
+					zAddData = Latin1_to_UTF8(timer.message);
 				}
 				break;
 			case CTimerd::TIMER_EXEC_PLUGIN :
@@ -1138,7 +1138,7 @@ int CTimerList::newTimer()
 
 	CMenuOptionChooser* m8 = new CMenuOptionChooser(LOCALE_TIMERLIST_STANDBY, &timerNew_standby_on, TIMERLIST_STANDBY_OPTIONS, TIMERLIST_STANDBY_OPTION_COUNT, false);
 
-	CStringInputSMS timerSettings_msg(LOCALE_TIMERLIST_MESSAGE, timerNew.message, 30, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz0123456789-.,:!?/ ");
+	CStringInputSMS timerSettings_msg(LOCALE_TIMERLIST_MESSAGE, timerNew.message, 30, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.,:!?/ ");
 	CMenuForwarder *m9 = new CMenuForwarder(LOCALE_TIMERLIST_MESSAGE, false, timerNew.message, &timerSettings_msg );
 
 	strcpy(timerNew.pluginName,"---");

@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.21 2011/04/24 12:23:09 dbt Exp $
+  $Id: bookmarkmanager.cpp,v 1.22 2012/04/10 13:03:49 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -41,6 +41,8 @@
 #include <gui/widget/stringinput.h>
 #include <gui/widget/icons.h>
 #include <gui/widget/buttons.h>
+
+#include <zapit/client/zapittools.h>
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -83,10 +85,10 @@ inline int CBookmarkManager::createBookmark (const std::string & name, const std
 
 int CBookmarkManager::createBookmark (const std::string & url, const std::string & time) {
     char bookmarkname[26]="";
-    CStringInputSMS bookmarkname_input(LOCALE_MOVIEPLAYER_BOOKMARKNAME, bookmarkname, 25, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT1, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-_");
+    CStringInputSMS bookmarkname_input(LOCALE_MOVIEPLAYER_BOOKMARKNAME, bookmarkname, 25, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT1, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT2, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_");
     bookmarkname_input.exec(NULL, "");
     // TODO: return -1 if no name was entered
-    return createBookmark(std::string(bookmarkname), url, time);
+    return createBookmark(ZapitTools::Latin1_to_UTF8(bookmarkname), url, time);
 }
 
 //------------------------------------------------------------------------
@@ -105,13 +107,13 @@ void CBookmarkManager::renameBookmark (unsigned int index) {
 
 	CBookmark & theBookmark = bookmarks[index];
 	char bookmarkname[26];
-	strncpy (bookmarkname, theBookmark.getName(), 25);
-	CStringInputSMS bookmarkname_input(LOCALE_MOVIEPLAYER_BOOKMARKNAME, bookmarkname, 25, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT1, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-_");
+	strncpy (bookmarkname, ZapitTools::UTF8_to_Latin1(theBookmark.getName()).c_str(), 25);
+	CStringInputSMS bookmarkname_input(LOCALE_MOVIEPLAYER_BOOKMARKNAME, bookmarkname, 25, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT1, LOCALE_MOVIEPLAYER_BOOKMARKNAME_HINT2, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_");
 	bookmarkname_input.exec(NULL, "");
 
-	if (strcmp(theBookmark.getName(), bookmarkname) != 0)
+	if (strcmp(ZapitTools::UTF8_to_Latin1(theBookmark.getName()).c_str(), bookmarkname) != 0)
 	{
-		theBookmark.setName(std::string(bookmarkname));
+		theBookmark.setName(ZapitTools::Latin1_to_UTF8(bookmarkname));
 		bookmarksmodified=true;
 	}
 }

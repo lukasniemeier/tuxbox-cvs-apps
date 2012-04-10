@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1074 2012/03/04 08:32:08 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1075 2012/04/10 13:03:49 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3189,7 +3189,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		}
 		else if( msg == NeutrinoMessages::REMIND)
 		{
-			std::string text = (char*)data;
+			std::string text = Latin1_to_UTF8((char*)data);
 			std::string::size_type pos;
 			while((pos=text.find('/'))!= std::string::npos)
 			{

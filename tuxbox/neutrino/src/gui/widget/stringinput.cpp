@@ -44,6 +44,8 @@
 #include <gui/widget/icons.h>
 #include <gui/widget/messagebox.h>
 
+#include <zapit/client/zapittools.h>
+
 #include <global.h>
 #include <neutrino.h>
 
@@ -54,6 +56,7 @@ CStringInput::CStringInput(const neutrino_locale_t Name, char* Value, int Size, 
 	name =  Name;
 	value = Value;
 	valueString = NULL;
+	valueStringIsUtf8 = false;
 	size =  Size;
 
 	hint_1 = Hint_1;
@@ -65,14 +68,18 @@ CStringInput::CStringInput(const neutrino_locale_t Name, char* Value, int Size, 
 	init();
 }
 
-CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, const char * const Valid_Chars, CChangeObserver* Observ, const char * const Icon)
+CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int Size, bool ValueIsUtf8, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, const char * const Valid_Chars, CChangeObserver* Observ, const char * const Icon)
 {
 	frameBuffer = CFrameBuffer::getInstance();
 	name =  Name;
 	value = new char[Size+1];
 	value[Size] = '\0';
-	strncpy(value,Value->c_str(),Size);
+	if (ValueIsUtf8)
+		strncpy(value, ZapitTools::UTF8_to_Latin1(Value->c_str()).c_str(), Size);
+	else
+		strncpy(value, Value->c_str(), Size);
 	valueString = Value;
+	valueStringIsUtf8 = ValueIsUtf8;
 	size = Size;
 
 	hint_1 = Hint_1;
@@ -184,7 +191,9 @@ void CStringInput::keyYellowPressed()
 
 void CStringInput::keyBluePressed()
 {
-	if (((value[selected] | 32) >= 'a') && ((value[selected] | 32) <= 'z'))
+	if (((value[selected] | 32) >= 'a') && ((value[selected] | 32) <= 'z') ||
+	    ((value[selected] | 32) == '\xE4') || ((value[selected] | 32) == '\xF6') ||  // 0xE4 == ä, 0xF6 == ö
+	    ((value[selected] | 32) == '\xFC') || ((value[selected] | 32) == '\xDF'))    // 0xFC == ü, 0xDF == ß
 	{
 		char newValue = value[selected] ^ 32;
 		if (strchr(validchars, newValue) != NULL) 
@@ -414,12 +423,15 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 
 	if (valueString != NULL)
 	{
-		*valueString = value;
+		*valueString = (valueStringIsUtf8) ? ZapitTools::Latin1_to_UTF8(value) : value;
 	}
 
 	if ( (observ) && (msg==CRCInput::RC_ok) )
 	{
-		observ->changeNotify(name, value);
+		if (valueString != NULL)
+			observ->changeNotify(name, (char*)valueString->c_str());
+		else
+			observ->changeNotify(name, value);
 	}
 
 	return res;
@@ -507,8 +519,8 @@ void CStringInput::paintChar(int pos)
 		paintChar(pos, value[pos]);
 }
 
-CStringInputSMS::CStringInputSMS(const neutrino_locale_t Name, std::string* Value, int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, const char * const Valid_Chars, CChangeObserver* Observ, const char * const Icon)
-		: CStringInput(Name, Value, Size, Hint_1, Hint_2, Valid_Chars, Observ, Icon)
+CStringInputSMS::CStringInputSMS(const neutrino_locale_t Name, std::string* Value, int Size, bool ValueIsUtf8, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, const char * const Valid_Chars, CChangeObserver* Observ, const char * const Icon)
+		: CStringInput(Name, Value, Size, ValueIsUtf8, Hint_1, Hint_2, Valid_Chars, Observ, Icon)
 {
 	initSMS(Valid_Chars);
 }
@@ -524,13 +536,13 @@ void CStringInputSMS::initSMS(const char * const Valid_Chars)
 	last_digit = -1;				// no key pressed yet
 	const char CharList[10][11] = { "0 -_/()<>=",	// 10 characters
 					"1.,:!?\\",
-					"abc2ä",
+					"abc2\xE4",   // 0xE4 == ä
 					"def3",
 					"ghi4",
 					"jkl5",
-					"mno6ö",
-					"pqrs7ß",
-					"tuv8ü",
+					"mno6\xF6",   // 0xF6 == ö
+					"pqrs7\xDF",  // 0xDF == ß
+					"tuv8\xFC",   // 0xFC == ü
 					"wxyz9" };
 
 	for (int i = 0; i < 10; i++)
@@ -585,8 +597,12 @@ void CStringInputSMS::keyBackspacePressed(void)
 
 void CStringInputSMS::keyRedPressed()		// switch between lower & uppercase
 {
-	if (((value[selected] | 32) >= 'a') && ((value[selected] | 32) <= 'z'))
-	value[selected] ^= 32;
+	if (((value[selected] | 32) >= 'a') && ((value[selected] | 32) <= 'z') ||
+	    ((value[selected] | 32) == '\xE4') || ((value[selected] | 32) == '\xF6') ||  // 0xE4 == ä, 0xF6 == ö
+	    ((value[selected] | 32) == '\xFC') || ((value[selected] | 32) == '\xDF'))    // 0xFC == ü, 0xDF == ß
+	{
+		value[selected] ^= 32;
+	}
 
 	paintChar(selected);
 }
