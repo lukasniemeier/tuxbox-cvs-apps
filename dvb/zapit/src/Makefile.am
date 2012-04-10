@@ -68,6 +68,11 @@ installdir = $(CONFIGDIR)/zapit
 
 install_DATA = 
 
+installdirs-local:
+	$(MKDIR_P) $(installdir)
+
+install-data-hook: installdirs-local
+
 if BOXTYPE_DBOX2
 install-data-local:
 	install -d $(CONFIGDIR)
