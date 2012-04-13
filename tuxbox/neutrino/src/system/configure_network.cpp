@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/system/configure_network.cpp,v 1.7 2009/11/20 22:44:19 dbt Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/src/system/configure_network.cpp,v 1.8 2012/04/13 12:15:22 rhabarber1848 Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -23,6 +23,7 @@
 #include "libnet.h"             /* netGetNameserver, netSetNameserver   */
 #include "network_interfaces.h" /* getInetAttributes, setInetAttributes */
 #include <stdlib.h>             /* system                               */
+#include <stdio.h>
 
 CNetworkConfig::CNetworkConfig(void)
 {

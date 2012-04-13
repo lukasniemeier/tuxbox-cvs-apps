@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.90 2011/04/04 09:28:05 dbt Exp $
+	$Id: lcdd.cpp,v 1.91 2012/04/13 12:15:20 rhabarber1848 Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -47,6 +47,7 @@
 #include <fcntl.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include <daemonc/remotecontrol.h>
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */

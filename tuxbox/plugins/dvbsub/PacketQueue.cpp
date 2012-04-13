@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <stdint.h>
 #include <pthread.h>
 #include <list>
 #include "Debug.hpp"

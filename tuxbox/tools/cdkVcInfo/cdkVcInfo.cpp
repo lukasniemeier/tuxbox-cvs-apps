@@ -1,7 +1,7 @@
 /*
  * Tool for printing some image information during bootup.
  *
- * $Id: cdkVcInfo.cpp,v 1.10 2011/12/21 21:05:27 rhabarber1848 Exp $
+ * $Id: cdkVcInfo.cpp,v 1.11 2012/04/13 12:15:22 rhabarber1848 Exp $
  *
  * cdkVcInfo - d-box2 linux project
  *
@@ -25,6 +25,7 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define CONSOLE "/dev/vc/0"
 #define VERSION_FILE "/.version"
@@ -113,7 +114,7 @@ int main (int argc, char **argv)
 	char gateway[BUFFERSIZE];
 	char null[BUFFERSIZE] = "";
 	char versioninfo[20];
-	char cvs_revision[] = "$Revision: 1.10 $";
+	char cvs_revision[] = "$Revision: 1.11 $";
 	sscanf(cvs_revision, "%*s %s", versioninfo);
 
 	while ((opt = getopt(argc, argv, "hgdn:")) != -1)

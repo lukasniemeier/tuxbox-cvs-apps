@@ -53,6 +53,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <sstream>
+#include <unistd.h>
 
 #include <sys/stat.h>
 #ifdef HAVE_CURL

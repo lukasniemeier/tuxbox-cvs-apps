@@ -39,6 +39,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/poll.h>
+#include <unistd.h>
 #ifdef HAVE_TRIPLEDRAGON
 #include <zapit/td-demux-compat.h>
 #include <tddevices.h>

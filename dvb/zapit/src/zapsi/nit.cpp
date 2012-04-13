@@ -1,5 +1,5 @@
 /*
- * $Id: nit.cpp,v 1.39 2005/04/17 06:56:16 metallica Exp $
+ * $Id: nit.cpp,v 1.40 2012/04/13 12:15:00 rhabarber1848 Exp $
  *
  * (C) 2002 by Andreas Oberritter <obi@tuxbox.org>
  *
@@ -50,7 +50,7 @@ int parse_nit(const t_satellite_position satellite_position, const unsigned char
 	unsigned short transport_stream_loop_length;
 	t_transport_stream_id transport_stream_id;
 	t_original_network_id original_network_id;
-	unsigned short network_id;
+//	unsigned short network_id;
 
 	transponder_id_t transponder_id;
 
@@ -70,7 +70,7 @@ int parse_nit(const t_satellite_position satellite_position, const unsigned char
 			return -1;
 
 		section_length = ((buffer[1] & 0x0F) << 8) + buffer[2];
-		network_id = ((buffer[3] << 8)| buffer [4]);
+//		network_id = ((buffer[3] << 8)| buffer [4]);
 		network_descriptors_length = ((buffer[8] & 0x0F) << 8) | buffer[9];
 
 		for (pos = 10; pos < network_descriptors_length + 10; pos += buffer[pos + 1] + 2)

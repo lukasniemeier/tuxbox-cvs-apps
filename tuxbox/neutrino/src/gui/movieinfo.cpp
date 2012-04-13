@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.26 2012/02/15 20:43:16 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.27 2012/04/13 12:15:21 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -48,6 +48,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <system/helper.h>
 #include <gui/widget/msgbox.h>

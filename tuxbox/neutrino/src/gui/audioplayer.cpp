@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.88 2012/04/06 18:50:22 rhabarber1848 Exp $
+  $Id: audioplayer.cpp,v 1.89 2012/04/13 12:15:20 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -78,6 +78,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <unistd.h>
 
 #if HAVE_DVB_API_VERSION >= 3
 #include <linux/dvb/audio.h>

@@ -24,6 +24,7 @@
 // system
 #include <fcntl.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 // yhttpd
 #include "yrequest.h"
@@ -493,7 +494,7 @@ unsigned int CWebserverRequest::HandlePostBoundary(std::string boundary, unsigne
 			ParameterList[var_name+"_upload_filename"] = upload_filename;
 
 			// open file for write
-			int fd = open(upload_filename.c_str(), O_WRONLY|O_CREAT|O_TRUNC);
+			int fd = open(upload_filename.c_str(), O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
 			if (fd<=0)
 			{
 				aprintf("cannot open file %s: ", upload_filename.c_str());

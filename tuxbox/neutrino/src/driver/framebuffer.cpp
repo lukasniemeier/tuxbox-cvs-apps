@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: framebuffer.cpp,v 1.83 2011/04/24 12:23:09 dbt Exp $
+	$Id: framebuffer.cpp,v 1.84 2012/04/13 12:15:20 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 				  2003 thegoodguy
@@ -1086,7 +1086,7 @@ bool CFrameBuffer::savePictureFromMem(const std::string & filename, const fb_pix
 	
 	std::string picturefile = getIconFilePath(filename);
 
-	pic_fd = open(picturefile.c_str(), O_WRONLY | O_CREAT);
+	pic_fd = open(picturefile.c_str(), O_WRONLY | O_CREAT, S_IRUSR|S_IWUSR);
 
 	if (pic_fd==-1)
 	{

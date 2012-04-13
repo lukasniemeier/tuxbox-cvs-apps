@@ -1,5 +1,5 @@
 /*
- * $Id: scan.cpp,v 1.171 2011/08/01 19:31:02 rhabarber1848 Exp $
+ * $Id: scan.cpp,v 1.172 2012/04/13 12:15:00 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -23,6 +23,7 @@
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 /* libevent */
 #include <eventserver.h>
@@ -158,7 +159,7 @@ void cp(const char *from, const char *to)
 	strcat(cmd, from);
 	strcat(cmd, " ");
 	strcat(cmd, to);
-	system(cmd);
+	(void)system(cmd);
 }
 
 void copy_to_end(FILE * fd, FILE * fd1)
@@ -166,11 +167,11 @@ void copy_to_end(FILE * fd, FILE * fd1)
 	//copies the services from previous services.xml file from the end of sat being scanned to the end of the file...
 	char buffer[256] ="";
 
-	fgets(buffer, 255, fd1);
+	(void)fgets(buffer, 255, fd1);
 	while(!feof(fd1) && !strstr(buffer, "</zapit>"))
 	{
 		fputs(buffer, fd);
-		fgets(buffer, 255, fd1);
+		(void)fgets(buffer, 255, fd1);
 	}
 	fclose(fd1);
 	unlink(SERVICES_TMP);
@@ -844,7 +845,7 @@ int copy_to_satellite_inc(TP_params * TP, FILE * fd, FILE * fd1, char * provider
 
 	DBG("%s %s %s %s", freq, rate, fec, pol);
 
-	fgets(buffer, 255, fd1);
+	(void)fgets(buffer, 255, fd1);
 	//while(!feof(fd1) && !((strstr(buffer, "sat name") && strstr(buffer, providerName)) || strstr(buffer, "</zapit>")))
 	while(!feof(fd1) && !strstr(buffer, "</zapit>"))
 	{
@@ -864,11 +865,11 @@ int copy_to_satellite_inc(TP_params * TP, FILE * fd, FILE * fd1, char * provider
 
 			DBG("found id %x/%x %s %s %s %s", one_tpid, one_onid, freq, rate, fec, pol);
 			while(!feof(fd1) && !strstr(buffer, "</transponder>"))
-				fgets(buffer, 255, fd1);
+				(void)fgets(buffer, 255, fd1);
 		}
 		else
 			fputs(buffer, fd);
-		fgets(buffer, 255, fd1);
+		(void)fgets(buffer, 255, fd1);
 	}
 
 	return found;

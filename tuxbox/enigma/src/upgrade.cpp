@@ -24,6 +24,7 @@
 #endif
 #include <mtd/mtd-user.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <sys/mount.h>
 
 #define TMP_IMAGE "/tmp/root.cramfs"

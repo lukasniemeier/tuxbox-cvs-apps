@@ -33,6 +33,7 @@
 #include <system/settings.h>
 
 #include <time.h>
+#include <unistd.h>
 
 
 SHTDCNT::SHTDCNT()

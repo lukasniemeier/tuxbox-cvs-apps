@@ -1,7 +1,7 @@
 /*
   Client-Interface fuer sectionsd  -   DBoxII-Project
 
-  $Id: sectionsdclient.cpp,v 1.65 2009/07/26 17:02:49 rhabarber1848 Exp $
+  $Id: sectionsdclient.cpp,v 1.66 2012/04/13 12:15:20 rhabarber1848 Exp $
 
   License: GPL
 
@@ -23,6 +23,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <unistd.h>
 
 #include <eventserver.h>
 

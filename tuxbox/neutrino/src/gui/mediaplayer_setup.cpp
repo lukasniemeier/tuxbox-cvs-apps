@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.8 2011/12/09 22:36:27 dbt Exp $
+	$Id: mediaplayer_setup.cpp,v 1.9 2012/04/13 12:15:21 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -63,6 +63,7 @@
 #include <driver/screen_max.h>
 
 #include <system/debug.h>
+#include <unistd.h>
 
 
 

@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.71 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.72 2012/04/13 12:15:21 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -78,6 +78,7 @@
 #include <sys/vfs.h> // for statfs
 #include <gui/widget/icons.h>
 #include <sys/mount.h>
+#include <unistd.h>
 //#include <system/ping.h>
 extern "C" int pingthost ( const char *hostname, int t );
 
@@ -362,7 +363,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.71 2012/04/10 13:03:49 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.72 2012/04/13 12:15:21 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3964,7 +3965,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.71 $");
+	return imageinfo.getModulVersion("","$Revision: 1.72 $");
 }
 
 /************************************************************************/

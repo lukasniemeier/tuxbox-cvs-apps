@@ -1,4 +1,4 @@
-/* $Id: hotplug.c,v 1.3 2007/12/08 15:12:16 seife Exp $
+/* $Id: hotplug.c,v 1.4 2012/04/13 12:15:22 rhabarber1848 Exp $
 
    Hotplug written in C to speed things up
    
@@ -147,7 +147,7 @@ static int action_add(char *fw_name)
 		return ret;
 	}
 	
-	strncat(sysfs_path,devpath_env,PATH_MAX);
+	strncat(sysfs_path,devpath_env,sizeof(devpath_env) - strlen(devpath_env) - 1);
 	strncat(sysfs_path,"/loading",PATH_MAX);
 
 	while (access(sysfs_path,F_OK)){
@@ -164,8 +164,8 @@ static int action_add(char *fw_name)
 		return ret;
 	}
 
-	write(hloading,&ack[ACK_1],1);
-	strncat(firmware_path,fw_name,PATH_MAX);
+	(void)write(hloading,&ack[ACK_1],1);
+	strncat(firmware_path,fw_name,sizeof(fw_name) - strlen(fw_name) - 1);
 
 	hfin=open(firmware_path,O_RDONLY);
 	if (!hfin) {
@@ -174,7 +174,7 @@ static int action_add(char *fw_name)
 	}
 	
 	sysfs_path[sysfs_base_len]=0x00; /* truncate again */
-	strncat(sysfs_path,devpath_env,PATH_MAX);
+	strncat(sysfs_path,devpath_env,sizeof(devpath_env) - strlen(devpath_env) - 1);
 	strncat(sysfs_path,"/data",PATH_MAX);
 
 	hfout=open(sysfs_path,O_WRONLY);
@@ -186,7 +186,7 @@ static int action_add(char *fw_name)
 		output_debug("hotplug: error copying file \"%s\" to \"%s\"\n",firmware_path,sysfs_path);
 		goto filecopy_out;
 	}
-	write(hloading,&ack[ACK_0],1);
+	(void)write(hloading,&ack[ACK_0],1);
 	
 	output_debug("hotplug: successfully wrote firmware file \"%s\" to \"%s\"\n",firmware_path,sysfs_path);
 	ret = 0;
@@ -197,7 +197,7 @@ hfout_out:
 	close(hfin);
 hfin_out:
 	if (ret)
-		write(hloading,&ack[ACK_ERR],1);
+		(void)write(hloading,&ack[ACK_ERR],1);
 
 	close(hloading);
 	return ret;

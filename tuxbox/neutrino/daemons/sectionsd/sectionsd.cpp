@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.339 2012/03/04 08:45:01 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.340 2012/04/13 12:15:20 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -47,6 +47,7 @@
 #include <semaphore.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <arpa/inet.h>
 #include <errno.h>
 #include <signal.h>
@@ -2651,7 +2652,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.339 2012/03/04 08:45:01 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.340 2012/04/13 12:15:20 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8625,7 +8626,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.339 2012/03/04 08:45:01 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.340 2012/04/13 12:15:20 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif

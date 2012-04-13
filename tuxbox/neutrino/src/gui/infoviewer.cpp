@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.314 2012/02/15 20:43:16 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.315 2012/04/13 12:15:21 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -59,6 +59,7 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 
 #include <time.h>
 #include <sys/param.h>
+#include <unistd.h>
 
 /* for showInfoFile... */
 #include <sys/types.h>

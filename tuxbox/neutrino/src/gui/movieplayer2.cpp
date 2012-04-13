@@ -1030,7 +1030,7 @@ ReceiveStreamThread(void *arg)
 	INFO("Buffering approx. 3 seconds\n");
 
 	int size;
-	int fd = open("/tmp/tmpts", O_CREAT | O_WRONLY);
+	int fd = open("/tmp/tmpts", O_CREAT | O_WRONLY, S_IRUSR|S_IWUSR);
 
 	struct pollfd poller[1];
 	poller[0].fd = skt;
@@ -3659,7 +3659,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.87 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.88 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
@@ -3922,7 +3922,7 @@ static bool filelist_auto_add(CFileList &filelist)
 
 	const char *filename = filelist[0].Name.c_str();
 	char *ext;
-	ext = strrchr(filename, '.');	// FOO-xxx-2007-12-31.001.ts <- the dot before "ts"
+	ext = (char*)strrchr(filename, '.');	// FOO-xxx-2007-12-31.001.ts <- the dot before "ts"
 					// 001.vdr <- the dot before "vdr"
 	// check if there is something to do...
 	if (! ext)

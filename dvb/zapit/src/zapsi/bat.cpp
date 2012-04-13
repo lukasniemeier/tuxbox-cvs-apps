@@ -1,5 +1,5 @@
 /*
- * $Id: bat.cpp,v 1.14 2004/02/17 16:26:07 thegoodguy Exp $
+ * $Id: bat.cpp,v 1.15 2012/04/13 12:15:00 rhabarber1848 Exp $
  *
  * (C) 2002 by Andreas Oberritter <obi@tuxbox.org>
  *
@@ -38,8 +38,8 @@ int parse_bat(void)
 	unsigned short pos3;
 
 	/* bouquet_association_section elements */
-	unsigned short section_length;
-	unsigned short bouquet_id;
+//	unsigned short section_length;
+//	unsigned short bouquet_id;
 	unsigned short bouquet_descriptors_length;
 	unsigned short transport_stream_loop_length;
 	t_transport_stream_id transport_stream_id;
@@ -61,8 +61,8 @@ int parse_bat(void)
 		if ((dmx.sectionFilter(0x11, filter, mask) < 0) || (dmx.read(buffer, BAT_SIZE) < 0))
 			return -1;
 
-		section_length = ((buffer[1] & 0x0F) << 8) | buffer[2];
-		bouquet_id = (buffer[3] << 8) | buffer[4];
+//		section_length = ((buffer[1] & 0x0F) << 8) | buffer[2];
+//		bouquet_id = (buffer[3] << 8) | buffer[4];
 		bouquet_descriptors_length = ((buffer[8] & 0x0F) << 8) | buffer[9];
 
 		for (pos = 10; pos < bouquet_descriptors_length + 10; pos += buffer[pos + 1] + 2) {

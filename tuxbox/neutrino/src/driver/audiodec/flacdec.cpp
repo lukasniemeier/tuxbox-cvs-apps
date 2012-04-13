@@ -36,6 +36,8 @@
 #include <algorithm>
 #include <sstream>
 #include <driver/netfile.h>
+#include <sys/stat.h>
+#include <limits.h>
 
 #define ProgName "FlacDec"
 // nr of msecs to skip in ff/rev mode
@@ -554,23 +556,23 @@ void CFlacDec::ParseUserComments(FLAC__StreamMetadata_VorbisComment* vc, CAudioM
 		if(vc->comments[i].entry) {
 			printf("comments[%u] = %d: %s\n", i, vc->comments[i].length, vc->comments[i].entry);
 			char* search;
-			if((search=strstr((const char*)vc->comments[i].entry,"Artist"))!=NULL ||
-			   (search=strstr((const char*)vc->comments[i].entry,"ARTIST"))!=NULL)
+			if((search=(char*)strstr((const char*)vc->comments[i].entry,"Artist"))!=NULL ||
+			   (search=(char*)strstr((const char*)vc->comments[i].entry,"ARTIST"))!=NULL)
 				m->artist = search+7;
-			else if((search=strstr((const char*)vc->comments[i].entry,"Album"))!=NULL ||
-			        (search=strstr((const char*)vc->comments[i].entry,"ALBUM"))!=NULL)
+			else if((search=(char*)strstr((const char*)vc->comments[i].entry,"Album"))!=NULL ||
+			        (search=(char*)strstr((const char*)vc->comments[i].entry,"ALBUM"))!=NULL)
 				m->album = search+6;
-			else if((search=strstr((const char*)vc->comments[i].entry,"Title"))!=NULL ||
-			        (search=strstr((const char*)vc->comments[i].entry,"TITLE"))!=NULL)
+			else if((search=(char*)strstr((const char*)vc->comments[i].entry,"Title"))!=NULL ||
+			        (search=(char*)strstr((const char*)vc->comments[i].entry,"TITLE"))!=NULL)
 				m->title = search+6;
-			else if((search=strstr((const char*)vc->comments[i].entry,"Genre"))!=NULL ||
-			        (search=strstr((const char*)vc->comments[i].entry,"GENRE"))!=NULL)
+			else if((search=(char*)strstr((const char*)vc->comments[i].entry,"Genre"))!=NULL ||
+			        (search=(char*)strstr((const char*)vc->comments[i].entry,"GENRE"))!=NULL)
 				m->genre = search+6;
-			else if((search=strstr((const char*)vc->comments[i].entry,"Date"))!=NULL ||
-			        (search=strstr((const char*)vc->comments[i].entry,"DATE"))!=NULL)
+			else if((search=(char*)strstr((const char*)vc->comments[i].entry,"Date"))!=NULL ||
+			        (search=(char*)strstr((const char*)vc->comments[i].entry,"DATE"))!=NULL)
 				m->date = search+5;
-			else if((search=strstr((const char*)vc->comments[i].entry,"TrackNumber"))!=NULL ||
-			        (search=strstr((const char*)vc->comments[i].entry,"TRACKNUMBER"))!=NULL)
+			else if((search=(char*)strstr((const char*)vc->comments[i].entry,"TrackNumber"))!=NULL ||
+			        (search=(char*)strstr((const char*)vc->comments[i].entry,"TRACKNUMBER"))!=NULL)
 				m->track = search+12;
 		}
 	}

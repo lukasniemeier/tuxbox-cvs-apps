@@ -12,6 +12,7 @@
 // system
 #include <fcntl.h>
 #include <sys/socket.h>
+#include <unistd.h>
 // yhttpd
 #include "yconfig.h"
 #include "yhttpd.h"

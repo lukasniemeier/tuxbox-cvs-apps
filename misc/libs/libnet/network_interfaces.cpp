@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/misc/libs/libnet/network_interfaces.cpp,v 1.7 2006/07/28 21:27:57 houdini Exp $
+ * $Header: /cvs/tuxbox/apps/misc/libs/libnet/network_interfaces.cpp,v 1.8 2012/04/13 12:15:01 rhabarber1848 Exp $
  *
  * (C) 2003 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -24,6 +24,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <unistd.h>
 
 /*
  * Known bugs:

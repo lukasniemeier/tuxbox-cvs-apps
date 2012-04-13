@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #define TUXTXT_TIMER_TICK 100
 #define TUXTXTTTF FONTDIR "/tuxtxt.ttf"
 #define TUXTXTTTFVAR "/var/tuxtxt/tuxtxt.ttf"

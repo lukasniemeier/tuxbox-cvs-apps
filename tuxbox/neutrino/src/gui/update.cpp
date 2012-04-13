@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.146 2012/03/24 11:27:57 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.147 2012/04/13 12:15:21 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -69,6 +69,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <fstream>
 

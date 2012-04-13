@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.135 2012/02/15 20:43:16 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.136 2012/04/13 12:15:21 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -41,6 +41,7 @@
 #include <neutrino.h>
 
 #include <system/debug.h>
+#include <unistd.h>
 
 #include <driver/encoding.h>
 #include <driver/vcrcontrol.h>

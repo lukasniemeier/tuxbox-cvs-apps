@@ -1,6 +1,6 @@
 /*
 
-        $Id: settings.cpp,v 1.55 2011/09/12 17:34:03 rhabarber1848 Exp $
+        $Id: settings.cpp,v 1.56 2012/04/13 12:15:22 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -27,6 +27,7 @@
 #include <zapit/settings.h>
 
 #include <cstring>
+#include <cstdlib>
 
 CScanSettings::CScanSettings(void)
 	: configfile('\t')

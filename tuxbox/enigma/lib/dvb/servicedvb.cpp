@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <stdio.h>
 
 #if HAVE_DVB_API_VERSION < 3

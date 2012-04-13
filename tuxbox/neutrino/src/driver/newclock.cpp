@@ -24,6 +24,7 @@
 
 #include <config.h>
 #include <driver/newclock.h>
+#include <stdio.h>
 
 static bool	time_digits[24*32 * 10];
 static bool	days[24*16 * 7];

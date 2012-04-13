@@ -182,7 +182,7 @@ public:
 	{
 		// added a new item to the list... in order
 		// returns a iterator to the new item
-		return insert( std::lower_bound( std::list<T*>::begin(), std::list<T*>::end(), e, less()), e );
+		return this->insert(std::lower_bound( std::list<T*>::begin(), std::list<T*>::end(), e, less()), e );
 	}
 
 };
@@ -388,12 +388,13 @@ template <class T>
 ePtrList<T>::ePtrList(const ePtrList& e)
 	:std::list<T*>(e), cur(e.cur), autoDelete( false )
 {		
-	if ( e.autoDelete )	
+	if ( e.autoDelete ) {
 		if ( e.size() )
 			eDebug("Warning !! We make a Copy of a non empty ePtrList, with autoDelete enabled"
 						 "We disable autoDelete in the new ePtrList !!");
 		else
 			autoDelete=true;
+	}
 }
 
 /////////////////// ePtrList Destructor /////////////////////////////

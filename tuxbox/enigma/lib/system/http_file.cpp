@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <shadow.h>
 #include <pwd.h>
+#include <sys/stat.h>
 
 eHTTPFile::eHTTPFile(eHTTPConnection *c, int _fd, int method, const char *mime): eHTTPDataSource(c), method(method)
 {

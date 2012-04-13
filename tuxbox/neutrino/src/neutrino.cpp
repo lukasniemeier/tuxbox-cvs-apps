@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1075 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1076 2012/04/13 12:15:20 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2348,13 +2348,13 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 #ifdef ENABLE_AUDIOPLAYER
 		else if(g_settings.startmode == STARTMODE_AUDIOPLAYER)
 		{
-			CAudioPlayerGui::CAudioPlayerGui tmpAudioPlayerGui;
+			CAudioPlayerGui tmpAudioPlayerGui;
 			tmpAudioPlayerGui.exec(NULL, "");
 		}
 #ifdef ENABLE_INTERNETRADIO
 		else if(g_settings.startmode == STARTMODE_INETRADIO)
 		{
-			CAudioPlayerGui::CAudioPlayerGui tmpAudioPlayerGui(true);
+			CAudioPlayerGui tmpAudioPlayerGui(true);
 			tmpAudioPlayerGui.exec(NULL, "");
 		}
 #endif
@@ -2362,7 +2362,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 #ifdef ENABLE_ESD
 		else if(g_settings.startmode == STARTMODE_ESOUND)
 		{
-			CEsoundGui::CEsoundGui tmpEsoundGui;
+			CEsoundGui tmpEsoundGui;
 			tmpEsoundGui.exec(NULL, "");
 		}
 #endif
@@ -3123,7 +3123,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 #ifdef ENABLE_ESD
 		else if( msg == NeutrinoMessages::ESOUND_ON )
 		{
-			CEsoundGui::CEsoundGui tmpEsoundGui;
+			CEsoundGui tmpEsoundGui;
 			tmpEsoundGui.exec(NULL, "");
 			g_RCInput->clearRCMsg();
 			return messages_return::handled;

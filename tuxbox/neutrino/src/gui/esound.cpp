@@ -1,5 +1,5 @@
 /*
-  $Id: esound.cpp,v 1.11 2009/10/30 22:06:05 seife Exp $
+  $Id: esound.cpp,v 1.13 2012/04/13 12:15:20 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   based on
@@ -73,6 +73,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <unistd.h>
 
 #if HAVE_DVB_API_VERSION >= 3
 #include <linux/dvb/audio.h>
@@ -158,7 +159,7 @@ int CEsoundGui::exec(CMenuTarget* parent, const std::string &)
 	if (usedBackground)
 		m_frameBuffer->saveBackgroundImage();
 	m_frameBuffer->loadPal("radiomode.pal", 18, COL_MAXFREE);
-	m_frameBuffer->useBackground(m_frameBuffer->loadBackground("radiomode.raw"));// set useBackground true or false
+	m_frameBuffer->useBackground(m_frameBuffer->loadBackground(NEUTRINO_ICON_RADIOMODE));// set useBackground true or false
 	m_frameBuffer->paintBackground();
 
 #if defined HAVE_DBOX_HARDWARE || defined HAVE_TRIPLEDRAGON

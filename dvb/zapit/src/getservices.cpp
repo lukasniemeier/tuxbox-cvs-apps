@@ -1,5 +1,5 @@
 /*
- * $Id: getservices.cpp,v 1.104 2009/09/30 17:34:20 seife Exp $
+ * $Id: getservices.cpp,v 1.105 2012/04/13 12:15:00 rhabarber1848 Exp $
  *
  * (C) 2002, 2003 by Andreas Oberritter <obi@tuxbox.org>
  *
@@ -254,14 +254,14 @@ int LoadMotorPositions(void)
 	motorPositions.clear();
 	if ((fd = fopen(MOTORCONFIGFILE, "r")))
 	{
-		fgets(buffer, 255, fd);
+		(void)fgets(buffer, 255, fd);
 		while(!feof(fd))
 		{	
 			sscanf(buffer, "%d %d", &temp1, &temp2);
 			satellitePosition = (t_satellite_position)temp1;
 			motorPosition = (uint8_t)temp2;
 			motorPositions[satellitePosition] = motorPosition;
-			fgets(buffer, 255, fd);	
+			(void)fgets(buffer, 255, fd);
 		}
 		fclose(fd);
 		

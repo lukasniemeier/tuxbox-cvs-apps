@@ -1,5 +1,5 @@
 /*
- * $Id: udpstreamts.c,v 1.3 2010/03/12 22:44:24 rhabarber1848 Exp $
+ * $Id: udpstreamts.c,v 1.4 2012/04/13 12:15:00 rhabarber1848 Exp $
  *
  * a lightweight videolan server replacement
  *
@@ -321,7 +321,7 @@ main (int argc, char **argv)
 
 		for (j=getdtablesize();j>=0;--j) close(j); /* close all descriptors */
 
-		j = open(argv[2], O_RDWR|O_CREAT|O_TRUNC); /*open stdin */
+		j = open(argv[2], O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR); /*open stdin */
 		dup(j); /* stdout */
 		dup(j); /* stderr */
 

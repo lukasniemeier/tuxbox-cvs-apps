@@ -1,5 +1,5 @@
 /*
- * $Id: lcdmenu.cpp,v 1.31 2009/08/08 13:21:14 barf Exp $
+ * $Id: lcdmenu.cpp,v 1.32 2012/04/13 12:15:19 rhabarber1848 Exp $
  *
  * A startup menu for the d-box 2 linux project
  *
@@ -22,6 +22,7 @@
  */
 
 #include <sys/reboot.h>
+#include <sys/stat.h>
 
 #include "lcdmenu.h"
 

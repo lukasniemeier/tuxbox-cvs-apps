@@ -1,5 +1,8 @@
 #include <errno.h>
 #include <fcntl.h>
+#include <cstdlib>
+#include <string.h>
+#include <unistd.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <linux/input.h>
@@ -420,7 +423,7 @@ void plugin_exec(PluginParam *par)
 {
 	int subpid, sx, ex, sy, ey;
 	int ret;
-	char cvs_revision[] = "$Revision: 1.1 $";
+	char cvs_revision[] = "$Revision: 1.2 $";
 
 	/* show versioninfo */
 	sscanf(cvs_revision, "%*s %s", versioninfo);

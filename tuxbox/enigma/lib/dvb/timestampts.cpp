@@ -1,5 +1,5 @@
 /*
- * $Id: timestampts.cpp,v 1.9 2009/12/30 10:51:32 dbluelle Exp $
+ * $Id: timestampts.cpp,v 1.10 2012/04/13 12:15:12 rhabarber1848 Exp $
  *
  * (C) 2008 by Dr. Best  <dr.best@dreambox-tools.info>
  *
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 
 #ifndef BYTE_ORDER

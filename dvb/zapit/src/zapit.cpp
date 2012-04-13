@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.458 2012/03/04 08:32:08 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.459 2012/04/13 12:15:00 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stropts.h>
 #include <linux/ioctl.h>
@@ -203,7 +204,7 @@ void cpy(const char *from, const char *to)
 	strcat(cmd, from);
 	strcat(cmd, " ");
 	strcat(cmd, to);
-	system(cmd);
+	(void)system(cmd);
 }
 /*
 //stolen from zapitools.cpp - check how to include
@@ -743,8 +744,8 @@ void saveSettings(bool write)
 				for (map<t_channel_id, unsigned short>::iterator audio_map_it = audio_map.begin();
 						audio_map_it != audio_map.end();
 						audio_map_it++) {
-					fwrite(&(audio_map_it->first), sizeof(t_channel_id), 1, audio_config_file);
-					fwrite(&(audio_map_it->second), sizeof(unsigned short), 1, audio_config_file);
+					(void)fwrite(&(audio_map_it->first), sizeof(t_channel_id), 1, audio_config_file);
+					(void)fwrite(&(audio_map_it->second), sizeof(unsigned short), 1, audio_config_file);
 				}
 				fclose(audio_config_file);
 			}
@@ -1909,11 +1910,11 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 	case CZapitMessages::CMD_SCAN_TP:
 	{
 		TP_params TP;
-		t_channel_id save_channel;
+//		t_channel_id save_channel;
 		
 		if (!cc) break; // otherwise zapit dies
 		// save channel info
-		save_channel = cc->getChannelID();
+//		save_channel = cc->getChannelID();
 		CBasicServer::receive_data(connfd, &TP, sizeof(TP));
 // Houdini: now configured/send by neutrino!
 //		TP.diseqc=transponder->second.DiSEqC;
@@ -3153,7 +3154,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.458 2012/03/04 08:32:08 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.459 2012/04/13 12:15:00 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
@@ -3328,8 +3329,8 @@ int main(int argc, char **argv)
 			t_channel_id chan;
 			unsigned short apid;
 			while (! feof(audio_config_file)) {
-				fread(&chan, sizeof(t_channel_id), 1, audio_config_file);
-				fread(&apid, sizeof(unsigned short), 1, audio_config_file);
+				(void)fread(&chan, sizeof(t_channel_id), 1, audio_config_file);
+				(void)fread(&apid, sizeof(unsigned short), 1, audio_config_file);
 				DBG("**** Old channelinfo: %d %d\n", (int) chan, (int) apid);
 				audio_map[chan] = apid;
 			}

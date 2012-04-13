@@ -1,6 +1,8 @@
 #include <cerrno>
 #include <inttypes.h>
 #include <pthread.h>
+#include <string.h>
+#include <unistd.h>
 #include <semaphore.h>
 
 #include "Debug.hpp"

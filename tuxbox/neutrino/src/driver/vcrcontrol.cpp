@@ -1033,7 +1033,7 @@ bool CVCRControl::CFileDevice::createRecordingDir(const char *filename)
 	//printf("[CFileDevice] trying to create directory %s\n",filename);
 	char *pos;
 	unsigned int start = 0;
-	while ((pos = strchr(&(filename[start]),'/')) != NULL) {
+	while ((pos = (char*)strchr(&(filename[start]),'/')) != NULL) {
 		if (pos == &filename[0])
 		{
 			start = 1;

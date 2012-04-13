@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <poll.h>
 #include "upnpclient.h"
+#include <unistd.h>
 
 struct ToLower
 {
