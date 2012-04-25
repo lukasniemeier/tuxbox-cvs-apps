@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.198 2012/04/10 13:03:50 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.199 2012/04/25 18:25:36 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -735,11 +735,12 @@ int CMenuOptionNumberChooser::paint(bool selected)
 	else
 		l_option = g_Locale->getText(localized_value_name);
 
+	const char * l_optionName = (optionString != NULL) ? optionString : g_Locale->getText(optionName);
+
 	int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_option, true); // UTF-8
 	int stringstartposName = x + offx + 10;
-	int stringstartposOption = x + dx - stringwidth - 10; //+ offx
-
-	const char * l_optionName = (optionString != NULL) ? optionString : g_Locale->getText(optionName);
+	int stringstartposOption = std::max(stringstartposName + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_optionName, true) + 10,
+										x + dx - stringwidth - 10); //+ offx
 
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), l_optionName, color, 0, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), l_option, color, 0, true); // UTF-8
@@ -863,7 +864,8 @@ int CMenuOptionChooser::paint( bool selected )
 
 	int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_option, true); // UTF-8
 	int stringstartposName = x + offx + 10;
-	int stringstartposOption = x + dx - stringwidth - 10; //+ offx
+	int stringstartposOption = std::max(stringstartposName + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(optionNameString.c_str(), true) + 10,
+										x + dx - stringwidth - 10); //+ offx
 
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), optionNameString.c_str(), color, 0, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), l_option, color, 0, true); // UTF-8
@@ -950,11 +952,13 @@ int CMenuOptionStringChooser::paint( bool selected )
 
 	CFrameBuffer::getInstance()->paintBoxRel(x, y, dx, height, bgcolor, RADIUS_SMALL);
 
+	const char * l_optionName = g_Locale->getText(optionName);
+
 	int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(optionValue);
 	int stringstartposName = x + offx + 10;
-	int stringstartposOption = x + dx - stringwidth - 10; //+ offx
+	int stringstartposOption = std::max(stringstartposName + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(l_optionName, true) + 10,
+										x + dx - stringwidth - 10); //+ offx
 
-	const char * l_optionName = g_Locale->getText(optionName);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), l_optionName, color, 0, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y+height,dx- (stringstartposOption - x), optionValue, color);
 
