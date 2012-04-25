@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.91 2012/04/13 12:15:20 rhabarber1848 Exp $
+	$Id: lcdd.cpp,v 1.92 2012/04/25 18:31:24 rhabarber1848 Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -390,7 +390,7 @@ static std::string removeLeadingSpaces(const std::string & text)
 
 static std::string splitString(const std::string & text, const int maxwidth, LcdFont *font, bool dumb, bool utf8)
 {
-	int pos;
+	int width, pos;
 	std::string tmp = removeLeadingSpaces(text);
 
 	if (font->getRenderWidth(tmp.c_str(), utf8) > maxwidth)
@@ -398,16 +398,31 @@ static std::string splitString(const std::string & text, const int maxwidth, Lcd
 		do
 		{
 			if (dumb)
-				tmp = tmp.substr(0, tmp.length()-1);
+			{
+				do
+				{
+					tmp = tmp.substr(0, tmp.length()-1);
+					width = font->getRenderWidth(tmp.c_str(), utf8);
+				} while (utf8 && font->getRenderWidth(tmp.substr(0, tmp.length()-1).c_str(), true) == width); // cut an UTF-8 character completely
+			}
 			else
 			{
-				pos = tmp.find_last_of("[ .-]+"); // TODO characters might be UTF-encoded!
+				pos = tmp.find_last_of("[ .-]+");
 				if (pos != -1)
+				{
 					tmp = tmp.substr(0, pos);
+					width = font->getRenderWidth(tmp.c_str(), utf8);
+				}
 				else // does not fit -> fall back to dumb split
-					tmp = tmp.substr(0, tmp.length()-1);
+				{
+					do
+					{
+						tmp = tmp.substr(0, tmp.length()-1);
+						width = font->getRenderWidth(tmp.c_str(), utf8);
+					} while (utf8 && font->getRenderWidth(tmp.substr(0, tmp.length()-1).c_str(), true) == width); // cut an UTF-8 character completely
+				}
 			}
-		} while (font->getRenderWidth(tmp.c_str(), utf8) > maxwidth);
+		} while (width > maxwidth);
 	}
 
 	return tmp;
