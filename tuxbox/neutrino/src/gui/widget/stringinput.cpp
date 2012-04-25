@@ -394,6 +394,7 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 			int r = handleOthers(msg, data);
 			if (r & (messages_return::cancel_all | messages_return::cancel_info))
 			{
+				strncpy(value, oldval, size);
 				res = (r & messages_return::cancel_all) ? menu_return::RETURN_EXIT_ALL : menu_return::RETURN_EXIT;
 				loop = false;
 			}
@@ -401,6 +402,7 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 			{
 				if (CNeutrinoApp::getInstance()->handleMsg(msg, data) & messages_return::cancel_all)
 				{
+					strncpy(value, oldval, size);
 					loop = false;
 					res = menu_return::RETURN_EXIT_ALL;
 				}
