@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.143 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.144 2012/04/25 18:23:27 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -266,7 +266,8 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 	if(m_search_list == SEARCH_LIST_NONE) // init globals once only
 	{
 		m_search_epg_item = SEARCH_EPG_TITLE;
-		//m_search_keyword = "";
+		m_search_keyword = "";
+		m_search_autokeyword = "";
 		m_search_list = SEARCH_LIST_CHANNEL;
 		m_search_channel_id = channel_id;
 		m_search_bouquet_id= bouquetList->getActiveBouquetNumber();
@@ -880,6 +881,12 @@ int EventList::findEvents(void)
 	int res = 0;
 	int event = 0;
 	t_channel_id channel_id;  //g_Zapit->getCurrentServiceID()
+
+	if((m_search_keyword.empty() || m_search_keyword == m_search_autokeyword) && evtlist[selected].eventID != 0)
+	{
+		m_search_keyword = evtlist[selected].description;
+		m_search_autokeyword = m_search_keyword;
+	}
 	
 	CEventFinderMenu menu(	&event,
 				&m_search_epg_item,
