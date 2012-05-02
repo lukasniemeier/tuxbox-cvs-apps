@@ -25,7 +25,7 @@ fi
 AC_ARG_ENABLE(tuxtxt,
         AS_HELP_STRING(--disable-tuxtxt,[disable Tuxtxt]),
         ,[enable_tuxtxt=yes])
-AM_CONDITIONAL(ENABLE_TUXTXT,test "$enable_tuxtxt" = "yes")
+AM_CONDITIONAL(ENABLE_TUXTXT,test "$enable_tuxtxt" != "no")
 
 AC_OUTPUT([
 Makefile
