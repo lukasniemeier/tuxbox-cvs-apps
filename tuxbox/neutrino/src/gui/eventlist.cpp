@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.144 2012/04/25 18:23:27 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.145 2012/05/02 19:03:40 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -70,7 +70,7 @@ bool sortById (const CChannelEvent& a, const CChannelEvent& b)
 bool sortByDescription (const CChannelEvent& a, const CChannelEvent& b)
 {
 	if(a.description == b.description)
-		return a.eventID < b.eventID;
+		return a.startTime < b.startTime;
 	else
 		return a.description < b.description ;
 }
