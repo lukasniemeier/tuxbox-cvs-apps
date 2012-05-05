@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.45 2012/05/05 20:09:21 dbt Exp $
+        $Id: personalize.cpp,v 1.46 2012/05/05 20:09:25 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -240,7 +240,7 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 		
 		if(actionKey == a_key) 
 		{                                     				// Personalize options menu
-			ShowMenuOptions(i);
+			res = ShowMenuOptions(i);
 			return res;
 		}
 	}
@@ -322,7 +322,7 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 
 //Here we give the user the option to enable, disable, or PIN protect items on the Main Menu.
 //We also provide a means of PIN protecting the menu itself.
-void CPersonalizeGui::ShowMenuOptions(const int& widget)
+int CPersonalizeGui::ShowMenuOptions(const int& widget)
 {
 	string mn_name = v_widget[widget]->getName();
 	printf("[neutrino-personalize] exec %s...\n", __FUNCTION__);
@@ -372,11 +372,12 @@ void CPersonalizeGui::ShowMenuOptions(const int& widget)
 			}	
 		}
 	}
-	
-	pm->exec (NULL, "");
+
+	int res = pm->exec(NULL, "");
 	pm->hide ();
 	delete pm;
 
+	return res;
 }
 
 //shows a short help message
