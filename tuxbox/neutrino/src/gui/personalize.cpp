@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.46 2012/05/05 20:09:25 dbt Exp $
+        $Id: personalize.cpp,v 1.47 2012/05/05 20:09:29 dbt Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -250,11 +250,6 @@ int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)
 		return res;
 	}
 	
-	if (actionKey=="restore") {  
-		ShowPersonalizationMenu	();
-		return menu_return::RETURN_EXIT_ALL;
-	}
-	
 	res = ShowPersonalizationMenu();                                        // Show main Personalization Menu
 	SaveAndExit();
 	return res;
@@ -415,7 +410,7 @@ void CPersonalizeGui::SaveAndExit()
 		else
 		{
 			if (ShowMsgUTF(LOCALE_PERSONALIZE_HEAD, g_Locale->getText(LOCALE_MESSAGEBOX_DISCARD), CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NEUTRINO_ICON_PROTECTING) == CMessageBox::mbrYes)
-				exec(NULL, "restore");
+				restoreSettings();
 		}
 	}
 }
@@ -644,7 +639,5 @@ void CPersonalizeGui::restoreSettings()
 	//restore settings with current settings
 	for (uint i = 0; i < v_int_settings.size(); i++)
 		*v_int_settings[i].p_val = v_int_settings[i].old_val;
-	
-	exec(NULL, "restore");
 }
 
