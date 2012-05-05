@@ -178,7 +178,7 @@ CLocaleManager::~CLocaleManager()
 		if (localeData[j] != locale_real_names[j])
 			free(localeData[j]);
 
-	delete localeData;
+	delete[] localeData;
 }
 
 const char * path[2] = {"/var/tuxbox/config/locale/", DATADIR "/neutrino/locale/"};
