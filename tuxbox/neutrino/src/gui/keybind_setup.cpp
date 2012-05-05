@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.14 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.15 2012/05/05 20:09:33 dbt Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -62,7 +62,7 @@ CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const I
 
 CKeybindSetup::~CKeybindSetup()
 {
-
+	delete keySetupNotifier;
 }
 
 int CKeybindSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
