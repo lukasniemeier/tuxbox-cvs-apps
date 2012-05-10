@@ -9,6 +9,7 @@
 #include <sys/un.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

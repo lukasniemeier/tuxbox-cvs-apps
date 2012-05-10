@@ -47,6 +47,8 @@
 
 #include <sys/mount.h>
 #include <unistd.h>
+#include <cstring>
+#include <cstdlib>
 
 pthread_mutex_t g_mut;
 pthread_cond_t g_cond;

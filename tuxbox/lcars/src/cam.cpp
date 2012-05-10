@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstdlib>
 #include <sys/ioctl.h>
 #include <memory.h>
 

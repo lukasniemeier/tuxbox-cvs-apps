@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: settings.cpp,v $
+Revision 1.15  2012/05/10 09:48:02  rhabarber1848
+Yet another bunch of gcc-4.7 related compile fixes: http://www.dbox2-tuning.net/forum/viewtopic.php?f=7&t=49638
+
 Revision 1.14  2003/03/08 17:31:18  waldi
 use tuxbox and frontend infos
 
@@ -77,6 +80,7 @@ Revision 1.2  2001/11/15 00:43:45  TheDOC
 #include <netinet/in.h>
 #include <net/if.h> 
 #include <arpa/inet.h>
+#include <cstdlib>
 
 #include "devices.h"
 #include "settings.h"

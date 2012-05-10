@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: plugins.cpp,v $
+Revision 1.11  2012/05/10 09:48:02  rhabarber1848
+Yet another bunch of gcc-4.7 related compile fixes: http://www.dbox2-tuning.net/forum/viewtopic.php?f=7&t=49638
+
 Revision 1.10  2004/06/16 08:46:45  thegoodguy
 fix compilation (untested)
 
@@ -58,6 +61,8 @@ Revision 1.2  2001/11/15 00:43:45  TheDOC
 #include "plugins.h"
 
 #include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 #include <fcntl.h>
 
 void plugins::loadPlugins()

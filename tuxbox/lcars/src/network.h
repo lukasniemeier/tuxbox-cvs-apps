@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: network.h,v $
+Revision 1.9  2012/05/10 09:48:02  rhabarber1848
+Yet another bunch of gcc-4.7 related compile fixes: http://www.dbox2-tuning.net/forum/viewtopic.php?f=7&t=49638
+
 Revision 1.8  2002/06/02 14:23:36  TheDOC
 some fixes and changes
 
@@ -81,7 +84,7 @@ public:
 	scan *scan_obj;
 
 	void writetext(std::string text);
-	network(zap *z, channels *c, fbClass *f, osd *o, settings *s, tuner *t, pat *pa, pmt *pm, eit *e, scan *sc, rc *r, control *c, variables *v);
+	network(zap *z, channels *c, fbClass *f, osd *o, settings *s, tuner *t, pat *pa, pmt *pm, eit *e, scan *sc, rc *r, control *d, variables *v);
 	int fd;
 	int inbound_connection;
 	static void *startlistening(void *object);

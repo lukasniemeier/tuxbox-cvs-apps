@@ -35,6 +35,8 @@
 #include <sstream>
 #include <audioplay.h>
 #include <linux/soundcard.h>
+#include <cstring>
+#include <cstdlib>
 
 #define ProgName "WavDec"
 // nr of msecs to skip in ff/rev mode

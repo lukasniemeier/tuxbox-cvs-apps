@@ -47,6 +47,7 @@
 #endif /* __USE_FILE__OFFSET64 */
 
 #include <unistd.h> /* off_t */
+#include <fcntl.h>
 
 
 #include <string>

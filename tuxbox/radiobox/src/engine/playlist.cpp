@@ -24,6 +24,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <cstring>
+#include <cstdlib>
 
 #include <sstream>
 #include <iomanip>

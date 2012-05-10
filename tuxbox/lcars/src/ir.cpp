@@ -1,4 +1,5 @@
 #include "ir.h"
+#include <stdio.h>
 
 ir::ir()
 {

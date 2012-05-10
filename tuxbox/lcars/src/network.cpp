@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: network.cpp,v $
+Revision 1.19  2012/05/10 09:48:02  rhabarber1848
+Yet another bunch of gcc-4.7 related compile fixes: http://www.dbox2-tuning.net/forum/viewtopic.php?f=7&t=49638
+
 Revision 1.18  2003/01/05 02:41:53  TheDOC
 lcars supports inputdev now
 
@@ -103,6 +106,7 @@ Revision 1.2  2001/11/15 00:43:45  TheDOC
 #include <sys/types.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <algorithm>
 
 #include "network.h"
 #include "channels.h"

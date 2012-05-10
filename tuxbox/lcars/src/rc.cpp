@@ -15,6 +15,9 @@
  ***************************************************************************/
 /*
 $Log: rc.cpp,v $
+Revision 1.11  2012/05/10 09:48:02  rhabarber1848
+Yet another bunch of gcc-4.7 related compile fixes: http://www.dbox2-tuning.net/forum/viewtopic.php?f=7&t=49638
+
 Revision 1.10  2003/01/05 20:49:55  TheDOC
 and the old rc-devices
 
@@ -61,6 +64,7 @@ Revision 1.2  2001/11/15 00:43:45  TheDOC
 #include <unistd.h>
 #include <fcntl.h>
 #include <iostream>
+#include <cstdlib>
 
 #ifdef HAVE_LINUX_DVB_VERSION_H
 
