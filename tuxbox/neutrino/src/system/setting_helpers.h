@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.109 2012/03/18 11:20:15 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.110 2012/05/16 21:49:56 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -74,7 +74,6 @@ class CSectionsdConfigNotifier : public CChangeObserver
 		bool changeNotify(const neutrino_locale_t, void * );
 };
 
-void showSubchan(const std::string & subChannelName);
 class CNVODChangeExec : public CMenuTarget
 {
 	public:
@@ -97,16 +96,6 @@ class CDVBInfoExec : public CMenuTarget
 {
 	public:
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-void testNetworkSettings(const char* ip, const char* netmask, const char* broadcast, const char* gateway, const char* nameserver, bool ip_static);
-void showCurrentNetworkSettings();
-class CNetAdapter
-{
-	private:
-		long mac_addr_sys ( u_char *addr);	
-	public:
-		std::string getMacAddr(void);
 };
 
 #endif

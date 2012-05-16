@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.h,v 1.7 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: network_setup.h,v 1.8 2012/05/16 21:49:56 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -61,6 +61,8 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 		std::string old_network_nameserver;
 		std::string old_network_gateway;
 
+		void testNetworkSettings();
+		void showCurrentNetworkSettings();
 		void restoreNetworkSettings(bool show_message = false);
 		void prepareSettings();
 
@@ -68,6 +70,7 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 
 		bool checkForIP();
 		bool settingsChanged();
+		const char * mypinghost(const char * const host);
 				
 	public:	
 		enum NETWORK_DHCP_MODE
@@ -106,6 +109,14 @@ class CDHCPNotifier : public CChangeObserver
 	public:
 		CDHCPNotifier( CMenuForwarder*, CMenuForwarder*, CMenuForwarder*, CMenuForwarder*, CMenuForwarder*);
 		bool changeNotify(const neutrino_locale_t, void * data);
+};
+
+class CNetAdapter
+{
+	private:
+		long mac_addr_sys ( u_char *addr);	
+	public:
+		std::string getMacAddr(void);
 };
 
 #endif
