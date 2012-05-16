@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1076 2012/04/13 12:15:20 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1077 2012/05/16 21:48:15 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -106,6 +106,7 @@
 #ifdef ENABLE_SAMBASERVER
 #include "gui/sambaserver_setup.h"
 #endif
+#include "gui/rc_lock.h"
 
 #include <system/setting_helpers.h>
 #include <system/settings.h>
@@ -2159,14 +2160,8 @@ int CNeutrinoApp::run(int argc, char **argv)
 	// script is available
 	g_PluginList->loadPlugins();
 
-#ifdef HAVE_DBOX_HARDWARE
-	UCodeChecker			= new CUCodeCheckExec;
-#endif
-	DVBInfo				= new CDVBInfoExec;
 	NVODChanger			= new CNVODChangeExec;
-	StreamFeaturesChanger		= new CStreamFeaturesChangeExec;
 
-	rcLock				= new CRCLock();
 	//USERMENU
 	Timerlist			= new CTimerList;
 
@@ -3202,7 +3197,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		}
 		else if (msg == NeutrinoMessages::LOCK_RC)
 		{
-			this->rcLock->exec(NULL,CRCLock::NO_USER_INPUT);
+			CRCLock rcLock;
+			rcLock.exec(NULL, CRCLock::NO_USER_INPUT);
 			return messages_return::handled;
 		}
 		else if( msg == NeutrinoMessages::CHANGEMODE )

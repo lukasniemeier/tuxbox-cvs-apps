@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.136 2012/04/13 12:15:21 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.137 2012/05/16 21:48:15 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -44,7 +44,6 @@
 #include <unistd.h>
 
 #include <driver/encoding.h>
-#include <driver/vcrcontrol.h>
 
 #include "gui/bedit/bouqueteditor_bouquets.h"
 #include "gui/widget/icons.h"
@@ -95,6 +94,7 @@
 #include "lcd_setup.h"
 #include "driver_boot_setup.h"
 #include "osd_setup.h"
+#include "rc_lock.h"
 
 
 #if ENABLE_UPNP
@@ -346,11 +346,11 @@ void CNeutrinoApp::InitMenuService()
 	
 #ifdef HAVE_DBOX_HARDWARE
 	// ucode check
-	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_UCODECHECK, true, NULL, UCodeChecker), &g_settings.personalize_ucodecheck);
+	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_UCODECHECK, true, NULL, new CUCodeCheckExec), &g_settings.personalize_ucodecheck);
 #endif
 
 	// epg status
-	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, DVBInfo), &g_settings.personalize_chan_epg_stat);
+	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_CHAN_EPG_STAT, true, NULL, new CDVBInfoExec), &g_settings.personalize_chan_epg_stat);
 
 	// separator
 	personalize->addSeparator(MENU_SERVICE); 
@@ -406,6 +406,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 #ifdef ENABLE_MOVIEPLAYER
 	CMoviePlayerGui* tmpMoviePlayerGui			= NULL;
 #endif
+	CRCLock* rcLock						= NULL;
+	CStreamFeaturesChangeExec* StreamFeaturesChanger	= NULL;
 	
 	std::string txt = g_settings.usermenu_text[button];
 	if (button == SNeutrinoSettings::BUTTON_RED)
@@ -462,6 +464,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 						sprintf(id, "%d", count);
 						menu_items++;
 						menu_prev = SNeutrinoSettings::ITEM_VTXT;
+						if (StreamFeaturesChanger == NULL)
+							StreamFeaturesChanger = new CStreamFeaturesChangeExec();
 						keyhelper.get(&key, &icon, cnt == 0 ? CRCInput::RC_blue : CRCInput::RC_nokey);
 						menu_item = new CMenuForwarderNonLocalized(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, key, icon);
 						menu->addItem(menu_item, (cnt == 0));
@@ -479,6 +483,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 						sprintf(id, "%d", count);
 						menu_items++;
 						menu_prev = SNeutrinoSettings::ITEM_PLUGIN;
+						if (StreamFeaturesChanger == NULL)
+							StreamFeaturesChanger = new CStreamFeaturesChangeExec();
 						keyhelper.get(&key, &icon, cnt == 0 ? CRCInput::RC_blue : CRCInput::RC_nokey);
 						menu_item = new CMenuForwarderNonLocalized(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, key, icon);
 						menu->addItem(menu_item, (cnt == 0));
@@ -544,8 +550,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_REMOTE: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_REMOTE;
+				rcLock = new CRCLock();
 				keyhelper.get(&key,&icon);
-				menu_item = new CMenuForwarder(LOCALE_RCLOCK_MENUEADD, true, NULL, this->rcLock, "-1" , key, icon );
+				menu_item = new CMenuForwarder(LOCALE_RCLOCK_MENUEADD, true, NULL, rcLock, "-1" , key, icon );
 				menu->addItem(menu_item, false);
 				break;
 
@@ -689,6 +696,9 @@ bool CNeutrinoApp::showUserMenu(int button)
 #ifdef ENABLE_MOVIEPLAYER
 	if(tmpMoviePlayerGui)		delete tmpMoviePlayerGui;
 #endif
+	if(rcLock)			delete rcLock;
+	if(StreamFeaturesChanger)	delete StreamFeaturesChanger;
+
 	return true;
 }
 

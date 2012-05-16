@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.245 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: neutrino.h,v 1.246 2012/05/16 21:48:15 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -44,7 +44,6 @@
 #include <gui/network_setup.h>
 #include <timerdclient/timerdtypes.h>
 #include <gui/channellist.h>          /* CChannelList */
-#include <gui/rc_lock.h>
 #include <daemonc/remotecontrol.h>    /* st_rmsg      */
 
 #include <zapit/client/zapitclient.h>
@@ -182,13 +181,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		CNetworkSetup 			*networksetup;
 		CNVODChangeExec         	*NVODChanger;
-#ifdef HAVE_DBOX_HARDWARE
-		CUCodeCheckExec			*UCodeChecker;
-#endif
-		CDVBInfoExec			*DVBInfo;
-		CStreamFeaturesChangeExec	*StreamFeaturesChanger;
-//		CVCRControl			*vcrControl;
-		CRCLock				*rcLock;
 		bool 				parentallocked;
 		bool 				waitforshutdown;
 		bool				volumeBarIsVisible;
