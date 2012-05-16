@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.146 2012/05/16 21:41:13 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.147 2012/05/16 21:42:36 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -426,7 +426,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 					if ((recDir != "") || (RECORDING_FILE != g_settings.recording_type))
 					{
 //						if (timerdclient.addRecordTimerEvent(channel_id,
-						if (timerdclient.addRecordTimerEvent(GET_CHANNEL_ID_FROM_EVENT_ID(evtlist[selected].eventID),
+						if (timerdclient.addRecordTimerEvent(evtlist[selected].get_channel_id(),
 										     evtlist[selected].startTime,
 										     evtlist[selected].startTime + evtlist[selected].duration,
 										     evtlist[selected].eventID, evtlist[selected].startTime,
@@ -437,7 +437,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 										  evtlist[selected].startTime + evtlist[selected].duration))
 							{
 //								timerdclient.addRecordTimerEvent(channel_id,
-								timerdclient.addRecordTimerEvent(GET_CHANNEL_ID_FROM_EVENT_ID(evtlist[selected].eventID),
+								timerdclient.addRecordTimerEvent(evtlist[selected].get_channel_id(),
 									 evtlist[selected].startTime,
 									 evtlist[selected].startTime + evtlist[selected].duration,
 									 evtlist[selected].eventID, evtlist[selected].startTime,
@@ -494,7 +494,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 					timerdclient.removeTimerEvent(timerID);
 				}
 //				timerdclient.addZaptoTimerEvent(channel_id,
-				timerdclient.addZaptoTimerEvent(GET_CHANNEL_ID_FROM_EVENT_ID(evtlist[selected].eventID),
+				timerdclient.addZaptoTimerEvent(evtlist[selected].get_channel_id(),
 								evtlist[selected].startTime,
 								evtlist[selected].startTime - ANNOUNCETIME, 0,
 								evtlist[selected].eventID, evtlist[selected].startTime, 0, true);
@@ -551,7 +551,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 				hide();
 
 //				res = g_EpgData->show(channel_id, evtlist[selected].eventID, &evtlist[selected].startTime);
-				res = g_EpgData->show(GET_CHANNEL_ID_FROM_EVENT_ID(evtlist[selected].eventID), evtlist[selected].eventID, &evtlist[selected].startTime);
+				res = g_EpgData->show(evtlist[selected].get_channel_id(), evtlist[selected].eventID, &evtlist[selected].startTime);
 				if ( res == menu_return::RETURN_EXIT_ALL )
 				{
 					loop = false;
