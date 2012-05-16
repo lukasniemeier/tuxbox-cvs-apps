@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.9 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -198,7 +198,6 @@ int CDriverBootSetup::showSetup()
 #endif
 
 	int res = dbs->exec(NULL, "");
-	dbs->hide();
 	selected = dbs->getSelected();
 	delete dbs;
 

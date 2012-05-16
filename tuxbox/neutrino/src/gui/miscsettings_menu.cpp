@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.8 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.9 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -263,7 +263,6 @@ int CMiscMenue::showMenue()
 
 
 	int res = misc_menue->exec(NULL, "");
-	misc_menue->hide();
 	selected = misc_menue->getSelected();
 	delete misc_menue;
 

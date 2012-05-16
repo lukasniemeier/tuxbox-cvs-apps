@@ -1,5 +1,5 @@
 /*
-	$Id: esd_setup.cpp,v 1.8 2011/12/09 22:36:27 dbt Exp $
+	$Id: esd_setup.cpp,v 1.9 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	esound setup implementation - Neutrino-GUI
 
@@ -94,7 +94,6 @@ int CEsdSetup::showEsdSetup()
 	esdSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_PORT, true, g_settings.esound_port, &setup_EsoundPort));
 
 	int res = esdSetup->exec(NULL, "");
-	esdSetup->hide();
 	selected = esdSetup->getSelected();
 	delete esdSetup;
 

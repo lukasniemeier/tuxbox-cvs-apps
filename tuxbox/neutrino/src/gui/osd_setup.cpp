@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.15 2012/03/24 11:27:57 rhabarber1848 Exp $
+	$Id: osd_setup.cpp,v 1.16 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -341,7 +341,6 @@ int COsdSetup::showOsdSetup()
 	osd_setup->addItem(osd_mute_icon_ch);	//mute icon
 
 	int res = osd_setup->exec(NULL, "");
-	osd_setup->hide();
 	selected = osd_setup->getSelected();
 	delete osd_setup;
 
@@ -390,7 +389,6 @@ int COsdSetup::showOsdMenueColorSetup()
 	ocs->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_TEXTCOLOR, true, NULL, &chContentSelectedTextcolor));
 
 	int res = ocs->exec(NULL, "");
-	ocs->hide();
 	delete ocs;
 
 	return res;
@@ -417,7 +415,6 @@ int COsdSetup::showOsdInfobarColorSetup()
 	ois->addItem(fwInfobarTextcolor);
 
 	int res = ois->exec(NULL, "");
-	ois->hide();
 	delete ois;
 
 	return res;
@@ -453,7 +450,6 @@ int COsdSetup::showOsdTimeoutSetup()
 	ots->addItem(ots_defaults_fw);
 
 	int res = ots->exec(NULL, "");
-	ots->hide();
 	delete ots;
 
 	// delete dynamic created objects
@@ -549,7 +545,6 @@ int COsdSetup::showOsdInfobarSetup()
 	oibs->addItem(oibs_chanlogo_bg_ch);
 
 	int res = oibs->exec(NULL, "");
-	oibs->hide();
 	delete oibs;
 
 	return res;
@@ -605,7 +600,6 @@ int COsdSetup::showOsdChannelListSetup()
 	ocls->addItem(ocls_ext_ch);
 
 	int res = ocls->exec(NULL, "");
-	ocls->hide();
 	delete ocls;
 
 	return res;
@@ -702,7 +696,6 @@ int COsdSetup::showOsdFontSizeSetup()
 	fontSettings->addItem(fontSettings_loadDefaults);
 
 	int res = fontSettings->exec(NULL, "");
-	fontSettings->hide();
 	delete fontSettings;
 
 	// delete dynamic created objects

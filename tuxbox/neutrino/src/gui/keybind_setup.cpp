@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.15 2012/05/05 20:09:33 dbt Exp $
+	$Id: keybind_setup.cpp,v 1.16 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -248,7 +248,6 @@ int CKeybindSetup::showSetup()
 			ks_rc->addItem(new CMenuForwarder(keydescription[i], true, keychooser[i]->getKeyName(), keychooser[i]));
 
 	int res = ks->exec(NULL, "");
-	ks->hide();
 	selected = ks->getSelected();
 	delete ks;
 

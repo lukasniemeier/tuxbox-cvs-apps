@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.13 2011/12/09 22:36:28 dbt Exp $
+	$Id: video_setup.cpp,v 1.14 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -173,7 +173,6 @@ int CVideoSetup::showVideoSetup()
 	videosetup->addItem(new CMenuOptionChooser(LOCALE_VIDEOMENU_VCRSWITCH, &g_settings.vcr_AutoSwitch, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true)); //video vcr switch
 
 	int res = videosetup->exec(NULL, "");
-	videosetup->hide();
 	selected = videosetup->getSelected();
 	delete videosetup;
 

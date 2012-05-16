@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.9 2012/04/10 13:03:50 rhabarber1848 Exp $
+	$Id: user_menue_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -122,7 +122,6 @@ int CUserMenuSetup::showSetup()
 	}
 
 	int res = ums->exec(NULL, "");
-	ums->hide();
 	selected = ums->getSelected();
 	delete ums;
 

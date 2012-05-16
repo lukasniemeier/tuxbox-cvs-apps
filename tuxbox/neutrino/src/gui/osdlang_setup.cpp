@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.cpp,v 1.7 2012/03/24 11:26:21 rhabarber1848 Exp $
+	$Id: osdlang_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	OSD-Language Setup  implementation - Neutrino-GUI
 
@@ -131,7 +131,6 @@ int COsdLangSetup::showSetup()
 	}
 
 	int res = osdl_setup->exec(NULL, "");
-	osdl_setup->hide();
 	selected = osdl_setup->getSelected();
 	delete osdl_setup;
 

@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.13 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.14 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -212,7 +212,6 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	mp_setup->addItem( oj9 );				//mutltiselect in filebrowser
 
 	int res = mp_setup->exec(NULL, "");
-	mp_setup->hide();
 	selected = mp_setup->getSelected();
 	delete mp_setup;
 
@@ -251,7 +250,6 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 	}
 
 	int res = MoviePluginSelector->exec(NULL, "");
-	MoviePluginSelector->hide();
 	delete MoviePluginSelector;
 	delete MoviePluginChanger;
 
@@ -261,7 +259,6 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 int CMoviePluginChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	int sel= atoi(actionKey.c_str());
-	parent->hide();
 	if (sel>=0)
 	{
 		g_settings.movieplayer_plugin=g_PluginList->getName(sel);

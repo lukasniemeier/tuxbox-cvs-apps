@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.9 2011/12/09 22:36:28 dbt Exp $
+	$Id: software_update.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -118,7 +118,6 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, flashUpdate, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 
 	int res = softUpdate->exec (NULL, "");
-	softUpdate->hide ();
 	selected = softUpdate->getSelected();
 	delete softUpdate;
 
@@ -153,7 +152,6 @@ int CSoftwareUpdate::showSoftwareUpdateExpert()
 #endif /*DISABLE_INTERNET_UPDATE*/
 
 	int res = mtdexpert->exec (NULL, "");
-	mtdexpert->hide ();
 	delete mtdexpert;
 
 	delete fe;

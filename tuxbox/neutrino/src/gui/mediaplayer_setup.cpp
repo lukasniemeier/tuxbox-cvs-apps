@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.9 2012/04/13 12:15:21 rhabarber1848 Exp $
+	$Id: mediaplayer_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -132,7 +132,6 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 #endif
 
 	int res = mediaSetup->exec(NULL, "");
-	mediaSetup->hide();
 	selected = mediaSetup->getSelected();
 	delete mediaSetup;
 

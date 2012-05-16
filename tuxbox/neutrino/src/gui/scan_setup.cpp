@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.18 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.19 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -432,7 +432,6 @@ int CScanSetup::showScanService()
 	scansetup->addItem(new CMenuForwarder(LOCALE_SCANTS_STARTNOW, true, NULL, scanTs, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 
 	int res = scansetup->exec(NULL, "");
-	scansetup->hide();
 	selected = scansetup->getSelected();
 	delete scansetup;
 
@@ -503,7 +502,6 @@ int CScanSetup::showScanModeMenue()
 	scanmode->addItem(fec);
 
 	int res = scanmode->exec(NULL, "");
-	scanmode->hide();
 	delete scanmode;
 
 	delete freq;

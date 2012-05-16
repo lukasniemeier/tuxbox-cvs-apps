@@ -1,5 +1,5 @@
 /*
-	$Id: pictureviewer_setup.cpp,v 1.7 2011/12/09 22:36:28 dbt Exp $
+	$Id: pictureviewer_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	pictureviewer setup implementation - Neutrino-GUI
 
@@ -75,7 +75,6 @@ int CPictureViewerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if(actionKey == "picturedir")
 	{
-		parent->hide();
 		CFileBrowser b;
 		b.Dir_Mode=true;
 		if (b.exec(g_settings.picviewer_picturedir))
@@ -131,7 +130,6 @@ int CPictureViewerSetup::showPictureViewerSetup()
 	picviewsetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_DECODE_SERVER_PORT, true, g_settings.picviewer_decode_server_port, &picViewSettings_DecServerPort));
 
 	int res = picviewsetup->exec(NULL, "");
-	picviewsetup->hide();
 	selected = picviewsetup->getSelected();
 	delete picviewsetup;
 

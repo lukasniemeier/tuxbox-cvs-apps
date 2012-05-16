@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.12 2011/12/09 22:36:27 dbt Exp $
+	$Id: movieplayer_menu.cpp,v 1.13 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -133,7 +133,6 @@ int CMoviePlayerMenue::showMoviePlayerMenue()
 #endif
 
 	int res = mpmenue->exec(NULL, "");
-	mpmenue->hide();
 	selected = mpmenue->getSelected();
 	delete mpmenue;
 

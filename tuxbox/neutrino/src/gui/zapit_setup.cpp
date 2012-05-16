@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.9 2011/12/21 21:03:50 rhabarber1848 Exp $
+	$Id: zapit_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -195,7 +195,6 @@ int CZapitSetup::showSetup()
 		z->addItem(c6);		//uncommitted_switch on/off
 
 	int res = z->exec(NULL, "");
-	z->hide();
 	selected = z->getSelected();
 	delete z;
 
@@ -241,7 +240,6 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 	}
 
 	int res = mctv.exec(NULL, "");
-	mctv.hide();
 
 	// delete dynamic created objects
 	for(unsigned int count=0;count<toDelete.size();count++)

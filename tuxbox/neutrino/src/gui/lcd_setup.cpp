@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.6 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: lcd_setup.cpp,v 1.7 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -180,7 +180,6 @@ int CLcdSetup::showSetup()
 	lcds->addItem(oj_align);
 
 	int res = lcds->exec(NULL, "");
-	lcds->hide();
 	selected = lcds->getSelected();
 	delete lcds;
 

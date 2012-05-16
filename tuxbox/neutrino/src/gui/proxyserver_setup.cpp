@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.cpp,v 1.7 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: proxyserver_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -97,7 +97,6 @@ int CProxySetup::showProxySetup()
 	mn->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYPASSWORD, true, g_settings.softupdate_proxypassword, &softUpdate_proxypass, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
 
 	int res = mn->exec(NULL, "");
-	mn->hide();
 	selected = mn->getSelected();
 	delete mn;
 

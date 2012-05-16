@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.26 2012/04/10 13:03:49 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.27 2012/05/16 21:38:57 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -175,7 +175,6 @@ int CThemes::Show()
 	}
 
 	int res = themes.exec(NULL, "");
-	themes.hide();
 	selected = themes.getSelected();
 
 	if (file_name.length() > 1) {

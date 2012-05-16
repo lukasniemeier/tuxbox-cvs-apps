@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.20 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.21 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -261,7 +261,6 @@ int CNetworkSetup::showNetworkSetup()
 	#endif
 
 		res = networkSettings->exec(NULL, "");
-		networkSettings->hide();
 		selected = networkSettings->getSelected();
 		delete networkSettings;
 

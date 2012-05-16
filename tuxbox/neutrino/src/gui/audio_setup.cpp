@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.10 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: audio_setup.cpp,v 1.11 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -174,7 +174,6 @@ int CAudioSetup::showAudioSetup()
 	audioSettings->addItem(as);
 
 	int res = audioSettings->exec(NULL, "");
-	audioSettings->hide();
 	selected = audioSettings->getSelected();
 	delete audioSettings;
 

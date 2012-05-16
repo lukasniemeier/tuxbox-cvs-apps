@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.14 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: sambaserver_setup.cpp,v 1.15 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -153,7 +153,6 @@ int CSambaSetup::showSambaSetup()
 	sm->addItem(sm_fw_interface);		//interface
 
 	int res = sm->exec(NULL, "");
-	sm->hide();
 	selected = sm->getSelected();
 	delete sm;
 

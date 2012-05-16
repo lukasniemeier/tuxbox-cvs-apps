@@ -1,5 +1,5 @@
 /*
-	$Id: audioplayer_setup.cpp,v 1.7 2011/12/09 22:36:27 dbt Exp $
+	$Id: audioplayer_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	audioplayer setup implementation - Neutrino-GUI
 
@@ -74,7 +74,6 @@ int CAudioPlayerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	if(actionKey == "audioplayerdir")
 	{
-		parent->hide();
 		CFileBrowser b;
 		b.Dir_Mode=true;
 		if (b.exec(g_settings.audioplayer_audioplayerdir))
@@ -136,7 +135,6 @@ int CAudioPlayerSetup::showAudioPlayerSetup()
 	audioplayerSetup->addItem(new CMenuOptionChooser(LOCALE_AUDIOPLAYER_ENABLE_SC_METADATA, &g_settings.audioplayer_enable_sc_metadata, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true ));
 
 	int res = audioplayerSetup->exec(NULL, "");
-	audioplayerSetup->hide();
 	selected = audioplayerSetup->getSelected();
 	delete audioplayerSetup;
 

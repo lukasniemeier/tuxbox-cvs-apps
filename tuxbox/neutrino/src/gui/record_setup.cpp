@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.16 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.17 2012/05/16 21:38:57 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -367,7 +367,6 @@ int CRecordSetup::showRecordSetup()
 		directRecordingSettings->addItem(oj14); //gen_psi
 
 	int res = recordingSettings->exec(NULL, "");
-	recordingSettings->hide();
 	selected = recordingSettings->getSelected();
 	delete recordingSettings;
 

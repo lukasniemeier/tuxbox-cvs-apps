@@ -1,5 +1,5 @@
 /*
-        $Id: personalize.cpp,v 1.47 2012/05/05 20:09:29 dbt Exp $
+        $Id: personalize.cpp,v 1.48 2012/05/16 21:38:57 rhabarber1848 Exp $
 
         Customization Menu - Neutrino-GUI
 
@@ -303,7 +303,6 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
 
 	int res = pMenu->exec(NULL, "");
-	pMenu->hide();
 	selected = pMenu->getSelected();
 	delete pMenu;
 
@@ -369,7 +368,6 @@ int CPersonalizeGui::ShowMenuOptions(const int& widget)
 	}
 
 	int res = pm->exec(NULL, "");
-	pm->hide ();
 	delete pm;
 
 	return res;
