@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.145 2012/05/02 19:03:40 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.146 2012/05/16 21:41:13 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -77,6 +77,12 @@ bool sortByDescription (const CChannelEvent& a, const CChannelEvent& b)
 static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)
 {
 	return a.startTime < b.startTime;
+}
+
+// unique operators
+bool uniqueByIdAndDateTime (const CChannelEvent& a, const CChannelEvent& b)
+{
+	return (a.eventID == b.eventID && a.startTime == b.startTime);
 }
 
 EventList::EventList()
@@ -932,6 +938,7 @@ int EventList::findEvents(void)
 			box.hide();
 		}
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
+		evtlist.resize(unique(evtlist.begin(), evtlist.end(), uniqueByIdAndDateTime) - evtlist.begin());
 		current_event = (unsigned int)-1;
 		time_t azeit=time(NULL);
 		
