@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.147 2012/05/16 21:42:36 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.148 2012/05/16 21:44:47 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -399,7 +399,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 		else if (msg == g_settings.key_channelList_addrecord)
 		{
-			if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
+			if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF && evtlist[0].eventID != 0)
 			{
 				CTimerdClient timerdclient;
 				int timerID;
@@ -481,39 +481,42 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		}
 		else if (msg == g_settings.key_channelList_addremind)
 		{
-			CTimerdClient timerdclient;
-			int timerID;
-//			unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].startTime + evtlist[selected].duration,evtlist[selected].eventID,&timerID);
-			unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].duration,evtlist[selected].get_channel_id(),&timerID);
-			if(timerdclient.isTimerdAvailable() && !(is_timer & EventList::TIMER_ZAPTO))
+			if (evtlist[0].eventID != 0)
 			{
-				// first delete zapto timer if any
-				if(is_timer & EventList::TIMER_RECORD)
+				CTimerdClient timerdclient;
+				int timerID;
+//				unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].startTime + evtlist[selected].duration,evtlist[selected].eventID,&timerID);
+				unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].duration,evtlist[selected].get_channel_id(),&timerID);
+				if(timerdclient.isTimerdAvailable() && !(is_timer & EventList::TIMER_ZAPTO))
 				{
-					printf("remove record timer\n");
-					timerdclient.removeTimerEvent(timerID);
+					// first delete zapto timer if any
+					if(is_timer & EventList::TIMER_RECORD)
+					{
+						printf("remove record timer\n");
+						timerdclient.removeTimerEvent(timerID);
+					}
+//					timerdclient.addZaptoTimerEvent(channel_id,
+					timerdclient.addZaptoTimerEvent(evtlist[selected].get_channel_id(),
+									evtlist[selected].startTime,
+									evtlist[selected].startTime - ANNOUNCETIME, 0,
+									evtlist[selected].eventID, evtlist[selected].startTime, 0, true);
+					UpdateTimerList();
+					paintItem(selected - liststart);
+					showFunctionBar(true);
+					//ShowLocalizedMessage(LOCALE_TIMER_EVENTTIMED_TITLE, LOCALE_TIMER_EVENTTIMED_MSG, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 				}
-//				timerdclient.addZaptoTimerEvent(channel_id,
-				timerdclient.addZaptoTimerEvent(evtlist[selected].get_channel_id(),
-								evtlist[selected].startTime,
-								evtlist[selected].startTime - ANNOUNCETIME, 0,
-								evtlist[selected].eventID, evtlist[selected].startTime, 0, true);
-				UpdateTimerList();
-				paintItem(selected - liststart);
-				showFunctionBar(true);
-				//ShowLocalizedMessage(LOCALE_TIMER_EVENTTIMED_TITLE, LOCALE_TIMER_EVENTTIMED_MSG, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
+				else if(timerdclient.isTimerdAvailable())
+				{
+					// Timer already available in Timerlist, remove now
+					printf("remove zapto timer\n");
+					timerdclient.removeTimerEvent(timerID);
+					UpdateTimerList();
+					paintItem(selected - liststart);
+					showFunctionBar(true);
+				}
+				else
+					printf("timerd not available\n");
 			}
-			else if(timerdclient.isTimerdAvailable())
-			{
-				// Timer already available in Timerlist, remove now
-				printf("remove zapto timer\n");
-				timerdclient.removeTimerEvent(timerID);
-				UpdateTimerList();
-				paintItem(selected - liststart);
-				showFunctionBar(true);
-			}
-			else
-				printf("timerd not available\n");
 		}
 
 		else if (msg == g_settings.key_channelList_reload)
