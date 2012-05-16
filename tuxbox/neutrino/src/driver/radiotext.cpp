@@ -1,5 +1,5 @@
 /*
-	$Id: radiotext.cpp,v 1.7 2009/10/31 10:11:02 seife Exp $
+	$Id: radiotext.cpp,v 1.8 2012/05/16 21:40:06 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -425,7 +425,7 @@ fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02
 		RTP_TToggle = 0x03;		// Bit 0/1 = Title/Artist
 		RT_MsgShow = true;
 		S_RtOsd = 1;
-		RT_Info = (RT_Info > 0) ? : 1;
+		RT_Info = (RT_Info > 0) ? RT_Info : 1;
 		RadioStatusMsg();
 	}
 
