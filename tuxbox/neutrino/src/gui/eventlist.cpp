@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.148 2012/05/16 21:44:47 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.149 2012/05/16 21:45:39 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -648,7 +648,7 @@ void EventList::paintItem(unsigned int pos)
 			if ( m_showChannel ) // show the channel if we made a event search only (which could be made through all channels ).
 			{
 				t_channel_id channel = evtlist[curpos].get_channel_id();
-				datetime2_str += "      " + g_Zapit->getChannelName(channel);
+				datetime2_str += "           " + g_Zapit->getChannelName(channel);
 			}
 
 			sprintf(tmpstr, "[%d min]", evtlist[curpos].duration / 60 );
