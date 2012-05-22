@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.14 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.15 2012/05/22 19:09:50 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -72,10 +72,20 @@ int CMoviePlayerSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		parent->hide();
 	}
 	
-	if(actionKey == "movieplugin")
+	if (!actionKey.empty())
 	{
-		res = showMoviePlayerSelectPlugin();
- 		return res;
+		if (actionKey == "movieplugin")
+		{
+			res = showMoviePlayerSelectPlugin();
+			return res;
+		}
+		else
+		{
+			int sel = atoi(actionKey.c_str());
+			if (sel >= 0)
+				g_settings.movieplayer_plugin = g_PluginList->getName(sel);
+			return menu_return::RETURN_EXIT;
+		}
 	}
 
 	res = showMoviePlayerSetup();
@@ -227,8 +237,6 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 	MoviePluginSelector->addItem(GenericMenuBack);
 	MoviePluginSelector->addItem(GenericMenuSeparatorLine);
 
-	CMoviePluginChangeExec *MoviePluginChanger = new CMoviePluginChangeExec;
-
 	std::string pluginName;
 	char id[5];
 	int enabled_count = 0;
@@ -242,7 +250,7 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 			enabled_count++;
 
 			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(pluginName.c_str(),
-				true, NULL, MoviePluginChanger, id, CRCInput::convertDigitToKey(enabled_count));
+				true, NULL, this, id, CRCInput::convertDigitToKey(enabled_count));
 			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 
 			MoviePluginSelector->addItem(fw, (g_settings.movieplayer_plugin.compare(pluginName) == 0));
@@ -251,19 +259,8 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 
 	int res = MoviePluginSelector->exec(NULL, "");
 	delete MoviePluginSelector;
-	delete MoviePluginChanger;
 
 	return res;
-}
-
-int CMoviePluginChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
-{
-	int sel= atoi(actionKey.c_str());
-	if (sel>=0)
-	{
-		g_settings.movieplayer_plugin=g_PluginList->getName(sel);
-	}
-	return menu_return::RETURN_EXIT;
 }
 
 CStreamingNotifier::CStreamingNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4, CMenuItem* i5, CMenuItem* i6, CMenuItem* i7, CMenuItem* i8, CMenuItem* i9, CMenuItem* i10, CMenuItem* i11, CMenuItem* i12)

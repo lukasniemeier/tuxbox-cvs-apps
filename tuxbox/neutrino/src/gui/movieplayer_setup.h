@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.h,v 1.6 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: movieplayer_setup.h,v 1.7 2012/05/22 19:09:50 rhabarber1848 Exp $
 
 	movieplaye setup implementation - Neutrino-GUI
 
@@ -46,12 +46,6 @@ class CMoviePlayerSetup : public CMenuTarget
 	public:	
 		CMoviePlayerSetup();
 		~CMoviePlayerSetup();
-		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-class CMoviePluginChangeExec : public CMenuTarget
-{
-	public:
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
