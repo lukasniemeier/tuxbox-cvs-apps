@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.138 2012/05/22 19:03:47 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.139 2012/05/22 19:08:13 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -266,8 +266,6 @@ void CNeutrinoApp::InitMenuSettings()
 	personalize->addItem(MENU_SETTINGS, new CLockedMenuForwarder(LOCALE_PARENTALLOCK_PARENTALLOCK, g_settings.parentallock_pincode, g_settings.parentallock_prompt, true, NULL, new CParentalSetup()), &g_settings.personalize_youth);
 
 	// network
-	if(networksetup == NULL)
-		networksetup = new CNetworkSetup();
 	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_NETWORK, true, NULL, networksetup), &g_settings.personalize_network);
 
 	// record settings
