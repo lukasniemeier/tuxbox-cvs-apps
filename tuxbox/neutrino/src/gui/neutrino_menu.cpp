@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.137 2012/05/16 21:48:15 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.138 2012/05/22 19:03:47 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -89,6 +89,7 @@
 #include "software_update.h"
 #include "streaminfo2.h"
 #include "sleeptimer.h"
+#include "subchannel_select.h"
 #include "update.h"
 #include "keybind_setup.h"
 #include "lcd_setup.h"
@@ -396,7 +397,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 	CFavorites* tmpFavorites				= NULL;
 	CPauseSectionsdNotifier* tmpPauseSectionsdNotifier 	= NULL;
 	CAudioSelectMenuHandler* tmpAudioSelectMenuHandler 	= NULL;
-	CMenuWidget* tmpNVODSelector				= NULL;
+	CSubChannelSelectMenu* tmpSubChannelSelectMenu		= NULL;
 	CStreamInfo2Handler*	tmpStreamInfo2Handler 		= NULL;
 	CEventListHandler* tmpEventListHandler			= NULL;
 #ifdef ENABLE_EPGPLUS
@@ -618,15 +619,12 @@ bool CNeutrinoApp::showUserMenu(int button)
 				if (!(g_RemoteControl->subChannels.empty()))
 				{
 					// NVOD/SubService- Kanal!
-					tmpNVODSelector = new CMenuWidget(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_HEAD, NEUTRINO_ICON_VIDEO, 350);
-					if(getNVODMenu(tmpNVODSelector))
-					{
-						menu_items++;
-						menu_prev = SNeutrinoSettings::ITEM_SUBCHANNEL;
-						keyhelper.get(&key,&icon);
-						menu_item = new CMenuForwarder(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_HEAD, true, NULL, tmpNVODSelector, "-1", key,icon);
-						menu->addItem(menu_item, false);
-					}
+					menu_items++;
+					menu_prev = SNeutrinoSettings::ITEM_SUBCHANNEL;
+					tmpSubChannelSelectMenu = new CSubChannelSelectMenu();
+					keyhelper.get(&key,&icon);
+					menu_item = new CMenuForwarder(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_HEAD, true, NULL, tmpSubChannelSelectMenu, "-1", key, icon);
+					menu->addItem(menu_item, false);
 				}
 				break;
 				
@@ -686,7 +684,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 	if(tmpFavorites)		delete tmpFavorites;
 	if(tmpPauseSectionsdNotifier)	delete tmpPauseSectionsdNotifier;
 	if(tmpAudioSelectMenuHandler)	delete tmpAudioSelectMenuHandler;
-	if(tmpNVODSelector)		delete tmpNVODSelector;
+	if(tmpSubChannelSelectMenu)	delete tmpSubChannelSelectMenu;
 	if(tmpStreamInfo2Handler)	delete tmpStreamInfo2Handler;
 	if(tmpEventListHandler)		delete tmpEventListHandler;
 #ifdef ENABLE_EPGPLUS
@@ -698,76 +696,6 @@ bool CNeutrinoApp::showUserMenu(int button)
 #endif
 	if(rcLock)			delete rcLock;
 	if(StreamFeaturesChanger)	delete StreamFeaturesChanger;
-
-	return true;
-}
-
-bool CNeutrinoApp::getNVODMenu(CMenuWidget* menu)
-{
-	if(menu == NULL) 
-		return false;
-	if (g_RemoteControl->subChannels.empty())
-		return false;
-		
-	menu->addItem(GenericMenuSeparator);
-	menu->addItem(GenericMenuCancel);
-	menu->addItem(GenericMenuSeparatorLine);
-
-	int count = 0;
-	char nvod_id[5];
-
-	for( CSubServiceListSorted::iterator e=g_RemoteControl->subChannels.begin(); e!=g_RemoteControl->subChannels.end(); ++e)
-	{
-		sprintf(nvod_id, "%d", count);
-
-		if( !g_RemoteControl->are_subchannels )
-		{
-			char nvod_time_a[50], nvod_time_e[50], nvod_time_x[50];
-			char nvod_s[100];
-			struct  tm *tmZeit;
-
-			tmZeit= localtime(&e->startzeit);
-			sprintf(nvod_time_a, "%02d:%02d", tmZeit->tm_hour, tmZeit->tm_min);
-
-			time_t endtime = e->startzeit+ e->dauer;
-			tmZeit= localtime(&endtime);
-			sprintf(nvod_time_e, "%02d:%02d", tmZeit->tm_hour, tmZeit->tm_min);
-
-			time_t jetzt=time(NULL);
-			if(e->startzeit > jetzt)
-			{
-				int mins=(e->startzeit- jetzt)/ 60;
-				sprintf(nvod_time_x, g_Locale->getText(LOCALE_NVOD_STARTING), mins);
-			}
-			else
-				if( (e->startzeit<= jetzt) && (jetzt < endtime) )
-			{
-				int proz=(jetzt- e->startzeit)*100/ e->dauer;
-				sprintf(nvod_time_x, g_Locale->getText(LOCALE_NVOD_PERCENTAGE), proz);
-			}
-			else
-				nvod_time_x[0]= 0;
-
-			sprintf(nvod_s, "%s - %s %s", nvod_time_a, nvod_time_e, nvod_time_x);
-			menu->addItem(new CMenuForwarderNonLocalized(nvod_s, true, NULL, NVODChanger, nvod_id), (count == g_RemoteControl->selected_subchannel));
-		}
-		else
-		{
-			if (count == 0)
-				menu->addItem(new CMenuForwarderNonLocalized( (Latin1_to_UTF8(e->subservice_name)).c_str(), true, NULL, NVODChanger, nvod_id, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
-			else
-				menu->addItem(new CMenuForwarderNonLocalized( (Latin1_to_UTF8(e->subservice_name)).c_str(), true, NULL, NVODChanger, nvod_id, CRCInput::convertDigitToKey(count)), (count == g_RemoteControl->selected_subchannel));
-		}
-
-		count++;
-	}
-
-	if( g_RemoteControl->are_subchannels )
-	{
-		menu->addItem(GenericMenuSeparatorLine);
-		CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_NVODSELECTOR_DIRECTORMODE, &g_RemoteControl->director_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
-		menu->addItem(oj);
-	}
 
 	return true;
 }

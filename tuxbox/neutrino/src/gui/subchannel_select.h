@@ -1,5 +1,5 @@
 /*
-	$Id:
+	$Id: subchannel_select.h,v 1.2 2012/05/22 19:05:38 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 

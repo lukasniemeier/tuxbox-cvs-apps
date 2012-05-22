@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.246 2012/05/16 21:48:15 rhabarber1848 Exp $
+	$Id: neutrino.h,v 1.247 2012/05/22 19:03:47 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -180,16 +180,13 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		bool				skipShutdownTimer;
 
 		CNetworkSetup 			*networksetup;
-		CNVODChangeExec         	*NVODChanger;
 		bool 				parentallocked;
 		bool 				waitforshutdown;
 		bool				volumeBarIsVisible;
 
 		// USERMENU
 		CTimerList			*Timerlist;
-
 		bool showUserMenu(int button);
-		bool getNVODMenu(CMenuWidget* menu);
 
 #ifdef HAVE_DBOX_HARDWARE
 		bool ucodes_available(void);

@@ -53,6 +53,7 @@ libneutrino_gui_a_SOURCES = \
 	sleeptimer.cpp \
 	software_update.cpp \
 	streaminfo2.cpp \
+	subchannel_select.cpp \
 	themes.cpp \
 	timeosd.cpp \
 	update.cpp \

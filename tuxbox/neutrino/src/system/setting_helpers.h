@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.110 2012/05/16 21:49:56 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.111 2012/05/22 19:03:48 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -72,12 +72,6 @@ class CSectionsdConfigNotifier : public CChangeObserver
 {
 	public:
 		bool changeNotify(const neutrino_locale_t, void * );
-};
-
-class CNVODChangeExec : public CMenuTarget
-{
-	public:
-		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
 
 class CStreamFeaturesChangeExec : public CMenuTarget

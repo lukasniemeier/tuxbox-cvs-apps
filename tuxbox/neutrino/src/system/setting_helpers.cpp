@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.198 2012/05/16 21:49:56 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.199 2012/05/22 19:03:47 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -121,17 +121,6 @@ bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t, void *)
 {
 	CNeutrinoApp::getInstance()->SendSectionsdConfig();
 	return true;
-}
-
-int CNVODChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
-{
-	//    printf("CNVODChangeExec exec: %s\n", actionKey.c_str());
-	unsigned sel= atoi(actionKey.c_str());
-	g_RemoteControl->setSubChannel(sel);
-
-	parent->hide();
-	g_InfoViewer->showSubchan();
-	return menu_return::RETURN_EXIT;
 }
 
 int CStreamFeaturesChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)

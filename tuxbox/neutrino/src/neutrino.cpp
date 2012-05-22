@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1077 2012/05/16 21:48:15 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1078 2012/05/22 19:03:47 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2159,8 +2159,6 @@ int CNeutrinoApp::run(int argc, char **argv)
 	//load Pluginlist before main menu (only show script menu if at least one
 	// script is available
 	g_PluginList->loadPlugins();
-
-	NVODChanger			= new CNVODChangeExec;
 
 	//USERMENU
 	Timerlist			= new CTimerList;
