@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1080 2012/05/31 17:42:33 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1081 2012/05/31 17:43:48 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1452,14 +1452,14 @@ void CNeutrinoApp::channelsInit(int init_mode, int _mode)
 	g_Zapit->getBouquets(zapitBouquets, false, true, CZapitClient::MODE_TV); // UTF-8
 	for(uint i = 0; i < zapitBouquets.size(); i++)
 	{
-		CZapitClient::BouquetChannelList zC;
+		zapitChannels.clear();
 
 		bouquetListTV->addBouquet(zapitBouquets[i].name, zapitBouquets[i].bouquet_nr, zapitBouquets[i].locked);
-		g_Zapit->getBouquetChannels(zapitBouquets[i].bouquet_nr, zC, CZapitClient::MODE_TV, true); // UTF-8
+		g_Zapit->getBouquetChannels(zapitBouquets[i].bouquet_nr, zapitChannels, CZapitClient::MODE_TV, true); // UTF-8
 
-		for (uint j = 0; j < zC.size(); j++)
+		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			CChannelList::CChannel* channel = new CChannelList::CChannel(zC[j].nr, zC[j].nr, zC[j].name, zC[j].satellitePosition, zC[j].channel_id); // UTF-8
+			CChannelList::CChannel* channel = new CChannelList::CChannel(zapitChannels[j].nr, zapitChannels[j].nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
 	
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListTV->Bouquets[i]->channelList->addChannel(channel);
@@ -1469,7 +1469,7 @@ void CNeutrinoApp::channelsInit(int init_mode, int _mode)
 
 				for (int k=0; k<channelListTV->getSize(); k++)
 				{
-					if ((*channelListTV)[k]->channel_id == zC[j].channel_id) {
+					if ((*channelListTV)[k]->channel_id == zapitChannels[j].channel_id) {
 						(*channelListTV)[k]->bAlwaysLocked = true;
 					}
 				}
@@ -1500,14 +1500,14 @@ void CNeutrinoApp::channelsInit(int init_mode, int _mode)
 	g_Zapit->getBouquets(zapitBouquets, false, true, CZapitClient::MODE_RADIO); // UTF-8
 	for(uint i = 0; i < zapitBouquets.size(); i++)
 	{
-		CZapitClient::BouquetChannelList zC;
+		zapitChannels.clear();
 
 		bouquetListRADIO->addBouquet(zapitBouquets[i].name, zapitBouquets[i].bouquet_nr, zapitBouquets[i].locked);
-		g_Zapit->getBouquetChannels(zapitBouquets[i].bouquet_nr, zC, CZapitClient::MODE_RADIO, true); // UTF-8
+		g_Zapit->getBouquetChannels(zapitBouquets[i].bouquet_nr, zapitChannels, CZapitClient::MODE_RADIO, true); // UTF-8
 
-		for (uint j = 0; j < zC.size(); j++)
+		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			CChannelList::CChannel* channel = new CChannelList::CChannel(zC[j].nr, zC[j].nr, zC[j].name, zC[j].satellitePosition, zC[j].channel_id); // UTF-8
+			CChannelList::CChannel* channel = new CChannelList::CChannel(zapitChannels[j].nr, zapitChannels[j].nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
 
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListRADIO->Bouquets[i]->channelList->addChannel(channel);
