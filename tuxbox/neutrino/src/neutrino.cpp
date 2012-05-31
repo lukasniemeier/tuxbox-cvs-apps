@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1079 2012/05/22 19:08:13 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1080 2012/05/31 17:42:33 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1578,7 +1578,7 @@ void CNeutrinoApp::channelsInit4Record(void)
 
 		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			CChannelList::CChannel* channel = channelListRecord->getChannel(zapitChannels[j].nr);
+			CChannelList::CChannel* channel = new CChannelList::CChannel(zapitChannels[j].nr, zapitChannels[j].nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
 
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListRecord->Bouquets[i]->channelList->addChannel(channel);
