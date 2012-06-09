@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.28 2012/06/09 18:05:44 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.29 2012/06/09 19:38:18 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -1218,8 +1218,7 @@ bool CMovieInfo::saveFile_std(const CFile& file, const char* text, const int tex
 	int fd;
 	if ((fd = open(file.Name.c_str(), O_SYNC | O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0)
 	{
-//		int nr;
-//		nr = write(fd, text, text_size);
+		(void)write(fd, text, text_size);
 		//fdatasync(fd);
 		close(fd);
 		result = true;
