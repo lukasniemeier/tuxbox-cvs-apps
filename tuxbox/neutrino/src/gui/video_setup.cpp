@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.14 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: video_setup.cpp,v 1.15 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -185,13 +185,16 @@ int CVideoSetup::showVideoSetup()
 
 bool CVideoSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 {
+	bool ret = false;
  	CNeutrinoApp * neutrino = CNeutrinoApp::getInstance();
-
 
  	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_VIDEOSIGNAL))
  	{
 		while ((vcr_video_out_signal) == CControldClient::VIDEOOUTPUT_SVIDEO && (video_out_signal != CControldClient::VIDEOOUTPUT_SVIDEO) && (video_out_signal != CControldClient::VIDEOOUTPUT_COMPOSITE) )
-			video_out_signal = (video_out_signal + 1) % 5;
+		{
+			video_out_signal = (video_out_signal + 1) % VIDEOMENU_VIDEOSIGNAL_OPTION_COUNT;
+			ret = true;
+		}
 		g_Controld->setVideoOutput(video_out_signal);
 		if (VcrVideoOutSignalOptionChooser)
 			VcrVideoOutSignalOptionChooser->setActive((video_out_signal == CControldClient::VIDEOOUTPUT_COMPOSITE) || (video_out_signal == CControldClient::VIDEOOUTPUT_SVIDEO));
@@ -212,7 +215,7 @@ bool CVideoSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 		g_Controld->setVideoFormat(g_settings.video_backgroundFormat);
 	}
 
-	return true;
+	return ret;
 }
 
 

@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.11 2012/06/09 17:49:09 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.12 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -216,7 +216,7 @@ bool CSPTSNotifier::changeNotify(const neutrino_locale_t, void *)
 	else
 		g_Zapit->PlaybackPES();
 
-	return true;
+	return false;
 }
 #endif
 
@@ -227,11 +227,9 @@ bool CTouchFileNotifier::changeNotify(const neutrino_locale_t, void * data)
 		FILE * fd = fopen(filename, "w");
 		if (fd)
 			fclose(fd);
-		else
-			return false;
 	}
 	else
 		remove(filename);
-	return true;
+	return false;
 }
 

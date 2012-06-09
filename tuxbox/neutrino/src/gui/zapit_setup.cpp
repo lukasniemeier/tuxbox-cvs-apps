@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: zapit_setup.cpp,v 1.11 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -290,6 +290,6 @@ bool CZapitSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 	{
 		g_Zapit->setUncommittedSwitchMode(*(int *)data);
 	}
-	return true;
+	return false;
 }
 

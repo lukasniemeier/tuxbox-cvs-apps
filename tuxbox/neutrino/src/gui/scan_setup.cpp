@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.19 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.20 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -597,7 +597,7 @@ bool CSatDiseqcNotifier::changeNotify(const neutrino_locale_t, void * Data)
 		extMotorMenu->setActive(false);
 		repeatMenu->setActive((*((int*) Data) != DISEQC_1_0));
 	}
-	return true;
+	return false;
 }
 
 CTP_scanNotifier::CTP_scanNotifier(CMenuOptionChooser* i1, CMenuOptionChooser* i2, CMenuForwarder* i3, CMenuForwarder* i4, CMenuOptionStringChooser* i5)
@@ -614,7 +614,7 @@ bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
 	int tp_scan_mode = CNeutrinoApp::getInstance()->getScanSettings().TP_scan;
 	bool set_true_false = tp_scan_mode;
 
-	if ((*((int*) Data) == 0) || (*((int*) Data) == 2)) // all sats || one sat
+	if ((*((int*) Data) == CScanTs::SCAN_COMPLETE) || (*((int*) Data) == CScanTs::SCAN_ONE_SAT))
 		set_true_false = false;
 
 	for (int i=0; i<2; i++)
@@ -624,18 +624,18 @@ bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
 	}
 
 	if (toDisable3[0]) {
-		if (*((int*) Data) == 0) // all sat
+		if (*((int*) Data) == CScanTs::SCAN_COMPLETE)
 			toDisable3[0]->setActive(false);
 		else
 			toDisable3[0]->setActive(true);
 	}
 
-	return true;
+	return false;
 }
 
 bool CScanSettingsSatManNotifier::changeNotify(const neutrino_locale_t, void *Data)
 {
 	(CNeutrinoApp::getInstance()->ScanSettings()).TP_diseqc =
 		 *((CNeutrinoApp::getInstance()->ScanSettings()).diseqscOfSat((char*)Data));
-	return true;
+	return false;
 }

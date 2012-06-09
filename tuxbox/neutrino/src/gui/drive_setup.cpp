@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.89 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: drive_setup.cpp,v 1.90 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -4604,7 +4604,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.89 $");
+	return imageinfo.getModulVersion("","$Revision: 1.90 $");
 }
 
 // returns text for initfile headers
@@ -5437,7 +5437,7 @@ bool CDriveSetupFsNotifier::changeNotify(const neutrino_locale_t, void * Data)
 		toDisable[i]->setActive(*((int *)Data) == 0x73776170 /*swap*/ ? false : true);
 	}
 
-	return true;
+	return false;
 }
 
 #ifdef ENABLE_NFSSERVER
@@ -5454,7 +5454,7 @@ bool CDriveSetupNFSHostNotifier::changeNotify(const neutrino_locale_t, void * Da
 	else
 		toDisable->setActive(true);
 
-	return true;
+	return false;
 }
 #endif
 
@@ -5482,7 +5482,7 @@ bool CDriveSetupSambaNotifier::changeNotify(const neutrino_locale_t, void * Data
 		toDisableoj[i]->setActive(active_mode);
 	}
 
-	return true;
+	return false;
 }
 #endif
 
@@ -5499,7 +5499,7 @@ bool CDriveSetupFstabNotifier::changeNotify(const neutrino_locale_t, void * Data
 	else
 		toDisable->setActive(true);
 
-	return true;
+	return false;
 }
 
 // class CDriveSetupMmcNotifier
@@ -5520,7 +5520,7 @@ bool CDriveSetupMmcNotifier::changeNotify(const neutrino_locale_t, void * Data)
 	else
 		toModifi->setActive(true);
 	
-	return true;
+	return false;
 }
 
 

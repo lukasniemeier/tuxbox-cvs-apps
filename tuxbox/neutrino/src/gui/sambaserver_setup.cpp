@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.15 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: sambaserver_setup.cpp,v 1.16 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -342,7 +342,6 @@ CSambaOnOffNotifier::CSambaOnOffNotifier( const char * file_to_modify)
 
 bool CSambaOnOffNotifier::changeNotify(const neutrino_locale_t, void * data)
 {
-	bool ret = true;
 	CSambaSetup smb;
 	CDriveSetup drivesetup;
 	bool have_shares = drivesetup.haveMountedSmbShares();
@@ -351,9 +350,7 @@ bool CSambaOnOffNotifier::changeNotify(const neutrino_locale_t, void * data)
 	{
 		if (have_shares)
 		{
-			ret = smb.startSamba();
-		
-			if (!ret)
+			if (!smb.startSamba())
 			{
 				DisplayErrorMessage(smb.getErrMsg().c_str());
 			}
@@ -365,20 +362,15 @@ bool CSambaOnOffNotifier::changeNotify(const neutrino_locale_t, void * data)
 		FILE * fd = fopen(filename, "w");
 		if (fd)
 			fclose(fd);
-		else
-			return false;
 	}
 	else
 	{
 		if (smb.killSamba())
 			DisplayInfoMessage(g_Locale->getText(LOCALE_SAMBASERVER_SETUP_STAT_STOPPED));
-		else
-			ret = false;
 
   		remove(filename); //remove markerfile
 	}
 
-
-	return ret;
+	return false;
 }
 

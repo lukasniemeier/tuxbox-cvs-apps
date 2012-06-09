@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.16 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: osd_setup.cpp,v 1.17 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -571,7 +571,7 @@ bool COsdSetupChannelLogoNotifier::changeNotify(const neutrino_locale_t, void * 
 		toDisable2->setActive(true);
 	}
 
-	return true;
+	return false;
 }
 
 #define CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT 2
@@ -738,7 +738,7 @@ bool CRadiotextNotifier::changeNotify(const neutrino_locale_t, void *)
 		g_Radiotext = NULL;
 	}
 
-	return true;
+	return false;
 }
 #endif
 

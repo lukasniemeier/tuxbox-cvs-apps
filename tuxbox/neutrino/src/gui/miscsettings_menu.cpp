@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.9 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.10 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -288,7 +288,7 @@ bool CMiscNotifier::changeNotify(const neutrino_locale_t, void *)
 	toDisable[1]->setActive(!g_settings.shutdown_real);
 	toDisable[2]->setActive(!g_settings.shutdown_real);
 	toDisable[3]->setActive(!g_settings.shutdown_real);
-	return true;
+	return false;
 }
 
 bool CShutdownCountNotifier::changeNotify(const neutrino_locale_t, void *)

@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.15 2012/05/22 19:09:50 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.16 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -291,5 +291,5 @@ bool CStreamingNotifier::changeNotify(const neutrino_locale_t, void *)
 		for (int i=0; i<=11; i++)
 			toDisable[i]->setActive(true);
 	}
-	return true;
+	return false;
 }

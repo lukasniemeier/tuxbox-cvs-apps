@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.17 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.18 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -384,7 +384,7 @@ bool CRecAPIDSettingsNotifier::changeNotify(const neutrino_locale_t, void *)
 	g_settings.recording_audio_pids_default = ( (g_settings.recording_audio_pids_std ? TIMERD_APIDS_STD : 0) |
 						  (g_settings.recording_audio_pids_alt ? TIMERD_APIDS_ALT : 0) |
 						  (g_settings.recording_audio_pids_ac3 ? TIMERD_APIDS_AC3 : 0));
-	return true;
+	return false;
 }
 
 CRecordingNotifier::CRecordingNotifier(CMenuItem* i1 , CMenuItem* i2 , CMenuItem* i3 ,
@@ -443,7 +443,7 @@ bool CRecordingNotifier::changeNotify(const neutrino_locale_t, void *)
 		toDisable[8]->setActive(false);
 	}
 
-	return true;
+	return false;
 }
 
 CRecordingNotifier2::CRecordingNotifier2( CMenuItem* i)
@@ -454,7 +454,7 @@ CRecordingNotifier2::CRecordingNotifier2( CMenuItem* i)
 bool CRecordingNotifier2::changeNotify(const neutrino_locale_t, void *)
 {
 	toDisable[0]->setActive(g_settings.recording_server_wakeup==1);
-	return true;
+	return false;
 }
 
 bool CRecordingSafetyNotifier::changeNotify(const neutrino_locale_t, void *)

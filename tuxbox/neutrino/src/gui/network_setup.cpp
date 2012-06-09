@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.22 2012/05/16 21:49:56 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.23 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -580,10 +580,10 @@ CDHCPNotifier::CDHCPNotifier( CMenuForwarder* a1, CMenuForwarder* a2, CMenuForwa
 
 bool CDHCPNotifier::changeNotify(const neutrino_locale_t, void * data)
 {
-	CNetworkConfig::getInstance()->inet_static = ((*(int*)(data)) == 0);
+	CNetworkConfig::getInstance()->inet_static = ((*(int*)(data)) == CNetworkSetup::NETWORK_DHCP_OFF);
 	for(int x=0;x<5;x++)
 		toDisable[x]->setActive(CNetworkConfig::getInstance()->inet_static);	
-	return true;
+	return false;
 }
 
 long CNetAdapter::mac_addr_sys ( u_char *addr) //only for function getMacAddr()

@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.11 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: audio_setup.cpp,v 1.12 2012/06/09 17:52:53 rhabarber1848 Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -186,15 +186,14 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_PCMOFFSET))
 	{
-		if (g_settings.audio_avs_Control == 2)   //lirc
+		if (g_settings.audio_avs_Control == CControld::TYPE_LIRC)
 			g_Controld->setVolume(100 - atoi(g_settings.audio_PCMOffset), CControld::TYPE_OST);
 	}
-
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOGOUT))
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_ANALOGOUT))
 	{
 		g_Zapit->setAudioMode(g_settings.audio_AnalogMode);
 	}
-	return true;
+	return false;
 }
 
 CAudioSetupNotifier2::CAudioSetupNotifier2( CMenuItem* i1)
@@ -204,12 +203,12 @@ CAudioSetupNotifier2::CAudioSetupNotifier2( CMenuItem* i1)
 
 bool CAudioSetupNotifier2::changeNotify(const neutrino_locale_t, void *)
 {
-	toDisable[0]->setActive(g_settings.audio_avs_Control == 2);
+	toDisable[0]->setActive(g_settings.audio_avs_Control == CControld::TYPE_LIRC);
 
-	if (g_settings.audio_avs_Control == 2)
+	if (g_settings.audio_avs_Control == CControld::TYPE_LIRC)
 		g_Controld->setVolume(100 - atoi(g_settings.audio_PCMOffset), CControld::TYPE_OST);
 	// tell controld the new volume_type
 	g_Controld->setVolume(g_Controld->getVolume((CControld::volume_type)g_settings.audio_avs_Control),
 									 (CControld::volume_type)g_settings.audio_avs_Control);
-	return true;
+	return false;
 }

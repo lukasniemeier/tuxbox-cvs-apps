@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.199 2012/05/22 19:03:47 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.200 2012/06/09 17:52:54 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -86,14 +86,14 @@ bool COnOffNotifier::changeNotify(const neutrino_locale_t, void *Data)
 		for (int i=0; i<number ; i++)
 			toDisable[i]->setActive(true);
 	}
-	return true;
+	return false;
 }
 
 bool CPauseSectionsdNotifier::changeNotify(const neutrino_locale_t, void * Data)
 {
 	g_Sectionsd->setPauseScanning((*((int *)Data)) == 0);
 
-	return true;
+	return false;
 }
 
 #ifndef TUXTXT_CFG_STANDALONE
@@ -113,14 +113,14 @@ bool CTuxtxtCacheNotifier::changeNotify(const neutrino_locale_t, void *)
 		tuxtxt_close();
 	}
 
-	return true;
+	return false;
 }
 #endif
 
 bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t, void *)
 {
 	CNeutrinoApp::getInstance()->SendSectionsdConfig();
-	return true;
+	return false;
 }
 
 int CStreamFeaturesChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
