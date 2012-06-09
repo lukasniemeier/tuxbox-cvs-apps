@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.11 2012/06/09 17:49:09 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -172,10 +172,8 @@ int CDriverBootSetup::showSetup()
 	}
 
 #ifdef HAVE_DBOX_HARDWARE
-	CConsoleDestChangeNotifier consoleDestChangeNotifier;
-	CMenuOptionChooser * oj_boot_console = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FB_DESTINATION, &g_settings.uboot_console, DRIVERSETTINGS_FB_DESTINATION_OPTIONS, DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT, true, &consoleDestChangeNotifier);
-	CFdxChangeNotifier fdxChangeNotifier;
-	CMenuOptionChooser * oj_dbox_duplex = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FDX_LOAD, &g_settings.uboot_dbox_duplex, DRIVERSETTINGS_FDX_OPTIONS, DRIVERSETTINGS_FDX_OPTION_COUNT, true, &fdxChangeNotifier);
+	CMenuOptionChooser * oj_boot_console = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FB_DESTINATION, &g_settings.uboot_console, DRIVERSETTINGS_FB_DESTINATION_OPTIONS, DRIVERSETTINGS_FB_DESTINATION_OPTION_COUNT, true);
+	CMenuOptionChooser * oj_dbox_duplex = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_FDX_LOAD, &g_settings.uboot_dbox_duplex, DRIVERSETTINGS_FDX_OPTIONS, DRIVERSETTINGS_FDX_OPTION_COUNT, true);
 #endif
 
 	//paint items
@@ -208,20 +206,6 @@ int CDriverBootSetup::showSetup()
 	toDelete.clear();
 
 	return res;
-}
-
-bool CConsoleDestChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	g_settings.uboot_console = *(int *)Data;
-
-	return true;
-}
-
-bool CFdxChangeNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	g_settings.uboot_dbox_duplex = *(int *)Data;
-
-	return true;
 }
 
 #ifdef HAVE_DBOX_HARDWARE
