@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.h,v 1.8 2012/05/16 21:49:56 rhabarber1848 Exp $
+	$Id: network_setup.h,v 1.9 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -99,7 +99,7 @@ class CNetworkSetup : public CMenuTarget, CChangeObserver
 		void saveNetworkSettings(bool show_message = false);
 		
 		int exec(CMenuTarget* parent, const std::string & actionKey);
- 		virtual bool changeNotify(const neutrino_locale_t, void * Data);
+		bool changeNotify(const neutrino_locale_t OptionName, void * Data);
 };
 
 class CDHCPNotifier : public CChangeObserver

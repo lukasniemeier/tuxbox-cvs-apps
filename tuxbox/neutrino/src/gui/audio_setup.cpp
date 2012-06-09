@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.12 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: audio_setup.cpp,v 1.13 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -140,15 +140,15 @@ int CAudioSetup::showAudioSetup()
 	CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOGOUT, &g_settings.audio_AnalogMode, AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT, true, &audioSetupNotifier);
 	audioSettings->addItem( oj );
 
-	oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_AUDIO_LEFT_RIGHT_SELECTABLE, &g_settings.audio_left_right_selectable, AUDIOMENU_LEFT_RIGHT_SELECTABEL_OPTIONS, AUDIOMENU_LEFT_RIGHT_SELECTABLE_OPTION_COUNT, true, &audioSetupNotifier);
+	oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_AUDIO_LEFT_RIGHT_SELECTABLE, &g_settings.audio_left_right_selectable, AUDIOMENU_LEFT_RIGHT_SELECTABEL_OPTIONS, AUDIOMENU_LEFT_RIGHT_SELECTABLE_OPTION_COUNT, true);
 	audioSettings->addItem( oj );
 
 	audioSettings->addItem(GenericMenuSeparatorLine);
 
-	oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE, &g_settings.audiochannel_up_down_enable, AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE_OPTIONS, AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE_COUNT, true, &audioSetupNotifier);
+	oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE, &g_settings.audiochannel_up_down_enable, AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE_OPTIONS, AUDIOMENU_AUDIOCHANNEL_UP_DOWN_ENABLE_COUNT, true);
 	audioSettings->addItem( oj );
 
-	oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &audioSetupNotifier);
+	oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_DOLBYDIGITAL, &g_settings.audio_DolbyDigital, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	audioSettings->addItem(oj);
 	
 	audioSettings->addItem(GenericMenuSeparatorLine);
@@ -169,7 +169,7 @@ int CAudioSetup::showAudioSetup()
 #endif
 	
 	// volume bar steps
-	CStringInput audio_step(LOCALE_AUDIOMENU_VOLUMEBAR_AUDIOSTEPS,g_settings.audio_step, 2, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ", &audioSetupNotifier);
+	CStringInput audio_step(LOCALE_AUDIOMENU_VOLUMEBAR_AUDIOSTEPS, g_settings.audio_step, 2, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");
 	CMenuForwarder *as = new CMenuForwarder(LOCALE_AUDIOMENU_VOLUMEBAR_AUDIOSTEPS, true, g_settings.audio_step, &audio_step);
 	audioSettings->addItem(as);
 

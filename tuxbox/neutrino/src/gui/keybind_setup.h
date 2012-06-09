@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.h,v 1.8 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: keybind_setup.h,v 1.9 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -36,13 +36,7 @@
 
 #include <string>
 
-class CKeySetupNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CKeybindSetup : public CMenuTarget
+class CKeybindSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		enum keynames {
@@ -72,8 +66,6 @@ class CKeybindSetup : public CMenuTarget
 			MAX_NUM_KEYNAMES
 		};
 
-		CKeySetupNotifier      *keySetupNotifier;
-
 		int width, selected;
 
 		neutrino_locale_t menue_title;
@@ -85,6 +77,7 @@ class CKeybindSetup : public CMenuTarget
 		CKeybindSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
 		~CKeybindSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 #endif

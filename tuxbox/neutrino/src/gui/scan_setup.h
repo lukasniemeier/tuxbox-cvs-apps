@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.h,v 1.10 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: scan_setup.h,v 1.11 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	Copyright (C) 2009 Thilo Graf (dbt)
 	http://www.dbox2-tuning.de
@@ -33,7 +33,7 @@
 
 #include <string>
 
-class CScanSetup : public CMenuTarget
+class CScanSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		int width, selected;
@@ -48,6 +48,8 @@ class CScanSetup : public CMenuTarget
 		CScanSetup();
 		~CScanSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+		bool changeNotify(const neutrino_locale_t OptionName, void * Data);
+
 		void initScanSettings();
 		std::string getScanModeString(const int& scan_type);
 };
@@ -76,12 +78,6 @@ class CTP_scanNotifier : public CChangeObserver
 	public:
 		CTP_scanNotifier(CMenuOptionChooser*, CMenuOptionChooser*, CMenuForwarder*, CMenuForwarder*, CMenuOptionStringChooser*);
 		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CScanSettingsSatManNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *Data);
 };
 
 #endif

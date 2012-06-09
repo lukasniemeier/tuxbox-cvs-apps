@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.12 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.13 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -137,8 +137,7 @@ int CDriverBootSetup::showSetup()
 	bool item_enabled[DRIVER_SETTING_FILES_COUNT];
 
 #ifdef HAVE_DBOX_HARDWARE
-	CSPTSNotifier sptsNotifier;
-	CMenuOptionChooser * oj_spts = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_SPTSMODE, &g_settings.misc_spts, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &sptsNotifier);
+	CMenuOptionChooser * oj_spts = new CMenuOptionChooser(LOCALE_DRIVERSETTINGS_SPTSMODE, &g_settings.misc_spts, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 #endif
 
 	CMenuOptionChooser * oj_switches[DRIVER_SETTING_FILES_COUNT];
@@ -208,17 +207,19 @@ int CDriverBootSetup::showSetup()
 	return res;
 }
 
-#ifdef HAVE_DBOX_HARDWARE
-bool CSPTSNotifier::changeNotify(const neutrino_locale_t, void *)
+bool CDriverBootSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 {
-	if (g_settings.misc_spts)
-		g_Zapit->PlaybackSPTS();
-	else
-		g_Zapit->PlaybackPES();
-
+#ifdef HAVE_DBOX_HARDWARE
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_DRIVERSETTINGS_SPTSMODE))
+	{
+		if (g_settings.misc_spts)
+			g_Zapit->PlaybackSPTS();
+		else
+			g_Zapit->PlaybackPES();
+	}
+#endif
 	return false;
 }
-#endif
 
 bool CTouchFileNotifier::changeNotify(const neutrino_locale_t, void * data)
 {

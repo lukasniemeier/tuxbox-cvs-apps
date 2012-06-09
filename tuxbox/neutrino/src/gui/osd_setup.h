@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.5 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: osd_setup.h,v 1.6 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -45,7 +45,7 @@ class CFontSizeNotifier : public CChangeObserver
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 
-class COsdSetup : public CMenuTarget
+class COsdSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		CColorSetupNotifier *colorSetupNotifier;
@@ -69,7 +69,8 @@ class COsdSetup : public CMenuTarget
 		COsdSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
 		~COsdSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-		
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
+
 		enum INFOBAR_CHANNEL_LOGO_POS_OPTIONS	
 		{
 			INFOBAR_NO_LOGO,
@@ -95,20 +96,6 @@ class COsdSetupChannelLogoNotifier : public CChangeObserver
 	public:
 		COsdSetupChannelLogoNotifier( CMenuForwarder*, CMenuOptionChooser* );
 		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-
-#ifdef ENABLE_RADIOTEXT
-class CRadiotextNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-#endif
-
-class CTimingSettingsNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 #endif

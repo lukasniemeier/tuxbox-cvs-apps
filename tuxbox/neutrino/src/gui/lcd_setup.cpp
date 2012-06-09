@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.8 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: lcd_setup.cpp,v 1.9 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -117,20 +117,19 @@ int CLcdSetup::showSetup()
 	CLcdControler* lcdsliders = new CLcdControler(LOCALE_LCDMENU_HEAD, NULL);
 
 	//option invert
-	CLcdNotifier lcdnotifier;
-	CMenuOptionChooser* oj_inverse = new CMenuOptionChooser(LOCALE_LCDMENU_INVERSE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &lcdnotifier);
+	CMenuOptionChooser* oj_inverse = new CMenuOptionChooser(LOCALE_LCDMENU_INVERSE, &g_settings.lcd_setting[SNeutrinoSettings::LCD_INVERSE], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 
 #ifndef HAVE_TRIPLEDRAGON
 	CMenuOptionChooser* oj_bias = NULL;
 	if (g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS)
-		oj_bias = new CMenuOptionChooser(LOCALE_LCDMENU_BIAS, &g_settings.lcd_setting[SNeutrinoSettings::LCD_BIAS], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &lcdnotifier);
+		oj_bias = new CMenuOptionChooser(LOCALE_LCDMENU_BIAS, &g_settings.lcd_setting[SNeutrinoSettings::LCD_BIAS], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 
-	CMenuOptionChooser* oj_power = new CMenuOptionChooser(LOCALE_LCDMENU_POWER, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &lcdnotifier);
+	CMenuOptionChooser* oj_power = new CMenuOptionChooser(LOCALE_LCDMENU_POWER, &g_settings.lcd_setting[SNeutrinoSettings::LCD_POWER], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 
 	// Autodimm available on Sagem/Philips only
 	CMenuOptionChooser* oj_dimm = NULL;
 	if ((g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) || (g_info.box_Type == CControld::TUXBOX_MAKER_SAGEM))
-		oj_dimm = new CMenuOptionChooser(LOCALE_LCDMENU_AUTODIMM, &g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &lcdnotifier);
+		oj_dimm = new CMenuOptionChooser(LOCALE_LCDMENU_AUTODIMM, &g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 
 	//dimm time
 	CStringInput dim_time(LOCALE_LCDMENU_DIM_TIME, g_settings.lcd_setting_dim_time, 3,	NONEXISTANT_LOCALE, NONEXISTANT_LOCALE,"0123456789 ");
@@ -188,10 +187,16 @@ int CLcdSetup::showSetup()
 	return res;
 }
 
-bool CLcdNotifier::changeNotify(const neutrino_locale_t, void *)
+bool CLcdSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 {
-	CLCD::getInstance()->setlcdparameter();
-	CLCD::getInstance()->setAutoDimm(g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM]);
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_INVERSE) ||
+	    ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_BIAS) ||
+	    ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_POWER) ||
+	    ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_AUTODIMM))
+	{
+		CLCD::getInstance()->setlcdparameter();
+		CLCD::getInstance()->setAutoDimm(g_settings.lcd_setting[SNeutrinoSettings::LCD_AUTODIMM]);
+	}
 	return false;
 }
 

@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.23 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.24 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -221,10 +221,9 @@ int CNetworkSetup::showNetworkSetup()
 		
 		//ntp
 		//prepare ntp input
-		CSectionsdConfigNotifier sectionsdConfigNotifier;
-		CStringInputSMS networkSettings_NtpServer(LOCALE_NETWORKMENU_NTPSERVER, &g_settings.network_ntpserver, 30, false, LOCALE_NETWORKMENU_NTPSERVER_HINT1, LOCALE_NETWORKMENU_NTPSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-. ", &sectionsdConfigNotifier);
+		CStringInputSMS networkSettings_NtpServer(LOCALE_NETWORKMENU_NTPSERVER, &g_settings.network_ntpserver, 30, false, LOCALE_NETWORKMENU_NTPSERVER_HINT1, LOCALE_NETWORKMENU_NTPSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-. ", this);
 	
-		CStringInput networkSettings_NtpRefresh(LOCALE_NETWORKMENU_NTPREFRESH, &g_settings.network_ntprefresh, 3, false, LOCALE_NETWORKMENU_NTPREFRESH_HINT1, LOCALE_NETWORKMENU_NTPREFRESH_HINT2 , "0123456789 ", &sectionsdConfigNotifier);
+		CStringInput networkSettings_NtpRefresh(LOCALE_NETWORKMENU_NTPREFRESH, &g_settings.network_ntprefresh, 3, false, LOCALE_NETWORKMENU_NTPREFRESH_HINT1, LOCALE_NETWORKMENU_NTPREFRESH_HINT2 , "0123456789 ", this);
 
 		CMenuWidget* ntp = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_NTPTITLE, true, NULL, ntp, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
@@ -232,7 +231,7 @@ int CNetworkSetup::showNetworkSetup()
 		ntp->addItem(GenericMenuSeparator);
 		ntp->addItem(GenericMenuBack);
 		ntp->addItem(GenericMenuSeparatorLine);
-		CMenuOptionChooser *ntp1 = new CMenuOptionChooser(LOCALE_NETWORKMENU_NTPENABLE, &g_settings.network_ntpenable, OPTIONS_NTPENABLE_OPTIONS, OPTIONS_NTPENABLE_OPTION_COUNT, true, &sectionsdConfigNotifier);
+		CMenuOptionChooser *ntp1 = new CMenuOptionChooser(LOCALE_NETWORKMENU_NTPENABLE, &g_settings.network_ntpenable, OPTIONS_NTPENABLE_OPTIONS, OPTIONS_NTPENABLE_OPTION_COUNT, true, this);
 		CMenuForwarder *ntp2 = new CMenuForwarder(LOCALE_NETWORKMENU_NTPSERVER, true, g_settings.network_ntpserver, &networkSettings_NtpServer);
 		CMenuForwarder *ntp3 = new CMenuForwarder(LOCALE_NETWORKMENU_NTPREFRESH, true, g_settings.network_ntprefresh, &networkSettings_NtpRefresh);
 		
@@ -554,19 +553,28 @@ void CNetworkSetup::showCurrentNetworkSettings()
 	ShowMsgUTF(LOCALE_NETWORKMENU_SHOW, text, CMessageBox::mbrBack, CMessageBox::mbBack); // UTF-8
 }
 
-bool CNetworkSetup::changeNotify(const neutrino_locale_t, void * Data)
+bool CNetworkSetup::changeNotify(const neutrino_locale_t OptionName, void * Data)
 {
-	char ip[16];
-	unsigned char _ip[4];
-	sscanf((char*) Data, "%hhu.%hhu.%hhu.%hhu", &_ip[0], &_ip[1], &_ip[2], &_ip[3]);
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_NETWORKMENU_IPADDRESS))
+	{
+		char ip[16];
+		unsigned char _ip[4];
+		sscanf((char*) Data, "%hhu.%hhu.%hhu.%hhu", &_ip[0], &_ip[1], &_ip[2], &_ip[3]);
 
-	sprintf(ip, "%hhu.%hhu.%hhu.255", _ip[0], _ip[1], _ip[2]);
-	networkConfig->broadcast = ip;
-	network_broadcast = networkConfig->broadcast;
+		sprintf(ip, "%hhu.%hhu.%hhu.255", _ip[0], _ip[1], _ip[2]);
+		networkConfig->broadcast = ip;
+		network_broadcast = networkConfig->broadcast;
 
-	networkConfig->netmask = (_ip[0] == 10) ? "255.0.0.0" : "255.255.255.0";
-	network_netmask = networkConfig->netmask;
-	return true;
+		networkConfig->netmask = (_ip[0] == 10) ? "255.0.0.0" : "255.255.255.0";
+		network_netmask = networkConfig->netmask;
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_NETWORKMENU_NTPSERVER) ||
+	         ARE_LOCALES_EQUAL(OptionName, LOCALE_NETWORKMENU_NTPREFRESH) ||
+	         ARE_LOCALES_EQUAL(OptionName, LOCALE_NETWORKMENU_NTPENABLE))
+	{
+		CNeutrinoApp::getInstance()->SendSectionsdConfig();
+	}
+	return false;
 }
 
 CDHCPNotifier::CDHCPNotifier( CMenuForwarder* a1, CMenuForwarder* a2, CMenuForwarder* a3, CMenuForwarder* a4, CMenuForwarder* a5)

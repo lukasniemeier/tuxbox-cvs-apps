@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.h,v 1.5 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: miscsettings_menu.h,v 1.6 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -33,7 +33,7 @@
 
 #include <string>
 
-class CMiscMenue : public CMenuTarget
+class CMiscMenue : public CMenuTarget, CChangeObserver
 {
 	private:
 		int width, selected;
@@ -47,6 +47,7 @@ class CMiscMenue : public CMenuTarget
 		CMiscMenue(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
 		~CMiscMenue();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 class CMiscNotifier : public CChangeObserver
@@ -55,12 +56,6 @@ class CMiscNotifier : public CChangeObserver
 		CMenuItem* toDisable[4];
 	public:
 		CMiscNotifier( CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem* );
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CShutdownCountNotifier : public CChangeObserver
-{
-	public:
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 

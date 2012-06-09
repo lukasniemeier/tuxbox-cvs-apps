@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.h,v 1.6 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: record_setup.h,v 1.7 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -36,7 +36,7 @@
 
 #include <string>
 
-class CRecordSetup : public CMenuTarget
+class CRecordSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		int width, selected;
@@ -47,12 +47,7 @@ class CRecordSetup : public CMenuTarget
 		CRecordSetup();
 		~CRecordSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-class CRecAPIDSettingsNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t OptionName, void*);
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 class CRecordingNotifier : public CChangeObserver
@@ -70,18 +65,6 @@ class CRecordingNotifier2 : public CChangeObserver
 		CMenuItem* toDisable[1];
 	public:
 		CRecordingNotifier2( CMenuItem*);
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CRecordingSafetyNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-
-class CZaptoSafetyNotifier : public CChangeObserver
-{
-	public:
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 

@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.10 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.11 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -43,6 +43,13 @@
 #include <driver/screen_max.h>
 
 #include <system/debug.h>
+
+#ifndef TUXTXT_CFG_STANDALONE
+extern "C" int  tuxtxt_stop();
+extern "C" void tuxtxt_close();
+extern "C" int  tuxtxt_init();
+extern "C" int  tuxtxt_start(int tpid);
+#endif
 
 CMiscMenue::CMiscMenue(const neutrino_locale_t title, const char * const IconName)
 {
@@ -187,8 +194,7 @@ int CMiscMenue::showMenue()
 	misc_menue->addItem(GenericMenuSeparatorLine);
 #ifndef TUXTXT_CFG_STANDALONE
 	//tutxt cache
-	CTuxtxtCacheNotifier tuxtxtcacheNotifier;
-	misc_menue->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_TUXTXT_CACHE, &g_settings.tuxtxt_cache, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &tuxtxtcacheNotifier));
+	misc_menue->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_TUXTXT_CACHE, &g_settings.tuxtxt_cache, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 #endif
 	// startmode
 	misc_menue->addItem(new CMenuOptionChooser(LOCALE_MISCSETTINGS_STARTMODE, &g_settings.startmode, MISCSETTINGS_STARTMODE_WITH_OPTIONS, MISCSETTINGS_STARTMODE_WITH_OPTIONS_COUNT, true));
@@ -209,8 +215,7 @@ int CMiscMenue::showMenue()
 	//standby with...
 	CMenuOptionChooser *m5 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_RC_STANDBY_OFF_WITH, &g_settings.standby_off_with, REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS, REMOTE_CONTROL_STANDBY_OFF_WITH_OPTIONS_COUNT, !g_settings.shutdown_real);
 	//shutdown count
-	CShutdownCountNotifier shutDownCountNotifier;
-	CStringInput miscSettings_shutdown_count(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", &shutDownCountNotifier);
+	CStringInput miscSettings_shutdown_count(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", this);
 	CMenuForwarder *m4 = new CMenuForwarder(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, !g_settings.shutdown_real, g_settings.shutdown_count, &miscSettings_shutdown_count);
 	//standby save power
 	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STANDBY_SAVE_POWER, &g_settings.standby_save_power, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
@@ -235,18 +240,17 @@ int CMiscMenue::showMenue()
 	misc_menue_epg->addItem(GenericMenuSeparatorLine);
 
 	//epg cache ??is this really usefull??
-	CSectionsdConfigNotifier sectionsdConfigNotifier;
-	CStringInput miscSettings_epg_cache(LOCALE_MISCSETTINGS_EPG_CACHE, &g_settings.epg_cache, 2, false, LOCALE_MISCSETTINGS_EPG_CACHE_HINT1, LOCALE_MISCSETTINGS_EPG_CACHE_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	CStringInput miscSettings_epg_cache(LOCALE_MISCSETTINGS_EPG_CACHE, &g_settings.epg_cache, 2, false, LOCALE_MISCSETTINGS_EPG_CACHE_HINT1, LOCALE_MISCSETTINGS_EPG_CACHE_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_CACHE, true, g_settings.epg_cache, &miscSettings_epg_cache));
 
 	//extended epg cache
-	CStringInput miscSettings_epg_extendedcache(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, &g_settings.epg_extendedcache, 2, false, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT1, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	CStringInput miscSettings_epg_extendedcache(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, &g_settings.epg_extendedcache, 2, false, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT1, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, true, g_settings.epg_extendedcache, &miscSettings_epg_extendedcache));
 	//old events
-	CStringInput miscSettings_epg_old_events(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, &g_settings.epg_old_events, 2, false, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	CStringInput miscSettings_epg_old_events(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, &g_settings.epg_old_events, 2, false, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_OLD_EVENTS, true, g_settings.epg_old_events, &miscSettings_epg_old_events));
 	//max epg events
-	CStringInput miscSettings_epg_max_events(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, &g_settings.epg_max_events, 5, false, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT2, "0123456789 ", &sectionsdConfigNotifier);
+	CStringInput miscSettings_epg_max_events(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, &g_settings.epg_max_events, 5, false, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, true, g_settings.epg_max_events, &miscSettings_epg_max_events));
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_DIR, true, g_settings.epg_dir, this, "epgdir"));
 	
@@ -274,6 +278,40 @@ int CMiscMenue::showMenue()
 	return res;
 }
 
+bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void *)
+{
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT))
+	{
+		printf("[neutrino] shutdown counter changed to %d minutes\n", atoi(g_settings.shutdown_count));
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_CACHE) ||
+	         ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE) ||
+	         ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_OLD_EVENTS) ||
+	         ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS))
+	{
+		CNeutrinoApp::getInstance()->SendSectionsdConfig();
+	}
+#ifndef TUXTXT_CFG_STANDALONE
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MISCSETTINGS_TUXTXT_CACHE))
+	{
+		int vtpid = g_RemoteControl->current_PIDs.PIDs.vtxtpid;
+
+		if (g_settings.tuxtxt_cache)
+		{
+			tuxtxt_init();
+			if (vtpid)
+				tuxtxt_start(vtpid);
+		}
+		else
+		{
+			tuxtxt_stop();
+			tuxtxt_close();
+		}
+	}
+#endif
+	return false;
+}
+
 CMiscNotifier::CMiscNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4)
 {
 	toDisable[0]=i1;
@@ -289,11 +327,5 @@ bool CMiscNotifier::changeNotify(const neutrino_locale_t, void *)
 	toDisable[2]->setActive(!g_settings.shutdown_real);
 	toDisable[3]->setActive(!g_settings.shutdown_real);
 	return false;
-}
-
-bool CShutdownCountNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	printf("[neutrino] shutdown counter changed to %d minutes\n", atoi(g_settings.shutdown_count));
-	return true;
 }
 

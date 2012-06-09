@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.200 2012/06/09 17:52:54 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.201 2012/06/09 18:02:14 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -55,13 +55,6 @@
 #include <neutrino.h>
 #include <gui/widget/messagebox.h>
 
-#ifndef TUXTXT_CFG_STANDALONE
-extern "C" int  tuxtxt_stop();
-extern "C" void tuxtxt_close();
-extern "C" int  tuxtxt_init();
-extern "C" int  tuxtxt_start(int tpid);
-#endif
-
 #define PROCDIR "/proc"
 
 COnOffNotifier::COnOffNotifier( CMenuItem* a1,CMenuItem* a2,CMenuItem* a3,CMenuItem* a4,CMenuItem* a5)
@@ -86,40 +79,6 @@ bool COnOffNotifier::changeNotify(const neutrino_locale_t, void *Data)
 		for (int i=0; i<number ; i++)
 			toDisable[i]->setActive(true);
 	}
-	return false;
-}
-
-bool CPauseSectionsdNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	g_Sectionsd->setPauseScanning((*((int *)Data)) == 0);
-
-	return false;
-}
-
-#ifndef TUXTXT_CFG_STANDALONE
-bool CTuxtxtCacheNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	int vtpid=g_RemoteControl->current_PIDs.PIDs.vtxtpid;
-
-	if (g_settings.tuxtxt_cache)
-	{
-		tuxtxt_init();
-		if (vtpid)
-			tuxtxt_start(vtpid);
-	}
-	else
-	{
-		tuxtxt_stop();
-		tuxtxt_close();
-	}
-
-	return false;
-}
-#endif
-
-bool CSectionsdConfigNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	CNeutrinoApp::getInstance()->SendSectionsdConfig();
 	return false;
 }
 

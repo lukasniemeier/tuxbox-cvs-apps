@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.h,v 1.6 2012/06/09 17:49:09 rhabarber1848 Exp $
+	$Id: driver_boot_setup.h,v 1.7 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -35,7 +35,7 @@
 
 #include <string>
 
-class CDriverBootSetup : public CMenuTarget
+class CDriverBootSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		int width, selected;
@@ -49,15 +49,8 @@ class CDriverBootSetup : public CMenuTarget
 		CDriverBootSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
 		~CDriverBootSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
-
-#ifdef HAVE_DBOX_HARDWARE
-class CSPTSNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-#endif
 
 class CTouchFileNotifier : public CChangeObserver
 {

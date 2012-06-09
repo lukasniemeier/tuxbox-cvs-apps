@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.247 2012/05/22 19:03:47 rhabarber1848 Exp $
+	$Id: neutrino.h,v 1.248 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -248,7 +248,7 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 
 		//onchange
-		bool changeNotify(const neutrino_locale_t OptionName, void *);
+		bool changeNotify(const neutrino_locale_t OptionName, void * Data);
 
 		int handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data);
 

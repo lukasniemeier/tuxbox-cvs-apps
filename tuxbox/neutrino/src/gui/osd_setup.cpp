@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.17 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: osd_setup.cpp,v 1.18 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -52,8 +52,6 @@
 #include <driver/screen_max.h>
 
 #include <system/debug.h>
-
-static CTimingSettingsNotifier timingsettingsnotifier;
 
 const SNeutrinoSettings::FONT_TYPES channellist_font_sizes[4] =
 {
@@ -439,7 +437,7 @@ int COsdSetup::showOsdTimeoutSetup()
 
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
 	{
-		CStringInput * colorSettings_timing_item = new CStringInput(timing_setting[i].name, g_settings.timing_string[i], 3, LOCALE_TIMING_HINT_1, LOCALE_TIMING_HINT_2, "0123456789 ", &timingsettingsnotifier);
+		CStringInput * colorSettings_timing_item = new CStringInput(timing_setting[i].name, g_settings.timing_string[i], 3, LOCALE_TIMING_HINT_1, LOCALE_TIMING_HINT_2, "0123456789 ", this);
 		toDelete.push_back(colorSettings_timing_item);
 		ots->addItem(new CMenuForwarder(timing_setting[i].name, true, g_settings.timing_string[i], colorSettings_timing_item));
 	}
@@ -509,8 +507,7 @@ int COsdSetup::showOsdInfobarSetup()
 	CMenuOptionChooser *oibs_epgshow_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_SHOW, &g_settings.infobar_show, INFOBAR_EPG_SHOW_OPTIONS, INFOBAR_EPG_SHOW_OPTIONS_COUNT, true);
 
 #ifdef ENABLE_RADIOTEXT
-	CRadiotextNotifier radiotextNotifier;
-	CMenuOptionChooser *oibs_radiotext_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &radiotextNotifier);
+	CMenuOptionChooser *oibs_radiotext_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT, &g_settings.radiotext_enable, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 #endif
 	CMenuSeparator     *oibs_chanlogo_sep 	= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO);
 	
@@ -719,31 +716,31 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t, void *)
 	return true;
 }
 
-#ifdef ENABLE_RADIOTEXT
-bool CRadiotextNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	if (g_settings.radiotext_enable)
-	{
-		if (g_Radiotext == NULL)
-			g_Radiotext = new CRadioText;
-		if (g_Radiotext && ((CNeutrinoApp::getInstance()->getMode()) == NeutrinoMessages::mode_radio))
-			g_Radiotext->setPid(g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].pid);
-	}
-	else
-	{
-		// stop radiotext PES decoding
-		if (g_Radiotext)
-			g_Radiotext->radiotext_stop();
-		delete g_Radiotext;
-		g_Radiotext = NULL;
-	}
 
-	return false;
-}
+bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void *)
+{
+#ifdef ENABLE_RADIOTEXT
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT))
+	{
+		if (g_settings.radiotext_enable)
+		{
+			if (g_Radiotext == NULL)
+				g_Radiotext = new CRadioText;
+			if (g_Radiotext && ((CNeutrinoApp::getInstance()->getMode()) == NeutrinoMessages::mode_radio))
+				g_Radiotext->setPid(g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].pid);
+		}
+		else
+		{
+			// stop radiotext PES decoding
+			if (g_Radiotext)
+				g_Radiotext->radiotext_stop();
+			delete g_Radiotext;
+			g_Radiotext = NULL;
+		}
+		return false;
+	}
 #endif
 
-bool CTimingSettingsNotifier::changeNotify(const neutrino_locale_t OptionName, void *)
-{
 	for (int i = 0; i < TIMING_SETTING_COUNT; i++)
 	{
 		if (ARE_LOCALES_EQUAL(OptionName, timing_setting[i].name))
@@ -752,6 +749,7 @@ bool CTimingSettingsNotifier::changeNotify(const neutrino_locale_t OptionName, v
 			return true;
 		}
 	}
+
 	return false;
 }
 

@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.139 2012/05/22 19:08:13 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.140 2012/06/09 18:02:13 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -393,7 +393,6 @@ bool CNeutrinoApp::showUserMenu(int button)
 
 	// define classes
 	CFavorites* tmpFavorites				= NULL;
-	CPauseSectionsdNotifier* tmpPauseSectionsdNotifier 	= NULL;
 	CAudioSelectMenuHandler* tmpAudioSelectMenuHandler 	= NULL;
 	CSubChannelSelectMenu* tmpSubChannelSelectMenu		= NULL;
 	CStreamInfo2Handler*	tmpStreamInfo2Handler 		= NULL;
@@ -588,9 +587,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_EPG_MISC;
 				dummy = g_Sectionsd->getIsScanningActive();
-				tmpPauseSectionsdNotifier = new CPauseSectionsdNotifier;
 				keyhelper.get(&key,&icon);
-				menu_item = new CMenuOptionChooser(LOCALE_MAINMENU_PAUSESECTIONSD, &dummy, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, tmpPauseSectionsdNotifier , key, icon );
+				menu_item = new CMenuOptionChooser(LOCALE_MAINMENU_PAUSESECTIONSD, &dummy, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this, key, icon );
 				menu->addItem(menu_item, false);
 				menu_items++;
 				keyhelper.get(&key,&icon);
@@ -680,7 +678,6 @@ bool CNeutrinoApp::showUserMenu(int button)
 	// clear the heap
 	if(menu)			delete menu;
 	if(tmpFavorites)		delete tmpFavorites;
-	if(tmpPauseSectionsdNotifier)	delete tmpPauseSectionsdNotifier;
 	if(tmpAudioSelectMenuHandler)	delete tmpAudioSelectMenuHandler;
 	if(tmpSubChannelSelectMenu)	delete tmpSubChannelSelectMenu;
 	if(tmpStreamInfo2Handler)	delete tmpStreamInfo2Handler;

@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.h,v 1.5 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: lcd_setup.h,v 1.6 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -35,7 +35,7 @@
 
 #include <string>
 
-class CLcdSetup : public CMenuTarget
+class CLcdSetup : public CMenuTarget, CChangeObserver
 {
 	private:
 		int width, selected;
@@ -49,12 +49,7 @@ class CLcdSetup : public CMenuTarget
 		CLcdSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
 		~CLcdSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-class CLcdNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 };
 
 #endif

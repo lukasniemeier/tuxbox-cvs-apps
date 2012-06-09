@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.20 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.21 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -249,7 +249,6 @@ int CScanSetup::showScanService()
 	CStringInput* toff_lat = NULL;
 	CStringInput* toff_long = NULL;
 	CSatDiseqcNotifier* satDiseqcNotifier = NULL;
-	CScanSettingsSatManNotifier* scanSettingsSatManNotifier = NULL;
 
 	//sat-lnb-settings
 	if(g_info.delivery_system == DVB_S)
@@ -389,8 +388,7 @@ int CScanSetup::showScanService()
 	scansetup->addItem(onoff_mode);
 
 	//prepare auto scan
-	CSectionsdConfigNotifier sectionsdConfigNotifier;
-	CMenuOptionChooser* onoffscanSectionsd = ( new CMenuOptionChooser(LOCALE_SECTIONSD_SCANMODE, (int *)&scanSettings.scanSectionsd, SECTIONSD_SCAN_OPTIONS, SECTIONSD_SCAN_OPTIONS_COUNT, true, &sectionsdConfigNotifier));
+	CMenuOptionChooser* onoffscanSectionsd = ( new CMenuOptionChooser(LOCALE_SECTIONSD_SCANMODE, (int *)&scanSettings.scanSectionsd, SECTIONSD_SCAN_OPTIONS, SECTIONSD_SCAN_OPTIONS_COUNT, true, this));
 
 	//sat-lnb-settings
 	if(g_info.delivery_system == DVB_S)
@@ -399,8 +397,7 @@ int CScanSetup::showScanService()
 		int satfound = -1;
 		int firstentry = -1;
 
-		scanSettingsSatManNotifier = new CScanSettingsSatManNotifier();
-		scanSettings.TP_SatSelectMenu = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.TP_satname, ((scanSettings.diseqcMode != NO_DISEQC) && scanSettings.TP_scan), scanSettingsSatManNotifier);
+		scanSettings.TP_SatSelectMenu = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.TP_satname, ((scanSettings.diseqcMode != NO_DISEQC) && scanSettings.TP_scan), this);
 
 		// add the sats which are configured (diseqc or motorpos) to the list of available sats */
 		for (i = 0; i < sat_list_size; i++)
@@ -440,7 +437,6 @@ int CScanSetup::showScanService()
 	delete toff_lat;
 	delete toff_long;
 	delete satDiseqcNotifier;
-	delete scanSettingsSatManNotifier;
 	delete scanTs;
 
 	return res;
@@ -573,6 +569,20 @@ std::string CScanSetup::getScanModeString(const int& scan_type)
 
 }
 
+bool CScanSetup::changeNotify(const neutrino_locale_t OptionName, void * Data)
+{
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_SATSETUP_SATELLITE))
+	{
+		(CNeutrinoApp::getInstance()->ScanSettings()).TP_diseqc =
+			 *((CNeutrinoApp::getInstance()->ScanSettings()).diseqscOfSat((char*)Data));
+	}
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_SECTIONSD_SCANMODE))
+	{
+		CNeutrinoApp::getInstance()->SendSectionsdConfig();
+	}
+	return false;
+}
+
 bool CSatDiseqcNotifier::changeNotify(const neutrino_locale_t, void * Data)
 {
 	if (*((int*) Data) == NO_DISEQC)
@@ -630,12 +640,5 @@ bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
 			toDisable3[0]->setActive(true);
 	}
 
-	return false;
-}
-
-bool CScanSettingsSatManNotifier::changeNotify(const neutrino_locale_t, void *Data)
-{
-	(CNeutrinoApp::getInstance()->ScanSettings()).TP_diseqc =
-		 *((CNeutrinoApp::getInstance()->ScanSettings()).diseqscOfSat((char*)Data));
 	return false;
 }

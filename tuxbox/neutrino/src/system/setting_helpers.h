@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.111 2012/05/22 19:03:48 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.112 2012/06/09 18:02:14 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -52,26 +52,6 @@ class COnOffNotifier : public CChangeObserver
 	public:
 		COnOffNotifier (CMenuItem* a1,CMenuItem* a2 = NULL,CMenuItem* a3 = NULL,CMenuItem* a4 = NULL,CMenuItem* a5 = NULL);
 		bool changeNotify(const neutrino_locale_t, void *Data);
-};
-
-#ifndef TUXTXT_CFG_STANDALONE
-class CTuxtxtCacheNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void *);
-};
-#endif
-
-class CPauseSectionsdNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-		
-class CSectionsdConfigNotifier : public CChangeObserver
-{
-	public:
-		bool changeNotify(const neutrino_locale_t, void * );
 };
 
 class CStreamFeaturesChangeExec : public CMenuTarget

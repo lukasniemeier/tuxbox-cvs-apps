@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.16 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.17 2012/06/09 18:02:13 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -50,8 +50,7 @@
 
 CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	keySetupNotifier = new CKeySetupNotifier;
-	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+	changeNotify(LOCALE_KEYBINDINGMENU_REPEATBLOCK, NULL);
 
 	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_MAINSETTINGS_KEYBINDING;
 	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_KEYBINDING;
@@ -62,7 +61,7 @@ CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const I
 
 CKeybindSetup::~CKeybindSetup()
 {
-	delete keySetupNotifier;
+
 }
 
 int CKeybindSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
@@ -190,9 +189,8 @@ int CKeybindSetup::showSetup()
 
 	CMenuSeparator *ks_rc_sep 				= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_RC);
 	
-	CStringInput keySettings_repeat_genericblocker(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
-	CStringInput keySettings_repeatBlocker(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", keySetupNotifier);
-	keySetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+	CStringInput keySettings_repeat_genericblocker(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", this);
+	CStringInput keySettings_repeatBlocker(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", this);
 	CMenuForwarder *ks_rc_repeat_fw = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCK, true, g_settings.repeat_blocker, &keySettings_repeatBlocker);
 	CMenuForwarder *ks_rc_repeat_generic_fw = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, true, g_settings.repeat_genericblocker, &keySettings_repeat_genericblocker);
 
@@ -258,8 +256,12 @@ int CKeybindSetup::showSetup()
 	return res;
 }
 
-bool CKeySetupNotifier::changeNotify(const neutrino_locale_t, void *)
+bool CKeybindSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 {
-	g_RCInput->setRepeat(atoi(g_settings.repeat_blocker), atoi(g_settings.repeat_genericblocker));
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_KEYBINDINGMENU_REPEATBLOCK) ||
+	    ARE_LOCALES_EQUAL(OptionName, LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC))
+	{
+		g_RCInput->setRepeat(atoi(g_settings.repeat_blocker), atoi(g_settings.repeat_genericblocker));
+	}
 	return false;
 }
