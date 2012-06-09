@@ -515,7 +515,7 @@ fontmenu.channellist Kanalliste
 fontmenu.epg EPG
 fontmenu.eventlist Eventlist
 fontmenu.gamelist Gameliste
-fontmenu.head Schriftgrössen
+fontmenu.head Schriftgrößen
 fontmenu.infobar Infobar
 fontsize.channel_num_zap Direktauswahl
 fontsize.channellist Kanalliste
@@ -537,9 +537,9 @@ fontsize.infobar_channame Infobar Kanal
 fontsize.infobar_info Infobar Info
 fontsize.infobar_number Infobar Nummer
 fontsize.infobar_small Infobar klein
-fontsize.menu Menutext
-fontsize.menu_info Menu Info
-fontsize.menu_title Menu Titel
+fontsize.menu Menütext
+fontsize.menu_info Menüinfo
+fontsize.menu_title Menütitel
 generic.empty 
 gtxalpha.alpha1 Alpha 1
 gtxalpha.alpha2 Alpha 2
@@ -1174,7 +1174,7 @@ recordingmenu.off aus
 recordingmenu.record_in_spts_mode in SPTS-Modus aufnehmen
 recordingmenu.record_is_running Aufnahme läuft gerade!
 recordingmenu.recording_type Aufnahme Gerät
-recordingmenu.ringbuffers Grösse Ringpuffer
+recordingmenu.ringbuffers Größe Ringpuffer
 recordingmenu.ringbuffers_05M 512 KB
 recordingmenu.ringbuffers_1M 1 MB
 recordingmenu.ringbuffers_2M 2 MB
