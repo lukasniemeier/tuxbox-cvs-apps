@@ -92,7 +92,7 @@ CKeyChooser::~CKeyChooser()
 void CKeyChooser::paint()
 {
 	keyName = CRCInput::getKeyName(*key);
-	(((CKeyValue *)(items[0]))->keyvalue) = *key;
+	static_cast<CKeyValue*>(items[0])->keyvalue = *key;
 
 	CMenuWidget::paint();
 }

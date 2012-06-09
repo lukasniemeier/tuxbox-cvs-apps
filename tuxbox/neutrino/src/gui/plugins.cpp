@@ -450,8 +450,6 @@ void CPlugins::startPlugin(int number, int param, int param2)
 		printf("[CPlugins] (id,val):(%s,%s)\n", par->id, par->val);
 	}
 
-	std::string pluginname = plugin_list[number].filename;
-
 	strcpy(depstring, plugin_list[number].depend.c_str());
 
 	argc=0;

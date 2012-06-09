@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.27 2012/04/13 12:15:21 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.28 2012/06/09 18:05:44 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -360,8 +360,6 @@ bool CMovieInfo::parseXmlTree (char* /*text*/, MI_MOVIE_INFO* /*movie_info*/)
 #ifndef XMLTREE_LIB
 	return (false); // no XML lib available return false
 #else /* XMLTREE_LIB */
-
-	int helpIDtoLoad = 80;
 
 	XMLTreeParser *parser=new XMLTreeParser("ISO-8859-1");
 
@@ -1220,8 +1218,8 @@ bool CMovieInfo::saveFile_std(const CFile& file, const char* text, const int tex
 	int fd;
 	if ((fd = open(file.Name.c_str(), O_SYNC | O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) >= 0)
 	{
-		int nr;
-		nr = write(fd, text, text_size);
+//		int nr;
+//		nr = write(fd, text, text_size);
 		//fdatasync(fd);
 		close(fd);
 		result = true;

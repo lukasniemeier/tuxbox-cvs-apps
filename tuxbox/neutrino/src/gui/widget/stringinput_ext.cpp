@@ -105,8 +105,8 @@ void CExtendedInput::calculateDialog()
 		maxY = iy>maxY?iy:maxY;
 	}
 
-	width = width>maxX+40?width:maxX+40;
-	height = height>maxY+hheight+ mheight?height:maxY+hheight+ mheight;
+	width = (width > maxX+40) ? width : maxX+40;
+	height = (height > maxY+hheight+mheight) ? height : maxY+hheight+mheight;
 
 	hintPosY = y + height -10;
 
