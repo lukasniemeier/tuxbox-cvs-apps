@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.h,v 1.5 2012/03/18 11:20:14 rhabarber1848 Exp $
+	$Id: user_menue_setup.h,v 1.6 2012/06/09 17:59:32 rhabarber1848 Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -50,16 +50,6 @@ class CUserMenuSetup : public CMenuTarget
 		CUserMenuSetup(neutrino_locale_t menue_title, int menue_button);
 		~CUserMenuSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
-};
-
-class CUserMenuNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder *menuitem;
-	public:
-		CUserMenuNotifier(CMenuForwarder *item = NULL);
-		void setItem(CMenuForwarder *item);
-		bool changeNotify(const neutrino_locale_t, void *);
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
-	$Id: user_menue_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: user_menue_setup.cpp,v 1.11 2012/06/09 17:59:32 rhabarber1848 Exp $
 
 	user_menue setup implementation - Neutrino-GUI
 	based up implementation by Günther
@@ -100,10 +100,8 @@ int CUserMenuSetup::showSetup()
 	ums->setPreselected(selected);
 	ums->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, local));
 
-	CUserMenuNotifier notify;
-	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, true, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF/- ", &notify);
+	CStringInputSMS name(LOCALE_USERMENU_NAME, &g_settings.usermenu_text[button], 11, true, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF/- ");
 	CMenuForwarder *mf = new CMenuForwarder(LOCALE_USERMENU_NAME, true, g_settings.usermenu_text[button], &name);
-	notify.setItem(mf);
 
 	//-------------------------------------
 	ums->addItem(GenericMenuSeparator);
@@ -126,24 +124,5 @@ int CUserMenuSetup::showSetup()
 	delete ums;
 
 	return res;
-}
-
-CUserMenuNotifier::CUserMenuNotifier(CMenuForwarder *item)
-{
-	menuitem = item;
-}
-
-void CUserMenuNotifier::setItem(CMenuForwarder *item)
-{
-	menuitem = item;
-}
-
-bool CUserMenuNotifier::changeNotify(const neutrino_locale_t, void *Data)
-{
-	if (menuitem) {
-		char *data = (char *)Data;
-		menuitem->setOption(data);
-	}
-	return true;
 }
 
