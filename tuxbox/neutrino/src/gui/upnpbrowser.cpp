@@ -107,9 +107,6 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 	if(g_settings.video_Format != CControldClient::VIDEOFORMAT_4_3)
 		g_Controld->setVideoFormat(CControldClient::VIDEOFORMAT_4_3);
 
-	// set zapit in standby mode
-        g_Zapit->setStandby(true);
-
 #ifdef HAVE_DBOX_HARDWARE
 	// If Audiomode is OST then save setting and switch to AVS-Mode
 	if(g_settings.audio_avs_Control == CControld::TYPE_OST)
@@ -132,6 +129,9 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 		m_LastMode=(CNeutrinoApp::getInstance()->getLastMode() | NeutrinoMessages::norezap);
 	else
 		m_LastMode=(CNeutrinoApp::getInstance()->getLastMode());
+
+	// set zapit in standby mode
+	g_Zapit->setStandby(true);
 
 	m_width = 710;
 	if((g_settings.screen_EndX - g_settings.screen_StartX) < m_width+ConnectLineBox_Width)

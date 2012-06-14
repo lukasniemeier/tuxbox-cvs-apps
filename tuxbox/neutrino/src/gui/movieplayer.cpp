@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.206 2012/06/14 18:13:14 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.207 2012/06/14 18:17:07 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -428,6 +428,18 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 		filebrowser->Multi_Select = false;
 	}
 
+	// tell neutrino we're in ts_mode
+	CNeutrinoApp::getInstance ()->handleMsg (NeutrinoMessages::CHANGEMODE, NeutrinoMessages::mode_ts);
+	// remember last mode
+	CZapitClient::responseGetLastChannel firstchannel;
+	g_Zapit->getLastChannel(firstchannel.channelNumber, firstchannel.mode);
+	if ((firstchannel.mode == 'r') ?
+	    (CNeutrinoApp::getInstance()->zapto_radio_on_init_done) :
+	    (CNeutrinoApp::getInstance()->zapto_tv_on_init_done))
+		m_LastMode=(CNeutrinoApp::getInstance()->getLastMode() | NeutrinoMessages::norezap);
+	else
+		m_LastMode=(CNeutrinoApp::getInstance()->getLastMode());
+
 	g_ZapitsetStandbyState = false; // 'Init State
 
 	// if filebrowser or moviebrowser playback we check if we should disable the tv (other modes might be added later)
@@ -442,22 +454,9 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 		g_Zapit->setStandby (true);
 	}
 
-
 	puts("[movieplayer.cpp] executing " MOVIEPLAYER_START_SCRIPT ".");
 	if (system(MOVIEPLAYER_START_SCRIPT) != 0)
 	perror("Datei " MOVIEPLAYER_START_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " MOVIEPLAYER_START_SCRIPT " not found. Please create if needed.\n");
-
-	// tell neutrino we're in ts_mode
-	CNeutrinoApp::getInstance ()->handleMsg (NeutrinoMessages::CHANGEMODE, NeutrinoMessages::mode_ts);
-	// remember last mode
-	CZapitClient::responseGetLastChannel firstchannel;
-	g_Zapit->getLastChannel(firstchannel.channelNumber, firstchannel.mode);
-	if ((firstchannel.mode == 'r') ?
-	    (CNeutrinoApp::getInstance()->zapto_radio_on_init_done) :
-	    (CNeutrinoApp::getInstance()->zapto_tv_on_init_done))
-		m_LastMode=(CNeutrinoApp::getInstance()->getLastMode() | NeutrinoMessages::norezap);
-	else
-		m_LastMode=(CNeutrinoApp::getInstance()->getLastMode());
 
 	// Stop or restart sectionsd according to configuration
 	if (g_settings.streaming_stopsectionsd == 1)
@@ -4664,7 +4663,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.206 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.207 $");
 }
 
 void CMoviePlayerGui::showHelpTS()
