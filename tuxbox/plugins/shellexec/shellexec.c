@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.c,v 1.9 2011/05/31 17:19:31 rhabarber1848 Exp $
+ * $Id: shellexec.c,v 1.10 2012/06/14 18:30:31 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -1629,10 +1629,6 @@ int llev=m->headerlevels[m->act_header], lmen=m->act_header, lentr=m->lastheader
 /******************************************************************************
  * shellexec Main
  ******************************************************************************/
-
-#define LCD_CPL 12
-#define LCD_RDIST 10
-
 
 int main (int argc, char **argv)
 {

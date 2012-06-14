@@ -117,6 +117,7 @@ class CPlugins
 		inline const std::string & getDescription      (const int number) const { return plugin_list[number].description       ; }
 		inline       int           getType             (const int number) const { return plugin_list[number].type              ; }
 		inline       bool          isHidden            (const int number) const { return plugin_list[number].hide              ; }
+		inline       bool          isUsingLcd          (const int number) const { return plugin_list[number].lcd               ; }
 
 		void startPlugin(int number, int param = 0, int param2 = 0);
 		void start_plugin_by_name(const std::string & filename,int param);// start plugins by "name=" in .cfg

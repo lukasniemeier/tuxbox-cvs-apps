@@ -89,7 +89,6 @@ int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &action
 		{
 			int vtxtpage = 0;
 			iss >> std::hex >> vtxtpage;
-			CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
 			g_PluginList->startPlugin("tuxtxt", 0, vtxtpage);
 		}
 		else if (type == "DVB:")

@@ -1,5 +1,5 @@
 /*
- * $Id: lcd.c,v 1.2 2010/09/27 19:40:10 rhabarber1848 Exp $
+ * $Id: lcd.c,v 1.3 2012/06/14 18:30:31 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -22,6 +22,8 @@
 #include "lcd.h"
 #include "lcd_font.h"
 
+#define LCD_MAX_LINECOPY 12
+
 static unsigned char raw[132][64];
 static unsigned char rawb[132][64];
 static unsigned char lcd[LCD_ROWS][LCD_COLS];
@@ -40,18 +42,22 @@ int LCD_Init(void)
 		perror("LCD (/dev/dbox/lcd0)");
 		return -1;
 	}
-	
+
 	memset(rawb,0,132*64);
 	read(fd, &lcd, 120*64/8);
 	for(x=0;x < LCD_COLS;x++) 
-	{   
-		for(y=0;y < 2;y++) 
+	{
+		for(y=0;y < 2;y++)
 		{
 			tmp2 = lcd[y][x];
-			for(z=0;z <= 7;z++) 
+			for(z=0;z < 8;z++)
 			{
-				if(tmp2 & (1<<z))
-					rawb[x][y * 8 + z] = 1;
+				if ((y * 8 + z) < LCD_MAX_LINECOPY)
+				{
+					if (tmp2 & (1<<z)) {
+						rawb[x][y * 8 + z] = 1;
+					}
+				}
 			}
 		}
 	}
@@ -120,9 +126,9 @@ void LCD_convert_data ()
 	for(x=0;x < LCD_COLS;x++) {   
 		for(y=0;y < LCD_ROWS;y++) {
 			tmp2 = 0;
-			for(z=0;z <= 7;z++) {
+			for(z=0;z < 8;z++) {
 				if(raw[x][y * 8 + z] == 1){
-					tmp2|=1<<z;
+					tmp2 |= (1<<z);
 				}
 			}
 			lcd[y][x] = tmp2;

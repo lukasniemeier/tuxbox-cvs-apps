@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.201 2012/06/09 18:02:14 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.202 2012/06/14 18:30:30 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -97,7 +97,8 @@ int CStreamFeaturesChangeExec::exec(CMenuTarget* parent, const std::string & act
 	// } else
 	if (sel>=0)
 	{
-		CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
+		if (!g_PluginList->isUsingLcd(sel))
+			CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
 		g_PluginList->startPlugin(sel);
 	}
 
