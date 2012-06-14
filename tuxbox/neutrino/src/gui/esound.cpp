@@ -1,5 +1,5 @@
 /*
-  $Id: esound.cpp,v 1.14 2012/06/14 18:17:07 rhabarber1848 Exp $
+  $Id: esound.cpp,v 1.15 2012/06/14 18:20:33 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   based on
@@ -258,6 +258,12 @@ int CEsoundGui::exec(CMenuTarget* parent, const std::string &)
 	// enable iec aka digi out
 	g_Zapit->IecOn();
 #endif
+
+	/* Workaround for 16:9 problem
+	   Avia does reset when changing samplerate and looses the display format information,
+	   which is set to default (4:3). Therefore we set 16:9 here again if needed. */
+	if(g_settings.video_Format == CControldClient::VIDEOFORMAT_16_9 && g_settings.video_backgroundFormat == CControldClient::VIDEOFORMAT_16_9)
+		g_Controld->setVideoFormat(CControldClient::VIDEOFORMAT_16_9);
 
 	CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , m_LastMode );
 	g_RCInput->postMsg( NeutrinoMessages::SHOW_INFOBAR, 0 );
