@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 	
-	$Id: pictureviewer.cpp,v 1.78 2011/04/24 12:23:09 dbt Exp $
+	$Id: pictureviewer.cpp,v 1.79 2012/06/14 18:13:14 rhabarber1848 Exp $
 
 	MP3Player by Dirch
 	
@@ -143,9 +143,9 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 	m_viewer->SetScaling((CPictureViewer::ScalingMode)g_settings.picviewer_scaling);
 	m_viewer->SetVisible(g_settings.screen_StartX, g_settings.screen_EndX, g_settings.screen_StartY, g_settings.screen_EndY);
 
-	if(g_settings.video_Format==1)
+	if(g_settings.video_Format == CControldClient::VIDEOFORMAT_16_9)
 		m_viewer->SetAspectRatio(16.0/9);
-	else if(g_settings.video_Format==0)
+	else if(g_settings.video_Format == CControldClient::VIDEOFORMAT_AUTO)
 	{
 		CControldClient cdc;
 		cdc.setVideoFormat(CControldClient::VIDEOFORMAT_4_3);
@@ -740,7 +740,7 @@ void CPictureViewerGui::endView()
 std::string CPictureViewerGui::getPictureViewerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.78 $");
+	return imageinfo.getModulVersion("","$Revision: 1.79 $");
 }
 
 void CPictureViewerGui::showHelp()

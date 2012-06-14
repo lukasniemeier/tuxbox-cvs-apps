@@ -407,14 +407,14 @@ void CUpnpBrowserGui::selectDevice()
 	catch (std::runtime_error error)
 	{
 		delete scanBox;
-		ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, "info.raw");
+		ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 		return;
 	}
 	scanBox->hide();
 
 	if (!m_devices.size())
 	{
-		ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_UPNPBROWSER_NOSERVERS, CMessageBox::mbrBack, CMessageBox::mbBack, "info.raw");
+		ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_UPNPBROWSER_NOSERVERS, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 		delete scanBox;
 		return;
 	}
@@ -472,13 +472,13 @@ void CUpnpBrowserGui::selectDevice()
 			catch (std::runtime_error error)
 			{
 				delete scanBox;
-				ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, "info.raw");
+				ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 				return;
 			}
 			scanBox->hide();
 			if (!m_devices.size())
 			{
-				ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_UPNPBROWSER_NOSERVERS, CMessageBox::mbrBack, CMessageBox::mbBack, "info.raw");
+				ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_UPNPBROWSER_NOSERVERS, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 				delete scanBox;
 				return;
 			}
@@ -539,7 +539,7 @@ void CUpnpBrowserGui::playnext(void)
 		}
 		catch (std::runtime_error error)
 		{
-			ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, "info.raw");
+			ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 			m_folderplay = false;
 			return;
 		}
@@ -658,7 +658,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 			}
 			catch (std::runtime_error error)
 			{
-				ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, "info.raw");
+				ShowMsgUTF(LOCALE_MESSAGEBOX_INFO, error.what(), CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 				if (entries)
 					delete entries;
 				return endall;
@@ -817,9 +817,9 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 						viewer->SetScaling((CPictureViewer::ScalingMode)g_settings.picviewer_scaling);
 						viewer->SetVisible(g_settings.screen_StartX, g_settings.screen_EndX, g_settings.screen_StartY, g_settings.screen_EndY);
 
-						if(g_settings.video_Format==1)
+						if(g_settings.video_Format == CControldClient::VIDEOFORMAT_16_9)
 							viewer->SetAspectRatio(16.0/9);
-						else if(g_settings.video_Format==0)
+						else if(g_settings.video_Format == CControldClient::VIDEOFORMAT_AUTO)
 						{
 							CControldClient cdc;
 							cdc.setVideoFormat(CControldClient::VIDEOFORMAT_4_3);
@@ -962,19 +962,19 @@ void CUpnpBrowserGui::paintItemPos(std::vector<UPnPEntry> *entry, unsigned int p
 	if ((*entry)[pos].isdir)
 	{
 		info = "<DIR>";
-		fileicon = "folder.raw";
+		fileicon = NEUTRINO_ICON_FOLDER;
 	}
 	else
 	{
 		if (preferred != -1)
 		{
 			info = (*entry)[pos].resources[preferred].duration;
-			fileicon = "mp3.raw";
+			fileicon = NEUTRINO_ICON_MP3;
 		}
 		else
 		{
 			info = "(none)";
-			fileicon = "file.raw";
+			fileicon = NEUTRINO_ICON_FILE;
 		}
 	}
 

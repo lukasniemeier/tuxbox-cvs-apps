@@ -3603,7 +3603,7 @@ static void checkAspectRatio (int vdec, bool init)
 	if (!init && time(NULL) <= last_check + 5)
 		return;
 
-	if (g_settings.video_Format == 1 && g_currentac3) // Display format 16:9
+	if (g_settings.video_Format == CControldClient::VIDEOFORMAT_16_9 && g_currentac3)
 	{
 		// Workaround for 16:9/AC3/PAUSE/PLAY problem
 		// AVIA does reset on Jump/pause with Ac3 and 16:9 Display.It loose the display format information, which is set to default (4:3)
@@ -3614,7 +3614,7 @@ static void checkAspectRatio (int vdec, bool init)
 			perror("[movieplayer.cpp] VIDEO_GET_SIZE");
 		last_check = time(NULL);
 	}
-	else if (g_settings.video_Format == 0) //Display format auto
+	else if (g_settings.video_Format == CControldClient::VIDEOFORMAT_AUTO)
 	{
 		if(init)
 		{
@@ -3659,7 +3659,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.88 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.89 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
