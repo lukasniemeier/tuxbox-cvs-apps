@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.90 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: drive_setup.cpp,v 1.91 2012/06/15 19:30:09 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -723,7 +723,7 @@ void CDriveSetup::showHddSetupMain()
 			
 			string m_name = have_mmc_modul[i] ? mmc_modules[i]: mmc_modules[i] + " " + g_Locale->getText(LOCALE_DRIVE_SETUP_MMC_MODUL_NOT_INSTALLED);	
 			
-			fw_mmc_load_parameters[i] = new CMenuForwarderNonLocalized(mmc_modules[i].c_str(), have_mmc_modul[i], d_settings.drive_mmc_modul_parameter[i], input_mmc_parameters[i]);
+			fw_mmc_load_parameters[i] = new CMenuForwarderNonLocalized(m_name.c_str(), have_mmc_modul[i], d_settings.drive_mmc_modul_parameter[i], input_mmc_parameters[i]);
 		}
 
 		//prepare forwarder item: mmc parameters 
@@ -4604,7 +4604,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.90 $");
+	return imageinfo.getModulVersion("","$Revision: 1.91 $");
 }
 
 // returns text for initfile headers
