@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.91 2012/06/15 19:30:09 dbt Exp $
+	$Id: drive_setup.cpp,v 1.92 2012/06/15 19:30:16 dbt Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -819,7 +819,7 @@ void CDriveSetup::showHddSetupMain()
 		extsettings->addItem (sep_modules);		//separator modul
 		extsettings->addItem (fw_moduldir);		//select prefered modul directory
 		// -----------------------------------------
-		if (v_fs_item.size() > 0)			//separator format options
+		if (!v_fs_item.empty())			//separator format options
 			extsettings->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_FORMAT_OPTIONS));
 		for (uint i = 0; i<v_fs_item.size(); i++)	//format options
 			extsettings->addItem(v_fs_item[i]);
@@ -3989,7 +3989,7 @@ bool CDriveSetup::mkExports()
 	}
 
 	// write exports
-	if (v_export_entries.size() != 0)
+	if (!v_export_entries.empty())
 	{
 		ofstream str_exports(exports.c_str());
 		if (!str_exports) 
@@ -4604,7 +4604,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.91 $");
+	return imageinfo.getModulVersion("","$Revision: 1.92 $");
 }
 
 // returns text for initfile headers
