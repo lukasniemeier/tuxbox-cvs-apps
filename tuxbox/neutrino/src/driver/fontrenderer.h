@@ -34,23 +34,14 @@
 
 #include FT_CACHE_IMAGE_H
 #include FT_CACHE_SMALL_BITMAPS_H
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#endif
 
 #include "framebuffer.h"
-
 
 class FBFontRenderClass;
 class Font
 {
 	CFrameBuffer	*frameBuffer;
-#ifdef FT_NEW_CACHE_API
 	FTC_ImageTypeRec font;
-#else
-	FTC_Image_Desc	font;
-	FT_Face		face;
-#endif
 	FBFontRenderClass *renderer;
 	FT_Size		size;
 
@@ -74,11 +65,7 @@ class Font
 	int getRenderWidth(const char *        text, const bool utf8_encoded = false);
 	int getRenderWidth(const std::string & text, const bool utf8_encoded = false);
 	int getHeight(void);
-#ifdef FT_NEW_CACHE_API
 	int getSize(){return font.width;}
-#else
-	int getSize(){return font.font.pix_width;}
-#endif
 	int setSize(int isize);
 
 	Font(FBFontRenderClass *render, FTC_FaceID faceid, const int isize, const fontmodifier _stylemodifier);
@@ -101,11 +88,7 @@ class FBFontRenderClass
 		FTC_SBitCache	sbitsCache;	/* the glyph small bitmaps cache   */
 
 		FTC_FaceID getFaceID(const char * const family, const char * const style);
-#ifdef FT_NEW_CACHE_API
 		FT_Error getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit);
-#else
-		FT_Error getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit);
-#endif
 
 	public:
 		pthread_mutex_t     render_mutex;

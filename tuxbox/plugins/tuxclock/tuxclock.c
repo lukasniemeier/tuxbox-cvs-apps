@@ -278,7 +278,7 @@ int OpenFB(int fbdev)
       munmap(lfb, fix_screeninfo.smem_len);
       return 7;
    }
-   if ((error = FTC_Manager_Lookup_Face(manager, FONT, &face))) {
+   if ((error = FTC_Manager_LookupFace(manager, FONT, &face))) {
       FTC_Manager_Done(manager);
       FT_Done_FreeType(library);
       munmap(lfb, fix_screeninfo.smem_len);
@@ -287,11 +287,7 @@ int OpenFB(int fbdev)
    use_kerning = FT_HAS_KERNING(face);
    desc.font.face_id = FONT;
    // oder ifdef OLDFT
-#ifdef FT_NEW_CACHE_API
    desc.flags = FT_LOAD_MONOCHROME;
-#else
-   desc.image_type = ftc_image_mono;
-#endif
    return 0;                                                     // all initialized ok
 }
 
@@ -467,11 +463,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
       errorlog(12);
       return 0;
    }
-#ifdef FT_NEW_CACHE_API
    if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))) {
-#else
-   if ((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))) {
-#endif
       errorlog(13);
       return 0;
    }

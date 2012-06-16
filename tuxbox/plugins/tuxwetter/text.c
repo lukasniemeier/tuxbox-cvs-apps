@@ -1,5 +1,5 @@
 /*
- * $Id: text.c,v 1.5 2011/05/31 17:19:33 rhabarber1848 Exp $
+ * $Id: text.c,v 1.6 2012/06/16 14:27:28 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -58,11 +58,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 			return 0;
 		}
 
-#ifdef FT_NEW_CACHE_API
 		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
-#else
-		if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#endif
 		{
 //			printf("<FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
 			return 0;
@@ -217,17 +213,10 @@ void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int si
 
 		switch (size)
 		{
-#ifdef FT_NEW_CACHE_API
 			case SMALL: desc.width = desc.height = FSIZE_SMALL; break;
 			case MED:   desc.width = desc.height = FSIZE_MED; break;
 			case BIG:   desc.width = desc.height = FSIZE_BIG; break;
 			default:    desc.width = desc.height = size; break;
-#else
-			case SMALL: desc.font.pix_width = desc.font.pix_height = FSIZE_SMALL; break;
-			case MED:   desc.font.pix_width = desc.font.pix_height = FSIZE_MED; break;
-			case BIG:   desc.font.pix_width = desc.font.pix_height = FSIZE_BIG; break;
-			default:    desc.font.pix_width = desc.font.pix_height = size; break;
-#endif
 		}
 		
 	//set alignment

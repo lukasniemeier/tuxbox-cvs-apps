@@ -8,10 +8,6 @@
 #include FT_CACHE_SMALL_BITMAPS_H
 #include <vector>
 
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#endif
-
 #include <lib/gdi/fb.h>
 #include <lib/base/esize.h>
 #include <lib/base/epoint.h>
@@ -43,11 +39,7 @@ class fontRenderClass
 	FTC_SBitCache	 sbitsCache;				/* the glyph small bitmaps cache */
 
 	FTC_FaceID getFaceID(const eString &face);
-#ifdef FT_NEW_CACHE_API
 	FT_Error getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit);
-#else
-	FT_Error getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit);
-#endif
 	static fontRenderClass *instance;
 	void init_fontRenderClass();
 public:
@@ -87,9 +79,6 @@ class eLCD;
 class eTextPara
 {
 	Font *current_font, *replacement_font;
-#ifndef FT_NEW_CACHE_API
-	FT_Face current_face, replacement_face;
-#endif
 	int use_kerning;
 	int previous;
 	static eString replacement_facename;
@@ -109,15 +98,9 @@ class eTextPara
 	void calc_bbox();
 	void clear();
 public:
-#ifdef FT_NEW_CACHE_API
 	eTextPara(eRect area, ePoint start=ePoint(-1, -1))
 		: current_font(0), replacement_font(0),
 			area(area), cursor(start), maximum(0, 0), left(start.x()), refcnt(0), bboxValid(0)
-#else
-	eTextPara(eRect area, ePoint start=ePoint(-1, -1))
-		: current_font(0), replacement_font(0), current_face(0), replacement_face(0),
-			area(area), cursor(start), maximum(0, 0), left(start.x()), refcnt(0), bboxValid(0)
-#endif
 	{
 	}
 	~eTextPara();
@@ -155,11 +138,7 @@ public:
 class Font
 {
 public:
-#ifdef FT_NEW_CACHE_API
 	FTC_ImageTypeRec font;
-#else
-	FTC_Image_Desc font;
-#endif
 	fontRenderClass *renderer;
 	int ref;
 	FT_Error getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit);

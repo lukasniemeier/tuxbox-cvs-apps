@@ -787,11 +787,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 			return 0;
 		}
 
-#ifdef FT_NEW_CACHE_API
 		if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
-#else
-		if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#endif
 		{
 			printf("TuxMail <FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
 
@@ -884,27 +880,15 @@ void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layou
 
 		if(size == SMALL)
 		{
-#ifdef FT_NEW_CACHE_API
 			desc.width = desc.height = 24;
-#else
-			desc.font.pix_width = desc.font.pix_height = 24;
-#endif
 		}
 		else if(size == NORMAL)
 		{
-#ifdef FT_NEW_CACHE_API
 			desc.width = desc.height = 32;
-#else
-			desc.font.pix_width = desc.font.pix_height = 32;
-#endif
 		}
 		else
 		{
-#ifdef FT_NEW_CACHE_API
 			desc.width = desc.height = 40;
-#else
-			desc.font.pix_width = desc.font.pix_height = 40;
-#endif
 		}
 
 	// set alignment
@@ -2193,14 +2177,8 @@ void EditMailFile(char* filename, int account, int mailindex )
 						{
 							nEditPos = linelen;
 						}
-						
-#ifdef FT_NEW_CACHE_API
 						desc.width = desc.height = 32;
-#else
-						desc.font.pix_width = desc.font.pix_height = 32;
-#endif
 						x = 0;
-						
 						if( nEditPos )
 						{
 							strncpy(linepart, szInfo[i], nEditPos);
@@ -3752,7 +3730,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.55 $";
+	char cvs_revision[] = "$Revision: 1.56 $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;
@@ -3887,9 +3865,9 @@ void plugin_exec(PluginParam *par)
 			return;
 		}
 
-		if((error = FTC_Manager_Lookup_Face(manager, FONT, &face)))
+		if((error = FTC_Manager_LookupFace(manager, FONT, &face)))
 		{
-			printf("TuxMail <FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+			printf("TuxMail <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 
 			FTC_Manager_Done(manager);
 
@@ -3902,13 +3880,8 @@ void plugin_exec(PluginParam *par)
 
 		use_kerning = FT_HAS_KERNING(face);
 
-#ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
 		desc.flags = FT_LOAD_MONOCHROME;
-#else
-		desc.font.face_id = FONT;
-		desc.image_type = ftc_image_mono;
-#endif
 	// init backbuffer
 
 		if(!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))

@@ -280,11 +280,6 @@ int rcaltgrtable[] =
 // if font is not in usual place, we look here:
 #define FONT2 "/var/tuxbox/config/enigma/fonts/pakenham.ttf"
 
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
-#endif
-
 enum {LANG_INT,LANG_DE, LANG_IT, LANG_SV, LANG_PT};
 enum {RC_NORMAL,RC_EDIT};
 enum {LEFT, CENTER, RIGHT};
@@ -294,11 +289,7 @@ FT_Library		library;
 FTC_Manager		manager;
 FTC_SBitCache		cache;
 FTC_SBit		sbit;
-#ifdef FT_NEW_CACHE_API
 FTC_ImageTypeRec	desc;
-#else
-FTC_Image_Desc		desc;
-#endif
 FT_Face			face;
 FT_UInt			prev_glyphindex;
 FT_Bool			use_kerning;

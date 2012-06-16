@@ -1,5 +1,5 @@
 /*
- * $Id: input.h,v 1.6 2012/03/11 12:11:29 rhabarber1848 Exp $
+ * $Id: input.h,v 1.7 2012/06/16 14:27:28 rhabarber1848 Exp $
  *
  * input - d-box2 linux project
  *
@@ -40,12 +40,6 @@
 #include FT_FREETYPE_H
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
-#endif
-
-
 #include "color.h"
 //freetype stuff
 
@@ -60,11 +54,7 @@ FT_Library		library;
 FTC_Manager		manager;
 FTC_SBitCache		cache;
 FTC_SBit		sbit;
-#ifdef FT_NEW_CACHE_API
 FTC_ImageTypeRec	desc;
-#else
-FTC_Image_Desc		desc;
-#endif
 FT_Face			face;
 FT_UInt			prev_glyphindex;
 FT_Bool			use_kerning;

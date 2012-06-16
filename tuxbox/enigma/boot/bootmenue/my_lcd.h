@@ -13,10 +13,6 @@
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
 #define FONT "/share/fonts/pakenham.ttf"
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
-#endif
 
 typedef unsigned char raw_display_t[LCD_ROWS*8][LCD_COLS];
 
@@ -27,11 +23,7 @@ class CLCDDisplay
 	FTC_Manager		manager;
 	FTC_SBitCache		cache;
 	FTC_SBit		sbit;
-#ifdef FT_NEW_CACHE_API
 	FTC_ImageTypeRec	desc;
-#else
-	FTC_Image_Desc		desc;
-#endif
 	FT_Face			face;
 	FT_UInt			prev_glyphindex;
 	int use_kerning;

@@ -16,10 +16,6 @@
 #include FT_FREETYPE_H
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#define FTC_Manager_Lookup_Face FTC_Manager_LookupFace
-#endif
 
 extern "C"
 {
@@ -219,11 +215,7 @@ struct fb_cmap colormap = {0, 6, rd2, gn2, bl2, tr2};
 FT_Library	library = 0;
 FTC_Manager	manager = 0;
 FTC_SBitCache	cache;
-#ifdef FT_NEW_CACHE_API
 FTC_ImageTypeRec desc;
-#else
-FTC_Image_Desc	desc;
-#endif
 FT_Face		face;
 FT_UInt		prev_glyphindex;
 FT_Bool		use_kerning;
@@ -900,11 +892,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 	    return FAILURE;
 	}
 
-#ifdef FT_NEW_CACHE_API
 	if(FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))
-#else
-	if(FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))
-#endif
 	{
 	    return FAILURE;
 	}
@@ -2235,19 +2223,15 @@ void plugin_exec(PluginParam *Parameter)
 	    return;
 	}
 
-	if(FTC_Manager_Lookup_Face(manager, (char*)FONT, &face))
+	if(FTC_Manager_LookupFace(manager, (char*)FONT, &face))
 	{
-	    Log2File("FTC_Manager_Lookup_Face() failed\n");
+	    Log2File("FTC_Manager_LookupFace() failed\n");
 
 	    return;
 	}
 
 	desc.font.face_id = (char*)FONT;
-#ifdef FT_NEW_CACHE_API
 	desc.flags = FT_LOAD_MONOCHROME;
-#else
-	desc.image_type = ftc_image_mono;
-#endif
 
 	use_kerning = FALSE;//FT_HAS_KERNING(face);
 

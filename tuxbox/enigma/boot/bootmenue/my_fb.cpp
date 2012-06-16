@@ -150,9 +150,9 @@ fbClass::fbClass()
 		munmap(lfb, available);
 	}
 
-	if((FTC_Manager_Lookup_Face(manager, (char*)FONT, &face)))
+	if((FTC_Manager_LookupFace(manager, (char*)FONT, &face)))
 	{
-		printf("[FONT] <FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+		printf("[FONT] <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 		FTC_Manager_Done(manager);
 		FT_Done_FreeType(library);
 		munmap(lfb, available);
@@ -160,13 +160,8 @@ fbClass::fbClass()
 
 	use_kerning = FT_HAS_KERNING(face);
 
-#ifdef FT_NEW_CACHE_API
 	desc.face_id = (char*)FONT;
 	desc.flags = FT_LOAD_MONOCHROME;
-#else
-	desc.font.face_id = (char*)FONT;
-	desc.image_type = ftc_image_mono;
-#endif
 #endif//USEFREETYPEFB
 
 	showConsole(1);
@@ -477,11 +472,7 @@ void fbClass::RenderString(std::string word, int sx, int sy, int maxwidth, int l
 	int stringlen, ex, charwidth;
 	unsigned char *string = ((unsigned char*)word.c_str());
 
-#ifdef FT_NEW_CACHE_API
 	desc.width = desc.height = size;
-#else
-	desc.font.pix_width = desc.font.pix_height = size;
-#endif
 
 	if(layout != LEFT)
 	{
@@ -530,11 +521,7 @@ int fbClass::RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int r, int
 		printf("TuxMail <FT_Get_Char_Index for Char \"%c\" failed: \"undefined character code\">\n", (int)currentchar);return 0;
 	}
 
-#ifdef FT_NEW_CACHE_API
 	if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
-#else
-	if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#endif
 	{
 		printf("TuxMail <FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);return 0;
 	}

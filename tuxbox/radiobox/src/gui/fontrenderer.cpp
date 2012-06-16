@@ -141,17 +141,10 @@ FTC_FaceID FBFontRenderClass::getFaceID(const char * const family, const char * 
 	return 0;
 }
 
-#ifdef FT_NEW_CACHE_API
 FT_Error FBFontRenderClass::getGlyphBitmap(FTC_ImageType *font, FT_ULong glyph_index, FTC_SBit *sbit)
 {
 	return FTC_SBitCache_Lookup(sbitsCache, font, glyph_index, sbit, NULL);
 }
-#else
-FT_Error FBFontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit)
-{
-	return FTC_SBit_Cache_Lookup(sbitsCache, font, glyph_index, sbit);
-}
-#endif
 
 const char * const FBFontRenderClass::AddFont(const char * const filename, const bool make_italics)
 {

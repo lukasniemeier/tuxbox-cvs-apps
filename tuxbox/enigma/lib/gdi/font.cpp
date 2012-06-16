@@ -32,11 +32,7 @@ fontRenderClass *fontRenderClass::instance;
 static pthread_mutex_t ftlock = 
 	PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;   // RECURSIVE
 
-#ifdef FT_NEW_CACHE_API
 static FTC_ImageType cache_current_font=0;
-#else
-static FTC_Font cache_current_font=0;
-#endif
 
 struct fntColorCacheKey
 {
@@ -115,17 +111,10 @@ FTC_FaceID fontRenderClass::getFaceID(const eString &face)
 	return 0;
 }
 
-#ifdef FT_NEW_CACHE_API
 FT_Error fontRenderClass::getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit) {
 	FT_Error res=FTC_SBitCache_Lookup(sbitsCache, font, glyph_index, sbit, NULL);
 	return res;
 }
-#else
-FT_Error fontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit) {
-	FT_Error res=FTC_SBit_Cache_Lookup(sbitsCache, font, glyph_index, sbit);
-	return res;
-}
-#endif
 
 eString fontRenderClass::AddFont(const eString &filename, const eString &name, int scale)
 {
@@ -206,29 +195,19 @@ float fontRenderClass::getLineHeight(const gFont& font)
 	if (!fnt)
 		return 0;
 	singleLock s(ftlock);
-#ifdef FT_NEW_CACHE_API
 	FTC_ScalerRec scaler;
 	scaler.face_id = fnt->font.face_id;
 	scaler.width   = fnt->font.width;
 	scaler.height  = fnt->font.height;
 	scaler.pixel   = true;
 	if (FTC_Manager_LookupSize(cacheManager, &scaler, &fnt->size)<0)
-#else
-	FT_Face current_face;
-	if (FTC_Manager_Lookup_Size(cacheManager, &fnt->font.font, &current_face, &fnt->size)<0)
-#endif
 	{
 		delete fnt;
 		eDebug("FTC_Manager_Lookup_Size failed!");
 		return 0;
 	}
-#ifdef FT_NEW_CACHE_API
 	int linegap=fnt->size->metrics.height-(fnt->size->metrics.ascender+fnt->size->metrics.descender);
 	float height=(fnt->size->metrics.ascender+fnt->size->metrics.descender+linegap/2.0)/64;
-#else
-	int linegap=current_face->size->metrics.height-(current_face->size->metrics.ascender+current_face->size->metrics.descender);
-	float height=(current_face->size->metrics.ascender+current_face->size->metrics.descender+linegap/2.0)/64;
-#endif
 	delete fnt;
 	return height;
 }
@@ -259,17 +238,10 @@ Font *fontRenderClass::getFont(const eString &face, int size, int tabwidth)
 Font::Font(fontRenderClass *render, FTC_FaceID faceid, int isize, int tw)
 	:renderer(render), ref(0), tabwidth(tw),  height(isize)
 {
-#ifdef FT_NEW_CACHE_API
 	font.face_id = faceid;
 	font.width = isize;
 	font.height = isize;
 	font.flags = FT_LOAD_DEFAULT;
-#else
-	font.font.face_id=faceid;
-	font.font.pix_width	= isize;
-	font.font.pix_height = isize;
-	font.image_type = ftc_image_grays;
-#endif
 	if (tabwidth==-1)
 		tabwidth=8*isize;
 //	font.image_type |= ftc_image_flag_autohinted;
@@ -413,13 +385,8 @@ void eTextPara::newLine(int flags)
 		maximum.setWidth(cursor.x());
 	cursor.setX(left);
 	previous=0;
-#ifdef FT_NEW_CACHE_API
 	int linegap=current_font->size->metrics.height-(current_font->size->metrics.ascender+current_font->size->metrics.descender);
 	cursor+=ePoint(0, (current_font->size->metrics.ascender+current_font->size->metrics.descender+linegap*1/2)>>6);
-#else
-	int linegap=current_face->size->metrics.height-(current_face->size->metrics.ascender+current_face->size->metrics.descender);
-	cursor+=ePoint(0, (current_face->size->metrics.ascender+current_face->size->metrics.descender+linegap*1/2)>>6);
-#endif
 	if (maximum.height()<cursor.y())
 		maximum.setHeight(cursor.y());
 	previous=0;
@@ -480,25 +447,17 @@ void eTextPara::setFont(Font *fnt, Font *replacement)
 	replacement_font=replacement;
 	singleLock s(ftlock);
 
-#ifdef FT_NEW_CACHE_API
 	FTC_ScalerRec scaler;
-#endif
 
 			// we ask for replacment_font first becauseof the cache
 	if (replacement_font)
 	{
-#ifdef FT_NEW_CACHE_API
 		scaler.face_id = replacement_font->font.face_id;
 		scaler.width   = replacement_font->font.width;
 		scaler.height  = replacement_font->font.height;
 		scaler.pixel   = true;
 		if (FTC_Manager_LookupSize(fontRenderClass::instance->cacheManager,
 				&scaler, &replacement_font->size)<0)
-#else
-		if (FTC_Manager_Lookup_Size(fontRenderClass::instance->cacheManager, 
-				&replacement_font->font.font, &replacement_face, 
-				&replacement_font->size)<0)
-#endif
 		{
 			eDebug("FTC_Manager_Lookup_Size failed!");
 			return;
@@ -506,30 +465,20 @@ void eTextPara::setFont(Font *fnt, Font *replacement)
 	}
 	if (current_font)
 	{
-#ifdef FT_NEW_CACHE_API
 		scaler.face_id = current_font->font.face_id;
 		scaler.width   = current_font->font.width;
 		scaler.height  = current_font->font.height;
 		scaler.pixel   = true;
 
 		if (FTC_Manager_LookupSize(fontRenderClass::instance->cacheManager, &scaler, &current_font->size)<0)
-#else
-		if (FTC_Manager_Lookup_Size(fontRenderClass::instance->cacheManager, &current_font->font.font, &current_face, &current_font->size)<0)
-#endif
 		{
 			eDebug("FTC_Manager_Lookup_Size failed!");
 			return;
 		}
 	}
-#ifdef FT_NEW_CACHE_API
 	cache_current_font=&current_font->font;
 	previous=0;
 	use_kerning=FT_HAS_KERNING(current_font->size->face);
-#else
-	cache_current_font=&current_font->font.font;
-	previous=0;
-	use_kerning=FT_HAS_KERNING(current_face);
-#endif
 }
 
 void
@@ -547,15 +496,10 @@ int eTextPara::renderString(const eString &string, int rflags)
 		
 	if (cursor.y()==-1)
 	{
-#ifdef FT_NEW_CACHE_API
 		cursor=ePoint(area.x(), area.y()+(current_font->size->metrics.ascender>>6));
-#else
-		cursor=ePoint(area.x(), area.y()+(current_face->size->metrics.ascender>>6));
-#endif
 		left=cursor.x();
 	}
 		
-#ifdef FT_NEW_CACHE_API
 	FTC_ScalerRec scaler;
 	if (&current_font->font != cache_current_font)
 	{
@@ -564,20 +508,11 @@ int eTextPara::renderString(const eString &string, int rflags)
 		scaler.height  = current_font->font.height;
 		scaler.pixel   = true;
 		if (FTC_Manager_LookupSize(fontRenderClass::instance->cacheManager, &scaler, &current_font->size)<0)
-#else
-	if (&current_font->font.font != cache_current_font)
-	{
-		if (FTC_Manager_Lookup_Size(fontRenderClass::instance->cacheManager, &current_font->font.font, &current_face, &current_font->size)<0)
-#endif
 		{
 			eDebug("FTC_Manager_Lookup_Size failed!");
 			return -1;
 		}
-#ifdef FT_NEW_CACHE_API
 		cache_current_font=&current_font->font;
-#else
-		cache_current_font=&current_font->font.font;
-#endif
 	}
 	
 	std::vector<unsigned long> uc_string, uc_visual;
@@ -703,37 +638,18 @@ nprint:	isprintable=0;
 		if (isprintable)
 		{
 			FT_UInt index;
-
-#ifdef FT_NEW_CACHE_API
 			index=(rflags&RS_DIRECT)? *i : FT_Get_Char_Index(current_font->size->face, *i);
-#else
-			index=(rflags&RS_DIRECT)? *i : FT_Get_Char_Index(current_face, *i);
-#endif
-
 			if (!index)
 			{
-#ifdef FT_NEW_CACHE_API
 				if (replacement_font)
 					index=(rflags&RS_DIRECT)? *i : FT_Get_Char_Index(replacement_font->size->face, *i);
-#else
-				if (replacement_face)
-					index=(rflags&RS_DIRECT)? *i : FT_Get_Char_Index(replacement_face, *i);
-#endif
 
 				if (!index)
 					eDebug("unicode %d ('%c') not present", *i, *i);
 				else
-#ifdef FT_NEW_CACHE_API
 					appendGlyph(replacement_font, replacement_font->size->face, index, flags, rflags);
-#else
-					appendGlyph(replacement_font, replacement_face, index, flags, rflags);
-#endif
 			} else
-#ifdef FT_NEW_CACHE_API
 				appendGlyph(current_font, current_font->size->face, index, flags, rflags);
-#else
-				appendGlyph(current_font, current_face, index, flags, rflags);
-#endif
 		}
 	}
 	bboxValid=false;
@@ -752,7 +668,6 @@ void eTextPara::blit(gPixmapDC &dc, const ePoint &offset, const gRGB &background
 	if (!current_font)
 		return;
 
-#ifdef FT_NEW_CACHE_API
 	FTC_ScalerRec scaler;
 	if (&current_font->font != cache_current_font)
 	{
@@ -761,20 +676,11 @@ void eTextPara::blit(gPixmapDC &dc, const ePoint &offset, const gRGB &background
 		scaler.height  = current_font->font.height;
 		scaler.pixel   = true;
 		if (FTC_Manager_LookupSize(fontRenderClass::instance->cacheManager, &scaler, &current_font->size)<0)
-#else
-	if (&current_font->font.font != cache_current_font)
-	{
-		if (FTC_Manager_Lookup_Size(fontRenderClass::instance->cacheManager, &current_font->font.font, &current_face, &current_font->size)<0)
-#endif
 		{
 			eDebug("FTC_Manager_Lookup_Size failed!");
 			return;
 		}
-#ifdef FT_NEW_CACHE_API
 		cache_current_font=&current_font->font;
-#else
-		cache_current_font=&current_font->font.font;
-#endif
 	}
 
 	gPixmap &target=dc.getPixmap();

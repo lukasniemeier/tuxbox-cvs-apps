@@ -1,5 +1,5 @@
 /*
- * $Id: blockads.c,v 1.5 2011/05/31 17:19:30 rhabarber1848 Exp $
+ * $Id: blockads.c,v 1.6 2012/06/16 14:27:26 rhabarber1848 Exp $
  *
  * blockads - d-box2 linux project
  *
@@ -317,9 +317,9 @@ FILE *fh1,*fh2;
 			return -1;
 		}
 
-		if((error = FTC_Manager_Lookup_Face(manager, FONT, &face)))
+		if((error = FTC_Manager_LookupFace(manager, FONT, &face)))
 		{
-			printf("Tuxwetter <FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+			printf("Tuxwetter <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 			FTC_Manager_Done(manager);
 			FT_Done_FreeType(library);
 			munmap(lfb, fix_screeninfo.smem_len);
@@ -328,13 +328,8 @@ FILE *fh1,*fh2;
 
 		use_kerning = FT_HAS_KERNING(face);
 
-#ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
 		desc.flags = FT_LOAD_MONOCHROME;
-#else
-		desc.font.face_id = FONT;
-		desc.image_type = ftc_image_mono;
-#endif
 	//init backbuffer
 		if(!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
 		{

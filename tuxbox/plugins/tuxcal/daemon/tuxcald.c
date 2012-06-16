@@ -382,9 +382,9 @@ int OpenFB(void)
 		return 0;
 	}
 
-	if ((error = FTC_Manager_Lookup_Face(manager, FONT, &face)))
+	if ((error = FTC_Manager_LookupFace(manager, FONT, &face)))
 	{
-		slog ? syslog(LOG_DAEMON | LOG_INFO, "FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X", error): printf("TuxCalD <FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+		slog ? syslog(LOG_DAEMON | LOG_INFO, "FTC_Manager_LookupFace failed with Errorcode 0x%.2X", error): printf("TuxCalD <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 		FTC_Manager_Done(manager);
 		FT_Done_FreeType(library);
 		munmap(lfb, fix_screeninfo.smem_len);
@@ -394,13 +394,8 @@ int OpenFB(void)
 
 	use_kerning = FT_HAS_KERNING(face);
 
-#ifdef FT_NEW_CACHE_API
 	desc.face_id = FONT;
 	desc.flags = FT_LOAD_MONOCHROME;
-#else
-	desc.font.face_id = FONT;
-	desc.image_type = ftc_image_mono;
-#endif
 	// init backbuffer
 	if (!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
 	{
@@ -520,11 +515,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 		return 0;
 	}
 
-#ifdef FT_NEW_CACHE_API
 	if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
-#else
-	if ((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#endif
 	{
 		printf("TuxCal <FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
 		return 0;
@@ -612,27 +603,15 @@ void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layou
 	// set size
 	if(size == SMALL)
 	{
-#ifdef FT_NEW_CACHE_API
 		desc.width = desc.height = FONTSIZE_SMALL;
-#else
-		desc.font.pix_width = desc.font.pix_height = FONTSIZE_SMALL;
-#endif
 	}
 	else if (size == NORMAL)
 	{
-#ifdef FT_NEW_CACHE_API
 		desc.width = desc.height = FONTSIZE_NORMAL;
-#else
-		desc.font.pix_width = desc.font.pix_height = FONTSIZE_NORMAL;
-#endif
 	}
 	else
 	{
-#ifdef FT_NEW_CACHE_API
 		desc.width = desc.height = FONTSIZE_BIG;
-#else
-		desc.font.pix_width = desc.font.pix_height = FONTSIZE_BIG;
-#endif
 	}
 
 	// set alignment
@@ -643,11 +622,7 @@ void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layou
 		switch(layout)
 		{
 			case FIXEDCENTER:
-#ifdef FT_NEW_CACHE_API
 				stringlen = (desc.width/2) * strlen(string);
-#else
-				stringlen = (desc.font.pix_width/2) * strlen(string);
-#endif
 
 			case CENTER:
 			{
@@ -658,11 +633,8 @@ void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layou
 			} break;
 
 			case FIXEDRIGHT:
-#ifdef FT_NEW_CACHE_API
 				stringlen = (desc.width/2) * strlen(string);
-#else
-				stringlen = (desc.font.pix_width/2) * strlen(string);
-#endif
+
 			case RIGHT:
 			{
 				if(stringlen < maxwidth)
@@ -684,11 +656,7 @@ void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layou
 		if ((charwidth = RenderChar(*string, sx, sy, ex, color)) == -1)  return; // string > maxwidth 
 
 		if ((layout == FIXEDLEFT) || (layout == FIXEDCENTER) || (layout == FIXEDRIGHT))
-#ifdef FT_NEW_CACHE_API
 			sx += (desc.width/2);
-#else
-			sx += (desc.font.pix_width/2);
-#endif
 		else 
 			sx += charwidth;
 		string++;
@@ -2134,7 +2102,7 @@ void SigHandler(int signal)
  ******************************************************************************/
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.18 $";
+	char cvs_revision[] = "$Revision: 1.19 $";
 	int param, nodelay = 0;
 	pthread_t thread_id;
 	void *thread_result = 0;

@@ -1,5 +1,5 @@
 /*
-        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.cpp,v 1.21 2011/05/31 17:19:30 rhabarber1848 Exp $        
+        $Header: /cvs/tuxbox/apps/tuxbox/libs/liblcddisplay/fontrenderer.cpp,v 1.22 2012/06/16 14:27:25 rhabarber1848 Exp $        
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -129,15 +129,9 @@ std::string LcdFontRenderClass::getFamily(const char *const filename) const
 	return "";
 }
 
-#ifdef FT_NEW_CACHE_API
 FT_Error LcdFontRenderClass::getGlyphBitmap(FTC_ImageType font, FT_ULong glyph_index, FTC_SBit *sbit) {
 	return FTC_SBitCache_Lookup(sbitsCache, font, glyph_index, sbit, NULL);
 }
-#else
-FT_Error LcdFontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_ULong glyph_index, FTC_SBit *sbit) {
-	return FTC_SBit_Cache_Lookup(sbitsCache, font, glyph_index, sbit);
-}
-#endif
 
 const char * LcdFontRenderClass::AddFont(const char * const filename)
 {
@@ -183,18 +177,10 @@ LcdFont::LcdFont(CLCDDisplay * fb, LcdFontRenderClass *render, FTC_FaceID faceid
 {
 	framebuffer=fb;
 	renderer=render;
-#ifdef FT_NEW_CACHE_API
 	font.face_id=faceid;
 	font.width  = isize;
 	font.height = isize;
 	font.flags  = FT_LOAD_TARGET_MONO;
-#else
-	font.font.face_id=faceid;
-	font.font.pix_width  = isize;
-	font.font.pix_height = isize;
-	font.image_type = ftc_image_mono;
-	font.image_type |= ftc_image_flag_autohinted;
-#endif
 }
 
 FT_Error LcdFont::getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit)
@@ -252,7 +238,6 @@ void LcdFont::RenderString(int x, int y, const int width, const char * text, con
 	int err;
 	pthread_mutex_lock(&renderer->render_mutex);
 
-#ifdef FT_NEW_CACHE_API
 	FTC_ScalerRec scaler;
 
 	scaler.face_id = font.face_id;
@@ -261,9 +246,6 @@ void LcdFont::RenderString(int x, int y, const int width, const char * text, con
 	scaler.pixel   = true;
 
 	if ((err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size)) != 0)
-#else
-	if ((err=FTC_Manager_Lookup_Size(renderer->cacheManager, &font.font, &face, &size))!=0)
-#endif
 	{ 
 		printf("FTC_Manager_Lookup_Size failed! (%d)\n",err);
 		pthread_mutex_unlock(&renderer->render_mutex);
@@ -292,11 +274,7 @@ void LcdFont::RenderString(int x, int y, const int width, const char * text, con
 		if (unicode_value == -1)
 			break;
 
-#ifdef FT_NEW_CACHE_API
 		int index = FT_Get_Char_Index(size->face, unicode_value);
-#else
-		int index = FT_Get_Char_Index(face, unicode_value);
-#endif
 
 		if (!index)
 		  continue;
@@ -337,7 +315,6 @@ int LcdFont::getRenderWidth(const char * text, const bool utf8_encoded)
 {
 	pthread_mutex_lock(&renderer->render_mutex);
 	FT_Error err;
-#ifdef FT_NEW_CACHE_API
 	FTC_ScalerRec scaler;
 	scaler.face_id = font.face_id;
 	scaler.width   = font.width;
@@ -345,9 +322,6 @@ int LcdFont::getRenderWidth(const char * text, const bool utf8_encoded)
 	scaler.pixel   = true;
 
 	err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
-#else
-	err = FTC_Manager_Lookup_Size(renderer->cacheManager, &font.font, &face, &size);
-#endif
 	if (err != 0)
 	{ 
 		printf("FTC_Manager_Lookup_Size failed! (0x%x)\n", err);
@@ -364,11 +338,7 @@ int LcdFont::getRenderWidth(const char * text, const bool utf8_encoded)
 		if (unicode_value == -1)
 			break;
 
-#ifdef FT_NEW_CACHE_API
 		int index = FT_Get_Char_Index(size->face, unicode_value);
-#else
-		int index=FT_Get_Char_Index(face, unicode_value);
-#endif
 
 		if (!index)
 			continue;

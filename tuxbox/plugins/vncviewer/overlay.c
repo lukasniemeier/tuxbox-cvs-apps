@@ -22,11 +22,7 @@ Pixel* ico_keybd_shifted = NULL;
 static	FT_Library		library = NULL;
 static	FTC_Manager		manager = NULL;
 static	FTC_SBitCache		cache;
-#ifdef FT_NEW_CACHE_API
 static	FTC_ImageTypeRec	desc;
-#else
-static	FTC_Image_Desc		desc;
-#endif
 static	FT_Face			face;
 
 extern int sx,ex;
@@ -238,11 +234,7 @@ int RenderChar(Pixel *dest,FT_ULong currentchar, int sx, int sy, int ex, int col
 		return 0;
 	}
 
-#ifdef FT_NEW_CACHE_API
 	if((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL)))
-#else
-	if((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit)))
-#endif
 	{
 		printf("<FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
 		return 0;
@@ -308,11 +300,7 @@ void RenderString(int ovwidth,Pixel *dest,const char *string, int sx, int sy, in
 {
 	if (strlen(string) == 0) return;
 	int stringlen, ex, charwidth,i,j;
-#ifdef FT_NEW_CACHE_API
 	desc.width = desc.height = ROW_HEIGHT;
-#else
-	desc.font.pix_width = desc.font.pix_height = ROW_HEIGHT;
-#endif
 	//set alignment
 
 	stringlen = GetStringLen(string);
@@ -1265,28 +1253,21 @@ selectServer(char* szServerNr, int rc_fd)
 		return 0;
 	}
 
-	if((error = FTC_Manager_Lookup_Face(manager, FONT, &face)))
+	if((error = FTC_Manager_LookupFace(manager, FONT, &face)))
 	{
-		if((error = FTC_Manager_Lookup_Face(manager, FONT2, &face)))
+		if((error = FTC_Manager_LookupFace(manager, FONT2, &face)))
 		{
-			printf("<FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+			printf("<FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 			return 0;
 		}
 		else
-#ifdef FT_NEW_CACHE_API
 			desc.face_id = FONT2;
-#else
-			desc.font.face_id = FONT2;
-#endif
-}
+	}
 	else
-#ifdef FT_NEW_CACHE_API
+	{
 		desc.face_id = FONT;
-	desc.flags = FT_LOAD_MONOCHROME;
-#else
-		desc.font.face_id = FONT;
-	desc.image_type = ftc_image_mono;
-#endif
+		desc.flags = FT_LOAD_MONOCHROME;
+	}
     char szServers[MAXSERVERS][256];
     char szServerNrs[MAXSERVERS][10];
     char line[256], *p;

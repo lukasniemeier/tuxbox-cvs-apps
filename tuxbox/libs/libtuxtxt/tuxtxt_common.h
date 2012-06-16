@@ -4022,11 +4022,7 @@ void tuxtxt_setfontwidth(tstRenderInfo* renderinfo,int newwidth)
 		int i;
 		renderinfo->fontwidth = newwidth;
 		if (renderinfo->usettf)
-#ifdef FT_NEW_CACHE_API
 			renderinfo->typettf.width  = (FT_UShort) renderinfo->fontwidth * renderinfo->TTFWidthFactor16 / 16;
-#else
-			renderinfo->typettf.font.pix_width  = (FT_UShort) renderinfo->fontwidth * renderinfo->TTFWidthFactor16 / 16;
-#endif
 		else
 		{
 			if (newwidth < 11)
@@ -4035,11 +4031,7 @@ void tuxtxt_setfontwidth(tstRenderInfo* renderinfo,int newwidth)
 				newwidth = 22;
 			else
 				newwidth = 23;
-#ifdef FT_NEW_CACHE_API
 			renderinfo->typettf.width  = renderinfo->typettf.height = (FT_UShort) newwidth;
-#else
-			renderinfo->typettf.font.pix_width  = renderinfo->typettf.font.pix_height = (FT_UShort) newwidth;
-#endif
 		}
 		for (i = 0; i <= 12; i++)
 			renderinfo->axdrcs[i] = (renderinfo->fontwidth * i + 6) / 12;
@@ -4127,11 +4119,7 @@ void tuxtxt_RenderCharIntern(tstRenderInfo* renderinfo,int Char, tstPageAttr *At
 		return;
 	}
 
-#ifdef FT_NEW_CACHE_API
 	if ((error = FTC_SBitCache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &renderinfo->sbit, NULL)) != 0)
-#else
-	if ((error = FTC_SBit_Cache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &renderinfo->sbit)) != 0)
-#endif
 	{
 #if TUXTXT_DEBUG
 		printf("TuxTxt <FTC_SBitCache_Lookup: 0x%x> c%x a%x g%x w%d h%d x%d y%d\n",
@@ -4162,11 +4150,7 @@ void tuxtxt_RenderCharIntern(tstRenderInfo* renderinfo,int Char, tstPageAttr *At
 			Char = G2table[0][0x20+ Attribute->diacrit];
 		if ((glyph = FT_Get_Char_Index(renderinfo->face, Char)))
 		{
-#ifdef FT_NEW_CACHE_API
 			if ((error = FTC_SBitCache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &sbit_diacrit, NULL)) == 0)
-#else
-			if ((error = FTC_SBit_Cache_Lookup(renderinfo->cache, &renderinfo->typettf, glyph, &sbit_diacrit)) == 0)
-#endif
 			{
 					sbitbuffer = localbuffer;
 					memcpy(sbitbuffer,renderinfo->sbit->buffer,renderinfo->sbit->pitch*renderinfo->sbit->height);
@@ -5352,43 +5336,23 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
 
 	if (renderinfo->usettf)
 	{
-#ifdef FT_NEW_CACHE_API
 		renderinfo->typettf.face_id = (FTC_FaceID) TUXTXTTTFVAR;
 		renderinfo->typettf.height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
-#else
-		renderinfo->typettf.font.face_id = (FTC_FaceID) TUXTXTTTFVAR;
-		renderinfo->typettf.font.pix_height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
-#endif
 	}
 	else
 	{
-#ifdef FT_NEW_CACHE_API
 		renderinfo->typettf.face_id = (FTC_FaceID) TUXTXTOTBVAR;
 		renderinfo->typettf.width  = (FT_UShort) 23;
 		renderinfo->typettf.height = (FT_UShort) 23;
-#else
-		renderinfo->typettf.font.face_id = (FTC_FaceID) TUXTXTOTBVAR;
-		renderinfo->typettf.font.pix_width  = (FT_UShort) 23;
-		renderinfo->typettf.font.pix_height = (FT_UShort) 23;
-#endif
 	}
 
-#ifdef FT_NEW_CACHE_API
 	renderinfo->typettf.flags = FT_LOAD_MONOCHROME;
 	if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
 	{
 		renderinfo->typettf.face_id = (renderinfo->usettf ? (FTC_FaceID) TUXTXTTTF : TUXTXTOTB);
 		if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
 		{
-#else
-	renderinfo->typettf.image_type = ftc_image_mono;
-	if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
-	{
-		renderinfo->typettf.font.face_id = (renderinfo->usettf ? (FTC_FaceID) TUXTXTTTF : TUXTXTOTB);
-		if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
-		{
-#endif
-			printf("TuxTxt <FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+			printf("TuxTxt <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 			FTC_Manager_Done(renderinfo->manager);
 			FT_Done_FreeType(renderinfo->library);
 			return 0;

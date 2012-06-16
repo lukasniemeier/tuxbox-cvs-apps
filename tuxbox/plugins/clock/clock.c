@@ -1,5 +1,5 @@
 /*
- * $Id: clock.c,v 1.6 2011/05/31 17:19:30 rhabarber1848 Exp $
+ * $Id: clock.c,v 1.7 2012/06/16 14:27:26 rhabarber1848 Exp $
  *
  * Clock / SSaver - d-box2 linux project
  *
@@ -379,9 +379,9 @@ int main (int argc, char **argv)
 			return -1;
 		}
 
-		if((error = FTC_Manager_Lookup_Face(manager, FONT, &face)))
+		if((error = FTC_Manager_LookupFace(manager, FONT, &face)))
 		{
-			printf("Clock / SSaver <FTC_Manager_Lookup_Face failed with Errorcode 0x%.2X>\n", error);
+			printf("Clock / SSaver <FTC_Manager_LookupFace failed with Errorcode 0x%.2X>\n", error);
 			FTC_Manager_Done(manager);
 			FT_Done_FreeType(library);
 			munmap(lfb, fix_screeninfo.smem_len);
@@ -390,13 +390,8 @@ int main (int argc, char **argv)
 
 		use_kerning = FT_HAS_KERNING(face);
 
-#ifdef FT_NEW_CACHE_API
 		desc.face_id = FONT;
 		desc.flags = FT_LOAD_MONOCHROME;
-#else
-		desc.font.face_id = FONT;
-		desc.image_type = ftc_image_mono;
-#endif
 
 		//init backbuffer
 

@@ -54,7 +54,7 @@
     05: "FT_Init_FreeType failed"
     06: "FTC_Manager_New failed"
     07: "FTC_SBitCache_New failed"
-    08: "FTC_Manager_Lookup_Face failed"
+    08: "FTC_Manager_LookupFace failed"
     09: "config not found, using defaults"
     10: "config file write error"
     11: "daemon is aborted"
@@ -363,7 +363,7 @@ int OpenFB(void)
       close(fbdev);
       return 7;
    }
-   if ((error = FTC_Manager_Lookup_Face(manager, FONT, &face))) {
+   if ((error = FTC_Manager_LookupFace(manager, FONT, &face))) {
       FTC_Manager_Done(manager);
       FT_Done_FreeType(library);
       munmap(lfb, fix_screeninfo.smem_len);
@@ -372,11 +372,7 @@ int OpenFB(void)
    }
    use_kerning = FT_HAS_KERNING(face);
    desc.font.face_id = FONT;
-#ifdef FT_NEW_CACHE_API
    desc.flags = FT_LOAD_MONOCHROME;
-#else
-   desc.image_type = ftc_image_mono;
-#endif
    if ((fb_color_set==-1)||(char_color=-1)||(char_bgcolor=-1)) {
       // search for black and white in FB colortab (same function FindColor() in tuxcal)
       // Definition and code from http://tuxbox-forum.dreambox-fan.de/forum/viewtopic.php?f=18&t=40377
@@ -494,11 +490,7 @@ int RenderChar(FT_ULong currentchar, int cx, int color)
       errorlog(24);
       return -2;
    }
-#ifdef FT_NEW_CACHE_API
    if ((error = FTC_SBitCache_Lookup(cache, &desc, glyphindex, &sbit, NULL))) {
-#else
-   if ((error = FTC_SBit_Cache_Lookup(cache, &desc, glyphindex, &sbit))) {
-#endif
       errorlog(25);
       return -2;
    }
@@ -663,7 +655,7 @@ void *InterfaceThread(void *arg)
  ******************************************************************************/
 int main(int argc, char **argv)
 {
-   char cvs_revision[] = "$Revision: 1.5 $";
+   char cvs_revision[] = "$Revision: 1.6 $";
    int nodelay = 0;
    pthread_t thread_id;
    void *thread_result = 0;

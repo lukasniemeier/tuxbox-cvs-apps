@@ -36,9 +36,6 @@
 #include FT_FREETYPE_H
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
-#if (FREETYPE_MAJOR > 2 || (FREETYPE_MAJOR == 2 && (FREETYPE_MINOR > 1 || (FREETYPE_MINOR == 1 && FREETYPE_PATCH >= 8))))
-#define FT_NEW_CACHE_API
-#endif
 
 #include <linux/fb.h>
 
@@ -278,11 +275,7 @@ typedef struct
 	tstPageAttr page_atrb[40 * 25];
 } subtitle_cache;
 
-#ifdef FT_NEW_CACHE_API
 #define FONTTYPE FTC_ImageTypeRec
-#else
-#define FONTTYPE FTC_Image_Desc
-#endif
 /* struct for all Information needed for Page Rendering */
 #define aydrcs (renderinfo->axdrcs + 12+1)
 typedef struct
