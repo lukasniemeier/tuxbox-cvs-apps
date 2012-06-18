@@ -19,14 +19,11 @@ nicht gespeichert werden.
  
 */
 
-
 #include <sys/time.h>
 #include <unistd.h>
 
 #include "lastchannel.h"
-
 #include <global.h>
-
 
 //
 //  -- Init Class  Contructor
@@ -38,18 +35,14 @@ CLastChannel::CLastChannel (void)
 {
 }
 
-
 //
 // -- Clear the last channel buffer
 //
 
 void CLastChannel::clear (void)
-
 {
-  this->lastChannels.clear();
+	this->lastChannels.clear();
 }
-
-
 
 //
 // -- Store a channelnumber in Buffer
@@ -58,69 +51,63 @@ void CLastChannel::clear (void)
 //
 
 void CLastChannel::store (int channel, t_channel_id channel_id, bool forceStoreToLastChannels)
-
 {
 	struct timeval  tv;
-
-
 	gettimeofday (&tv, NULL);
 
-  int           lastChannel(-1);
-  t_channel_id  lastChannel_id(0);
-  unsigned long lastTimestamp(0);
+	int           lastChannel(-1);
+	t_channel_id  lastChannel_id(0);
+	unsigned long lastTimestamp(0);
 
-  if (!this->lastChannels.empty())
-  {
-    lastChannel    = this->lastChannels.front().channel;
-    lastChannel_id = this->lastChannels.front().channel_id;
-    lastTimestamp  = this->lastChannels.front().timestamp;
-  }
-
-  if (    ( (forceStoreToLastChannels || (int)(tv.tv_sec - lastTimestamp) > g_settings.timing[SNeutrinoSettings::TIMING_ZAPHISTORY]))
-	        && (lastChannel != channel) )
+	if (!this->lastChannels.empty())
 	{
-    if (this->shallRemoveEqualChannel && (this->lastChannels.size() > 1))
-    {
-      std::list<_LastCh>::iterator It = this->lastChannels.begin();
-      ++It;
-      for (
-          ; It != this->lastChannels.end()
-          ; ++It
-          )
-      {
-        if (lastChannel_id == It->channel_id)
-        {
-
-          this->lastChannels.erase(It);
-          break;
-        }
-      }
-    }
-
-		// -- store channel on next pos (new channel)
-   _LastCh newChannel = {channel, channel_id, tv.tv_sec};
-    this->lastChannels.push_front(newChannel);
-    if (this->lastChannels.size() > this->maxSize)
-    {
-      this->lastChannels.pop_back();
-    }
+		lastChannel    = this->lastChannels.front().channel;
+		lastChannel_id = this->lastChannels.front().channel_id;
+		lastTimestamp  = this->lastChannels.front().timestamp;
 	}
 
-  // -- remember time (secs)
-  if (!this->lastChannels.empty())
-  {
-    this->lastChannels.front().channel    = channel;
-    this->lastChannels.front().channel_id = channel_id;
-    this->lastChannels.front().timestamp  = tv.tv_sec;
-  }
+	if (((forceStoreToLastChannels ||
+	    (int)(tv.tv_sec - lastTimestamp) > g_settings.timing[SNeutrinoSettings::TIMING_ZAPHISTORY])) &&
+	    (lastChannel != channel))
+	{
+		if (this->shallRemoveEqualChannel && (this->lastChannels.size() > 1))
+		{
+			std::list<_LastCh>::iterator It = this->lastChannels.begin();
+			++It;
+			for (
+				; It != this->lastChannels.end()
+				; ++It)
+			{
+				if (lastChannel_id == It->channel_id)
+				{
+					this->lastChannels.erase(It);
+					break;
+				}
+			}
+		}
+
+		// -- store channel on next pos (new channel)
+		_LastCh newChannel = {channel, channel_id, tv.tv_sec};
+		this->lastChannels.push_front(newChannel);
+		if (this->lastChannels.size() > this->maxSize)
+		{
+			this->lastChannels.pop_back();
+		}
+	}
+
+	// -- remember time (secs)
+	if (!this->lastChannels.empty())
+	{
+		this->lastChannels.front().channel    = channel;
+		this->lastChannels.front().channel_id = channel_id;
+		this->lastChannels.front().timestamp  = tv.tv_sec;
+	}
 }
 
 unsigned int CLastChannel::size () const
 {
-  return this->lastChannels.size();
+	return this->lastChannels.size();
 }
-
-
 
 //
 // -- Clear store time delay
@@ -129,16 +116,12 @@ unsigned int CLastChannel::size () const
 //
 
 void CLastChannel::clear_storedelay (void)
-
 {
-  if (!this->lastChannels.empty())
-  {
-    this->lastChannels.front().timestamp = 0;
-  }
+	if (!this->lastChannels.empty())
+	{
+		this->lastChannels.front().timestamp = 0;
+	}
 }
-
-
-
 
 //
 // -- Get last Channel-Entry
@@ -147,19 +130,12 @@ void CLastChannel::clear_storedelay (void)
 // -- Return:  channelnumber or <0  (end of list)
 
 int CLastChannel::getlast (int n)
-
 {
-  if ( (n < int(this->lastChannels.size()))
-     &&(n > -1)
-     &&(!this->lastChannels.empty())
-     )
-  {
-    std::list<_LastCh>::const_iterator It = this->lastChannels.begin();
-    std::advance(It, n);
-
-    return It->channel;
-  }
-
-  return -1;
+	if ((n < int(this->lastChannels.size())) && (n > -1) && (!this->lastChannels.empty()))
+	{
+		std::list<_LastCh>::const_iterator It = this->lastChannels.begin();
+		std::advance(It, n);
+		return It->channel;
+	}
+	return -1;
 }
-
