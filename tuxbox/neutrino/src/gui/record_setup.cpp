@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.19 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.20 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -156,7 +156,8 @@ int CRecordSetup::showRecordSetup()
 	//input record server mac address
 	CMenuForwarder * mf3 = new CMenuForwarder(LOCALE_RECORDINGMENU_SERVER_MAC, ((g_settings.recording_type == RECORDING_SERVER) && g_settings.recording_server_wakeup==1), g_settings.recording_server_mac, &recordingSettings_server_mac);
 
-	CRecordingNotifier2 RecordingNotifier2(mf3);
+	COnOffNotifier RecordingNotifier2;
+	RecordingNotifier2.addItem(mf3);
 
 	//prepare choose wol
 	CMenuOptionChooser * oj2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_SERVER_WAKEUP, &g_settings.recording_server_wakeup, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, (g_settings.recording_type == RECORDING_SERVER), &RecordingNotifier2);
@@ -454,17 +455,6 @@ bool CRecordingNotifier::changeNotify(const neutrino_locale_t, void *)
 		toDisable[8]->setActive(false);
 	}
 
-	return false;
-}
-
-CRecordingNotifier2::CRecordingNotifier2( CMenuItem* i)
-{
-	toDisable[0]=i;
-}
-
-bool CRecordingNotifier2::changeNotify(const neutrino_locale_t, void *)
-{
-	toDisable[0]->setActive(g_settings.recording_server_wakeup==1);
 	return false;
 }
 

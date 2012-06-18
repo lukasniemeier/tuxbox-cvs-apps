@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.202 2012/06/14 18:30:30 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.203 2012/06/18 16:53:35 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -57,29 +57,24 @@
 
 #define PROCDIR "/proc"
 
-COnOffNotifier::COnOffNotifier( CMenuItem* a1,CMenuItem* a2,CMenuItem* a3,CMenuItem* a4,CMenuItem* a5)
+COnOffNotifier::COnOffNotifier(int OffValue)
 {
-	number = 0;
-	if(a1 != NULL){ toDisable[0] =a1;number++;};
-	if(a2 != NULL){ toDisable[1] =a2;number++;};
-	if(a3 != NULL){ toDisable[2] =a3;number++;};
-	if(a4 != NULL){ toDisable[3] =a4;number++;};
-	if(a5 != NULL){ toDisable[4] =a5;number++;};
+	offValue = OffValue;
 }
 
 bool COnOffNotifier::changeNotify(const neutrino_locale_t, void *Data)
 {
-	if(*(int*)(Data) == 0)
-	{
-		for (int i=0; i<number ; i++)
-			toDisable[i]->setActive(false);
-	}
-	else
-	{
-		for (int i=0; i<number ; i++)
-			toDisable[i]->setActive(true);
-	}
+	bool active = (*(int*)(Data) != offValue);
+
+	for (std::vector<CMenuItem*>::iterator it = toDisable.begin(); it != toDisable.end(); it++)
+		(*it)->setActive(active);
+
 	return false;
+}
+
+void COnOffNotifier::addItem(CMenuItem* menuItem)
+{
+	toDisable.push_back(menuItem);
 }
 
 int CStreamFeaturesChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)

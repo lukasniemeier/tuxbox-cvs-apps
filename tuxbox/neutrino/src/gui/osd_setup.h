@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.6 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: osd_setup.h,v 1.7 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -85,17 +85,6 @@ class COsdSetup : public CMenuTarget, CChangeObserver
 			INFOBAR_LOGO_FRAMED,
 			INFOBAR_LOGO_SHADED
 		};
-};
-
-class COsdSetupChannelLogoNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder* toDisable1;
-		CMenuOptionChooser* toDisable2;
-
-	public:
-		COsdSetupChannelLogoNotifier( CMenuForwarder*, CMenuOptionChooser* );
-		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 
 #endif

@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.72 2012/04/13 12:15:21 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.73 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -363,7 +363,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.72 2012/04/13 12:15:21 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.73 2012/06/18 16:53:34 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3155,7 +3155,8 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 	{
 		dirInput[i] =  new CDirChooser(&m_settings.storageDir[i]);
 		forwarder[i] = new CMenuForwarder(LOCALE_MOVIEBROWSER_DIR,        m_settings.storageDirUsed[i], m_settings.storageDir[i],      dirInput[i]);
-		notifier[i] =  new COnOffNotifier(forwarder[i]);
+		notifier[i] =  new COnOffNotifier();
+		notifier[i]->addItem(forwarder[i]);
 		chooser[i] =   new CMenuOptionChooser(LOCALE_MOVIEBROWSER_USE_DIR , &m_settings.storageDirUsed[i]  , MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true,notifier[i]);
 		if(i > 0)
 			optionsMenuDirUser.addItem(GenericMenuSeparator);
@@ -3965,7 +3966,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.72 $");
+	return imageinfo.getModulVersion("","$Revision: 1.73 $");
 }
 
 /************************************************************************/

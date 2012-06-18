@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.11 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.12 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -220,7 +220,11 @@ int CMiscMenue::showMenue()
 	//standby save power
 	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STANDBY_SAVE_POWER, &g_settings.standby_save_power, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
 	//sutdown real
-	CMiscNotifier miscNotifier(m1, m3, m4, m5);
+	COnOffNotifier miscNotifier(1);
+	miscNotifier.addItem(m1);
+	miscNotifier.addItem(m3);
+	miscNotifier.addItem(m4);
+	miscNotifier.addItem(m5);
 	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL, &g_settings.shutdown_real, OPTIONS_OFF1_ON0_OPTIONS, OPTIONS_OFF1_ON0_OPTION_COUNT, true, &miscNotifier);
 
 	misc_menue_energy->addItem(m2);
@@ -309,23 +313,6 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void *)
 		}
 	}
 #endif
-	return false;
-}
-
-CMiscNotifier::CMiscNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4)
-{
-	toDisable[0]=i1;
-	toDisable[1]=i2;
-	toDisable[2]=i3;
-	toDisable[3]=i4;
-}
-
-bool CMiscNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	toDisable[0]->setActive(!g_settings.shutdown_real);
-	toDisable[1]->setActive(!g_settings.shutdown_real);
-	toDisable[2]->setActive(!g_settings.shutdown_real);
-	toDisable[3]->setActive(!g_settings.shutdown_real);
 	return false;
 }
 

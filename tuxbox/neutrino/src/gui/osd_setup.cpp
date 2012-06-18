@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.18 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: osd_setup.cpp,v 1.19 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -517,7 +517,9 @@ int COsdSetup::showOsdInfobarSetup()
 	CMenuForwarder 	   *oibs_chanlogo_fw 	= new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_LOGODIR, activ_logo_opts, g_settings.infobar_channel_logodir, this, "channel_logodir");
 	CMenuOptionChooser *oibs_chanlogo_bg_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_BACKGROUND, &g_settings.infobar_channellogo_background, INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_BACKGROUND_SHOW_OPTIONS_COUNT, activ_logo_opts);
 
-	COsdSetupChannelLogoNotifier channelLogoNotifier(oibs_chanlogo_fw, oibs_chanlogo_bg_ch);
+	COnOffNotifier channelLogoNotifier;
+	channelLogoNotifier.addItem(oibs_chanlogo_fw);
+	channelLogoNotifier.addItem(oibs_chanlogo_bg_ch);
 	CMenuOptionChooser *oibs_chanlogo_ch 	= new CMenuOptionChooser(LOCALE_OSDSETTINGS_INFOBAR_CHANNELLOGO_SHOW, &g_settings.infobar_show_channellogo, INFOBAR_CHANNELLOGO_SHOW_OPTIONS, INFOBAR_CHANNELLOGO_SHOW_OPTIONS_COUNT, true, &channelLogoNotifier);
 	
 
@@ -545,30 +547,6 @@ int COsdSetup::showOsdInfobarSetup()
 	delete oibs;
 
 	return res;
-}
-
-#include <iostream>
-// class COsdSetupChannelLogoNotifier
-//enable disable entry for channel logo path 
-COsdSetupChannelLogoNotifier::COsdSetupChannelLogoNotifier( CMenuForwarder* fw1, CMenuOptionChooser* oj1)
-{
-	toDisable1 = fw1;
-	toDisable2 = oj1;
-}
-bool COsdSetupChannelLogoNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	if (*((int *)Data) == 0)
-	{
-		toDisable1->setActive(false);
-		toDisable2->setActive(false);
-	}
-	else
-	{
-		toDisable1->setActive(true);
-		toDisable2->setActive(true);
-	}
-
-	return false;
 }
 
 #define CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT 2

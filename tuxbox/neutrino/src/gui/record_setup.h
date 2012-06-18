@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.h,v 1.7 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: record_setup.h,v 1.8 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -57,15 +57,6 @@ class CRecordingNotifier : public CChangeObserver
 	public:
 		CRecordingNotifier(CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*, CMenuItem*);
 		bool changeNotify(const neutrino_locale_t OptionName, void*);
-};
-
-class CRecordingNotifier2 : public CChangeObserver
-{
-	private:
-		CMenuItem* toDisable[1];
-	public:
-		CRecordingNotifier2( CMenuItem*);
-		bool changeNotify(const neutrino_locale_t, void *);
 };
 
 #endif

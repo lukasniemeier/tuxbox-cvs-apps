@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.h,v 1.112 2012/06/09 18:02:14 rhabarber1848 Exp $
+	$Id: setting_helpers.h,v 1.113 2012/06/18 16:53:35 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -38,6 +38,7 @@
 #include <gui/widget/menue.h>
 
 #include <string>
+#include <vector>
 
 unsigned long long getcurrenttime();
 std::string getPidof(const std::string& process_name);
@@ -47,11 +48,14 @@ std::string getInterface();
 class COnOffNotifier : public CChangeObserver
 {
 	private:
-		int number;
-		CMenuItem* toDisable[5];
+		int offValue;
+		std::vector<CMenuItem*> toDisable;
+
 	public:
-		COnOffNotifier (CMenuItem* a1,CMenuItem* a2 = NULL,CMenuItem* a3 = NULL,CMenuItem* a4 = NULL,CMenuItem* a5 = NULL);
+		COnOffNotifier(int OffValue = 0);
 		bool changeNotify(const neutrino_locale_t, void *Data);
+
+		void addItem(CMenuItem* menuItem);
 };
 
 class CStreamFeaturesChangeExec : public CMenuTarget

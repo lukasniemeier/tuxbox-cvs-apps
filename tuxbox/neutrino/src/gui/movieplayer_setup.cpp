@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.16 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.17 2012/06/18 16:53:34 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -178,12 +178,25 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 
 	CMenuOptionChooser* oj10 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_VLC10               , &g_settings.streaming_vlc10                , MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, g_settings.streaming_type);
 
-	CStreamingNotifier StreamingNotifier(mf1,mf2,mf3,mf4,mf5,mf6,oj1,oj2,oj3,oj4,oj5,oj10);
+	COnOffNotifier StreamingNotifier;
+	StreamingNotifier.addItem(mf1);
+	StreamingNotifier.addItem(mf2);
+	StreamingNotifier.addItem(mf3);
+	StreamingNotifier.addItem(mf4);
+	StreamingNotifier.addItem(mf5);
+	StreamingNotifier.addItem(mf6);
+	StreamingNotifier.addItem(oj1);
+	StreamingNotifier.addItem(oj2);
+	StreamingNotifier.addItem(oj3);
+	StreamingNotifier.addItem(oj4);
+	StreamingNotifier.addItem(oj5);
+	StreamingNotifier.addItem(oj10);
 
 #ifndef ENABLE_MOVIEPLAYER2
 	CIntInput mp_setup_buffer_size(LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE, (long&)g_settings.streaming_buffer_segment_size,3, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT1, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT2);
 	CMenuForwarder* mf9 = new CMenuForwarder(LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE, g_settings.streaming_use_buffer, mp_setup_buffer_size.getValue(), &mp_setup_buffer_size);
-	COnOffNotifier bufferNotifier(mf9);
+	COnOffNotifier bufferNotifier;
+	bufferNotifier.addItem(mf9);
 	CMenuOptionChooser* oj6 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_USE_BUFFER, &g_settings.streaming_use_buffer, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &bufferNotifier);
 #endif
 	CMenuOptionChooser* oj7 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_SECTIONSD , &g_settings.streaming_stopsectionsd  , STREAMINGMENU_STOPSECTIONSD_OPTIONS, STREAMINGMENU_STOPSECTIONSD_OPTION_COUNT, true);
@@ -261,35 +274,4 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 	delete MoviePluginSelector;
 
 	return res;
-}
-
-CStreamingNotifier::CStreamingNotifier( CMenuItem* i1, CMenuItem* i2, CMenuItem* i3, CMenuItem* i4, CMenuItem* i5, CMenuItem* i6, CMenuItem* i7, CMenuItem* i8, CMenuItem* i9, CMenuItem* i10, CMenuItem* i11, CMenuItem* i12)
-{
-	toDisable[0]=i1;
-	toDisable[1]=i2;
-	toDisable[2]=i3;
-	toDisable[3]=i4;
-	toDisable[4]=i5;
-	toDisable[5]=i6;
-	toDisable[6]=i7;
-	toDisable[7]=i8;
-	toDisable[8]=i9;
-	toDisable[9]=i10;
-	toDisable[10]=i11;
-	toDisable[11]=i12;
-}
-
-bool CStreamingNotifier::changeNotify(const neutrino_locale_t, void *)
-{
-	if(g_settings.streaming_type==0)
-	{
-		for (int i=0; i<=11; i++)
-			toDisable[i]->setActive(false);
-	}
-	else if(g_settings.streaming_type==1)
-	{
-		for (int i=0; i<=11; i++)
-			toDisable[i]->setActive(true);
-	}
-	return false;
 }
