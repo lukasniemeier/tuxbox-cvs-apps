@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.11 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: zapit_setup.cpp,v 1.12 2012/06/26 18:39:05 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -153,8 +153,6 @@ int CZapitSetup::showSetup()
 		z->addItem(z_subhead);
 	}
 
-	CZapitSetupNotifier zapitSetupNotifier(NULL, NULL);
-
 	//save last channel on/off
 	savelastchannel = g_Zapit->getSaveLastChannel() ? 1 : 0;
 
@@ -162,8 +160,9 @@ int CZapitSetup::showSetup()
 	CMenuForwarder *c1 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_TV, !savelastchannel, CstartChannelTV, this, "zapit_starttv");
 	//last radio-channel
 	CMenuForwarder *c2 = new CMenuForwarder(LOCALE_ZAPITCONFIG_START_RADIO, !savelastchannel, CstartChannelRadio, this, "zapit_startradio");
-	CZapitSetupNotifier zapitSaveLastNotifier(c1, c2);
-	CMenuOptionChooser *c0 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_LAST_CHANNEL, &savelastchannel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &zapitSaveLastNotifier);
+
+	CZapitSetupNotifier zapitSetupNotifier(c1, c2);
+	CMenuOptionChooser *c0 = new CMenuOptionChooser(LOCALE_ZAPITCONFIG_SAVE_LAST_CHANNEL, &savelastchannel, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, &zapitSetupNotifier);
 
 	//save audio pids
 	saveaudiopids = g_Zapit->getSaveAudioPIDs() ? 1 : 0;
