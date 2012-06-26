@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.13 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: audio_setup.cpp,v 1.14 2012/06/26 18:30:41 rhabarber1848 Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -203,7 +203,8 @@ CAudioSetupNotifier2::CAudioSetupNotifier2( CMenuItem* i1)
 
 bool CAudioSetupNotifier2::changeNotify(const neutrino_locale_t, void *)
 {
-	toDisable[0]->setActive(g_settings.audio_avs_Control == CControld::TYPE_LIRC);
+	if (toDisable[0])
+		toDisable[0]->setActive(g_settings.audio_avs_Control == CControld::TYPE_LIRC);
 
 	if (g_settings.audio_avs_Control == CControld::TYPE_LIRC)
 		g_Controld->setVolume(100 - atoi(g_settings.audio_PCMOffset), CControld::TYPE_OST);
