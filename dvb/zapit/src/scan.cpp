@@ -1,5 +1,5 @@
 /*
- * $Id: scan.cpp,v 1.172 2012/04/13 12:15:00 rhabarber1848 Exp $
+ * $Id: scan.cpp,v 1.173 2012/06/26 18:40:58 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -208,7 +208,6 @@ void stop_scan(const bool success)
 			for (vector<CZapitChannel*>::iterator jt = (*it)->radioChannels.begin(); jt != (*it)->radioChannels.end(); jt++)
 				delete (*jt);
 		}
-		scanBouquetManager->clearAll();
 		delete scanBouquetManager;
 	}
 }

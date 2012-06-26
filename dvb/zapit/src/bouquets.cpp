@@ -1,5 +1,5 @@
 /*
- * $Id: bouquets.cpp,v 1.115 2009/09/04 11:25:26 rhabarber1848 Exp $
+ * $Id: bouquets.cpp,v 1.116 2012/06/26 18:40:58 rhabarber1848 Exp $
  *
  * BouquetManager for zapit - d-box2 linux project
  *
@@ -223,6 +223,11 @@ void writeChannelList(FILE * const bouq_fd, const ChannelList & list, const bool
 }
 
 /**** class CBouquetManager *************************************************/
+CBouquetManager::~CBouquetManager()
+{
+	clearAll();
+}
+
 void CBouquetManager::saveBouquets(bool includeBouquetOthers)
 {
 	FILE *       bouq_fd;

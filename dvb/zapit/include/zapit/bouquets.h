@@ -1,5 +1,5 @@
 /*
- * $Id: bouquets.h,v 1.64 2009/09/04 11:25:25 rhabarber1848 Exp $
+ * $Id: bouquets.h,v 1.65 2012/06/26 18:40:58 rhabarber1848 Exp $
  */
 
 #ifndef __bouquets_h__
@@ -87,6 +87,7 @@ class CBouquetManager
 
  public:
 		CBouquetManager() { remainChannels = NULL; };
+		~CBouquetManager();
 		class ChannelIterator
 		{
 			private:

@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.459 2012/04/13 12:15:00 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.460 2012/06/26 18:40:58 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -3154,7 +3154,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.459 2012/04/13 12:15:00 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.460 2012/06/26 18:40:58 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
@@ -3434,8 +3434,6 @@ int main(int argc, char **argv)
 	if (scanInputParser)
 		xmlFreeDoc(scanInputParser);
 
-	/* TODO: the destructor of bouquetManager should actually do that */
-	bouquetManager->clearAll();
 	delete bouquetManager;
 	delete eventServer;
 
