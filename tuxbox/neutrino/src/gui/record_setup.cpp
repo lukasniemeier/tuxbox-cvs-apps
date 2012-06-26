@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.20 2012/06/18 16:53:34 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.21 2012/06/26 18:37:04 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -156,11 +156,11 @@ int CRecordSetup::showRecordSetup()
 	//input record server mac address
 	CMenuForwarder * mf3 = new CMenuForwarder(LOCALE_RECORDINGMENU_SERVER_MAC, ((g_settings.recording_type == RECORDING_SERVER) && g_settings.recording_server_wakeup==1), g_settings.recording_server_mac, &recordingSettings_server_mac);
 
-	COnOffNotifier RecordingNotifier2;
-	RecordingNotifier2.addItem(mf3);
+	COnOffNotifier wolOnOffNotifier;
+	wolOnOffNotifier.addItem(mf3);
 
 	//prepare choose wol
-	CMenuOptionChooser * oj2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_SERVER_WAKEUP, &g_settings.recording_server_wakeup, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, (g_settings.recording_type == RECORDING_SERVER), &RecordingNotifier2);
+	CMenuOptionChooser * oj2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_SERVER_WAKEUP, &g_settings.recording_server_wakeup, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, (g_settings.recording_type == RECORDING_SERVER), &wolOnOffNotifier);
 
 	//prepare playback stop
 	CMenuOptionChooser* oj3 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_STOPPLAYBACK, &g_settings.recording_stopplayback, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, (g_settings.recording_type == RECORDING_SERVER || g_settings.recording_type == RECORDING_FILE));
