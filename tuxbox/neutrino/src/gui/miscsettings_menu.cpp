@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.12 2012/06/18 16:53:34 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.13 2012/06/26 18:31:21 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -217,12 +217,16 @@ int CMiscMenue::showMenue()
 	//shutdown count
 	CStringInput miscSettings_shutdown_count(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", this);
 	CMenuForwarder *m4 = new CMenuForwarder(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, !g_settings.shutdown_real, g_settings.shutdown_count, &miscSettings_shutdown_count);
+#ifndef HAVE_TRIPLEDRAGON
 	//standby save power
 	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STANDBY_SAVE_POWER, &g_settings.standby_save_power, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
+#endif
 	//sutdown real
 	COnOffNotifier miscNotifier(1);
 	miscNotifier.addItem(m1);
+#ifndef HAVE_TRIPLEDRAGON
 	miscNotifier.addItem(m3);
+#endif
 	miscNotifier.addItem(m4);
 	miscNotifier.addItem(m5);
 	CMenuOptionChooser *m2 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL, &g_settings.shutdown_real, OPTIONS_OFF1_ON0_OPTIONS, OPTIONS_OFF1_ON0_OPTION_COUNT, true, &miscNotifier);
