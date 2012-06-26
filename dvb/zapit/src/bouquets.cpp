@@ -1,5 +1,5 @@
 /*
- * $Id: bouquets.cpp,v 1.116 2012/06/26 18:40:58 rhabarber1848 Exp $
+ * $Id: bouquets.cpp,v 1.117 2012/06/26 18:42:03 rhabarber1848 Exp $
  *
  * BouquetManager for zapit - d-box2 linux project
  *
@@ -158,7 +158,8 @@ void CBouquet::moveService(const unsigned int oldPosition, const unsigned int ne
 		CZapitChannel* tmp = *it;
 		channels->erase(it);
 
-		advance(it, newPosition - oldPosition);
+		it = channels->begin();
+		advance(it, newPosition);
 		channels->insert(it, tmp);
 	}
 }
@@ -621,7 +622,8 @@ void CBouquetManager::moveBouquet(const unsigned int oldId, const unsigned int n
 		CBouquet* tmp = *it;
 		Bouquets.erase(it);
 
-		advance(it, newId - oldId);
+		it = Bouquets.begin();
+		advance(it, newId);
 		Bouquets.insert(it, tmp);
 	}
 }
