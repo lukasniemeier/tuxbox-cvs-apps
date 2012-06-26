@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.27 2012/05/16 21:38:57 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.28 2012/06/26 18:37:42 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -51,10 +51,17 @@
 CThemes::CThemes()
 : themefile('\t')
 {
+	colorSetupNotifier = new CColorSetupNotifier();
+
 	width = w_max (500, 100);
 	selected = -1;
 
 	hasThemeChanged = false;
+}
+
+CThemes::~CThemes()
+{
+	delete colorSetupNotifier;
 }
 
 int CThemes::exec(CMenuTarget* parent, const std::string & actionKey)
@@ -66,9 +73,7 @@ int CThemes::exec(CMenuTarget* parent, const std::string & actionKey)
 		if (actionKey=="theme_neutrino")
 		{
 			setupDefaultColors();
-			notifier = new CColorSetupNotifier();
-			notifier->changeNotify(NONEXISTANT_LOCALE, NULL);
-			delete notifier;
+			colorSetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 		}
 		else
 		{
@@ -276,10 +281,8 @@ void CThemes::rememberOldTheme(bool remember)
 		g_settings.infobar_Text_green 			= oldThemeValues[38];
 		g_settings.infobar_Text_blue 			= oldThemeValues[39];
 
-		notifier = new CColorSetupNotifier;
-		notifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+		colorSetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 		hasThemeChanged = false;
-		delete notifier;
 	}
 }
 
@@ -328,10 +331,8 @@ void CThemes::readFile(char* themename)
 		g_settings.infobar_Text_green = themefile.getInt32( "infobar_Text_green", 0x64 );
 		g_settings.infobar_Text_blue = themefile.getInt32( "infobar_Text_blue", 0x64 );
 
-		notifier = new CColorSetupNotifier;
-		notifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+		colorSetupNotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
 		hasThemeChanged = true;
-		delete notifier;
 	}
 	else
 		printf("[neutrino theme] %s not found\n", themename);

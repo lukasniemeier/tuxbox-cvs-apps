@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.10 2012/03/18 11:20:14 rhabarber1848 Exp $ 
+	$Id: themes.h,v 1.11 2012/06/26 18:37:42 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -37,7 +37,7 @@ class CThemes : public CMenuTarget
 {
 	private:
 		CConfigFile themefile;
-		CColorSetupNotifier *notifier;
+		CColorSetupNotifier *colorSetupNotifier;
 
 		int width, selected;
 		int oldThemeValues[40];
@@ -52,6 +52,7 @@ class CThemes : public CMenuTarget
 
 	public:
 		CThemes();
+		~CThemes();
 		void setupDefaultColors();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };
