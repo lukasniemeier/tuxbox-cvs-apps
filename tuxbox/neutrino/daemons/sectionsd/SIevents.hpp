@@ -1,7 +1,7 @@
 #ifndef SIEVENTS_HPP
 #define SIEVENTS_HPP
 //
-// $Id: SIevents.hpp,v 1.35 2012/03/04 08:44:27 rhabarber1848 Exp $
+// $Id: SIevents.hpp,v 1.36 2012/06/26 18:50:30 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -242,7 +242,8 @@ struct saveSIcomponentXML : public std::unary_function<class SIcomponent, void>
   void operator() (const SIcomponent &c) { c.saveXML(f);}
 };
 
-typedef std::multiset <SIcomponent, std::less<SIcomponent> > SIcomponents;
+//typedef std::multiset <SIcomponent, std::less<SIcomponent> > SIcomponents;
+typedef std::vector<class SIcomponent> SIcomponents;
 
 class SIparentalRating {
   public:
@@ -285,7 +286,8 @@ struct saveSIparentalRatingXML : public std::unary_function<SIparentalRating, vo
   void operator() (const SIparentalRating &r) { r.saveXML(f);}
 };
 
-typedef std::set <SIparentalRating, std::less<SIparentalRating> > SIparentalRatings;
+//typedef std::set <SIparentalRating, std::less<SIparentalRating> > SIparentalRatings;
+typedef std::vector<class SIparentalRating> SIparentalRatings;
 
 class SItime {
   public:

@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.340 2012/04/13 12:15:20 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.341 2012/06/26 18:50:30 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -785,8 +785,8 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		if (si->second->components.size() != evt.components.size())
 			already_exists = false;
 		else {
-			SIcomponents::iterator c1 = si->second->components.begin();
-			SIcomponents::iterator c2 = evt.components.begin();
+			SIcomponents::const_iterator c1 = si->second->components.begin();
+			SIcomponents::const_iterator c2 = evt.components.begin();
 			while ((c1 != si->second->components.end()) && (c2 != evt.components.end())) {
 				if ((c1->componentType != c2->componentType) ||
 					(c1->componentTag != c2->componentTag) ||
@@ -825,8 +825,8 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		if (si->second->ratings.size() != evt.ratings.size())
 			already_exists = false;
 		else {
-			SIparentalRatings::iterator p1 = si->second->ratings.begin();
-			SIparentalRatings::iterator p2 = evt.ratings.begin();
+			SIparentalRatings::const_iterator p1 = si->second->ratings.begin();
+			SIparentalRatings::const_iterator p2 = evt.ratings.begin();
 			while ((p1 != si->second->ratings.end()) && (p2 != evt.ratings.end())) {
 				if ((p1->rating != p2->rating) ||
 					(strcmp(p1->countryCode.c_str(),p2->countryCode.c_str()) != 0)) {
@@ -2652,7 +2652,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.340 2012/04/13 12:15:20 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.341 2012/06/26 18:50:30 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -4576,11 +4576,11 @@ static void *insertEventsfromFile(void *)
 							c.componentType = xmlGetNumericAttribute(node, "type", 16);
 							c.componentTag = xmlGetNumericAttribute(node, "tag", 16);
 							c.component = std::string(UTF8_to_Latin1(xmlGetAttribute(node, "text")));
-							e.components.insert(c);
+							e.components.insert(e.components.end(), c);
 							node = node->xmlNextNode;
 						}
 						while (xmlGetNextOccurence(node, "parental_rating") != NULL) {
-							e.ratings.insert(SIparentalRating(std::string(UTF8_to_Latin1(xmlGetAttribute(node, "country"))), (unsigned char) xmlGetNumericAttribute(node, "rating", 10)));
+							e.ratings.insert(e.ratings.end(), SIparentalRating(std::string(UTF8_to_Latin1(xmlGetAttribute(node, "country"))), (unsigned char) xmlGetNumericAttribute(node, "rating", 10)));
 							node = node->xmlNextNode;
 						}
 						while (xmlGetNextOccurence(node, "linkage") != NULL) {
@@ -8626,7 +8626,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.340 2012/04/13 12:15:20 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.341 2012/06/26 18:50:30 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif

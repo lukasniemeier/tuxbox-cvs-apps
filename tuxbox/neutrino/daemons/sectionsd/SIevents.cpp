@@ -1,5 +1,5 @@
 //
-// $Id: SIevents.cpp,v 1.40 2012/03/04 08:44:27 rhabarber1848 Exp $
+// $Id: SIevents.cpp,v 1.41 2012/06/26 18:50:30 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -126,7 +126,7 @@ int SIevent::saveXML(FILE *file, const char *serviceName) const
 
 char SIevent::getFSK() const
 {
-	for (SIparentalRatings::iterator it = ratings.begin(); it != ratings.end(); ++it)
+	for (SIparentalRatings::const_iterator it = ratings.begin(); it != ratings.end(); ++it)
 	{
 		if (it->countryCode == "DEU")
 		{

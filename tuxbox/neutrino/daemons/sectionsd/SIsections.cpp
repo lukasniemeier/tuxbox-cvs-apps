@@ -1,5 +1,5 @@
 //
-// $Id: SIsections.cpp,v 1.68 2012/03/04 08:44:27 rhabarber1848 Exp $
+// $Id: SIsections.cpp,v 1.69 2012/06/26 18:50:30 rhabarber1848 Exp $
 //
 // classes for SI sections (dbox-II-project)
 //
@@ -197,7 +197,7 @@ void SIsectionEIT::parseComponentDescriptor(const char *buf, SIevent &e, unsigne
 			else if (c.component[0] < 0x20)
 				c.component.erase(0,1);
 		}
-		e.components.insert(c);
+		e.components.insert(e.components.end(), c);
 	}
 }
 
@@ -223,7 +223,7 @@ void SIsectionEIT::parseParentalRatingDescriptor(const char *buf, SIevent &e, un
 		return; // defekt
 	const char *s=buf+sizeof(struct descr_generic_header);
 	while(s<buf+sizeof(struct descr_generic_header)+cont->descriptor_length-4) {
-		e.ratings.insert(SIparentalRating(std::string(s, 3), *(s+3)));
+		e.ratings.insert(e.ratings.end(), SIparentalRating(std::string(s, 3), *(s+3)));
 		s+=4;
 	}
 }
@@ -540,7 +540,10 @@ void SIsectionPPT::parseLinkageDescriptor(const char *buf, SIevent &e, unsigned 
 void SIsectionPPT::parseComponentDescriptor(const char *buf, SIevent &e, unsigned maxlen)
 {
   if(maxlen>=sizeof(struct descr_component_header))
-    e.components.insert(SIcomponent((const struct descr_component_header *)buf));
+  {
+    SIcomponent c((const struct descr_component_header *)buf)
+    e.components.insert(e.components.end(), c);
+  }
 }
 
 void SIsectionPPT::parseContentDescriptor(const char *buf, SIevent &e, unsigned maxlen)
@@ -565,7 +568,7 @@ void SIsectionPPT::parseParentalRatingDescriptor(const char *buf, SIevent &e, un
     return; // defekt
   const char *s=buf+sizeof(struct descr_generic_header);
   while(s<buf+sizeof(struct descr_generic_header)+cont->descriptor_length-4) {
-    e.ratings.insert(SIparentalRating(std::string(s, 3), *(s+3)));
+    e.ratings.insert(e.ratings.end(), SIparentalRating(std::string(s, 3), *(s+3)));
     s+=4;
   }
 }
@@ -685,7 +688,7 @@ void SIsectionPPT::parsePrivateParentalInformationDescriptor(const char *buf, SI
   buf+=sizeof(struct descr_generic_header);
 
   if (sizeof(struct descr_generic_header)+1 < evt->descriptor_length) {
-    e.ratings.insert(SIparentalRating(std::string("", 0), *(buf)));
+    e.ratings.insert(e.ratings.end(), SIparentalRating(std::string("", 0), *(buf)));
   }
 #if 0
     unsigned char rating;
