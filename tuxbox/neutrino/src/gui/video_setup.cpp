@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.16 2012/06/09 17:56:48 rhabarber1848 Exp $
+	$Id: video_setup.cpp,v 1.17 2012/06/26 18:38:29 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -148,11 +148,6 @@ int CVideoSetup::showVideoSetup()
 	SyncControlerForwarder = new CMenuForwarder(LOCALE_VIDEOMENU_RGB_CENTERING, sc_active, NULL , RGBCSyncControler, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 #endif
 
-	if (g_settings.video_Format == CControldClient::VIDEOFORMAT_AUTO)
-	{
-		this->changeNotify(LOCALE_VIDEOMENU_VIDEOFORMAT, NULL);
-	}
-	
 	videosetup->addItem(oj1);	//video format
 	videosetup->addItem(oj2);	//video format background
 #ifdef HAVE_DBOX_HARDWARE
