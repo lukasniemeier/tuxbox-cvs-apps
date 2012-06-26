@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.460 2012/06/26 18:40:58 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.461 2012/06/26 18:42:57 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -2168,7 +2168,7 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 		if (msgMoveChannel.bouquet < bouquetManager->Bouquets.size())
 			bouquetManager->Bouquets[msgMoveChannel.bouquet]->moveService(msgMoveChannel.oldPos, msgMoveChannel.newPos,
 					(((currentMode & RADIO_MODE) && msgMoveChannel.mode == CZapitClient::MODE_CURRENT)
-					 || (msgMoveChannel.mode==CZapitClient::MODE_RADIO)) ? 2 : 1);
+					 || (msgMoveChannel.mode==CZapitClient::MODE_RADIO)) ? ST_DIGITAL_RADIO_SOUND_SERVICE : ST_DIGITAL_TELEVISION_SERVICE);
 		break;
 	}
 
@@ -3154,7 +3154,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.460 2012/06/26 18:40:58 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.461 2012/06/26 18:42:57 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;

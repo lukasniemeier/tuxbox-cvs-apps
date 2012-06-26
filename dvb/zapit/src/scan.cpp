@@ -1,5 +1,5 @@
 /*
- * $Id: scan.cpp,v 1.173 2012/06/26 18:40:58 rhabarber1848 Exp $
+ * $Id: scan.cpp,v 1.174 2012/06/26 18:42:57 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
  *
@@ -463,15 +463,15 @@ void write_transponder(FILE *fd, const transponder_id_t transponder_id, const tr
 			switch ( scanType ) {
 
 				case CZapitClient::ST_TVRADIO:
-					if ( (cI->second.getServiceType() == 1 ) || (cI->second.getServiceType() == 2) )
+					if ( (cI->second.getServiceType() == ST_DIGITAL_TELEVISION_SERVICE) || (cI->second.getServiceType() == ST_DIGITAL_RADIO_SOUND_SERVICE) )
 						service_wr=true;
 					break;
 				case CZapitClient::ST_TV:
-					if ( cI->second.getServiceType() == 1 )
+					if ( cI->second.getServiceType() == ST_DIGITAL_TELEVISION_SERVICE )
 						service_wr=true;
 					break;
 				case CZapitClient::ST_RADIO:
-					if ( cI->second.getServiceType() == 2 )
+					if ( cI->second.getServiceType() == ST_DIGITAL_RADIO_SOUND_SERVICE )
 						service_wr=true;
 					break;
 				case CZapitClient::ST_ALL:
