@@ -139,15 +139,16 @@ int CAudioSelectMenuHandler::doMenu()
 	}
 
 	// -- setup menue for to Dual Channel Stereo
+	CAudioSetupNotifier* audioSetupNotifier = NULL;
 	if (g_settings.audio_left_right_selectable) {
 
 	   AudioSelector.addItem(GenericMenuSeparatorLine);
 
-       CAudioSetupNotifier audioSetupNotifier;
+	   audioSetupNotifier = new CAudioSetupNotifier();
 	   CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOGOUT,
 				&g_settings.audio_AnalogMode,
 				AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT,
-				true, &audioSetupNotifier);
+				true, audioSetupNotifier);
 
 	   AudioSelector.addItem( oj );
 
@@ -191,7 +192,9 @@ int CAudioSelectMenuHandler::doMenu()
 		}
 	}
 
-	return AudioSelector.exec(NULL, "");
+	int res = AudioSelector.exec(NULL, "");
+	delete audioSetupNotifier;
+	return res;
 }
 
 
