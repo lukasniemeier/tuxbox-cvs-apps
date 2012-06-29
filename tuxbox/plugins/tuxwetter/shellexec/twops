@@ -83,15 +83,15 @@ tuxwet)
     sed -i -e s/"Timeout-Zeit[^,]*"/"Timeout-Zeit~t~t~t~t$res s"/ $MENU
   ;; 
 
-  partnerid)
-    echo "aendere Partner-ID"
-    def=`grep ^PartnerID= $TUXWCFG`
+  apikey)
+    echo "aendere API-Key"
+    def=`grep ^API-Key= $TUXWCFG`
     if [ `expr length $def` -gt 0 ]; then
-      def=`expr substr $def 11 10`
+      def=`expr substr $def 9 22`
     else
-      def="1005530704"
+      def="8fe33dfb41145603102808"
     fi
-    res=`$pth t="Partner-ID bei weather.com" l="##########" d=$def`
+    res=`$pth t="API-Key bei worldweatheronline.com" l="^^^^^^^^^^^^^^^^^^^^^^" d=$def k=1`
     if [  $res -lt 1 ]; then 
       exit 1
     fi
@@ -99,28 +99,8 @@ tuxwet)
     if [ -z $res ]; then
       exit 1
     fi
-    sed -e "s/PartnerID=.*/PartnerID=$res/g" $TUXWCFG > /tmp/tuxwetter.conf
-    sed -i -e s/"Partner-ID[^,]*"/"Partner-ID~t~t~t$res"/ $MENU
-  ;;
-
-  licensekey)
-    echo "aendere License-Key"
-    def=`grep ^LicenseKey= $TUXWCFG`
-    if [ `expr length $def` -gt 0 ]; then
-      def=`expr substr $def 12 16`
-    else
-      def="a9c95f7636ad307b"
-    fi
-    res=`$pth t="License-Key bei weather.com" l="^^^^^^^^^^^^^^^^" d=$def k=1`
-    if [  $res -lt 1 ]; then 
-      exit 1
-    fi
-  
-    if [ -z $res ]; then
-      exit 1
-    fi
-    sed -e "s/LicenseKey=.*/LicenseKey=$res/g" $TUXWCFG > /tmp/tuxwetter.conf
-    sed -i -e s/"License-Key[^,]*"/"License-Key~t$res"/ $MENU
+    sed -e "s/API-Key=.*/API-Key=$res/g" $TUXWCFG > /tmp/tuxwetter.conf
+    sed -i -e s/"API-Key[^,]*"/"API-Key~t$res"/ $MENU
   ;; 
 
   esac
