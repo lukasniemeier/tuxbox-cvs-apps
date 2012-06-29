@@ -1,7 +1,6 @@
 installdir = $(DATADIR)/tuxwetter
 
 install_DATA = \
-	0.bmp \
 	10.bmp \
 	11.bmp \
 	12.bmp \
@@ -36,13 +35,6 @@ install_DATA = \
 	39.bmp \
 	3.bmp \
 	40.bmp \
-	41.bmp \
-	42.bmp \
-	43.bmp \
-	44.bmp \
-	45.bmp \
-	46.bmp \
-	47.bmp \
 	4.bmp \
 	5.bmp \
 	6.bmp \

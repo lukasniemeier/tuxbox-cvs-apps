@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.c,v 1.8 2012/06/16 14:27:28 rhabarber1848 Exp $
+ * $Id: tuxwetter.c,v 1.9 2012/06/29 21:26:01 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
 */
+#define _GNU_SOURCE
 
 #include <string.h>
 #include <stdio.h>
@@ -42,13 +43,15 @@
 #include "lcd.h"
 #include "color.h"
 
-#define P_VERSION 3.56
+#define P_VERSION 3.62
+#define S_VERSION ""
 
-char CONVERT_LIST[]="/var/tuxbox/config/tuxwetter//convert.list";
+char CONVERT_LIST[]="/var/tuxbox/config/tuxwetter/convert.list";
 #define CFG_FILE 	"/var/tuxbox/config/tuxwetter/tuxwetter.conf"
 #define MCF_FILE 	"/var/tuxbox/config/tuxwetter/tuxwetter.mcfg"
 #define TIME_FILE	"/var/tuxbox/config/tuxwetter/swisstime"
 #define MISS_FILE	"/var/tuxbox/config/tuxwetter/missing_translations.txt"
+
 #define NCF_FILE 	"/var/tuxbox/config/neutrino.conf"
 #define ECF_FILE    "/var/tuxbox/config/enigma/config"
 #define BMP_FILE 	"tuxwettr.bmp"
@@ -68,14 +71,17 @@ static char TCF_FILE[128]="";
 #define LCD_RDIST 	10
 
 // Forward defines
-int gif_on_data(char *name, int xstart, int ystart, int xsize, int ysize, int wait, int single, int center, int rahmen);
-char par[32]="1005530704", key[32]="a9c95f7636ad307b";
+int pic_on_data(char *name, int xstart, int ystart, int xsize, int ysize, int wait, int single, int center, int rahmen);
+char par[32]="", key[32]="";
 void TrimString(char *strg);
 
 // Color table stuff
 static char menucoltxt[CMH][24]={"Content_Selected_Text","Content_Selected","Content_Text","Content","Content_inactive_Text","inactive","Head_Text","Head"};
 
 #ifdef HAVE_DBOX_HARDWARE
+
+//					   CMCST,   CMCS,    CMCT,    CMC,     CMCIT,   CMCI,    CMHT,    CMH	
+//					   WHITE,   BLUE0,   TRANSP,  CMS,   ORANGE,  GREEN,   YELLOW,  RED
 
 unsigned short rd[] = {0x00<<8, 0x00<<8, 0xFF<<8, 0x00<<8, 0xFF<<8, 0x00<<8, 0xFF<<8, 0x00<<8, 
 					   0xFF<<8, 0x00<<8, 0x00<<8, 0x00<<8, 0xFF<<8, 0x00<<8, 0xFF<<8, 0xFF<<8};
@@ -135,7 +141,7 @@ char NOMEM[]="Tuxwetter <Out of memory>\n";
 unsigned char FONT[64]= "/share/fonts/pakenham.ttf";
 unsigned char *lfb = 0, *lbb = 0;
 int intype=0, show_icons=0, gmodeon=0, ctmo=0, metric=1, loadalways=0, radius=0;
-char city_code[15] = "";
+char city_code[30] = "";
 char city_name[50] = "";
 unsigned int alpha=0x0202;
 int show_splash=1;
@@ -191,7 +197,7 @@ FILE *fh;
 static void quit_signal(int sig)
 {
 	put_instance(get_instance()-1);
-	printf("tuxwetter Version %.2f killed\n",P_VERSION);
+	printf("tuxwetter Version %.2f%s killed\n",P_VERSION,S_VERSION);
 	exit(1);
 }
 
@@ -212,7 +218,7 @@ FILE *nfh;
 char tstr [512], *cfptr=NULL;
 int rv=-1,styp=0;
 
-	if((((nfh=fopen(NCF_FILE,"r"))!=NULL)&&(styp=1))||(((nfh=fopen(ECF_FILE,"r"))!=NULL))&&(styp=2))
+	if((((nfh=fopen(NCF_FILE,"r"))!=NULL)&&(styp=1)) || ((((nfh=fopen(ECF_FILE,"r"))!=NULL))&&(styp=2)))
 	{
 		tstr[0]=0;
 
@@ -322,7 +328,7 @@ int ReadConf(char *iscmd)
 				{
 					strncpy(par,cptr+1,sizeof(par)-1);
 				}
-			if(strstr(line_buffer,"LicenseKey") == line_buffer)
+			if(strstr(line_buffer,"API-Key") == line_buffer)
 				{
 					strncpy(key,cptr+1,sizeof(key)-1);
 				}
@@ -339,6 +345,7 @@ int ReadConf(char *iscmd)
 				}
 		}
 	}
+	fclose(fd_conf);
 
 	return 1;
 }
@@ -410,6 +417,7 @@ struct tm *ltime;
 		{
 			ltime=gmtime(&stime);
 		}	
+
 		fpos=0;
 		ferr=0;
 		tval=0;
@@ -671,8 +679,10 @@ PLISTENTRY entr;
 
 int Get_Selection(MENU *m)
 {
-int rv=1,rccode, mloop=1,lrow,lpos;
-char dstr[128],*lcptr,*lcstr,*lcdptr;
+int rv=1,rccode, mloop=1;
+int lrow,lpos;
+char dstr[128];
+char *lcptr = NULL, *lcstr= NULL, *lcdptr = NULL;
 
 	LCD_Init();
 	do{
@@ -1050,11 +1060,13 @@ FILE *fh;
 
 void ShowInfo(MENU *m)
 {
-	int scrollbar_len, scrollbar_ofs, scrollbar_cor, loop;
-	int index=m->act_entry,tind=m->act_entry, sbw=(m->num_entrys>10)?12:0;
+	double scrollbar_len, scrollbar_ofs, scrollbar_cor;
+	int loop, index=m->act_entry,tind=m->act_entry, sbw=(m->num_entrys > LIST_STEP)?14:0;
 	char tstr[BUFSIZE], *tptr;
-	int moffs=35, ixw=400, iyw=(m->num_entrys<10)?((m->num_entrys+1)*30+moffs):380, dy, my, mh=iyw-moffs, toffs, soffs=4, oldx=startx, oldy=starty;
-	dy=(m->num_entrys<10)?30:(mh/11);
+	int moffs=35, roffs=5, ixw=400, iyw=(m->num_entrys < LIST_STEP)?((m->num_entrys+1)*30+moffs):380, dy, mh, my, toffs, soffs=4, oldx=startx, oldy=starty;
+	
+	mh=iyw-moffs-roffs-4;
+	dy=(m->num_entrys<LIST_STEP)?30:(mh/(LIST_STEP+1));
 	toffs=dy/2;
 	my=moffs+dy+toffs;
 	
@@ -1067,7 +1079,7 @@ void ShowInfo(MENU *m)
 	RenderBox(0, 0, ixw, iyw, radius, CMC);
 
 	// titlebar
-	RenderBox(2, 2, ixw-2, moffs+5, radius, CMH);
+	RenderBox(2, 2, ixw-2, moffs+roffs, radius, CMH);
 
 	//selectbar
 	RenderBox(2, moffs+toffs+soffs+(index%10)*dy+2, ixw-sbw, moffs+toffs+soffs+(index%10+1)*dy+2, radius, CMCS);
@@ -1076,16 +1088,17 @@ void ShowInfo(MENU *m)
 	if(sbw)
 	{
 		//sliderframe
-		RenderBox(ixw-sbw, moffs+3, ixw, iyw, radius, CMS);
+		RenderBox(ixw-sbw, moffs+roffs, ixw, iyw-4, radius, CMS);
+
 		//slider
-		scrollbar_len = mh / m->num_entrys;
-		scrollbar_ofs = scrollbar_len*index;
-		scrollbar_cor = mh - ((mh/scrollbar_len)*scrollbar_len)-3;
-		RenderBox(ixw-sbw, moffs + scrollbar_ofs+3, ixw, moffs + scrollbar_ofs + scrollbar_len +scrollbar_cor -1, radius, CMCIT);
+		scrollbar_len = (double)(mh-2) / (double)(((m->num_entrys-1)/LIST_STEP+1)*LIST_STEP);
+		scrollbar_ofs = scrollbar_len*(double)((index/LIST_STEP)*LIST_STEP)+roffs;
+		scrollbar_cor = scrollbar_len*(double)LIST_STEP;
+		RenderBox(ixw-sbw+2, moffs+scrollbar_ofs+2, ixw-2, moffs+scrollbar_ofs+scrollbar_cor, radius, CMCIT);
 	}
 
 	// Title text
-	RenderString(m->headertxt[m->act_header], 45, dy-soffs+3, ixw-sbw, LEFT, BIG, CMHT);
+	RenderString(m->headertxt[m->act_header], 45, dy-soffs+3, ixw-45, LEFT, BIG, CMHT);
 
 	index /= 10;
 	//Show table of commands
@@ -1138,6 +1151,8 @@ char *tptr;
 int cpos;
 int res;
 
+	int len=strlen(menu.list[menu.act_entry]->entry);
+
 	if ((tptr=strchr(menu.list[menu.act_entry]->entry,','))!=NULL)
 	{
 		ShowInfo(&menu);
@@ -1146,10 +1161,10 @@ int res;
 			ShowMessage(prs_translate("Bitte warten",CONVERT_LIST),0);
 		}
 		cpos=(tptr-menu.list[menu.act_entry]->entry);
-		strncpy(city_code,++tptr,8);
+		strncpy(city_code,++tptr,len-cpos-1);
 		strncpy(city_name,menu.list[menu.act_entry]->entry,cpos);
 		city_name[cpos]=0;
-		city_code[8]=0;
+		city_code[len-cpos-1]=0;
 		printf("Tuxwetter <Citycode %s selected>\n",city_code);
 		if((res=parser(city_code,CONVERT_LIST,metric,intype,ctmo))!=0)
 		{
@@ -1178,15 +1193,18 @@ void clear_screen(void)
 
 void show_data(int index)
 {
-char vstr[512],v2str[512],rstr[512],tstr[512],icon[60],*pt1;
-int col1=60,col2=300,sy=70,dy=26, itmp, tret=0;
+#ifndef WWEATHER
+	int itmp;
+#endif
+char vstr[512],v2str[512],rstr[512],tstr[512],icon[60];
+int col1=60,col2=300,sy=70,dy=26,tret=0;
 int gxs=30,gxw=560,gys=70,gyw=250,gicw=112,vxs=0;
 int prelate=0;
 int rcd;
 int HMED=27;
 time_t atime;
 struct tm *ltime;
-char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
+char tun[2]="C",sun[5]="km/h",dun[6]="km",pun[5]="mbar",iun[7]="mm", cun[20];
 
 	clear_screen();
 	//frame layout
@@ -1206,19 +1224,20 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 	strcpy(cun,prs_translate("Uhr",CONVERT_LIST));
 	if(!metric)
 	{
-		sprintf(tun,"F");
-		sprintf(sun,"mph");
-		sprintf(dun,"mi");
-		sprintf(pun,"in");
-		*cun=0;
+		sprintf(tun,"F");     // Fahrenheit
+		sprintf(sun,"mph");   // miles per hour
+		sprintf(dun,"miles");
+		sprintf(pun,"mb");    // millibar
+		sprintf(iun,"inches");
+		*cun=0;               // Uhrzeit
 	}
 	if(index==-99)
 	{
 		int i;
-
+	
 		col1=40; col2=340; dy=22;
 		
-		sprintf(rstr,"New-Tuxwetter    Version %.2f",P_VERSION);
+		sprintf(rstr,"New-Tuxwetter    Version %.2f%s",P_VERSION,S_VERSION);
 		RenderString(rstr, 0, 34, 619, CENTER, BIG, CMHT);
 	
 		sprintf(rstr,"%s",prs_translate("Steuertasten in den Menüs",CONVERT_LIST));
@@ -1339,15 +1358,15 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 			int i, tmax[7], tmin[7], mint=100, maxt=-100, j, pmin, pmax;
 			double tstep=1, garr[70], tv1, tv2, tv3;
 						
-			RenderBox(0, 0, 619, 510, radius, CMC);
-			RenderBox(2, 2, 617, 44, radius, CMH);
+			RenderBox(-2, 0, 622, 510, radius, CMC);
+			RenderBox(0, 2, 620, 44, radius, CMH);
 			sprintf(rstr,"%s",prs_translate("Trend für die kommende Woche",CONVERT_LIST));
 			RenderString(rstr, 0, 34, 619, CENTER, BIG, CMHT);
-			RenderLine(gxs,gys,gxs,gys+gyw+gicw-12,CMCIT);
-			RenderLine(gxs+1,gys,gxs+1,gys+gyw+gicw-12,CMCIT);
+			RenderLine(gxs,gys,gxs,gys+gyw+gicw+48,CMCIT);
+			RenderLine(gxs+1,gys,gxs+1,gys+gyw+gicw+48,CMCIT);
 			for(i=0; i<5; i++)
 			{
-				prs_get_val(i, PRE_TEMPH,0,vstr);
+				prs_get_val(i, PRE_TEMPHC, 0, vstr);
 				if(sscanf(vstr,"%d",&tmax[i])!=1)
 				{
 					if(!i)
@@ -1360,7 +1379,7 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 						tmax[i]=tmax[i-1];
 					}
 				}
-				prs_get_val(i, PRE_TEMPL,0,vstr);
+				prs_get_val(i, PRE_TEMPLC, 0, vstr);
 				if(sscanf(vstr,"%d",&tmin[i])!=1)
 				{
 					tmin[i]=(i)?tmin[i-1]:0;
@@ -1381,16 +1400,27 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				{
 					maxt=tmin[i];
 				}
+#ifdef WWEATHER
+				prs_get_dwday(i, PRE_DAY,vstr);
+				strcat(vstr,"_SIG");
+#else
 				prs_get_day(i, vstr, metric);
 				if((pt1=strchr(vstr,','))!=NULL)
 				{
 					strcpy(pt1,"_SIG");
 				}
+#endif
 				strcpy(rstr,prs_translate(vstr,CONVERT_LIST));
-				RenderString(rstr, 30+i*gicw, 370, gicw, CENTER, BIG, CMCT);
-				RenderLine(gxs+(i+1)*gicw,gys,gxs+(i+1)*gicw,gys+gyw+gicw-10,CMCIT);
+
+				if(!show_icons) {
+					RenderString(rstr, 30+i*gicw, 370, gicw, CENTER, BIG, CMCT);
+				}
+				else {
+					RenderString(rstr, i*gicw-12, 345, gicw, CENTER, SMALL, CMCT);
+				}
+				RenderLine(gxs+(i+1)*gicw,gys,gxs+(i+1)*gicw,gys+gyw+gicw+48,CMCIT);
 			}
-			RenderLine(gxs+i*gicw+1,gys,gxs+i*gicw+1,gys+gyw+gicw-12,CMCIT);
+			RenderLine(gxs+i*gicw+1,gys,gxs+i*gicw+1,gys+gyw+gicw+48,CMCIT);
 			tstep=(5*(1+(int)((maxt-mint)/5))+1);
 			tstep=(double)(gyw-5)/tstep;
 
@@ -1400,6 +1430,10 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 			RenderLine(gxs,gys+gyw,gxs+gxw,gys+gyw,CMCIT);
 			RenderLine(gxs,gys+gyw+1,gxs+gxw,gys+gyw+1,CMCIT);
 			RenderLine(gxs,gys+gyw+2,gxs+gxw,gys+gyw+2,CMCIT);
+			RenderLine(gxs,gys+gyw+160,gxs+gxw,gys+gyw+160,CMCIT);
+			RenderLine(gxs,gys+gyw+161,gxs+gxw,gys+gyw+161,CMCIT);
+			RenderString((metric)? "°C":"°F", gxs-14, gys-3, 20, RIGHT, SMALL, CMCT);
+			RenderString((metric)? "°C":"°F", gxs+gxw-14, gys-3, 20, RIGHT, SMALL, CMCT);
 			RenderString(prs_translate("Höchstwerte",CONVERT_LIST), gxs, gys, gxw/2, CENTER, SMALL, YELLOW);
 			RenderString(prs_translate("Tiefstwerte",CONVERT_LIST), gxs+(gxw/2), gys, gxw/2, CENTER, SMALL, GREEN);
 
@@ -1414,9 +1448,14 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 					}
 					RenderLine(gxs,gys+gyw-(i*tstep)-1,gxs+gxw,gys+gyw-(i*tstep)-1,COL_MENUCONTENT_PLUS_3);
 				}
-				sprintf(vstr,"%d",mint+i-1);
-				RenderString(vstr,gxs-22,gys+gyw-(i*tstep)+7, 20, RIGHT, SMALL, CMCT);
-				RenderString(vstr,gxs+gxw+2,gys+gyw-(i*tstep)+7, 20, RIGHT, SMALL, CMCT);
+				if (metric) {
+					sprintf(vstr,"%d",mint+i-1);
+				}
+				else {
+					sprintf(vstr,"%.1f",(mint+i-1)*1.8+32); // °C to °F
+				}
+				RenderString(vstr,gxs-31,gys+gyw-(i*tstep)+7, 31, RIGHT, 22, CMCT);
+				RenderString(vstr,gxs+gxw+1,gys+gyw-(i*tstep)+7,(metric)?20:31, RIGHT, 22, CMCT);
 			}
 			RenderLine(gxs,gys+gyw-((i-1)*tstep)-3,gxs+gxw,gys+gyw-((i-1)*tstep)-3,((!(mint+i-1)))?CMCT:CMCIT);
 
@@ -1494,16 +1533,49 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				RenderLine(gxs+gicw/2+((i-1)*(gicw/10)),pmin+1,gxs+gicw/2+i*(gicw/10),pmax+1,YELLOW);
 				RenderLine(gxs+gicw/2+((i-1)*(gicw/10)),pmin+2,gxs+gicw/2+i*(gicw/10),pmax+2,YELLOW);
 			}
+			
+//	Ungeglättete Kurven			
+/*
+			for(i=1; i<7; i++)
+			{
+				{
+					pmin=(gys+gyw)-(tmin[i-1]-mint+1)*tstep-1;
+					pmax=(gys+gyw)-(tmin[i]-mint+1)*tstep-1;
+					RenderLine(gxs+gicw/2+gicw*(i-1),pmin,gxs+gicw/2+gicw*i,pmax,GREEN);
+					RenderLine(gxs+gicw/2+gicw*(i-1),pmin+1,gxs+gicw/2+gicw*i,pmax+1,GREEN);
+					pmin=(gys+gyw)-(tmax[i-1]-mint+1)*tstep-1;
+					pmax=(gys+gyw)-(tmax[i]-mint+1)*tstep-1;
+					RenderLine(gxs+gicw/2+gicw*(i-1),pmin,gxs+gicw/2+gicw*i,pmax,YELLOW);
+					RenderLine(gxs+gicw/2+gicw*(i-1),pmin+1,gxs+gicw/2+gicw*i,pmax+1,YELLOW);
+				}
+			}
+*/	
+			// show axtuell icon
+#ifdef WWEATHER
+			prs_get_val(0, ACT_ICON, 0, vstr);
+			// extract iconcode from url
+			get_iconcode(vstr, rstr);
+#else
+			// show icon
+			prs_get_val(0, ACT_ICON, 0, vstr);
+			sprintf (rstr,"%s.bmp",vstr);
+#endif
+			bmp2lcd (rstr);
+
 
 			if(show_icons)
 			{
 				for(i=0; i<5; i++)
 				{
 					prs_get_val(i,PRE_ICON,prelate,vstr);
+#ifdef WWEATHER
+					if (HTTP_downloadFile(vstr, ICON_FILE, 0, intype, ctmo, 2) == 0)
+#else
 					snprintf(icon, sizeof(icon), "http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
-					if (HTTP_downloadFile(icon, ICON_FILE, 0, intype, ctmo, 2) == 0) 
+ 					if (HTTP_downloadFile(icon, ICON_FILE, 0, intype, ctmo, 2) == 0) 
+#endif
 					{
-						tret=gif_on_data(icon, 72+i*gicw, 430, gicw, gicw, 5, (i)?((i==4)?1:0):2, 0, 0);
+						tret=pic_on_data(icon, startx+gxs+7+i*gicw, starty+374, 100, 100, 5, (i)?((i==4)?1:0):2, 0, 0);
 					}
 				}
 			}
@@ -1515,16 +1587,28 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 			{
 				dy=24;
 				sy-=2;
+
 				// show icon
+#ifdef WWEATHER
 				prs_get_val(0, ACT_ICON, 0, vstr);
-				sprintf (rstr,"%s.bmp",vstr);
+				// extract iconcode from url
+				get_iconcode(vstr, rstr);
+#else
+ 				// show icon
+ 				prs_get_val(0, ACT_ICON, 0, vstr);
+ 				sprintf (rstr,"%s.bmp",vstr);
+#endif
 				bmp2lcd (rstr);
 
 				if(show_icons)
 				{
 					xremove(ICON_FILE);
+#ifdef WWEATHER
+					if (HTTP_downloadFile(vstr, ICON_FILE, 0, intype, ctmo, 2) != 0) 
+#else
 					snprintf(icon, sizeof(icon), "http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
-					if (HTTP_downloadFile(icon, ICON_FILE, 0, intype, ctmo, 2) != 0) 
+ 					if (HTTP_downloadFile(icon, ICON_FILE, 0, intype, ctmo, 2) != 0) 
+#endif
 					{
 						printf("Tuxwetter <unable to get icon>\n");
 					}
@@ -1555,13 +1639,18 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 	
 				sprintf(rstr,"%s",prs_translate("Ortszeit:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_time(0, ACT_TIME, vstr, metric);
 				sprintf(rstr,"%s %s",vstr,cun);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 		
 				sprintf(rstr,"%s",prs_translate("Aktuelle Uhrzeit:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+//				prs_get_time(0, ACT_TIME, vstr);
 				time(&atime);
 				ltime=localtime(&atime);
 				if(metric)
@@ -1577,7 +1666,11 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 			
 				sprintf(rstr,"%s",prs_translate("Zeitpunkt der Messung:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
-				prs_get_dtime(0, ACT_UPTIME, vstr, metric);
+#ifdef WWEATHER
+				prs_get_time(0, ACT_OBST, vstr, metric);
+#else
+				prs_get_dtime(0, ACT_OBST, vstr, metric);
+#endif
 				sprintf(rstr,"%s %s",vstr,cun);
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=(1.5*(double)dy);
@@ -1591,9 +1684,15 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 		
 				sprintf(rstr,"%s",prs_translate("Temperatur:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
-				prs_get_val(0, ACT_TEMP, 0, vstr);
-				prs_get_val(0, ACT_FTEMP, 0, v2str);
-				sprintf(rstr,"%s °%s  %s %s °%s",vstr,tun,prs_translate("gefühlt:",CONVERT_LIST),v2str,tun);
+				if (metric) {
+					prs_get_val(0, ACT_TEMPC, 0, vstr);
+					prs_get_val(0, ACT_FTEMPC, 0, v2str);
+				}
+				else {
+					prs_get_val(0, ACT_TEMPF, 0, vstr);
+					prs_get_val(0, ACT_FTEMPF, 0, v2str);
+				}
+				sprintf(rstr,"%s °%s   %s %s °%s",vstr,tun,prs_translate("gefühlt:",CONVERT_LIST),v2str,tun);
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 
@@ -1606,23 +1705,39 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 	
 				sprintf(rstr,"%s",prs_translate("Taupunkt:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_val(0, ACT_DEWP, 0, vstr);
 				sprintf(rstr,"%s °%s",vstr,tun);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 		
 				sprintf(rstr,"%s",prs_translate("Luftdruck:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(0, ACT_PRESS, 0, vstr);
+#ifdef WWEATHER
+				sprintf(rstr,"%s %s",vstr,pun);
+				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
+#else
 				prs_get_val(0, ACT_PRTEND, 0, v2str);
 				sprintf(rstr,"%s %s  %s",vstr,pun,v2str);
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
+#endif
 				sy+=dy;
+
+
 
 				sprintf(rstr,"%s",prs_translate("Wind:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(0, ACT_WINDD, 0, vstr);
-				prs_get_val(0, ACT_WSPEED, 0, v2str);
+				if (metric) {
+					prs_get_val(0, ACT_WSPEEDK, 0, v2str); //Km
+				}
+				else {
+					prs_get_val(0, ACT_WSPEEDM, 0, v2str); //miles
+				}
 				if((strstr(vstr,"windstill")!=NULL) || (strstr(v2str,"CALM")!=NULL))
 				{
 					sprintf(rstr,"%s",prs_translate("windstill",CONVERT_LIST));
@@ -1637,28 +1752,52 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 	
 				sprintf(rstr,"%s",prs_translate("Sonnenaufgang:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_time(0, ACT_SUNR, vstr,metric);
 				sprintf(rstr,"%s %s",vstr,cun);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 			
 				sprintf(rstr,"%s",prs_translate("Sonnenuntergang:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_time(0, ACT_SUNS, vstr,metric);
 				sprintf(rstr,"%s %s",vstr,cun);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
-		
+#ifdef WWEATHER
+				sprintf(rstr,"%s",prs_translate("Bewölkung:",CONVERT_LIST));
+				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+				prs_get_val(0, ACT_CLOUDC, 0, v2str);
+				sprintf(rstr,"%s %%",v2str);
+				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
+				sy+=dy;
+#else		
 				sprintf(rstr,"%s",prs_translate("Mondphase:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(0, ACT_MOON, 0, v2str);
 				sprintf(rstr,"%s",v2str);
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;			
-			
+#endif			
 				sprintf(rstr,"%s",prs_translate("Fernsicht:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(0, ACT_VIS, 0, vstr);
+#ifdef WWEATHER
+				if (metric) {
+					sprintf(rstr,"%s %s",vstr,dun);
+				}
+				else {
+					float mi = 0.621371192 * atoi(vstr)+0.05; // 0.621371192 = 1km
+					sprintf(rstr,"%.1f %s",mi,dun);
+				}
+#else
 				if(sscanf(vstr,"%d",&itmp)==1)
 				{
 					sprintf(rstr,"%s %s",vstr,dun);
@@ -1667,10 +1806,22 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				{
 					strcpy(rstr,vstr);
 				}
-		
+#endif		
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
-			
+#ifdef WWEATHER
+				sprintf(rstr,"%s",prs_translate("Niederschlag:",CONVERT_LIST));
+				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+				prs_get_val(0, ACT_PRECIPMM, 0, vstr);
+				if (metric) {
+					sprintf(rstr,"%s %s",vstr,iun); // mm
+				}
+				else {
+					float d1 = 0;
+					sscanf(vstr, "%f", &d1);
+					sprintf(rstr,"%.2f %s",d1*0.03937,iun); // inches
+				}
+#else
 				sprintf(rstr,"%s",prs_translate("UV-Index:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(0, ACT_UVIND, 0, vstr);
@@ -1683,11 +1834,13 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(0, PRE_PPCP, 0, vstr);
 				sprintf(rstr,"%s %%",vstr);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
+			
 				if(show_icons)
 				{
-					tret=gif_on_data(icon, 540, 115, 100, 100, 5, 3, 0, 0);
+					tret=pic_on_data(icon, startx+495, starty+80, 100, 100, 5, 3, 0, 0);
 				}
 				memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
 			}
@@ -1696,23 +1849,37 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				--index;
 				if(index==1)
 				{
-					prs_get_val(index-1, PRE_TEMPH, 0, vstr);
+					if (metric)
+						prs_get_val(index-1, PRE_TEMPHC, 0, vstr);
+					else
+						prs_get_val(index-1, PRE_TEMPHF, 0, vstr);
+
 					if(strstr(vstr,"N/A")!=NULL)
 					{
 						prelate=1;
 					}
 				}
 			
-				// show icon
+#ifdef WWEATHER
 				prs_get_val(index-1,PRE_ICON,prelate,vstr);
-				sprintf (rstr,"%s.bmp",vstr);
+				// extract iconcode from url
+				get_iconcode(vstr, rstr);
+#else
+				// show pre icon
+ 				prs_get_val(index-1,PRE_ICON,prelate,vstr);
+ 				sprintf (rstr,"%s.bmp",vstr);
+#endif
 				bmp2lcd (rstr);
 
 				if(show_icons)
 				{
 					xremove(ICON_FILE);
+#ifdef WWEATHER
+					if (HTTP_downloadFile(vstr, ICON_FILE, 0, intype, ctmo, 2) != 0) 
+#else
 					snprintf(icon, sizeof(icon), "http://image.weather.com/web/common/intlwxicons/52/%s.gif",vstr);
-					if (HTTP_downloadFile(icon, ICON_FILE,0,intype,ctmo,2) != 0) 
+ 					if (HTTP_downloadFile(icon, ICON_FILE,0,intype,ctmo,2) != 0) 
+#endif
 					{
 						printf("Tuxwetter <unable to get icon file \n");
 					}
@@ -1724,7 +1891,12 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				}
 				else
 				{
+#ifdef WWEATHER
+					prs_get_dwday(index-1, PRE_DAY,rstr);
+					sprintf(vstr,"%s",prs_translate(rstr,CONVERT_LIST));
+#else
 					prs_get_day(index-1, vstr, metric);
+#endif
 				}
 				sprintf(rstr,"%s %s",prs_translate("Vorschau für",CONVERT_LIST),vstr);
 				RenderString(rstr, 0, 34, 619, CENTER, BIG, CMHT);
@@ -1737,29 +1909,43 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 		
 				sprintf(rstr,"%s",prs_translate("Höchste Temperatur:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
-				prs_get_val(index-1,PRE_TEMPH,0,vstr);
+				if (metric)
+					prs_get_val(index-1, PRE_TEMPHC, 0, vstr);
+				else
+					prs_get_val(index-1, PRE_TEMPHF, 0, vstr);
 				sprintf(rstr,"%s °%s",vstr,tun);
 				RenderString((prelate)?"---":rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 
 				sprintf(rstr,"%s",prs_translate("Tiefste Temperatur:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
-				prs_get_val(index-1,PRE_TEMPL,0,vstr);
+				if (metric)
+					prs_get_val(index-1, PRE_TEMPLC, 0, vstr);
+				else
+					prs_get_val(index-1, PRE_TEMPLF, 0, vstr);
 				sprintf(rstr,"%s °%s",vstr,tun);
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 
 				sprintf(rstr,"%s",prs_translate("Sonnenaufgang:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_time(index-1, PRE_SUNR,vstr,metric);
 				sprintf(rstr,"%s %s",vstr,cun);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 		
 				sprintf(rstr,"%s",prs_translate("Sonnenuntergang:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_time(index-1, PRE_SUNS,vstr,metric);
 				sprintf(rstr,"%s %s",vstr,cun);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=(1.5*(double)dy);
 		
@@ -1776,7 +1962,10 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 				sprintf(rstr,"%s",prs_translate("Wind:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(index-1, PRE_WINDD, 0, vstr);
-				prs_get_val(index-1, PRE_WSPEED, 0, v2str);
+				if (metric)
+					prs_get_val(0, PRE_WSPEEDK, 0, v2str); //Km/h
+				else
+					prs_get_val(0, PRE_WSPEEDM, 0, v2str); //miles ph
 				sprintf(tstr,"%s",prs_translate("von",CONVERT_LIST));
 				sprintf(rstr,"%s %s %s %s %s",tstr,vstr,prs_translate("mit",CONVERT_LIST),v2str,sun);
 				RenderString((prelate)?"---":rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
@@ -1784,16 +1973,34 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 
 				sprintf(rstr,"%s",prs_translate("Luftfeuchtigkeit:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_val(index-1, PRE_HMID, 0, vstr);
 				sprintf(rstr,"%s %%",vstr);
+#endif
 				RenderString((prelate)?"---":rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
-
+#ifdef WWEATHER
+				sprintf(rstr,"%s",prs_translate("Niederschlag:",CONVERT_LIST));
+				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+				prs_get_val(index-1, PRE_PRECIPMM, 0, vstr);
+				if (metric) {
+					sprintf(rstr,"%s %s",vstr,iun); // mm
+				}
+				else {
+					float d1 = 0;
+					sscanf(vstr, "%f", &d1);
+					sprintf(rstr,"%.2f %s",d1*0.03937,iun); // inches
+				}
+				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
+#else
 				sprintf(rstr,"%s",prs_translate("Regenrisiko:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
 				prs_get_val(index-1, PRE_PPCP, 0, vstr);
 				sprintf(rstr,"%s %%",vstr);
 				RenderString((prelate)?"---":rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
+#endif
 				sy+=(1.5*(double)dy);
 			
 				RenderString(prs_translate("Nachtwerte",CONVERT_LIST), col1, sy, col2-col1, LEFT, MED, GREEN);
@@ -1801,15 +2008,22 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 	
 				sprintf(rstr,"%s",prs_translate("Bedingung:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_val(index-1, PRE_COND, 1, vstr);
 				sprintf(rstr,"%s",vstr);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 			
 				sprintf(rstr,"%s",prs_translate("Wind:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_val(index-1, PRE_WINDD, 1, vstr);
-				prs_get_val(index-1, PRE_WSPEED, 1, v2str);
+				prs_get_val(index-1, PRE_WSPEEDK, 1, v2str);
 				if((strstr(vstr,"windstill")!=NULL) || (strstr(v2str,"CALM")!=NULL))
 				{
 					sprintf(rstr,"%s",prs_translate("windstill",CONVERT_LIST));
@@ -1819,26 +2033,37 @@ char tun[2]="C",sun[5]="km/h",dun[3]="km",pun[5]="mbar",cun[20];
 					sprintf(tstr,"%s",prs_translate("von",CONVERT_LIST));
 					sprintf(rstr,"%s %s %s %s %s",tstr,vstr,prs_translate("mit",CONVERT_LIST),v2str,sun);
 				}
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 
 				sprintf(rstr,"%s",prs_translate("Luftfeuchtigkeit:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_val(index-1, PRE_HMID, 1, vstr);
 				sprintf(rstr,"%s %%",vstr);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 	
 				sprintf(rstr,"%s",prs_translate("Regenrisiko:",CONVERT_LIST));
 				RenderString(rstr, col1, sy, col2-col1, LEFT, MED, CMCT);
+#ifdef WWEATHER
+				sprintf(rstr,"---");
+#else
 				prs_get_val(index-1, PRE_PPCP, 1, vstr);
 				sprintf(rstr,"%s %%",vstr);
+#endif
 				RenderString(rstr, col2, sy, 619-col2, LEFT, MED, CMCT);
 				sy+=dy;
 
+//				memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
+			
 				if(show_icons)
 				{
-					tret=gif_on_data(icon, 540, 115, 100, 100, 5, 3, 0, 0);
+					tret=pic_on_data(icon, startx+495, starty+80, 100, 100, 5, 3, 0, 0);
 				}
 				memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
 			}
@@ -1938,7 +2163,7 @@ int show_jpg(char *name, int xstart, int ystart, int xsize, int ysize, int wait,
 {
 FILE *tfh;
 int x1,y1,rcj,rv=-1;
-int imx,imy,dxo,dyo,dxp,dyp;
+int imx = -1,imy = -1,dxo = -1,dyo = -1,dxp = -1,dyp = -1;
 unsigned char *buffer=NULL;
 
 	if((tfh=fopen(name,"r"))!=NULL)
@@ -2032,6 +2257,7 @@ unsigned char *buffer=NULL;
 			else
 			{
 				showBusy(startx+3,starty+3,10,0xff,00,00);
+//				showBusy(startx+10,starty+10,20,170,0,0);
 				if(rcn==RC_HOME)
 				{
 					rcn=RC_OK;
@@ -2127,7 +2353,7 @@ unsigned char *buffer=NULL, fname[512];
 	return (rv)?-1:0;	
 }
 
-int gif_on_data(char *url, int xstart, int ystart, int xsize, int ysize, int wait, int single, int center, int rahmen)
+int pic_on_data(char *url, int xstart, int ystart, int xsize, int ysize, int wait, int single, int center, int rahmen)
 {
 FILE *tfh;
 int i,x1,y1,rv=-1;
@@ -2138,22 +2364,35 @@ unsigned char *tbuf=lfb;
 	if((tfh=fopen(ICON_FILE,"r"))!=NULL)
 	{
 		lfb=lbb;
+#ifdef WWEATHER
+		if(fh_png_getsize(ICON_FILE, &x1, &y1, xsize, ysize))
+		{
+			printf("Tuxwetter <invalid PNG-Format>\n");
+			return -1;
+		}
+#else
 		if(fh_gif_getsize(ICON_FILE, &x1, &y1, xsize, ysize))
 		{
 			printf("Tuxwetter <invalid GIF-Format>\n");
 			return -1;
 		}
+#endif
 		if((buffer=(unsigned char *) malloc(x1*y1*4))==NULL)
 		{
 			printf(NOMEM);
 			return -1;
 		}
+#ifdef WWEATHER
+		if(!(rv=fh_png_load(ICON_FILE, buffer, x1, y1)))
+#else
 		if(!(rv=fh_gif_load(ICON_FILE, buffer, x1, y1)))
+#endif
 		{
 			scale_pic(&buffer,x1,y1,xstart,ystart,xsize,ysize,&imx,&imy,&dxp,&dyp,&dxo,&dyo,center);
 			if (rahmen >0)
 			{
 				RenderBox(xstart+1-sx-rahmen, ystart-6-sy-rahmen,xstart+xsize+2-sx+rahmen,ystart+ysize-sy-6+rahmen, 0, CMCS);
+//				memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
 			}
 
 			if(single & 2)
@@ -2169,6 +2408,7 @@ unsigned char *tbuf=lfb;
 						*(gbuf++)=11;
 #endif
 			}
+
 			fb_display(buffer, imx, imy, dxp, dyp, dxo, dyo, 0, single);
 			if(single & 1)
 			{
@@ -2269,11 +2509,11 @@ int col1=40,sy=70,dy=26;
 
 char *translate_url(char *cmd, int ftype, int absolute)
 {
-unsigned char *rptr=NULL,*pt1,*pt2,*pt3,*pt4,*pt5;
-unsigned char *sstr=strdup(cmd),*estr=strdup(cmd);
-FILE *fh,*fh2;
+char *rptr=NULL,*pt1 = NULL,*pt2 = NULL,*pt3 = NULL,*pt4 = NULL,*pt5 = NULL;
+char *sstr=strdup(cmd),*estr=strdup(cmd);
+FILE *fh = NULL,*fh2 = NULL;
 int txttype=(ftype==TYP_TXTHTML),crlf=0;
-long flength;
+long flength=0;
 
 
 	strcpy(trstr,cmd);
@@ -2491,12 +2731,33 @@ int llev=m->headerlevels[m->act_header], lmen=m->act_header, lentr=m->lastheader
 }
 
 /******************************************************************************
+ * get icon code from url
+ ******************************************************************************/
+void get_iconcode(const char * input, char * output)
+{
+char *pt1 = NULL, *pt2 = NULL;
+char v2str[128];
+
+	strcpy(output, "na"); // NA
+	if ((pt1=strrchr(input,'/')) != NULL) {
+		if ((pt1=strchr(pt1+1,'_')) != NULL) {
+			if ((pt2=strchr(pt1+1,'_')) != NULL) {
+				strncpy(v2str,pt1+1,pt2-pt1-1);
+				v2str[pt2-pt1-1]='\0';
+				strcpy(output, v2str);
+			}
+		}
+	}
+
+}
+
+/******************************************************************************
  * Tuxwetter Main
  ******************************************************************************/
 
 int main (int argc, char **argv)
 {
-int index=0,cindex=0,tv,rcm,rce,lpos,lrow,ferr,tret=-1;
+int index=0,cindex=0,tv,rcm,rce,lpos,lrow,ferr=0,tret=-1;
 int mainloop=1,wloop=1, dloop=1;
 char rstr[BUFSIZE], *rptr;
 char dstr[BUFSIZE];
@@ -2511,7 +2772,7 @@ PLISTENTRY pl=&epl;
 		{
 			if((strstr(argv[tv],"-v")==argv[tv])||(strstr(argv[tv],"--Version")==argv[tv]))
 			{
-				printf("New-Tuxwetter Version %.2f\n",P_VERSION);
+				printf("New-Tuxwetter Version %.2f%s\n",P_VERSION,S_VERSION);
 				return 0;
 			}
 			if(*argv[tv]=='/')
@@ -2556,7 +2817,7 @@ PLISTENTRY pl=&epl;
 			radius=9;
 		else
 			radius=0;
-
+			
 		if((trstr=malloc(BUFSIZE))==NULL)
 		{
 			printf(NOMEM);
@@ -2585,7 +2846,7 @@ PLISTENTRY pl=&epl;
 			Clear_List(&funcs,-1);
 			return -1;
 		}
-
+	
 		fb = open(FB_DEVICE, O_RDWR);
 #ifdef HAVE_DBOX_HARDWARE
 		rc = open(RC_DEVICE, O_RDONLY);
@@ -2711,6 +2972,7 @@ PLISTENTRY pl=&epl;
 
 		desc.face_id = FONT;
 		desc.flags = FT_LOAD_MONOCHROME;
+
 	//init backbuffer
 
 		if(!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
@@ -2727,6 +2989,12 @@ PLISTENTRY pl=&epl;
 		startx = sx + (((ex-sx) - 620)/2);
 		starty = sy + (((ey-sy) - 505)/2);
 
+	/* Set up signal handlers. */
+	signal(SIGINT, quit_signal);
+	signal(SIGTERM, quit_signal);
+	signal(SIGQUIT, quit_signal);
+
+	// Prepare BMPs
 	bmp2lcd (BMP_FILE);
 
 //  Startbildschirm
@@ -2735,9 +3003,12 @@ PLISTENTRY pl=&epl;
 
 	if(show_splash && !cmdline)
 	{
-		show_jpg("/share/tuxbox/tuxwetter/startbild.jpg", sx, sy, ex-sx, ey-sy, 5, 0, 1, 1);
+		sprintf (rstr,"cd /tmp\n/bin/busybox tar -xf bmps.tar startbild.jpg");
+		system(rstr);
+		show_jpg("/tmp/startbild.jpg", sx, sy, ex-sx, ey-sy, 5, 0, 1, 1);
+		xremove("/tmp/startbild.jpg");
 	}
-
+		
 	//main loop
 	
 	menu.act_entry=0;
@@ -3003,7 +3274,7 @@ PLISTENTRY pl=&epl;
 														fprintf(fh2,"<br>");
 														while(*pt1)
 														{	
-															if(*pt1==' ' && cnt>40)
+															if(*pt1==' ' && cnt>50) //old 40
 															{
 																fprintf(fh2,"\n<br>");
 																cnt=0;
@@ -3087,6 +3358,7 @@ PLISTENTRY pl=&epl;
 									sprintf(tstr,"%s",prs_translate("Fehler",CONVERT_LIST));
 									sprintf(tstr,"%s %d %s.",tstr,ferr,prs_translate("beim Download",CONVERT_LIST));
 									ShowMessage(tstr,1);
+									ferr=0;
 									dloop=-1;
 								}
 							
@@ -3124,6 +3396,17 @@ PLISTENTRY pl=&epl;
 
 							for(index=0; index<MAX_FUNCS; index++)
 							{
+#ifdef WWEATHER
+								if(index==2)
+								{
+									sprintf(rstr,"%s",prs_translate("Heute",CONVERT_LIST));
+								}
+								else
+								{
+									prs_get_dwday(index-2, PRE_DAY,tstr);
+									sprintf(rstr,"%s",prs_translate(tstr,CONVERT_LIST));
+								}
+#else
 								if(index==2)
 								{
 									sprintf(rstr,"%s",prs_translate("Heute",CONVERT_LIST));
@@ -3135,7 +3418,8 @@ PLISTENTRY pl=&epl;
 								if((rptr=strchr(rstr,','))!=NULL)
 								{
 									*rptr=0;
-								}		
+								}
+#endif
 								if(index>1)
 								{
 									sprintf(tstr,"%s %s",prs_translate("Vorschau für",CONVERT_LIST),rstr);
@@ -3273,12 +3557,12 @@ PLISTENTRY pl=&epl;
 	sprintf(tstr,"[ -e /tmp/picture* ] && rm /tmp/picture*");
 	system(tstr);
 	xremove("/tmp/tuxwettr.tmp");
-	xremove("/tmp/bmps.tar");
 	xremove("/tmp/icon.gif");
 	xremove("/tmp/tempgif.gif");
 	xremove(PHP_FILE);
-	put_instance(get_instance()-1);
-	
+
+	put_instance(instance = get_instance()-1);
+
 	if((tfh=fopen(TIME_FILE,"r"))!=NULL)
 	{
 		fclose(tfh);

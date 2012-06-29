@@ -1,5 +1,5 @@
 /*
- * $Id: text.c,v 1.6 2012/06/16 14:27:28 rhabarber1848 Exp $
+ * $Id: text.c,v 1.7 2012/06/29 21:26:01 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -64,14 +64,15 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 			return 0;
 		}
 
-		if(use_kerning)
+/*		if(use_kerning)
 		{
 			FT_Get_Kerning(face, prev_glyphindex, glyphindex, ft_kerning_default, &kerning);
 
 			prev_glyphindex = glyphindex;
 			kerning.x >>= 6;
 		}
-		else kerning.x = 0;
+		else*/
+			kerning.x = 0;
 
 	//render char
 
@@ -200,14 +201,14 @@ void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int si
 	char rstr[256], *rptr=rstr;
 	int varcolor=color;
 
-	if(strstr(string,"N/A"))
+/*	if(strstr(string,"N/A"))
 	{
 		sprintf(rstr,"---");
 	}
 	else
 	{
-		strcpy(rstr,string);
-	}
+*/		strcpy(rstr,string);
+//	}
 
 	//set size
 
@@ -258,6 +259,21 @@ void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int si
 			}
 			else
 			{
+				if (*rptr==0xC3)
+				{
+					++rptr;
+					switch(*rptr)
+					{
+					case 0x84: *rptr='Ä'; break;
+					case 0x96: *rptr='Ö'; break;
+					case 0x9C: *rptr='Ü'; break;
+					case 0xA4: *rptr='ä'; break;
+					case 0xB6: *rptr='ö'; break;
+					case 0xBC: *rptr='ü'; break;
+					case 0x9F: *rptr='ß'; break;
+					default  : *rptr='.'; break;
+					}
+				}
 				if((charwidth = RenderChar(*rptr, sx, sy, ex, ((color!=CMCIT) && (color!=CMCST))?varcolor:color)) == -1) return; /* string > maxwidth */
 				sx += charwidth;
 			}

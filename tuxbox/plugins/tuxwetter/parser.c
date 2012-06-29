@@ -1,5 +1,5 @@
 /*
- * $Id: parser.c,v 1.1 2009/12/19 19:42:49 rhabarber1848 Exp $
+ * $Id: parser.c,v 1.2 2012/06/29 21:26:01 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -32,7 +32,15 @@
 /*
 Interne Variablen Bitte nicht direkt aufrufen!!!
 */
-char 	data		[1000][50];
+
+#ifdef WWEATHER
+#	define MAXITEM	200
+#	define MAXMEM	300
+#else
+#	define MAXITEM	1000
+#	define MAXMEM	50
+#endif
+char 	data		[MAXITEM][MAXMEM];
 char 	conveng		[500][40]; 
 char	convger		[500][40];
 int	prev_count =	0;
@@ -180,7 +188,9 @@ int prs_get_val (int i, int what, int nacht, char *out)
 {
 int z;
 
-	strcpy(out,data[(what & ~TRANSLATION)+(i*PRE_STEP)+(nacht*NIGHT_STEP)]);
+	strcpy(out, data[(what & ~TRANSLATION)+(i*PRE_STEP)+(nacht*NIGHT_STEP)]);
+	TrimString(out);
+
 	if(what & TRANSLATION)
 	{
 		for(z=0;z<=tc;z++)
@@ -271,6 +281,35 @@ int hh,mm,ret=1;
 	return ret;
 }
 
+int prs_get_dwday(int i, int what, char *out)
+{
+	int ret=1;
+	char *wday[] = {"SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","???"};
+
+	struct tm ts;
+
+	*out=0;
+
+	if(sscanf(data[(what & ~TRANSLATION)+(i*PRE_STEP)],"%d-%d-%d",&t_actyear,&t_actmonth,&t_actday)==3)
+	{
+		ts.tm_year = t_actyear - 1900;
+		ts.tm_mon  = t_actmonth - 1;
+		ts.tm_mday = t_actday;
+
+		ts.tm_hour = 0;
+		ts.tm_min  = 0;
+		ts.tm_sec  = 1;
+		ts.tm_isdst = -1;
+
+		if ( mktime(&ts) == -1 )
+			ts.tm_wday = 7;
+
+		sprintf(out,"%s", wday[ts.tm_wday]);
+		ret=0;
+	}
+	return ret;
+}
+
 //**************************************** Parser ****************************************
 
 //*** XML File ***
@@ -278,15 +317,23 @@ int hh,mm,ret=1;
 int parser(char *citycode, char *trans, int metric, int inet, int ctmo)
 {
 	int  rec=0, flag=0;
-	int cc=0, bc=1, day_data=PRE_DAY, exit_ind=-1;
+	int cc=0, bc=1, exit_ind=-1;
 	char gettemp;
 	FILE *wxfile=NULL;
 	char url[200];
 	char debug[505];
+
+#ifdef WWEATHER
+	extern char key[];
+	int d_flag=0;	//data flag ">DATA<"
+	int D_flag=0;	//data flag "[DATA]"
+	int l_flag=0;	//do not change to upper case (URL)
+#else
+	int day_data=PRE_DAY;
 	int previews=9;
 	extern char par[], key[];
-
-	memset(data,0,1000*50);
+#endif
+	memset(data,0,MAXITEM*MAXMEM /* 1000*50 */);
 	memset(conveng,0,500*40); 
 	memset(convger,0,500*40);
 	prev_count=0;
@@ -294,7 +341,87 @@ int parser(char *citycode, char *trans, int metric, int inet, int ctmo)
 	tc=0;
 	t_actday=0;
 	t_actmonth=0;
-	
+
+#ifdef WWEATHER
+/*	sprintf (url,"wget -q -O /tmp/tuxwettr.tmp \"http://free.worldweatheronline.com/feed/weather.ashx?q=%s&format=xml&num_of_days=5&includeLocation=yes&key=%s\"",citycode,key);
+	exit_ind=system(url);
+	sleep(1);
+*/
+	sprintf (url,"http://free.worldweatheronline.com/feed/weather.ashx?q=%s&format=xml&num_of_days=5&includeLocation=yes&key=%s",citycode,key);
+	exit_ind=HTTP_downloadFile(url, "/tmp/tuxwettr.tmp", 0, inet, ctmo, 3);
+
+	if(exit_ind != 0)
+	{
+		printf("Tuxwetter <Download data from server failed. Errorcode: %d>\n",exit_ind);
+		exit_ind=-1;
+		return exit_ind;
+	}
+
+	exit_ind=-1;
+
+	if ((wxfile = fopen("/tmp/tuxwettr.tmp","r"))==NULL)
+	{
+		printf("Tuxwetter <Missing tuxwettr.tmp File>\n");
+		return exit_ind;
+	}
+	else
+	{
+		fgets(debug,50,wxfile);
+	    	//printf("%s\n",debug);
+		if((debug[45] != 'r')||(debug[46] != 'e')||(debug[47] != 'q'))
+		{
+			fclose(wxfile);
+			return exit_ind;
+		 }
+		else 
+		{
+			// starting position forcast
+			bc = NA; 
+			strcpy(data[bc],"N/A");
+			bc++;
+
+			fseek(wxfile, 0L, SEEK_SET);
+			while (!feof(wxfile))
+			{
+				gettemp=fgetc(wxfile);
+				if (gettemp == '<' || gettemp == ']') rec = 0;
+				if (gettemp == ':') l_flag = 1;
+				if (rec == 1)
+				{
+					if(!l_flag)
+						data[bc][cc] = toupper(gettemp);
+					else
+						data[bc][cc] = gettemp;
+					//printf("#2 data[%d][%d] = %c(%d)\n",bc,cc,gettemp,gettemp);
+					cc++;
+					d_flag=1;
+					if(cc == MAXMEM-1) rec = 0;
+				}
+				if (gettemp == '>' || gettemp == '[') rec = 1;
+				if (gettemp == '[' && !D_flag)
+				{
+					rec = 0;
+					D_flag = 1;
+				}
+				if ((gettemp == '<' || gettemp == ']') && d_flag)
+				{
+					data[bc][cc] = '\0';
+					//printf("data[%d] = %s\n",bc,data[bc]);
+					bc++;
+					cc = 0;
+					rec = 0;
+					d_flag = 0;
+					D_flag = 0;
+					l_flag = 0;
+				}
+			}
+		}
+	}
+	fclose(wxfile);
+	cc=0;
+
+	exit_ind=1;
+#else	
 /*	sprintf (url,"http://xoap.weather.com/weather/local/%s?cc=*&dayf=%d&prod=xoap&unit=%c&par=1005530704&key=a9c95f7636ad307b",citycode,previews,(metric)?'m':'u');
 	exit_ind=HTTP_downloadFile(url, "/tmp/tuxwettr.tmp", 0, inet, ctmo, 3);
 */
@@ -388,6 +515,7 @@ int parser(char *citycode, char *trans, int metric, int inet, int ctmo)
 	cc=0;
 
 	exit_ind=1;
+#endif
 	
 //*** Übersetzungs File ***
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: fb_display.c,v 1.1 2009/12/19 19:42:49 rhabarber1848 Exp $
+ * $Id: fb_display.c,v 1.2 2012/06/29 21:26:01 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -91,7 +91,6 @@ void blit2FB(void *fbbuff,
 	unsigned int xp, unsigned int yp,
 	unsigned int xoffs, unsigned int yoffs,
 	int cpp, int setpal);
-
 inline unsigned short make16color(unsigned long r, unsigned long g, 
 											 unsigned long b, unsigned long rl, 
 											 unsigned long ro, unsigned long gl, 
@@ -119,7 +118,7 @@ int fb_set_gmode(int gmode)
 		var.xres_virtual = 720;
 		var.yres= 576;
 		var.yres_virtual = 576;
-	
+
 		var.bits_per_pixel = gpix.bpp;
 		var.red = gpix.red;
 		var.green = gpix.green;
@@ -129,7 +128,7 @@ int fb_set_gmode(int gmode)
 #ifdef HAVE_DBOX_HARDWARE
 		ioctl(fb, AVIA_GT_GV_GET_BLEV, &alpha);
 #endif
-	
+
 		clearFB(720, 576, 16, 2);
 		
 		if(set332map() == -1)
@@ -177,7 +176,6 @@ void fb_display(unsigned char *rgbbuff, int x_size, int y_size, int x_pan, int y
 		printf("fb_display <FBIOGET_VSCREENINFO failed>\n");
 		return;
 	}
-
     /* correct panning */
     if(x_pan > x_size - (int)var.xres) x_pan = 0;
     if(y_pan > y_size - (int)var.yres) y_pan = 0;
@@ -520,3 +518,4 @@ int showBusy(int sx, int sy, int width, char r, char g, char b)
 	}
 return 0;
 }
+

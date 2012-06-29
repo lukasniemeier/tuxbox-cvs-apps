@@ -1,5 +1,5 @@
 /*
- * $Id: color.h,v 1.1 2009/12/19 19:42:49 rhabarber1848 Exp $
+ * $Id: color.h,v 1.2 2012/06/29 21:26:01 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
 */
 
 #ifndef __color__

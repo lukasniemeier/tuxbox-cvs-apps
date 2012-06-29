@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.h,v 1.8 2012/06/16 14:27:28 rhabarber1848 Exp $
+ * $Id: tuxwetter.h,v 1.9 2012/06/29 21:26:01 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -43,6 +43,9 @@
 #include FT_FREETYPE_H
 #include FT_CACHE_H
 #include FT_CACHE_SMALL_BITMAPS_H
+
+#define WWEATHER
+#define BUFSIZE 4095
 
 #define MISS_FILE	"/var/tuxbox/config/tuxwetter/missing_translations.txt"
 
@@ -168,6 +171,7 @@ extern unsigned char *proxyadress, *proxyuserpwd;
 extern int instance;
 int get_instance(void);
 void put_instance(int pval);
+void get_iconcode(const char * input, char * output);
 
 struct fb_fix_screeninfo fix_screeninfo;
 struct fb_var_screeninfo var_screeninfo;
@@ -185,7 +189,6 @@ unsigned short rccode;
 
 #endif
 
-#define BUFSIZE 4096
 #define FB_DEVICE	"/dev/fb/0"
 
 #if HAVE_DVB_API_VERSION < 3

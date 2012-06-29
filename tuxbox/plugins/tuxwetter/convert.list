@@ -14,13 +14,16 @@ AM T-STORMS|vormittags Gewitter
 AM|vormittags
 AND|und
 AT|mit
+BLIZZARD|Schneesturm
+BLOWING SNOW|Schneetreiben
 CALM|windstill
 CET|MEZ
 CLEAR|heiter
-CLEARING|aufklarend 
+CLEARING|aufklarend
+CLEAR/SUNNY|klar/sonnig
 CLOUDS|wolkig
 CLOUDS EARLY / CLEARING LATE|wolkig, später aufklarend
-CLOUDY|wolkig 
+CLOUDY|wolkig
 CLOUDY AND WINDY|wolkig und stürmisch
 CLOUDY / WIND|bewölkt und stürmisch
 DRIFTING SNOW|Schneetreiben
@@ -33,7 +36,7 @@ ESE|OstSüdOst
 EXTREME|extrem stark
 FAIR|heiter
 FAIR AND WINDY|Heiter und windig
-FALLING|fallend 
+FALLING|fallend
 FEW SHOWERS|etwas Schauer
 FEW SNOW SHOWERS|einige Schneeschauer
 FEW SNOW SHOWERS / WIND|einige Schneeschauer, windig
@@ -41,6 +44,8 @@ FIRST QUARTER|zunehmender Halbmond
 FOG|Nebel
 FOG LATE|später neblig
 FOGGY|neblig
+FREEZING DRIZZLE|gefrierender Nieselregen
+FREEZING FOG|gefrierender Nebel
 FREEZING RAIN|Eisregen
 FREEZING RAIN / SLEET|gefrierender Regen, Graupel
 FRIDAY|Freitag
@@ -48,24 +53,32 @@ FULL|Vollmond
 FULL MOON|Vollmond
 GERMANY|Deutschland
 HAZE|dunstig
+HEAVY FREEZING DRIZZLE|stark gefrierender Nieselregen
 HEAVY T-STORM AND WINDY|schwere Gewitter, stürmisch
 HEAVY RAIN|starker Regen
+HEAVY RAIN AT TIMES|zeitweise starker Regen
+HEAVY SNOW|starker Schneefall
 HIGH|hoch
 ICE CRYSTALS|Eiskristalle
 ICE EARLY|anfangs Eisglätte
+ICE PELLETS|Hagel
 ISOLATED T-STORMS|örtlich Gewitter
 ISOLATED|örtlich 
 LAST QUARTER|abnehmender Halbmond
 LIGHT DRIZZLE|leichter Nieselregen
 LIGHT FREEZING DRIZZLE|leichter Nieselregen, überfrierend
+LIGHT FREEZING RAIN|leicht überfrierender Regen
+LIGHT RAIN|leichter Regen
 LIGHT RAIN AND WINDY|leichter Regen, stürmisch
-LIGHT RAIN / WIND|leichter Regen, windig
-LIGHT RAIN / WIND LATE|im Verlauf leichter Regen, windig
 LIGHT RAIN EARLY|anfangs leichter Regen
 LIGHT RAIN LATE|später leichter Regen
 LIGHT RAIN SHOWER|leichte Schauer 
 LIGHT RAIN SHOWER AND WINDY|leichte Regenschauer, stürmisch
-LIGHT RAIN|leichter Regen
+LIGHT RAIN / WIND|leichter Regen, windig
+LIGHT RAIN / WIND LATE|im Verlauf leichter Regen, windig
+LIGHT SHOWERS OF ICE PELLETS|leichte Hagelschauer
+LIGHT SLEET|Schneeregen oder Regen
+LIGHT SLEET SHOWERS|leichter Graupelschauer
 LIGHT SNOW|leichter Schneefall
 LIGHT SNOW EARLY|anfangs leichter Schneefall
 LIGHT SNOW GRAINSLIGHT SNOW LATE|leichter Schneegriesel
@@ -75,9 +88,20 @@ LIGHT SNOW AND FREEZING RAIN|leichter Schneefall, gefrierender Regen
 LIGHT SNOW AND WINDY|leichter Schneefall, stürmisch
 LIGHT SNOW / WIND|leichter Schneefall, stürmisch
 LOW|niedrig
-MIST|Nebel 
-MIST AND WINDY|Nebel und windig
+MIST|Dunst
+MIST AND WINDY|Dunst und windig
 MODERATE|mäßig
+MODERATE OR HEAVY FREEZING RAIN|mäßig bis stark gefrierender Regen
+MODERATE OR HEAVY RAIN IN AREA WITH THUNDER|mäßiger Regen im Nahbereich mit Donner 
+MODERATE OR HEAVY RAIN SHOWER|mäßig bis starker Regenschauer
+MODERATE OR HEAVY SHOWERS OF ICE PELLETS|leichte bis starke Hagelschauer
+MODERATE OR HEAVY SLEET|mäßig bis starker Schneeregen
+MODERATE OR HEAVY SLEET SHOWERS|mäßig bis starker Graupelschauer
+MODERATE OR HEAVY SNOW IN AREA WITH THUNDER|mäßig bis starker Schneefall mit Donner
+MODERATE OR HEAVY SNOW SHOWERS|mäßige bis starke Schneeschauer
+MODERATE RAIN|mäßiger Regen
+MODERATE RAIN AT TIMES|zeitweise mäßiger Regen
+MODERATE SNOW|mäßiger Schneefall
 MONDAY|Montag
 MOSTLY CLEAR|überwiegend heiter
 MOSTLY CLOUDY AND WINDY|überwiegend bewölkt, stürmisch
@@ -94,20 +118,30 @@ NNE|NordNordOst
 NNW|NordNordWest
 NW|NordWest
 OVERCAST|bedeckt
+PARTLY|teils
+PARTLY CLOUDY|teils wolkig
 PARTLY CLOUDY AND WINDY|teilweise bewölkt und stürmisch
 PARTLY CLOUDY / WIND|teils bewölkt und stürmisch
-PARTLY CLOUDY|teils wolkig
-PARTLY|teils
 PATCHES OF FOG|vereinzelt Nebel
+PATCHY FREEZING DRIZZLE NEARBY|leichter gefrierender Nieselregen in der Nähe
+PATCHY HEAVY SNOW|stellenweise starker Schneefall
+PATCHY LIGHT DRIZZLE|stellenweise leichter Nieselregen
+PATCHY LIGHT RAIN|stellenweise leichter Regen
+PATCHY LIGHT RAIN IN AREA WITH THUNDER|stellenweise leichter Regen mit Donner
+PATCHY LIGHT SNOW|stellenweise leichter Schneefall
+PATCHY LIGHT SNOW IN AREA WITH THUNDER|stellenweise leichter Schneefall mit Donner
+PATCHY MODERATE SNOW|stellenweise mäßiger Schneefall
+PATCHY RAIN NEARBY|stellenweise Regen in der Nähe
+PATCHY SLEET NEARBY|stellenweise Schneeregen in der Nähe
+PATCHY SNOW NEARBY|stellenweise Schneefall in der Nähe
 PM LIGHT RAIN|nachmittags leichter Regen
 PM LIGHT SNOW|nachmittags leichter Schneefall
 PM RAIN / SNOW SHOWERS|nachmittags Regen- u. Schneeschauer
 PM RAIN / SNOW SHOWERS / WIND|nachmittags Regen- u. Schneeschauer / windig
 PM SHOWERS|nachmittags Schauer
-PM SHOWERS / WIND|nachmitags Schauer, windig
+PM SHOWERS / WIND|nachmittags Schauer, windig
 PM SNOW SHOWERS|nachmittags Schneeschauer
 PM SNOW SHOWERS / WIND|nachmittags Schneeschauer / windig
-PM T-SHOWERS|nachmittags Gewitter
 PM T-STORMS|nachmittags Gewitter
 PM|nachmittags
 RAIN|Regen
@@ -148,7 +182,6 @@ SHOWERS|Schauer
 SNOW|Schnee
 SNOW AND WINDY|Schnee, stürmisch
 SNOW EARLY|anfangs Schneefall
-SNOW GRAINS|Schneegriesel
 SNOW SHOWERS|Schneeschauer
 SNOW SHOWER|Schneeschauer
 SNOW SHOWERS EARLY|anfangs Schneeschauer
@@ -168,7 +201,9 @@ THE|der
 THIRD QUARTER|abnehmender Halbmond
 THUNDER|Gewitter
 THUNDER IN THE VICINITY|Gewitter in der Umgebung
+THUNDER OUTBREAKS IN NEARBY|Donner-Ausbrüche in der Nähe
 THURSDAY|Donnerstag
+TORRENTIAL RAIN SHOWER|sintflutartige Regenschauer
 T-SHOWERS|tropische Schauer
 T-SHOWERS / WIND|tropische Schauer / Wind
 T-STORM|Gewitter
@@ -254,8 +289,10 @@ von|
 mit|
 Sonnenaufgang:|
 Sonnenuntergang:|
+Bewölkung:|
 Mondphase:|
 Fernsicht:|
+Niederschlag:|
 UV-Index:|
 Regenrisiko:|
 Heute|
@@ -291,10 +328,11 @@ Wochentrend anzeigen|
 Höchstwerte|
 Tiefstwerte|
 Trend für die kommende Woche|
-Montag_SIG|Mo
-Dienstag_SIG|Di
-Mittwoch_SIG|Mi
-Donnerstag_SIG|Do
-Freitag_SIG|Fr
-Samstag_SIG|Sa
-Sonntag_SIG|So
+MONDAY_SIG|Mo
+TUESDAY_SIG|Di
+WEDNESDAY_SIG|Mi
+THURSDAY_SIG|Do
+FRIDAY_SIG|Fr
+SATURDAY_SIG|Sa
+SUNDAY_SIG|So
+
