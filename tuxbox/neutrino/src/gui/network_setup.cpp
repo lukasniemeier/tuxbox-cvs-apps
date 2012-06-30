@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.24 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.25 2012/06/30 10:57:13 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -357,15 +357,13 @@ const char * CNetworkSetup::mypinghost(const char * const host)
 //saves settings without apply, reboot is required 
 void CNetworkSetup::saveNetworkSettings(bool show_message)
 {
-	bool show_msg = show_message;
-
 	printf("[network setup] saving current network settings...\n");
 
 	prepareSettings();
 
   	networkConfig->commitConfig();
 
-	if (show_msg)
+	if (show_message)
 		ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_NETWORKMENU_SETUPSAVED), width , g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR], NEUTRINO_ICON_INFO); // UTF-8
 
 }
@@ -407,17 +405,17 @@ int CNetworkSetup::saveChangesDialog()
 	
 	switch(result)
 	{
-		case 0: //yes
+		case CMessageBox::mbrYes:
 			applyNetworkSettings();
 			return 0;
 			break;
 	
-		case 1: //no
+		case CMessageBox::mbrNo:
 			saveNetworkSettings(true);
 			return 0;
 			break;
 	
-		default://back
+		default:
 			restoreNetworkSettings(true);
 			return 1;
 			break;
@@ -427,10 +425,9 @@ int CNetworkSetup::saveChangesDialog()
 //restores settings without any changes if user wants to
 void CNetworkSetup::restoreNetworkSettings(bool show_message)
 {
-	bool show_msg = show_message;
-	int result = 1;
+	int result = CMessageBox::mbrNo;
 
-	if (show_msg)
+	if (show_message)
 	{
 		result = 	ShowMsgUTF(LOCALE_MAINSETTINGS_NETWORK, g_Locale->getText(LOCALE_NETWORKMENU_RESET_SETTINGS_NOW), CMessageBox::mbrNo, 
 				CMessageBox::mbYes | 
@@ -439,7 +436,7 @@ void CNetworkSetup::restoreNetworkSettings(bool show_message)
 				width);
 	}
 
-	if (result == 0) //yes
+	if (result == CMessageBox::mbrYes)
 	{
 		network_automatic_start	= old_network_automatic_start;
 		network_dhcp		= old_network_dhcp;
