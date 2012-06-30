@@ -36,6 +36,7 @@ class fbClass
 	FTC_SBitCache		cache;
 	FTC_SBit		sbit;
 	FTC_ImageTypeRec	desc;
+	FT_Face			face;
 	FT_UInt			prev_glyphindex;
 	int use_kerning;
 	int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int r, int g, int b);
