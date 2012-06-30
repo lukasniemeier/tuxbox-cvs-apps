@@ -1,5 +1,5 @@
 /*
- * $Id: bouquets.cpp,v 1.117 2012/06/26 18:42:03 rhabarber1848 Exp $
+ * $Id: bouquets.cpp,v 1.118 2012/06/30 10:54:17 rhabarber1848 Exp $
  *
  * BouquetManager for zapit - d-box2 linux project
  *
@@ -519,7 +519,7 @@ void CBouquetManager::makeRemainingChannelsBouquet(void)
 	}
 
 	// TODO: use locales
-	remainChannels = addBouquet((Bouquets.size() == 0) ? "Alle Kan\xC3\xA4le" : "Andere"); // UTF-8 encoded
+	remainChannels = addBouquet(Bouquets.empty() ? "Alle Kan\xC3\xA4le" : "Andere"); // UTF-8 encoded
 
 	for (tallchans::iterator it = allchans.begin(); it != allchans.end(); it++)
 		if (chans_processed.find(it->first) == chans_processed.end())
@@ -650,7 +650,7 @@ CBouquetManager::ChannelIterator::ChannelIterator(CBouquetManager* owner, const 
 {
 	Owner = owner;
 	tv = TV;
-	if (Owner->Bouquets.size() == 0)
+	if (Owner->Bouquets.empty())
 		c = -2;
 	else
 	{
@@ -668,7 +668,7 @@ CBouquetManager::ChannelIterator CBouquetManager::ChannelIterator::operator ++(i
 		if ((unsigned int) c >= getBouquet()->size())
 		{
 			for (b++; b < Owner->Bouquets.size(); b++)
-				if (getBouquet()->size() != 0)
+				if (!getBouquet()->empty())
 				{
 					c = 0;
 					goto end;

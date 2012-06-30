@@ -330,7 +330,7 @@ void CRemoteControl::getSubChannels()
 
 void CRemoteControl::getNVODs()
 {
-	if ( subChannels.size() == 0 )
+	if ( subChannels.empty() )
 	{
 		CSectionsdClient::NVODTimesList	NVODs;
 		if ( g_Sectionsd->getNVODTimesServiceKey( current_channel_id, NVODs ) )
@@ -525,7 +525,7 @@ const std::string & CRemoteControl::setSubChannel(const int numSub, const bool f
 			std::swap<int>(current_subchannel, old_subchannel);
 			button_Portal = false; //Reset Button
 		}
-		if (old_subchannel >= (int)subChannels.size() && (int)subChannels.size() > 0)	// all subchannels available?
+		if (old_subchannel >= (int)subChannels.size() && !subChannels.empty())	// all subchannels available?
 			old_subchannel = (int)subChannels.size()-1;
 
 		if (old_subchannel >= (int)subChannels.size() && current_subchannel >= (int)subChannels.size())
@@ -596,13 +596,13 @@ const std::string & CRemoteControl::toggleSubChannel(void)
 const std::string & CRemoteControl::subChannelUp(void)
 {
 	// if there are any NVOD/subchannels switch these else switch audio channel (if any)
-	if (subChannels.size() > 0 || !g_settings.audiochannel_up_down_enable)
+	if (!subChannels.empty() || !g_settings.audiochannel_up_down_enable)
 	{
-		return setSubChannel((subChannels.size() == 0) ? -1 : (int)((selected_subchannel + 1) % subChannels.size()));
+		return setSubChannel(subChannels.empty() ? -1 : (int)((selected_subchannel + 1) % subChannels.size()));
 	}
 	else
 	{
-		if (current_PIDs.APIDs.size() > 0)
+		if (!current_PIDs.APIDs.empty())
 		{
 			setAPID((current_PIDs.PIDs.selected_apid + 1) % current_PIDs.APIDs.size());
 		}
@@ -613,13 +613,13 @@ const std::string & CRemoteControl::subChannelUp(void)
 const std::string & CRemoteControl::subChannelDown(void)
 {
 	// if there are any NVOD/subchannels switch these else switch audio channel (if any)
-	if (subChannels.size() > 0 || !g_settings.audiochannel_up_down_enable)
+	if (!subChannels.empty() || !g_settings.audiochannel_up_down_enable)
 	{
 		return setSubChannel((selected_subchannel <= 0) ? (subChannels.size() - 1) : (selected_subchannel - 1));
 	}
 	else
 	{
-		if (current_PIDs.APIDs.size() > 0)
+		if (!current_PIDs.APIDs.empty())
 		{
 			if (current_PIDs.PIDs.selected_apid <= 0)
 				setAPID(current_PIDs.APIDs.size() - 1);

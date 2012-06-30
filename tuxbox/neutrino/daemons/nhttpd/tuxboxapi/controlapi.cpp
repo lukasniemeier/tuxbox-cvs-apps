@@ -109,7 +109,7 @@ THandleStatus CControlAPI::Hook_SendResponse(CyhookHandler *hh)
 void CControlAPI::compatibility_Timer(CyhookHandler *hh)
 {
 	log_level_printf(4,"CControlAPI Compatibility Timer Start url:%s\n",hh->UrlData["url"].c_str());
-	if(NeutrinoAPI->Timerd->isTimerdAvailable() && hh->ParamList.size() > 0)
+	if(NeutrinoAPI->Timerd->isTimerdAvailable() && !hh->ParamList.empty())
 	{
 		if(hh->ParamList["action"] == "remove")
 		{
@@ -352,7 +352,7 @@ void CControlAPI::ExecCGI(CyhookHandler *hh)
 		hh->SetHeader(HTTP_OK, "text/xml");
 	else
 		hh->SetHeader(HTTP_OK, "text/plain");
-	if (hh->ParamList.size() > 0)
+	if (!hh->ParamList.empty())
 	{
 		script = hh->ParamList["1"];
 		unsigned int len = hh->ParamList.size();

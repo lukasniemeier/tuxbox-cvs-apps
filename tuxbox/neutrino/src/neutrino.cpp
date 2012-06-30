@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1082 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1083 2012/06/30 10:54:18 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2963,7 +2963,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 				name += "\n";
 				std::string zAddData;
 
-				if (tmpTimerList.size() > 0)
+				if (!tmpTimerList.empty())
 				{
 					sort( tmpTimerList.begin(), tmpTimerList.end() );
 					CTimerd::responseGetTimer &timer = tmpTimerList[0];

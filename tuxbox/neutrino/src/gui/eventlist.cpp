@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.149 2012/05/16 21:45:39 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.150 2012/06/30 10:54:18 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -178,7 +178,7 @@ void EventList::readEvents(const t_channel_id channel_id)
 	time_t azeit=time(NULL);
 	CChannelEventList::iterator e;
 
-	if ( evtlist.size() != 0 ) {
+	if ( !evtlist.empty() ) {
 		CEPGData epgData;
 		// todo: what if there are more than one events in the Portal
 		if (g_Sectionsd->getActualEPGServiceKey(channel_id, &epgData ))
@@ -244,7 +244,7 @@ void EventList::readEvents(const t_channel_id channel_id)
 		current_event++;
 	}
 
-	if ( evtlist.size() == 0 )
+	if ( evtlist.empty() )
 	{
 		CChannelEvent evt;
 
@@ -953,15 +953,12 @@ int EventList::findEvents(void)
 			}
 			current_event++;
 		}
-		if(evtlist.empty())
+		if (evtlist.empty())
 		{
-			if ( evtlist.size() == 0 )
-			{
-				CChannelEvent evt;
-				evt.description = ZapitTools::UTF8_to_Latin1(g_Locale->getText(LOCALE_EPGLIST_NOEVENTS));
-				evt.eventID = 0;
-				evtlist.push_back(evt);
-			}
+			CChannelEvent evt;
+			evt.description = ZapitTools::UTF8_to_Latin1(g_Locale->getText(LOCALE_EPGLIST_NOEVENTS));
+			evt.eventID = 0;
+			evtlist.push_back(evt);
 		}
 		if (current_event == (unsigned int)-1)
 			current_event = 0;

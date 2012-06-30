@@ -1,6 +1,6 @@
 /*
 
-        $Id: settings.cpp,v 1.56 2012/04/13 12:15:22 rhabarber1848 Exp $
+        $Id: settings.cpp,v 1.57 2012/06/30 10:54:19 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -123,7 +123,7 @@ void CScanSettings::toSatList( CZapitClient::ScanSatelliteList& satList) const
 				satList.push_back(sat);
 			}
 		}
-		if (satList.size() == 0) {
+		if (satList.empty()) {
 			strncpy(sat.satName, satNameNoDiseqc, 30);
 			sat.diseqc = 0;
 			satList.push_back(sat);

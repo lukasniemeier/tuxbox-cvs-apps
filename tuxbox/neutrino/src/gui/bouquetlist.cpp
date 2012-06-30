@@ -175,7 +175,7 @@ int CBouquetList::show()
 	x = getScreenStartX (width);
 	y = getScreenStartY (height) - theight/2;
 
-	if(Bouquets.size()==0)
+	if (Bouquets.empty())
 	{
 		return res;
 	}

@@ -977,7 +977,7 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, unsigne
 	while(1)
 	{
 		timer_id = 0;
-		if ( timers.size()> 0 )
+		if ( !timers.empty() )
 		{
 			gettimeofday( &tv, NULL );
 			unsigned long long t_n= (unsigned long long) tv.tv_usec + (unsigned long long)((unsigned long long) tv.tv_sec * (unsigned long long) 1000000);

@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.29 2012/06/09 19:38:18 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.30 2012/06/30 10:54:19 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -171,7 +171,7 @@ bool CMovieInfo::encodeMovieInfoXml(std::string* extMessage,MI_MOVIE_INFO &movie
 	XML_ADD_TAG_LONG	(*extMessage, MI_XML_TAG_EPGID,				movie_info.epgEpgId); // %llu
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_MODE,				movie_info.epgMode);//%d
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VIDEOPID,			movie_info.epgVideoPid);//%u
-	if(movie_info.audioPids.size()>0)
+	if (!movie_info.audioPids.empty())
 	{
 		*extMessage +=	"\t\t<"MI_XML_TAG_AUDIOPIDS" selected=\"";
 		sprintf(tmp, "%u", movie_info.audioPids[0].epgAudioPid); //pids.APIDs[i].pid);
@@ -190,7 +190,7 @@ bool CMovieInfo::encodeMovieInfoXml(std::string* extMessage,MI_MOVIE_INFO &movie
 		*extMessage += "\t\t</"MI_XML_TAG_AUDIOPIDS">\n";
 	}
 	XML_ADD_TAG_UNSIGNED(*extMessage, MI_XML_TAG_VTXTPID,			movie_info.epgVTXPID);//%u
-	if(movie_info.subPids.size() > 0)
+	if (!movie_info.subPids.empty())
 	{
 		*extMessage += "\t\t<"MI_XML_TAG_SUBPIDS">\n";
 		for(unsigned int i = 0; i < movie_info.subPids.size(); i++)
@@ -494,7 +494,7 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
     print_buffer += "\n"; 
    	print_buffer += movie_info.epgInfo2; 
 
-	 if( movie_info.productionCountry.size() != 0 || movie_info.productionDate != 0)
+	 if( !movie_info.productionCountry.empty() || movie_info.productionDate != 0)
 	 {
 		print_buffer += "\n"; 
   		print_buffer += movie_info.productionCountry; 
@@ -550,7 +550,7 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
 		snprintf(date_char, 12, "%3d", movie_info.length);
     	print_buffer += date_char; 
     }
-    if(movie_info.audioPids.size() != 0 )
+    if (!movie_info.audioPids.empty())
      {
 	    print_buffer += "\n"; 
    		print_buffer += g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_AUDIO);
@@ -562,7 +562,7 @@ void CMovieInfo::showMovieInfo(MI_MOVIE_INFO& movie_info)
 	    }
 		print_buffer.erase(print_buffer.size()-2);
      }
-	if(movie_info.subPids.size() > 0)
+	if (!movie_info.subPids.empty())
 	{
 		print_buffer += "\n";
 		print_buffer += g_Locale->getText(LOCALE_MOVIEBROWSER_INFO_SUBTITLES);

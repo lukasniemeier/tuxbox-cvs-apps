@@ -1,5 +1,5 @@
 //
-// $Id: SIsections.cpp,v 1.69 2012/06/26 18:50:30 rhabarber1848 Exp $
+// $Id: SIsections.cpp,v 1.70 2012/06/30 10:54:17 rhabarber1848 Exp $
 //
 // classes for SI sections (dbox-II-project)
 //
@@ -1548,7 +1548,7 @@ int SIsections :: readSections(const unsigned short pid, const unsigned char fil
 	printf("Sections read: %d\n\n", size());
 #endif // DEBUG
 
-	if (!missingSections.size())
+	if (missingSections.empty())
 		return 0;
 
 #ifdef DEBUG

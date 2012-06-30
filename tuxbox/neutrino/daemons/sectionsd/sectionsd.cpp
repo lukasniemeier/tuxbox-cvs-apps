@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.342 2012/06/30 10:52:49 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.343 2012/06/30 10:54:17 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -650,7 +650,7 @@ static bool deleteEvent(const event_id_t uniqueKey)
 
 	if (e != mySIeventsOrderUniqueKey.end())
 	{
-		if (e->second->times.size())
+		if (!e->second->times.empty())
 		{
 			mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.erase(e->second);
 			mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.erase(e->second);
@@ -781,7 +781,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 	   on one German Sky channel and incomplete on another one. So we
 	   make sure to keep the complete event, if applicable. */
 
-	if ((already_exists) && (evt.components.size() > 0)) {
+	if ((already_exists) && !evt.components.empty()) {
 		if (si->second->components.size() != evt.components.size())
 			already_exists = false;
 		else {
@@ -801,7 +801,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		}
 	}
 
-	if ((already_exists) && (evt.linkage_descs.size() > 0)) {
+	if ((already_exists) && !evt.linkage_descs.empty()) {
 		if (si->second->linkage_descs.size() != evt.linkage_descs.size())
 			already_exists = false;
 		else {
@@ -821,7 +821,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		}
 	}
 
-	if ((already_exists) && (evt.ratings.size() > 0)) {
+	if ((already_exists) && !evt.ratings.empty()) {
 		if (si->second->ratings.size() != evt.ratings.size())
 			already_exists = false;
 		else {
@@ -981,7 +981,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		{
 			// ist ein MetaEvent, d.h. mit Zeiten fuer NVOD-Event
 
-			if (e->times.size())
+			if (!e->times.empty())
 			{
 				// D.h. wir fuegen die Zeiten in das richtige Event ein
 				MySIeventsOrderUniqueKey::iterator ie = mySIeventsOrderUniqueKey.find(i->second);
@@ -1016,7 +1016,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		// normales Event
 		mySIeventsOrderUniqueKey.insert(std::make_pair(e->uniqueKey(), e));
 
-		if (e->times.size())
+		if (!e->times.empty())
 		{
 			// diese beiden Mengen enthalten nur Events mit Zeiten
 			mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.insert(e);
@@ -1030,7 +1030,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 // Fuegt zusaetzliche Zeiten in ein Event ein
 static void addEventTimes(const SIevent &evt)
 {
-	if (evt.times.size())
+	if (!evt.times.empty())
 	{
 		readLockEvents();
 		// D.h. wir fuegen die Zeiten in das richtige Event ein
@@ -1042,7 +1042,7 @@ static void addEventTimes(const SIevent &evt)
 			// Falls das Event in den beiden Mengen mit Zeiten vorhanden ist, dieses dort loeschen
 			unlockEvents();
 			writeLockEvents();
-			if (e->second->times.size())
+			if (!e->second->times.empty())
 			{
 				mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.erase(e->second);
 				mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.erase(e->second);
@@ -1119,7 +1119,7 @@ static void addNVODevent(const SIevent &evt)
 
 	mySIeventsNVODorderUniqueKey.insert(std::make_pair(e->uniqueKey(), e));
 	unlockEvents();
-	if (e->times.size())
+	if (!e->times.empty())
 	{
 		// diese beiden Mengen enthalten nur Events mit Zeiten
 		writeLockEvents();
@@ -1670,7 +1670,7 @@ static bool addService(const SIservice &s, const int is_actual)
 		mySIservicesOrderUniqueKey.insert(std::make_pair(sptr->uniqueKey(), sptr));
 		unlockServices();
 
-		if (sptr->nvods.size())
+		if (!sptr->nvods.empty())
 		{
 			writeLockServices();
 			mySIservicesNVODorderUniqueKey.insert(std::make_pair(sptr->uniqueKey(), sptr));
@@ -2652,7 +2652,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.342 2012/06/30 10:52:49 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.343 2012/06/30 10:54:17 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -4152,7 +4152,7 @@ static void commandTimesNVODservice(int connfd, char *data, const unsigned dataL
 	{
 		dprintf("NVODServices: %u\n", si->second->nvods.size());
 
-		if (si->second->nvods.size())
+		if (!si->second->nvods.empty())
 		{
 			responseHeader.dataLength = (sizeof(t_service_id) + sizeof(t_original_network_id) + sizeof(t_transport_stream_id) + 4 + 4) * si->second->nvods.size();
 			msgData = new char[responseHeader.dataLength];
@@ -8626,7 +8626,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.342 2012/06/30 10:52:49 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.343 2012/06/30 10:54:17 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif

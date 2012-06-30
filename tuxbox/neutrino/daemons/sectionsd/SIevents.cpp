@@ -1,5 +1,5 @@
 //
-// $Id: SIevents.cpp,v 1.41 2012/06/26 18:50:30 rhabarber1848 Exp $
+// $Id: SIevents.cpp,v 1.42 2012/06/30 10:54:17 rhabarber1848 Exp $
 //
 // classes SIevent and SIevents (dbox-II-project)
 //
@@ -136,7 +136,7 @@ char SIevent::getFSK() const
 			    return (it->rating == 0 ? 0 : 18); // return FSK 18 for : 0x10 to 0xFF defined by the broadcaster
 		}
 	}
-	if (ratings.size() != 0)
+	if (!ratings.empty())
 	{
 		if ((ratings.begin()->rating >= 0x01) && (ratings.begin()->rating <= 0x0F))
 			return (ratings.begin()->rating + 3);
@@ -511,7 +511,7 @@ void SIevents::removeOldEvents(long seconds)
 
 			// Set has the important property that inserting a new element into a set does not
 			//  invalidate iterators that point to existing elements.
-			if (copy_of_event.times.size() != 0)
+			if (!copy_of_event.times.empty())
 #ifdef DEBUG
 				assert((++insert(it, copy_of_event)) == it);
 #else
@@ -537,7 +537,7 @@ void SIevents::mergeAndRemoveTimeShiftedEvents(const SIservices &services)
 
 //  SIevents eventsToDelete; // Hier rein kommen Events die geloescht werden sollen
 	for(SIservices::iterator k=services.begin(); k!=services.end(); ++k)
-		if(k->nvods.size()) {
+		if(!k->nvods.empty()) {
 			// NVOD-Referenzen gefunden
 			// Zuerst mal das Event mit dem Text holen
 			iterator e;

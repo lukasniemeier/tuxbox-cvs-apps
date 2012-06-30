@@ -3,7 +3,7 @@
 
 	Copyright (C) 2002 Dirk Szymanski 'Dirch'
 	
-	$Id: timerdclient.cpp,v 1.57 2009/10/12 07:35:39 rhabarber1848 Exp $
+	$Id: timerdclient.cpp,v 1.58 2012/06/30 10:54:17 rhabarber1848 Exp $
 
 	License: GPL
 
@@ -247,7 +247,7 @@ int CTimerdClient::addTimerEvent( CTimerd::CTimerEventTypes evType, void* data, 
 		//printf("[CTimerdClient] checking for overlapping timers\n");
 		CTimerd::TimerList overlappingTimer;
 		overlappingTimer = getOverlappingTimers(alarmtime, stoptime);
-		if (overlappingTimer.size() > 0)
+		if (!overlappingTimer.empty())
 		{
 			// timerd starts eventID at 0 so we can return -1
 			return -1;

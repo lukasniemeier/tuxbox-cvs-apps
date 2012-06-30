@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.160 2011/11/22 07:30:00 rhabarber1848 Exp $
+	$Id: epgview.cpp,v 1.161 2012/06/30 10:54:18 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -512,7 +512,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 
 	// 21.07.2005 - rainerk
 	// Show extended information
-	if(0 != epgData.itemDescriptions.size()) {
+	if (!epgData.itemDescriptions.empty()) {
 		char line[256];
 		std::vector<std::string>::iterator description;
 		std::vector<std::string>::iterator item;

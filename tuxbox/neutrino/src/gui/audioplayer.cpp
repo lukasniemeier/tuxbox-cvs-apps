@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.91 2012/06/14 18:20:33 rhabarber1848 Exp $
+  $Id: audioplayer.cpp,v 1.92 2012/06/30 10:54:18 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -590,7 +590,7 @@ int CAudioPlayerGui::show()
 						//stop(); // Stop if song is deleted, next song will be startet automat.
 					}
 					if(m_selected >= m_playlist.size())
-						m_selected = m_playlist.size() == 0 ? m_playlist.size() : m_playlist.size() - 1;
+						m_selected = m_playlist.empty() ? m_playlist.size() : m_playlist.size() - 1;
 						update = true;
 				}
 			}
@@ -1536,7 +1536,7 @@ void CAudioPlayerGui::paintItem(int pos)
 		}
 		c_rad_small = 0;
 	}
-	if (pos == 0 && m_playlist.size() == 0) // starts always at pos 0, ensure no transp corners
+	if (m_playlist.empty() && pos == 0) // starts always at pos 0, ensure no transp corners
 		m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_fheight, COL_MENUCONTENT_PLUS_0);
 	else if (pos == 0)
 		m_frameBuffer->paintBoxRel(m_x, ypos, m_width - 15, m_fheight, COL_MENUCONTENT_PLUS_0, c_rad_small, CORNER_LEFT);
@@ -1856,7 +1856,7 @@ void CAudioPlayerGui::paint()
 		int sbc = ((m_playlist.size() - 1) / m_listmaxshow) + 1;
 		int sbs = (m_selected / m_listmaxshow);
 	
-		if (m_playlist.size())
+		if (!m_playlist.empty())
 			m_frameBuffer->paintBoxRel(m_x + m_width - 13, ypos + 2 + sbs*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
 	}
 
@@ -2465,7 +2465,7 @@ void CAudioPlayerGui::removeFromPlaylist(long pos)
 			item->second.erase(pos);
 
 			// delete empty entries
-			if (item->second.size() == 0)
+			if (item->second.empty())
 			{
 				m_title2Pos.erase(item);
 			}
@@ -2525,7 +2525,7 @@ void CAudioPlayerGui::selectTitle(unsigned char selectionChar)
 		} 
 		else
 		{
-			if (it->second.size() > 0)
+			if (!it->second.empty())
 			{
 				i = *(it->second.begin());
 				//printf("using begin i: %ld\n",i);

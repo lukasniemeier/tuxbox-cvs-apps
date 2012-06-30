@@ -497,7 +497,7 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 			info2 = Latin1_to_UTF8(epgdata.info2);
 			
 			movieInfo.parentalLockAge = epgdata.fsk;
-			if(epgdata.contentClassification.size() > 0 )
+			if (!epgdata.contentClassification.empty())
 				movieInfo.genreMajor = epgdata.contentClassification[0];
 				
 			movieInfo.length = epgdata.epg_times.dauer	/ 60;
@@ -808,7 +808,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		save_vtxt_pid = true;
 	}
 
-	if ((StreamSubtitlePid) && (allpids.SubPIDs.size() > 0)) {
+	if (StreamSubtitlePid && !allpids.SubPIDs.empty()) {
 		// Add ttx-pid only once
 		unsigned txtdone = 0;
 		if (StreamVTxtPid) {

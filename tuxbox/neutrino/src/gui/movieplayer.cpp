@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.207 2012/06/14 18:17:07 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.208 2012/06/30 10:54:19 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3749,7 +3749,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 					}
 					else if(g_settings.movieplayer_plugin == "DVB Subtitle Viewer")
 					{
-						if(p_movie_info != NULL && p_movie_info->subPids.size() > 0)
+						if(p_movie_info != NULL && !p_movie_info->subPids.empty())
 							param = (subpid == 0) ? p_movie_info->subPids[0].subPid : subpid;
 						else
 							param = subpid;
@@ -4663,7 +4663,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.207 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.208 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

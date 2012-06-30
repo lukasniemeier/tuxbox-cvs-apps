@@ -1,5 +1,5 @@
 /*
-	$Id: lcdd.cpp,v 1.92 2012/04/25 18:31:24 rhabarber1848 Exp $
+	$Id: lcdd.cpp,v 1.93 2012/06/30 10:54:18 rhabarber1848 Exp $
 
 	LCD-Daemon  -   DBoxII-Project
 
@@ -1189,7 +1189,7 @@ void CLCD::showFilelist(int flist_pos,CFileList* flist,const char * const mainDi
 		
 	if (mode == MODE_FILEBROWSER && 
 	    m_fileList != NULL &&
-	    m_fileList->size() > 0)
+	    !m_fileList->empty())
 	{    
 		
 		printf("[lcdd] FileList:OK\n");

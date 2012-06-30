@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.92 2012/06/15 19:30:16 dbt Exp $
+	$Id: drive_setup.cpp,v 1.93 2012/06/30 10:54:18 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -673,7 +673,7 @@ void CDriveSetup::showHddSetupMain()
 		d_settings.drive_activate_ide = IDE_OFF;
 	CMenuOptionChooser *m2	= new CMenuOptionChooser(LOCALE_DRIVE_SETUP_IDE_ACTIVATE, &d_settings.drive_activate_ide, OPTIONS_IDE_ACTIVATE_OPTIONS, OPTIONS_IDE_ACTIVATE_OPTION_COUNT, true);
 
-	bool is_mmc_supported = (v_mmc_modules.size()!=0) ? true : false;
+	bool is_mmc_supported = v_mmc_modules.empty() ? false : true;
 
  	/************show main menue entries***********/
 	// intro entries
@@ -2945,7 +2945,7 @@ void CDriveSetup::loadFsModulList()
 	v_fs_modules.resize(unique(v_fs_modules.begin(), v_fs_modules.end()) - v_fs_modules.begin());
 
 	//set status for available fsdriver
- 	have_fsdrivers = v_fs_modules.size() == 0 ? false : true;
+ 	have_fsdrivers = v_fs_modules.empty() ? false : true;
 	
 	// last fs must be swap
 	if (!haveSwap())
@@ -4604,7 +4604,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.92 $");
+	return imageinfo.getModulVersion("","$Revision: 1.93 $");
 }
 
 // returns text for initfile headers

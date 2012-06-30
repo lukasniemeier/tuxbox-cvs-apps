@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.115 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.116 2012/06/30 10:54:19 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -414,7 +414,7 @@ void CTimerList::updateEvents(void)
 		listmaxshow=timerlist.size();
 		height = theight+0+listmaxshow*fheight*2;	// recalc height
 	}
-	if(selected==timerlist.size() && !(timerlist.empty()))
+	if (!timerlist.empty() && selected==timerlist.size())
 	{
 		selected=timerlist.size()-1;
 		liststart = (selected/listmaxshow)*listmaxshow;

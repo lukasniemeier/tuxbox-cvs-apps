@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.229 2012/03/11 08:38:26 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.230 2012/06/30 10:54:18 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -350,7 +350,7 @@ int CChannelList::show()
 		}
 		else if (msg_repeatok == g_settings.key_bouquet_up && bouquetList != NULL)
 		{
-			if (bouquetList->Bouquets.size() > 0)
+			if (!bouquetList->Bouquets.empty())
 			{
 				int nNext = (bouquetList->getActiveBouquetNumber()+1) % bouquetList->Bouquets.size();
 				bouquetList->activateBouquet( nNext );
@@ -360,7 +360,7 @@ int CChannelList::show()
 		}
 		else if (msg_repeatok == g_settings.key_bouquet_down && bouquetList != NULL)
 		{
-			if (bouquetList->Bouquets.size() > 0)
+			if (!bouquetList->Bouquets.empty())
 			{
 				int nNext = (bouquetList->getActiveBouquetNumber()+bouquetList->Bouquets.size()-1) % bouquetList->Bouquets.size();
 				bouquetList->activateBouquet(nNext);
@@ -711,7 +711,7 @@ int CChannelList::numericZap(neutrino_msg_t key)
         			}
 			}
 
-			if (channelList.getSize() != 0) {
+			if (!chanlist.empty()) {
 				this->frameBuffer->paintBackground();
 				int newChannel = channelList.show() ;
 
@@ -964,7 +964,7 @@ void CChannelList::virtual_zap_mode(bool up)
 
 void CChannelList::quickZap(neutrino_msg_t key)
 {
-        if(chanlist.size()==0)
+        if (chanlist.empty())
         {
                 //evtl. anzeige dass keine kanalliste....
                 return;

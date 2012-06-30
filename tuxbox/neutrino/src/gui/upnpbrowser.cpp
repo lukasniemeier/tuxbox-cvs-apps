@@ -412,7 +412,7 @@ void CUpnpBrowserGui::selectDevice()
 	}
 	scanBox->hide();
 
-	if (!m_devices.size())
+	if (m_devices.empty())
 	{
 		ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_UPNPBROWSER_NOSERVERS, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 		delete scanBox;
@@ -476,7 +476,7 @@ void CUpnpBrowserGui::selectDevice()
 				return;
 			}
 			scanBox->hide();
-			if (!m_devices.size())
+			if (m_devices.empty())
 			{
 				ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_UPNPBROWSER_NOSERVERS, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 				delete scanBox;

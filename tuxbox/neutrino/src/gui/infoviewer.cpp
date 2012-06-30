@@ -1,5 +1,5 @@
 /*
-	$Id: infoviewer.cpp,v 1.315 2012/04/13 12:15:21 rhabarber1848 Exp $
+	$Id: infoviewer.cpp,v 1.316 2012/06/30 10:54:18 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1071,7 +1071,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 				if (!g_settings.usermenu_text[SNeutrinoSettings::BUTTON_GREEN].empty())
 					txt = g_settings.usermenu_text[SNeutrinoSettings::BUTTON_GREEN].c_str();
 				else if (g_settings.audio_left_right_selectable || count > 1 ||
-				         g_RemoteControl->current_PIDs.SubPIDs.size() > 0)
+				         !g_RemoteControl->current_PIDs.SubPIDs.empty())
 					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_INFOVIEWER_LANGUAGES;
 				else
 					paint = false;
@@ -1702,7 +1702,7 @@ void CInfoViewer::show_Data(bool calledFromEvent)
 	bool is_nvod = false;
 
 	if ((g_RemoteControl->current_channel_id == channel_id) &&
-	    (g_RemoteControl->subChannels.size()> 0 ) && !g_RemoteControl->are_subchannels)
+	    !g_RemoteControl->subChannels.empty() && !g_RemoteControl->are_subchannels)
 	{
 		is_nvod = true;
 		info_CurrentNext.current_zeit.startzeit = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].startzeit;

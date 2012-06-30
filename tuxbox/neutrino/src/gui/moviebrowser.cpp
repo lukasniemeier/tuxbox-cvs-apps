@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.73 2012/06/18 16:53:34 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.74 2012/06/30 10:54:18 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -363,7 +363,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.73 2012/06/18 16:53:34 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.74 2012/06/30 10:54:18 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -1130,7 +1130,7 @@ int CMovieBrowser::exec(const char* path)
 	saveSettings(&m_settings);	// might be better done in ~CMovieBrowser, but for any reason this does not work if MB is killed by neutrino shutdown
 	
 	// make stale if we should reload the next time, but not if movie has to be played
-	if(m_vMovieInfo.size() == 0 || (m_settings.reload == true && res == false))
+	if(m_vMovieInfo.empty() || (m_settings.reload == true && res == false))
 	{
 		TRACE("[mb] force reload next time\r\n");
 		fileInfoStale();
@@ -1329,7 +1329,7 @@ CFile* CMovieBrowser::getSelectedFile(void)
 void CMovieBrowser::refreshMovieInfo(void)
 {
 	//TRACE("[mb]->refreshMovieInfo \r\n");
-	if(m_vMovieInfo.size() <= 0) return;
+	if (m_vMovieInfo.empty()) return;
 	if (m_movieSelectionHandler == NULL)
 	{
 		// There is no selected element, clear LCD
@@ -1350,7 +1350,7 @@ void CMovieBrowser::refreshMovieInfo(void)
 ************************************************************************/
 void CMovieBrowser::refreshLCD(void)
 {
-	if(m_vMovieInfo.size() <= 0) return;
+	if (m_vMovieInfo.empty()) return;
 
 	CLCD * lcd = CLCD::getInstance();
 	if(m_movieSelectionHandler == NULL)
@@ -1380,7 +1380,7 @@ void CMovieBrowser::refreshFilterList(void)
 	m_FilterLines.rowWidth[0] = 400;
 	m_FilterLines.lineHeader[0]= "";
 
-	if(m_vMovieInfo.size() <= 0) 
+	if (m_vMovieInfo.empty()) 
 		return; // exit here if nothing else is to do
 
 	if(m_settings.filter.item == MB_INFO_MAX_NUMBER)
@@ -1468,7 +1468,7 @@ void CMovieBrowser::refreshLastPlayList(void) //P2
 	}
 	m_vHandlePlayList.clear();
 
-	if(m_vMovieInfo.size() <= 0) 
+	if (m_vMovieInfo.empty()) 
 		return; // exit here if nothing else is to do
 
 	MI_MOVIE_INFO* movie_handle;
@@ -1526,7 +1526,7 @@ void CMovieBrowser::refreshLastRecordList(void) //P2
 	}
 	m_vHandleRecordList.clear();
 
-	if(m_vMovieInfo.size() <= 0) 
+	if (m_vMovieInfo.empty()) 
 		return; // exit here if nothing else is to do
 
 	MI_MOVIE_INFO* movie_handle;
@@ -1585,7 +1585,7 @@ void CMovieBrowser::refreshBrowserList(void) //P1
 	}
 	m_vHandleBrowserList.clear();
 	
-	if(m_vMovieInfo.size() <= 0) 
+	if (m_vMovieInfo.empty()) 
 	{
 		m_currentBrowserSelection = 0;
 		m_movieSelectionHandler = NULL;
@@ -1861,7 +1861,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_spkr) 
 	{
-		if(m_vMovieInfo.size() > 0)
+		if (!m_vMovieInfo.empty())
 		{	
 			if(m_movieSelectionHandler != NULL)
 			{
@@ -2421,7 +2421,7 @@ void CMovieBrowser::onSetFocusNext(void)
 bool CMovieBrowser::onSortMovieInfoHandleList(std::vector<MI_MOVIE_INFO*>& handle_list, MB_INFO_ITEM sort_item, MB_DIRECTION direction)
 {
 	//TRACE("sort: %d\r\n",direction);
-	if(handle_list.size() <= 0) 
+	if (handle_list.empty()) 
 		return (false); // nothing to sort, return immedately
 	if(sortBy[sort_item] == NULL) 
 		return (false);
@@ -2504,7 +2504,7 @@ void CMovieBrowser::loadAllTsFileNamesFromStorage(void)
 	}
 	
 	TRACE("[mb] Dir%d, Files:%d \r\n",m_dirNames.size(),m_vMovieInfo.size());
-	if(m_vMovieInfo.size() == 0)
+	if (m_vMovieInfo.empty())
 	{
 		std::string msg = g_Locale->getText(LOCALE_MOVIEBROWSER_ERROR_NO_MOVIES);
 		DisplayErrorMessage(msg.c_str());
@@ -2703,13 +2703,13 @@ bool CMovieBrowser::delFile_std(CFile& file)
 void CMovieBrowser::updateMovieSelection(void)
 {
 	//TRACE("[mb]->updateMovieSelection %d\r\n",m_windowFocus);
-	if (m_vMovieInfo.size() == 0) return;
+	if (m_vMovieInfo.empty()) return;
 	bool new_selection = false;
 	 
 	unsigned int old_movie_selection;
 	if(m_windowFocus == MB_FOCUS_BROWSER)
 	{
-		if(m_vHandleBrowserList.size() == 0)
+		if (m_vHandleBrowserList.empty())
 		{
 			// There are no elements in the Filebrowser, clear all handles
 			m_currentBrowserSelection = 0;
@@ -2730,7 +2730,7 @@ void CMovieBrowser::updateMovieSelection(void)
 	}
 	else if(m_windowFocus == MB_FOCUS_LAST_PLAY)
 	{
-		if(m_vHandlePlayList.size() == 0)
+		if (m_vHandlePlayList.empty())
 		{
 			// There are no elements in the Filebrowser, clear all handles
 			m_currentPlaySelection = 0;
@@ -2751,7 +2751,7 @@ void CMovieBrowser::updateMovieSelection(void)
 	}
 	else if(m_windowFocus == MB_FOCUS_LAST_RECORD)
 	{
-		if(m_vHandleRecordList.size() == 0)
+		if (m_vHandleRecordList.empty())
 		{
 			// There are no elements in the Filebrowser, clear all handles
 			m_currentRecordSelection = 0;
@@ -2786,7 +2786,7 @@ void CMovieBrowser::updateMovieSelection(void)
 void CMovieBrowser::updateFilterSelection(void)
 {
 	//TRACE("[mb]->updateFilterSelection \r\n");
-	if(m_FilterLines.lineArray[0].size() == 0) return;
+	if (m_FilterLines.lineArray[0].empty()) return;
 
 	bool result = true;
 	int selected_line = m_pcFilter->getSelectedLine();
@@ -3441,7 +3441,7 @@ bool CMovieBrowser::getMovieInfoItem(MI_MOVIE_INFO& movie_info, MB_INFO_ITEM ite
 			*item_string = movie_info.file.getFileName();
 			break;
 		case MB_INFO_FILEPATH: 				// 		= 1,
-			if(m_dirNames.size() > 0)
+			if (!m_dirNames.empty())
 				*item_string = m_dirNames[movie_info.dirItNr];
 			break;
 		case MB_INFO_TITLE: 				// 		= 2,
@@ -3966,7 +3966,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.73 $");
+	return imageinfo.getModulVersion("","$Revision: 1.74 $");
 }
 
 /************************************************************************/

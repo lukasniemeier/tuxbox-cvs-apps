@@ -3282,7 +3282,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			}
 			else if (g_settings.movieplayer_plugin == "DVB Subtitle Viewer")
 			{
-				if (movieinfo_valid && movieinfo.subPids.size() > 0)
+				if (movieinfo_valid && !movieinfo.subPids.empty())
 					param = (subpid == 0) ? movieinfo.subPids[0].subPid : subpid;
 				else
 					param = subpid;
@@ -3659,7 +3659,7 @@ static void checkAspectRatio (int /*vdec*/, bool /*init*/)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("2.","$Revision: 1.89 $");
+	return imageinfo.getModulVersion("2.","$Revision: 1.90 $");
 }
 
 void CMoviePlayerGui::showFileInfoVLC()
