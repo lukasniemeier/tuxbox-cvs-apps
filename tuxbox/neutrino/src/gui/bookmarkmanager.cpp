@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.24 2012/06/30 10:54:18 rhabarber1848 Exp $
+  $Id: bookmarkmanager.cpp,v 1.25 2012/06/30 10:55:55 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -358,7 +358,7 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 			if( CNeutrinoApp::getInstance()->handleMsg( msg, data ) & messages_return::cancel_all )
 			{
 				loop = false;
-				res = menu_return::RETURN_EXIT_ALL;
+				res = -1;
 			}
 		}
 	}
