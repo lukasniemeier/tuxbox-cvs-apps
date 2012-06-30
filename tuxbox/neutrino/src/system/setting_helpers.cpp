@@ -1,5 +1,5 @@
 /*
-	$Id: setting_helpers.cpp,v 1.203 2012/06/18 16:53:35 rhabarber1848 Exp $
+	$Id: setting_helpers.cpp,v 1.204 2012/06/30 10:57:43 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -130,7 +130,7 @@ int CUCodeCheckExec::exec(CMenuTarget*, const std::string &)
 	text << res;
 
 	ShowMsgUTF(LOCALE_UCODECHECK_HEAD, text.str(), CMessageBox::mbrBack, CMessageBox::mbBack); // UTF-8
-	return 1;
+	return menu_return::RETURN_NONE;
 }
 #endif
 
@@ -144,7 +144,7 @@ int CDVBInfoExec::exec(CMenuTarget*, const std::string &)
 	text << g_Locale->getText(LOCALE_SERVICEMENU_CHAN_EPG_STAT_EPG_STAT) << ":\n" << g_Sectionsd->getStatusinformation() << "\n";
 
 	ShowMsgUTF(LOCALE_SERVICEMENU_CHAN_EPG_STAT, text.str(), CMessageBox::mbrBack, CMessageBox::mbBack); // UTF-8
-	return 1;
+	return menu_return::RETURN_NONE;
 }
 
 unsigned long long getcurrenttime()

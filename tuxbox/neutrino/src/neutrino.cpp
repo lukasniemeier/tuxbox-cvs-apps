@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1083 2012/06/30 10:54:18 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1084 2012/06/30 10:57:42 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3993,19 +3993,17 @@ void CNeutrinoApp::startNextRecording()
 int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 {
 	//	printf("ac: %s\n", actionKey.c_str());
-	int returnval = menu_return::RETURN_REPAINT;
+	int returnval = menu_return::RETURN_NONE;
 
 	if(actionKey=="shutdown")
 	{
 		ExitRun(true);
-		returnval = menu_return::RETURN_NONE;
 	}
 	else if(actionKey=="reboot")
 	{
 		FILE *f = fopen("/tmp/.reboot", "w");
 		fclose(f);
 		ExitRun(true);
-		returnval = menu_return::RETURN_NONE;
 	}
 	else if(actionKey=="tv")
 	{
@@ -4092,6 +4090,7 @@ int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 	else if(actionKey == "clearSectionsd")
 	{
 		g_Sectionsd->freeMemory();
+		returnval = menu_return::RETURN_REPAINT; // just to show that something was done
 	}
 	else if(actionKey == "EPGrestart")
 	{
@@ -4100,16 +4099,17 @@ int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 		g_Sectionsd->setPauseScanning(false);
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
 		SendSectionsdConfig();
+		returnval = menu_return::RETURN_REPAINT; // just to show that something was done
 	}
-
 #ifdef ENABLE_MOVIEPLAYER2
 	else if (actionKey.find("mb.file://") == 0)
 	{
 		CMenuTarget* mp = new CMoviePlayerGui();
-		mp->exec(NULL, actionKey.substr(3));
+		returnval = mp->exec(NULL, actionKey.substr(3));
 		delete mp;
 	}
 #endif
+
 	return returnval;
 }
 
