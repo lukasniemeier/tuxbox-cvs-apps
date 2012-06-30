@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.341 2012/06/26 18:50:30 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.342 2012/06/30 10:52:49 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -940,7 +940,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		// Mehrere Events mit gleicher ID sind, diese vorher loeschen
 		deleteEvent(e->uniqueKey());
 		readLockEvents();
-		if (mySIeventsOrderUniqueKey.size() >= max_events) {
+		if ( !mySIeventsOrderUniqueKey.empty() && mySIeventsOrderUniqueKey.size() >= max_events && max_events != 0 ) {
 			MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator lastEvent =
 										mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin();
 
@@ -1096,7 +1096,7 @@ static void addNVODevent(const SIevent &evt)
 	// mehrere Events mit gleicher ID sind, diese vorher loeschen
 	deleteEvent(e->uniqueKey());
 	readLockEvents();
-	if (mySIeventsOrderUniqueKey.size() >= max_events) {
+	if ( !mySIeventsOrderUniqueKey.empty() && mySIeventsOrderUniqueKey.size() >= max_events  && max_events != 0 ) {
 		//FIXME: Set Old Events to 0 if limit is reached...
 		MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator lastEvent =
 										mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end();
@@ -2652,7 +2652,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.341 2012/06/26 18:50:30 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.342 2012/06/30 10:52:49 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8626,7 +8626,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.341 2012/06/26 18:50:30 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.342 2012/06/30 10:52:49 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
