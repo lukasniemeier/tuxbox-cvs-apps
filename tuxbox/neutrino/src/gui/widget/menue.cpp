@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.199 2012/04/25 18:25:36 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.200 2012/06/30 10:51:31 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -330,6 +330,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 				if (titem->isSelectable())
 				{
 					items[selected]->paint(false);
+					titem->paint(true);
 					selected = i;
 					msg = CRCInput::RC_ok;
 				}
