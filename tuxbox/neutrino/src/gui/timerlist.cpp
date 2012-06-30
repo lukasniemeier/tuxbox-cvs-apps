@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.117 2012/06/30 11:14:03 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.118 2012/06/30 11:15:08 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -147,7 +147,7 @@ public:
 			m5->setActive(true);
 		else
 			m5->setActive(false);
-		return true;
+		return false;
 	}
 };
 
@@ -184,7 +184,7 @@ public:
 			m2->setActive(true);
 		else
 			m2->setActive(false);
-		return true;
+		return false;
 	}
 };
 
@@ -218,7 +218,7 @@ public:
 
 	bool changeNotify(const neutrino_locale_t OptionName, void *)
 	{
-		if(OptionName == LOCALE_TIMERLIST_APIDS_DFLT)
+		if(ARE_LOCALES_EQUAL(OptionName, LOCALE_TIMERLIST_APIDS_DFLT))
 		{
 			if(*o_dflt==0)
 			{
@@ -228,20 +228,23 @@ public:
 			}
 			else
 			{
-				m_std->setActive(false);
-				m_alt->setActive(false);
-				m_ac3->setActive(false);
 				*o_std=0;
 				*o_alt=0;
 				*o_ac3=0;
+				m_std->setActive(false);
+				m_alt->setActive(false);
+				m_ac3->setActive(false);
 			}
 		}
 		else
 		{
 			if(*o_std || *o_alt || *o_ac3)
-					 *o_dflt=0;
+			{
+				*o_dflt=0;
+				m_dflt->paint();
+			}
 		}
-		return true;
+		return false;
 	}
 };
 
