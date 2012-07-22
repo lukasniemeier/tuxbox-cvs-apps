@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.c,v 1.11 2012/06/16 14:27:27 rhabarber1848 Exp $
+ * $Id: shellexec.c,v 1.12 2012/07/22 06:28:42 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -42,7 +42,7 @@ static char CFG_FILE[128]="/var/tuxbox/config/shellexec.conf";
 #define LCD_CPL 	12
 #define LCD_RDIST 	10
 
-#define SH_VERSION  2.54
+#define SH_VERSION  2.56
 typedef struct {int fnum; FILE *fh[16];} FSTRUCT, *PFSTRUCT;
 
 static int direct[32];
@@ -65,7 +65,7 @@ int Get_Selection(MENU *m);
 int AddListEntry(MENU *m, char *line, int pos);
 int Get_Menu(int showwait);
 static void ShowInfo(MENU *m, int knew);
-
+static void quit_signal(int sig);
 
 unsigned char *lfb = 0, *lbb = 0;
 unsigned char title[256];
@@ -116,13 +116,6 @@ FILE *fh;
 		remove(INST_FILE);
 		remove(LCDL_FILE);
 	}
-}
-
-static void quit_signal()
-{
-	put_instance(get_instance()-1);
-	printf("shellexec Version %.2f killed\n",SH_VERSION);
-	exit(1);
 }
 
 char *strxchr(char *xstr, char srch)
@@ -264,10 +257,7 @@ int Read_Neutrino_Cfg(char *entry)
 FILE *nfh;
 char tstr [512], *cfptr=NULL;
 int rv=-1,styp=0;
-/*  following code issues warning // remove later
-	// warning: suggest parentheses around && within ||
-	if ( ( ((nfh=fopen(NCF_FILE,"r")) != NULL) && (styp=1) ) || ( ((nfh=fopen(ECF_FILE,"r")) != NULL)) && (styp=2) )
-*/
+
 	if ( ( ((nfh=fopen(NCF_FILE,"r")) != NULL) && (styp=1) ) || ( ((nfh=fopen(ECF_FILE,"r")) != NULL) && (styp=2) ) ) 
 	{
 		tstr[0]='\0';
@@ -985,6 +975,7 @@ char *ptr1,*ptr2,*ptr3,*ptr4, *wstr;
 		{
 			printf(NOMEM);
 			Clear_List(m,0);
+			free(wstr);
 			return 0;
 		}
 		for(i=m->num_entrys; i<m->num_entrys+LIST_STEP; i++)
@@ -993,6 +984,7 @@ char *ptr1,*ptr2,*ptr3,*ptr4, *wstr;
 				{
 				printf(NOMEM);
 				Clear_List(m,0);
+				free(wstr);
 				return -1;
 				}
 			m->list[i]=entr;
@@ -1636,9 +1628,6 @@ int main (int argc, char **argv)
 int cindex=0,mainloop=1,tv;
 char tstr[BUFSIZE], *rptr;
 PLISTENTRY pl;
-#ifdef HAVE_DBOX_HARDWARE
-unsigned int alpha;
-#endif
 
 		printf("shellexec Version %.2f\n",SH_VERSION);
 		for(tv=1; tv<argc; tv++)
@@ -1777,8 +1766,15 @@ unsigned int alpha;
 
 		switch(noepg)
 		{
-			case 1: system("touch /tmp/.daemon_h;killall sectionsd"); break;
-			case 2: if(STYP==1) system("[ -x /bin/sectionsdcontrol -o -x /var/bin/sectionsdcontrol ] && sectionsdcontrol --pause || wget -Y off -q -O /dev/null http://localhost/control/zapto?stopsectionsd &"); break;
+			case 1:/* system("touch /tmp/.daemon_h;killall sectionsd");
+				break;*/
+			case 2:
+				if (STYP==1) {
+					system("[ -x /bin/sectionsdcontrol -o -x /var/bin/sectionsdcontrol ] && sectionsdcontrol --pause || wget -Y off -q -O /dev/null http://localhost/control/zapto?stopsectionsd &");
+				}
+				break;
+			default:
+				break;
 		}
 		
 //		lbb=lfb;
@@ -1932,29 +1928,42 @@ unsigned int alpha;
 				}
 		}
 	}
+	closedown();
+	return 0;
+}
 
-	//cleanup
+static void quit_signal(int sig)
+{
+	closedown();
+	printf("shellexec Version %.2f killed, SIG %d\n", SH_VERSION, sig);
+	exit(1);
+}
 
-	Clear_List(&menu,-1);
+void closedown(void)
+{
+	Clear_List(&menu, -1);
 
 	FTC_Manager_Done(manager);
 	FT_Done_FreeType(library);
-	
-	if (url != '\0')
-	{
-		sprintf(line_buffer,"/sbin/rdate -s %s > /dev/null &",url);
-		system(line_buffer);
-	}
-	
+
 	fcntl(rc, F_SETFL, O_NONBLOCK);
 	
 	LCD_Close();
 	
 	close(rc);
 
-	switch(noepg)
+	put_instance(instance = get_instance()-1);
+	if (instance == 0)
+	{
+		if (url != '\0')
 		{
-			case 1: 
+			sprintf(line_buffer,"/sbin/rdate -s %s > /dev/null &",url);
+			system(line_buffer);
+		}
+
+		switch (noepg)
+		{
+			case 1:/*
 				{
 				int slev=5,tlev;
 				char *cfptr=NULL;
@@ -1982,10 +1991,17 @@ unsigned int alpha;
 				sprintf(line_buffer,"rm -f /tmp/.daemon_h;(sectionsd;sleep 1;(PIDS=`pidof sectionsd`; [ -n \"$PIDS\" ] && renice %d $PIDS > /dev/null);[ -x /bin/sectionsdcontrol -o -x /var/bin/sectionsdcontrol ] && sectionsdcontrol --restart)&",slev); 
 				system(line_buffer); 
 				}
-			break;
-			
-			case 2: if(STYP==1) system("[ -x /bin/sectionsdcontrol -o -x /var/bin/sectionsdcontrol ] && sectionsdcontrol --nopause || wget -Y off -q -O /dev/null http://localhost/control/zapto?startsectionsd &"); break;
+				break;
+*/
+			case 2:
+				if (STYP==1) {
+					system("[ -x /bin/sectionsdcontrol -o -x /var/bin/sectionsdcontrol ] && sectionsdcontrol --nopause || wget -Y off -q -O /dev/null http://localhost/control/zapto?startsectionsd &");
+				}
+				break;
+			default:
+				break;
 		}
+	}
 
 	free(line_buffer);
 	free(g_trstr);
@@ -1993,7 +2009,6 @@ unsigned int alpha;
 	// clear Display
 	memset(lbb, TRANSP, var_screeninfo.xres*var_screeninfo.yres);
 	memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
-//	memset(lfb, TRANSP, var_screeninfo.xres*var_screeninfo.yres);
 	munmap(lfb, fix_screeninfo.smem_len);
 
 #ifdef HAVE_DBOX_HARDWARE
@@ -2001,9 +2016,5 @@ unsigned int alpha;
 #endif
 	close(fb);
 	free(lbb);
-
-	put_instance(get_instance()-1);
-
-	return 0;
 }
 

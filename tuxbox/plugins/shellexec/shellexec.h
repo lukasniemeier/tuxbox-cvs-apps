@@ -1,5 +1,5 @@
 /*
- * $Id: shellexec.h,v 1.10 2012/06/16 14:27:27 rhabarber1848 Exp $
+ * $Id: shellexec.h,v 1.11 2012/07/22 06:28:42 rhabarber1848 Exp $
  *
  * shellexec - d-box2 linux project
  *
@@ -188,8 +188,11 @@ enum {FILL, GRID};
 #define YELLOW	0x04
 #define RED	0x02
 
-
+#ifdef HAVE_DBOX_HARDWARE
+unsigned int alpha;
+#endif
 extern unsigned char *lfb, *lbb;
+
 
 struct fb_fix_screeninfo fix_screeninfo;
 struct fb_var_screeninfo var_screeninfo;
@@ -201,6 +204,7 @@ extern int MAX_FUNCS;
 extern int instance;
 int get_instance(void);
 void put_instance(int pval);
+void closedown(void);
 
 #if HAVE_DVB_API_VERSION >= 3
 
@@ -209,8 +213,6 @@ struct input_event ev;
 #endif
 
 unsigned short rccode;
-
-#endif
 
 #define FB_DEVICE	"/dev/fb/0"
 
@@ -222,3 +224,4 @@ unsigned short lastkey;
 #define RC_DEVICE	"/dev/input/event0"
 #endif
 
+#endif
