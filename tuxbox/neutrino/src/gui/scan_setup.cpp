@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.21 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.22 2012/07/22 06:24:46 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -86,20 +86,12 @@ int CScanSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		scanSettings.gotoXXLongitude = strtod(zapit_long, NULL);
 		CNeutrinoApp::getInstance()->exec(NULL, "savesettings");
 		g_Zapit->loadScanSetupSettings();
-		res = showScanService();
-		if (res == menu_return::RETURN_EXIT_ALL)
-			return menu_return::RETURN_EXIT_ALL;
-		return menu_return::RETURN_EXIT;
+		return res;
 	}
 	else if (actionKey == "show_scanmodes")
 	{
 		res = showScanModeMenue();
-		if (res == menu_return::RETURN_EXIT_ALL)
-			return menu_return::RETURN_EXIT_ALL;
-		res = showScanService();
-		if (res == menu_return::RETURN_EXIT_ALL)
-			return menu_return::RETURN_EXIT_ALL;
-		return menu_return::RETURN_EXIT;
+		return res;
 	}
 
 	res = showScanService();
@@ -380,8 +372,8 @@ int CScanSetup::showScanService()
 	}
 
 	//sub menue scanmode
-	std::string scan_mode = getScanModeString(scanSettings.TP_scan);
-	CMenuForwarder* fw_scanmode = new CMenuForwarder(LOCALE_SERVICEMENU_SCANMODES, true, scan_mode, this, "show_scanmodes", (g_info.delivery_system == DVB_S) ? CRCInput::RC_3 : CRCInput::RC_1);
+	scan_mode_string = getScanModeString(scanSettings.TP_scan);
+	CMenuForwarder* fw_scanmode = new CMenuForwarder(LOCALE_SERVICEMENU_SCANMODES, true, scan_mode_string, this, "show_scanmodes", (g_info.delivery_system == DVB_S) ? CRCInput::RC_3 : CRCInput::RC_1);
 	scansetup->addItem(fw_scanmode); 
 
 	//show scan mode (fast->on/off)
@@ -389,37 +381,6 @@ int CScanSetup::showScanService()
 
 	//prepare auto scan
 	CMenuOptionChooser* onoffscanSectionsd = ( new CMenuOptionChooser(LOCALE_SECTIONSD_SCANMODE, (int *)&scanSettings.scanSectionsd, SECTIONSD_SCAN_OPTIONS, SECTIONSD_SCAN_OPTIONS_COUNT, true, this));
-
-	//sat-lnb-settings
-	if(g_info.delivery_system == DVB_S)
-	{
-		uint i;
-		int satfound = -1;
-		int firstentry = -1;
-
-		scanSettings.TP_SatSelectMenu = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.TP_satname, ((scanSettings.diseqcMode != NO_DISEQC) && scanSettings.TP_scan), this);
-
-		// add the sats which are configured (diseqc or motorpos) to the list of available sats */
-		for (i = 0; i < sat_list_size; i++)
-		{
-			if ((((scanSettings.diseqcMode != DISEQC_1_2)) && (0 <= (*scanSettings.diseqscOfSat(satList[i].satName) ))) ||
-			    (((scanSettings.diseqcMode == DISEQC_1_2)) && (0 <= (*scanSettings.motorPosOfSat(satList[i].satName)))))
-			{
-				if (firstentry == -1) firstentry = i;
-				if (strcmp(scanSettings.TP_satname, satList[i].satName) == 0)
-					satfound = i;
-				scanSettings.TP_SatSelectMenu->addOption(satList[i].satName);
-				dprintf(DEBUG_DEBUG, "satName = %s, diseqscOfSat(%d) = %d, motorPosOfSat(%d) = %d\n", satList[i].satName, i, *scanSettings.diseqscOfSat(satList[i].satName), i, *scanSettings.motorPosOfSat(satList[i].satName));
-			}
-		}
-		// if scanSettings.TP_satname cannot be found in the list of available sats use 1st in list
-		if ((satfound == -1) && (sat_list_size)) {
-//			strcpy(scanSettings.TP_satname, satList[firstentry].satName);
-			strcpy(scanSettings.TP_satname, scanSettings.satNameNoDiseqc);
-		}
-	} else {
-		scanSettings.TP_SatSelectMenu = NULL;
-	}
 
 	//show auto scan
 	scansetup->addItem(onoffscanSectionsd);
@@ -471,15 +432,43 @@ int CScanSetup::showScanModeMenue()
 		//prepare forwarders rate/freq
 	CMenuForwarder *Rate = new CMenuForwarder(LOCALE_SCANTP_RATE, scanSettings.TP_scan == 1, scanSettings.TP_rate, &rate);
 	CMenuForwarder *Freq = new CMenuForwarder(LOCALE_SCANTP_FREQ, scanSettings.TP_scan == 1, scanSettings.TP_freq, freq);
-	
-	CTP_scanNotifier *TP_scanNotifier;
+
+	//sat-lnb-settings
+	CMenuOptionStringChooser* TP_SatSelectMenu = NULL;
+	if(g_info.delivery_system == DVB_S)
+	{
+		uint i;
+		int satfound = -1;
+		int firstentry = -1;
+
+		TP_SatSelectMenu = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.TP_satname, ((scanSettings.diseqcMode != NO_DISEQC) && scanSettings.TP_scan), this);
+
+		// add the sats which are configured (diseqc or motorpos) to the list of available sats */
+		for (i = 0; i < sat_list_size; i++)
+		{
+			if ((((scanSettings.diseqcMode != DISEQC_1_2)) && (0 <= (*scanSettings.diseqscOfSat(satList[i].satName) ))) ||
+			    (((scanSettings.diseqcMode == DISEQC_1_2)) && (0 <= (*scanSettings.motorPosOfSat(satList[i].satName)))))
+			{
+				if (firstentry == -1) firstentry = i;
+				if (strcmp(scanSettings.TP_satname, satList[i].satName) == 0)
+					satfound = i;
+				TP_SatSelectMenu->addOption(satList[i].satName);
+				dprintf(DEBUG_DEBUG, "satName = %s, diseqscOfSat(%d) = %d, motorPosOfSat(%d) = %d\n", satList[i].satName, i, *scanSettings.diseqscOfSat(satList[i].satName), i, *scanSettings.motorPosOfSat(satList[i].satName));
+			}
+		}
+		// if scanSettings.TP_satname cannot be found in the list of available sats use 1st in list
+		if ((satfound == -1) && (sat_list_size)) {
+//			strcpy(scanSettings.TP_satname, satList[firstentry].satName);
+			strcpy(scanSettings.TP_satname, scanSettings.satNameNoDiseqc);
+		}
+	}
+
+	CTP_scanNotifier TP_scanNotifier(fec, pol_mod, Freq, Rate, TP_SatSelectMenu, scan_mode_string);
 	CMenuOptionChooser* scan;
 	if(g_info.delivery_system == DVB_S) {
-		TP_scanNotifier = new CTP_scanNotifier(fec, pol_mod, Freq, Rate, scanSettings.TP_SatSelectMenu);
-		scan = ( new CMenuOptionChooser(LOCALE_SCANTP_SCAN, (int *)&scanSettings.TP_scan, SCANTS_SCAN_OPTIONS, SCANTS_SCAN_OPTION_COUNT, true/*(g_info.delivery_system == DVB_S)*/, TP_scanNotifier));
+		scan = new CMenuOptionChooser(LOCALE_SCANTP_SCAN, (int *)&scanSettings.TP_scan, SCANTS_SCAN_OPTIONS, SCANTS_SCAN_OPTION_COUNT, true/*(g_info.delivery_system == DVB_S)*/, &TP_scanNotifier);
 	} else {
-		TP_scanNotifier = new CTP_scanNotifier(fec, pol_mod, Freq, Rate, 0);
-		scan = ( new CMenuOptionChooser(LOCALE_SCANTP_SCAN, (int *)&scanSettings.TP_scan, SCANTS_CABLESCAN_OPTIONS, SCANTS_CABLESCAN_OPTION_COUNT, true/*(g_info.delivery_system == DVB_S)*/, TP_scanNotifier));
+		scan = new CMenuOptionChooser(LOCALE_SCANTP_SCAN, (int *)&scanSettings.TP_scan, SCANTS_CABLESCAN_OPTIONS, SCANTS_CABLESCAN_OPTION_COUNT, true/*(g_info.delivery_system != DVB_S)*/, &TP_scanNotifier);
 	}
 
 	//intros scan mode
@@ -489,7 +478,7 @@ int CScanSetup::showScanModeMenue()
 	scanmode->addItem(GenericMenuSeparatorLine);
 	scanmode->addItem(scan);
 	if(g_info.delivery_system == DVB_S) {
-		scanmode->addItem(scanSettings.TP_SatSelectMenu);
+		scanmode->addItem(TP_SatSelectMenu);
 	}
 	//show items for scanmode submenue
 	scanmode->addItem(Freq);
@@ -501,7 +490,6 @@ int CScanSetup::showScanModeMenue()
 	delete scanmode;
 
 	delete freq;
-	delete TP_scanNotifier;
 
 	return res;
 }
@@ -610,13 +598,14 @@ bool CSatDiseqcNotifier::changeNotify(const neutrino_locale_t, void * Data)
 	return false;
 }
 
-CTP_scanNotifier::CTP_scanNotifier(CMenuOptionChooser* i1, CMenuOptionChooser* i2, CMenuForwarder* i3, CMenuForwarder* i4, CMenuOptionStringChooser* i5)
+CTP_scanNotifier::CTP_scanNotifier(CMenuOptionChooser* i1, CMenuOptionChooser* i2, CMenuForwarder* i3, CMenuForwarder* i4, CMenuOptionStringChooser* i5, std::string &s)
 {
 	toDisable1[0]=i1;
 	toDisable1[1]=i2;
 	toDisable2[0]=i3;
 	toDisable2[1]=i4;
 	toDisable3[0]=i5;
+	scan_mode_string = &s;
 }
 
 bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
@@ -639,6 +628,8 @@ bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
 		else
 			toDisable3[0]->setActive(true);
 	}
+
+	*scan_mode_string = g_Locale->getText(scan_mode[tp_scan_mode].locale);
 
 	return false;
 }

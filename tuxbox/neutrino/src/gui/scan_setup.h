@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.h,v 1.11 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: scan_setup.h,v 1.12 2012/07/22 06:24:46 rhabarber1848 Exp $
 
 	Copyright (C) 2009 Thilo Graf (dbt)
 	http://www.dbox2-tuning.de
@@ -41,6 +41,8 @@ class CScanSetup : public CMenuTarget, CChangeObserver
 		uint sat_list_size;
 		uint provider_list_size;
 
+		std::string scan_mode_string;
+
 		int showScanService();
 		int showScanModeMenue();
 
@@ -75,8 +77,9 @@ class CTP_scanNotifier : public CChangeObserver
 		CMenuOptionChooser* toDisable1[2];
 		CMenuForwarder* toDisable2[2];
 		CMenuOptionStringChooser* toDisable3[1];		
+		std::string* scan_mode_string;
 	public:
-		CTP_scanNotifier(CMenuOptionChooser*, CMenuOptionChooser*, CMenuForwarder*, CMenuForwarder*, CMenuOptionStringChooser*);
+		CTP_scanNotifier(CMenuOptionChooser* i1, CMenuOptionChooser* i2, CMenuForwarder* i3, CMenuForwarder* i4, CMenuOptionStringChooser* i5, std::string &s);
 		bool changeNotify(const neutrino_locale_t, void *);
 };
 

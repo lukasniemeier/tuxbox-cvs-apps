@@ -1,6 +1,6 @@
 /*
 
-        $Id: settings.cpp,v 1.57 2012/06/30 10:54:19 rhabarber1848 Exp $
+        $Id: settings.cpp,v 1.58 2012/07/22 06:24:46 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -345,32 +345,6 @@ bool CScanSettings::saveSettings(const char * const fileName)
 
 	configfile.setInt32("scanSectionsd",scanSectionsd );
 
-	// check if sat is used
-	if(TP_SatSelectMenu) {
-		std::vector<std::string> tmpsatNameList;
-		tmpsatNameList.clear();
-		bool satfound = false;
-		// scan the new available sat configurations and change update TP_SatSelectMenu
-		for (int i = 0; i < s_Count; i++)
-		{
-			if (((0 <= satDiseqc[i])   && (diseqcMode != DISEQC_1_2)) ||
-			    ((0 != satMotorPos[i]) && (diseqcMode == DISEQC_1_2)))
-			{
-				if (strcmp(satName[i], TP_satname) == 0) satfound = true;
-				tmpsatNameList.push_back(satName[i]);
-//				printf("scan settings: (%d) Name = %s, DiseqC = %d, MotorPos = %d\n", i, satName[i], satDiseqc[i], satMotorPos[i]);
-			}
-		}
-	
-		if (!satfound && !tmpsatNameList.empty())
-			strcpy(TP_satname, tmpsatNameList[0].c_str());
-
-		TP_SatSelectMenu->removeOptions();
-		for (uint i=0; i < tmpsatNameList.size(); i++)
-		{
-			TP_SatSelectMenu->addOption(tmpsatNameList[i].c_str());
-		}
-	}
 	if(configfile.getModifiedFlag())
 		configfile.saveConfig(fileName);
 	return true;

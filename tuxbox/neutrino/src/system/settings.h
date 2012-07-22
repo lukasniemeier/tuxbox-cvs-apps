@@ -1,5 +1,5 @@
 /* 
-  $Id: settings.h,v 1.246 2012/03/04 08:32:08 rhabarber1848 Exp $
+  $Id: settings.h,v 1.247 2012/07/22 06:24:46 rhabarber1848 Exp $
  
   Neutrino-GUI  -   DBoxII-Project
 
@@ -34,14 +34,12 @@
 #ifndef __settings__
 #define __settings__
 
+#include <driver/rcinput.h>
 #include <system/localize.h>
 #include <configfile.h>
 #include <zapit/client/zapitclient.h>
 
 #include <string>
-
-// Houdini: dirty Hack to update menu settings
-#include "gui/widget/menue.h"
 
 struct SNeutrinoSettings
 {
@@ -617,7 +615,6 @@ class CScanSettings
 	char		TP_rate[9];
 	char		TP_satname[30];
 	int		TP_diseqc;
-	CMenuOptionStringChooser* TP_SatSelectMenu;
 
 	CScanSettings();
 
