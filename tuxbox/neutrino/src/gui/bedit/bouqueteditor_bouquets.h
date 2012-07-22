@@ -50,7 +50,7 @@ public:
 	virtual ~CBouquetEditorEvents() {};
 };
 
-class CBEBouquetWidget : public CMenuWidget
+class CBEBouquetWidget : public CMenuTarget
 {
 
 	private:

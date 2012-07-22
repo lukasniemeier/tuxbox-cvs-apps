@@ -41,7 +41,7 @@
 #include <string>
 
 
-class CBEChannelWidget : public CMenuWidget
+class CBEChannelWidget : public CMenuTarget
 {
 
 	private:

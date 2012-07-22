@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.h,v 1.19 2012/04/10 13:03:49 rhabarber1848 Exp $
+	$Id: moviebrowser.h,v 1.20 2012/07/22 06:35:02 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
  
@@ -450,7 +450,7 @@ typedef enum
 }DIR_STATE;
 
 #define MAX_DIR 10
-class CDirMenu : public CMenuWidget
+class CDirMenu : public CMenuTarget
 {
 	private:
 		std::vector<MB_DIR>* dirList;
