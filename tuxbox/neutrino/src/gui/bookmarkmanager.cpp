@@ -4,7 +4,7 @@
   Part of Movieplayer (c) 2003, 2004 by gagga
   Based on code by Zwen. Thanks.
 
-  $Id: bookmarkmanager.cpp,v 1.25 2012/06/30 10:55:55 rhabarber1848 Exp $
+  $Id: bookmarkmanager.cpp,v 1.26 2012/07/22 14:22:37 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -250,7 +250,7 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 		listmaxshow=bookmarks.size();
 		height = theight+0+listmaxshow*fheight*2;	// recalc height
 	}
-	if (!(bookmarks.empty() && selected==bookmarks.size()))
+	if (!bookmarks.empty() && selected==bookmarks.size())
 	{
 		selected=bookmarks.size()-1;
 		liststart = (selected/listmaxshow)*listmaxshow;

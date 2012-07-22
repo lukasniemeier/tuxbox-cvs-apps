@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.230 2012/06/30 10:54:18 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.231 2012/07/22 14:22:37 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -711,7 +711,7 @@ int CChannelList::numericZap(neutrino_msg_t key)
         			}
 			}
 
-			if (!chanlist.empty()) {
+			if (channelList.getSize() != 0) {
 				this->frameBuffer->paintBackground();
 				int newChannel = channelList.show() ;
 
