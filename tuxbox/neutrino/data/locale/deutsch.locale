@@ -639,8 +639,8 @@ keybindingmenu.volumedown Lautstärke minus
 keybindingmenu.volumedown_head Lautstärke minus
 keybindingmenu.volumeup Lautstärke plus
 keybindingmenu.volumeup_head Lautstärke plus
-keybindingmenu.zaphistory Zapping-History Bouquet
-keybindingmenu.zaphistory_head Zapping-History Bouquet
+keybindingmenu.zaphistory Programmverlauf
+keybindingmenu.zaphistory_head Programmverlauf
 keychooser.head Neue Taste einstellen
 keychooser.text1 Bitte Taste drücken
 keychooser.text2 Zum abbrechen warten..

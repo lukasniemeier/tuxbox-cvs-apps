@@ -639,8 +639,8 @@ keybindingmenu.volumedown volume down
 keybindingmenu.volumedown_head Keysetup volume down
 keybindingmenu.volumeup volume up
 keybindingmenu.volumeup_head Keysetup volume up
-keybindingmenu.zaphistory Channel History Bouquet
-keybindingmenu.zaphistory_head Channel History Bouquet
+keybindingmenu.zaphistory Channel history
+keybindingmenu.zaphistory_head Channel history
 keychooser.head Setup new Key
 keychooser.text1 Please press the new key
 keychooser.text2 wait a few seconds for abort
