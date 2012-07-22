@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino_menu.cpp,v 1.141 2012/06/30 10:54:19 rhabarber1848 Exp $
+	$Id: neutrino_menu.cpp,v 1.142 2012/07/22 06:32:14 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -494,7 +494,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_FAVORITS: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_FAVORITS;
-				tmpFavorites = new CFavorites;
+				if (tmpFavorites == NULL)
+					tmpFavorites = new CFavorites();
 				keyhelper.get(&key,&icon);
 				menu_item = new CMenuForwarder(LOCALE_FAVORITES_MENUEADD, true, NULL, tmpFavorites, "-1", key, icon);
 				menu->addItem(menu_item, false);
@@ -548,7 +549,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_REMOTE: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_REMOTE;
-				rcLock = new CRCLock();
+				if (rcLock == NULL)
+					rcLock = new CRCLock();
 				keyhelper.get(&key,&icon);
 				menu_item = new CMenuForwarder(LOCALE_RCLOCK_MENUEADD, true, NULL, rcLock, "-1" , key, icon );
 				menu->addItem(menu_item, false);
@@ -558,7 +560,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_EPG_SUPER: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_EPG_SUPER;
-				tmpEPGplusHandler = new CEPGplusHandler();
+				if (tmpEPGplusHandler == NULL)
+					tmpEPGplusHandler = new CEPGplusHandler();
 				keyhelper.get(&key,&icon,CRCInput::RC_green);
 				menu_item = new CMenuForwarder(LOCALE_EPGMENU_EPGPLUS   , true, NULL, tmpEPGplusHandler  ,  "-1", key, icon);
 				menu->addItem(menu_item, false);
@@ -568,7 +571,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_EPG_LIST: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_EPG_LIST;
-				tmpEventListHandler = new CEventListHandler();
+				if (tmpEventListHandler == NULL)
+					tmpEventListHandler = new CEventListHandler();
 				keyhelper.get(&key,&icon,CRCInput::RC_red);
 				menu_item = new CMenuForwarder(LOCALE_EPGMENU_EVENTLIST , true, NULL, tmpEventListHandler,  "-1", key, icon);
 				menu->addItem(menu_item, false);
@@ -577,7 +581,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_EPG_INFO: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_EPG_INFO;
-				tmpEPGDataHandler = new CEPGDataHandler();
+				if (tmpEPGDataHandler == NULL)
+					tmpEPGDataHandler = new CEPGDataHandler();
 				keyhelper.get(&key,&icon,CRCInput::RC_yellow);
 				menu_item = new CMenuForwarder(LOCALE_EPGMENU_EVENTINFO , true, NULL, tmpEPGDataHandler ,  "-1", key, icon);
 				menu->addItem(menu_item, false);
@@ -604,7 +609,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 				{
 					menu_items++;
 					menu_prev = SNeutrinoSettings::ITEM_AUDIO_SELECT;
-					tmpAudioSelectMenuHandler = new CAudioSelectMenuHandler;
+					if (tmpAudioSelectMenuHandler == NULL)
+						tmpAudioSelectMenuHandler = new CAudioSelectMenuHandler();
 					keyhelper.get(&key,&icon);
 					menu_item = new CMenuForwarder(LOCALE_AUDIOSELECTMENUE_HEAD, true, NULL, tmpAudioSelectMenuHandler, "-1", key,icon);
 					menu->addItem(menu_item, false);
@@ -617,7 +623,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 					// NVOD/SubService- Kanal!
 					menu_items++;
 					menu_prev = SNeutrinoSettings::ITEM_SUBCHANNEL;
-					tmpSubChannelSelectMenu = new CSubChannelSelectMenu();
+					if (tmpSubChannelSelectMenu == NULL)
+						tmpSubChannelSelectMenu = new CSubChannelSelectMenu();
 					keyhelper.get(&key,&icon);
 					menu_item = new CMenuForwarder(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_HEAD, true, NULL, tmpSubChannelSelectMenu, "-1", key, icon);
 					menu->addItem(menu_item, false);
@@ -627,7 +634,8 @@ bool CNeutrinoApp::showUserMenu(int button)
 			case SNeutrinoSettings::ITEM_TECHINFO: 
 				menu_items++;
 				menu_prev = SNeutrinoSettings::ITEM_TECHINFO;
-				tmpStreamInfo2Handler = new CStreamInfo2Handler();
+				if (tmpStreamInfo2Handler == NULL)
+					tmpStreamInfo2Handler = new CStreamInfo2Handler();
 				keyhelper.get(&key,&icon,CRCInput::RC_blue);
 				menu_item = new CMenuForwarder(LOCALE_EPGMENU_STREAMINFO, true, NULL, tmpStreamInfo2Handler    , "-1", key, icon );
 				menu->addItem(menu_item, false);
@@ -676,21 +684,21 @@ bool CNeutrinoApp::showUserMenu(int button)
 	//AudioMute(current_muted, true);
 	
 	// clear the heap
-	if(menu)			delete menu;
-	if(tmpFavorites)		delete tmpFavorites;
-	if(tmpAudioSelectMenuHandler)	delete tmpAudioSelectMenuHandler;
-	if(tmpSubChannelSelectMenu)	delete tmpSubChannelSelectMenu;
-	if(tmpStreamInfo2Handler)	delete tmpStreamInfo2Handler;
-	if(tmpEventListHandler)		delete tmpEventListHandler;
+	delete menu;
+	delete tmpFavorites;
+	delete tmpAudioSelectMenuHandler;
+	delete tmpSubChannelSelectMenu;
+	delete tmpStreamInfo2Handler;
+	delete tmpEventListHandler;
 #ifdef ENABLE_EPGPLUS
-	if(tmpEPGplusHandler)		delete tmpEPGplusHandler;
+	delete tmpEPGplusHandler;
 #endif
-	if(tmpEPGDataHandler)		delete tmpEPGDataHandler;
+	delete tmpEPGDataHandler;
 #ifdef ENABLE_MOVIEPLAYER
-	if(tmpMoviePlayerGui)		delete tmpMoviePlayerGui;
+	delete tmpMoviePlayerGui;
 #endif
-	if(rcLock)			delete rcLock;
-	if(StreamFeaturesChanger)	delete StreamFeaturesChanger;
+	delete rcLock;
+	delete StreamFeaturesChanger;
 
 	return true;
 }
