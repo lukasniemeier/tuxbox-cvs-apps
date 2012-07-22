@@ -385,6 +385,8 @@ void CRemoteControl::processAPIDnames()
 
 	for(unsigned int count=0; count< current_PIDs.APIDs.size(); count++)
 	{
+		size_t desc_maxlen = sizeof(current_PIDs.APIDs[count].desc) - 1;
+
 		if ( current_PIDs.APIDs[count].component_tag != 0xFF )
 		{
 			has_unresolved_ctags= true;
@@ -397,10 +399,6 @@ void CRemoteControl::processAPIDnames()
 			const char *p = getISO639Description(current_PIDs.APIDs[count].desc);
 			if (p != current_PIDs.APIDs[count].desc) // ...check, because arguments of strcpy must not overlap
 			{
-				size_t desc_maxlen = sizeof(current_PIDs.APIDs[count].desc) - 1;
-				if (current_PIDs.APIDs[count].is_ac3)
-					desc_maxlen -= 6;
-
 				strncpy(current_PIDs.APIDs[count].desc, p, desc_maxlen);
 				current_PIDs.APIDs[count].desc[desc_maxlen] = 0;
 			}
@@ -408,7 +406,11 @@ void CRemoteControl::processAPIDnames()
 
 		if ( current_PIDs.APIDs[count].is_ac3 )
 		{
-			strncat(current_PIDs.APIDs[count].desc, " (AC3)", 6);
+			if (strstr(current_PIDs.APIDs[count].desc, "AC3") == NULL)
+			{
+				current_PIDs.APIDs[count].desc[desc_maxlen - 6] = 0;
+				strncat(current_PIDs.APIDs[count].desc, " (AC3)", 6);
+			}
 			has_ac3 = true;
 		}
 	}
@@ -433,14 +435,15 @@ void CRemoteControl::processAPIDnames()
 							if(!tags[i].component.empty())
 							{
 								size_t desc_maxlen = sizeof(current_PIDs.APIDs[j].desc) - 1;
-								if (current_PIDs.APIDs[j].is_ac3)
-									desc_maxlen -= 6;
 
 								strncpy(current_PIDs.APIDs[j].desc, (Latin1_to_UTF8(tags[i].component)).c_str(), desc_maxlen);
 								current_PIDs.APIDs[j].desc[desc_maxlen] = 0;
 
-								if (current_PIDs.APIDs[j].is_ac3)
+								if (current_PIDs.APIDs[j].is_ac3 && strstr(current_PIDs.APIDs[j].desc, "AC3") == NULL)
+								{
+									current_PIDs.APIDs[j].desc[desc_maxlen - 6] = 0;
 									strncat(current_PIDs.APIDs[j].desc, " (AC3)", 6);
+								}
 							}
 							current_PIDs.APIDs[j].component_tag = -1;
 							break;
