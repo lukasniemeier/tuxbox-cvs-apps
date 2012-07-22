@@ -536,46 +536,54 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler */*
 	NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
 	if (NeutrinoAPI->Sectionsd->getComponentTagsUniqueKey(currentNextInfo.current_uniqueKey,tags))
 	{
-		for (unsigned int i=0; i< tags.size(); i++)
+		for (unsigned short j=0; j< pids.APIDs.size(); j++)
 		{
-			for (unsigned short j=0; j< pids.APIDs.size(); j++)
+			eit_not_ok = true;
+			for (unsigned int i=0; i< tags.size(); i++)
 			{
 				if ( pids.APIDs[j].component_tag == tags[i].componentTag )
 				{
  					if(!tags[i].component.empty())
 					{
-						if(!(isalnum(tags[i].component[0])))
-							tags[i].component=tags[i].component.substr(1,tags[i].component.length()-1);
-						yresult += string_printf("<option value=%05u>%s</option>\r\n",idx_as_id ? j : pids.APIDs[j].pid,encodeString(tags[i].component).c_str());
+						yresult += string_printf("<option value=%05u>%s%s</option>\r\n",
+							idx_as_id ? j : pids.APIDs[j].pid,
+							encodeString(tags[i].component).c_str(),
+							pids.APIDs[j].is_ac3 && tags[i].component.find("AC3") == std::string::npos ? " (AC3)": "");
+						eit_not_ok = false;
 					}
-					else
-					{
-						if(!(init_iso))
-						{
-							size_t desc_maxlen = sizeof( pids.APIDs[j].desc ) - 1;
-							strncpy( pids.APIDs[j].desc, getISO639Description( pids.APIDs[j].desc ), desc_maxlen );
-							pids.APIDs[j].desc[desc_maxlen] = 0;
-						}
-			 			yresult += string_printf("<option value=%05u>%s %s</option>\r\n",idx_as_id ? j : pids.APIDs[j].pid,encodeString(std::string(pids.APIDs[j].desc)).c_str(),pids.APIDs[j].is_ac3 ? " (AC3)": " ");
-					}
-					eit_not_ok=false;
 					break;
 				}
 			}
+			if (eit_not_ok)
+			{
+				if(!(init_iso))
+				{
+					size_t desc_maxlen = sizeof( pids.APIDs[j].desc ) - 1;
+					strncpy( pids.APIDs[j].desc, getISO639Description( pids.APIDs[j].desc ), desc_maxlen );
+					pids.APIDs[j].desc[desc_maxlen] = 0;
+				}
+	 			yresult += string_printf("<option value=%05u>%s%s</option>\r\n",
+					idx_as_id ? j : pids.APIDs[j].pid,
+					encodeString(std::string(pids.APIDs[j].desc)).c_str(),
+					pids.APIDs[j].is_ac3 && strstr(pids.APIDs[j].desc, "AC3") == NULL ? " (AC3)": "");
+			}
 		}
 	}
-	if(eit_not_ok)
+	else
 	{
 		unsigned short i = 0;
 		for (CZapitClient::APIDList::iterator it = pids.APIDs.begin(); it!=pids.APIDs.end(); it++)
 		{
 			if(!(init_iso))
 			{
-				size_t desc_maxlen = sizeof( pids.APIDs[i].desc ) - 1;
-				strncpy( pids.APIDs[i].desc, getISO639Description( pids.APIDs[i].desc ), desc_maxlen );
-				pids.APIDs[i].desc[desc_maxlen] = 0;
+				size_t desc_maxlen = sizeof( it->desc ) - 1;
+				strncpy( it->desc, getISO639Description( it->desc ), desc_maxlen );
+				it->desc[desc_maxlen] = 0;
 			}
- 			yresult += string_printf("<option value=%05u>%s %s</option>\r\n",idx_as_id ? i : it->pid,pids.APIDs[i].desc,pids.APIDs[i].is_ac3 ? " (AC3)": " ");
+ 			yresult += string_printf("<option value=%05u>%s%s</option>\r\n",
+				idx_as_id ? i : it->pid,
+				encodeString(std::string(it->desc)).c_str(),
+				it->is_ac3 && strstr(it->desc, "AC3") == NULL ? " (AC3)": "");
 			i++;
 		}
 	}
