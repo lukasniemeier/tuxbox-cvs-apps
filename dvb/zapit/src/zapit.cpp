@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.461 2012/06/26 18:42:57 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.462 2012/08/06 18:24:11 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -40,8 +40,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <stropts.h>
-#include <linux/ioctl.h>
+#include <sys/ioctl.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -3154,7 +3153,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.461 2012/06/26 18:42:57 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.462 2012/08/06 18:24:11 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
