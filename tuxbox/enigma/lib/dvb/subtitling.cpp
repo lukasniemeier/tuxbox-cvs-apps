@@ -36,6 +36,9 @@
 #define streamSource stream_source
 #define dmxPesFilterParams dmx_pes_filter_params
 #endif
+#ifndef DMX_LOW_BITRATE
+#define DMX_LOW_BITRATE 0x4000
+#endif
 
 #include <lib/dvb/subtitling.h>
 
@@ -365,7 +368,7 @@ void eSubtitleWidget::start(int pid, const std::set<int> &ppageids)
 	f.input = DMX_IN_FRONTEND;
 	f.output = DMX_OUT_TAP;
 	f.pesType = DMX_PES_OTHER;
-	f.flags = DMX_IMMEDIATE_START;
+	f.flags = DMX_IMMEDIATE_START|DMX_LOW_BITRATE;
 	if (::ioctl(fd, DMX_SET_PES_FILTER, &f) == -1)
 		eWarning("DMX_SET_PES_FILTER: %m (subtitling)");
 	else
