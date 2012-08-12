@@ -1259,6 +1259,20 @@ eServiceNumberWidget::eServiceNumberWidget(int initial)
 }
 void eServiceNumberWidget::init_eServiceNumberWidget(int initial)
 {
+	// get channelKeypressedInitDelay in ms
+	int channelKeypressedInitDelay;
+	if ((eConfig::getInstance()->getKey("/enigma/channelKeypressedInitDelay", channelKeypressedInitDelay)) != 0)
+	{
+		channelKeypressedInitDelay = 2000;
+		eConfig::getInstance()->setKey("/enigma/channelKeypressedInitDelay", channelKeypressedInitDelay);
+	}
+
+	if ((channelKeypressedInitDelay < 500) || (channelKeypressedInitDelay > 6000))
+	{
+		if (channelKeypressedInitDelay < 500) channelKeypressedInitDelay = 500;
+		if (channelKeypressedInitDelay > 6000) channelKeypressedInitDelay = 6000;
+		eConfig::getInstance()->setKey("/enigma/channelKeypressedInitDelay", channelKeypressedInitDelay);
+	}
 	setText(_("Channel"));
 	move(ePoint(200, 140));
 	resize(eSize(280, 120));
@@ -1276,7 +1290,7 @@ void eServiceNumberWidget::init_eServiceNumberWidget(int initial)
 	CONNECT(number->numberChanged, eServiceNumberWidget::numberChanged );
 
 	timer=new eTimer(eApp);
-	timer->start(2000,true);
+	timer->start(channelKeypressedInitDelay,true);
 	CONNECT(timer->timeout, eServiceNumberWidget::timeout);
 }
 
@@ -1288,7 +1302,9 @@ eServiceNumberWidget::~eServiceNumberWidget()
 
 void eServiceNumberWidget::numberChanged()
 {
-	timer->start(2000,true);
+	int channelKeypressedInitDelay = 2000;
+	eConfig::getInstance()->getKey("/enigma/channelKeypressedInitDelay", channelKeypressedInitDelay);
+	timer->start(channelKeypressedInitDelay,true);
 }
 
 eZapMain *eZapMain::instance;
@@ -1749,6 +1765,20 @@ void eZapMain::init_main()
 		if (timeoutInfobar < 2) timeoutInfobar = 2;
 		if (timeoutInfobar > 12) timeoutInfobar = 12;
 		eConfig::getInstance()->setKey("/enigma/timeoutInfobar", timeoutInfobar);
+	}
+
+// get Volumebar timeout in ms
+	if ((eConfig::getInstance()->getKey("/enigma/timeoutVolumebar", timeoutVolumebar)) != 0)
+	{
+		timeoutVolumebar = 2000;
+		eConfig::getInstance()->setKey("/enigma/timeoutVolumebar", timeoutVolumebar);
+	}
+
+	if ((timeoutVolumebar < 500) || (timeoutVolumebar > 6000))
+	{
+		if (timeoutVolumebar < 500) timeoutVolumebar = 500;
+		if (timeoutVolumebar > 6000) timeoutVolumebar = 6000;
+		eConfig::getInstance()->setKey("/enigma/timeoutVolumebar", timeoutVolumebar);
 	}
 
 // Mute Symbol
@@ -3008,7 +3038,8 @@ void eZapMain::volumeUp()
 	if ((!currentFocus) || (currentFocus == this))
 	{
 		volume.show();
-		volumeTimer.start(2000, true);
+		eConfig::getInstance()->getKey("/enigma/timeoutVolumebar", timeoutVolumebar);
+		volumeTimer.start(timeoutVolumebar, true);
 	}
 }
 
@@ -3045,7 +3076,8 @@ void eZapMain::volumeDown()
 	if ((!currentFocus) || (currentFocus == this))
 	{
 		volume.show();
-		volumeTimer.start(2000, true);
+		eConfig::getInstance()->getKey("/enigma/timeoutVolumebar", timeoutVolumebar);
+		volumeTimer.start(timeoutVolumebar, true);
 	}
 }
 

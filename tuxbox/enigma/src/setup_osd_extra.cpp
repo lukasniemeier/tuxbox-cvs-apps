@@ -37,6 +37,42 @@ void eOSDExpertSetup::init_eOSDExpertSetup()
 	timeout_infobar->setCurrent(timeoutInfobar);
 	CONNECT( list.selchanged, eOSDExpertSetup::selInfobarChanged );
 
+	timeout_volumebar = new eListBoxEntryMulti(&list, _("volumebar timeout (left, right)"));
+	timeout_volumebar->add((eString)"  " + eString().sprintf(_("volumebar timeout %d.%d sec"), 0, 5) + (eString)" >", 500);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 1, 0) + (eString)" >", 1000);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 1, 5) + (eString)" >", 1500);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 2, 0) + (eString)" >", 2000);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 2, 5) + (eString)" >", 2500);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 3, 0) + (eString)" >", 3000);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 3, 5) + (eString)" >", 3500);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 4, 0) + (eString)" >", 4000);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 4, 5) + (eString)" >", 4500);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 5, 0) + (eString)" >", 5000);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 5, 5) + (eString)" >", 5500);
+	timeout_volumebar->add((eString)"< " + eString().sprintf(_("volumebar timeout %d.%d sec"), 6, 0) + (eString)"  ", 6000);
+	int timeoutVolumebar = 2000;
+	eConfig::getInstance()->getKey("/enigma/timeoutVolumebar", timeoutVolumebar);
+	timeout_volumebar->setCurrent(timeoutVolumebar);
+	CONNECT( list.selchanged, eOSDExpertSetup::selVolumebarChanged );
+
+	timeout_keypressed = new eListBoxEntryMulti(&list, _("channel numbers timeout (left, right)"));
+	timeout_keypressed->add((eString)"  " + eString().sprintf(_("keypressed timeout %d.%d sec"), 0, 5) + (eString)" >", 500);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 1, 0) + (eString)" >", 1000);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 1, 5) + (eString)" >", 1500);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 2, 0) + (eString)" >", 2000);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 2, 5) + (eString)" >", 2500);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 3, 0) + (eString)" >", 3000);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 3, 5) + (eString)" >", 3500);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 4, 0) + (eString)" >", 4000);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 4, 5) + (eString)" >", 4500);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 5, 0) + (eString)" >", 5000);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 5, 5) + (eString)" >", 5500);
+	timeout_keypressed->add((eString)"< " + eString().sprintf(_("keypressed timeout %d.%d sec"), 6, 0) + (eString)"  ", 6000);
+	int timeoutKeypressed = 2000;
+	eConfig::getInstance()->getKey("/enigma/channelKeypressedInitDelay", timeoutKeypressed);
+	timeout_keypressed->setCurrent(timeoutKeypressed);
+	CONNECT( list.selchanged, eOSDExpertSetup::selChannelKeypressedInitDelayChanged );
+
 	new eListBoxEntryCheck(&list, _("show infobar on service switch"), "/ezap/osd/showOSDOnSwitchService", _("show infobar when switching to another service"));
 	CONNECT((new eListBoxEntryCheck(&list,_("Serviceselector help buttons"),"/ezap/serviceselector/showButtons",_("show colored help buttons in service selector")))->selected, eOSDExpertSetup::colorbuttonsChanged );
 	if ( eSystemInfo::getInstance()->getFEType() == eSystemInfo::feSatellite)
@@ -52,6 +88,18 @@ void eOSDExpertSetup::selInfobarChanged(eListBoxEntryMenu* e)
 {
 	if ( e == (eListBoxEntryMenu*)timeout_infobar )
 		eConfig::getInstance()->setKey("/enigma/timeoutInfobar", (int)e->getKey());
+}
+
+void eOSDExpertSetup::selVolumebarChanged(eListBoxEntryMenu* e)
+{
+	if ( e == (eListBoxEntryMenu*)timeout_volumebar )
+		eConfig::getInstance()->setKey("/enigma/timeoutVolumebar", (int)e->getKey());
+}
+
+void eOSDExpertSetup::selChannelKeypressedInitDelayChanged(eListBoxEntryMenu* e)
+{
+	if ( e == (eListBoxEntryMenu*)timeout_keypressed )
+		eConfig::getInstance()->setKey("/enigma/channelKeypressedInitDelay", (int)e->getKey());
 }
 
 void eOSDExpertSetup::colorbuttonsChanged(bool b)

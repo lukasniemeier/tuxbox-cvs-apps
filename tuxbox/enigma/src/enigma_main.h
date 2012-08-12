@@ -363,6 +363,8 @@ private:
 	int dvrfunctions;
 	int stateOSD;
 	int timeoutInfobar;
+	int timeoutVolumebar;
+	int channelKeypressedInitDelay;
 	eEPGSearchDATA *cEPGSearchDATA;
 	// eRecordingStatus *recstatus;
 
