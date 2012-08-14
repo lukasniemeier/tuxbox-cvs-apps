@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.231 2012/07/22 14:22:37 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.232 2012/08/14 18:16:37 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -1313,15 +1313,16 @@ void CChannelList::paintHead()
 	}
 
 	frameBuffer->paintBoxRel(x,y, width,theight+0, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+0, width-10-timestr_len-10, name, COL_MENUHEAD, 0, true); // UTF-8
-	
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width-10-timestr_len-10, name, COL_MENUHEAD, 0, true); // UTF-8
+
+
 	if ((g_info.delivery_system == DVB_S) && (provstr_len > 0))
 	{
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+width-10-timestr_len-10-provstr_len-10,y+fheight+5, provstr_len+1, provstr, COL_MENUHEAD, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+width-10-timestr_len-10-provstr_len-10,y+theight/2+fheight/2+2, provstr_len+1, provstr, COL_MENUHEAD, 0, true); // UTF-8
 	}
 
 	if (gotTime){
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+width-10-timestr_len, y+theight+0, timestr_len+1, timestr, COL_MENUHEAD, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+width-10-timestr_len, y+theight+2, timestr_len+1, timestr, COL_MENUHEAD, 0, true); // UTF-8
 	}
 
 	// paintFoot(); // activate to re-paint buttons
