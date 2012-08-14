@@ -1,5 +1,5 @@
 /*
-	$Id: streaminfo2.cpp,v 1.49 2012/08/14 18:19:53 rhabarber1848 Exp $
+	$Id: streaminfo2.cpp,v 1.50 2012/08/14 18:25:25 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -95,7 +95,7 @@ CStreamInfo2::CStreamInfo2()
 	rate.min_short_average = 20000;
 	
 	brc = 0;
-	int mode = g_Zapit->getMode();
+	int mode = CNeutrinoApp::getInstance()->getMode();
 
 #ifdef ENABLE_RADIOTEXT
 	/* stop Radiotext if in Radiomode */
@@ -107,7 +107,7 @@ CStreamInfo2::CStreamInfo2()
 #endif
  
 	if (!g_Zapit->isRecordModeActive())
-		if (mode == 1) { 
+		if (mode == NeutrinoMessages::mode_tv) { 
 			current_apid = -1;		
 #ifdef HAVE_DBOX_HARDWARE
 			actmode = g_Zapit->PlaybackState();
@@ -810,7 +810,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 std::string CStreamInfo2Misc::getStreamInfoVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.49 $");
+	return imageinfo.getModulVersion("","$Revision: 1.50 $");
 }
 
 int CStreamInfo2Handler::exec(CMenuTarget* parent, const std::string &)
