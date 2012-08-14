@@ -464,7 +464,7 @@ void setvideooutput(CControld::video_format format, bool bSaveSettings)
 	}
 
 #ifdef HAVE_DBOX_HARDWARE
-	if(format == CControld::FORMAT_RGB || format == CControld::FORMAT_YUV_VBS || format == CControld::FORMAT_YUV_VBS)
+	if (format == CControld::FORMAT_RGB || format == CControld::FORMAT_YUV_VBS || format == CControld::FORMAT_YUV_CVBS)
 		setRGBCsync(settings.csync);
 #endif
 }
