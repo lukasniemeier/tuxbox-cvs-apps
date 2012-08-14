@@ -4,7 +4,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: listframe.cpp,v 1.8 2011/05/31 08:40:36 dbt Exp $
+	$Id: listframe.cpp,v 1.9 2012/08/14 18:19:54 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -322,7 +322,7 @@ void CListFrame::initFramesRel(void)
 	{
 		m_cFrameTitleRel.iX			= 0;
 		m_cFrameTitleRel.iY			= 0;
-		m_cFrameTitleRel.iHeight	= m_nFontTitleHeight +2 ;
+		m_cFrameTitleRel.iHeight	= m_nFontTitleHeight;
 		m_cFrameTitleRel.iWidth		= m_cFrame.iWidth ;
 	}
 	else
@@ -485,8 +485,8 @@ void CListFrame::refreshTitle(void)
 									
 	m_pcWindow->RenderString(	m_pcFontTitle,
 								m_cFrameTitleRel.iX + TEXT_BORDER_WIDTH, 
-								m_cFrameTitleRel.iY + m_cFrameTitleRel.iHeight, 
-								m_cFrameTitleRel.iWidth - TEXT_BORDER_WIDTH<<1, 
+								m_cFrameTitleRel.iY + m_cFrameTitleRel.iHeight + 2, 
+								m_cFrameTitleRel.iWidth - TEXT_BORDER_WIDTH, 
 								m_textTitle.c_str(), 
 								TITLE_FONT_COLOR, 
 								0, 

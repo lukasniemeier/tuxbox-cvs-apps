@@ -147,17 +147,24 @@ void CHintBox::refresh(void)
 
 	int c_rad_mid = RADIUS_MID;
 
+	// shadow
 	window->paintBoxRel(SHADOW_OFFSET, SHADOW_OFFSET, width, (entries_per_page + 1) * fheight + theight, (CFBWindow::color_t)COL_INFOBAR_SHADOW_PLUS_0, c_rad_mid);
+
+	// title
 	window->paintBoxRel(0, 0, width, theight, (CFBWindow::color_t)COL_MENUHEAD_PLUS_0, c_rad_mid , CORNER_TOP);
 
+	int iconoffset = 0;
 	if (!iconfile.empty())
 	{
-		window->paintIcon(iconfile.c_str(), 8, 5);
-		window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], 40, theight, width - 40, g_Locale->getText(caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
+		int iconw, iconh;
+		CFrameBuffer::getInstance()->getIconSize(iconfile.c_str(), &iconw, &iconh);
+		window->paintIcon(iconfile.c_str(), 8, theight / 2 - iconh / 2);
+		iconoffset = 8 + iconw;
 	}
-	else
-		window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], 10, theight, width - 10, g_Locale->getText(caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
-		window->paintBoxRel(0, theight, width, (entries_per_page + 1) * fheight, (CFBWindow::color_t)COL_MENUCONTENT_PLUS_0, c_rad_mid , CORNER_BOTTOM);
+	window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], iconoffset + 10, theight + 2, width - iconoffset - 10, g_Locale->getText(caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
+
+	// background of text panel
+	window->paintBoxRel(0, theight, width, (entries_per_page + 1) * fheight, (CFBWindow::color_t)COL_MENUCONTENT_PLUS_0, c_rad_mid , CORNER_BOTTOM);
 
 	int count = entries_per_page;
 	int ypos  = theight + (fheight >> 1);

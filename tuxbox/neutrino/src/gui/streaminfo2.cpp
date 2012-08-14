@@ -1,5 +1,5 @@
 /*
-	$Id: streaminfo2.cpp,v 1.48 2011/12/17 14:50:51 rhabarber1848 Exp $
+	$Id: streaminfo2.cpp,v 1.49 2012/08/14 18:19:53 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -459,7 +459,7 @@ void CStreamInfo2::paint(int/*mode*/)
 		int pigboxes_x = xpos+width-260;
 		
 		frameBuffer->paintBoxRel(background_x, y, background_w, hheight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-		g_Font[font_head]->RenderString(xpos, y + hheight , width, head_string, COL_MENUHEAD, 0, true); // UTF-8	
+		g_Font[font_head]->RenderString(xpos, y + hheight + 2, width, head_string, COL_MENUHEAD, 0, true); // UTF-8	
 		frameBuffer->paintBoxRel(background_x, y + hheight, background_w, background_h, COL_MENUCONTENT_PLUS_0);
 		ypos = y+hheight+8;
 
@@ -810,7 +810,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 std::string CStreamInfo2Misc::getStreamInfoVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.48 $");
+	return imageinfo.getModulVersion("","$Revision: 1.49 $");
 }
 
 int CStreamInfo2Handler::exec(CMenuTarget* parent, const std::string &)

@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.75 2012/06/30 10:57:43 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.76 2012/08/14 18:19:53 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -363,7 +363,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.75 2012/06/30 10:57:43 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.76 2012/08/14 18:19:53 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -1655,23 +1655,25 @@ void CMovieBrowser::refreshTitle(void)
 								RADIUS_MID,
 								CORNER_TOP);
 	
+	int iconw = 0, iconh = 0;
+	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_EPGINFO, &iconw, &iconh);
 	m_pcWindow->paintIcon(NEUTRINO_ICON_EPGINFO, 
-								m_cBoxFrameTitleRel.iX+6, 
-								m_cBoxFrameTitleRel.iY+m_cBoxFrameTitleRel.iHeight/2 - 12);
+								m_cBoxFrameTitleRel.iX + 6, 
+								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
 									
 	m_pcWindow->RenderString(	m_pcFontTitle,
-								m_cBoxFrameTitleRel.iX + TEXT_BORDER_WIDTH +30, 
-								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight, 
-								m_cBoxFrameTitleRel.iWidth - TEXT_BORDER_WIDTH<<1, 
+								m_cBoxFrameTitleRel.iX + 6 + iconw + TEXT_BORDER_WIDTH, 
+								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight + 2, 
+								m_cBoxFrameTitleRel.iWidth - 6 - iconw - TEXT_BORDER_WIDTH, 
 								m_textTitle.c_str(), 
 								TITLE_FONT_COLOR, 
 								0, 
 								true); // UTF-8
-	int iconw = 0, iconh = 0;
+
 	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
 	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, 
 								m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - iconw - 12, 
-								m_cBoxFrameTitleRel.iY+m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
+								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
 }
 
 /************************************************************************
@@ -3966,7 +3968,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.75 $");
+	return imageinfo.getModulVersion("","$Revision: 1.76 $");
 }
 
 /************************************************************************/

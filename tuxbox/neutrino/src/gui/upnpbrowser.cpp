@@ -995,7 +995,7 @@ void CUpnpBrowserGui::paintItemPos(std::vector<UPnPEntry> *entry, unsigned int p
 void CUpnpBrowserGui::paintDevice()
 {
 	std::string tmp;
-	int w, xstart, ypos, top;
+	int w, xstart, ypos, top, iconw, iconh;
 	int c_rad_mid = RADIUS_MID;
 
 	// LCD
@@ -1038,23 +1038,14 @@ void CUpnpBrowserGui::paintDevice()
 	// Head
 	tmp = g_Locale->getText(LOCALE_UPNPBROWSER_HEAD);
 	m_frameBuffer->paintBoxRel(m_x, m_y + m_title_height, m_width, m_theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	m_frameBuffer->paintIcon(NEUTRINO_ICON_UPNP, m_x + 7, m_y + m_title_height + 6);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 35, m_y + m_theight + m_title_height + 0,
-		m_width - 45, tmp, COL_MENUHEAD, 0, true); // UTF-8
-	ypos = m_y + m_title_height;
-	if(m_theight > 26)
-		ypos = (m_theight - 26) / 2 + m_y + m_title_height;
-	m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - 30, ypos);
-#if 0
-	if( CNeutrinoApp::getInstance()->isMuted() )
-	{
-		xpos = m_x + m_width - 75;
-		ypos = m_y + m_title_height;
-		if(m_theight > 32)
-			ypos = (m_theight - 32) / 2 + m_y + m_title_height;
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_MUTE, xpos, ypos);
-	}
-#endif
+	m_frameBuffer->getIconSize(NEUTRINO_ICON_UPNP, &iconw, &iconh);
+	ypos = m_y + m_title_height + m_theight / 2 - iconh / 2;
+	m_frameBuffer->paintIcon(NEUTRINO_ICON_UPNP, m_x + 7, ypos);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 7 + iconw + 10, m_y + m_title_height + m_theight + 2,
+		m_width - 7 - iconw - 10, tmp, COL_MENUHEAD, 0, true); // UTF-8
+	m_frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
+	ypos = m_y + m_title_height + m_theight / 2 - iconh / 2;
+	m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - iconw - 8, ypos);
 
 	// Items
 	for (unsigned int count=0;count<m_listmaxshow;count++)
@@ -1087,7 +1078,7 @@ void CUpnpBrowserGui::paintItem(std::vector<UPnPEntry> *entry, unsigned int sele
 {
 	std::string tmp;
 	std::stringstream ts;
-	int w, xstart, ypos, top;
+	int w, xstart, ypos, top, iconw, iconh;
 	int preferred=(*entry)[selected].preferred;
 
 	// LCD
@@ -1161,23 +1152,14 @@ void CUpnpBrowserGui::paintItem(std::vector<UPnPEntry> *entry, unsigned int sele
 	// Head
 	tmp = g_Locale->getText(LOCALE_UPNPBROWSER_HEAD);
 	m_frameBuffer->paintBoxRel(m_x, m_y + m_title_height, m_width, m_theight, COL_MENUHEAD_PLUS_0);
-	m_frameBuffer->paintIcon(NEUTRINO_ICON_UPNP, m_x + 7, m_y + m_title_height + 6);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 35, m_y + m_theight + m_title_height + 0,
-		m_width - 45, tmp, COL_MENUHEAD, 0, true); // UTF-8
-	ypos = m_y + m_title_height;
-	if(m_theight > 26)
-		ypos = (m_theight - 26) / 2 + m_y + m_title_height;
-	m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - 30, ypos);
-#if 0
-	if( CNeutrinoApp::getInstance()->isMuted() )
-	{
-		xpos = m_x + m_width - 75;
-		ypos = m_y + m_title_height;
-		if(m_theight > 32)
-			ypos = (m_theight - 32) / 2 + m_y + m_title_height;
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_MUTE, xpos, ypos);
-	}
-#endif
+	m_frameBuffer->getIconSize(NEUTRINO_ICON_UPNP, &iconw, &iconh);
+	ypos = m_y + m_title_height + m_theight / 2 - iconh / 2;
+	m_frameBuffer->paintIcon(NEUTRINO_ICON_UPNP, m_x + 7, ypos);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 7 + iconw + 10, m_y + m_title_height + m_theight + 2,
+		m_width - 7 - iconw - 10, tmp, COL_MENUHEAD, 0, true); // UTF-8
+	m_frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
+	ypos = m_y + m_title_height + m_theight / 2 - iconh / 2;
+	m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - iconw - 8, ypos);
 
 	// Items
 	for (unsigned int count=0;count<m_listmaxshow;count++)

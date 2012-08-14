@@ -463,13 +463,15 @@ void CStringInput::paint()
 
 	if (!(iconfile.empty()))
 	{
-		frameBuffer->paintIcon(iconfile, x + 8, y + 5);
-		iconoffset = 28;
+		int iconw, iconh;
+		frameBuffer->getIconSize(iconfile.c_str(), &iconw, &iconh);
+		frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - iconh / 2);
+		iconoffset = 8 + iconw;
 	}
 	else
 		iconoffset = 0;
 
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+ 10+ iconoffset, y+ hheight, width- 10- iconoffset, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + iconoffset + 10, y + hheight + 2, width - iconoffset - 10, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
 
 	if (hint_1 != NONEXISTANT_LOCALE)
 	{

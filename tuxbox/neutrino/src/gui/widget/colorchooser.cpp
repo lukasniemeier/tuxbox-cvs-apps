@@ -50,10 +50,10 @@
 #define VALUE_ALPHA 3
 
 static const char * const iconnames[4] = {
-	"volumeslider2red.raw",
-	"volumeslider2green.raw",
-	"volumeslider2blue.raw",
-	"volumeslider2alpha.raw"
+	NEUTRINO_ICON_VOLUMESLIDER2RED,
+	NEUTRINO_ICON_VOLUMESLIDER2GREEN,
+	NEUTRINO_ICON_VOLUMESLIDER2BLUE,
+	NEUTRINO_ICON_VOLUMESLIDER2ALPHA
 };
 
 static const neutrino_locale_t colorchooser_names[4] =
@@ -227,7 +227,7 @@ void CColorChooser::paint()
 {
 	int c_rad_mid = RADIUS_MID;
 	frameBuffer->paintBoxRel(x, y, width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+hheight, width, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 10, y + hheight + 2, width, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
 	frameBuffer->paintBoxRel(x, y + hheight, width, height - hheight, COL_MENUCONTENT_PLUS_0, c_rad_mid,  CORNER_BOTTOM);
 
 	for (int i = 0; i < 4; i++)
@@ -246,8 +246,8 @@ void CColorChooser::paintSlider(int _x, int _y, unsigned char *spos, const neutr
 	if (!spos)
 		return;
 	frameBuffer->paintBoxRel(_x + 70, _y, 120, mheight, COL_MENUCONTENT_PLUS_0);
-	frameBuffer->paintIcon("volumebody.raw", _x + 70, _y + 2 + mheight / 4);
-	frameBuffer->paintIcon(selected ? iconname : "volumeslider2.raw", _x + 73 + (*spos), _y + mheight / 4);
+	frameBuffer->paintIcon(NEUTRINO_ICON_VOLUMEBODY, _x + 70, _y + 2 + mheight / 4);
+	frameBuffer->paintIcon(selected ? iconname : NEUTRINO_ICON_VOLUMESLIDER2, _x + 73 + (*spos), _y + mheight / 4);
 
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(_x, _y + mheight, width, g_Locale->getText(text), COL_MENUCONTENT, 0, true); // UTF-8
 }

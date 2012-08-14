@@ -1,5 +1,5 @@
 /*
-	$Id: progresswindow.cpp,v 1.23 2011/07/22 19:46:55 rhabarber1848 Exp $
+	$Id: progresswindow.cpp,v 1.24 2012/08/14 18:19:54 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -145,7 +145,7 @@ void CProgressWindow::paint()
 	
 	frameBuffer->paintBoxRel(x, ypos, width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 	if (caption != NONEXISTANT_LOCALE)
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10, ypos+ hheight, width- 10, g_Locale->getText(caption), COL_MENUHEAD, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 10, ypos + hheight + 2, width - 10, g_Locale->getText(caption), COL_MENUHEAD, 0, true); // UTF-8
 	frameBuffer->paintBoxRel(x, ypos + hheight, width, height - hheight, COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 
 	ypos+= hheight + (mheight >>1);

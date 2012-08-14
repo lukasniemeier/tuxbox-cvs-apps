@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 	
-	$Id: pictureviewer.cpp,v 1.79 2012/06/14 18:13:14 rhabarber1848 Exp $
+	$Id: pictureviewer.cpp,v 1.80 2012/08/14 18:19:53 rhabarber1848 Exp $
 
 	MP3Player by Dirch
 	
@@ -608,7 +608,7 @@ void CPictureViewerGui::paintHead()
 
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 	frameBuffer->paintIcon(NEUTRINO_ICON_MP3, x + 7, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight, width - 45, g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 7 + iconw + 10, y + theight + 2, width - 7 - iconw - 10, g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD), COL_MENUHEAD, 0, true); // UTF-8
 
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 	int xpos = x + width - iconw - 6;
@@ -740,7 +740,7 @@ void CPictureViewerGui::endView()
 std::string CPictureViewerGui::getPictureViewerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.79 $");
+	return imageinfo.getModulVersion("","$Revision: 1.80 $");
 }
 
 void CPictureViewerGui::showHelp()

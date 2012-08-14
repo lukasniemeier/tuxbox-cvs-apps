@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.200 2012/06/30 10:51:31 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.201 2012/08/14 18:19:54 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -605,8 +605,10 @@ void CMenuWidget::paint()
 	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 	frameBuffer->paintBoxRel(x, y, width + sb_width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+38, y+hheight+1, width-40, nameString.c_str(), COL_MENUHEAD, 0, true); // UTF-8
-	frameBuffer->paintIcon(iconfile, x + 8, y + 5);
+	int iconw, iconh;
+	frameBuffer->getIconSize(iconfile.c_str(), &iconw, &iconh);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 8 + iconw + 10, y + hheight + 2, width - 8 - iconw - 10, nameString.c_str(), COL_MENUHEAD, 0, true); // UTF-8
+	frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - iconh / 2);
 
 	item_start_y = y+hheight;
 	paintItems();

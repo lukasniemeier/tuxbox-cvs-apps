@@ -61,7 +61,6 @@
 #define WINDOW_FRAME_BORDER_WIDTH	SHADOW_OFFSET
 #define ADD_FOOT_HEIGHT	 		14
 #define	TEXT_BORDER_WIDTH		8
-#define	TITLE_ICON_WIDTH		(40 - TEXT_BORDER_WIDTH)
 
 #define MAX_WINDOW_WIDTH  		(g_settings.screen_EndX - g_settings.screen_StartX )
 #define MAX_WINDOW_HEIGHT 		(g_settings.screen_EndY - g_settings.screen_StartY - 40)	
@@ -445,11 +444,13 @@ void CMsgBox::refreshTitle(void)
 	if (!m_cIcon.empty())
 	{
 		// draw icon and title text
-		m_pcWindow->paintIcon(m_cIcon.c_str(), m_cBoxFrameTitleRel.iX + 8, m_cBoxFrameTitleRel.iY + 5);
+		int iconw, iconh;
+		CFrameBuffer::getInstance()->getIconSize(m_cIcon.c_str(), &iconw, &iconh);
+		m_pcWindow->paintIcon(m_cIcon.c_str(), m_cBoxFrameTitleRel.iX + 8, m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
 		m_pcWindow->RenderString(	m_pcFontTitle,
-						m_cBoxFrameTitleRel.iX + TITLE_ICON_WIDTH + TEXT_BORDER_WIDTH,
-						m_cBoxFrameTitleRel.iHeight+3,
-						m_cBoxFrameTitleRel.iWidth - TITLE_ICON_WIDTH + TEXT_BORDER_WIDTH,
+						m_cBoxFrameTitleRel.iX + 8 + iconw + TEXT_BORDER_WIDTH,
+						m_cBoxFrameTitleRel.iHeight + 2,
+						m_cBoxFrameTitleRel.iWidth - 8 - iconw - TEXT_BORDER_WIDTH,
 						m_cTitle.c_str(),
 						(CFBWindow::color_t)COL_MENUHEAD,
 						0,
@@ -460,7 +461,7 @@ void CMsgBox::refreshTitle(void)
 		// no icon available, just draw the title text
 		m_pcWindow->RenderString(	m_pcFontTitle, 
 						m_cBoxFrameTitleRel.iX + TEXT_BORDER_WIDTH, 
-						m_cBoxFrameTitleRel.iHeight+3, 
+						m_cBoxFrameTitleRel.iHeight + 2, 
 						m_cBoxFrameTitleRel.iWidth - TEXT_BORDER_WIDTH, 
 						m_cTitle.c_str(), 
 						(CFBWindow::color_t)COL_MENUHEAD, 

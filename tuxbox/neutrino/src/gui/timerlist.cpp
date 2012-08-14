@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.118 2012/06/30 11:15:08 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.119 2012/08/14 18:19:53 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -772,11 +772,11 @@ void CTimerList::paintHead()
 	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
 	int ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 35, y + theight, width - 45, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 5 + iconw + 10, y + theight + 2, width - 5 - iconw - 10, g_Locale->getText(LOCALE_TIMERLIST_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 	ypos = y + theight_mid - (iconh / 2);
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - 30, ypos);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - iconw - 8, ypos);
 }
 
 const struct button_label TimerListButtons[4] =

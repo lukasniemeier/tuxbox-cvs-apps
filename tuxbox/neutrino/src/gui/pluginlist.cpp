@@ -307,18 +307,21 @@ void CPluginList::paintHead()
 	frameBuffer->paintBoxRel(x, y, width + sb_width, theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 	frameBuffer->paintBoxRel(x, y + theight, width, height- theight - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), COL_MENUCONTENT_PLUS_0);
 
+	int iconoffset = 0;
 	if(pluginlisttype == CPlugins::P_TYPE_GAME)
 	{
-		frameBuffer->paintIcon(NEUTRINO_ICON_GAMES,x+8,y+5);
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+38,y+theight+1, width, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
+		int iconw, iconh;
+		frameBuffer->getIconSize(NEUTRINO_ICON_GAMES, &iconw, &iconh);
+		frameBuffer->paintIcon(NEUTRINO_ICON_GAMES, x + 8, y + theight / 2 - iconh / 2);
+		iconoffset = 8 + iconw;
 	} else if (pluginlisttype == CPlugins::P_TYPE_SCRIPT)
 	{
-		frameBuffer->paintIcon(NEUTRINO_ICON_SHELL,x+8,y+5);
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+38,y+theight+1, width, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
-	} else
-	{
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+8,y+theight+1, width, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8		
+		int iconw, iconh;
+		frameBuffer->getIconSize(NEUTRINO_ICON_SHELL, &iconw, &iconh);
+		frameBuffer->paintIcon(NEUTRINO_ICON_SHELL, x + 8, y + theight / 2 - iconh / 2);
+		iconoffset = 8 + iconw;
 	}
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + iconoffset + 10, y + theight + 2, width - iconoffset - 10, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8		
 }
 
 void CPluginList::paint()

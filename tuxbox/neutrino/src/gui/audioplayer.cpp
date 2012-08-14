@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.92 2012/06/30 10:54:18 rhabarber1848 Exp $
+  $Id: audioplayer.cpp,v 1.93 2012/08/14 18:19:53 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -1601,25 +1601,15 @@ void CAudioPlayerGui::paintHead()
 	m_frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &iconw, &iconh);
 	int ypos = m_y + m_title_height + (m_theight / 2) - (iconh / 2);
 	m_frameBuffer->paintIcon(NEUTRINO_ICON_MP3, m_x + 7, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 35, m_y + m_theight + m_title_height + 0,
-									m_width - 45, strCaption, COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 7 + iconw + 10, m_y + m_title_height + m_theight + 2,
+									m_width - 7 - iconw - 10, strCaption, COL_MENUHEAD, 0, true); // UTF-8
 
 #ifdef ENABLE_GUI_MOUNT
 	if (!m_inetmode)
 	{
 		m_frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
 		ypos = m_y + m_title_height + (m_theight / 2) - (iconh / 2);
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - 35, ypos);
-	}
-#endif
-#if 0
-	if( CNeutrinoApp::getInstance()->isMuted() )
-	{
-		int xpos = m_x + m_width - 75;
-		ypos = m_y + m_title_height;
-		if(m_theight > 32)
-			ypos = (m_theight - 32) / 2 + m_y + m_title_height;
-		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_MUTE, xpos, ypos);
+		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - iconw - 8, ypos);
 	}
 #endif
 }
