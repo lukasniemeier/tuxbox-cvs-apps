@@ -1,5 +1,5 @@
 /*
- * $Id: zapit.cpp,v 1.462 2012/08/06 18:24:11 rhabarber1848 Exp $
+ * $Id: zapit.cpp,v 1.463 2012/08/14 18:24:12 rhabarber1848 Exp $
  *
  * zapit - d-box2 linux project
  *
@@ -1970,6 +1970,7 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 			{
 				satname = xmlGetAttribute(search, "name");
 				strncpy(sat.satName, satname, 29);
+				sat.satName[29] = '\0';
 				sat.satPosition = satellitePositions[satname];
 				sat.motorPosition = motorPositions[sat.satPosition];
 				sat.satDiseqc = -1; /* FIXME */
@@ -3153,7 +3154,7 @@ void loadScanSettings(void)
 
 int main(int argc, char **argv)
 {
-	fprintf(stdout, "$Id: zapit.cpp,v 1.462 2012/08/06 18:24:11 rhabarber1848 Exp $\n");
+	fprintf(stdout, "$Id: zapit.cpp,v 1.463 2012/08/14 18:24:12 rhabarber1848 Exp $\n");
 
 	bool check_lock = true;
 	int opt;
