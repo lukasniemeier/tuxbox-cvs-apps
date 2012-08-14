@@ -54,19 +54,8 @@
 CBEBouquetWidget::CBEBouquetWidget()
 {
 	frameBuffer = CFrameBuffer::getInstance();
+
 	selected = 0;
-	// width  = 500;
-	// height = 440;
-	// ButtonHeight = 25;
-	width  = w_max (550, 0);
-	height = h_max (440, 50);
-	ButtonHeight = 25;
-	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight+0+listmaxshow*fheight; // recalc height
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
 	liststart = 0;
 	state = beDefault;
 	blueFunction = beRename;
@@ -121,14 +110,15 @@ void CBEBouquetWidget::paint()
 {
 	liststart = (selected/listmaxshow)*listmaxshow;
 
+	int ypos = y+ theight;
+	int sb = fheight* listmaxshow;
+	frameBuffer->paintBoxRel(x, ypos, width, sb, COL_MENUCONTENT_PLUS_0); //mainframe
+	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
+
 	for(unsigned int count=0;count<listmaxshow;count++)
 	{
 		paintItem(count);
 	}
-
-	int ypos = y+ theight;
-	int sb = fheight* listmaxshow;
-	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 
 	int sbc= ((Bouquets.size()- 1)/ listmaxshow)+ 1;
 	int sbs= (selected/listmaxshow);
@@ -140,7 +130,7 @@ void CBEBouquetWidget::paint()
 void CBEBouquetWidget::paintHead()
 {
 	frameBuffer->paintBoxRel(x,y, width,theight+0, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+0, width, g_Locale->getText(LOCALE_BOUQUETLIST_HEAD), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width, g_Locale->getText(LOCALE_BOUQUETLIST_HEAD), COL_MENUHEAD, 0, true); // UTF-8
 }
 
 struct button_label CBEBouquetWidgetButtons1[5] =
@@ -155,7 +145,7 @@ struct button_label CBEBouquetWidgetButtons1[5] =
 void CBEBouquetWidget::paintFoot()
 {
 	frameBuffer->paintBoxRel(x,y+height, width,ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	frameBuffer->paintHLine(x, x+width,  y, COL_INFOBAR_SHADOW_PLUS_0);
+//	frameBuffer->paintHLine(x, x+width,  y, COL_INFOBAR_SHADOW_PLUS_0);
 
 	switch( blueFunction)
 	{
@@ -183,6 +173,17 @@ int CBEBouquetWidget::exec(CMenuTarget* parent, const std::string&)
 	neutrino_msg_data_t data;
 
 	int res = menu_return::RETURN_REPAINT;
+
+	width  = w_max (550, 0);
+	height = h_max (440, 50);
+
+	ButtonHeight = 25;
+	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
+	listmaxshow = (height-theight-0)/fheight;
+	height = theight+0+listmaxshow*fheight; // recalc height
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 
 	if (parent)
 	{

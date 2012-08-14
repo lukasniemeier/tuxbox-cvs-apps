@@ -53,11 +53,11 @@ CBEChannelSelectWidget::CBEChannelSelectWidget(const std::string & Caption, unsi
 {
 	bouquet = Bouquet;
 	mode =    Mode;
-	// width =   500;
-	// height =  440;
-        width  = w_max (550, 0);
-        height = h_max (440, 50);
+
+    width  = w_max (550, 0);
+    height = h_max (440, 50);
 	ButtonHeight = 25;
+
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
 	listmaxshow = (height-theight-0)/fheight;
@@ -96,6 +96,7 @@ void CBEChannelSelectWidget::paintItem(uint itemNr, int paintNr, bool _selected)
 
 	uint8_t    color;
 	fb_pixel_t bgcolor;
+
 	if (_selected)
 	{
 		color   = COL_MENUCONTENTSELECTED;
@@ -108,6 +109,7 @@ void CBEChannelSelectWidget::paintItem(uint itemNr, int paintNr, bool _selected)
 		bgcolor = COL_MENUCONTENT_PLUS_0;
 		c_rad_small = 0;
 	}
+	
 
 	frameBuffer->paintBoxRel(x,ypos, width- 15, fheight, bgcolor, c_rad_small);
 
@@ -155,7 +157,7 @@ void CBEChannelSelectWidget::paintHead()
 {
 	// paint head
 	frameBuffer->paintBoxRel(x,y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight, width, ZapitTools::UTF8_to_Latin1(caption.c_str()) , COL_MENUHEAD);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width, caption.c_str() , COL_MENUHEAD);
 }
 
 const struct button_label CBEBouquetSelectWidgetButtons[2] =

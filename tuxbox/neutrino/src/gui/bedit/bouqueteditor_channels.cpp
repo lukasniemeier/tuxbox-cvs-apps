@@ -50,18 +50,8 @@
 CBEChannelWidget::CBEChannelWidget(const std::string & Caption, unsigned int Bouquet)
 {
 	frameBuffer = CFrameBuffer::getInstance();
+
 	selected = 0;
-	// width =  500;
-	// height = 440;
-        width  = w_max (550, 0);
-        height = h_max (440, 50);
-	ButtonHeight = 25;
-	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight+0+listmaxshow*fheight; // recalc height
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
 	liststart = 0;
 	state = beDefault;
 	caption = Caption;
@@ -116,15 +106,17 @@ void CBEChannelWidget::paint()
 	else // if(lastnum<100000)
 		numwidth = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getRenderWidth("00000");
 
+	// paint scrollbar
+	int ypos = y+ theight;
+	int sb = fheight* listmaxshow;
+
+	frameBuffer->paintBoxRel(x, ypos, width, sb, COL_MENUCONTENT_PLUS_0); //mainframe
+	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb, COL_MENUCONTENT_PLUS_1);
+
 	for(unsigned int count=0;count<listmaxshow;count++)
 	{
 		paintItem(count);
 	}
-	
-	// paint scrollbar
-	int ypos = y+ theight;
-	int sb = fheight* listmaxshow;	
-	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 
 	int sbc= ((Channels.size()- 1)/ listmaxshow)+ 1;
 	int sbs= (selected/listmaxshow);
@@ -136,7 +128,7 @@ void CBEChannelWidget::paint()
 void CBEChannelWidget::paintHead()
 {
 	frameBuffer->paintBoxRel(x,y, width,theight+0, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+0, width, caption.c_str() , COL_MENUHEAD);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width, caption.c_str() , COL_MENUHEAD);
 }
 
 const struct button_label CBEChannelWidgetButtons[4] =
@@ -150,8 +142,6 @@ const struct button_label CBEChannelWidgetButtons[4] =
 void CBEChannelWidget::paintFoot()
 {
 	frameBuffer->paintBoxRel(x,y+height, width,ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	frameBuffer->paintHLine(x, x+width,  y, COL_INFOBAR_SHADOW_PLUS_0);
-
 	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, width/5, 4, CBEChannelWidgetButtons);
 }
 
@@ -166,6 +156,16 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string &)
 	neutrino_msg_data_t data;
 
 	int res = menu_return::RETURN_REPAINT;
+
+	width  = w_max (550, 0);
+	height = h_max (440, 50);
+	ButtonHeight = 25;
+	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
+	listmaxshow = (height-theight-0)/fheight;
+	height = theight + 0 + listmaxshow * fheight; // recalc height
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 
 	if (parent)
 	{
