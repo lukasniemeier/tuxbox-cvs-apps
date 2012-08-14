@@ -2,7 +2,7 @@
 #define __channellist__
 
 /*
-	$Id: channellist.h,v 1.79 2010/11/08 21:34:25 dbt Exp $
+	$Id: channellist.h,v 1.80 2012/08/14 18:26:54 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -136,6 +136,7 @@ class CChannelList
 
 		int handleMsg(const neutrino_msg_t msg, neutrino_msg_data_t data);
 
+		bool isEmpty() const;
 		int getSize() const;
 		int getSelectedChannelIndex() const;
 

@@ -1,5 +1,5 @@
 /*
-	$Id: epgplus.cpp,v 1.63 2011/12/31 08:53:35 rhabarber1848 Exp $
+	$Id: epgplus.cpp,v 1.64 2012/08/14 18:26:54 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -973,7 +973,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 			}
 			if (msg == g_settings.key_channelList_pagedown || msg == CRCInput::RC_yellow)
 			{
-				if (channelList->getSize() > 0)
+				if (!channelList->isEmpty())
 				{
 					switch (currentSwapMode)
 					{
@@ -1005,7 +1005,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 #ifdef DEBUG_
 							std::cout << "bouquet->unique_key " << bouquet->unique_key << " " << bouquet->channelList->getName() << std::endl;
 #endif
-							if (bouquet->channelList->getSize() > 0)
+							if (!bouquet->channelList->isEmpty())
 							{
 								// select first channel of bouquet
 #ifdef DEBUG_
@@ -1023,7 +1023,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 			}
 			else if (msg == g_settings.key_channelList_pageup || msg == CRCInput::RC_green)
 			{
-				if (channelList->getSize() > 0 )
+				if (!channelList->isEmpty())
 				{
 					switch (currentSwapMode)
 					{
@@ -1055,7 +1055,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 #ifdef DEBUG_
 							std::cout << "bouquet->unique_key " << bouquet->unique_key << " " << bouquet->channelList->getName() << std::endl;
 #endif
-							if (bouquet->channelList->getSize() > 0)
+							if (!bouquet->channelList->isEmpty())
 							{
 								// select first channel of bouquet
 #ifdef DEBUG_
@@ -1143,7 +1143,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 			}
 			else if (msg_repeatok == CRCInput::RC_up)
 			{
-				if (channelList->getSize() > 0) {
+				if (!channelList->isEmpty()) {
 #ifdef DEBUG_
 					std::cout << "RC_up" << std::endl;
 #endif
@@ -1181,7 +1181,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 			}
 			else if (msg_repeatok == CRCInput::RC_down)
 			{
-				if (channelList->getSize() > 0) {
+				if (!channelList->isEmpty()) {
 					int selectedChannelEntryIndex     = selectedChannelEntry->index;
 					int prevSelectedChannelEntryIndex = selectedChannelEntry->index;
 
