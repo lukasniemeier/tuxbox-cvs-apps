@@ -367,12 +367,6 @@ void CVCRControl::CFileAndServerDevice::RestoreNeutrino(void)
 	   last_mode != NeutrinoMessages::mode_standby)
 		g_RCInput->postMsg( NeutrinoMessages::CHANGEMODE , last_mode);
 
-/*	if(last_mode == NeutrinoMessages::mode_standby &&
-		CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_standby )
-	{
-		//Wenn vorher und jetzt standby, dann die zapit wieder auf sb schalten
-		g_Zapit->setStandby(true);
-	}*/
 #ifndef TUXTXT_CFG_STANDALONE
 	if(g_settings.tuxtxt_cache)
 	{
@@ -404,20 +398,9 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 			if(last_mode == NeutrinoMessages::mode_standby)
 				CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , NeutrinoMessages::mode_standby);
 		}
-		// Wenn im SB dann m�ssen wir die zapit aufwecken
-/*		if(last_mode == NeutrinoMessages::mode_standby)
-		{
-			g_Zapit->setStandby(false);
-		}*/
 		if(g_Zapit->getCurrentServiceID() != channel_id)	// und momentan noch nicht getuned ist
 		{
 			g_Zapit->zapTo_serviceID(channel_id);		// dann umschalten
-		}
-		if(last_mode == NeutrinoMessages::mode_standby)
-		{
-			sleep(1); // Wait for zapit to come alive
-			g_Zapit->muteAudio(false); // god knows why this is neccessary, it wont work without
-			g_Zapit->muteAudio(true);
 		}
 	}
 #ifndef TUXTXT_CFG_STANDALONE
@@ -742,7 +725,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	bool sptsmode=g_settings.misc_spts;   // take default from settings
 
 	// aviaEXT is loaded, actual mode is not SPTS and switchoption is set , only in tvmode
-	if ((actmode == 0) && g_settings.recording_in_spts_mode && mode == 1)
+	if (actmode == 0 && g_settings.recording_in_spts_mode && mode == NeutrinoMessages::mode_tv)
 	{
 		g_Zapit->PlaybackSPTS();
 		while ((repeatcount++ < 10) && (g_Zapit->PlaybackState() != 1)) {
@@ -750,9 +733,9 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		}
 		sptsmode = true;
 	}
-	else if(mode==2)
+	else if (mode == NeutrinoMessages::mode_radio)
 	{
-		if(actmode== 1)
+		if (actmode == 1)
 		{
 			g_Zapit->PlaybackPES();
 			while ((repeatcount++ < 10) && (g_Zapit->PlaybackState() != 0)) {
@@ -762,7 +745,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		sptsmode = false;
 	}
 
-	if (actmode == 1 && g_settings.recording_in_spts_mode && !sptsmode && mode == 1) {
+	if (actmode == 1 && g_settings.recording_in_spts_mode && !sptsmode && mode == NeutrinoMessages::mode_tv) {
 		sptsmode = true;
 	}
 #else
@@ -1124,14 +1107,14 @@ bool CVCRControl::CServerDevice::Record(const t_channel_id channel_id, int mode,
 	int actmode=g_Zapit->PlaybackState() ; // get actual decoder mode
 
 	// aviaEXT is loaded, actual mode is not SPTS and switchoption is set , only in tvmode
-	if ((actmode == 0)  && g_settings.recording_in_spts_mode && mode == 1)
+	if (actmode == 0 && g_settings.recording_in_spts_mode && mode == NeutrinoMessages::mode_tv)
 	{
 		g_Zapit->PlaybackSPTS();
 		while ((repeatcount++ < 10) && (g_Zapit->PlaybackState() != 1)) {
 			sleep(1); 
 		}
 	}
-	else if(mode==2  && actmode== 1)
+	else if (mode == NeutrinoMessages::mode_radio && actmode == 1)
 	{
 			g_Zapit->PlaybackPES();
 			while ((repeatcount++ < 10) && (g_Zapit->PlaybackState() != 0)) {

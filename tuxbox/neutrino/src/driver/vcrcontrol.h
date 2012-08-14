@@ -69,7 +69,7 @@ class CVCRControl
 			virtual CVCRDevices getDeviceType(void) const = 0;
 			CVCRStates  deviceState;
 			virtual bool Stop() = 0;
-			virtual bool Record(const t_channel_id channel_id = 0, int mode = 1, const event_id_t epgid = 0,
+			virtual bool Record(const t_channel_id channel_id = 0, int mode = NeutrinoMessages::mode_tv, const event_id_t epgid = 0,
 					    const std::string& epgTitle = "", unsigned char apids = 0, const time_t epg_time = 0) = 0;
 			virtual bool Pause() = 0;
 			virtual bool Resume() = 0;
@@ -95,7 +95,7 @@ class CVCRControl
 					return DEVICE_VCR;
 				};
 			virtual bool Stop(); 
-			virtual bool Record(const t_channel_id channel_id = 0, int mode = 1, const event_id_t epgid = 0,
+			virtual bool Record(const t_channel_id channel_id = 0, int mode = NeutrinoMessages::mode_tv, const event_id_t epgid = 0,
 					    const std::string& epgTitle = "", unsigned char apids = 0, const time_t epg_time = 0);
 			virtual bool Pause();
 			virtual bool Resume();
@@ -152,7 +152,7 @@ class CVCRControl
 				};
 				
 			virtual bool Stop(); 
-			virtual bool Record(const t_channel_id channel_id = 0, int mode = 1, const event_id_t epgid = 0,
+			virtual bool Record(const t_channel_id channel_id = 0, int mode = NeutrinoMessages::mode_tv, const event_id_t epgid = 0,
 					    const std::string& epgTitle = "", unsigned char apids = 0, const time_t epg_time = 0);
 			
 			CFileDevice(const bool stopplayback, const int stopsectionsd, const char * const directory, const unsigned int splitsize, const bool use_o_sync, const bool use_fdatasync, const bool stream_vtxt_pid, const bool stream_subtitle_pid, const unsigned int ringbuffers, const bool gen_psi, bool createTemplateDirectories)
@@ -194,7 +194,7 @@ class CVCRControl
 				};
 
 			virtual bool Stop();
-			virtual bool Record(const t_channel_id channel_id = 0, int mode = 1, const event_id_t epgid = 0,
+			virtual bool Record(const t_channel_id channel_id = 0, int mode = NeutrinoMessages::mode_tv, const event_id_t epgid = 0,
 					    const std::string& epgTitle = "", unsigned char apids = 0, const time_t epg_time = 0);
 
 			CServerDevice(const bool stopplayback, const int stopsectionsd, const char * const serveraddress, const unsigned int serverport)
