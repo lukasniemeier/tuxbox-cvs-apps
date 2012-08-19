@@ -2274,6 +2274,7 @@ int CRCInput::translate(int code)
 		}
 	}
 	else
+	{
 		/* remotecontrol code */
 		switch (code&0xFF)
 		{
