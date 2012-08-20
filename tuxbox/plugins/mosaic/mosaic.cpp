@@ -992,7 +992,7 @@ void RenderString(char *string, int sx, int sy, int maxwidth, int alignment, int
 
     // set size
 
-	desc.font.pix_width = desc.font.pix_height = 20;
+	desc.width = desc.height = 20;
 
     // alignment
 
@@ -2230,7 +2230,7 @@ void plugin_exec(PluginParam *Parameter)
 	    return;
 	}
 
-	desc.font.face_id = (char*)FONT;
+	desc.face_id = (char*)FONT;
 	desc.flags = FT_LOAD_MONOCHROME;
 
 	use_kerning = FALSE;//FT_HAS_KERNING(face);
