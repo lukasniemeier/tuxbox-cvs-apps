@@ -10,11 +10,13 @@ EXTRA_DIST =  \
 	Tongatapu Vladivostok West Yakutsk
 
 install-data-local:
-	sh -c 'f=`pwd` ; \
-		tar jxf $$f/zoneinfo.tar.bz2 '
-	$(INSTALL) -d $(datadir)/zoneinfo
-	$(INSTALL_DATA) $(EXTRA_DIST) $(datadir)/zoneinfo
-	rm $(EXTRA_DIST)
+	if [ ! -d $(datadir)/zoneinfo/Atlantic ]; then \
+		sh -c 'f=`pwd` ; \
+			tar jxf $$f/zoneinfo.tar.bz2 ' && \
+		$(INSTALL) -d $(datadir)/zoneinfo && \
+		$(INSTALL_DATA) $(EXTRA_DIST) $(datadir)/zoneinfo && \
+		rm $(EXTRA_DIST); \
+	fi
 	$(INSTALL) -d $(sysconfdir)
 	ln -sf /var/etc/localtime $(sysconfdir)/localtime
 
