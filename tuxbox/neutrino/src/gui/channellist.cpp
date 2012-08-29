@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.233 2012/08/14 18:26:54 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.234 2012/08/29 18:05:52 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -1285,7 +1285,9 @@ void CChannelList::paintItem(int pos)
 void CChannelList::paintHead()
 {
 	int timestr_len = 0;
+	int timestr_offset = 0;
 	int provstr_len = 0;
+	int provstr_offset = 0;
 	char timestr[10];
 	char provstr[20];
 	time_t now = time(NULL);
@@ -1296,6 +1298,7 @@ void CChannelList::paintHead()
 	if(gotTime){
 		strftime(timestr, 10, "%H:%M", tm);
 		timestr_len = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(timestr, true); // UTF-8
+		timestr_offset = timestr_len + 10;
 	}
 	
 	if (g_info.delivery_system == DVB_S)
@@ -1307,22 +1310,23 @@ void CChannelList::paintHead()
 				snprintf(provstr, 19, "%s", satList_it->satName);
 				provstr[19] = '\0';
 				provstr_len = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getRenderWidth(provstr, true); // UTF-8
+				provstr_offset = provstr_len + 10;
 				break;
 			}
 		}
 	}
 
 	frameBuffer->paintBoxRel(x,y, width,theight+0, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width-10-timestr_len-10, name, COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 10, y + theight + 2, width - 20 - timestr_offset - provstr_offset, name, COL_MENUHEAD, 0, true); // UTF-8
 
 
 	if ((g_info.delivery_system == DVB_S) && (provstr_len > 0))
 	{
-		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+width-10-timestr_len-10-provstr_len-10,y+theight/2+fheight/2+2, provstr_len+1, provstr, COL_MENUHEAD, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x + width - 10 - timestr_offset - provstr_len, y + theight / 2 + fheight / 2 + 2, provstr_len + 1, provstr, COL_MENUHEAD, 0, true); // UTF-8
 	}
 
 	if (gotTime){
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+width-10-timestr_len, y+theight+2, timestr_len+1, timestr, COL_MENUHEAD, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + width - 10 - timestr_len, y + theight + 2, timestr_len + 1, timestr, COL_MENUHEAD, 0, true); // UTF-8
 	}
 
 	// paintFoot(); // activate to re-paint buttons
