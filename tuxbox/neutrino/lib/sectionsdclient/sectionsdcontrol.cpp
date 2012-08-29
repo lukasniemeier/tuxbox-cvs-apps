@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/lib/sectionsdclient/sectionsdcontrol.cpp,v 1.9 2009/01/24 17:47:03 seife Exp $
+ * $Header: /cvs/tuxbox/apps/tuxbox/neutrino/lib/sectionsdclient/sectionsdcontrol.cpp,v 1.10 2012/08/29 18:02:42 rhabarber1848 Exp $
  *
  * Sectionsd command line interface - The Tuxbox Project
  *
@@ -38,6 +38,7 @@ void usage(void) {
 	printf("        sectionsdcontrol --repg <epgdir> read epgfiles from dir\n");
 	printf("        sectionsdcontrol --freemem       unloads all events\n");
 	printf("        sectionsdcontrol --restart       restart sectionsd\n");
+	printf("        sectionsdcontrol --rn            register neutrino as event client\n");
 	printf("        sectionsdcontrol --ping          ping sectionsd\n");
 	printf("        sectionsdcontrol --statistics    print statistics\n");
 }
@@ -97,6 +98,11 @@ int main(int argc, char** argv)
 		{
 			printf("restarting sectionsd\n");
 			client.Restart();
+		}
+		else if (!strcmp(argv[i], "--rn"))
+		{
+			printf("registering neutrino\n");
+			client.RegisterNeutrino();
 		}
 		else if (!strcmp(argv[i], "--statistics"))
 		{
