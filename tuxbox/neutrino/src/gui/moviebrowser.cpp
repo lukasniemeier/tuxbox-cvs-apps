@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.76 2012/08/14 18:19:53 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.77 2012/08/29 18:20:47 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -363,7 +363,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.76 2012/08/14 18:19:53 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.77 2012/08/29 18:20:47 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -3312,7 +3312,7 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 	CMenuWidget startPosSelectionMenu(LOCALE_MOVIEBROWSER_START_HEAD , NEUTRINO_ICON_STREAMING);
 	CMenuSelectorTarget startPosChanger(&result);
 	
-	startPosSelectionMenu.addIntroItems();
+	startPosSelectionMenu.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	
 	if( m_movieSelectionHandler->bookmarks.start != 0)
 	{
@@ -3968,7 +3968,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.76 $");
+	return imageinfo.getModulVersion("","$Revision: 1.77 $");
 }
 
 /************************************************************************/
