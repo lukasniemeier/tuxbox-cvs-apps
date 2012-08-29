@@ -1,4 +1,4 @@
-AUDIOSelectMenue.head  Audio Selection
+AUDIOSelectMenue.head Audio Selection
 EPGMenu.epgplus Eventlist overview
 EPGMenu.eventinfo Event-Info
 EPGMenu.eventlist Eventlist current program
@@ -419,7 +419,7 @@ eventfinder.search Search
 eventfinder.search_within_epg Search within
 eventfinder.search_within_list Search within
 eventfinder.searching Search for keyword in EPG...
-eventfinder.start_search  Start Search
+eventfinder.start_search Start Search
 eventlistbar.channelswitch schedule
 eventlistbar.eventsort sorting
 eventlistbar.recordevent record

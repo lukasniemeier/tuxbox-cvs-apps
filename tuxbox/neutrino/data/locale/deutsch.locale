@@ -1,4 +1,4 @@
-AUDIOSelectMenue.head  Audio-Auswahl
+AUDIOSelectMenue.head Audio-Auswahl
 EPGMenu.epgplus Vorschau Komplettübersicht
 EPGMenu.eventinfo Info zur Sendung
 EPGMenu.eventlist Vorschau
@@ -419,7 +419,7 @@ eventfinder.search Suche
 eventfinder.search_within_epg Suche in
 eventfinder.search_within_list Suche in
 eventfinder.searching Suche Stichwort in EPG ...
-eventfinder.start_search  Starte Suche
+eventfinder.start_search Starte Suche
 eventlistbar.channelswitch Umschalten
 eventlistbar.eventsort Sortieren
 eventlistbar.recordevent Aufnehmen
