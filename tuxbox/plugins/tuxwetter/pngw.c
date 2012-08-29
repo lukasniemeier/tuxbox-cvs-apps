@@ -1,5 +1,5 @@
 /*
- * $Id: pngw.c,v 1.2 2011/02/27 14:56:10 rhabarber1848 Exp $
+ * $Id: pngw.c,v 1.3 2012/08/29 18:12:44 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -62,7 +62,11 @@ int fh_png_load(const char *name,unsigned char *buffer,int x,int y)
 	if(!(fh=fopen(name,"rb")))	return(FH_ERROR_FILE);
 
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	if(png_ptr == NULL) return(FH_ERROR_FORMAT);
+	if(png_ptr == NULL)
+	{
+		fclose(fh);
+		return(FH_ERROR_FORMAT);
+	}
 	info_ptr = png_create_info_struct(png_ptr);
 	if(info_ptr == NULL)
 	{
@@ -146,7 +150,11 @@ int fh_png_getsize(const char *name,int *x,int *y, int wanted_width, int wanted_
 	if(!(fh=fopen(name,"rb")))	return(FH_ERROR_FILE);
 
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,NULL,NULL,NULL);
-	if(png_ptr == NULL) return(FH_ERROR_FORMAT);
+	if(png_ptr == NULL)
+	{
+		fclose(fh);
+		return(FH_ERROR_FORMAT);
+	}
 	info_ptr = png_create_info_struct(png_ptr);
 	if(info_ptr == NULL)
 	{

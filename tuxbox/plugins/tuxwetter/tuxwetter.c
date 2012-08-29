@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.c,v 1.9 2012/06/29 21:26:01 rhabarber1848 Exp $
+ * $Id: tuxwetter.c,v 1.10 2012/08/29 18:12:44 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -2368,18 +2368,21 @@ unsigned char *tbuf=lfb;
 		if(fh_png_getsize(ICON_FILE, &x1, &y1, xsize, ysize))
 		{
 			printf("Tuxwetter <invalid PNG-Format>\n");
+			fclose(tfh);
 			return -1;
 		}
 #else
 		if(fh_gif_getsize(ICON_FILE, &x1, &y1, xsize, ysize))
 		{
 			printf("Tuxwetter <invalid GIF-Format>\n");
+			fclose(tfh);
 			return -1;
 		}
 #endif
 		if((buffer=(unsigned char *) malloc(x1*y1*4))==NULL)
 		{
 			printf(NOMEM);
+			fclose(tfh);
 			return -1;
 		}
 #ifdef WWEATHER
@@ -2417,6 +2420,7 @@ unsigned char *tbuf=lfb;
 			gmodeon=1;
 		}
 		free(buffer);
+		fclose(tfh);
 		lfb=tbuf;
 	}
 	return (rv)?-1:0;	
