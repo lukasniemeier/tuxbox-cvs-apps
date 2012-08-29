@@ -1305,6 +1305,10 @@ void CControlAPI::ZaptoCGI(CyhookHandler *hh)
 			hh->printf("<hr style=\"color:black; background-color:black; height:2px; width:250px; margin-left:0; text-align:left;\">");
 			hh->Write((char *) (NeutrinoAPI->Sectionsd->getIsScanningActive() ? "sectionsd restarted, scanning active!" : "sectionsd restarted, scanning paused"));
 		}
+		else if (hh->ParamList["1"] == "rnsectionsd")
+		{
+			NeutrinoAPI->Sectionsd->RegisterNeutrino();
+		}
 		else if (hh->ParamList["1"] == "freememsectionsd")
 		{
 			NeutrinoAPI->Sectionsd->freeMemory();
