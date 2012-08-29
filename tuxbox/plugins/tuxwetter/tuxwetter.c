@@ -1,5 +1,5 @@
 /*
- * $Id: tuxwetter.c,v 1.10 2012/08/29 18:12:44 rhabarber1848 Exp $
+ * $Id: tuxwetter.c,v 1.11 2012/08/29 18:26:31 rhabarber1848 Exp $
  *
  * tuxwetter - d-box2 linux project
  *
@@ -43,7 +43,7 @@
 #include "lcd.h"
 #include "color.h"
 
-#define P_VERSION 3.62
+#define P_VERSION 3.63
 #define S_VERSION ""
 
 char CONVERT_LIST[]="/var/tuxbox/config/tuxwetter/convert.list";

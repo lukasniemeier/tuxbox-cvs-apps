@@ -1,5 +1,5 @@
 /*
- * $Id: logomask.c,v 1.1 2010/03/03 20:28:45 rhabarber1848 Exp $
+ * $Id: logomask.c,v 1.2 2012/08/29 18:26:31 rhabarber1848 Exp $
  *
  * logomask - d-box2 linux project
  *
@@ -32,7 +32,7 @@ extern int FSIZE_SMALL;
 #define NCF_FILE "/var/tuxbox/config/neutrino.conf"
 #define CFG_FILE "/var/tuxbox/config/logomask.conf"
 
-#define CL_VERSION  "0.30"
+#define CL_VERSION  "0.31"
 #define MAX_MASK 16
 
 unsigned char *lfb = 0, *lbb = 0;
