@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.201 2012/08/14 18:19:54 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.202 2012/08/29 18:19:10 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -662,12 +662,25 @@ void CMenuWidget::paintItems()
 }
 
 /*adds the typical menu intro with optional subhead, separator, back button and separatorline to menu*/
-void CMenuWidget::addIntroItems(neutrino_locale_t subhead_text, neutrino_locale_t section_text)
+void CMenuWidget::addIntroItems(neutrino_locale_t subhead_text, neutrino_locale_t section_text, int buttontype)
 {
 	if (subhead_text != NONEXISTANT_LOCALE)
 		addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, subhead_text));
 	addItem(GenericMenuSeparator);
-	addItem(GenericMenuBack);
+
+	if (buttontype != BTN_TYPE_NO)
+	{
+		switch (buttontype)
+		{
+			case BTN_TYPE_BACK:
+				addItem(GenericMenuBack);
+				break;
+			case BTN_TYPE_CANCEL:
+				addItem(GenericMenuCancel);
+				break;
+		}
+	}
+
 	if (section_text != NONEXISTANT_LOCALE)
 		addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, section_text));
 	else
