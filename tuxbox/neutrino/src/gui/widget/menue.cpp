@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.202 2012/08/29 18:19:10 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.203 2012/09/12 07:32:47 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -540,6 +540,10 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 void CMenuWidget::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x, y, width + 15 + SHADOW_OFFSET, height + CORNER_RADIUS_MID * 2 + 1 + SHADOW_OFFSET);
+
+	/* x = -1 is a marker which prevents the item from being painted on setActive changes */
+	for (unsigned int count = 0; count < items.size(); count++)
+		items[count]->init(-1, 0, 0, 0);
 }
 
 void CMenuWidget::paint()
