@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.203 2012/02/25 22:02:14 rhabarber1848 Exp $
+ * $Id: locals_intern.h,v 1.204 2012/09/12 07:29:10 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1406,6 +1406,7 @@ const char * locale_real_names[] =
 	"streamingmenu.streaming_resolution",
 	"streamingmenu.streaming_server_cddrive",
 	"streamingmenu.streaming_server_startdir",
+	"streamingmenu.streaming_settings",
 	"streamingmenu.streaming_show_tv_in_browser",
 	"streamingmenu.streaming_transcode_audio",
 	"streamingmenu.streaming_transcode_video_codec",

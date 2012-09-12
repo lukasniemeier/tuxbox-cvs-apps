@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.18 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.19 2012/09/12 07:29:10 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -139,8 +139,12 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	CMenuWidget* mp_setup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	mp_setup->setPreselected(selected);
 
+	CMenuWidget* mp_streaming_setup = new CMenuWidget(LOCALE_MAINSETTINGS_STREAMING, NEUTRINO_ICON_SETTINGS, width);
+	CMenuForwarder* mp_streaming_setup_mf = new CMenuForwarder(LOCALE_STREAMINGMENU_STREAMING_SETTINGS, true, NULL, mp_streaming_setup, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+
 	// intros
 	mp_setup->addIntroItems(LOCALE_MAINSETTINGS_STREAMING);
+	mp_streaming_setup->addIntroItems(LOCALE_STREAMINGMENU_STREAMING_SETTINGS);
 
 	// server ip
 	CIPInput mp_setup_server_ip(LOCALE_STREAMINGMENU_SERVER_IP, g_settings.streaming_server_ip, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
@@ -200,25 +204,25 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	CMenuOptionChooser* oj8 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_SHOW_TV_IN_BROWSER , &g_settings.streaming_show_tv_in_browser  , MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
 	CMenuOptionChooser* oj9 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_FILEBROWSER_ALLOW_MULTISELECT , &g_settings.streaming_allow_multiselect  , MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
 
+	CMenuOptionChooser* oj0 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_TYPE, &g_settings.streaming_type, STREAMINGMENU_STREAMING_TYPE_OPTIONS, STREAMINGMENU_STREAMING_TYPE_OPTION_COUNT, true, &StreamingNotifier);
 
-	// enable/disable streamingserver
-	mp_setup->addItem(new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_TYPE                  , &g_settings.streaming_type                 , STREAMINGMENU_STREAMING_TYPE_OPTIONS, STREAMINGMENU_STREAMING_TYPE_OPTION_COUNT, true, &StreamingNotifier));
-
-	mp_setup->addItem(GenericMenuSeparatorLine);	//separator
-	mp_setup->addItem( mf1);				//Server IP
-	mp_setup->addItem( mf2);				//Server Port
-	mp_setup->addItem( mf3);				//CD-Drive
-	mp_setup->addItem( mf6);				//vlc Startdir
-	mp_setup->addItem(GenericMenuSeparatorLine);	//separator	
-	mp_setup->addItem( mf4);				//Video-Rate
-	mp_setup->addItem( oj3);				//transcode
-	mp_setup->addItem( oj4);				//codec
-	mp_setup->addItem( oj5);				//definition
-	mp_setup->addItem( oj10);				//vlc10
-	mp_setup->addItem(GenericMenuSeparatorLine);	//separator
-	mp_setup->addItem( mf5);				//Audiorate
-	mp_setup->addItem( oj1);				//transcode audio
-	mp_setup->addItem( oj2);				//ac3 on avi
+	mp_setup->addItem(mp_streaming_setup_mf);		//streaming server settings
+		mp_streaming_setup->addItem(oj0);		//enable/disable streamingserver
+		mp_streaming_setup->addItem(GenericMenuSeparatorLine);	//separator	
+		mp_streaming_setup->addItem(mf1);		//Server IP
+		mp_streaming_setup->addItem(mf2);		//Server Port
+		mp_streaming_setup->addItem(mf3);		//CD-Drive
+		mp_streaming_setup->addItem(mf6);		//vlc Startdir
+		mp_streaming_setup->addItem(GenericMenuSeparatorLine);	//separator	
+		mp_streaming_setup->addItem(mf4);		//Video-Rate
+		mp_streaming_setup->addItem(oj3);		//transcode
+		mp_streaming_setup->addItem(oj4);		//codec
+		mp_streaming_setup->addItem(oj5);		//definition
+		mp_streaming_setup->addItem(oj10);		//vlc10
+		mp_streaming_setup->addItem(GenericMenuSeparatorLine);	//separator
+		mp_streaming_setup->addItem(mf5);		//Audiorate
+		mp_streaming_setup->addItem(oj1);		//transcode audio
+		mp_streaming_setup->addItem(oj2);		//ac3 on avi
 	mp_setup->addItem(GenericMenuSeparatorLine);	//separator
 	mp_setup->addItem( mf7);				//default startdir
 	mp_setup->addItem( mf8);				//default movieplugin
@@ -234,6 +238,8 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	int res = mp_setup->exec(NULL, "");
 	selected = mp_setup->getSelected();
 	delete mp_setup;
+
+	delete mp_streaming_setup;
 
 	return res;
 }
