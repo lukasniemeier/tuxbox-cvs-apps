@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.14 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: movieplayer_menu.cpp,v 1.15 2012/09/12 07:31:21 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -52,7 +52,7 @@
 
 CMoviePlayerMenue::CMoviePlayerMenue()
 {
-	moviePlayerSetup = new CMoviePlayerSetup();
+	moviePlayerSetup = new CMoviePlayerSetup(&toNotify);
 
 	width = w_max (500, 100);
 	selected = -1;
@@ -114,11 +114,14 @@ int CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
 	//vlc file play
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, moviePlayerGui, "fileplayback", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "fileplayback", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	mpmenue->addItem(toNotify.back());
 	//vlc dvd play
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_DVDPLAYBACK, true, NULL, moviePlayerGui, "dvdplayback", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_DVDPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "dvdplayback", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	mpmenue->addItem(toNotify.back());
 	//vlc vcd play
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_VCDPLAYBACK, true, NULL, moviePlayerGui, "vcdplayback", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_VCDPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "vcdplayback", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	mpmenue->addItem(toNotify.back());
 
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
@@ -139,6 +142,7 @@ int CMoviePlayerMenue::showMoviePlayerMenue()
 #ifdef ENABLE_GUI_MOUNT
 	delete nfsSmallMenu;
 #endif
+	toNotify.clear();
 
 	return res;
 }

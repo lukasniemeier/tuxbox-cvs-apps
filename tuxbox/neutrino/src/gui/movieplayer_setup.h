@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.h,v 1.8 2012/06/18 16:53:34 rhabarber1848 Exp $
+	$Id: movieplayer_setup.h,v 1.9 2012/09/12 07:31:21 rhabarber1848 Exp $
 
 	movieplaye setup implementation - Neutrino-GUI
 
@@ -34,17 +34,19 @@
 #include <gui/widget/menue.h>
 
 #include <string>
+#include <vector>
 
 class CMoviePlayerSetup : public CMenuTarget
 {
 	private:
+		std::vector<CMenuItem*>* toNotify;
 		int width, selected;
 
 		int showMoviePlayerSetup();
 		int showMoviePlayerSelectPlugin();
 
 	public:	
-		CMoviePlayerSetup();
+		CMoviePlayerSetup(std::vector<CMenuItem*>* ToNotify = NULL);
 		~CMoviePlayerSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };

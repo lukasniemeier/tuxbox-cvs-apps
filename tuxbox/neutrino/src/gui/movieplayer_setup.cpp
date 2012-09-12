@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.19 2012/09/12 07:29:10 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.20 2012/09/12 07:31:21 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -51,8 +51,10 @@
 #include <system/debug.h>
 
 
-CMoviePlayerSetup::CMoviePlayerSetup()
+CMoviePlayerSetup::CMoviePlayerSetup(std::vector<CMenuItem*>* ToNotify)
 {
+	toNotify = ToNotify;
+
 	width = w_max (500, 100);
 	selected = -1;
 }
@@ -180,6 +182,11 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	CMenuOptionChooser* oj10 = new CMenuOptionChooser(LOCALE_STREAMINGMENU_STREAMING_VLC10               , &g_settings.streaming_vlc10                , MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, g_settings.streaming_type);
 
 	COnOffNotifier StreamingNotifier;
+	if (toNotify != NULL)
+	{
+		for (std::vector<CMenuItem*>::iterator it = toNotify->begin(); it != toNotify->end(); it++)
+			StreamingNotifier.addItem(*it);
+	}
 	StreamingNotifier.addItem(mf1);
 	StreamingNotifier.addItem(mf2);
 	StreamingNotifier.addItem(mf3);

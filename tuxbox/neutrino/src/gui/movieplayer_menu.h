@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.h,v 1.8 2011/12/09 22:36:27 dbt Exp $
+	$Id: movieplayer_menu.h,v 1.9 2012/09/12 07:31:21 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -36,11 +36,13 @@
 #include "movieplayer.h"
 
 #include <string>
+#include <vector>
 
 class CMoviePlayerMenue : public CMenuTarget
 {
 	private:
 		CMenuTarget* moviePlayerSetup;
+		std::vector<CMenuItem*> toNotify;
 		int width, selected;
 
 		int showMoviePlayerMenue();
