@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.203 2012/09/12 07:32:47 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.204 2012/09/12 08:41:56 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -585,7 +585,15 @@ void CMenuWidget::paint()
 	{
 		if ((!(items[i]->iconName.empty())) || CRCInput::isNumeric(items[i]->directKey))
 		{
-			iconOffset = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+			int iconw, iconh;
+
+			frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_RIGHT, &iconw, &iconh);
+			iconOffset += iconw;
+
+			frameBuffer->getIconSize(NEUTRINO_ICON_RIGHT_MARKER, &iconw, &iconh);
+			iconOffset += iconw;
+
+			iconOffset += 10;
 			break;
 		}
 	}
@@ -1221,7 +1229,7 @@ int CMenuSeparator::paint(bool selected)
 
 			/* if no alignment is specified, align centered */
 			if (type & ALIGN_LEFT)
-				stringstartposX = x + (!SUB_HEAD ?  20 : 20 +18);
+				stringstartposX = x + (!SUB_HEAD ? 20 : offx + 10);
 			else if (type & ALIGN_RIGHT)
 				stringstartposX = x + dx - stringwidth - 20;
 			else /* ALIGN_CENTER */
