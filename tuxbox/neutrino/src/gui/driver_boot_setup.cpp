@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.cpp,v 1.13 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: driver_boot_setup.cpp,v 1.14 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -128,12 +128,6 @@ int CDriverBootSetup::showSetup()
 	CMenuWidget * dbs = new CMenuWidget(menue_title, menue_icon, width);
 	dbs->setPreselected(selected);
 
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * dbs_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVERSETTINGS_DRIVER_BOOT);
-		dbs->addItem(dbs_subhead);
-	}
-
 	bool item_enabled[DRIVER_SETTING_FILES_COUNT];
 
 #ifdef HAVE_DBOX_HARDWARE
@@ -176,9 +170,7 @@ int CDriverBootSetup::showSetup()
 #endif
 
 	//paint items
-	dbs->addItem(GenericMenuSeparator);
-	dbs->addItem(GenericMenuBack);
-	dbs->addItem(GenericMenuSeparatorLine);
+	dbs->addIntroItems(menue_title != LOCALE_DRIVERSETTINGS_DRIVER_BOOT ? LOCALE_DRIVERSETTINGS_DRIVER_BOOT : NONEXISTANT_LOCALE);
 	//-----------------------------------------
 #ifdef HAVE_DBOX_HARDWARE
 	dbs->addItem(oj_spts);

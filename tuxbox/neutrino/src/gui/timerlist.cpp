@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.119 2012/08/14 18:19:53 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.120 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -956,9 +956,7 @@ int CTimerList::modifyTimer()
 	CTimerd::responseGetTimer* timer=&timerlist[selected];
 	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUMODIFY, NEUTRINO_ICON_SETTINGS, width);
 	//main items
-	timerSettings.addItem(GenericMenuSeparator);
-	timerSettings.addItem(GenericMenuBack);
-	timerSettings.addItem(GenericMenuSeparatorLine);
+	timerSettings.addIntroItems();
 	timerSettings.addItem(new CMenuForwarder(LOCALE_TIMERLIST_SAVE, true, NULL, this, "modifytimer", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	timerSettings.addItem(GenericMenuSeparatorLine);
 
@@ -1006,9 +1004,7 @@ int CTimerList::modifyTimer()
 	timer_apids_std = (timer->apids & TIMERD_APIDS_STD) ? 1 : 0 ;
 	timer_apids_ac3 = (timer->apids & TIMERD_APIDS_AC3) ? 1 : 0 ;
 	timer_apids_alt = (timer->apids & TIMERD_APIDS_ALT) ? 1 : 0 ;
-	timerSettings_apids.addItem(GenericMenuSeparator);
-	timerSettings_apids.addItem(GenericMenuBack);
-	timerSettings_apids.addItem(GenericMenuSeparatorLine);
+	timerSettings_apids.addIntroItems();
 	CMenuOptionChooser* ma1 = new CMenuOptionChooser(LOCALE_TIMERLIST_APIDS_DFLT, &timer_apids_dflt, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &apid_notifier);
 	timerSettings_apids.addItem(ma1);
 	CMenuOptionChooser* ma2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_STD, &timer_apids_std, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &apid_notifier);
@@ -1042,9 +1038,7 @@ int CTimerList::newTimer()
 
 
 	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUNEW, NEUTRINO_ICON_SETTINGS, width);
-	timerSettings.addItem(GenericMenuSeparator);
-	timerSettings.addItem(GenericMenuBack);
-	timerSettings.addItem(GenericMenuSeparatorLine);
+	timerSettings.addIntroItems();
 	timerSettings.addItem(new CMenuForwarder(LOCALE_TIMERLIST_SAVE, true, NULL, this, "newtimer", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	timerSettings.addItem(GenericMenuSeparatorLine);
 
@@ -1072,15 +1066,11 @@ int CTimerList::newTimer()
 
 	//bouquet menues tv
 	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width); 
-	mctv.addItem(GenericMenuSeparator);
-	mctv.addItem(GenericMenuBack);
-	mctv.addItem(GenericMenuSeparatorLine);
+	mctv.addIntroItems();
 
 	//bouquet menues radio
  	CMenuWidget mcradio(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
-	mcradio.addItem(GenericMenuSeparator);
-	mcradio.addItem(GenericMenuBack);
-	mcradio.addItem(GenericMenuSeparatorLine);
+	mcradio.addIntroItems();
 
 	for(; bouquet != bouquetlist.end();bouquet++)
 	{	
@@ -1093,9 +1083,7 @@ int CTimerList::newTimer()
 		CZapitClient::BouquetChannelList subchannellist;
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_TV, true); // UTF-8
 		CZapitClient::BouquetChannelList::iterator channel = subchannellist.begin();
-		mwtv->addItem(GenericMenuSeparator);
-		mwtv->addItem(GenericMenuBack);
-		mwtv->addItem(GenericMenuSeparatorLine);
+		mwtv->addIntroItems();
 		for(; channel != subchannellist.end();channel++)
 		{
 			char cChannelId[3+16+1+1];
@@ -1115,9 +1103,7 @@ int CTimerList::newTimer()
 		//radio
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_RADIO, true); // UTF-8
 		channel = subchannellist.begin();
-		mwradio->addItem(GenericMenuSeparator);
-		mwradio->addItem(GenericMenuBack);
-		mwradio->addItem(GenericMenuSeparatorLine);
+		mwradio->addIntroItems();
 		for(; channel != subchannellist.end();channel++)
 		{
 			char cChannelId[3+16+1+1];
@@ -1135,9 +1121,7 @@ int CTimerList::newTimer()
 	}
 	//selct mode (tv/radio)
 	CMenuWidget mm(LOCALE_TIMERLIST_MODESELECT, NEUTRINO_ICON_SETTINGS, width);
-	mm.addItem(GenericMenuSeparator);
-	mm.addItem(GenericMenuBack);
-	mm.addItem(GenericMenuSeparatorLine);
+	mm.addIntroItems();
 	mm.addItem(new CMenuForwarder(LOCALE_TIMERLIST_MODETV, true, NULL, &mctv));
 	mm.addItem(new CMenuForwarder(LOCALE_TIMERLIST_MODERADIO, true, NULL, &mcradio));
 

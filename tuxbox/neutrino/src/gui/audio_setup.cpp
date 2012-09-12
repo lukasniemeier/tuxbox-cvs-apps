@@ -1,5 +1,5 @@
 /*
-	$Id: audio_setup.cpp,v 1.14 2012/06/26 18:30:41 rhabarber1848 Exp $
+	$Id: audio_setup.cpp,v 1.15 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	audio setup implementation - Neutrino-GUI
 
@@ -129,13 +129,8 @@ int CAudioSetup::showAudioSetup()
 	CMenuWidget* audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	audioSettings->setPreselected(selected);
 
-	//subhead
-	audioSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_AUDIO));
-
 	// intros
-	audioSettings->addItem(GenericMenuSeparator);
-	audioSettings->addItem(GenericMenuBack);
-	audioSettings->addItem(GenericMenuSeparatorLine);
+	audioSettings->addIntroItems(LOCALE_MAINSETTINGS_AUDIO);
 
 	CMenuOptionChooser* oj = new CMenuOptionChooser(LOCALE_AUDIOMENU_ANALOGOUT, &g_settings.audio_AnalogMode, AUDIOMENU_ANALOGOUT_OPTIONS, AUDIOMENU_ANALOGOUT_OPTION_COUNT, true, &audioSetupNotifier);
 	audioSettings->addItem( oj );

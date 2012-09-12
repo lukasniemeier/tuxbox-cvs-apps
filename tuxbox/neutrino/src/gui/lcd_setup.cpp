@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.9 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: lcd_setup.cpp,v 1.10 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -107,12 +107,6 @@ int CLcdSetup::showSetup()
 	CMenuWidget * lcds = new CMenuWidget(menue_title, menue_icon, width);
 	lcds->setPreselected(selected);
 
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * lcds_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_LCDMENU_HEAD);
-		lcds->addItem(lcds_subhead);
-	}
-
 	//sliders
 	CLcdControler* lcdsliders = new CLcdControler(LOCALE_LCDMENU_HEAD, NULL);
 
@@ -153,9 +147,7 @@ int CLcdSetup::showSetup()
 
 
 	//paint items
-	lcds->addItem(GenericMenuSeparator);
-	lcds->addItem(GenericMenuBack);
-	lcds->addItem(GenericMenuSeparatorLine);
+	lcds->addIntroItems(menue_title != LOCALE_LCDMENU_HEAD ? LOCALE_LCDMENU_HEAD : NONEXISTANT_LOCALE);
 	//----------------------------------------
 	lcds->addItem(oj_inverse);
 #ifndef HAVE_TRIPLEDRAGON

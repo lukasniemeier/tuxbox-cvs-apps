@@ -1,5 +1,5 @@
 /*
-	$Id: scan_setup.cpp,v 1.22 2012/07/22 06:24:46 rhabarber1848 Exp $
+	$Id: scan_setup.cpp,v 1.23 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -217,9 +217,6 @@ int CScanSetup::showScanService()
 	CMenuWidget* scansetup = new CMenuWidget(LOCALE_SERVICEMENU_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	scansetup->setPreselected(selected);
 
-	//subhead
-	scansetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_SERVICEMENU_SCANTS));
-
 	//prepare scantype green
 	CMenuOptionChooser* ojScantype = new CMenuOptionChooser(LOCALE_ZAPIT_SCANTYPE, (int *)&scanSettings.scanType, SCANTS_ZAPIT_SCANTYPE, SCANTS_ZAPIT_SCANTYPE_COUNT, true, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 
@@ -227,9 +224,7 @@ int CScanSetup::showScanService()
 	CMenuOptionChooser* ojBouquets = new CMenuOptionChooser(LOCALE_SCANTS_BOUQUET, (int *)&scanSettings.bouquetMode, SCANTS_BOUQUET_OPTIONS, SCANTS_BOUQUET_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 
 	// intros
-	scansetup->addItem(GenericMenuSeparator);
-	scansetup->addItem(GenericMenuBack);
-	scansetup->addItem(GenericMenuSeparatorLine);
+	scansetup->addIntroItems(LOCALE_SERVICEMENU_SCANTS);
 
 	//save button red
 	scansetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "save_action", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
@@ -263,9 +258,7 @@ int CScanSetup::showScanService()
 		extSatSettings = new CMenuWidget(LOCALE_SATSETUP_EXTENDED, NEUTRINO_ICON_SETTINGS);
 
 		//intros ext sat settings
-		extSatSettings->addItem(GenericMenuSeparator);
-		extSatSettings->addItem(GenericMenuBack);
-		extSatSettings->addItem(GenericMenuSeparatorLine);
+		extSatSettings->addIntroItems();
 
 		//prepare diseqc mode
 		CMenuForwarder* ojExtSatSettings = new CMenuForwarder(LOCALE_SATSETUP_EXTENDED, (scanSettings.diseqcMode != NO_DISEQC), NULL, extSatSettings, NULL, CRCInput::RC_1);
@@ -282,9 +275,7 @@ int CScanSetup::showScanService()
 		extMotorSettings = new CMenuWidget(LOCALE_SATSETUP_EXTENDED_MOTOR, NEUTRINO_ICON_SETTINGS);
 		
 		//intros motor settings
-		extMotorSettings->addItem(GenericMenuSeparator);
-		extMotorSettings->addItem(GenericMenuBack);
-		extMotorSettings->addItem(GenericMenuSeparatorLine);
+		extMotorSettings->addIntroItems();
 		
 		//save motorsettings red
 		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_SAVESETTINGSNOW, true, NULL, this, "save_action", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
@@ -472,10 +463,7 @@ int CScanSetup::showScanModeMenue()
 	}
 
 	//intros scan mode
-	scanmode->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_SERVICEMENU_SCANMODES));
-	scanmode->addItem(GenericMenuSeparator);
-	scanmode->addItem(GenericMenuBack);
-	scanmode->addItem(GenericMenuSeparatorLine);
+	scanmode->addIntroItems(LOCALE_SERVICEMENU_SCANMODES);
 	scanmode->addItem(scan);
 	if(g_info.delivery_system == DVB_S) {
 		scanmode->addItem(TP_SatSelectMenu);

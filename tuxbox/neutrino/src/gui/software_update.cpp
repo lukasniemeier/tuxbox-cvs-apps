@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: software_update.cpp,v 1.11 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -94,9 +94,8 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	CMenuWidget* softUpdate = new CMenuWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE, width);
 	softUpdate->setPreselected(selected);
 
-	softUpdate->addItem(GenericMenuSeparator);
-	softUpdate->addItem(GenericMenuBack);
-	softUpdate->addItem(GenericMenuSeparatorLine);
+	// intros
+	softUpdate->addIntroItems();
 
 	// experts-functions 
 	softUpdate->addItem( new CMenuForwarder(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, true, ""  , this     , "experts",CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
@@ -132,10 +131,7 @@ int CSoftwareUpdate::showSoftwareUpdateExpert()
 	CFlashExpert* fe = new CFlashExpert();
 
 	CMenuWidget* mtdexpert = new CMenuWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE);
-	mtdexpert->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_EXPERTFUNCTIONS));
-	mtdexpert->addItem(GenericMenuSeparator);
-	mtdexpert->addItem(GenericMenuBack);
-	mtdexpert->addItem(GenericMenuSeparatorLine);
+	mtdexpert->addIntroItems(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS);
 	
 	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_READFLASH    , true, NULL, fe, "readflash"       , CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_WRITEFLASH   , true, NULL, fe, "writeflash"      , CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));

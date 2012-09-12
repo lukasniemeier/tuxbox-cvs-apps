@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.17 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.18 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -144,12 +144,6 @@ int CKeybindSetup::showSetup()
 	CMenuWidget * ks = new CMenuWidget(menue_title, menue_icon, width);
 	ks->setPreselected(selected);
 
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * ks_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_KEYBINDING);
-		ks->addItem(ks_subhead);
-	}
-
 	neutrino_msg_t * keyvalue_p[] =
 		{
 			&g_settings.key_tvradio_mode,
@@ -184,18 +178,13 @@ int CKeybindSetup::showSetup()
 	//remote control
 	CMenuWidget * ks_rc 		= new CMenuWidget(menue_title, menue_icon, width);
 	CMenuForwarder *ks_rc_fw 	= new CMenuForwarder(LOCALE_KEYBINDINGMENU, true, NULL, ks_rc, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
-	
-	CMenuSeparator * ks_rc_subhead 	= new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU);
 
-	CMenuSeparator *ks_rc_sep 				= new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_RC);
-	
 	CStringInput keySettings_repeat_genericblocker(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", this);
 	CStringInput keySettings_repeatBlocker(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", this);
 	CMenuForwarder *ks_rc_repeat_fw = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCK, true, g_settings.repeat_blocker, &keySettings_repeatBlocker);
 	CMenuForwarder *ks_rc_repeat_generic_fw = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, true, g_settings.repeat_genericblocker, &keySettings_repeat_genericblocker);
 
 	//mode change
-	CMenuSeparator * ks_mc_sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_MODECHANGE);
 	CMenuForwarder * ks_mc_fw = new CMenuForwarder(keydescription[VIRTUALKEY_TV_RADIO_MODE], true, keychooser[VIRTUALKEY_TV_RADIO_MODE]->getKeyName(), keychooser[VIRTUALKEY_TV_RADIO_MODE]);
 
 	//channellist
@@ -210,11 +199,8 @@ int CKeybindSetup::showSetup()
 	
 
 	//paint items
-	ks->addItem(GenericMenuSeparator);
-	ks->addItem(GenericMenuBack);
-	//----------------------------------
 	//remote control
-	ks->addItem(ks_rc_sep);
+	ks->addIntroItems(menue_title != LOCALE_MAINSETTINGS_KEYBINDING ? LOCALE_MAINSETTINGS_KEYBINDING : NONEXISTANT_LOCALE, LOCALE_KEYBINDINGMENU_RC);
 	ks->addItem(ks_rc_repeat_fw);
 	ks->addItem(ks_rc_repeat_generic_fw);
 	//----------------------------------
@@ -222,11 +208,8 @@ int CKeybindSetup::showSetup()
 	ks->addItem(GenericMenuSeparatorLine);
 	ks->addItem(ks_rc_fw);
 	//----------------------------------
-		ks_rc->addItem(ks_rc_subhead);
-		ks_rc->addItem(GenericMenuSeparator);
-		ks_rc->addItem(GenericMenuBack);
 		//show mode change item
-		ks_rc->addItem(ks_mc_sep);
+		ks_rc->addIntroItems(LOCALE_KEYBINDINGMENU, LOCALE_KEYBINDINGMENU_MODECHANGE);
 		ks_rc->addItem(ks_mc_fw);
 		//----------------------------------
 		//show channellist items

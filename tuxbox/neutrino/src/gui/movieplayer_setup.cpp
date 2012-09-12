@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_setup.cpp,v 1.17 2012/06/18 16:53:34 rhabarber1848 Exp $
+	$Id: movieplayer_setup.cpp,v 1.18 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	movieplayer setup implementation - Neutrino-GUI
 
@@ -138,12 +138,9 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 {
 	CMenuWidget* mp_setup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	mp_setup->setPreselected(selected);
-	mp_setup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_STREAMING));
 
 	// intros
-	mp_setup->addItem(GenericMenuSeparator);
-	mp_setup->addItem(GenericMenuBack);
-	mp_setup->addItem(GenericMenuSeparatorLine);
+	mp_setup->addIntroItems(LOCALE_MAINSETTINGS_STREAMING);
 
 	// server ip
 	CIPInput mp_setup_server_ip(LOCALE_STREAMINGMENU_SERVER_IP, g_settings.streaming_server_ip, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
@@ -244,11 +241,9 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 {
 	CMenuWidget * MoviePluginSelector = new CMenuWidget(LOCALE_MAINSETTINGS_STREAMING, NEUTRINO_ICON_FEATURES, width);
-	MoviePluginSelector->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MOVIEPLAYER_DEFPLUGIN));
 
-	MoviePluginSelector->addItem(GenericMenuSeparator);
-	MoviePluginSelector->addItem(GenericMenuBack);
-	MoviePluginSelector->addItem(GenericMenuSeparatorLine);
+	// intros
+	MoviePluginSelector->addIntroItems(LOCALE_MOVIEPLAYER_DEFPLUGIN);
 
 	std::string pluginName;
 	char id[5];

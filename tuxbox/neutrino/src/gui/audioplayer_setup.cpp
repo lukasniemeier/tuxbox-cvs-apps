@@ -1,5 +1,5 @@
 /*
-	$Id: audioplayer_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: audioplayer_setup.cpp,v 1.9 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	audioplayer setup implementation - Neutrino-GUI
 
@@ -107,12 +107,9 @@ int CAudioPlayerSetup::showAudioPlayerSetup()
 {
 	CMenuWidget* audioplayerSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	audioplayerSetup->setPreselected(selected);
-	audioplayerSetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINMENU_AUDIOPLAYER));
 
 	// intros
-	audioplayerSetup->addItem(GenericMenuSeparator);
-	audioplayerSetup->addItem(GenericMenuBack);
-	audioplayerSetup->addItem(GenericMenuSeparatorLine);
+	audioplayerSetup->addIntroItems(LOCALE_MAINMENU_AUDIOPLAYER);
 
 	// display order
 	audioplayerSetup->addItem(new CMenuOptionChooser(LOCALE_AUDIOPLAYER_DISPLAY_ORDER, &g_settings.audioplayer_display , AUDIOPLAYER_DISPLAY_ORDER_OPTIONS, AUDIOPLAYER_DISPLAY_ORDER_OPTION_COUNT, true ));

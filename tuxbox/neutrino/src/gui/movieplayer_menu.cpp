@@ -1,5 +1,5 @@
 /*
-	$Id: movieplayer_menu.cpp,v 1.13 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: movieplayer_menu.cpp,v 1.14 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Movieplayer menue - Neutrino-GUI
 
@@ -86,9 +86,8 @@ int CMoviePlayerMenue::showMoviePlayerMenue()
 	CMenuWidget * mpmenue = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_EPGINFO, width);
 	mpmenue->setPreselected(selected);
 
-	mpmenue->addItem(GenericMenuSeparator);
-	mpmenue->addItem(GenericMenuBack);
-	mpmenue->addItem(GenericMenuSeparatorLine);
+	//intros
+	mpmenue->addIntroItems();
 
 	//ts playback 
 	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, moviePlayerGui, "tsplayback", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));

@@ -4,7 +4,7 @@
   Movieplayer (c) 2003, 2004 by gagga
   Based on code by Dirch, obi and the Metzler Bros. Thanks.
 
-  $Id: movieplayer.cpp,v 1.208 2012/06/30 10:54:19 rhabarber1848 Exp $
+  $Id: movieplayer.cpp,v 1.209 2012/09/12 07:25:12 rhabarber1848 Exp $
 
   Homepage: http://www.giggo.de/dbox2/movieplayer.html
 
@@ -3585,9 +3585,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 		if(g_showaudioselectdialog)
 		{
 			CMenuWidget APIDSelector(LOCALE_APIDSELECTOR_HEAD, NEUTRINO_ICON_AUDIO, 400);
-			APIDSelector.addItem(GenericMenuSeparator);
-			APIDSelector.addItem(GenericMenuCancel);
-			APIDSelector.addItem(GenericMenuSeparatorLine);
+			APIDSelector.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 
 			CAPIDSelectExec *APIDChanger = new CAPIDSelectExec;
 			unsigned int digit = 0;
@@ -4663,7 +4661,7 @@ void checkAspectRatio (int vdec, bool init)
 std::string CMoviePlayerGui::getMoviePlayerVersion(void)
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("1.","$Revision: 1.208 $");
+	return imageinfo.getModulVersion("1.","$Revision: 1.209 $");
 }
 
 void CMoviePlayerGui::showHelpTS()

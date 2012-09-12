@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.13 2012/06/26 18:31:21 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.14 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -170,17 +170,8 @@ int CMiscMenue::showMenue()
 	//filebrowser
 	CMenuWidget *misc_menue_filebrowser 	= new CMenuWidget(LOCALE_MISCSETTINGS_HEAD, menue_icon, width);
 
-	//osd main settings, subhead
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * misc_menue_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_HEAD);
-		misc_menue->addItem(misc_menue_subhead);
-	}
-
-	misc_menue->addItem(GenericMenuSeparator);
-	misc_menue->addItem(GenericMenuBack);
-	misc_menue->addItem(GenericMenuSeparatorLine);
-
+	//osd main settings, intros
+	misc_menue->addIntroItems(menue_title != LOCALE_MISCSETTINGS_HEAD ? LOCALE_MISCSETTINGS_HEAD : NONEXISTANT_LOCALE);
 
 	// general
 	misc_menue->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_RC_STANDBY_MODES,	true, NULL, misc_menue_energy, NULL,  CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));	
@@ -202,13 +193,7 @@ int CMiscMenue::showMenue()
 	
 	/* misc settings sub menues */
 	// general
-	misc_menue_energy->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_RC_STANDBY_MODES));
-
-	misc_menue_energy->addItem(GenericMenuSeparator);
-	misc_menue_energy->addItem(GenericMenuBack);
-	misc_menue_energy->addItem(GenericMenuSeparatorLine);
-
-
+	misc_menue_energy->addIntroItems(LOCALE_MISCSETTINGS_RC_STANDBY_MODES);
 
 	//rc delay
 	CMenuOptionChooser *m1 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_SHUTDOWN_REAL_RCDELAY, &g_settings.shutdown_real_rcdelay, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
@@ -240,17 +225,13 @@ int CMiscMenue::showMenue()
 	misc_menue_energy->addItem(m1);
 	misc_menue_energy->addItem(m5);
 
-	//epg settings
-	misc_menue_epg->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MISCSETTINGS_EPG_HEAD));
 
-	misc_menue_epg->addItem(GenericMenuSeparator);
-	misc_menue_epg->addItem(GenericMenuBack);
-	misc_menue_epg->addItem(GenericMenuSeparatorLine);
+	//epg settings
+	misc_menue_epg->addIntroItems(LOCALE_MISCSETTINGS_EPG_HEAD);
 
 	//epg cache ??is this really usefull??
 	CStringInput miscSettings_epg_cache(LOCALE_MISCSETTINGS_EPG_CACHE, &g_settings.epg_cache, 2, false, LOCALE_MISCSETTINGS_EPG_CACHE_HINT1, LOCALE_MISCSETTINGS_EPG_CACHE_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_CACHE, true, g_settings.epg_cache, &miscSettings_epg_cache));
-
 	//extended epg cache
 	CStringInput miscSettings_epg_extendedcache(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, &g_settings.epg_extendedcache, 2, false, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT1, LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_EXTENDEDCACHE, true, g_settings.epg_extendedcache, &miscSettings_epg_extendedcache));
@@ -261,13 +242,10 @@ int CMiscMenue::showMenue()
 	CStringInput miscSettings_epg_max_events(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, &g_settings.epg_max_events, 5, false, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT1, LOCALE_MISCSETTINGS_EPG_MAX_EVENTS_HINT2, "0123456789 ", this);
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_MAX_EVENTS, true, g_settings.epg_max_events, &miscSettings_epg_max_events));
 	misc_menue_epg->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_DIR, true, g_settings.epg_dir, this, "epgdir"));
-	
+
+
 	//filebrowser
-	misc_menue_filebrowser->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_FILEBROWSER_HEAD));
-	
-	misc_menue_filebrowser->addItem(GenericMenuSeparator);
-	misc_menue_filebrowser->addItem(GenericMenuBack);
-	misc_menue_filebrowser->addItem(GenericMenuSeparatorLine);
+	misc_menue_filebrowser->addIntroItems(LOCALE_FILEBROWSER_HEAD);
 
 	misc_menue_filebrowser->addItem(new CMenuOptionChooser(LOCALE_FILESYSTEM_IS_UTF8            , &g_settings.filesystem_is_utf8            , MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTIONS, MISCSETTINGS_FILESYSTEM_IS_UTF8_OPTION_COUNT, true ));
 	misc_menue_filebrowser->addItem(new CMenuOptionChooser(LOCALE_FILEBROWSER_SHOWRIGHTS        , &g_settings.filebrowser_showrights        , MESSAGEBOX_NO_YES_OPTIONS              , MESSAGEBOX_NO_YES_OPTION_COUNT              , true ));

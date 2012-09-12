@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.150 2012/06/30 10:54:18 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.151 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1127,9 +1127,7 @@ int CEventFinderMenu::showMenu(void)
 	
 	CMenuWidget searchMenu(LOCALE_EVENTFINDER_HEAD, NEUTRINO_ICON_FEATURES, 450);
 
-	searchMenu.addItem(GenericMenuSeparator);
-	searchMenu.addItem(GenericMenuBack);
-	searchMenu.addItem(GenericMenuSeparatorLine);
+	searchMenu.addIntroItems();
 	//***************************************
 	searchMenu.addItem(mf0, false);
 	searchMenu.addItem(GenericMenuSeparatorLine);

@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.12 2012/06/26 18:39:05 rhabarber1848 Exp $
+	$Id: zapit_setup.cpp,v 1.13 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -146,13 +146,6 @@ int CZapitSetup::showSetup()
 	CMenuWidget * z = new CMenuWidget(menue_title, menue_icon, width);
 	z->setPreselected(selected);
 
-	//subhead
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * z_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_ZAPITCONFIG_HEAD);
-		z->addItem(z_subhead);
-	}
-
 	//save last channel on/off
 	savelastchannel = g_Zapit->getSaveLastChannel() ? 1 : 0;
 
@@ -181,9 +174,7 @@ int CZapitSetup::showSetup()
 	}
 
 	//-----------------------------------
-	z->addItem(GenericMenuSeparator);
-	z->addItem(GenericMenuBack);
-	z->addItem(GenericMenuSeparatorLine);
+	z->addIntroItems(menue_title != LOCALE_ZAPITCONFIG_HEAD ? LOCALE_ZAPITCONFIG_HEAD : NONEXISTANT_LOCALE);
 	//-----------------------------------
 	z->addItem(c0);			//save last channel on/off
 	z->addItem(c1);			//last tv-channel
@@ -208,9 +199,7 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 	zapit.getBouquets(bouquetlist, false, true, mode); // UTF-8
 	CZapitClient::BouquetList::iterator bouquet = bouquetlist.begin();
 	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
-	mctv.addItem(GenericMenuSeparator);
-	mctv.addItem(GenericMenuBack);
-	mctv.addItem(GenericMenuSeparatorLine);
+	mctv.addIntroItems();
 
 	for(; bouquet != bouquetlist.end();bouquet++)
 	{
@@ -219,9 +208,7 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 		CZapitClient::BouquetChannelList channellist;
 		zapit.getBouquetChannels(bouquet->bouquet_nr,channellist,mode, true); // UTF-8
 		CZapitClient::BouquetChannelList::iterator channel = channellist.begin();
-		mwtv->addItem(GenericMenuSeparator);
-		mwtv->addItem(GenericMenuBack);
-		mwtv->addItem(GenericMenuSeparatorLine);
+		mwtv->addIntroItems();
 		for(; channel != channellist.end();channel++)
 		{
 			char cChannelId[32];

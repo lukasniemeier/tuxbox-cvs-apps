@@ -1,5 +1,5 @@
 /***************************************************************************
-	$Id: moviebrowser.cpp,v 1.77 2012/08/29 18:20:47 rhabarber1848 Exp $
+	$Id: moviebrowser.cpp,v 1.78 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -363,7 +363,7 @@ CMovieBrowser::CMovieBrowser(const char* path): configfile ('\t')
 ************************************************************************/
 CMovieBrowser::CMovieBrowser(): configfile ('\t')
 {
-	TRACE("$Id: moviebrowser.cpp,v 1.77 2012/08/29 18:20:47 rhabarber1848 Exp $\r\n");
+	TRACE("$Id: moviebrowser.cpp,v 1.78 2012/09/12 07:25:12 rhabarber1848 Exp $\r\n");
 	init();
 }
 
@@ -2965,10 +2965,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CIntInput bookEndIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK,   (long&)movie_info->bookmarks.end,          5, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
 
 	CMenuWidget bookmarkMenu (LOCALE_MOVIEBROWSER_BOOK_HEAD , NEUTRINO_ICON_STREAMING);
-
-	bookmarkMenu.addItem(GenericMenuSeparator);
-	bookmarkMenu.addItem(GenericMenuBack);
-	bookmarkMenu.addItem(GenericMenuSeparatorLine);
+	bookmarkMenu.addIntroItems();
 	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_CLEAR_ALL, true, NULL, this, "book_clear_all",CRCInput::RC_red,   NEUTRINO_ICON_BUTTON_RED));
 	bookmarkMenu.addItem(GenericMenuSeparatorLine);
 	bookmarkMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART,    true, bookStartIntInput.getValue(), &bookStartIntInput));
@@ -2985,9 +2982,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		pBookTypeIntInput[i] = new CIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (long&) movie_info->bookmarks.user[i].length, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO2);
 
 		pBookItemMenu[i] = new CMenuWidget(LOCALE_MOVIEBROWSER_BOOK_HEAD, NEUTRINO_ICON_STREAMING);
-		pBookItemMenu[i]->addItem(GenericMenuSeparator);
-		pBookItemMenu[i]->addItem(GenericMenuBack);
-		pBookItemMenu[i]->addItem(GenericMenuSeparatorLine);
+		pBookItemMenu[i]->addIntroItems();
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_NAME,     true,  movie_info->bookmarks.user[i].name,pBookNameInput[i]));
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_POSITION, true,  pBookPosIntInput[i]->getValue(), pBookPosIntInput[i]));
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE,     true,  pBookTypeIntInput[i]->getValue(),pBookTypeIntInput[i]));
@@ -3003,9 +2998,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 
 	CMenuWidget serieMenu (LOCALE_MOVIEBROWSER_SERIE_HEAD, NEUTRINO_ICON_STREAMING);
-	serieMenu.addItem(GenericMenuSeparator);
-	serieMenu.addItem(GenericMenuBack);
-	serieMenu.addItem(GenericMenuSeparatorLine);
+	serieMenu.addIntroItems();
 	serieMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_SERIE_NAME,   true, movie_info->serieName,&serieUserInput));
 	serieMenu.addItem(GenericMenuSeparatorLine);
 	for(unsigned int i=0; i < m_vHandleSerienames.size(); i++)
@@ -3019,9 +3012,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoUpdateAllIfDestEmptyOnly=true;
 
 	CMenuWidget movieInfoMenuUpdate (LOCALE_MOVIEBROWSER_INFO_HEAD_UPDATE, NEUTRINO_ICON_STREAMING,450);
-	movieInfoMenuUpdate.addItem(GenericMenuSeparator);
-	movieInfoMenuUpdate.addItem(GenericMenuBack);
-	movieInfoMenuUpdate.addItem(GenericMenuSeparatorLine);
+	movieInfoMenuUpdate.addIntroItems();
 	movieInfoMenuUpdate.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_SAVE_ALL, true, NULL, this, "save_movie_info_all",CRCInput::RC_red,   NEUTRINO_ICON_BUTTON_RED), true);
 	movieInfoMenuUpdate.addItem(GenericMenuSeparatorLine);
 	movieInfoMenuUpdate.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_UPDATE_IF_DEST_EMPTY_ONLY, (&movieInfoUpdateAllIfDestEmptyOnly), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true,NULL,CRCInput::RC_green,   NEUTRINO_ICON_BUTTON_GREEN ));
@@ -3058,10 +3049,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CIntInput    yearUserIntInput(LOCALE_MOVIEBROWSER_INFO_PRODYEAR,       (long&)movie_info->productionDate, 4, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 
 	CMenuWidget movieInfoMenu (LOCALE_MOVIEBROWSER_INFO_HEAD, NEUTRINO_ICON_STREAMING,m_cBoxFrame.iWidth);
-
-	movieInfoMenu.addItem(GenericMenuSeparator);
-	movieInfoMenu.addItem(GenericMenuBack);
-	movieInfoMenu.addItem(GenericMenuSeparatorLine);
+	movieInfoMenu.addIntroItems();
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_SAVE,     true, NULL, this, "save_movie_info", CRCInput::RC_red,   NEUTRINO_ICON_BUTTON_RED), true);
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_HEAD_UPDATE, true, NULL,      &movieInfoMenuUpdate, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
@@ -3116,9 +3104,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 /********************************************************************/
 /**  parental lock **************************************************/
 	CMenuWidget parentalMenu (LOCALE_MOVIEBROWSER_MENU_PARENTAL_LOCK_HEAD , NEUTRINO_ICON_STREAMING,450);
-	parentalMenu.addItem(GenericMenuSeparator);
-	parentalMenu.addItem(GenericMenuBack);
-	parentalMenu.addItem(GenericMenuSeparatorLine);
+	parentalMenu.addIntroItems();
 	parentalMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_MENU_PARENTAL_LOCK_ACTIVATED, (int*)(&m_parentalLock), MESSAGEBOX_PARENTAL_LOCK_OPTIONS, MESSAGEBOX_PARENTAL_LOCK_OPTIONS_COUNT, true ));
 	parentalMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_MENU_PARENTAL_LOCK_RATE_HEAD, (int*)(&m_settings.parentalLockAge), MESSAGEBOX_PARENTAL_LOCKAGE_OPTIONS, MESSAGEBOX_PARENTAL_LOCKAGE_OPTION_COUNT, true ));
 
@@ -3126,10 +3112,8 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 /********************************************************************/
 /**  optionsVerzeichnisse  **************************************************/
 	CMenuWidget optionsMenuDir (LOCALE_MOVIEBROWSER_MENU_DIRECTORIES_HEAD , NEUTRINO_ICON_STREAMING,450);
-	optionsMenuDir.addItem(GenericMenuSeparator);
-	optionsMenuDir.addItem(GenericMenuBack);
 
-	optionsMenuDir.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEBROWSER_USE_MOVIE_DIR));
+	optionsMenuDir.addIntroItems(NONEXISTANT_LOCALE, LOCALE_MOVIEBROWSER_USE_MOVIE_DIR);
 	optionsMenuDir.addItem( new CMenuOptionChooser(g_settings.streaming_moviedir.c_str(),     (int*)(&m_settings.storageDirMovieUsed), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true ));
 	
 	optionsMenuDir.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_TIMERLIST_RECORDING_DIR));
@@ -3145,9 +3129,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 	}
 
 	CMenuWidget optionsMenuDirUser (LOCALE_MOVIEBROWSER_DIR_HEAD , NEUTRINO_ICON_STREAMING,450);
-	optionsMenuDirUser.addItem(GenericMenuSeparator);
-	optionsMenuDirUser.addItem(GenericMenuBack);
-	optionsMenuDirUser.addItem(GenericMenuSeparatorLine);
+	optionsMenuDirUser.addIntroItems();
 
 	CDirChooser*      dirInput[MB_MAX_DIRS];
 	CMenuOptionChooser* chooser[MB_MAX_DIRS];
@@ -3179,9 +3161,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 		browserRowWidthIntInput[i] = new CIntInput(LOCALE_MOVIEBROWSER_BROWSER_ROW_WIDTH,(long&) m_settings.browserRowWidth[i], 3, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 
 	CMenuWidget optionsMenuBrowser (LOCALE_MOVIEBROWSER_OPTION_BROWSER , NEUTRINO_ICON_STREAMING,480);
-	optionsMenuBrowser.addItem(GenericMenuSeparator);
-	optionsMenuBrowser.addItem(GenericMenuBack);
-	optionsMenuBrowser.addItem(GenericMenuSeparatorLine);
+	optionsMenuBrowser.addIntroItems();
 	optionsMenuBrowser.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_LAST_PLAY_MAX_ITEMS,	true, playMaxUserIntInput.getValue(),   &playMaxUserIntInput));
 	optionsMenuBrowser.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_LAST_RECORD_MAX_ITEMS,  true, recMaxUserIntInput.getValue(), &recMaxUserIntInput));
 	optionsMenuBrowser.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BROWSER_FRAME_HIGH,     true, browserFrameUserIntInput.getValue(), &browserFrameUserIntInput));
@@ -3198,9 +3178,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 /**  options  **************************************************/
 
 	CMenuWidget optionsMenu (LOCALE_EPGPLUS_OPTIONS , NEUTRINO_ICON_STREAMING,450);
-	optionsMenu.addItem(GenericMenuSeparator);
-	optionsMenu.addItem(GenericMenuBack);
-	optionsMenu.addItem(GenericMenuSeparatorLine);
+	optionsMenu.addIntroItems();
 	optionsMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_LOAD_DEFAULT, true, NULL, this, "loaddefault",              CRCInput::RC_red,  NEUTRINO_ICON_BUTTON_RED));
 	optionsMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_OPTION_BROWSER, true, NULL, &optionsMenuBrowser,NULL,       CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 	optionsMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_DIRECTORIES_HEAD, true, NULL, &optionsMenuDir,NULL,    CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
@@ -3220,9 +3198,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 #endif
 
 	CMenuWidget mainMenu(LOCALE_MOVIEBROWSER_MENU_MAIN_HEAD, NEUTRINO_ICON_STREAMING);
-	mainMenu.addItem(GenericMenuSeparator);
-	mainMenu.addItem(GenericMenuBack);
-	mainMenu.addItem(GenericMenuSeparatorLine);
+	mainMenu.addIntroItems();
 	mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_HEAD, (m_movieSelectionHandler != NULL), NULL, this,   "show_movie_info_menu",    CRCInput::RC_red,    NEUTRINO_ICON_BUTTON_RED), true);
 	mainMenu.addItem(GenericMenuSeparatorLine);
 	mainMenu.addItem( new CMenuForwarder(LOCALE_EPGPLUS_OPTIONS,                    true, NULL, &optionsMenu,NULL,                                  CRCInput::RC_green,  NEUTRINO_ICON_BUTTON_GREEN));
@@ -3968,7 +3944,7 @@ std::string CMovieBrowser::getMovieBrowserVersion(void)
 /************************************************************************/
 {	
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.77 $");
+	return imageinfo.getModulVersion("","$Revision: 1.78 $");
 }
 
 /************************************************************************/
@@ -3983,10 +3959,7 @@ int CDirMenu::show(void)
 	char tmp[20];
 
 	CMenuWidget dirMenu (LOCALE_MOVIEBROWSER_MENU_DIRECTORIES_HEAD , NEUTRINO_ICON_STREAMING,440);
-
-	dirMenu.addItem(GenericMenuSeparator);
-	dirMenu.addItem(GenericMenuBack);
-	dirMenu.addItem(GenericMenuSeparatorLine);
+	dirMenu.addIntroItems();
 
 	updateDirState();
 	for(unsigned int i = 0; i < dirList->size() && i < MAX_DIR; i++)

@@ -1,5 +1,5 @@
 /*
-	$Id: pictureviewer_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: pictureviewer_setup.cpp,v 1.9 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	pictureviewer setup implementation - Neutrino-GUI
 
@@ -108,13 +108,10 @@ int CPictureViewerSetup::showPictureViewerSetup()
 /*shows the setup menue*/
 {
 	CMenuWidget* picviewsetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
-	picviewsetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_PICTUREVIEWER_HEAD));
 	picviewsetup->setPreselected(selected);
 
 	// intros: back ande save
-	picviewsetup->addItem(GenericMenuSeparator);
-	picviewsetup->addItem(GenericMenuBack);
-	picviewsetup->addItem(GenericMenuSeparatorLine);
+	picviewsetup->addIntroItems(LOCALE_PICTUREVIEWER_HEAD);
 
 	picviewsetup->addItem(new CMenuOptionChooser(LOCALE_PICTUREVIEWER_SCALING  , &g_settings.picviewer_scaling     , PICTUREVIEWER_SCALING_OPTIONS  , PICTUREVIEWER_SCALING_OPTION_COUNT  , true ));
 

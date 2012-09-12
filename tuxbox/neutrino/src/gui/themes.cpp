@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.28 2012/06/26 18:37:42 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.29 2012/09/12 07:25:12 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -151,9 +151,9 @@ int CThemes::Show()
 
 	CMenuWidget themes (LOCALE_COLORTHEMEMENU_HEAD2, NEUTRINO_ICON_SETTINGS, width);
 	themes.setPreselected(selected);
-	themes.addItem(GenericMenuSeparator);
-	themes.addItem(GenericMenuBack);
-	themes.addItem(GenericMenuSeparatorLine);
+
+	//intros
+	themes.addIntroItems();
 	
 	//set default theme
 	themes.addItem(new CMenuForwarder(LOCALE_COLORTHEMEMENU_NEUTRINO_THEME, true, NULL, this, "theme_neutrino", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));

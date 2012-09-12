@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.cpp,v 1.8 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: proxyserver_setup.cpp,v 1.9 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -77,15 +77,7 @@ int CProxySetup::showProxySetup()
 	CMenuWidget * mn = new CMenuWidget(menue_title, menue_icon, width);
 	mn->setPreselected(selected);
 
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * proxy_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_PROXYSERVER_SEP);
-		mn->addItem(proxy_subhead);
-	}
-
-	mn->addItem(GenericMenuSeparator);
-	mn->addItem(GenericMenuBack);
-	mn->addItem(GenericMenuSeparatorLine);
+	mn->addIntroItems(menue_title != LOCALE_FLASHUPDATE_PROXYSERVER_SEP ? LOCALE_FLASHUPDATE_PROXYSERVER_SEP : NONEXISTANT_LOCALE);
 
 	CStringInputSMS softUpdate_proxy(LOCALE_FLASHUPDATE_PROXYSERVER, g_settings.softupdate_proxyserver, 23, LOCALE_FLASHUPDATE_PROXYSERVER_HINT1, LOCALE_FLASHUPDATE_PROXYSERVER_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789-.: ");
 	mn->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER, true, g_settings.softupdate_proxyserver, &softUpdate_proxy, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));

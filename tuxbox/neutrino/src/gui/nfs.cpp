@@ -155,9 +155,7 @@ int CNFSMountGui::exec( CMenuTarget* parent, const std::string & actionKey )
 int CNFSMountGui::menu()
 {
 	CMenuWidget mountMenuW(LOCALE_NFS_MOUNT, NEUTRINO_ICON_STREAMING, 720);
-	mountMenuW.addItem(GenericMenuSeparator);
-	mountMenuW.addItem(GenericMenuBack);
-	mountMenuW.addItem(GenericMenuSeparatorLine);
+	mountMenuW.addIntroItems();
 	char s2[12];
 
 	for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
@@ -231,9 +229,7 @@ int CNFSMountGui::menuEntry(int nr)
 	   (m_smbfs_sup != CFSMounter::FS_UNSUPPORTED && *type != (int)CFSMounter::SMBFS);
 
 	CMenuWidget mountMenuEntryW(LOCALE_NFS_MOUNT, NEUTRINO_ICON_STREAMING,720);
-	mountMenuEntryW.addItem(GenericMenuSeparator);
-	mountMenuEntryW.addItem(GenericMenuBack);
-	mountMenuEntryW.addItem(GenericMenuSeparatorLine);
+	mountMenuEntryW.addIntroItems();
 	CIPInput ipInput(LOCALE_NFS_IP, g_settings.network_nfs_ip[nr], LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
 	CStringInputSMS dirInput(LOCALE_NFS_DIR, dir, 30, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE,"abcdefghijklmnopqrstuvwxyz0123456789-_.,:|!?/ ");
 	CMenuOptionChooser *automountInput= new CMenuOptionChooser(LOCALE_NFS_AUTOMOUNT, automount, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true);
@@ -295,9 +291,7 @@ int CNFSUmountGui::menu()
 	int count = 0;
 	CFSMounter::MountInfos infos;
 	CMenuWidget umountMenu(LOCALE_NFS_UMOUNT, NEUTRINO_ICON_STREAMING,720);
-	umountMenu.addItem(GenericMenuSeparator);
-	umountMenu.addItem(GenericMenuBack);
-	umountMenu.addItem(GenericMenuSeparatorLine);
+	umountMenu.addIntroItems();
 	CFSMounter::getMountedFS(infos);
 	for (CFSMounter::MountInfos::const_iterator it = infos.begin();
 	     it != infos.end();it++)
@@ -332,9 +326,7 @@ int CNFSSmallMenu::exec( CMenuTarget* parent, const std::string & actionKey )
 		CNFSUmountGui umountGui;
 		CMenuForwarder *remount_fwd = new CMenuForwarder(LOCALE_NFS_REMOUNT, true, NULL, this, "remount");
 		remount_fwd->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
-		menu.addItem(GenericMenuSeparator);
-		menu.addItem(GenericMenuBack);
-		menu.addItem(GenericMenuSeparatorLine);
+		menu.addIntroItems();
 		menu.addItem(remount_fwd);
 		menu.addItem(new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, & mountGui));
 		menu.addItem(new CMenuForwarder(LOCALE_NFS_UMOUNT, true, NULL, &umountGui));

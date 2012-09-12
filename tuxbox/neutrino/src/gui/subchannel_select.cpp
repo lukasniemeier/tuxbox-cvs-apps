@@ -1,5 +1,5 @@
 /*
-	$Id: subchannel_select.cpp,v 1.2 2012/05/22 19:05:38 rhabarber1848 Exp $
+	$Id: subchannel_select.cpp,v 1.3 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -64,9 +64,7 @@ int CSubChannelSelectMenu::exec(CMenuTarget* parent, const std::string &actionKe
 int CSubChannelSelectMenu::doMenu()
 {
 	CMenuWidget SubChannelSelector(g_RemoteControl->are_subchannels ? LOCALE_NVODSELECTOR_SUBSERVICE : LOCALE_NVODSELECTOR_HEAD, NEUTRINO_ICON_VIDEO, 350);
-	SubChannelSelector.addItem(GenericMenuSeparator);
-	SubChannelSelector.addItem(GenericMenuCancel);
-	SubChannelSelector.addItem(GenericMenuSeparatorLine);
+	SubChannelSelector.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 
 	int count = 0;
 	char nvod_id[5];

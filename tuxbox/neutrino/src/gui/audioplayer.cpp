@@ -1,5 +1,5 @@
 /*
-  $Id: audioplayer.cpp,v 1.93 2012/08/14 18:19:53 rhabarber1848 Exp $
+  $Id: audioplayer.cpp,v 1.94 2012/09/12 07:25:12 rhabarber1848 Exp $
   Neutrino-GUI  -   DBoxII-Project
 
   AudioPlayer by Dirch,Zwen
@@ -681,10 +681,9 @@ int CAudioPlayerGui::show()
 					int select = -1;
 					CMenuSelectorTarget InetRadioInputChanger(&select);
 					// -- setup menue for inetradio input
+					InputSelector.addIntroItems();
+
 					sprintf(cnt, "%d", count);
-					InputSelector.addItem(GenericMenuSeparator);
-					InputSelector.addItem(GenericMenuBack);
-					InputSelector.addItem(GenericMenuSeparatorLine);
 					InputSelector.addItem(new CMenuForwarder(
 						LOCALE_AUDIOPLAYER_ADD_LOC, true, NULL, &InetRadioInputChanger,
 						cnt, CRCInput::convertDigitToKey(count + 1)), true);

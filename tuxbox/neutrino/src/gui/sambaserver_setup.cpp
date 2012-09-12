@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.16 2012/06/09 17:52:53 rhabarber1848 Exp $
+	$Id: sambaserver_setup.cpp,v 1.17 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -116,12 +116,6 @@ int CSambaSetup::showSambaSetup()
 	CMenuWidget * sm = new CMenuWidget(menue_title, menue_icon, width);
 	sm->setPreselected(selected);
 
-	if (menue_title != NONEXISTANT_LOCALE)
-	{
-		CMenuSeparator * sm_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_SAMBASERVER_SETUP);
-		sm->addItem(sm_subhead);
-	}
-
 	//start/stop sambaserver, set real server status
 	if (getPidof(NMBD).empty() || getPidof(SMBD).empty())
 	{
@@ -142,9 +136,7 @@ int CSambaSetup::showSambaSetup()
 	CMenuForwarder * sm_fw_interface = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_INTERFACE, false, interface);
 
 	//add items
-	sm->addItem(GenericMenuSeparator);
-	sm->addItem(GenericMenuBack);
-	sm->addItem(GenericMenuSeparatorLine);
+	sm->addIntroItems(menue_title != LOCALE_SAMBASERVER_SETUP ? LOCALE_SAMBASERVER_SETUP : NONEXISTANT_LOCALE);
 	//-----------------------------------
 	sm->addItem(sm_start);			//server stat
 	sm->addItem(GenericMenuSeparatorLine);

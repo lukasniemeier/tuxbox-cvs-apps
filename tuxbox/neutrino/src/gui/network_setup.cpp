@@ -1,5 +1,5 @@
 /*
-	$Id: network_setup.cpp,v 1.25 2012/06/30 10:57:13 rhabarber1848 Exp $
+	$Id: network_setup.cpp,v 1.26 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	network setup implementation - Neutrino-GUI
 
@@ -164,9 +164,6 @@ int CNetworkSetup::showNetworkSetup()
 		CMenuWidget* networkSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->setPreselected(selected);
 
-		//subhead
-		networkSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_NETWORK));
-
 		//apply button
 		CMenuForwarder *m0 = new CMenuForwarder(LOCALE_NETWORKMENU_SETUPNOW, true, NULL, this, "networkapply", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 	
@@ -195,9 +192,7 @@ int CNetworkSetup::showNetworkSetup()
 		
 		//paint menu items
 		//intros
-		networkSettings->addItem(GenericMenuSeparator);
-		networkSettings->addItem(GenericMenuBack);
-		networkSettings->addItem(GenericMenuSeparatorLine);
+		networkSettings->addIntroItems(LOCALE_MAINSETTINGS_NETWORK);
 	
 		networkSettings->addItem( m0 );
 	
@@ -227,10 +222,7 @@ int CNetworkSetup::showNetworkSetup()
 
 		CMenuWidget* ntp = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_NTPTITLE, true, NULL, ntp, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
-		ntp->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_NETWORKMENU_NTPTITLE));
-		ntp->addItem(GenericMenuSeparator);
-		ntp->addItem(GenericMenuBack);
-		ntp->addItem(GenericMenuSeparatorLine);
+		ntp->addIntroItems(LOCALE_NETWORKMENU_NTPTITLE);
 		CMenuOptionChooser *ntp1 = new CMenuOptionChooser(LOCALE_NETWORKMENU_NTPENABLE, &g_settings.network_ntpenable, OPTIONS_NTPENABLE_OPTIONS, OPTIONS_NTPENABLE_OPTION_COUNT, true, this);
 		CMenuForwarder *ntp2 = new CMenuForwarder(LOCALE_NETWORKMENU_NTPSERVER, true, g_settings.network_ntpserver, &networkSettings_NtpServer);
 		CMenuForwarder *ntp3 = new CMenuForwarder(LOCALE_NETWORKMENU_NTPREFRESH, true, g_settings.network_ntprefresh, &networkSettings_NtpRefresh);
@@ -243,10 +235,7 @@ int CNetworkSetup::showNetworkSetup()
 	#ifdef ENABLE_GUI_MOUNT
 		CMenuWidget* networkmounts = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
 		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, networkmounts, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
-		networkmounts->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_NETWORKMENU_MOUNT));
-		networkmounts->addItem(GenericMenuSeparator);
-		networkmounts->addItem(GenericMenuBack);
-		networkmounts->addItem(GenericMenuSeparatorLine);
+		networkmounts->addIntroItems(LOCALE_NETWORKMENU_MOUNT);
 
 		CNFSMountGui* nfsMountGui = new CNFSMountGui();
 		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, nfsMountGui, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));

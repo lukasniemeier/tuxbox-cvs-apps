@@ -1,5 +1,5 @@
 /*
-	$Id: record_setup.cpp,v 1.21 2012/06/26 18:37:04 rhabarber1848 Exp $
+	$Id: record_setup.cpp,v 1.22 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	record setup implementation - Neutrino-GUI
 
@@ -138,9 +138,6 @@ int CRecordSetup::showRecordSetup()
 	CMenuWidget* recordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	recordingSettings->setPreselected(selected);
 
-	//subhead
-	recordingSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MAINSETTINGS_RECORDING));	
-
 	//prepare input record server ip
 	CIPInput recordingSettings_server_ip(LOCALE_RECORDINGMENU_SERVER_IP, g_settings.recording_server_ip, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
 	//input record server ip
@@ -218,12 +215,8 @@ int CRecordSetup::showRecordSetup()
 	CMenuOptionChooser* aoj2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_ALT, &g_settings.recording_audio_pids_alt, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, this);
 	//prepare audio pids ac3
 	CMenuOptionChooser* aoj3 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_AC3, &g_settings.recording_audio_pids_ac3, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, this);
-	//subhead
-	apidRecordingSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_RECORDINGMENU_APIDS));
 
-	apidRecordingSettings->addItem(GenericMenuSeparator);
-	apidRecordingSettings->addItem(GenericMenuBack);
-	apidRecordingSettings->addItem(GenericMenuSeparatorLine);
+	apidRecordingSettings->addIntroItems(LOCALE_RECORDINGMENU_APIDS);
 	apidRecordingSettings->addItem(aoj1);
 	apidRecordingSettings->addItem(aoj2);
 	apidRecordingSettings->addItem(aoj3);
@@ -231,10 +224,7 @@ int CRecordSetup::showRecordSetup()
 	// directory menue for direct recording settings
 	CMenuWidget *dirMenu = new CMenuWidget(LOCALE_RECORDINGMENU_FILESETTINGS, NEUTRINO_ICON_RECORDING, width);
 	toDelete.push_back(dirMenu);
-	dirMenu->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_RECORDINGMENU_DEFDIR));
-	dirMenu->addItem(GenericMenuSeparator);
-	dirMenu->addItem(GenericMenuBack);
-	dirMenu->addItem(GenericMenuSeparatorLine);
+	dirMenu->addIntroItems(LOCALE_RECORDINGMENU_DEFDIR);
 	char temp[10];
 	for(int i=0 ; i < MAX_RECORDING_DIR ; i++)
 	{
@@ -253,9 +243,7 @@ int CRecordSetup::showRecordSetup()
 		dirRecordingSettings->addItem(dirRecordingSettings_subhead);
 
 		// intro items
-		dirRecordingSettings->addItem(GenericMenuSeparator);
-		dirRecordingSettings->addItem(GenericMenuBack);
-		dirRecordingSettings->addItem(GenericMenuSeparatorLine);
+		dirRecordingSettings->addIntroItems();
 
 		// directory
 		CDirChooser* dirRecordingSettings_dirChooser = new CDirChooser(&g_settings.recording_dir[i]);
@@ -310,9 +298,7 @@ int CRecordSetup::showRecordSetup()
 
 	//paint menue entries
 	//intros
-	recordingSettings->addItem(GenericMenuSeparator);
-	recordingSettings->addItem(GenericMenuBack);
-	recordingSettings->addItem(GenericMenuSeparatorLine);
+	recordingSettings->addIntroItems(LOCALE_MAINSETTINGS_RECORDING);
 
 	recordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_SETUPNOW, true, NULL, this, "recording", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	recordingSettings->addItem(new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "help_recording", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
@@ -336,20 +322,14 @@ int CRecordSetup::showRecordSetup()
 #endif
 	recordingSettings->addItem(GenericMenuSeparatorLine);
 	recordingSettings->addItem( mf15);//timersettings
-		//subhead
-		timerRecordingSettings->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_TIMERSETTINGS_SEPARATOR));
-		timerRecordingSettings->addItem(GenericMenuSeparator);
-		timerRecordingSettings->addItem(GenericMenuBack);
-		timerRecordingSettings->addItem(GenericMenuSeparatorLine);
+		//intros
+		timerRecordingSettings->addIntroItems(LOCALE_TIMERSETTINGS_SEPARATOR);
 		timerRecordingSettings->addItem( mf5); //start record correcture
 		timerRecordingSettings->addItem( mf6); //end record correcture
 		timerRecordingSettings->addItem( mf14);//switch correcture
 	recordingSettings->addItem( mf13);//audio pid settings
-		//subhead
-		directRecordingSettings->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_RECORDINGMENU_FILESETTINGS));
-		directRecordingSettings->addItem(GenericMenuSeparator);
-		directRecordingSettings->addItem(GenericMenuBack);
-		directRecordingSettings->addItem(GenericMenuSeparatorLine);
+		//intros
+		directRecordingSettings->addIntroItems(LOCALE_RECORDINGMENU_FILESETTINGS);
 		directRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DEFDIR, true, NULL, dirMenu, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 		directRecordingSettings->addItem(oj10);
 		directRecordingSettings->addItem(oj15); //max. recording time

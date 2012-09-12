@@ -1,5 +1,5 @@
 /*
-	$Id: parentallock_setup.cpp,v 1.9 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: parentallock_setup.cpp,v 1.10 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	parentallock setup implementation - Neutrino-GUI
 
@@ -103,13 +103,8 @@ int CParentalSetup::showParentalSetup()
 	CMenuWidget* plock = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_LOCK, width);
 	plock->setPreselected(selected);
 
-	//subhead
-	plock->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_PARENTALLOCK_PARENTALLOCK));
-
 	// intros
-	plock->addItem(GenericMenuSeparator);
-	plock->addItem(GenericMenuBack);
-	plock->addItem(GenericMenuSeparatorLine);
+	plock->addIntroItems(LOCALE_PARENTALLOCK_PARENTALLOCK);
 
 	plock->addItem(new CMenuOptionChooser(LOCALE_PARENTALLOCK_PROMPT , &g_settings.parentallock_prompt , PARENTALLOCK_PROMPT_OPTIONS, PARENTALLOCK_PROMPT_OPTION_COUNT , !CNeutrinoApp::getInstance()->isParentallocked()));
 

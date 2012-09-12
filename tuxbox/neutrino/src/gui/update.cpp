@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.147 2012/04/13 12:15:21 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.148 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -673,9 +673,7 @@ void CFlashExpert::showMTDSelector(const std::string & actionkey)
 {
 	//mtd-selector erzeugen
 	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_MTDSELECTOR, NEUTRINO_ICON_UPDATE, width);
-	mtdselector->addItem(GenericMenuSeparator);
-	mtdselector->addItem(GenericMenuBack);
-	mtdselector->addItem(GenericMenuSeparatorLine);
+	mtdselector->addIntroItems();
 	CMTDInfo* mtdInfo =CMTDInfo::getInstance();
 	for (int i = 0; i < mtdInfo->getMTDCount(); i++)
 	{
@@ -690,9 +688,7 @@ void CFlashExpert::showMTDSelector(const std::string & actionkey)
 void CFlashExpert::showFileSelector(const std::string & actionkey)
 {
 	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_FILESELECTOR, NEUTRINO_ICON_UPDATE, width);
-	fileselector->addItem(GenericMenuSeparator);
-	fileselector->addItem(GenericMenuBack);
-	fileselector->addItem(GenericMenuSeparatorLine);
+	fileselector->addIntroItems();
 	struct dirent **namelist;
 	int n = scandir("/tmp", &namelist, 0, alphasort);
 	if (n < 0)

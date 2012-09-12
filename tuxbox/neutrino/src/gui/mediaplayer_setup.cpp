@@ -1,5 +1,5 @@
 /*
-	$Id: mediaplayer_setup.cpp,v 1.10 2012/05/16 21:38:57 rhabarber1848 Exp $
+	$Id: mediaplayer_setup.cpp,v 1.11 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -98,12 +98,9 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 {
 	CMenuWidget* mediaSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
 	mediaSetup->setPreselected(selected);
-	mediaSetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_MEDIAPLAYERSETTINGS_GENERAL));
 
 	// intros
-	mediaSetup->addItem(GenericMenuSeparator);
-	mediaSetup->addItem(GenericMenuBack);
-	mediaSetup->addItem(GenericMenuSeparatorLine);
+	mediaSetup->addIntroItems(LOCALE_MEDIAPLAYERSETTINGS_GENERAL);
 
 	// entries
 #ifdef ENABLE_AUDIOPLAYER

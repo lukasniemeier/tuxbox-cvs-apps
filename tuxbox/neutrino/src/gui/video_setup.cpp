@@ -1,5 +1,5 @@
 /*
-	$Id: video_setup.cpp,v 1.17 2012/06/26 18:38:29 rhabarber1848 Exp $
+	$Id: video_setup.cpp,v 1.18 2012/09/12 07:25:12 rhabarber1848 Exp $
 
 	video setup implementation - Neutrino-GUI
 
@@ -124,15 +124,12 @@ int CVideoSetup::showVideoSetup()
 	//init
 	CMenuWidget * videosetup = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
 	videosetup->setPreselected(selected);
-	//subhead
-	videosetup->addItem( new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_VIDEOMENU_HEAD));
 
 	//video signal type
 	CMenuOptionChooser * scart = new CMenuOptionChooser(LOCALE_VIDEOMENU_VIDEOSIGNAL, &video_out_signal, VIDEOMENU_VIDEOSIGNAL_OPTIONS, VIDEOMENU_VIDEOSIGNAL_OPTION_COUNT, true, this);
 
-	videosetup->addItem(GenericMenuSeparator);
-	videosetup->addItem(GenericMenuBack);
-	videosetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_VIDEOMENU_TV_SCART));
+	//intros
+	videosetup->addIntroItems(LOCALE_VIDEOMENU_HEAD, LOCALE_VIDEOMENU_TV_SCART);
 
 	videosetup->addItem(scart); 	//video signal type
 	
