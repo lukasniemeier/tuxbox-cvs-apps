@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.204 2012/09/12 08:41:56 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.205 2012/09/23 08:19:15 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1229,13 +1229,14 @@ int CMenuSeparator::paint(bool selected)
 
 			/* if no alignment is specified, align centered */
 			if (type & ALIGN_LEFT)
-				stringstartposX = x + (!SUB_HEAD ? 20 : offx + 10);
+				stringstartposX = x + (!(type & SUB_HEAD) ? 20 : offx + 10);
 			else if (type & ALIGN_RIGHT)
 				stringstartposX = x + dx - stringwidth - 20;
 			else /* ALIGN_CENTER */
 				stringstartposX = x + (dx >> 1) - (stringwidth >> 1);
 
-			frameBuffer->paintBoxRel(stringstartposX-5, y, stringwidth+10, height, bgcolor0);
+			if (type & LINE)
+				frameBuffer->paintBoxRel(stringstartposX-5, y, stringwidth+10, height, bgcolor0);
 
 			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposX, y+height,dx- (stringstartposX- x) , l_text, color, 0, true); // UTF-8
 
