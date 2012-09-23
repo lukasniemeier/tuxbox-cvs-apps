@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.cpp,v 1.29 2012/09/12 07:25:12 rhabarber1848 Exp $ 
+	$Id: themes.cpp,v 1.30 2012/09/23 08:18:03 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 
@@ -48,10 +48,13 @@
 #define USERDIR "/var" THEMEDIR
 #define FILE_PREFIX ".theme"
 
-CThemes::CThemes()
+CThemes::CThemes(const neutrino_locale_t title, const char * const IconName)
 : themefile('\t')
 {
 	colorSetupNotifier = new CColorSetupNotifier();
+
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (500, 100);
 	selected = -1;
@@ -149,11 +152,11 @@ int CThemes::Show()
 {
 	std::string file_name = "";
 
-	CMenuWidget themes (LOCALE_COLORTHEMEMENU_HEAD2, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget themes(menue_title, menue_icon, width);
 	themes.setPreselected(selected);
 
 	//intros
-	themes.addIntroItems();
+	themes.addIntroItems(menue_title != LOCALE_COLORTHEMEMENU_HEAD2 ? LOCALE_COLORTHEMEMENU_HEAD2 : NONEXISTANT_LOCALE);
 	
 	//set default theme
 	themes.addItem(new CMenuForwarder(LOCALE_COLORTHEMEMENU_NEUTRINO_THEME, true, NULL, this, "theme_neutrino", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));

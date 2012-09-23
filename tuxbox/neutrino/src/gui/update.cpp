@@ -1,5 +1,5 @@
 /*
-	$Id: update.cpp,v 1.148 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: update.cpp,v 1.149 2012/09/23 08:18:03 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -155,7 +155,8 @@ bool CFlashUpdate::selectHttpImage(void)
 	httpTool.setStatusViewer(this);
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_GETINFOFILE)); // UTF-8
 
-	CMenuWidget SelectionWidget(LOCALE_FLASHUPDATE_SELECTIMAGE, NEUTRINO_ICON_UPDATE, listWidth);
+	CMenuWidget SelectionWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE, listWidth);
+	SelectionWidget.addItem(new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_SELECTIMAGE));
 	SelectionWidget.addItem(GenericMenuSeparator);
 	SelectionWidget.addItem(GenericMenuBack);
 
@@ -672,8 +673,8 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 void CFlashExpert::showMTDSelector(const std::string & actionkey)
 {
 	//mtd-selector erzeugen
-	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_MTDSELECTOR, NEUTRINO_ICON_UPDATE, width);
-	mtdselector->addIntroItems();
+	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, NEUTRINO_ICON_UPDATE, width);
+	mtdselector->addIntroItems(LOCALE_FLASHUPDATE_MTDSELECTOR);
 	CMTDInfo* mtdInfo =CMTDInfo::getInstance();
 	for (int i = 0; i < mtdInfo->getMTDCount(); i++)
 	{
@@ -687,8 +688,8 @@ void CFlashExpert::showMTDSelector(const std::string & actionkey)
 
 void CFlashExpert::showFileSelector(const std::string & actionkey)
 {
-	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_FILESELECTOR, NEUTRINO_ICON_UPDATE, width);
-	fileselector->addIntroItems();
+	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, NEUTRINO_ICON_UPDATE, width);
+	fileselector->addIntroItems(LOCALE_FLASHUPDATE_FILESELECTOR);
 	struct dirent **namelist;
 	int n = scandir("/tmp", &namelist, 0, alphasort);
 	if (n < 0)

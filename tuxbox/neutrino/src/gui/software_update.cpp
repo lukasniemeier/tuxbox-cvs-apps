@@ -1,5 +1,5 @@
 /*
-	$Id: software_update.cpp,v 1.11 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: software_update.cpp,v 1.12 2012/09/23 08:18:03 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -91,11 +91,11 @@ int CSoftwareUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 int CSoftwareUpdate::showSoftwareUpdate()
 /* shows the menue and options for software update */
 {
-	CMenuWidget* softUpdate = new CMenuWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE, width);
+	CMenuWidget* softUpdate = new CMenuWidget(LOCALE_SERVICEMENU_HEAD, NEUTRINO_ICON_UPDATE, width);
 	softUpdate->setPreselected(selected);
 
 	// intros
-	softUpdate->addIntroItems();
+	softUpdate->addIntroItems(LOCALE_SERVICEMENU_UPDATE);
 
 	// experts-functions 
 	softUpdate->addItem( new CMenuForwarder(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, true, ""  , this     , "experts",CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));

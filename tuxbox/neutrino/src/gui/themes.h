@@ -17,7 +17,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-	$Id: themes.h,v 1.11 2012/06/26 18:37:42 rhabarber1848 Exp $ 
+	$Id: themes.h,v 1.12 2012/09/23 08:18:03 rhabarber1848 Exp $ 
 
 	Copyright (C) 2007, 2008, 2009 (flasher) Frank Liebelt
 */
@@ -42,6 +42,9 @@ class CThemes : public CMenuTarget
 		int width, selected;
 		int oldThemeValues[40];
 
+		neutrino_locale_t menue_title;
+		std::string menue_icon;
+
 		bool hasThemeChanged;
 
 		int Show();
@@ -51,7 +54,7 @@ class CThemes : public CMenuTarget
 		void rememberOldTheme(bool remember);
 
 	public:
-		CThemes();
+		CThemes(const neutrino_locale_t title = LOCALE_COLORTHEMEMENU_HEAD2, const char * const IconName = NEUTRINO_ICON_COLORS);
 		~CThemes();
 		void setupDefaultColors();
 		int exec(CMenuTarget* parent, const std::string & actionKey);

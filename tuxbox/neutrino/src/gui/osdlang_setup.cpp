@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.cpp,v 1.9 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: osdlang_setup.cpp,v 1.10 2012/09/23 08:18:03 rhabarber1848 Exp $
 
 	OSD-Language Setup  implementation - Neutrino-GUI
 
@@ -50,8 +50,11 @@
 
 
 
-COsdLangSetup::COsdLangSetup()
+COsdLangSetup::COsdLangSetup(const neutrino_locale_t title, const char * const IconName)
 {
+	menue_title = title;
+	menue_icon = IconName;
+
 	width = w_max (500, 100);
 	selected = -1;
 }
@@ -89,11 +92,11 @@ int COsdLangSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 
 int COsdLangSetup::showSetup()
 {
-	CMenuWidget *osdl_setup = new CMenuWidget(LOCALE_LANGUAGESETUP_HEAD, NEUTRINO_ICON_LANGUAGE, width);
+	CMenuWidget *osdl_setup = new CMenuWidget(menue_title, menue_icon, width);
 	osdl_setup->setPreselected(selected);
 
 	//intros
-	osdl_setup->addIntroItems();
+	osdl_setup->addIntroItems(menue_title != LOCALE_LANGUAGESETUP_HEAD ? LOCALE_LANGUAGESETUP_HEAD : NONEXISTANT_LOCALE);
 
 	//search available languages....
 
