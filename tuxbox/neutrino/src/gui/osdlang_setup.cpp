@@ -1,5 +1,5 @@
 /*
-	$Id: osdlang_setup.cpp,v 1.10 2012/09/23 08:18:03 rhabarber1848 Exp $
+	$Id: osdlang_setup.cpp,v 1.11 2012/09/23 08:26:30 rhabarber1848 Exp $
 
 	OSD-Language Setup  implementation - Neutrino-GUI
 
@@ -76,7 +76,10 @@ int COsdLangSetup::exec(CMenuTarget* parent, const std::string & actionKey)
 
 		int unicode_locale = g_Locale->loadLocale(locale);
 		if(CNeutrinoApp::getInstance()->ChangeFonts(unicode_locale))
+		{
+			parent->hide();
 			return menu_return::RETURN_REPAINT;
+		}
 		else
 			return menu_return::RETURN_NONE;
 	}
