@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.343 2012/06/30 10:54:17 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.344 2012/09/23 08:25:00 rhabarber1848 Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2652,7 +2652,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.343 2012/06/30 10:54:17 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.344 2012/09/23 08:25:00 rhabarber1848 Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -4699,8 +4699,11 @@ static void commandWriteSI2XML(int connfd, char *data, const unsigned dataLength
 	responseHeader.dataLength = 0;
 	writeNbytes(connfd, (const char *)&responseHeader, sizeof(responseHeader), WRITE_TIMEOUT_IN_SECONDS);
 
-	if (dataLength > 100)
+	if (mySIeventsOrderUniqueKey.empty() || dataLength > 100)
+	{
+		eventServer->sendEvent(CSectionsdClient::EVT_WRITE_SI_FINISHED, CEventServer::INITID_SECTIONSD);
 		return ;
+	}
 
 	strncpy(tmpname, data, dataLength);
 	tmpname[dataLength] = '\0';
@@ -4730,6 +4733,7 @@ static void commandWriteSI2XML(int connfd, char *data, const unsigned dataLength
 			if (!(eventfile = fopen(filename, "w")))
 			{
 				unlockEvents();
+				eventServer->sendEvent(CSectionsdClient::EVT_WRITE_SI_FINISHED, CEventServer::INITID_SECTIONSD);
 				return;
 			}
 			write_epg_xml_header(eventfile,onid,tsid,sid);
@@ -4749,6 +4753,7 @@ static void commandWriteSI2XML(int connfd, char *data, const unsigned dataLength
 					if (!(eventfile = fopen(filename, "w")))
 					{
 						unlockEvents();
+						eventServer->sendEvent(CSectionsdClient::EVT_WRITE_SI_FINISHED, CEventServer::INITID_SECTIONSD);
 						return;
 					}
 					write_epg_xml_header(eventfile,onid,tsid,sid);
@@ -4766,6 +4771,7 @@ static void commandWriteSI2XML(int connfd, char *data, const unsigned dataLength
 					if (!(eventfile = fopen(filename, "w")))
 					{
 						unlockEvents();
+						eventServer->sendEvent(CSectionsdClient::EVT_WRITE_SI_FINISHED, CEventServer::INITID_SECTIONSD);
 						return;
 					}
 					write_epg_xml_header(eventfile,onid,tsid,sid);
@@ -4782,6 +4788,7 @@ static void commandWriteSI2XML(int connfd, char *data, const unsigned dataLength
 					if (!(eventfile = fopen(filename, "w")))
 					{
 						unlockEvents();
+						eventServer->sendEvent(CSectionsdClient::EVT_WRITE_SI_FINISHED, CEventServer::INITID_SECTIONSD);
 						return;
 					}
 					write_epg_xml_header(eventfile,onid,tsid,sid);
@@ -8626,7 +8633,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.343 2012/06/30 10:54:17 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.344 2012/09/23 08:25:00 rhabarber1848 Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
