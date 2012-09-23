@@ -1,5 +1,5 @@
 /*
-	$Id: timerlist.cpp,v 1.120 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: timerlist.cpp,v 1.121 2012/09/23 08:20:23 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -956,7 +956,7 @@ int CTimerList::modifyTimer()
 	CTimerd::responseGetTimer* timer=&timerlist[selected];
 	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUMODIFY, NEUTRINO_ICON_SETTINGS, width);
 	//main items
-	timerSettings.addIntroItems();
+	timerSettings.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	timerSettings.addItem(new CMenuForwarder(LOCALE_TIMERLIST_SAVE, true, NULL, this, "modifytimer", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	timerSettings.addItem(GenericMenuSeparatorLine);
 
@@ -1038,7 +1038,7 @@ int CTimerList::newTimer()
 
 
 	CMenuWidget timerSettings(LOCALE_TIMERLIST_MENUNEW, NEUTRINO_ICON_SETTINGS, width);
-	timerSettings.addIntroItems();
+	timerSettings.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	timerSettings.addItem(new CMenuForwarder(LOCALE_TIMERLIST_SAVE, true, NULL, this, "newtimer", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
 	timerSettings.addItem(GenericMenuSeparatorLine);
 
