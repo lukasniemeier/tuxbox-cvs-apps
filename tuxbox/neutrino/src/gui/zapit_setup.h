@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.h,v 1.7 2011/12/21 21:03:50 rhabarber1848 Exp $
+	$Id: zapit_setup.h,v 1.8 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -54,7 +54,7 @@ class CZapitSetup : public CMenuTarget
 		char CstartChannelTV[30];
 
 	public:	
-		CZapitSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);
+		CZapitSetup(const neutrino_locale_t title = LOCALE_ZAPITCONFIG_HEAD, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CZapitSetup();
 
 		int exec(CMenuTarget* parent, const std::string & actionKey);

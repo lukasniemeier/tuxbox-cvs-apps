@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.cpp,v 1.17 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: sambaserver_setup.cpp,v 1.18 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -60,8 +60,8 @@ using namespace std;
 
 CSambaSetup::CSambaSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_SAMBASERVER_SETUP;
-	menue_icon = IconName != NEUTRINO_ICON_SETTINGS ? IconName : NEUTRINO_ICON_SETTINGS;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (550, 100);
 	selected = -1;

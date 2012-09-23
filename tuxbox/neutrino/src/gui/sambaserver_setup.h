@@ -1,5 +1,5 @@
 /*
-	$Id: sambaserver_setup.h,v 1.7 2011/12/09 22:36:28 dbt Exp $
+	$Id: sambaserver_setup.h,v 1.8 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	sambaserver setup menue - Neutrino-GUI
 
@@ -64,7 +64,7 @@ class CSambaSetup : public CMenuTarget
 		int Init();
 
 	public:	
-		CSambaSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);
+		CSambaSetup(const neutrino_locale_t title = LOCALE_SAMBASERVER_SETUP, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CSambaSetup();
 
 		enum SMB_ON_OFF_NUM	

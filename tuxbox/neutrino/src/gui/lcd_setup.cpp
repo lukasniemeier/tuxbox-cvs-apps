@@ -1,5 +1,5 @@
 /*
-	$Id: lcd_setup.cpp,v 1.10 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: lcd_setup.cpp,v 1.11 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	lcd setup implementation - Neutrino-GUI
 
@@ -49,8 +49,8 @@
 
 CLcdSetup::CLcdSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_LCDMENU_HEAD;
-	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_LCD;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (500, 100);
 	selected = -1;

@@ -1,5 +1,5 @@
 /*
-	$Id: zapit_setup.cpp,v 1.13 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: zapit_setup.cpp,v 1.14 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	zapit setup menue - Neutrino-GUI
 
@@ -54,8 +54,8 @@ using namespace std;
 
 CZapitSetup::CZapitSetup(const neutrino_locale_t title, const char * const IconName)
 {
-	menue_title = (title != NONEXISTANT_LOCALE) ? title : LOCALE_ZAPITCONFIG_HEAD;
-	menue_icon = IconName != NEUTRINO_ICON_SETTINGS ? IconName : NEUTRINO_ICON_SETTINGS;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (550, 100);
 	selected = -1;

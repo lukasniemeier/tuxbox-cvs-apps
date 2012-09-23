@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.h,v 1.4 2011/12/09 22:36:28 dbt Exp $
+	$Id: proxyserver_setup.h,v 1.5 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -47,7 +47,7 @@ class CProxySetup : public CMenuTarget
 		int showProxySetup();
 
 	public:	
-		CProxySetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NEUTRINO_ICON_SETTINGS);
+		CProxySetup(const neutrino_locale_t title = LOCALE_FLASHUPDATE_PROXYSERVER_SEP, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CProxySetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 };

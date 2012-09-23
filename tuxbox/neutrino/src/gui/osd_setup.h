@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.h,v 1.7 2012/06/18 16:53:34 rhabarber1848 Exp $
+	$Id: osd_setup.h,v 1.8 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -66,7 +66,7 @@ class COsdSetup : public CMenuTarget, CChangeObserver
 		void AddFontSettingItem(CMenuWidget *fontSettings, const SNeutrinoSettings::FONT_TYPES number_of_fontsize_entry);
 
 	public:
-		COsdSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
+		COsdSetup(const neutrino_locale_t title = LOCALE_OSDSETTINGS_COLORMENU_HEAD, const char * const IconName = NEUTRINO_ICON_COLORS);
 		~COsdSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 		bool changeNotify(const neutrino_locale_t OptionName, void *);

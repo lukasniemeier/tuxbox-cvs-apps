@@ -1,5 +1,5 @@
 /*
-	$Id: driver_boot_setup.h,v 1.7 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: driver_boot_setup.h,v 1.8 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	driver_boot_setup implementation - Neutrino-GUI
 
@@ -46,7 +46,7 @@ class CDriverBootSetup : public CMenuTarget, CChangeObserver
 		int showSetup();
 
 	public:
-		CDriverBootSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
+		CDriverBootSetup(const neutrino_locale_t title = LOCALE_DRIVERSETTINGS_DRIVER_BOOT, const char * const IconName = NEUTRINO_ICON_SETTINGS);
 		~CDriverBootSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 		bool changeNotify(const neutrino_locale_t OptionName, void *);

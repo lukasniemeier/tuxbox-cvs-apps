@@ -1,5 +1,5 @@
 /*
-	$Id: proxyserver_setup.cpp,v 1.9 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: proxyserver_setup.cpp,v 1.10 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	proxyserver_setup menue - Neutrino-GUI
 
@@ -44,8 +44,8 @@
 
 CProxySetup::CProxySetup(const neutrino_locale_t title, const char * const IconName )
 {
-	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_FLASHUPDATE_PROXYSERVER_SEP;
-	menue_icon = IconName != NEUTRINO_ICON_SETTINGS ? IconName : NEUTRINO_ICON_SETTINGS;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (500, 100);
 	selected = -1;

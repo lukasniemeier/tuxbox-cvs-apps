@@ -1,5 +1,5 @@
 /*
-	$Id: osd_setup.cpp,v 1.20 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: osd_setup.cpp,v 1.21 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	osd_setup implementation - Neutrino-GUI
 
@@ -121,8 +121,8 @@ COsdSetup::COsdSetup(const neutrino_locale_t title, const char * const IconName)
 
 	fontsizenotifier = new CFontSizeNotifier;
 
-	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_OSDSETTINGS_COLORMENU_HEAD;
-	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_COLORS;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (500, 100);
 	selected = -1;

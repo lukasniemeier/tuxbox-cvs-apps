@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.h,v 1.9 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: keybind_setup.h,v 1.10 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -74,7 +74,7 @@ class CKeybindSetup : public CMenuTarget, CChangeObserver
 		int showSetup();
 
 	public:	
-		CKeybindSetup(const neutrino_locale_t title = NONEXISTANT_LOCALE, const char * const IconName = NULL);
+		CKeybindSetup(const neutrino_locale_t title = LOCALE_MAINSETTINGS_KEYBINDING, const char * const IconName = NEUTRINO_ICON_KEYBINDING);
 		~CKeybindSetup();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 		bool changeNotify(const neutrino_locale_t OptionName, void *);

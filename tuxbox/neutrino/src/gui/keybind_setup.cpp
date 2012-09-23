@@ -1,5 +1,5 @@
 /*
-	$Id: keybind_setup.cpp,v 1.18 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: keybind_setup.cpp,v 1.19 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	keybindings setup implementation - Neutrino-GUI
 
@@ -52,8 +52,8 @@ CKeybindSetup::CKeybindSetup(const neutrino_locale_t title, const char * const I
 {
 	changeNotify(LOCALE_KEYBINDINGMENU_REPEATBLOCK, NULL);
 
-	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_MAINSETTINGS_KEYBINDING;
-	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_KEYBINDING;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (500, 100);
 	selected = -1;

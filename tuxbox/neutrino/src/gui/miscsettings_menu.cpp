@@ -1,5 +1,5 @@
 /*
-	$Id: miscsettings_menu.cpp,v 1.14 2012/09/12 07:25:12 rhabarber1848 Exp $
+	$Id: miscsettings_menu.cpp,v 1.15 2012/09/23 08:16:48 rhabarber1848 Exp $
 
 	miscsettings_menu implementation - Neutrino-GUI
 
@@ -53,8 +53,8 @@ extern "C" int  tuxtxt_start(int tpid);
 
 CMiscMenue::CMiscMenue(const neutrino_locale_t title, const char * const IconName)
 {
-	menue_title = title != NONEXISTANT_LOCALE ? title : LOCALE_MISCSETTINGS_HEAD;
-	menue_icon = IconName != NULL ? IconName : NEUTRINO_ICON_SETTINGS;
+	menue_title = title;
+	menue_icon = IconName;
 
 	width = w_max (500, 100);
 	selected = -1;
