@@ -44,6 +44,7 @@
 CMountChooser::CMountChooser(const neutrino_locale_t Name, const std::string & Icon, int * chosenIndex, char * chosenLocalDir, const char * const selectedLocalDir, const int mwidth, const int mheight)
 	: CMenuWidget(Name, Icon,mwidth,mheight), index(chosenIndex), localDir(chosenLocalDir)
 {
+	addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	char indexStr[2];
 	for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
 	{

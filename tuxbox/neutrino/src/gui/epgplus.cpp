@@ -1,5 +1,5 @@
 /*
-	$Id: epgplus.cpp,v 1.64 2012/08/14 18:26:54 rhabarber1848 Exp $
+	$Id: epgplus.cpp,v 1.65 2012/09/23 08:21:31 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1089,6 +1089,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 				frameBuffer->SaveScreen(usableScreenX, usableScreenY, usableScreenWidth, usableScreenHeight, savedScreen);
 
 				CMenuWidget menuWidgetActions(LOCALE_EPGPLUS_ACTIONS, NEUTRINO_ICON_FEATURES, 400);
+				menuWidgetActions.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_RECORD     , true, NULL, new MenuTargetAddRecordTimer(this), NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
 				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REFRESH_EPG, true, NULL, new MenuTargetRefreshEpg    (this), NULL, CRCInput::RC_green , NEUTRINO_ICON_BUTTON_GREEN ), false);
 				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REMIND     , true, NULL, new MenuTargetAddReminder   (this), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
@@ -1104,6 +1105,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 				switch_bigfont = bigfont;
 
 				CMenuWidget menuWidgetOptions(LOCALE_EPGPLUS_OPTIONS, NEUTRINO_ICON_FEATURES, 500);
+				menuWidgetOptions.addIntroItems();
 				menuWidgetOptions.addItem(new MenuOptionChooserSwitchSwapMode(this));
 				menuWidgetOptions.addItem(new MenuOptionChooserSwitchViewMode(this));
 				menuWidgetOptions.addItem(new MenuOptionChooserSwitchFontsize());
