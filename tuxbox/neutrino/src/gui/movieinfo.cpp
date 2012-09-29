@@ -3,7 +3,7 @@
 
  	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: movieinfo.cpp,v 1.30 2012/06/30 10:54:19 rhabarber1848 Exp $
+	$Id: movieinfo.cpp,v 1.31 2012/09/29 07:42:32 rhabarber1848 Exp $
 
 	Kommentar:
 
@@ -442,6 +442,7 @@ bool CMovieInfo::parseXmlTree (char* /*text*/, MI_MOVIE_INFO* /*movie_info*/)
 				XML_GET_DATA_STRING	(xam1, MI_XML_TAG_PRODUCT_COUNTRY,	movie_info->productionCountry);
 				//if(!strcmp(xam1->GetType(), MI_XML_TAG_PRODUCT_COUNTRY)) if(xam1->GetData() != NULL)strncpy(movie_info->productionCountry, xam1->GetData(),4);	
 				XML_GET_DATA_INT	(xam1, MI_XML_TAG_PRODUCT_DATE,		movie_info->productionDate);
+				XML_GET_DATA_INT	(xam1, MI_XML_TAG_QUALITIY,			movie_info->quality);  // for backward compatibility
 				XML_GET_DATA_INT	(xam1, MI_XML_TAG_QUALITY,			movie_info->quality);
 				XML_GET_DATA_INT	(xam1, MI_XML_TAG_PARENTAL_LOCKAGE,	movie_info->parentalLockAge);
 				XML_GET_DATA_INT	(xam1, MI_XML_TAG_DATE_OF_LAST_PLAY,movie_info->dateOfLastPlay);
@@ -770,6 +771,7 @@ bool CMovieInfo::parseXmlQuickFix(char* text, MI_MOVIE_INFO* movie_info)
 		GET_XML_DATA_STRING(text,	pos,	MI_XML_TAG_PRODUCT_COUNTRY,	movie_info->productionCountry)		
 		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_PRODUCT_DATE,	movie_info->productionDate)		
 		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_PARENTAL_LOCKAGE,	movie_info->parentalLockAge)		
+		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_QUALITIY,			movie_info->quality)		// for backward compatibility
 		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_QUALITY,			movie_info->quality)		
 		GET_XML_DATA_INT   (text,	pos,	MI_XML_TAG_DATE_OF_LAST_PLAY,movie_info->dateOfLastPlay)		
 
