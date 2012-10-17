@@ -4,7 +4,7 @@
 
 	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: textbox.cpp,v 1.7 2009/11/22 15:36:58 rhabarber1848 Exp $
+	$Id: textbox.cpp,v 1.8 2012/10/17 16:29:02 rhabarber1848 Exp $
 
 	Kommentar: 
   
@@ -395,7 +395,7 @@ void CTextBox::refreshTextLineArray(void)
 			}
 			else
 			{
-				pos = m_cText.find_first_of("\n-. ",pos_prev);
+				pos = m_cText.find_first_of("\n-. /_",pos_prev);
 			}
 	
 			//TRACE_1("     pos: %d pos_prev: %d\r\n",pos,pos_prev);
