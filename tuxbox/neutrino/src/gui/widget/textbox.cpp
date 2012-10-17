@@ -4,7 +4,7 @@
 
 	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: textbox.cpp,v 1.10 2012/10/17 16:31:22 rhabarber1848 Exp $
+	$Id: textbox.cpp,v 1.11 2012/10/17 16:32:26 rhabarber1848 Exp $
 
 	Kommentar: 
   
@@ -430,11 +430,11 @@ void CTextBox::refreshTextLineArray(void)
 				//TRACE_1("     aktLine : %s\r\n",aktLine.c_str());
 				//TRACE_1("     aktWidth: %d aktWordWidth:%d\r\n",aktWidth,aktWordWidth);
 		
-				if( m_cText[pos] == '\n' ||
+				if ((pos < TextChars && m_cText[pos] == '\n') ||
 					loop == false)
 				{
 					// current line ends with an carriage return, make new line
-					if (m_cText[pos] == '\n')
+					if (pos < TextChars && m_cText[pos] == '\n')
 						aktLine.erase(aktLine.size() - 1,1);
 					m_cLineArray.push_back(aktLine);
 					m_nNrOfLines++;
