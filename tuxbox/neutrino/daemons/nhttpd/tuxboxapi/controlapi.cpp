@@ -1308,6 +1308,7 @@ void CControlAPI::ZaptoCGI(CyhookHandler *hh)
 		else if (hh->ParamList["1"] == "rnsectionsd")
 		{
 			NeutrinoAPI->Sectionsd->RegisterNeutrino();
+			NeutrinoAPI->Sectionsd->setServiceChanged(NeutrinoAPI->Zapit->getCurrentServiceID(), false);
 		}
 		else if (hh->ParamList["1"] == "freememsectionsd")
 		{
