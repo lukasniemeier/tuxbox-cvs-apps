@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.161 2012/06/30 10:54:18 rhabarber1848 Exp $
+	$Id: epgview.cpp,v 1.162 2012/10/17 16:36:20 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -490,7 +490,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 				}
 			}
 			// Compare strings normally if not positively found to be equal before
-			if (false == bHide && false == (std::string::npos == epgData.info2.find(epgData.info1))) {
+			if (false == bHide && 0 == epgData.info2.find(epgData.info1)) {
 				bHide = true;
 			}
 		}
