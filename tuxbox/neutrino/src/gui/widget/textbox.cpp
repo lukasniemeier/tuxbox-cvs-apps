@@ -4,7 +4,7 @@
 
 	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: textbox.cpp,v 1.8 2012/10/17 16:29:02 rhabarber1848 Exp $
+	$Id: textbox.cpp,v 1.9 2012/10/17 16:30:12 rhabarber1848 Exp $
 
 	Kommentar: 
   
@@ -71,7 +71,6 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-bool UTF8XMLtoUTF8(std::string* text);
 
 
 //////////////////////////////////////////////////////////////////////
@@ -148,10 +147,7 @@ CTextBox::CTextBox(const char * text)
 
 	m_pcWindow = NULL;
 	if(text != NULL)
-	{
 		m_cText = *text;
-		UTF8XMLtoUTF8(&m_cText); // remove UTF8XML tags
-	}
 
 	/* Initialise the window frames first */
 	initFramesRel();
@@ -669,7 +665,6 @@ bool CTextBox::setText(const std::string* newText)
 	if (newText != NULL)
 	{
 		m_cText = *newText;
-		UTF8XMLtoUTF8(&m_cText); // remove UTF8XML tags
 		refreshTextLineArray();
 		refresh();
 		result = true;
@@ -713,76 +708,3 @@ void CTextBox::hide (void)
 	m_pcWindow = NULL;
 }
 
-/************************************************************************
-
-************************************************************************/
-bool UTF8XMLtoUTF8(std::string* text)
-{
-	bool result = true;
-#if 1 // use whatever is faster
-	int pos=0;
-	int end = text->size()-5;
-	while(pos !=-1)
-	{
-		pos = text->find("&",pos);
-		if(pos != -1)
-		{
-			if(pos < end)
-			{
-				if( (*text)[pos+1] == 'q' &&
-					(*text)[pos+2] == 'u' &&
-					(*text)[pos+3] == 'o' &&
-					(*text)[pos+4] == 't' &&
-					(*text)[pos+5] == ';' )
-				{
-					text->replace(pos,6,"\"");
-					end = text->size()-5;
-				}
-				else if(	(*text)[pos+1] == 'a' &&
-							(*text)[pos+2] == 'p' &&
-							(*text)[pos+3] == 'o' &&
-							(*text)[pos+4] == 's' &&
-							(*text)[pos+5] == ';' )
-				{
-					text->replace(pos,6,"\'");
-					end = text->size()-5;
-				}
-			}
-			pos++;
-		}
-	}
-
-#else
-	int pos=0;
-	int end = text->size()-5;
-	for(pos = 0 ; pos < end; pos++)
-	{
-		if( movie_info.epgInfo2[pos] == '&' &&
-			(*text)[pos+5] == ';' && // this line is added here to speed up the routine, since the ; is at the same pos for both &apos; and &quot; , other are not supported yet
-			(*text)[pos+3] == 'o')   // this line is added here to speed up the routine, since the o is at the same pos for both &apos; and &quot; , other are not supported yet
-		{
-			if( (*text)[pos+1] == 'q' &&
-				(*text)[pos+2] == 'u' &&
-				/*(*text)[pos+3] == 'o' &&*/
-				(*text)[pos+4] == 't' /*&&
-				(*text)[pos+5] == ';' */)
-			{
-				(*text)[pos] = '\"';
-				text->erase(pos+1,5);
-				end = text->size()-5;
-			}
-			else if(	(*text)[pos+1] == 'a' &&
-						(*text)[pos+2] == 'p' &&
-						/*(*text)[pos+3] == 'o' &&*/
-						(*text)[pos+4] == 's' /*&&
-						(*text)[pos+5] == ';' */)
-			{
-				(*text)[pos] = '\'';
-				text->erase(pos+1,5);
-				end = text->size()-5;
-			}
-		}
-	}
-#endif
-	return(result);
-}
