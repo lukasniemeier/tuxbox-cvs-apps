@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.h,v 1.248 2012/06/09 18:02:13 rhabarber1848 Exp $
+	$Id: neutrino.h,v 1.249 2012/10/17 16:33:50 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -92,6 +92,9 @@ typedef struct font_sizes_groups
 
 extern const font_sizes_struct neutrino_font[];
 extern const char * locale_real_names[]; /* #include <system/locals_intern.h> */
+
+extern const unsigned char genre_sub_classes[];            /* epgview.cpp */
+extern const neutrino_locale_t * genre_sub_classes_list[]; /* epgview.cpp */
 
 #define OPTIONS_OFF0_ON1_OPTION_COUNT 2
 extern const CMenuOptionChooser::keyval OPTIONS_OFF0_ON1_OPTIONS[];
