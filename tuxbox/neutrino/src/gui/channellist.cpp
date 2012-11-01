@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.234 2012/08/29 18:05:52 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.235 2012/11/01 19:32:25 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -416,8 +416,8 @@ int CChannelList::show()
 				res = -2;
 				loop = false;
 			}
-//			else
-//			{
+			else
+			{
 //				g_RCInput->getMsg( &msg, &data, 0 );
 //
 //				if ( ( msg != CRCInput::RC_red ) &&
@@ -426,12 +426,11 @@ int CChannelList::show()
 //					// RC_red schlucken
 //					g_RCInput->postMsg( msg, data );
 //				}
-//
-//			}
-			paintHead();
-			paintFoot(); // remove to re-paint buttons
-			paint();
 
+				paintHead();
+				paintFoot(); // remove to re-paint buttons
+				paint();
+			}
 		}
 		else if ( msg == CRCInput::RC_blue )
 		{
