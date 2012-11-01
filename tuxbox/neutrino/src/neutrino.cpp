@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1085 2012/11/01 19:28:42 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1086 2012/11/01 19:36:26 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -2946,6 +2946,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		}
 		else if( msg == NeutrinoMessages::ANNOUNCE_ZAPTO)
 		{
+			CTimerd::RecordingInfo * eventinfo = (CTimerd::RecordingInfo *) data;
 			execute_start_file(NEUTRINO_ZAPTO_TIMER_SCRIPT);
 			if( mode == mode_standby )
 			{
@@ -2954,66 +2955,46 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 			}
 			if( mode != mode_scart )
 			{
-				CTimerd::TimerList tmpTimerList;
-				CTimerdClient tmpTimerdClient;
-
-				tmpTimerList.clear();
-				tmpTimerdClient.getTimerList( tmpTimerList );
 				std::string name = g_Locale->getText(LOCALE_ZAPTOTIMER_ANNOUNCE);
 				name += "\n";
-				std::string zAddData;
+				std::string zAddData = "";
 
-				if (!tmpTimerList.empty())
-				{
-					sort( tmpTimerList.begin(), tmpTimerList.end() );
-					CTimerd::responseGetTimer &timer = tmpTimerList[0];
-
-					CZapitClient Zapit;
-					zAddData = Zapit.getChannelName( timer.channel_id ); // UTF-8
-					if( zAddData.empty() )
-					{
-						zAddData = g_Locale->getText(LOCALE_TIMERLIST_PROGRAM_UNKNOWN);
-					}
-
-					if (timer.epgID!=0)
-					{
-						CEPGData epgdata;
-#warning fixme sectionsd should deliver data in UTF-8 format
-						zAddData += " :\n";
-						if (g_Sectionsd->getEPGid(timer.epgID, timer.epg_starttime, &epgdata))
-						{
-							zAddData += Latin1_to_UTF8(epgdata.title);
-						}
-						else if(strlen(timer.epgTitle)!=0)
-						{
-							zAddData += Latin1_to_UTF8(timer.epgTitle);
-						}
-					}
-					else if(strlen(timer.epgTitle)!=0)
-					{
-						zAddData += Latin1_to_UTF8(timer.epgTitle);
-					}
-				}
-				else
-				{
+				if (g_Zapit->getMode() != CZapitClient::MODE_STANDBY)
+					zAddData = g_Zapit->getChannelName(eventinfo->channel_id); // UTF-8
+				if (zAddData.empty())
 					zAddData = g_Locale->getText(LOCALE_TIMERLIST_PROGRAM_UNKNOWN);
-				}
-				name += zAddData;
-				ShowHintUTF( LOCALE_MESSAGEBOX_INFO, name.c_str() );
-				//			ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_ZAPTOTIMER_ANNOUNCE));
-			}
 
+				if (eventinfo->epgID != 0)
+				{
+					CEPGData epgdata;
+#warning fixme sectionsd should deliver data in UTF-8 format
+					zAddData += " :\n";
+					if (g_Sectionsd->getEPGid(eventinfo->epgID, eventinfo->epg_starttime, &epgdata))
+						zAddData += Latin1_to_UTF8(epgdata.title);
+					else if (strlen(eventinfo->epgTitle) != 0)
+						zAddData += Latin1_to_UTF8(eventinfo->epgTitle);
+				}
+				else if (strlen(eventinfo->epgTitle) != 0)
+				{
+					zAddData += " :\n";
+					zAddData += Latin1_to_UTF8(eventinfo->epgTitle);
+				}
+
+				name += zAddData;
+				ShowHintUTF(LOCALE_MESSAGEBOX_INFO, name.c_str());
+			}
+			delete [] (unsigned char*) data;
 			return messages_return::handled;
 		}
 		else if( msg == NeutrinoMessages::ANNOUNCE_RECORD)
 		{
+			CTimerd::RecordingInfo * eventinfo = (CTimerd::RecordingInfo *) data;
 			if (g_settings.standby_save_power && mode == mode_standby)
 			{
 				standbyAfterRecord = true;
 				standbyMode(false);
 			}
 			execute_start_file(NEUTRINO_RECORDING_TIMER_SCRIPT);
-
 			if( g_settings.recording_server_wakeup )
 			{
 				std::string command = "ether-wake ";
@@ -3023,7 +3004,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 			}
 			if (g_settings.recording_type == RECORDING_FILE)
 			{
-				char * recDir = ((CTimerd::RecordingInfo*)data)->recordingDir;
+				char * recDir = eventinfo->recordingDir;
 				for (int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
 				{
 					if (strcmp(g_settings.network_nfs_local_dir[i],recDir) == 0)
@@ -3041,14 +3022,42 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 			{
 				if(recordingstatus==0)
 				{
-					t_channel_id channel_id=((CTimerd::RecordingInfo*)data)->channel_id;
+					t_channel_id channel_id = eventinfo->channel_id;
 					if(g_Zapit->getCurrentServiceID() != channel_id)
 						g_Zapit->zapTo_serviceID_NOWAIT(channel_id);
 				}
 			}
-			delete [] (unsigned char*) data;
 			if( mode != mode_scart )
-				ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_RECORDTIMER_ANNOUNCE));
+			{
+				std::string name = g_Locale->getText(LOCALE_RECORDTIMER_ANNOUNCE);
+				name += "\n";
+				std::string zAddData = "";
+
+				if (g_Zapit->getMode() != CZapitClient::MODE_STANDBY)
+					zAddData = g_Zapit->getChannelName(eventinfo->channel_id); // UTF-8
+				if (zAddData.empty())
+					zAddData = g_Locale->getText(LOCALE_TIMERLIST_PROGRAM_UNKNOWN);
+
+				if (eventinfo->epgID != 0)
+				{
+					CEPGData epgdata;
+#warning fixme sectionsd should deliver data in UTF-8 format
+					zAddData += " :\n";
+					if (g_Sectionsd->getEPGid(eventinfo->epgID, eventinfo->epg_starttime, &epgdata))
+						zAddData += Latin1_to_UTF8(epgdata.title);
+					else if (strlen(eventinfo->epgTitle) != 0)
+						zAddData += Latin1_to_UTF8(eventinfo->epgTitle);
+				}
+				else if (strlen(eventinfo->epgTitle) != 0)
+				{
+					zAddData += " :\n";
+					zAddData += Latin1_to_UTF8(eventinfo->epgTitle);
+				}
+
+				name += zAddData;
+				ShowHintUTF(LOCALE_MESSAGEBOX_INFO, name.c_str());
+			}
+			delete [] (unsigned char*) data;
 			return messages_return::handled;
 		}
 		else if( msg == NeutrinoMessages::ANNOUNCE_SLEEPTIMER)

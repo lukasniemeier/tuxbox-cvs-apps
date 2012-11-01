@@ -6,7 +6,7 @@
 
 	Copyright (C) 2009 Stefan Seyfried
 
-   $Id: timermanager.cpp,v 1.101 2012/03/07 19:33:59 rhabarber1848 Exp $
+   $Id: timermanager.cpp,v 1.102 2012/11/01 19:36:26 rhabarber1848 Exp $
 
 	License: GPL
 
@@ -1190,8 +1190,10 @@ void CTimerEvent_Record::announceEvent()
 	ri.eventID=eventID;
 	strcpy(ri.recordingDir, recordingDir.substr(0,sizeof(ri.recordingDir)-1).c_str());						
 	strcpy(ri.epgTitle, epgTitle.substr(0,sizeof(ri.epgTitle)-1).c_str());						
-	CTimerManager::getInstance()->getEventServer()->sendEvent(CTimerdClient::EVT_ANNOUNCE_RECORD, CEventServer::INITID_TIMERD,
-								  &ri,sizeof(CTimerd::RecordingInfo));
+	CTimerManager::getInstance()->getEventServer()->sendEvent(CTimerdClient::EVT_ANNOUNCE_RECORD,
+								  CEventServer::INITID_TIMERD,
+								  &ri,
+								  sizeof(CTimerd::RecordingInfo));
 	dprintf("Record announcement\n"); 
 }
 //------------------------------------------------------------
@@ -1276,8 +1278,14 @@ void CTimerEvent_Record::Refresh()
 //=============================================================
 void CTimerEvent_Zapto::announceEvent()
 {
+	Refresh();
+	CTimerd::RecordingInfo ri=eventInfo;
+	ri.eventID=eventID;
+	strcpy(ri.epgTitle, epgTitle.substr(0,sizeof(ri.epgTitle)-1).c_str());						
 	CTimerManager::getInstance()->getEventServer()->sendEvent(CTimerdClient::EVT_ANNOUNCE_ZAPTO,
-								  CEventServer::INITID_TIMERD);
+								  CEventServer::INITID_TIMERD,
+								  &ri,
+								  sizeof(CTimerd::RecordingInfo));
 }
 //------------------------------------------------------------
 void CTimerEvent_Zapto::fireEvent()

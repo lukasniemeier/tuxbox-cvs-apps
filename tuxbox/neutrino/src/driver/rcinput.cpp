@@ -1504,7 +1504,8 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, unsigne
 								break;
 							case CTimerdClient::EVT_ANNOUNCE_ZAPTO :
 									*msg = NeutrinoMessages::ANNOUNCE_ZAPTO;
-									*data = 0;
+									*data = (neutrino_msg_data_t)p;
+									dont_delete_p = true;
 								break;
 							case CTimerdClient::EVT_ANNOUNCE_SHUTDOWN :
 									*msg = NeutrinoMessages::ANNOUNCE_SHUTDOWN;
