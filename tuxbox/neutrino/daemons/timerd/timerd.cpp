@@ -4,7 +4,7 @@
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
 
-	$Id: timerd.cpp,v 1.66 2009/10/12 07:35:37 rhabarber1848 Exp $
+	$Id: timerd.cpp,v 1.67 2012/11/01 19:37:34 rhabarber1848 Exp $
 
 	License: GPL
 
@@ -125,16 +125,15 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 						resp.epg_starttime = ev->eventInfo.epg_starttime;
 						resp.channel_id = ev->eventInfo.channel_id;
 						resp.apids = ev->eventInfo.apids;
+						strcpy(resp.epgTitle, ev->epgTitle.substr(0,sizeof(resp.epgTitle)-1).c_str());
 					}
 					else if(event->eventType == CTimerd::TIMER_REMIND)
 					{
-						memset(resp.message, 0, sizeof(resp.message));
-						strncpy(resp.message, static_cast<CTimerEvent_Remind*>(event)->message, sizeof(resp.message)-1);
+						strcpy(resp.message, static_cast<CTimerEvent_Remind*>(event)->message);
 					}
 					else if (event->eventType == CTimerd::TIMER_EXEC_PLUGIN)
 					{
-						memset(resp.pluginName, 0, sizeof(resp.pluginName));
-						strncpy(resp.pluginName, static_cast<CTimerEvent_ExecPlugin*>(event)->name, sizeof(resp.message)-1);						
+						strcpy(resp.pluginName, static_cast<CTimerEvent_ExecPlugin*>(event)->name);
 					}
 				}
 			}
