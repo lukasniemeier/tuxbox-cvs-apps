@@ -1,7 +1,7 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-	$Id: channellist.cpp,v 1.235 2012/11/01 19:32:25 rhabarber1848 Exp $
+	$Id: channellist.cpp,v 1.236 2012/11/01 19:35:25 rhabarber1848 Exp $
 	
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
@@ -381,19 +381,7 @@ int CChannelList::show()
 		}
 		else if (this->historyMode && CRCInput::isNumeric(msg))
 		{ //numeric zap
-			switch (msg)
-			{
-				case CRCInput::RC_0:selected = 0; break;
-				case CRCInput::RC_1:selected = 1; break;
-				case CRCInput::RC_2:selected = 2; break;
-				case CRCInput::RC_3:selected = 3; break;
-				case CRCInput::RC_4:selected = 4; break;
-				case CRCInput::RC_5:selected = 5; break;
-				case CRCInput::RC_6:selected = 6; break;
-				case CRCInput::RC_7:selected = 7; break;
-				case CRCInput::RC_8:selected = 8; break;
-				case CRCInput::RC_9:selected = 9; break;
-			};
+			selected = CRCInput::getNumericValue(msg);
 			zapOnExit = true;
 			loop = false;
 		}
