@@ -1,5 +1,5 @@
 /*
-	$Id: progresswindow.cpp,v 1.24 2012/08/14 18:19:54 rhabarber1848 Exp $
+	$Id: progresswindow.cpp,v 1.25 2012/11/01 19:34:21 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -161,7 +161,7 @@ void CProgressWindow::paint()
 	ypos+= mheight;
 
 	globalstatusY = ypos+ mheight-20;
-	ypos+= mheight >>1;
+	showGlobalStatus(0);
 	showGlobalStatus(global_progress);
 }
 
