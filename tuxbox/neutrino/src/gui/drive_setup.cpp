@@ -1,5 +1,5 @@
 /*
-	$Id: drive_setup.cpp,v 1.93 2012/06/30 10:54:18 rhabarber1848 Exp $
+	$Id: drive_setup.cpp,v 1.94 2012/11/01 19:44:37 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -49,7 +49,6 @@ TODO:
 #include <gui/widget/hintbox.h>
 #include <gui/widget/icons.h>
 #include <gui/widget/messagebox.h>
-#include <gui/widget/stringinput.h>
 #include <gui/widget/stringinput_ext.h>
 #include <gui/widget/progressbar.h>
 #include <gui/widget/helpbox.h>
@@ -190,7 +189,16 @@ struct data_cyl_t data_partition[MAXCOUNT_DRIVE][MAXCOUNT_PARTS] =
 
 CDriveSetup::CDriveSetup():configfile('\t')
 {
-	frameBuffer = CFrameBuffer::getInstance();
+	frameBuffer 		= CFrameBuffer::getInstance();
+	fstabNotifier 		= NULL;
+	dirchooser_moduldir 	= NULL;
+	insmod_load_options 	= NULL;
+	mmc_notifier		= NULL;
+	for (size_t i=0; i<MAXCOUNT_FSTYPES; i++)
+		v_input_fs_options.push_back(NULL);
+	for (size_t i=0; i<MAXCOUNT_MMC_MODULES; i++)
+		v_input_mmc_parameters.push_back(NULL);
+	
 
 	width 	= w_max (600, 50);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
@@ -269,6 +277,14 @@ CDriveSetup* CDriveSetup::getInstance()
 
 CDriveSetup::~CDriveSetup()
 {
+	delete fstabNotifier;
+	delete dirchooser_moduldir;
+	delete insmod_load_options;
+	delete mmc_notifier;
+	for (size_t i=0; i<v_input_fs_options.size(); i++)
+		delete v_input_fs_options[i];
+	for (size_t i=0; i<v_input_mmc_parameters.size(); i++)
+		delete v_input_mmc_parameters[i];
 }
 
 int CDriveSetup::exec(CMenuTarget* parent, const string &actionKey)
@@ -640,29 +656,29 @@ const mn_data_struct_t mn_data[MAXCOUNT_DRIVE] =
  	{LOCALE_DRIVE_SETUP_MMC		, CRCInput::RC_blue	, NEUTRINO_ICON_BUTTON_BLUE},	//MMCARD
 };
 
+
 // shows the main drive setup menue
 void CDriveSetup::showHddSetupMain()
 {
 	// have no fsdrivers found
 	if (!have_fsdrivers)
 		DisplayErrorMessage(g_Locale->getText(LOCALE_DRIVE_SETUP_MSG_ERROR_NO_FSDRIVER_FOUND));
-
+	
 	// mmc active ?
 	device_isActive[MMCARD] = isMmcActive();
-
+	
 	// main menue
-	CMenuWidget 	*m = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
-	m->setPreselected(selected_main);
-
+	CMenuWidget m(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
+	m.setPreselected(selected_main);
+	
 	// apply
 	CMenuForwarder *m1 = new CMenuForwarder(LOCALE_DRIVE_SETUP_SAVESETTINGS, true, NULL, this, "apply", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
-
+	
 	// help
 	CMenuForwarder *m_help = new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "show_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP);
-
+	
 	// activate/deactivate ide interface
-	if (isIdeInterfaceActive()) 
-	{
+	if (isIdeInterfaceActive()){
 		// get the current state of ide modul and set it to current settings, informations comes from init file and neutrino settings
 		// TODO get status direct from driver
 		string init_file = getInitIdeFilePath();
@@ -672,197 +688,180 @@ void CDriveSetup::showHddSetupMain()
 	else
 		d_settings.drive_activate_ide = IDE_OFF;
 	CMenuOptionChooser *m2	= new CMenuOptionChooser(LOCALE_DRIVE_SETUP_IDE_ACTIVATE, &d_settings.drive_activate_ide, OPTIONS_IDE_ACTIVATE_OPTIONS, OPTIONS_IDE_ACTIVATE_OPTION_COUNT, true);
-
-	bool is_mmc_supported = v_mmc_modules.empty() ? false : true;
-
- 	/************show main menue entries***********/
+	
+	/************add main menue entries***********/
 	// intro entries
-	m->addItem(GenericMenuSeparator);
-	m->addItem(GenericMenuBack);
-	m->addItem(GenericMenuSeparatorLine);
+	m.addItem(GenericMenuSeparator);
+	m.addItem(GenericMenuBack);
+	m.addItem(GenericMenuSeparatorLine);
 	// show apply button/entry
-	m->addItem(m1);
-	m->addItem(GenericMenuSeparatorLine);
+	m.addItem(m1);
+	m.addItem(GenericMenuSeparatorLine);
 	//---------------------------------------------
-	m->addItem(m2); // show ide options on/off
+	m.addItem(m2); // add ide options on/off
 	//---------------------------------------------
 	
-	//mmc options separator
-	if (is_mmc_supported) 
-		m->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC)); //show mmc options separator if supported
-
-	// mmc: prepare mmc settings
-	if (is_mmc_supported)  //paint mmc option item only if any modul is available...
-	{
-		//mmc modul count
-		uint mmc_cnt = v_mmc_modules.size();
+	// mmc: prepare mmc settings  and paint mmc option item only if is any mmc modul available...
+	CMenuWidget  *w_mmc_parameter = NULL;
+	if (!v_mmc_modules.empty()){
+		//mmc options separator
+		m.addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC)); //show mmc options separator if supported
+		
 		//options item enabled/disabled
 		bool mmc_opt_activ = (string)d_settings.drive_mmc_module_name == g_Locale->getText(LOCALE_OPTIONS_OFF) ? false : device_isActive[MMCARD];
 		//current modul name on open menue
 		sprintf(d_settings.drive_mmc_module_name, "%s", getUsedMmcModulName().c_str());
-
-		//select mmc modules
-		CMenuOptionStringChooser *m7 = NULL;
-
-		//sub menue mmc parameters
-		CMenuWidget  *w_mmc_parameter = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
-		CDriveSetupMmcNotifier *mmc_notifier = NULL;
- 		//item to show mmc parameter
-		CMenuForwarder  *fw_mmc_parameter = NULL;
-		//input dialog for edit mmc parameters
-		CStringInputSMS *input_mmc_parameters[MAXCOUNT_MMC_MODULES];
-		//item mmc parameters for submenue
-		CMenuForwarderNonLocalized *fw_mmc_load_parameters[MAXCOUNT_MMC_MODULES];
-		//subhead_mmc_parameters
-		CMenuSeparator *subhead_mmc_parameters = NULL;
 		
-		//prepare mmc parameter input
-		for (uint i=0; i < MAXCOUNT_MMC_MODULES; i++)
-		{
-			input_mmc_parameters[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_mmc_modul_parameter[i], 20, false, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_MMC_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "1234567890abcdefghijklmnopqrstuvwxyz-= ");
-			
-			string m_name = have_mmc_modul[i] ? mmc_modules[i]: mmc_modules[i] + " " + g_Locale->getText(LOCALE_DRIVE_SETUP_MMC_MODUL_NOT_INSTALLED);	
-			
-			fw_mmc_load_parameters[i] = new CMenuForwarderNonLocalized(m_name.c_str(), have_mmc_modul[i], d_settings.drive_mmc_modul_parameter[i], input_mmc_parameters[i]);
-		}
-
-		//prepare forwarder item: mmc parameters 
-		fw_mmc_parameter = new CMenuForwarder(LOCALE_DRIVE_SETUP_MMC_MODUL_PARAMETERS, mmc_opt_activ, NULL, w_mmc_parameter, NULL, CRCInput::RC_0);
-		mmc_notifier = new CDriveSetupMmcNotifier(fw_mmc_parameter);
-
+		//prepare sub menue an item for mmc parameters
+		w_mmc_parameter = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
+		showMMCParameterMenu(w_mmc_parameter);
+		
 		//prepare mmc options...
-		m7 = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_MMC_USED_DRIVER, d_settings.drive_mmc_module_name, true, mmc_notifier);
-		for (uint i=0; i < mmc_cnt; i++) 
-		{
-			m7->addOption(v_mmc_modules[i].c_str());
-		}
-		//... and add mmc option "off"
-		m7->addOption(g_Locale->getText(LOCALE_OPTIONS_OFF));
-
-		//subhead submenue: mmc parameters
-		subhead_mmc_parameters = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC_MODUL_PARAMETERS);
+		CMenuForwarder  *fw_mmc_parameter = new CMenuForwarder(LOCALE_DRIVE_SETUP_MMC_MODUL_PARAMETERS, mmc_opt_activ, NULL, w_mmc_parameter, NULL, CRCInput::RC_0);
 		
-		//mmc: paint select item
-		m->addItem (m7);		//show mmc name
-		m->addItem (fw_mmc_parameter);	//show item mmc options
-		// -----------------------------------------
-			//mmc:paint submenue mmc parameters
-			w_mmc_parameter->addItem(subhead_mmc_parameters);	//subhhaed mmc parameters
-			w_mmc_parameter->addItem(GenericMenuSeparator);		//empty intro separator
-			w_mmc_parameter->addItem(GenericMenuBack);		//back
-			w_mmc_parameter->addItem(GenericMenuSeparatorLine);	//separator
-			// -----------------------------------------
-			for (uint i=0; i < MAXCOUNT_MMC_MODULES; i++)
-				w_mmc_parameter->addItem(fw_mmc_load_parameters[i]); //show selectable mmc modules to edit
-				
+		//select mmc modules
+		if (mmc_notifier == NULL)
+			mmc_notifier = new CDriveSetupMmcNotifier(fw_mmc_parameter);
+		CMenuOptionStringChooser *oj_mmc_chooser = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_MMC_USED_DRIVER, d_settings.drive_mmc_module_name, true, mmc_notifier);
+		for (size_t i=0; i < v_mmc_modules.size(); i++)
+			oj_mmc_chooser->addOption(v_mmc_modules[i].c_str());
+		oj_mmc_chooser->addOption(g_Locale->getText(LOCALE_OPTIONS_OFF));//... and add mmc option "off"
+		
+		//mmc: add select item
+		m.addItem (oj_mmc_chooser);	//show mmc name chooser
+		m.addItem (fw_mmc_parameter);	//show item mmc options
 	}
 	else	//set mmc-name option to "off", if no mmc modul is loaded
 		strcpy(d_settings.drive_mmc_module_name, g_Locale->getText(LOCALE_OPTIONS_OFF));
 		
-
-	m->addItem(GenericMenuSeparatorLine);
-
-	//extended settings
-	CMenuWidget 	*extsettings = new CMenuWidget(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
-	m->addItem (new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS, true, NULL, extsettings, NULL, CRCInput::RC_1));
-
-		CMenuSeparator * subhead_extsettings = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS);
-		CMenuSeparator * sep_fstab = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_FSTAB);
+	m.addItem(GenericMenuSeparatorLine);
 	
-		//extended settings: fstab settings
-		bool active_item = d_settings.drive_use_fstab;
-		CMenuOptionChooser *oj_auto_fs = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE_AUTO_FS, &d_settings.drive_use_fstab_auto_fs, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, active_item);
-		CDriveSetupFstabNotifier *fstabNotifier;
-		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs);
-		CMenuOptionChooser *oj_fstab = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE, &d_settings.drive_use_fstab, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true, fstabNotifier);
-
-		//extended settings: load options
-		CMenuSeparator * sep_load_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
-		sep_load_options->setString(LOAD);
-		CStringInputSMS * input_load_options  = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_command_load_options, 20, false, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- ");
-		CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_command_load_options, input_load_options);
-
-		//extended settings: custom modul dir
-		CMenuSeparator * sep_modules = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL);
-		CDirChooser * dirchooser_moduldir = new CDirChooser(&d_settings.drive_modul_dir);
-		CMenuForwarder * fw_moduldir = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_CUSTOM_MODULDIR, true, d_settings.drive_modul_dir, dirchooser_moduldir);
-
-		//extended settings: reset settings
-		CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
-		
-		//extended settings: filesystem format options
-		vector<CStringInputSMS*> v_input_fs_options;
-		vector<CMenuItem*> v_fs_item;
-		for (int i = 0; i<MAXCOUNT_FSTYPES; i++)
-		{
- 			for (uint ii = 0; ii<v_fs_modules.size(); ii++)
-			{
- 				if (v_fs_modules[ii] != fstype[i].fsname)
-					continue;
-				
-				v_input_fs_options.push_back(new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, d_settings.drive_fs_format_option[i], 32, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- "));
-				v_fs_item.push_back(new CMenuForwarderNonLocalized(fstype[i].fsname.c_str(), true, d_settings.drive_fs_format_option[i], v_input_fs_options.back()));
- 			}
-		}
-		
-		//extended settings: paint items 
-		extsettings->addItem(subhead_extsettings);	//menue subhead
-		extsettings->addItem(GenericMenuSeparator);	//empty intro separator
-		extsettings->addItem(GenericMenuBack);		//back
-		// -----------------------------------------
-		extsettings->addItem (sep_fstab);		//separator fstab
-		extsettings->addItem (oj_fstab);		//option fstab on/off
-		extsettings->addItem (oj_auto_fs);		//option auto fs on/off
-		// -----------------------------------------
-		extsettings->addItem (sep_load_options);	//separator insmod/modprobe
-		extsettings->addItem (fw_input_load_options);	//input options
-		extsettings->addItem (sep_modules);		//separator modul
-		extsettings->addItem (fw_moduldir);		//select prefered modul directory
-		// -----------------------------------------
-		if (!v_fs_item.empty())			//separator format options
-			extsettings->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_FORMAT_OPTIONS));
-		for (uint i = 0; i<v_fs_item.size(); i++)	//format options
-			extsettings->addItem(v_fs_item[i]);
-		//------------------------------------------
-		extsettings->addItem(GenericMenuSeparatorLine);	//separator
-		extsettings->addItem (fw_reset);		//reset
-
+	//extended settings
+	CMenuWidget w_extsettings(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
+	m.addItem (new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS, true, NULL, &w_extsettings, NULL, CRCInput::RC_1));
+	showExtMenu(&w_extsettings);
+	
 	//drives:
 	//show select separator, only visible if any device activ
 	if (hdd_count>0 || foundMmc()) 	
-		m->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_SELECT));
-
-
+		m.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_SELECT));
+	
 	//capacity
 	string s_cap[MAXCOUNT_DRIVE];
-
-	//entries for model, capacity and temperature
-	CMenuForwarder	*m5[MAXCOUNT_DRIVE];
-
-	for (int i = 0; i<MAXCOUNT_DRIVE; i++) 
-	{
-		m5[i] = new CMenuForwarder(mn_data[i].entry_locale, true, v_model_name[i], this, sel_device_num_actionkey[i].c_str(), mn_data[i].rcinput_key, mn_data[i].active_icon);
-
-		if (device_isActive[i])
-		{
-			//show model entry
-			m->addItem (m5[i]);
-
-			//set and converting size string for menu
+	//generate forwarders for model, capacity and temperature
+	for (int i = 0; i<MAXCOUNT_DRIVE; i++)	{
+		if (device_isActive[i]){
+			//model
+			m.addItem(new CMenuForwarder(mn_data[i].entry_locale, true, v_model_name[i], this, sel_device_num_actionkey[i].c_str(), mn_data[i].rcinput_key, mn_data[i].active_icon));
+			//capacity
 			s_cap[i] = convertByteString(device_size[i]);
-			m->addItem( new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_CAPACITY, false, s_cap[i]));
-
-			//show temperature, do nothing if no value available
+			m.addItem( new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_CAPACITY, false, s_cap[i]));
+			//temperature, do nothing if no value available
 			if (v_device_temp[i] !="0")
-				m->addItem( new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_TEMP, false, v_device_temp[i].c_str()));
+				m.addItem( new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_TEMP, false, v_device_temp[i].c_str()));
 		}
 	}
+	
 	//help
-	m->addItem(m_help);
+	m.addItem(m_help);
+	
+	exit_res = m.exec (NULL, "");
+	selected_main = m.getSelected();
+	delete w_mmc_parameter;
+}
 
-	exit_res = m->exec (NULL, "");
-	selected_main = m->getSelected();
-	delete m;
+//init extended settings sub menu
+void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
+{
+	CMenuSeparator * subhead_extsettings = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS);
+	CMenuSeparator * sep_fstab = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_FSTAB);
+
+	//extended settings: fstab settings
+	CMenuOptionChooser *oj_auto_fs = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE_AUTO_FS, &d_settings.drive_use_fstab_auto_fs, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, d_settings.drive_use_fstab);
+	if (fstabNotifier == NULL)
+		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs);
+	CMenuOptionChooser *oj_fstab = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE, &d_settings.drive_use_fstab, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true, fstabNotifier);
+
+	//extended settings: insmod load options
+	CMenuSeparator * sep_load_options = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING);
+	sep_load_options->setString(LOAD);
+	if (insmod_load_options == NULL)
+		insmod_load_options = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_advanced_modul_command_load_options, 20,
+							  false, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- ");
+	CMenuForwarder * fw_input_load_options = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_ENTRY, true, d_settings.drive_advanced_modul_command_load_options, insmod_load_options);
+
+	//extended settings: custom modul dir
+	CMenuSeparator * sep_modules = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL);
+	if (dirchooser_moduldir == NULL)
+		dirchooser_moduldir = new CDirChooser(&d_settings.drive_modul_dir);
+	CMenuForwarder * fw_moduldir = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_CUSTOM_MODULDIR, true, d_settings.drive_modul_dir, dirchooser_moduldir);
+
+	//extended settings: reset settings
+	CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+
+	//extended settings: filesystem format options
+	vector<CMenuForwarderNonLocalized*> v_fs_opts_items;
+	for (size_t i=0; i<MAXCOUNT_FSTYPES; i++){
+		for (size_t j = 0; j<v_fs_modules.size(); j++){
+			if (v_fs_modules[j] != fstype[i].fsname)
+				continue;
+			//create items, but don't create new input instances
+			if (v_input_fs_options[i] == NULL )
+				v_input_fs_options[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, d_settings.drive_fs_format_option[i], 32,
+								LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- ");
+			CMenuForwarderNonLocalized * fw_item= NULL;
+			fw_item = new CMenuForwarderNonLocalized(fstype[i].fsname.c_str(), true, d_settings.drive_fs_format_option[i], v_input_fs_options[i]);
+			v_fs_opts_items.push_back(fw_item);
+		}
+	}
+
+	//extended settings: add items
+	extsettings->addItem(subhead_extsettings);	//menue subhead
+	extsettings->addItem(GenericMenuSeparator);	//empty intro separator
+	extsettings->addItem(GenericMenuBack);		//back
+	// -----------------------------------------
+	extsettings->addItem (sep_fstab);		//separator fstab
+	extsettings->addItem (oj_fstab);		//option fstab on/off
+	extsettings->addItem (oj_auto_fs);		//option auto fs on/off
+	// -----------------------------------------
+	extsettings->addItem (sep_load_options);	//separator insmod/modprobe
+	extsettings->addItem (fw_input_load_options);	//input options
+	extsettings->addItem (sep_modules);		//separator modul
+	extsettings->addItem (fw_moduldir);		//select prefered modul directory
+	// -----------------------------------------
+	if (!v_fs_opts_items.empty())			//separator format options
+		extsettings->addItem(new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_FORMAT_OPTIONS));
+	for (size_t i = 0; i<v_fs_opts_items.size(); i++)	//format options
+		extsettings->addItem(v_fs_opts_items[i]);
+	//------------------------------------------
+	extsettings->addItem(GenericMenuSeparatorLine);	//separator
+	extsettings->addItem (fw_reset);		//reset
+}
+
+void CDriveSetup::showMMCParameterMenu(CMenuWidget* w_mmc)
+{
+	//subhead_mmc_parameters
+	CMenuSeparator *subhead_mmc_parameters = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC_MODUL_PARAMETERS);
+
+	//prepare mmc parameter input
+	std::vector<CMenuForwarderNonLocalized*> v_fw_mmc_load_parameters;
+	for (uint i=0; i < MAXCOUNT_MMC_MODULES; i++){
+		if (v_input_mmc_parameters[i] == NULL)
+			v_input_mmc_parameters[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_mmc_modul_parameter[i], 20, false,
+										LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_MMC_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "1234567890abcdefghijklmnopqrstuvwxyz-= ");
+
+		string m_name = have_mmc_modul[i] ? mmc_modules[i]: mmc_modules[i] + " " + g_Locale->getText(LOCALE_DRIVE_SETUP_MMC_MODUL_NOT_INSTALLED);
+		v_fw_mmc_load_parameters.push_back(new CMenuForwarderNonLocalized(m_name.c_str(), have_mmc_modul[i], d_settings.drive_mmc_modul_parameter[i], v_input_mmc_parameters[i]));
+	}
+
+	//mmc:paint submenue mmc parameters
+	w_mmc->addItem(subhead_mmc_parameters);	//subhhaed mmc parameters
+	w_mmc->addItem(GenericMenuSeparator);		//empty intro separator
+	w_mmc->addItem(GenericMenuBack);		//back
+	w_mmc->addItem(GenericMenuSeparatorLine);	//separator
+	// -----------------------------------------
+	for (size_t i=0; i < v_fw_mmc_load_parameters.size(); i++)
+		w_mmc->addItem(v_fw_mmc_load_parameters[i]); //show selectable mmc modules to edit
 }
 
 
@@ -4604,7 +4603,7 @@ string CDriveSetup::getTimeStamp()
 string CDriveSetup::getDriveSetupVersion()
 {
 	static CImageInfo imageinfo;
-	return imageinfo.getModulVersion("","$Revision: 1.93 $");
+	return imageinfo.getModulVersion("","$Revision: 1.94 $");
 }
 
 // returns text for initfile headers
