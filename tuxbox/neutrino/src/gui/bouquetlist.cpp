@@ -83,7 +83,7 @@ int CBouquetList::getActiveBouquetNumber()
 
 int CBouquetList::showChannelList( int nBouquet)
 {
-	if (nBouquet == -1)
+	if (nBouquet < 0 || nBouquet >= (int)Bouquets.size())
 		nBouquet = selected;
 
 	int nNewChannel = Bouquets[nBouquet]->channelList->show();
@@ -117,7 +117,9 @@ int CBouquetList::activateBouquet( int id, bool bShowChannelList)
 {
 	int res = menu_return::RETURN_REPAINT;
 
-	selected = id;
+	if (id >= 0 && id < (int)Bouquets.size())
+		selected = id;
+
 	if (bShowChannelList)
 	{
 		int nNewChannel = Bouquets[selected]->channelList->show();
