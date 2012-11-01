@@ -1331,7 +1331,7 @@ settings.pos_top_left top left
 settings.pos_top_right top right
 shutdown.recoding_query dBox is currently recording. Really shutdown?
 shutdowntimer.announce Box will shutdown in 1 min.\nCancel Shutdown?
-sleeptimerbox.announce Sleeptimer in 1 min
+sleeptimerbox.announce Sleeptimer in 1 minute. Cancel?
 sleeptimerbox.hint1 Shutdown time in min. (000=off)
 sleeptimerbox.hint2 The dbox2 will shutdown after this time.
 sleeptimerbox.title Sleeptimer

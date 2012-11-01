@@ -1331,7 +1331,7 @@ settings.pos_top_left oben links
 settings.pos_top_right oben rechts
 shutdown.recoding_query Aufnahme läuft. Trotzdem runterfahren?
 shutdowntimer.announce Die Box wird in 1 Min. runtergefahren.\nShutdown abbrechen?
-sleeptimerbox.announce Sleeptimer in 1 Min.
+sleeptimerbox.announce Sleeptimer in 1 Minute. Abbrechen?
 sleeptimerbox.hint1 Ausschaltzeit in Min. (000=aus)
 sleeptimerbox.hint2 Die d-box schaltet sich nach dieser Zeit aus.
 sleeptimerbox.title Sleeptimer

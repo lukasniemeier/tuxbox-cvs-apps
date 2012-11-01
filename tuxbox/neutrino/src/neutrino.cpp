@@ -1,5 +1,5 @@
 /*
-	$Id: neutrino.cpp,v 1.1084 2012/06/30 10:57:42 rhabarber1848 Exp $
+	$Id: neutrino.cpp,v 1.1085 2012/11/01 19:28:42 rhabarber1848 Exp $
 	
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -3054,7 +3054,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		else if( msg == NeutrinoMessages::ANNOUNCE_SLEEPTIMER)
 		{
 			if( mode != mode_scart )
-				ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SLEEPTIMERBOX_ANNOUNCE));
+				if (ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_SLEEPTIMERBOX_ANNOUNCE, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NULL, 450, 30, true) == CMessageBox::mbrYes)
+					g_Timerd->stopTimerEvent(g_Timerd->getSleeptimerID());
 			return messages_return::handled;
 		}
 		else if( msg == NeutrinoMessages::SLEEPTIMER)
@@ -3105,7 +3106,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		else if( msg == NeutrinoMessages::ANNOUNCE_SHUTDOWN)
 		{
 			if( mode != mode_scart )
-				skipShutdownTimer = (ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_SHUTDOWNTIMER_ANNOUNCE, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NULL, 450, 5) == CMessageBox::mbrYes);
+				skipShutdownTimer = (ShowLocalizedMessage(LOCALE_MESSAGEBOX_INFO, LOCALE_SHUTDOWNTIMER_ANNOUNCE, CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo, NULL, 450, 30, true) == CMessageBox::mbrYes);
 		}
 		else if( msg == NeutrinoMessages::SHUTDOWN )
 		{
