@@ -1,5 +1,5 @@
 /*
-	$Id: menue.cpp,v 1.205 2012/09/23 08:19:15 rhabarber1848 Exp $
+	$Id: menue.cpp,v 1.206 2012/11/01 19:30:05 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1239,6 +1239,9 @@ int CMenuSeparator::paint(bool selected)
 				frameBuffer->paintBoxRel(stringstartposX-5, y, stringwidth+10, height, bgcolor0);
 
 			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposX, y+height,dx- (stringstartposX- x) , l_text, color, 0, true); // UTF-8
+
+			if (type & SUB_HEAD)
+				CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, l_text);
 
 			if (selected)
 			{
