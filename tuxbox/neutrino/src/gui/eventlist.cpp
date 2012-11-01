@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.152 2012/09/23 08:20:23 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.153 2012/11/01 19:38:27 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -1037,6 +1037,8 @@ CEventFinderMenu::CEventFinderMenu(	int* 		event,
 					t_bouquet_id*	search_bouquet_id)
 /************************************************************************************************/
 {
+	m_search_channelname_mf = NULL;
+
 	m_event			= event;
 	m_search_epg_item	= search_epg_item;
 	m_search_keyword	= search_keyword;
@@ -1119,26 +1121,51 @@ int CEventFinderMenu::showMenu(void)
 	
 	CStringInputSMS stringInput(LOCALE_EVENTFINDER_KEYWORD, m_search_keyword, 20, false, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
 	
-	CMenuForwarder* mf0 		= new CMenuForwarder(LOCALE_EVENTFINDER_KEYWORD ,true, *m_search_keyword, &stringInput, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1 );
-	CMenuOptionChooser* mo0 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST , m_search_list, SEARCH_LIST_OPTIONS, SEARCH_LIST_OPTION_COUNT, true, NULL, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
-	CMenuForwarderNonLocalized* mf1	= new CMenuForwarderNonLocalized("", *m_search_list != EventList::SEARCH_LIST_ALL, m_search_channelname, this, "3", CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3 );
+	CMenuForwarder* mf0 		= new CMenuForwarder(LOCALE_EVENTFINDER_KEYWORD, true, *m_search_keyword, &stringInput, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
+	CMenuOptionChooser* mo0 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST, m_search_list, SEARCH_LIST_OPTIONS, SEARCH_LIST_OPTION_COUNT, true, this, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
+	m_search_channelname_mf		= new CMenuForwarderNonLocalized("", *m_search_list != EventList::SEARCH_LIST_ALL, m_search_channelname, this, "3", CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3);
 	CMenuOptionChooser* mo1 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_EPG, m_search_epg_item, SEARCH_EPG_OPTIONS, SEARCH_EPG_OPTION_COUNT, true, NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4);
-	CMenuForwarder* mf2	= new CMenuForwarder(LOCALE_EVENTFINDER_START_SEARCH, true, NULL, this, "5", CRCInput::RC_5, NEUTRINO_ICON_BUTTON_5 );
+	CMenuForwarder* mf1	= new CMenuForwarder(LOCALE_EVENTFINDER_START_SEARCH, true, NULL, this, "5", CRCInput::RC_5, NEUTRINO_ICON_BUTTON_5);
 	
 	CMenuWidget searchMenu(LOCALE_EVENTFINDER_HEAD, NEUTRINO_ICON_FEATURES, 450);
 
 	searchMenu.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	//***************************************
-	searchMenu.addItem(mf0, false);
+	searchMenu.addItem(mf0);
 	searchMenu.addItem(GenericMenuSeparatorLine);
 	//***************************************
-	searchMenu.addItem(mo0, false);
-	searchMenu.addItem(mf1, false);
-	searchMenu.addItem(mo1, false);
+	searchMenu.addItem(mo0);
+	searchMenu.addItem(m_search_channelname_mf);
+	searchMenu.addItem(mo1);
 	//***************************************
 	searchMenu.addItem(GenericMenuSeparatorLine);
-	searchMenu.addItem(mf2, false);
+	searchMenu.addItem(mf1);
 	
 	res = searchMenu.exec(NULL,"");
 	return(res);
+}
+
+/************************************************************************************************/
+bool CEventFinderMenu::changeNotify(const neutrino_locale_t OptionName, void *)
+/************************************************************************************************/
+{
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST))
+	{
+		if (*m_search_list == EventList::SEARCH_LIST_CHANNEL)
+		{
+			m_search_channelname = g_Zapit->getChannelName(*m_search_channel_id);
+			m_search_channelname_mf->setActive(true);
+		}
+		else if (*m_search_list == EventList::SEARCH_LIST_BOUQUET)
+		{
+			m_search_channelname = bouquetList->Bouquets[*m_search_bouquet_id]->channelList->getName();
+			m_search_channelname_mf->setActive(true);
+		}
+		else if (*m_search_list == EventList::SEARCH_LIST_ALL)
+		{
+			m_search_channelname = "";
+			m_search_channelname_mf->setActive(false);
+		}
+	}
+	return false;
 }
