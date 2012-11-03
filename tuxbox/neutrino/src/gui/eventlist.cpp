@@ -1,5 +1,5 @@
 /*
-	$Id: eventlist.cpp,v 1.153 2012/11/01 19:38:27 rhabarber1848 Exp $
+	$Id: eventlist.cpp,v 1.154 2012/11/03 07:03:59 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -262,7 +262,7 @@ void EventList::readEvents(const t_channel_id channel_id)
 }
 
 
-int EventList::exec(const t_channel_id channel_id, const std::string& channelname) // UTF-8
+int EventList::exec(const t_channel_id channel_id, const std::string& channelname, const CChannelEventList &followlist) // UTF-8
 {
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
@@ -284,7 +284,17 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 	name = channelname;
 	sort_mode=0;
 	paintHead();
-	readEvents(channel_id);
+	if (!followlist.empty())
+	{
+		std::insert_iterator<CChannelEventList> ii(evtlist, evtlist.begin());
+		copy(followlist.begin(), followlist.end(), ii);
+		showfollow = true;
+	}
+	else
+	{
+		readEvents(channel_id);
+		showfollow = false;
+	}
 	UpdateTimerList();
 	paint();
 	showFunctionBar(true);
@@ -359,6 +369,9 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		}
 		else if (msg == g_settings.key_channelList_sort)
 		{
+			if (showfollow)
+				continue;
+
 			unsigned long long selected_id = evtlist[selected].eventID;
 			if(sort_mode==0)
 			{
@@ -521,6 +534,9 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 		else if (msg == g_settings.key_channelList_reload)
 		{
+			if (showfollow)
+				continue;
+
 			hide();
 			paintHead();
 			readEvents(channel_id);
@@ -541,6 +557,9 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 #ifdef ENABLE_EPGPLUS
 		else if (msg == CRCInput::RC_epg)
 		{
+			if (showfollow)
+				continue;
+
 			hide();
 			CEPGplusHandler eplus;
 			eplus.exec(NULL, "");
@@ -549,7 +568,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 #endif
 		else if (msg==CRCInput::RC_help || msg==CRCInput::RC_right || msg==CRCInput::RC_ok)
 		{
-			if ( evtlist[selected].eventID != 0 )
+			if (!showfollow && evtlist[selected].eventID != 0)
 			{
 				hide();
 
@@ -579,6 +598,9 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		}
 		else if (msg == g_settings.key_channelList_search)
 		{
+			if (showfollow)
+				continue;
+
 			findEvents();
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
 		}
@@ -726,7 +748,7 @@ void EventList::paint()
 
 	liststart = (selected/listmaxshow)*listmaxshow;
 
-	if (evtlist[0].eventID != 0)
+	if (!showfollow && evtlist[0].eventID != 0)
 	{
 		int iconw = 0, iconh = 0;
 		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
@@ -813,9 +835,8 @@ void  EventList::showFunctionBar (bool show)
 	}
 
 	// Button: Event Search
-	if (g_settings.key_channelList_search != CRCInput::RC_nokey)
+	if (!showfollow && g_settings.key_channelList_search != CRCInput::RC_nokey)
 	{
-
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_search);
 		EventListButtons[1].button = icon;
 		
@@ -855,7 +876,7 @@ void  EventList::showFunctionBar (bool show)
 	}
 
 	// Button: Event Re-Sort
-	if (g_settings.key_channelList_sort != CRCInput::RC_nokey)
+	if (!showfollow && g_settings.key_channelList_sort != CRCInput::RC_nokey)
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_sort);
 		EventListButtons[3].button = icon;
@@ -871,7 +892,7 @@ void  EventList::showFunctionBar (bool show)
 	}
 
 	// Button: Event Reload/Refresh
-	if (g_settings.key_channelList_reload != CRCInput::RC_nokey)
+	if (!showfollow && g_settings.key_channelList_reload != CRCInput::RC_nokey)
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_reload);
 		EventListButtons[4].button = icon;

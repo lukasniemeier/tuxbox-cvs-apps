@@ -109,6 +109,8 @@ class EventList
 		int 		y;
 		int      sort_mode;
 
+		bool showfollow;
+
 		void paintItem(unsigned pos);
 		void paint();
 		void paintHead();
@@ -138,7 +140,7 @@ class EventList
 	public:
 		EventList();
 		~EventList();
-		int exec(const t_channel_id channel_id, const std::string& channelname); // UTF-8
+		int exec(const t_channel_id channel_id, const std::string& channelname, const CChannelEventList &followlist = CChannelEventList()); // UTF-8
 };
 
 

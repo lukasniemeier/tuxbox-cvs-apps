@@ -2,7 +2,7 @@
 #define __locals__
 
 /*
- * $Id: locals.h,v 1.204 2012/09/12 07:29:10 rhabarber1848 Exp $
+ * $Id: locals.h,v 1.205 2012/11/03 07:04:00 rhabarber1848 Exp $
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -431,6 +431,7 @@ typedef enum
 	LOCALE_EPGLIST_HEAD,
 	LOCALE_EPGLIST_NOEVENTS,
 	LOCALE_EPGVIEWER_MORE_SCREENINGS,
+	LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT,
 	LOCALE_EPGVIEWER_AGE_RATING,
 	LOCALE_EPGVIEWER_AUDIO,
 	LOCALE_EPGVIEWER_GENRE,

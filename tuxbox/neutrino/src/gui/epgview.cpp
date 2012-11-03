@@ -1,5 +1,5 @@
 /*
-	$Id: epgview.cpp,v 1.162 2012/10/17 16:36:20 rhabarber1848 Exp $
+	$Id: epgview.cpp,v 1.163 2012/11/03 07:03:59 rhabarber1848 Exp $
 
 	Neutrino-GUI  -   DBoxII-Project
 
@@ -385,14 +385,13 @@ const neutrino_locale_t * genre_sub_classes_list[10] =
 
 bool CEpgData::hasFollowScreenings(const t_channel_id /*channel_id*/, const std::string & title)
 {
-	time_t curtime = time(NULL);
-
+	followlist.clear();
 	for (CChannelEventList::iterator e = evtlist.begin(); e != evtlist.end(); ++e )
 	{
-		if (e->startTime > curtime && e->eventID && e->description == title)
-			return true;
+		if (e->startTime != epgData.epg_times.startzeit && e->eventID && e->description == title)
+			followlist.push_back(*e);
 	}
-	return false;
+	return !followlist.empty();
 }
 
 const char * GetGenre(const unsigned char contentClassification) // UTF-8
@@ -756,6 +755,21 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 					break;
 				}
 
+				// more screenings
+				case CRCInput::RC_blue:
+					if (!followlist.empty())
+					{
+						hide();
+						EventList* eventList = new EventList();
+						res = eventList->exec(channel_id, g_Locale->getText(LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT), followlist); // UTF-8
+						delete eventList;
+						if (res == menu_return::RETURN_EXIT_ALL)
+							loop = false;
+						else
+							show(channel_id, id, &startzeit, false);
+					}
+					break;
+
 				case CRCInput::RC_help:
 					bigFonts = bigFonts ? false : true;
 					if(bigFonts)
@@ -835,7 +849,9 @@ void CEpgData::GetEPGData(const t_channel_id channel_id, unsigned long long id, 
 		struct tm *pStartZeit = localtime(&(epgData.epg_times).startzeit);
 		char temp[11];
 		strftime( temp, sizeof(temp), "%d.%m.%Y", pStartZeit);
-		epg_date= temp;
+		epg_date = g_Locale->getText(CLocaleManager::getWeekday(pStartZeit));
+		epg_date += ". ";
+		epg_date += temp;
 		strftime( temp, sizeof(temp), "%H:%M", pStartZeit);
 		epg_start= temp;
 
@@ -889,45 +905,38 @@ void CEpgData::GetPrevNextEPGData( unsigned long long id, time_t* startzeit )
 // -- 2002-05-03 rasc
 //
 
-int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::string & title)
+int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::string & /*title*/)
 {
   CChannelEventList::iterator e;
-  time_t			curtime;
   struct  tm		*tmStartZeit;
   std::string		screening_dates,screening_nodual;
   int				count;
   char			tmpstr[256];
 
-
   	count = 0;
 	screening_dates = screening_nodual = "";
-	// alredy read: evtlist = g_Sectionsd->getEventsServiceKey( channel_id );
-    	curtime = time(NULL);
 
-	for ( e= evtlist.begin(); e != evtlist.end(); ++e )
+	for (e = followlist.begin(); e != followlist.end(); ++e)
 	{
-	    	if (e->startTime <= curtime) continue;
-		if (! e->eventID) continue;
-		if (e->description == title) {
-			count++;
-			tmStartZeit = localtime(&(e->startTime));
+		count++;
+		tmStartZeit = localtime(&(e->startTime));
 
-			screening_dates = "    ";
+		screening_dates = "    ";
 
-			screening_dates += g_Locale->getText(CLocaleManager::getWeekday(tmStartZeit));
-			screening_dates += '.';
+		screening_dates += g_Locale->getText(CLocaleManager::getWeekday(tmStartZeit));
+		screening_dates += '.';
 
-			strftime(tmpstr, sizeof(tmpstr), "  %d.", tmStartZeit );
-			screening_dates += tmpstr;
+		strftime(tmpstr, sizeof(tmpstr), "  %d.", tmStartZeit );
+		screening_dates += tmpstr;
 
-			screening_dates += g_Locale->getText(CLocaleManager::getMonth(tmStartZeit));
+		screening_dates += g_Locale->getText(CLocaleManager::getMonth(tmStartZeit));
 
-			strftime(tmpstr, sizeof(tmpstr), ".  %H:%M ", tmStartZeit );
-			screening_dates += tmpstr;
+		strftime(tmpstr, sizeof(tmpstr), ".  %H:%M ", tmStartZeit );
+		screening_dates += tmpstr;
+
 		if (screening_dates != screening_nodual){
 			screening_nodual=screening_dates;
 			processTextToArray(screening_dates ); // UTF-8
-			}
 		}
 	}
 	if (count == 0)
@@ -940,11 +949,11 @@ int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::st
 // -- Just display or hide TimerEventbar
 // -- 2002-05-13 rasc
 //
-const struct button_label epgviewButtons[2] =
+const struct button_label epgviewButtons[3] =
 {
-	{ NEUTRINO_ICON_BUTTON_RED    , LOCALE_TIMERBAR_RECORDEVENT   },
-	{ NEUTRINO_ICON_BUTTON_YELLOW , LOCALE_TIMERBAR_CHANNELSWITCH }
-
+	{ NEUTRINO_ICON_BUTTON_RED    , LOCALE_TIMERBAR_RECORDEVENT            },
+	{ NEUTRINO_ICON_BUTTON_YELLOW , LOCALE_TIMERBAR_CHANNELSWITCH          },
+	{ NEUTRINO_ICON_BUTTON_BLUE   , LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT }
 };
 
 void CEpgData::showTimerEventBar(bool _show)
@@ -967,7 +976,11 @@ void CEpgData::showTimerEventBar(bool _show)
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8, by, ButtonWidth, 1, &epgviewButtons[0]);
 
 	// Button: Timer Channelswitch
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
+
+	// Button: more screenings
+	if (!followlist.empty())
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2]);
 }
 
 

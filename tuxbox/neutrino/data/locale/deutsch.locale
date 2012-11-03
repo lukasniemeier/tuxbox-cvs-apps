@@ -404,6 +404,7 @@ epglist.error_no_recorddir_msg Aufnahme kann nicht vorgemerkt werden! \nKein Auf
 epglist.head Vorschau - %s
 epglist.noevents Keine EPG-Information verfügbar.
 epgviewer.More_Screenings Weitere Termine auf diesem Kanal
+epgviewer.More_Screenings_short Weitere Termine
 epgviewer.age_rating Altersfreigabe
 epgviewer.audio Audio
 epgviewer.genre Genre
