@@ -1088,11 +1088,15 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 				fb_pixel_t savedScreen[usableScreenWidth * usableScreenHeight * sizeof(fb_pixel_t)];
 				frameBuffer->SaveScreen(usableScreenX, usableScreenY, usableScreenWidth, usableScreenHeight, savedScreen);
 
+				MenuTargetAddRecordTimer menuTargetAddRecordTimer(this);
+				MenuTargetRefreshEpg menuTargetRefreshEpg(this);
+				MenuTargetAddReminder menuTargetAddReminder(this);
+
 				CMenuWidget menuWidgetActions(LOCALE_EPGPLUS_ACTIONS, NEUTRINO_ICON_FEATURES, 400);
 				menuWidgetActions.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
-				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_RECORD     , true, NULL, new MenuTargetAddRecordTimer(this), NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
-				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REFRESH_EPG, true, NULL, new MenuTargetRefreshEpg    (this), NULL, CRCInput::RC_green , NEUTRINO_ICON_BUTTON_GREEN ), false);
-				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REMIND     , true, NULL, new MenuTargetAddReminder   (this), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
+				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_RECORD     , true, NULL, &menuTargetAddRecordTimer, NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
+				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REFRESH_EPG, true, NULL, &menuTargetRefreshEpg    , NULL, CRCInput::RC_green , NEUTRINO_ICON_BUTTON_GREEN ), false);
+				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REMIND     , true, NULL, &menuTargetAddReminder   , NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
 
 				menuWidgetActions.exec(NULL, "");
 
