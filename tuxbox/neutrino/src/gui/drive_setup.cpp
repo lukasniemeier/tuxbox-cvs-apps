@@ -721,7 +721,8 @@ void CDriveSetup::showHddSetupMain()
 		
 		//select mmc modules
 		if (mmc_notifier == NULL)
-			mmc_notifier = new CDriveSetupMmcNotifier(fw_mmc_parameter);
+			mmc_notifier = new COnOffNotifier(0x61757300 /*off*/); //modify mmc load options (off: 0x61757300, mmc: 0x6D6D6300, mmc2: 0x6D6D6332, mmccombo: 0x6D6D6363)
+		mmc_notifier->addItem(fw_mmc_parameter);
 		CMenuOptionStringChooser *oj_mmc_chooser = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_MMC_USED_DRIVER, d_settings.drive_mmc_module_name, true, mmc_notifier);
 		for (size_t i=0; i < v_mmc_modules.size(); i++)
 			oj_mmc_chooser->addOption(v_mmc_modules[i].c_str());
@@ -767,6 +768,10 @@ void CDriveSetup::showHddSetupMain()
 	
 	exit_res = m.exec (NULL, "");
 	selected_main = m.getSelected();
+	if (fstabNotifier != NULL)
+		fstabNotifier->removeItems();
+	if (mmc_notifier != NULL)
+		mmc_notifier->removeItems();
 	delete w_mmc_parameter;
 }
 
@@ -779,7 +784,8 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 	//extended settings: fstab settings
 	CMenuOptionChooser *oj_auto_fs = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE_AUTO_FS, &d_settings.drive_use_fstab_auto_fs, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, d_settings.drive_use_fstab);
 	if (fstabNotifier == NULL)
-		fstabNotifier = new CDriveSetupFstabNotifier(oj_auto_fs);
+		fstabNotifier = new COnOffNotifier(); //enable disable entry for fstab options
+	fstabNotifier->addItem(oj_auto_fs);
 	CMenuOptionChooser *oj_fstab = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE, &d_settings.drive_use_fstab, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true, fstabNotifier);
 
 	//extended settings: insmod load options
@@ -1151,7 +1157,7 @@ void CDriveSetup::showHddSetupSub()
 	CMenuOptionStringChooser * fs_chooser[MAXCOUNT_PARTS];
 	
 	//fs notifier
-	CDriveSetupFsNotifier * fsNotifier[MAXCOUNT_PARTS];
+	COnOffNotifier * fsNotifier[MAXCOUNT_PARTS];
 
 	//size input
 	CStringInput * input_part_size[MAXCOUNT_PARTS];
@@ -1164,7 +1170,7 @@ void CDriveSetup::showHddSetupSub()
 	CMenuForwarder * srv_path_fw[MAXCOUNT_PARTS];
 	#ifdef ENABLE_NFSSERVER
 		//choose nfs mode
-		CDriveSetupNFSHostNotifier * nfsHostNotifier[MAXCOUNT_PARTS];
+		COnOffNotifier * nfsHostNotifier[MAXCOUNT_PARTS];
 		CMenuOptionChooser * nfs_chooser[MAXCOUNT_PARTS];
 	
 		//menue partitions: host ip input for nfs exports
@@ -1174,7 +1180,7 @@ void CDriveSetup::showHddSetupSub()
 	#ifdef ENABLE_SAMBASERVER
 		//global samba settings
 		CMenuForwarder * srv_smb_globals[MAXCOUNT_PARTS];
-		CDriveSetupSambaNotifier * sambaNotifier[MAXCOUNT_PARTS];
+		COnOffNotifier * sambaNotifier[MAXCOUNT_PARTS];
 		CMenuOptionChooser * smb_chooser[MAXCOUNT_PARTS];
 		
 		CMenuForwarder * smb_share_name_fw[MAXCOUNT_PARTS];
@@ -1283,7 +1289,8 @@ void CDriveSetup::showHddSetupSub()
 			nfs_host_ip_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP, d_settings.drive_partition_nfs[current_device][i], d_settings.drive_partition_nfs_host_ip[current_device][i], nfs_host_ip[i], NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1 );
 	
 			//prepare option nfs chooser
-			nfsHostNotifier[i] = new CDriveSetupNFSHostNotifier (nfs_host_ip_fw[i]);
+			nfsHostNotifier[i] = new COnOffNotifier(); //enable disable entry for input nfs host ip
+			nfsHostNotifier[i]->addItem(nfs_host_ip_fw[i]);
 			nfs_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_NFS, &d_settings.drive_partition_nfs[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, share_chooser_activ, nfsHostNotifier[i], CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED  );		
 		#endif /*ENABLE_NFSSERVER*/
 		
@@ -1307,7 +1314,11 @@ void CDriveSetup::showHddSetupSub()
 
 			//prepare on off use
 			//only active if samba binaries are available or if no samba installed, show info message
-			sambaNotifier[i] = new CDriveSetupSambaNotifier (srv_smb_globals[i], smb_share_name_fw[i], smb_ro_chooser[i], smb_public_chooser[i]);
+			sambaNotifier[i] = new COnOffNotifier(); //enable disable entries for samba shares
+			sambaNotifier[i]->addItem(srv_smb_globals[i]);
+			sambaNotifier[i]->addItem(smb_share_name_fw[i]);
+			sambaNotifier[i]->addItem(smb_ro_chooser[i]);
+			sambaNotifier[i]->addItem(smb_public_chooser[i]);
 			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, have_samba, sambaNotifier[i], CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN );	
 		#endif /*ENABLE_SAMBASERVER*/
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
@@ -1318,10 +1329,11 @@ void CDriveSetup::showHddSetupSub()
 		input_size[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SIZE, item_activ[i], d_settings.drive_partition_size[current_device][i], input_part_size[i] );
 
 		//select filesystem
+		fsNotifier[i] = new COnOffNotifier(0x73776170 /*swap*/); //enable disable entry for selecting mountpoint
+		fsNotifier[i]->addItem(mp_chooser[i]);
+		fsNotifier[i]->addItem(input_size[i]);
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
-		fsNotifier[i] = new CDriveSetupFsNotifier(mp_chooser[i], input_size[i], part_srv_fw[i]);
-#else
-		fsNotifier[i] = new CDriveSetupFsNotifier(mp_chooser[i], input_size[i]);
+		fsNotifier[i]->addItem(part_srv_fw[i]);
 #endif		
 		bool fs_chooser_activ = (string)d_settings.drive_partition_fstype[current_device][i] == "swap" ? false : (is_mounted[i] ? false : true);
 	 	fs_chooser[i] = new CMenuOptionStringChooser(LOCALE_DRIVE_SETUP_PARTITION_FS, d_settings.drive_partition_fstype[current_device][i],fs_chooser_activ, fsNotifier[i]);
@@ -5403,123 +5415,6 @@ bool  CDriveSetup::haveChangedSettings()
 
 	cout<<"[drive setup] no settings changed!"<<endl;
  	return false;
-}
-
-
-//enable disable entry for selecting mountpoint
-CDriveSetupFsNotifier::CDriveSetupFsNotifier	(	
-					#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
-						CMenuForwarder* f1, 
-						CMenuForwarder* f2,
-						CMenuForwarder* f3
-					#else
-						CMenuForwarder* f1, 
-						CMenuForwarder* f2 
-					#endif
-						)
-{
-#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
-	toDisable[0] = f1;
-	toDisable[1] = f2;
-	toDisable[2] = f3;
-#else
-	toDisable[0] = f1;
-	toDisable[1] = f2;
-#endif
-}
-
-bool CDriveSetupFsNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-
-	for (uint i = 0; i < (sizeof(toDisable) / sizeof(toDisable[0])); i++) 
-	{
-		toDisable[i]->setActive(*((int *)Data) == 0x73776170 /*swap*/ ? false : true);
-	}
-
-	return false;
-}
-
-#ifdef ENABLE_NFSSERVER
-// class CDriveSetupNFSHostNotifier
-//enable disable entry for input nfs host ip 
-CDriveSetupNFSHostNotifier::CDriveSetupNFSHostNotifier( CMenuForwarder* f)
-{
-	toDisable = f;
-}
-bool CDriveSetupNFSHostNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	if (*((int *)Data) == 0)
-		toDisable->setActive(false);
-	else
-		toDisable->setActive(true);
-
-	return false;
-}
-#endif
-
-#ifdef ENABLE_SAMBASERVER
-// class CDriveSetupSambatNotifier
-//enable disable entries for samba shares 
-CDriveSetupSambaNotifier::CDriveSetupSambaNotifier(CMenuForwarder* fw1, CMenuForwarder* fw2, CMenuOptionChooser* oj1, CMenuOptionChooser* oj2)
-{
-	toDisablefw[0] = fw1;
-	toDisablefw[1] = fw2;
-	toDisableoj[0] = oj1;
-	toDisableoj[1] = oj2;
-}
-bool CDriveSetupSambaNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	bool active_mode = (*((int *)Data) == 0 ? false : true);
-
-	for (uint i = 0; i < (sizeof(toDisablefw) / sizeof(toDisablefw[0])); i++) 
-	{
-		toDisablefw[i]->setActive(active_mode);
-	}
-	
-	for (uint i = 0; i < (sizeof(toDisableoj) / sizeof(toDisableoj[0])); i++) 
-	{
-		toDisableoj[i]->setActive(active_mode);
-	}
-
-	return false;
-}
-#endif
-
-// class CDriveSetupFstabNotifier
-//enable disable entry for fstab options 
-CDriveSetupFstabNotifier::CDriveSetupFstabNotifier( CMenuOptionChooser* oj1)
-{
-	toDisable = oj1;
-}
-bool CDriveSetupFstabNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	if (*((int *)Data) == 0)
-		toDisable->setActive(false);
-	else
-		toDisable->setActive(true);
-
-	return false;
-}
-
-// class CDriveSetupMmcNotifier
-//modify mmc load options 
-CDriveSetupMmcNotifier::CDriveSetupMmcNotifier( CMenuForwarder* f1)
-{
-	toModifi = f1;
-}
-bool CDriveSetupMmcNotifier::changeNotify(const neutrino_locale_t, void * Data)
-{
-	int opt[4] = {	0x61757300 /*off*/,
-			0x6D6D6300 /*mmc*/, 
-			0x6D6D6332 /*mmc2*/, 
-			0x6D6D6363 /*mmccombo*/};
-
-	if (*((int *)Data) == opt[0] /*off*/)
-		toModifi->setActive(false);
-	else
-		toModifi->setActive(true);
-	
-	return false;
 }
 
 

@@ -59,6 +59,7 @@
 
 #include <driver/framebuffer.h>
 #include <system/settings.h>
+#include <system/setting_helpers.h>
 
 #include <string>
 #include <vector>
@@ -71,76 +72,6 @@
 #define MAXCOUNT_MMC_MODULES 3
 // possible supported fstypes for mkfs.X and fsck.x
 #define MAXCOUNT_FSTYPES 7
-
-
-//helper class for fstab handler
-class CDriveSetupFsNotifier : public CChangeObserver
-{
-	private:
-	#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
-		CMenuForwarder* toDisable[3];
-	#else
-		CMenuForwarder* toDisable[2];
-	#endif
-
-	public:
-		CDriveSetupFsNotifier(
-					#if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
-						CMenuForwarder*,
-						CMenuForwarder*,
-						CMenuForwarder*);
-					#else
-
-						CMenuForwarder*,
-						CMenuForwarder*);
-					#endif
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-
-#ifdef ENABLE_NFSSERVER
-class CDriveSetupNFSHostNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder* toDisable;
-
-	public:
-		CDriveSetupNFSHostNotifier( CMenuForwarder*);
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-#endif /*ENABLE_NFSSERVER*/
-
-#ifdef ENABLE_SAMBASERVER
-class CDriveSetupSambaNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder* toDisablefw[2];
-		CMenuOptionChooser* toDisableoj[2];
-
-	public:
-		CDriveSetupSambaNotifier(CMenuForwarder*, CMenuForwarder*, CMenuOptionChooser*, CMenuOptionChooser*);
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-#endif /*ENABLE_SAMBASERVER*/
-
-class CDriveSetupFstabNotifier : public CChangeObserver
-{
-	private:
-		CMenuOptionChooser* toDisable;
-
-	public:
-		CDriveSetupFstabNotifier( CMenuOptionChooser* );
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
-
-class CDriveSetupMmcNotifier : public CChangeObserver
-{
-	private:
-		CMenuForwarder* toModifi;
-
-	public:
-		CDriveSetupMmcNotifier( CMenuForwarder* f1);
-		bool changeNotify(const neutrino_locale_t, void * Data);
-};
 
 
 // drive settings
@@ -304,10 +235,10 @@ class CDriveSetup : public CMenuTarget
 		CFrameBuffer 			*frameBuffer;
 		CConfigFile			configfile;
 		SDriveSettings			d_settings;
-		CDriveSetupFstabNotifier	*fstabNotifier;
+		COnOffNotifier			*fstabNotifier;
 		CDirChooser			*dirchooser_moduldir;
 		CStringInputSMS 		*insmod_load_options;
-		CDriveSetupMmcNotifier		*mmc_notifier;
+		COnOffNotifier			*mmc_notifier;
 		std::vector<CStringInputSMS*> 	v_input_fs_options, v_input_mmc_parameters;
 
 		int x, y, width, height, hheight, mheight, selected_main;
