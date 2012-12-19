@@ -56,6 +56,7 @@ class COnOffNotifier : public CChangeObserver
 		bool changeNotify(const neutrino_locale_t, void *Data);
 
 		void addItem(CMenuItem* menuItem);
+		void removeItems();
 };
 
 class CStreamFeaturesChangeExec : public CMenuTarget

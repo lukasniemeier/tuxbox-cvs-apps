@@ -77,6 +77,11 @@ void COnOffNotifier::addItem(CMenuItem* menuItem)
 	toDisable.push_back(menuItem);
 }
 
+void COnOffNotifier::removeItems()
+{
+	toDisable.clear();
+}
+
 int CStreamFeaturesChangeExec::exec(CMenuTarget* parent, const std::string & actionKey)
 {
 	//printf("CStreamFeaturesChangeExec exec: %s\n", actionKey.c_str());
