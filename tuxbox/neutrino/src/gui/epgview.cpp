@@ -939,8 +939,7 @@ int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::st
 			processTextToArray(screening_dates ); // UTF-8
 		}
 	}
-	if (count == 0)
-		processTextToArray("---\n"); // UTF-8
+
 	return count;
 }
 
