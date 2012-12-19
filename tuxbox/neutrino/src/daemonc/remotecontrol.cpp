@@ -423,7 +423,6 @@ void CRemoteControl::processAPIDnames()
 			if ( g_Sectionsd->getComponentTagsUniqueKey( current_EPGid, tags ) )
 			{
 				has_unresolved_ctags = false;
-				has_ac3 = false;
 
 				for (unsigned int i=0; i< tags.size(); i++)
 				{
@@ -450,33 +449,22 @@ void CRemoteControl::processAPIDnames()
 						}
 					}
 				}
-
-				CZapitClient::APIDList::iterator e = current_PIDs.APIDs.begin();
-				while ( e != current_PIDs.APIDs.end() )
-				{
-					if ( e->is_ac3 )
-					{
-							has_ac3 = true;
-					}
-					e++;
-				}
-
-				if ( g_settings.audio_DolbyDigital == 1)
-				{
-					for (unsigned int j=0; j< current_PIDs.APIDs.size(); j++)
-						if ( current_PIDs.APIDs[j].is_ac3 )
-						{
-							setAPID( j );
-							break;
-						}
-				}
-
-				if ( current_PIDs.PIDs.selected_apid >= current_PIDs.APIDs.size() )
-				{
-                	setAPID( 0 );
-				}
 			}
 		}
+	}
+
+	if (has_ac3 && g_settings.audio_DolbyDigital == 1)
+	{
+		for (unsigned int j = 0; j < current_PIDs.APIDs.size(); j++)
+			if (current_PIDs.APIDs[j].is_ac3)
+			{
+				setAPID(j);
+				break;
+			}
+	}
+	else if (current_PIDs.PIDs.selected_apid >= current_PIDs.APIDs.size())
+	{
+		setAPID(0);
 	}
 
 	char *p = new char[sizeof(t_channel_id)];
