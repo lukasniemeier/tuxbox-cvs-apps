@@ -676,7 +676,9 @@ void CStringInputSMS::paint()
 {
 	CStringInput::paint();
 
-	frameBuffer->paintIcon("numericpad.raw", x+20+140, y+ hheight+ mheight+ iheight* 3+ 30, COL_MENUCONTENT);
+	int iconw, iconh;
+	frameBuffer->getIconSize(NEUTRINO_ICON_NUMERIC_PAD, &iconw, &iconh);
+	frameBuffer->paintIcon(NEUTRINO_ICON_NUMERIC_PAD, x + width / 2 - iconw / 2, y + hheight + mheight + iheight * 3 + 30, COL_MENUCONTENT);
 
 	int c_rad_mid = RADIUS_MID;
 	frameBuffer->paintBoxRel(x, y + height - 25, width, 25, COL_INFOBAR_SHADOW_PLUS_1, c_rad_mid, CORNER_BOTTOM);

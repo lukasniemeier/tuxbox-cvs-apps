@@ -77,6 +77,7 @@
 #define NEUTRINO_ICON_MOUNTED		"mounted.raw"
 #define NEUTRINO_ICON_MP3		"mp3.raw"
 #define NEUTRINO_ICON_NOT_MOUNTED	"not_mounted.raw"
+#define NEUTRINO_ICON_NUMERIC_PAD	"numericpad.raw"
 #define NEUTRINO_ICON_PAUSE		"pause.raw"
 #define NEUTRINO_ICON_PLAY		"play.raw"
 #define NEUTRINO_ICON_PROTECTING	"protecting.raw"
