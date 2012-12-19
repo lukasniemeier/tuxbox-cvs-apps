@@ -235,6 +235,7 @@ int CScanSetup::showScanService()
 	CMenuWidget* extMotorSettings = NULL;
 	CStringInput* toff_lat = NULL;
 	CStringInput* toff_long = NULL;
+	CMotorControl* motorControl = NULL;
 	CSatDiseqcNotifier* satDiseqcNotifier = NULL;
 
 	//sat-lnb-settings
@@ -302,7 +303,8 @@ int CScanSetup::showScanService()
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 		
 		//manual motor control
-		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_MOTORCONTROL, true, NULL, new CMotorControl(), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+		motorControl = new CMotorControl();
+		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_MOTORCONTROL, true, NULL, motorControl, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 
 		//prepare motor control
@@ -388,6 +390,7 @@ int CScanSetup::showScanService()
 	delete extMotorSettings;
 	delete toff_lat;
 	delete toff_long;
+	delete motorControl;
 	delete satDiseqcNotifier;
 	delete scanTs;
 
