@@ -691,9 +691,7 @@ void CDriveSetup::showHddSetupMain()
 	
 	/************add main menue entries***********/
 	// intro entries
-	m.addItem(GenericMenuSeparator);
-	m.addItem(GenericMenuBack);
-	m.addItem(GenericMenuSeparatorLine);
+	m.addIntroItems();
 	// show apply button/entry
 	m.addItem(m1);
 	m.addItem(GenericMenuSeparatorLine);
@@ -778,9 +776,6 @@ void CDriveSetup::showHddSetupMain()
 //init extended settings sub menu
 void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 {
-	CMenuSeparator * subhead_extsettings = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS);
-	CMenuSeparator * sep_fstab = new CMenuSeparator(CMenuSeparator::ALIGN_CENTER | CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_FSTAB);
-
 	//extended settings: fstab settings
 	CMenuOptionChooser *oj_auto_fs = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_FSTAB_USE_AUTO_FS, &d_settings.drive_use_fstab_auto_fs, OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, d_settings.drive_use_fstab);
 	if (fstabNotifier == NULL)
@@ -822,11 +817,8 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 	}
 
 	//extended settings: add items
-	extsettings->addItem(subhead_extsettings);	//menue subhead
-	extsettings->addItem(GenericMenuSeparator);	//empty intro separator
-	extsettings->addItem(GenericMenuBack);		//back
+	extsettings->addIntroItems(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS, LOCALE_DRIVE_SETUP_FSTAB);	//intro items
 	// -----------------------------------------
-	extsettings->addItem (sep_fstab);		//separator fstab
 	extsettings->addItem (oj_fstab);		//option fstab on/off
 	extsettings->addItem (oj_auto_fs);		//option auto fs on/off
 	// -----------------------------------------
@@ -846,9 +838,6 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 
 void CDriveSetup::showMMCParameterMenu(CMenuWidget* w_mmc)
 {
-	//subhead_mmc_parameters
-	CMenuSeparator *subhead_mmc_parameters = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_MMC_MODUL_PARAMETERS);
-
 	//prepare mmc parameter input
 	std::vector<CMenuForwarderNonLocalized*> v_fw_mmc_load_parameters;
 	for (uint i=0; i < MAXCOUNT_MMC_MODULES; i++){
@@ -861,10 +850,7 @@ void CDriveSetup::showMMCParameterMenu(CMenuWidget* w_mmc)
 	}
 
 	//mmc:paint submenue mmc parameters
-	w_mmc->addItem(subhead_mmc_parameters);	//subhhaed mmc parameters
-	w_mmc->addItem(GenericMenuSeparator);		//empty intro separator
-	w_mmc->addItem(GenericMenuBack);		//back
-	w_mmc->addItem(GenericMenuSeparatorLine);	//separator
+	w_mmc->addIntroItems(LOCALE_DRIVE_SETUP_MMC_MODUL_PARAMETERS);	//intro items
 	// -----------------------------------------
 	for (size_t i=0; i < v_fw_mmc_load_parameters.size(); i++)
 		w_mmc->addItem(v_fw_mmc_load_parameters[i]); //show selectable mmc modules to edit
@@ -946,7 +932,6 @@ void CDriveSetup::showHddSetupSub()
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 	//menue add shares
 	CMenuWidget 	sub_add_share(LOCALE_DRIVE_SETUP_HEAD, msg_icon, width);
-	CMenuSeparator 	*srv_share_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE);
 
 #ifdef ENABLE_NFSSERVER
 	//nfs separator
@@ -984,7 +969,6 @@ void CDriveSetup::showHddSetupSub()
 
 	//menue sub: prepare sub head
 	string dev_name = g_Locale->getText(mn_data[current_device].entry_locale);
-	CMenuSeparator *subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING, mn_data[current_device].entry_locale);
 
 	//menue sub: generate part items
 	CMenuForwarderNonLocalized *sub_part_entry[MAXCOUNT_PARTS];
@@ -1100,22 +1084,15 @@ void CDriveSetup::showHddSetupSub()
 	CMenuForwarder *partsize[MAXCOUNT_PARTS];
 
 	//sub menue main
-	sub->addItem(subhead);		//subhead 
-	//------------------------
-	sub->addItem(GenericMenuSeparator);
-	sub->addItem(GenericMenuBack);	//back
+	sub->addIntroItems(mn_data[current_device].entry_locale, (current_device != MMCARD) ? LOCALE_DRIVE_SETUP_HDD_PARAMETERS : LOCALE_DRIVE_SETUP_HDD_JOBS);	//intro items
 	//------------------------
 	CStringInput hdd_sleep(LOCALE_DRIVE_SETUP_HDD_SLEEP, d_settings.drive_spindown[current_device], 3, LOCALE_DRIVE_SETUP_HDD_SLEEP_STD, LOCALE_DRIVE_SETUP_HDD_SLEEP_HELP, "0123456789 ");
 	if (current_device != MMCARD) 	//not for mmc!
 	{
-		sub->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_PARAMETERS));//separator
 		sub->addItem(new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_SLEEP, true, d_settings.drive_spindown[current_device], &hdd_sleep )); //spindown
-		
 		sub->addItem(new CMenuOptionChooser(LOCALE_DRIVE_SETUP_HDD_CACHE, &d_settings.drive_write_cache[current_device], OPTIONS_ON_OFF_OPTIONS, OPTIONS_ON_OFF_OPTION_COUNT, true )); //writecache
-		sub->addItem(sep_jobs); //separator jobs
+		sub->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_JOBS)); //separator jobs
 	}
-	else
-		sub->addItem(sep_jobs); 	//separator jobs
 	//------------------------
 	sub->addItem(swap_add); 	//add swap
 	sub->addItem(part_add); 	//add partition
@@ -1129,9 +1106,6 @@ void CDriveSetup::showHddSetupSub()
 	unsigned long long start_cyl[MAXCOUNT_PARTS];
 	// end cylinder
 	unsigned long long end_cyl[MAXCOUNT_PARTS];
-
-	//menue partitions: prepare separator: info
-	CMenuSeparator *sep_info = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_PARTITION_INFO);
 
 	// cylinders
 	CMenuForwarder *fw_cylinders[MAXCOUNT_PARTS];
@@ -1375,10 +1349,7 @@ void CDriveSetup::showHddSetupSub()
 		//edit partition
 		part[i]->addItem(p_subhead[i]);			//subhead
 		//------------------------
-		part[i]->addItem(GenericMenuSeparator); 	//separator
-		part[i]->addItem(GenericMenuBack);		//back
-		//------------------------
-		part[i]->addItem(sep_info);			//separator information
+		part[i]->addIntroItems(NONEXISTANT_LOCALE, LOCALE_DRIVE_SETUP_PARTITION_INFO);	//intro items
 		//------------------------
 //		part[i]->addItem(freesizeOfPart[i]);		//freesize of Part and / whole freesize, it is not very useful to show more, than size of partition in edit mode!
 		part[i]->addItem(partsize[i]);			//partsize
@@ -1401,11 +1372,7 @@ void CDriveSetup::showHddSetupSub()
 		part[i]->addItem(GenericMenuSeparatorLine);	//separator
 		part[i]->addItem(part_srv_fw[i]);		//sub menue server shares
 			//------------------------
-			part_srv_shares[i]->addItem(srv_share_subhead);	//subhead
-			//------------------------
-			part_srv_shares[i]->addItem(GenericMenuSeparator); 	//separator
-			part_srv_shares[i]->addItem(GenericMenuBack);		//back
-			part_srv_shares[i]->addItem(GenericMenuSeparatorLine);	//separator
+			part_srv_shares[i]->addIntroItems(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE);	//intro items
 			part_srv_shares[i]->addItem(srv_path_fw[i]);		//show shared mountpoint
 		#ifdef ENABLE_NFSSERVER
 			part_srv_shares[i]->addItem(srv_nfs_sep);		//nfs separator
@@ -1436,9 +1403,7 @@ void CDriveSetup::showHddSetupSub()
 	//add
 	sub_add->addItem(add_subhead); 	//add partition-subhead
 	//------------------------
-	sub_add->addItem(GenericMenuSeparator); 	//separator
-	sub_add->addItem(GenericMenuBack);		//back
-	sub_add->addItem(GenericMenuSeparatorLine);	//separator
+	sub_add->addIntroItems();	//intro items
 	//------------------------
 	sub_add->addItem(freesizeOfPart[next_part_number]); // freesize of Part
 	sub_add->addItem(fw_add_start_cyl);		//start_cylinder
@@ -1456,11 +1421,7 @@ void CDriveSetup::showHddSetupSub()
 	sub_add->addItem(GenericMenuSeparatorLine);	//separator
 	sub_add->addItem(part_srv_fw[next_part_number]);//sub menue server shares
 		//------------------------
-		sub_add_share.addItem(srv_share_subhead);	//subhead
-		//------------------------
-		sub_add_share.addItem(GenericMenuSeparator); 	//separator
-		sub_add_share.addItem(GenericMenuSeparatorLine);//separator
-		sub_add_share.addItem(GenericMenuBack);	//back
+		sub_add_share.addIntroItems(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE);	//intro items
 		sub_add_share.addItem(srv_path_fw[next_part_number]); 	//separator
 	#ifdef ENABLE_NFSSERVER
 		sub_add_share.addItem(srv_nfs_sep);				//nfs separator
@@ -1488,9 +1449,7 @@ void CDriveSetup::showHddSetupSub()
 	//add swap
 	sub_add_swap->addItem(add_swap_subhead); 		//add swap-subhead
 	//------------------------
-	sub_add_swap->addItem(GenericMenuSeparator); 		//separator
-	sub_add_swap->addItem(GenericMenuBack);			//back
-	sub_add_swap->addItem(GenericMenuSeparatorLine);	//separator
+	sub_add_swap->addIntroItems();	//intro items
 	//------------------------
 	sub_add_swap->addItem(freesizeOfPart[next_part_number]); // freesize of Part
 	sub_add_swap->addItem(fw_add_start_cyl);		//start_cylinder
