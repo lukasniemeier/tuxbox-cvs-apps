@@ -145,6 +145,7 @@ bool CFlashUpdate::selectHttpImage(void)
 	std::string name;
 	std::string version;
 	std::vector<std::string> updates_lists, urls, md5s, names, versions, descriptions;
+	std::vector<CUpdateMenuTarget*> update_menu_targets;
 	int selected = -1, listWidth = w_max (710, 50);
 
 	// get default update url from .version
@@ -213,7 +214,8 @@ bool CFlashUpdate::selectHttpImage(void)
 
 				descriptions.push_back(description); /* workaround since CMenuForwarder does not store the Option String itself */
 
-				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(names[i].c_str(), true, descriptions[i].c_str(), new CUpdateMenuTarget(i, &selected));
+				update_menu_targets.push_back(new CUpdateMenuTarget(i, &selected));
+				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(names[i].c_str(), true, descriptions[i].c_str(), update_menu_targets.back());
 				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 				SelectionWidget.addItem(fw);
 				i++;
@@ -230,6 +232,9 @@ bool CFlashUpdate::selectHttpImage(void)
 	}
 
 	SelectionWidget.exec(NULL, "");
+
+	for (std::vector<CUpdateMenuTarget*>::iterator it = update_menu_targets.begin(); it != update_menu_targets.end(); it++)
+		delete *it;
 
 	if (selected == -1)
 		return false;
@@ -256,7 +261,7 @@ bool CFlashUpdate::getUpdateImage(const std::string & version)
 bool CFlashUpdate::checkVersion4Update()
 {
 	char msg[400];
-	CFlashVersionInfo * versionInfo=0;
+	CFlashVersionInfo * versionInfo = NULL;
 	neutrino_locale_t msg_body;
 
 #ifndef DISABLE_INTERNET_UPDATE
@@ -361,6 +366,7 @@ bool CFlashUpdate::checkVersion4Update()
 		versionInfo = new CFlashVersionInfo();
 		if (!ft.GetVersionInfo(*versionInfo, filename))
 		{
+			delete versionInfo;
 			ShowHintUTF(LOCALE_MESSAGEBOX_ERROR, g_Locale->getText(LOCALE_FLASHUPDATE_CANTOPENFILE)); // UTF-8
 			return false;			
 		}
