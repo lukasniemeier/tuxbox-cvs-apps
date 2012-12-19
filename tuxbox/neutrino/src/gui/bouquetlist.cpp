@@ -181,6 +181,7 @@ int CBouquetList::show()
 	{
 		return res;
 	}
+	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_BOUQUETLIST_HEAD));
 
 	int digits = 1;
 	int i= Bouquets.size();
@@ -319,6 +320,9 @@ int CBouquetList::show()
 		};
 	}
 	hide();
+
+	CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
+
 	if(zapOnExit)
 	{
 		return (selected);
@@ -362,6 +366,9 @@ void CBouquetList::paintItem(int pos)
 		//number - for direct jump
 		char tmp[10];
 		sprintf((char*) tmp, "%d", liststart+pos+ 1);
+
+		if (liststart + pos == selected)
+			CLCD::getInstance()->showMenuText(0, bouq->channelList->getName(), -1, true); // UTF-8
 
 		int numpos = x+5+numwidth- g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getRenderWidth(tmp);
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(numpos,ypos+fheight, numwidth+5, tmp, color, fheight);
