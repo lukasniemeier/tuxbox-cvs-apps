@@ -292,6 +292,12 @@ void CPluginList::paintItem(int pos)
 		pluginitem* actplugin = pluginlist[liststart+pos];
 		g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMLARGE]->RenderString(x+10, ypos+fheight1+3, width-20, actplugin->name, color, 0, true); // UTF-8
 		g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMSMALL]->RenderString(x+20, ypos+fheight,    width-20, actplugin->desc, color, 0, true); // UTF-8
+
+		if(liststart+pos==selected)
+		{
+			CLCD::getInstance()->showMenuText(0, actplugin->name.c_str(), -1, true); // UTF-8
+			CLCD::getInstance()->showMenuText(1, actplugin->desc.c_str(), -1, true); // UTF-8
+		}
 	}
 }
 
@@ -339,6 +345,8 @@ void CPluginList::paint()
 	y = getScreenStartY (height);
 	
    liststart = (selected/listmaxshow)*listmaxshow;
+
+	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, g_Locale->getText(name));
 
 	paintHead();
 	paintItems();
