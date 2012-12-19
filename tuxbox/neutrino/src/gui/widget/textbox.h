@@ -98,8 +98,6 @@ class CTextBox
 		std::string m_cText;
 		std::vector<std::string> m_cLineArray;
 
-		bool m_showTextFrame;
-
 		CBox m_cFrame;
 		CBox m_cFrameTextRel;
 		CBox m_cFrameScrollRel;
@@ -112,7 +110,6 @@ class CTextBox
 		int m_nNrOfPages;
 		int m_nNrOfLines;
 		int m_nNrOfNewLine;
-		int m_nMaxLineWidth;
 		int m_nLinesPerPage;
 		int m_nCurrentLine;
 		int m_nCurrentPage;
@@ -142,7 +139,6 @@ class CTextBox
 inline	bool 	isPainted(void){if( m_pcWindow == NULL) return (false); else return (true);};
 
 inline	CBox	getWindowsPos(void)			{return(m_cFrame);};
-inline	int		getMaxLineWidth(void)		{return(m_nMaxLineWidth);};
 inline  int     getLines(void)				{return(m_nNrOfLines);};
 inline  int     getPages(void)				{return(m_nNrOfPages);};
 inline	void	movePosition(int x, int y){m_cFrame.iX = x; m_cFrame.iY = y;};

@@ -209,7 +209,6 @@ void CTextBox::initVar(void)
 	m_cText	= "";
 	m_nMode = SCROLL;
 
-	m_pcFontText = NULL;
 	m_pcFontText  =  g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1];
 	m_nFontTextHeight = m_pcFontText->getHeight();
 
@@ -267,7 +266,7 @@ void CTextBox::reSizeMainFrameWidth(int textWidth)
 //////////////////////////////////////////////////////////////////////
 void CTextBox::reSizeMainFrameHeight(int textHeight)
 {
-	TRACE("[CTextBox]->ReSizeMainFrameHeight: %d, current: %d\r\n",textHeight,m_cFrameTextRel.iHeight);
+	//TRACE("[CTextBox]->ReSizeMainFrameHeight: %d, current: %d\r\n",textHeight,m_cFrameTextRel.iHeight);
 
 	int iNewWindowHeight =	textHeight 
 							+ 2*TEXT_BORDER_WIDTH;
@@ -590,7 +589,7 @@ void CTextBox::scrollPageDown(const int pages)
 {
 	if( !(m_nMode & SCROLL)) return;
 	if( m_nNrOfLines <= 0) return;
-	TRACE("[CTextBox]->ScrollPageDown \r\n");
+	//TRACE("[CTextBox]->ScrollPageDown \r\n");
 
 
 	if(m_nCurrentPage + pages < m_nNrOfPages)
@@ -617,7 +616,7 @@ void CTextBox::scrollPageUp(const int pages)
 {
 	if( !(m_nMode & SCROLL)) return;
 	if( m_nNrOfLines <= 0) return;
-	TRACE("[CTextBox]->ScrollPageUp \r\n");
+	//TRACE("[CTextBox]->ScrollPageUp \r\n");
 
 
 	if(m_nCurrentPage - pages > 0)
