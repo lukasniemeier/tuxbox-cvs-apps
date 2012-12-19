@@ -541,7 +541,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	if (hasComponentTags)
 	{
 		for (unsigned int i = 0; i < tags.size(); i++)
-			if (tags[i].streamContent == 2)
+			if (tags[i].streamContent == 2 && !tags[i].component.empty())
 				audioInfo += tags[i].component + ", ";
 
 		if (!audioInfo.empty())
