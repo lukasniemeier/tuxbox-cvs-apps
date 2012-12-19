@@ -2169,6 +2169,9 @@ void CMovieBrowser::onDeleteFile(MI_MOVIE_INFO& movieSelectionHandler)
 		msg += g_Locale->getText(LOCALE_FILEBROWSER_DODELETE2);
 		if (ShowMsgUTF(LOCALE_FILEBROWSER_DELETE, msg, CMessageBox::mbrNo, CMessageBox::mbYes|CMessageBox::mbNo)==CMessageBox::mbrYes)
 		{
+			CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_MOVIEBROWSER_DELETE_INFO));
+			hintBox.paint();
+
 			CFile file_xml  = movieSelectionHandler.file; 
 			if(m_movieInfo.convertTs2XmlName(&file_xml.Name) == true)  
 			{
@@ -2176,6 +2179,9 @@ void CMovieBrowser::onDeleteFile(MI_MOVIE_INFO& movieSelectionHandler)
 			}
 
 			delFile(movieSelectionHandler.file);
+
+			hintBox.hide();
+			g_RCInput->clearRCMsg();
 
 			m_vMovieInfo.erase( (std::vector<MI_MOVIE_INFO>::iterator)&movieSelectionHandler);
 			updateSerienames();
