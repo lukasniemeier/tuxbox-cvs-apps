@@ -298,6 +298,7 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 	for(int count=strlen(value)-1;count<size-1;count++)
 		strcat(value, " ");
 	strncpy(oldval, value, size);
+	dispval[0] = 0;
 
 	paint();
 

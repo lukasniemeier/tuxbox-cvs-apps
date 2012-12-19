@@ -135,6 +135,8 @@ int CExtendedInput::exec( CMenuTarget* parent, const std::string & )
 	}
 
 	strcpy(oldval, value);
+	dispval[0] = 0;
+
 	paint();
 
 	unsigned long long timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
