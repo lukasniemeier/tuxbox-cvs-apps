@@ -63,10 +63,12 @@ extern CBouquetList *bouquetList;
 #include "gui/keyhelper.h"
 
 // sort operators
+#if 0
 bool sortById (const CChannelEvent& a, const CChannelEvent& b)
 {
 	return a.eventID < b.eventID ;
 }
+#endif
 bool sortByDescription (const CChannelEvent& a, const CChannelEvent& b)
 {
 	if(a.description == b.description)
@@ -232,6 +234,7 @@ void EventList::readEvents(const t_channel_id channel_id)
 		}
 
 		// Houdini added for Private Premiere EPG, start sorted by start date/time
+		sort_mode = 0;
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
 	}
 
@@ -279,7 +282,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		m_search_bouquet_id= bouquetList->getActiveBouquetNumber();
 		//m_search_source_text = "";
 	}
-	m_showChannel = false; // do not show the channel in normal mode, we just need it in search mode
+	m_showSearchResults = false;
 
 	name = channelname;
 	sort_mode=0;
@@ -534,7 +537,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 		else if (msg == g_settings.key_channelList_reload)
 		{
-			if (showfollow)
+			if (showfollow || m_showSearchResults)
 				continue;
 
 			hide();
@@ -546,8 +549,21 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 		else if (msg == CRCInput::RC_timeout || msg == g_settings.key_channelList_cancel)
 		{
-			selected = oldselected;
-			loop=false;
+			if (m_showSearchResults)
+			{
+				m_showSearchResults = false;
+				hide();
+				name = channelname;
+				paintHead();
+				readEvents(channel_id);
+				paint();
+				showFunctionBar(true);
+			}
+			else
+			{
+				selected = oldselected;
+				loop = false;
+			}
 		}
 
 		else if ( msg==CRCInput::RC_left || msg==CRCInput::RC_red)
@@ -601,8 +617,18 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 			if (showfollow)
 				continue;
 
-			findEvents();
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
+			res = findEvents();
+			if (res == menu_return::RETURN_EXIT_ALL)
+			{
+				loop = false;
+			}
+			else
+			{
+				paintHead();
+				paint();
+				showFunctionBar(true);
+				timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
+			}
 		}
 		else
 		{
@@ -667,7 +693,7 @@ void EventList::paintItem(unsigned int pos)
 			strftime(tmpstr, sizeof(tmpstr), " %d. ", tmStartZeit );
 			datetime2_str = (std::string)tmpstr + g_Locale->getText(CLocaleManager::getMonth(tmStartZeit)) + '.';
 
-			if ( m_showChannel ) // show the channel if we made a event search only (which could be made through all channels ).
+			if (m_showSearchResults) // show the channel if we made a event search only (which could be made through all channels)
 			{
 				t_channel_id channel = evtlist[curpos].get_channel_id();
 				datetime2_str += "           " + g_Zapit->getChannelName(channel);
@@ -892,7 +918,7 @@ void  EventList::showFunctionBar (bool show)
 	}
 
 	// Button: Event Reload/Refresh
-	if (!showfollow && g_settings.key_channelList_reload != CRCInput::RC_nokey)
+	if (!showfollow && !m_showSearchResults && g_settings.key_channelList_reload != CRCInput::RC_nokey)
 	{
 		keyhelper.get(&dummy, &icon, g_settings.key_channelList_reload);
 		EventListButtons[4].button = icon;
@@ -908,7 +934,7 @@ void  EventList::showFunctionBar (bool show)
 int EventList::findEvents(void) 
 /************************************************************************************************/
 {
-	int res = 0;
+	int res = menu_return::RETURN_REPAINT;
 	int event = 0;
 	t_channel_id channel_id;  //g_Zapit->getCurrentServiceID()
 
@@ -926,11 +952,11 @@ int EventList::findEvents(void)
 				&m_search_bouquet_id
 				);
 	hide();
-	menu.exec(NULL,"");
+	res = menu.exec(NULL,"");
 	
 	if(event == 1)
 	{
-		m_showChannel = true;   // force the event list to paint the channel name
+		m_showSearchResults = true;
 		evtlist.clear();
 		if(m_search_list == SEARCH_LIST_CHANNEL)
 		{
@@ -961,6 +987,7 @@ int EventList::findEvents(void)
 			}
 			box.hide();
 		}
+		sort_mode = 0;
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
 		evtlist.resize(unique(evtlist.begin(), evtlist.end(), uniqueByIdAndDateTime) - evtlist.begin());
 		current_event = (unsigned int)-1;
@@ -987,9 +1014,7 @@ int EventList::findEvents(void)
 		
 		name = (std::string)g_Locale->getText(LOCALE_EVENTFINDER_SEARCH) + ": '" + ZapitTools::Latin1_to_UTF8(m_search_keyword.c_str()) + "'";
 	}
-	paintHead();
-	paint();
-	showFunctionBar(true);
+
 	return(res);
 }
 
@@ -1075,11 +1100,12 @@ int CEventFinderMenu::exec(CMenuTarget* parent, const std::string &actionkey)
 {
 	int res = menu_return::RETURN_REPAINT;
 	
+	if(parent != NULL)
+		parent->hide();
+
 	if(actionkey =="")
 	{
-		if(parent != NULL)
-			parent->hide();
-		showMenu();
+		res = showMenu();
 	}
 	else if(actionkey =="3")
 	{
@@ -1114,7 +1140,7 @@ int CEventFinderMenu::exec(CMenuTarget* parent, const std::string &actionkey)
 	else if(actionkey =="5")
 	{
 		*m_event = true;
-		res = menu_return::RETURN_EXIT_ALL;
+		res = menu_return::RETURN_EXIT;
 	}
 	
 	return res;

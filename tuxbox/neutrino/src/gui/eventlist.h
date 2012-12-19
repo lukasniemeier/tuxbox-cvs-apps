@@ -79,7 +79,7 @@ class EventList
 		int             m_search_list;
 		t_channel_id    m_search_channel_id;
 		t_bouquet_id    m_search_bouquet_id;
-		bool m_showChannel;
+		bool m_showSearchResults;
 
 	private:
 		int findEvents(void);
