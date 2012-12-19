@@ -2978,7 +2978,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	{
 		pBookItemMenuForwarderNotifier[i] = new CBookItemMenuForwarderNotifier();
 
-		pBookNameInput[i] =    new CStringInputSMS (LOCALE_MOVIEBROWSER_EDIT_BOOK, &movie_info->bookmarks.user[i].name, 20, true, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO2, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ", pBookItemMenuForwarderNotifier[i]);
+		pBookNameInput[i] =    new CStringInputSMS (LOCALE_MOVIEBROWSER_EDIT_BOOK, &movie_info->bookmarks.user[i].name, 20, true, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_NAME_INFO2, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ", pBookItemMenuForwarderNotifier[i]);
 		pBookPosIntInput[i] =  new CIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (long&) movie_info->bookmarks.user[i].pos, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
 		pBookTypeIntInput[i] = new CIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (long&) movie_info->bookmarks.user[i].length, 20, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_TYPE_INFO2);
 
@@ -2996,7 +2996,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 
 /********************************************************************/
 /**  serie******************************************************/
-	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
+	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
 
 	CMenuWidget serieMenu(LOCALE_MOVIEBROWSER_INFO_HEAD, NEUTRINO_ICON_STREAMING);
 	serieMenu.addIntroItems(LOCALE_MOVIEBROWSER_SERIE_HEAD);
@@ -3040,13 +3040,13 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		snprintf(size,BUFFER_SIZE,"%5llu",movie_info->file.Size>>20);
 	}
 
-	CStringInputSMS titelUserInput(LOCALE_MOVIEBROWSER_INFO_TITLE,            &movie_info->epgTitle, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
-	CStringInputSMS channelUserInput(LOCALE_MOVIEBROWSER_INFO_CHANNEL,        &movie_info->epgChannel, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
-	CStringInputSMS epgUserInput(LOCALE_MOVIEBROWSER_INFO_INFO1,              &movie_info->epgInfo1, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
+	CStringInputSMS titelUserInput(LOCALE_MOVIEBROWSER_INFO_TITLE,            &movie_info->epgTitle, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
+	CStringInputSMS channelUserInput(LOCALE_MOVIEBROWSER_INFO_CHANNEL,        &movie_info->epgChannel, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
+	CStringInputSMS epgUserInput(LOCALE_MOVIEBROWSER_INFO_INFO1,              &movie_info->epgInfo1, MAX_STRING, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
 	CDateInput   dateUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,        &movie_info->dateOfLastPlay, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 	CDateInput   recUserDateInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,         &movie_info->file.Time, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 	CIntInput    lengthUserIntInput(LOCALE_MOVIEBROWSER_INFO_LENGTH,       (long&)movie_info->length, 3, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
-	CStringInputSMS countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    &movie_info->productionCountry, 11, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
+	CStringInputSMS countryUserInput(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    &movie_info->productionCountry, 11, true, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
 	CIntInput    yearUserIntInput(LOCALE_MOVIEBROWSER_INFO_PRODYEAR,       (long&)movie_info->productionDate, 4, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY);
 
 	CMenuWidget movieInfoMenu(LOCALE_MOVIEBROWSER_MENU_MAIN_HEAD, NEUTRINO_ICON_STREAMING, m_cBoxFrame.iWidth);

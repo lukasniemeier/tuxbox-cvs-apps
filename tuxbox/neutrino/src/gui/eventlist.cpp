@@ -1166,7 +1166,7 @@ int CEventFinderMenu::showMenu(void)
 		m_search_channelname = "";
 	}
 	
-	CStringInputSMS stringInput(LOCALE_EVENTFINDER_KEYWORD, m_search_keyword, 20, false, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-.: ");
+	CStringInputSMS stringInput(LOCALE_EVENTFINDER_KEYWORD, m_search_keyword, 20, false, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
 	
 	CMenuForwarder* mf0 		= new CMenuForwarder(LOCALE_EVENTFINDER_KEYWORD, true, *m_search_keyword, &stringInput, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
 	CMenuOptionChooser* mo0 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST, m_search_list, SEARCH_LIST_OPTIONS, SEARCH_LIST_OPTION_COUNT, true, this, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);

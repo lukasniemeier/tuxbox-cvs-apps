@@ -540,7 +540,7 @@ void CStringInputSMS::initSMS(const char * const Valid_Chars)
 {
 	last_digit = -1;				// no key pressed yet
 	const char CharList[10][11] = { "0 -_/()<>=",	// 10 characters
-					"1.,:!?\\",
+					"1.,:!?\\'\"&",
 					"abc2\xE4",   // 0xE4 == ä
 					"def3",
 					"ghi4",
