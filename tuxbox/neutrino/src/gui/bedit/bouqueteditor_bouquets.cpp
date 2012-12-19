@@ -100,7 +100,7 @@ void CBEBouquetWidget::paintItem(int pos)
 		}
 		if (Bouquets[liststart+pos].hidden)
 		{
-			frameBuffer->paintIcon("hidden.raw", x + 37, ypos);
+			frameBuffer->paintIcon(NEUTRINO_ICON_HIDDEN, x + 37, ypos);
 		}
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+68, ypos+ fheight, width-68, Bouquets[liststart+pos].name, color);
 	}

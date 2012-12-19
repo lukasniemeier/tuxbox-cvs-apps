@@ -213,12 +213,12 @@ void CScreenSetup::paintIcons()
 
 void CScreenSetup::paintBorderUL()
 {
-	frameBuffer->paintIcon( "border_ul.raw", x_coord[0], y_coord[0] );
+	frameBuffer->paintIcon(NEUTRINO_ICON_BORDER_UL, x_coord[0], y_coord[0]);
 }
 
 void CScreenSetup::paintBorderLR()
 {
-	frameBuffer->paintIcon("border_lr.raw", x_coord[1]- 96, y_coord[1]- 96 );
+	frameBuffer->paintIcon(NEUTRINO_ICON_BORDER_LR, x_coord[1] - 96, y_coord[1] - 96);
 }
 
 void CScreenSetup::paintCoords()

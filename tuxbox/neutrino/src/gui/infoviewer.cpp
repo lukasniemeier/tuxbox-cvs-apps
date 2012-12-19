@@ -1145,11 +1145,11 @@ void CInfoViewer::showIcon_RadioText(bool rt_available) const
 	if (showButtonBar)
 	{
 		int mode = CNeutrinoApp::getInstance()->getMode();
-		std::string rt_icon = "radiotextoff.raw";
+		std::string rt_icon = NEUTRINO_ICON_RADIOTEXT_OFF;
 		if ((!virtual_zap_mode) && (!recordModeActive) && (mode == NeutrinoMessages::mode_radio))
 		{
 			if (g_settings.radiotext_enable){
-					rt_icon = rt_available ? "radiotextget.raw" : "radiotextwait.raw";
+					rt_icon = rt_available ? NEUTRINO_ICON_RADIOTEXT_GET : NEUTRINO_ICON_RADIOTEXT_WAIT;
 				}
 		}
 		frameBuffer->paintIcon(rt_icon, BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6), BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
@@ -1209,7 +1209,7 @@ void CInfoViewer::showIcon_SubT(const int SubPid) const
 	if (SubPid > -1)
 		subpid = SubPid;
 
-	frameBuffer->paintIcon((subpid != 0) ? "subt.raw" : "subt_gray.raw",
+	frameBuffer->paintIcon((subpid != 0) ? NEUTRINO_ICON_SUBT : NEUTRINO_ICON_SUBT_GREY,
 				BoxEndX - (ICON_SMALL_WIDTH + 6),
 				BoxEndY + (g_settings.infobar_sat_display && SubPid < 0 ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
@@ -1875,7 +1875,7 @@ void CInfoViewer::killTitle()
 
 void CInfoViewer::showIcon_CA_Status() const
 {
-	frameBuffer->paintIcon((CA_Status) ? "ca.raw" : "fta.raw",
+	frameBuffer->paintIcon((CA_Status) ? NEUTRINO_ICON_CA : NEUTRINO_ICON_FTA,
 				BoxEndX - (ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_LARGE_WIDTH + 2 + ICON_SMALL_WIDTH + 2 + ICON_SMALL_WIDTH + 6),
 				BoxEndY + (g_settings.infobar_sat_display ? 15 : 0) + (InfoHeightY_Info - ICON_HEIGHT) / 2);
 }
