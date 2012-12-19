@@ -1810,7 +1810,7 @@ bool CNeutrinoApp::doGuiRecord(char * preselectedDir, bool addTimer, char * file
 				std::string recDir = (preselectedDir != NULL) ? preselectedDir : g_settings.recording_dir[0];
 				if( preselectedDir == NULL && g_settings.recording_choose_direct_rec_dir)
 				{
-					CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,NULL,&recDir);
+					CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_TIMER, NULL, &recDir);
 					recDirs.exec(NULL,"");
 					refreshGui = true;
 					recDir = recDirs.get_selected_dir();

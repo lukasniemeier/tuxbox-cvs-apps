@@ -426,7 +426,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 					std::string recDir = g_settings.recording_dir[0];
 					if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
 					{
-						CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,NULL,&recDir);
+						CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_TIMER, NULL, &recDir);
 						hide();
 						recDirs.exec(NULL,"");
 						paint();

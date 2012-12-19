@@ -79,7 +79,7 @@ int CEsdSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 int CEsdSetup::showEsdSetup()
 /*shows the esd setup menue*/
 {
-	CMenuWidget* esdSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget* esdSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_AUDIO, width);
 	esdSetup->setPreselected(selected);
 
 	// intros

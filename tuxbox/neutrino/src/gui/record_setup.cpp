@@ -135,7 +135,7 @@ int CRecordSetup::showRecordSetup()
 	std::vector<CMenuTarget*> toDelete;
 
 	//menue init
-	CMenuWidget* recordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget* recordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_RECORDING, width);
 	recordingSettings->setPreselected(selected);
 
 	//prepare input record server ip

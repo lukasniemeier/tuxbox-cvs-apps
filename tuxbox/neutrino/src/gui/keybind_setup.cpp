@@ -172,7 +172,7 @@ int CKeybindSetup::showSetup()
 
 	CKeyChooser * keychooser[MAX_NUM_KEYNAMES];
 	for (int i = 0; i < MAX_NUM_KEYNAMES; i++)
-		keychooser[i] = new CKeyChooser(keyvalue_p[i], keydescription_head[i], NEUTRINO_ICON_SETTINGS);
+		keychooser[i] = new CKeyChooser(keyvalue_p[i], keydescription_head[i], NEUTRINO_ICON_KEYBINDING);
 
 
 	//remote control

@@ -126,7 +126,7 @@ int CAudioSetup::showAudioSetup()
 	CAudioSetupNotifier audioSetupNotifier;
 
 	//menue init
-	CMenuWidget* audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget* audioSettings = new CMenuWidget(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_AUDIO, width);
 	audioSettings->setPreselected(selected);
 
 	// intros

@@ -1712,7 +1712,7 @@ int EpgPlus::MenuTargetAddRecordTimer::exec(CMenuTarget*, const std::string&)
 			std::string recDir = g_settings.recording_dir[0];
 			if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
 			{
-				CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_SETTINGS, NULL, &recDir);
+				CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_TIMER, NULL, &recDir);
 				epgPlus->hide();
 				recDirs.exec(NULL,"");
 				epgPlus->paint();

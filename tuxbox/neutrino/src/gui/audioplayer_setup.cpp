@@ -105,7 +105,7 @@ const CMenuOptionChooser::keyval AUDIOPLAYER_DISPLAY_ORDER_OPTIONS[AUDIOPLAYER_D
 int CAudioPlayerSetup::showAudioPlayerSetup()
 /*shows the audio setup menue*/
 {
-	CMenuWidget* audioplayerSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget* audioplayerSetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_AUDIO, width);
 	audioplayerSetup->setPreselected(selected);
 
 	// intros

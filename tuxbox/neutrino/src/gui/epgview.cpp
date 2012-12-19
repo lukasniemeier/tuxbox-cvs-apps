@@ -695,7 +695,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 							std::string recDir = g_settings.recording_dir[0];
 							if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
 							{
-								CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR,NEUTRINO_ICON_SETTINGS,NULL,&recDir);
+								CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_TIMER, NULL, &recDir);
 								hide();
 								recDirs.exec(NULL,"");
 								show(channel_id,epgData.eventID,&epgData.epg_times.startzeit,false);

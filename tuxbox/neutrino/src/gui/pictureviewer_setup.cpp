@@ -107,7 +107,7 @@ const CMenuOptionChooser::keyval PICTUREVIEWER_SCALING_OPTIONS[PICTUREVIEWER_SCA
 int CPictureViewerSetup::showPictureViewerSetup()
 /*shows the setup menue*/
 {
-	CMenuWidget* picviewsetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width);
+	CMenuWidget* picviewsetup = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_VIDEO, width);
 	picviewsetup->setPreselected(selected);
 
 	// intros: back ande save
