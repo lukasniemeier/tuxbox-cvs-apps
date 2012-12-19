@@ -1470,7 +1470,7 @@ timersettings.zapto_safety_time_before Umschaltstart-Korrektur
 timersettings.zapto_safety_time_before.hint_1 Korrekturzeit in Min. (00=aus), die beim Start
 timersettings.zapto_safety_time_before.hint_2 des jeweiligen Timers abgezogen werden
 timing.chanlist Kanalliste
-timing.epg Epg
+timing.epg EPG
 timing.filebrowser Filebrowser
 timing.head Timeouts
 timing.hint_1 Einblendzeit in Sek., die das OSD auf dem TV
