@@ -383,12 +383,12 @@ const neutrino_locale_t * genre_sub_classes_list[10] =
 	genre_travel_hobbies
 };
 
-bool CEpgData::hasFollowScreenings(const t_channel_id /*channel_id*/, const std::string & title)
+bool CEpgData::hasFollowScreenings(const t_channel_id /*channel_id*/, const std::string & title, const time_t startzeit)
 {
 	followlist.clear();
 	for (CChannelEventList::iterator e = evtlist.begin(); e != evtlist.end(); ++e )
 	{
-		if (e->startTime != epgData.epg_times.startzeit && e->eventID && e->description == title)
+		if (e->eventID != 0 && e->description == title && e->startTime != startzeit)
 			followlist.push_back(*e);
 	}
 	return !followlist.empty();
@@ -559,10 +559,10 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 
 	// -- display more screenings on the same channel
 	// -- 2002-05-03 rasc
-	if (hasFollowScreenings(channel_id, epgData.title)) {
+	if (hasFollowScreenings(channel_id, epgData.title, epgData.epg_times.startzeit)) {
 		processTextToArray(""); // UTF-8
 		processTextToArray(std::string(g_Locale->getText(LOCALE_EPGVIEWER_MORE_SCREENINGS)) + ':'); // UTF-8
-		FollowScreenings(channel_id, epgData.title);
+		FollowScreenings();
 	}
 
 	//show the epg
@@ -766,7 +766,10 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 						if (res == menu_return::RETURN_EXIT_ALL)
 							loop = false;
 						else
+						{
 							show(channel_id, id, &startzeit, false);
+							showPos = 0;
+						}
 					}
 					break;
 
@@ -905,20 +908,17 @@ void CEpgData::GetPrevNextEPGData( unsigned long long id, time_t* startzeit )
 // -- 2002-05-03 rasc
 //
 
-int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::string & /*title*/)
+void CEpgData::FollowScreenings()
 {
   CChannelEventList::iterator e;
   struct  tm		*tmStartZeit;
   std::string		screening_dates,screening_nodual;
-  int				count;
   char			tmpstr[256];
 
-  	count = 0;
 	screening_dates = screening_nodual = "";
 
 	for (e = followlist.begin(); e != followlist.end(); ++e)
 	{
-		count++;
 		tmStartZeit = localtime(&(e->startTime));
 
 		screening_dates = "    ";
@@ -939,8 +939,6 @@ int CEpgData::FollowScreenings (const t_channel_id /*channel_id*/, const std::st
 			processTextToArray(screening_dates ); // UTF-8
 		}
 	}
-
-	return count;
 }
 
 
