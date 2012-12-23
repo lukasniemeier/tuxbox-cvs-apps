@@ -176,6 +176,7 @@ bool CWebserverRequest::ParseParams(std::string param_string)
 			ende = true;
 		if(ySplitStringExact(param,"=",name,value))
 		{
+			name = decodeString(name);
 			value = trim(decodeString(value));
 			if(ParameterList[name].empty())
 				ParameterList[name] = value;
@@ -185,6 +186,8 @@ bool CWebserverRequest::ParseParams(std::string param_string)
 				ParameterList[name] += value;
 			}
 		}
+		else
+			name = trim(decodeString(name));
 		number = string_printf("%d", ParameterList.size()+1);
 		log_level_printf(7,"ParseParams: name: %s value: %s\n",name.c_str(), value.c_str());
 		ParameterList[number] = name;
@@ -228,16 +231,22 @@ bool CWebserverRequest::ParseHeader(std::string header)
 //-----------------------------------------------------------------------------
 void CWebserverRequest::analyzeURL(std::string url)
 {
+	std::string fullurl = "";
 	ParameterList.clear();
+
 	// URI decode
-	url = decodeString(url);
-	url = trim(url, "\r\n"); // non-HTTP-Standard: allow \r or \n in URL. Delete it.
-	UrlData["fullurl"] = url;
+	fullurl = decodeString(url);
+	fullurl = trim(fullurl, "\r\n"); // non-HTTP-Standard: allow \r or \n in URL. Delete it.
+	UrlData["fullurl"] = fullurl;
+
 	// split Params
 	if(ySplitString(url,"?",UrlData["url"],UrlData["paramstring"]))	// split pure URL and all Params
+	{
+		UrlData["url"] = decodeString(UrlData["url"]);
 		ParseParams(UrlData["paramstring"]);			// split params to ParameterList
+	}
 	else								// No Params
-		UrlData["url"] = url;
+		UrlData["url"] = fullurl;
 
 	if(!ySplitStringLast(UrlData["url"],"/",UrlData["path"],UrlData["filename"]))
 	{

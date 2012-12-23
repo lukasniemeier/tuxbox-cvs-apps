@@ -568,7 +568,7 @@ void CControlAPI::MessageCGI(CyhookHandler *hh)
 
 	if (event != 0)
 	{
-		message=decodeString(message);
+		//message=decodeString(message);
 		NeutrinoAPI->EventServer->sendEvent(event, CEventServer::INITID_HTTPD, (void *) message.c_str(), message.length() + 1);
 		hh->SendOk();
 	}
@@ -1368,7 +1368,7 @@ void CControlAPI::StartPluginCGI(CyhookHandler *hh)
 		if (hh->ParamList["name"] != "")
 		{
 			pluginname = hh->ParamList["name"];
-			pluginname=decodeString(pluginname);
+			//pluginname=decodeString(pluginname);
 			NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::EVT_START_PLUGIN,
 				CEventServer::INITID_HTTPD,
 				(void *) pluginname.c_str(),
