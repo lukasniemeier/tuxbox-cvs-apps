@@ -829,7 +829,14 @@ int CChannelList::numericZap(neutrino_msg_t key)
 	}
 	else
 	{
-		showInfo(tuned);
+		if (!g_RemoteControl->subChannels.empty() && g_RemoteControl->selected_subchannel > 0)
+			g_InfoViewer->showTitle(getActiveChannelNumber(),
+					getActiveChannelName(),
+					getActiveSatellitePosition(),
+					g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].getChannelID(),
+					true);
+		else
+			showInfo(tuned);
 		g_InfoViewer->killTitle();
 
 		// Rote Taste zeigt EPG fuer gewaehlten Kanal an
@@ -940,7 +947,14 @@ void CChannelList::virtual_zap_mode(bool up)
 	}
 	else
 	{
-		showInfo(tuned);
+		if (!g_RemoteControl->subChannels.empty() && g_RemoteControl->selected_subchannel > 0)
+			g_InfoViewer->showTitle(getActiveChannelNumber(),
+					getActiveChannelName(),
+					getActiveSatellitePosition(),
+					g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].getChannelID(),
+					true);
+		else
+			showInfo(tuned);
 		g_InfoViewer->killTitle();
 
 		// Rote Taste zeigt EPG fuer gewaehlten Kanal an
