@@ -159,6 +159,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"rcem", 		&CControlAPI::RCEmCGI,		"text/plain"},
 	// Start skripts, plugins
 	{"startplugin", 	&CControlAPI::StartPluginCGI,	"text/plain"},
+	{"reloadplugins", 	&CControlAPI::ReloadPluginsCGI,	"text/plain"},
 	{"exec", 		&CControlAPI::ExecCGI,		"+xml"},
 	{"yweb", 		&CControlAPI::YWebCGI,		"text/plain"},
 	// video handling
@@ -1379,6 +1380,18 @@ void CControlAPI::StartPluginCGI(CyhookHandler *hh)
 		else
 			hh->SendError();
 
+	}
+	else
+		hh->SendError();
+}
+
+//-----------------------------------------------------------------------------
+void CControlAPI::ReloadPluginsCGI(CyhookHandler *hh)
+{
+	if (hh->ParamList.empty())
+	{
+		NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::RELOAD_PLUGINS, CEventServer::INITID_HTTPD);
+		hh->SendOk();
 	}
 	else
 		hh->SendError();

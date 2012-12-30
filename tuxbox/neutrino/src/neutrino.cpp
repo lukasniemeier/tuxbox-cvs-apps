@@ -3292,6 +3292,11 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 				scartMode( false );
 			}
 		}
+		else if (msg == NeutrinoMessages::RELOAD_PLUGINS)
+		{
+			g_PluginList->loadPlugins();
+			return messages_return::handled;
+		}
 		else if (msg == NeutrinoMessages::EVT_START_PLUGIN)
 		{
 			g_PluginList->startPlugin((const char *)data);
