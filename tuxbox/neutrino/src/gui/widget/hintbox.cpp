@@ -38,6 +38,7 @@
 
 #include <global.h>
 #include <neutrino.h>
+#include <driver/screen_max.h>
 
 #define HINTBOX_MAX_HEIGHT 420
 
@@ -105,6 +106,9 @@ CHintBox::CHintBox(const neutrino_locale_t Caption, const char * const Text, con
 		if (nw > width)
 			width = nw;
 	}
+
+	width = w_max(width, SHADOW_OFFSET);
+
 	window = NULL;
 }
 
