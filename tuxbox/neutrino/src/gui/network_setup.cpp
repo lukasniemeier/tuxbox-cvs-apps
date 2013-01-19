@@ -390,12 +390,12 @@ int CNetworkSetup::saveChangesDialog()
 		return 1;	
 
 	// Save the settings after changes, if user wants to!
-	int result = 	ShowMsgUTF(LOCALE_MAINSETTINGS_NETWORK, g_Locale->getText(LOCALE_NETWORKMENU_APPLY_SETTINGS_NOW), CMessageBox::mbrYes, 
-			CMessageBox::mbYes | 
-			CMessageBox::mbNo | 
-			CMessageBox::mbBack, 
-			NEUTRINO_ICON_QUESTION, 
-			width);
+	int result = ShowLocalizedMessage(LOCALE_MAINSETTINGS_NETWORK,
+					  LOCALE_NETWORKMENU_APPLY_SETTINGS_NOW,
+					  CMessageBox::mbrYes,
+					  CMessageBox::mbYes | CMessageBox::mbNo | CMessageBox::mbBack,
+					  NEUTRINO_ICON_QUESTION,
+					  width);
 	
 	switch(result)
 	{
@@ -423,11 +423,12 @@ void CNetworkSetup::restoreNetworkSettings(bool show_message)
 
 	if (show_message)
 	{
-		result = 	ShowMsgUTF(LOCALE_MAINSETTINGS_NETWORK, g_Locale->getText(LOCALE_NETWORKMENU_RESET_SETTINGS_NOW), CMessageBox::mbrNo, 
-				CMessageBox::mbYes | 
-				CMessageBox::mbNo , 
-				NEUTRINO_ICON_QUESTION, 
-				width);
+		result = ShowLocalizedMessage(LOCALE_MAINSETTINGS_NETWORK,
+					      LOCALE_NETWORKMENU_RESET_SETTINGS_NOW,
+					      CMessageBox::mbrNo,
+					      CMessageBox::mbYes | CMessageBox::mbNo,
+					      NEUTRINO_ICON_QUESTION,
+					      width);
 	}
 
 	if (result == CMessageBox::mbrYes)
