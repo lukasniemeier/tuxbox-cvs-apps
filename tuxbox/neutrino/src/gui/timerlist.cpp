@@ -462,7 +462,7 @@ int CTimerList::show()
 //			if (timerlist.empty())
 //			{
 				//evtl. anzeige dass keine kanalliste....
-				/* ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_TIMERLIST_EMPTY));
+				/* ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_TIMERLIST_EMPTY);
 				 return -1;*/
 //			}
 			paint();

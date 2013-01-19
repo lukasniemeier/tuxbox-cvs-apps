@@ -285,7 +285,7 @@ int CEsoundGui::show()
 
 	bool loop = true;
 
-	ShowHintUTF( LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_ESOUND_INFO) );
+	ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_ESOUND_INFO);
 	while(loop)
 	{
 		if(CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_audio)

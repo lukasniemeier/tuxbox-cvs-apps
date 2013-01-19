@@ -2261,14 +2261,14 @@ int CNeutrinoApp::run(int argc, char **argv)
 	if(loadSettingsErg==1)
 	{
 		dprintf(DEBUG_INFO, "config file missing\n");
-		ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SETTINGS_NOCONFFILE));
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_SETTINGS_NOCONFFILE);
 		configfile.setModifiedFlag(true);
 		saveSetup();
 	}
 	else if(loadSettingsErg==2)
 	{
 		dprintf(DEBUG_INFO, "parts of configfile missing\n");
-		ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_SETTINGS_MISSINGOPTIONSCONFFILE));
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_SETTINGS_MISSINGOPTIONSCONFFILE);
 		configfile.setModifiedFlag(true);
 		saveSetup();
 	}
@@ -2469,7 +2469,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 				if (g_settings.personalize_redbutton == 0)
 				{
 					// EventList Menu - Personalization Check
-					ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_PERSONALIZE_MENUDISABLEDHINT));
+					ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_PERSONALIZE_MENUDISABLEDHINT);
 				} else {
 					showUserMenu(SNeutrinoSettings::BUTTON_RED);  //USERMENU
 				}
@@ -2484,7 +2484,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 				else if (g_settings.personalize_bluebutton == 0)
 				{
 					// Features Menu - Personalization Check
-					ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_PERSONALIZE_MENUDISABLEDHINT));
+					ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_PERSONALIZE_MENUDISABLEDHINT);
 				}
 				else 
 					showUserMenu(SNeutrinoSettings::BUTTON_BLUE);

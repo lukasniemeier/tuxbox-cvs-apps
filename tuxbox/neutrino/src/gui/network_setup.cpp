@@ -320,10 +320,12 @@ bool CNetworkSetup::checkForIP()
 
 	if (!network_dhcp && network_address.empty()) //no ip definied
 	{
-		ShowMsgUTF(LOCALE_MAINSETTINGS_NETWORK, g_Locale->getText(LOCALE_NETWORKMENU_ERROR_NO_ADDRESS), CMessageBox::mbrBack, 
-				CMessageBox::mbBack, 
-				NEUTRINO_ICON_ERROR, 
-				width);
+		ShowMsgUTF(LOCALE_MAINSETTINGS_NETWORK,
+			   g_Locale->getText(LOCALE_NETWORKMENU_ERROR_NO_ADDRESS),
+			   CMessageBox::mbrBack,
+			   CMessageBox::mbBack,
+			   NEUTRINO_ICON_ERROR,
+			   width);
 		ret = false;
 	}
 
@@ -353,8 +355,11 @@ void CNetworkSetup::saveNetworkSettings(bool show_message)
   	networkConfig->commitConfig();
 
 	if (show_message)
-		ShowHintUTF(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_NETWORKMENU_SETUPSAVED), width , g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR], NEUTRINO_ICON_INFO); // UTF-8
-
+		ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO,
+				  LOCALE_NETWORKMENU_SETUPSAVED,
+				  width,
+				  g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR],
+				  NEUTRINO_ICON_INFO);
 }
 
 //saves settings and apply, reboot not required
