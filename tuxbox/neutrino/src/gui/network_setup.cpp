@@ -320,12 +320,12 @@ bool CNetworkSetup::checkForIP()
 
 	if (!network_dhcp && network_address.empty()) //no ip definied
 	{
-		ShowMsgUTF(LOCALE_MAINSETTINGS_NETWORK,
-			   g_Locale->getText(LOCALE_NETWORKMENU_ERROR_NO_ADDRESS),
-			   CMessageBox::mbrBack,
-			   CMessageBox::mbBack,
-			   NEUTRINO_ICON_ERROR,
-			   width);
+        ShowLocalizedMessage(LOCALE_MAINSETTINGS_NETWORK,
+                             LOCALE_NETWORKMENU_ERROR_NO_ADDRESS,
+                             CMessageBox::mbrBack,
+                             CMessageBox::mbBack,
+                             NEUTRINO_ICON_ERROR,
+                             width);
 		ret = false;
 	}
 
