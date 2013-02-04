@@ -60,6 +60,7 @@
 #define NEUTRINO_ICON_16_9		"16_9.raw"
 #define NEUTRINO_ICON_16_9_GREY		"16_9_gray.raw"
 #define NEUTRINO_ICON_AUDIO		"audio.raw"
+#define NEUTRINO_ICON_BOOKMARKMANAGER	"bookmarkmanager.raw"
 #define NEUTRINO_ICON_BORDER_LR		"border_lr.raw"
 #define NEUTRINO_ICON_BORDER_UL		"border_ul.raw"
 #define NEUTRINO_ICON_CA		"ca.raw"

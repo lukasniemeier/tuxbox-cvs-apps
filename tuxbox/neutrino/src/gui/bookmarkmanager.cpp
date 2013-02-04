@@ -234,7 +234,7 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 		width=g_settings.screen_EndX-g_settings.screen_StartX-10;
 
 	int iconw = 0, iconh = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
+	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);
 	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	x = getScreenStartX (width);
@@ -435,10 +435,10 @@ void CBookmarkManager::paintHead()
 
 	int theight_mid = theight / 2;
 	int iconw = 0, iconh = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
+	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);
 
 	int ypos = y + theight_mid - (iconh / 2);
-	frameBuffer->paintIcon(NEUTRINO_ICON_TIMER, x + 5, ypos);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BOOKMARKMANAGER, x + 5, ypos);
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 5 + iconw + 10, y + theight + 2, width - 5 - iconw - 10, g_Locale->getText(LOCALE_BOOKMARKMANAGER_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
 #if 0

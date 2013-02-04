@@ -4,7 +4,7 @@ install_DATA = \
 	0.raw 1.raw 2.raw 3.raw 4.raw 5.raw 6.raw 7.raw 8.raw 9.raw \
 	16_9_gray.raw 16_9.raw \
 	audio.raw \
-	blau.raw border_lr.raw border_ul.raw \
+	blau.raw bookmarkmanager.raw border_lr.raw border_ul.raw \
 	ca.raw colors.raw conflict.raw \
 	dd_avail.raw dd_gray.raw dd.raw down.raw \
 	epginfo.raw error.raw \
