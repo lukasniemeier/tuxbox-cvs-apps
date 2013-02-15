@@ -6,7 +6,7 @@
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
 
-	Bugfixes/cleanups/dreambox port (C) 2007-2009 Stefan Seyfried
+	Bugfixes/cleanups/dreambox port (C) 2007-2013 Stefan Seyfried
 	(C) 2008 Novell, Inc. Author: Stefan Seyfried
 
 	Kommentar:
@@ -1710,7 +1710,9 @@ void CInfoViewer::show_Data(bool calledFromEvent)
 		info_CurrentNext.current_zeit.startzeit = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].startzeit;
 		info_CurrentNext.current_zeit.dauer = g_RemoteControl->subChannels[g_RemoteControl->selected_subchannel].dauer;
 	}
-	/* what is this for? is it for preventing overlapping events to be displayed? */
+#if 0
+/* this triggers false positives on some channels.
+ * TODO: test on real NVOD channels, if this was even necessary at all */
 	else
 	{
 		if ((info_CurrentNext.flags & CSectionsdClient::epgflags::has_current) &&
@@ -1723,6 +1725,7 @@ void CInfoViewer::show_Data(bool calledFromEvent)
 			}
 		}
 	}
+#endif
 	
 	time_t jetzt=time(NULL);
 	if (info_CurrentNext.flags & CSectionsdClient::epgflags::has_current)
