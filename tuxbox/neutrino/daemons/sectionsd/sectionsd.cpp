@@ -7252,7 +7252,8 @@ static void *fseitThread(void *)
 						if (!(e->times.empty()))
 						{
 							if ( ( e->times.begin()->startzeit < zeit + secondsToCache ) &&
-							        ( ( e->times.begin()->startzeit + (long)e->times.begin()->dauer ) > zeit - oldEventsAre ) )
+							        ( ( e->times.begin()->startzeit + (long)e->times.begin()->dauer ) > zeit - oldEventsAre ) &&
+							        ( e->times.begin()->dauer > 1 ) )
 							{
 								//fprintf(stderr, "%02x ", header.table_id);
 								addEvent(*e, zeit);
@@ -7594,7 +7595,8 @@ static void *eitThread(void *)
 						if (!(e->times.empty()))
 						{
 							if ( ( e->times.begin()->startzeit < zeit + secondsToCache ) &&
-							        ( ( e->times.begin()->startzeit + (long)e->times.begin()->dauer ) > zeit - oldEventsAre ) )
+							        ( ( e->times.begin()->startzeit + (long)e->times.begin()->dauer ) > zeit - oldEventsAre ) &&
+							        ( e->times.begin()->dauer > 1 ) )
 							{
 								//fprintf(stderr, "%02x ", header.table_id);
 								addEvent(*e, zeit);
