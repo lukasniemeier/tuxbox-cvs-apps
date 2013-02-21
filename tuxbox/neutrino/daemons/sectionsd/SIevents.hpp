@@ -133,6 +133,22 @@ public:
 		return name < l.name;
 	}
 
+	bool operator==(const SIlinkage& l) const {
+		return (linkageType == l.linkageType) &&
+			(transportStreamId == l.transportStreamId) &&
+			(originalNetworkId == l.originalNetworkId) &&
+			(serviceId == l.serviceId) &&
+			(name == l.name);
+	}
+
+	bool operator!=(const SIlinkage& l) const {
+		return (linkageType != l.linkageType) ||
+			(transportStreamId != l.transportStreamId) ||
+			(originalNetworkId != l.originalNetworkId) ||
+			(serviceId != l.serviceId) ||
+			(name != l.name);
+	}
+
 	void dump(void) const {
 		printf("Linakge Type: 0x%02hhx\n", linkageType);
 		if (name.length())
@@ -205,6 +221,18 @@ class SIcomponent {
       return streamContent < c.streamContent;
 //      return component < c.component;
     }
+    bool operator==(const SIcomponent& c) const {
+      return (componentType == c.componentType) &&
+        (componentTag == c.componentTag) &&
+        (streamContent == c.streamContent) &&
+        (component == c.component);
+    }
+    bool operator!=(const SIcomponent& c) const {
+      return (componentType != c.componentType) ||
+        (componentTag != c.componentTag) ||
+        (streamContent != c.streamContent) ||
+        (component != c.component);
+    }
     void dump(void) const {
       if(component.length())
         printf("Component: %s\n", component.c_str());
@@ -257,8 +285,16 @@ class SIparentalRating {
       countryCode=r.countryCode;
     }
     // Der Operator zum sortieren
-    bool operator < (const SIparentalRating& c) const {
-      return countryCode < c.countryCode;
+    bool operator < (const SIparentalRating& r) const {
+      return countryCode < r.countryCode;
+    }
+    bool operator==(const SIparentalRating& r) const {
+      return (rating == r.rating) &&
+        (countryCode == r.countryCode);
+    }
+    bool operator!=(const SIparentalRating& r) const {
+      return (rating != r.rating) ||
+        (countryCode != r.countryCode);
     }
     void dump(void) const {
       printf("Rating: %s %hhu (+3)\n", countryCode.c_str(), rating);
@@ -303,6 +339,14 @@ class SItime {
     // Der Operator zum sortieren
     bool operator < (const SItime& t) const {
       return startzeit < t.startzeit;
+    }
+    bool operator==(const SItime& t) const {
+      return (dauer == t.dauer) &&
+        (startzeit == t.startzeit);
+    }
+    bool operator!=(const SItime& t) const {
+      return (dauer != t.dauer) ||
+        (startzeit != t.startzeit);
     }
     void dump(void) const {
       printf("Startzeit: %s", ctime(&startzeit));
