@@ -709,6 +709,8 @@ int CNeutrinoApp::loadSetup()
 	g_settings.audio_left_right_selectable = configfile.getBool("audio_left_right_selectable", false);
 
 	//screen configuration
+	g_settings.screen_xres = configfile.getInt32("screen_xres", 100);
+	g_settings.screen_yres = configfile.getInt32("screen_yres", 100);
 	g_settings.screen_StartX = configfile.getInt32( "screen_StartX", 37 );
 	g_settings.screen_StartY = configfile.getInt32( "screen_StartY", 23 );
 	g_settings.screen_EndX = configfile.getInt32( "screen_EndX", 668 );
@@ -1248,6 +1250,8 @@ void CNeutrinoApp::saveSetup()
 	configfile.setBool  ( "audio_left_right_selectable", g_settings.audio_left_right_selectable );
 
 	//screen configuration
+	configfile.setInt32( "screen_xres", g_settings.screen_xres);
+	configfile.setInt32( "screen_yres", g_settings.screen_yres);
 	configfile.setInt32( "screen_StartX", g_settings.screen_StartX );
 	configfile.setInt32( "screen_StartY", g_settings.screen_StartY );
 	configfile.setInt32( "screen_EndX", g_settings.screen_EndX );
@@ -1728,7 +1732,7 @@ void CNeutrinoApp::SetupFonts()
 	if (g_fontRenderer != NULL)
 		delete g_fontRenderer;
 
-	g_fontRenderer = new FBFontRenderClass();
+	g_fontRenderer = new FBFontRenderClass(72 * g_settings.screen_xres / 100, 72 * g_settings.screen_yres / 100);
 
 	style[0] = g_fontRenderer->AddFont(font.filename[0]);
 

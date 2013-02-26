@@ -42,7 +42,7 @@ FT_Error FBFontRenderClass::myFTC_Face_Requester(FTC_FaceID  face_id,
 }
 
 
-FBFontRenderClass::FBFontRenderClass()
+FBFontRenderClass::FBFontRenderClass(const int xr, const int yr)
 {
 	dprintf(DEBUG_DEBUG, "[FONT] initializing core...\n");
 	if (FT_Init_FreeType(&library))
@@ -52,6 +52,9 @@ FBFontRenderClass::FBFontRenderClass()
 	}
 
 	font = NULL;
+
+	xres = xr;
+	yres = yr;
 
 	int maxbytes= 4 *1024*1024;
 	dprintf(DEBUG_INFO, "[FONT] Intializing font cache, using max. %dMB...\n", maxbytes/1024/1024);
@@ -148,9 +151,14 @@ FTC_FaceID FBFontRenderClass::getFaceID(const char * const family, const char * 
 	return 0;
 }
 
-FT_Error FBFontRenderClass::getGlyphBitmap(FTC_ImageType fnt, FT_ULong glyph_index, FTC_SBit *sbit)
+FT_Error FBFontRenderClass::getGlyphBitmap(FTC_ImageTypeRec *fnt, FT_ULong glyph_index, FTC_SBit *sbit)
 {
 	return FTC_SBitCache_Lookup(sbitsCache, fnt, glyph_index, sbit, NULL);
+}
+
+FT_Error FBFontRenderClass::getGlyphBitmap(FTC_ScalerRec *sc, FT_ULong glyph_index, FTC_SBit *sbit)
+{
+	return FTC_SBitCache_LookupScaler(sbitsCache, sc, FT_LOAD_DEFAULT, glyph_index, sbit, NULL);
 }
 
 const char *FBFontRenderClass::AddFont(const char * const filename, const bool make_italics)
@@ -204,50 +212,54 @@ std::string FBFontRenderClass::getFamily(const char * const filename) const
 
 Font::Font(FBFontRenderClass *render, FTC_FaceID faceid, const int isize, const fontmodifier _stylemodifier)
 {
-	stylemodifier           = _stylemodifier;
+	stylemodifier  = _stylemodifier;
 
-	frameBuffer 		= CFrameBuffer::getInstance();
-	renderer 		= render;
-	font.face_id	 	= faceid;
-	font.width  		= isize;
-	font.height	 	= isize;
-	font.flags	 	= FT_LOAD_FORCE_AUTOHINT;
+	frameBuffer    = CFrameBuffer::getInstance();
+	renderer       = render;
+	font.face_id   = faceid;
+	font.width     = isize;
+	font.height    = isize;
+	font.flags     = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
+
+	scaler.face_id = font.face_id;
+	scaler.width   = isize * 64;
+	scaler.height  = isize * 64;
+	scaler.pixel   = false;
+	scaler.x_res   = render->xres;
+	scaler.y_res   = render->yres;
+
 	setSize(isize);
 }
 
 FT_Error Font::getGlyphBitmap(FT_ULong glyph_index, FTC_SBit *sbit)
 {
-	return renderer->getGlyphBitmap(&font, glyph_index, sbit);
+	return renderer->getGlyphBitmap(&scaler, glyph_index, sbit);
 }
 
 int Font::setSize(int isize)
 {
-	FT_Error err;
-	FTC_ScalerRec scaler;
-
 	int temp = font.width;
 	font.width = font.height = isize;
-	scaler.face_id = font.face_id;
-	scaler.width   = font.width;
-	scaler.height  = font.height;
-	scaler.pixel   = true;
+	scaler.width   = isize * 64;
+	scaler.height  = isize * 64;
 
-	err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
+	FT_Error err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
 	if (err != 0)
 	{
-		dprintf(DEBUG_NORMAL, "FTC_Manager_Lookup_Size failed! (0x%x)\n", err);
+		dprintf(DEBUG_NORMAL, "%s:FTC_Manager_LookupSize failed (0x%x)\n", __FUNCTION__, err);
 		return 0;
 	}
 	// hack begin (this is a hack to get correct font metrics, didn't find any other way which gave correct values)
+	face = size->face;
 	FTC_SBit glyph;
 	int index;
 
-	index = FT_Get_Char_Index(size->face, 'M');
+	index = FT_Get_Char_Index(face, 'M');
 	getGlyphBitmap(index, &glyph);
 	int tM=glyph->top;
 	fontwidth = glyph->width;
 
-	index = FT_Get_Char_Index(size->face, 'g');
+	index = FT_Get_Char_Index(face, 'g');
 	getGlyphBitmap(index, &glyph);
 	int hg=glyph->height;
 	int tg=glyph->top;
@@ -321,24 +333,18 @@ void Font::RenderString(int x, int y, const int width, const char *text, const u
 	if (!frameBuffer->getActive())
 		return;
 
-	FT_Error err;
-
 	pthread_mutex_lock( &renderer->render_mutex );
-	FTC_ScalerRec scaler;
 
-	scaler.face_id = font.face_id;
-	scaler.width   = font.width;
-	scaler.height  = font.height;
-	scaler.pixel   = true;
-
-	err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
+	FT_Error err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
 	if (err != 0)
 	{
-		dprintf(DEBUG_NORMAL, "FTC_Manager_Lookup_Size failed! (0x%x)\n", err);
+		dprintf(DEBUG_NORMAL, "FTC_Manager_LookupSize failed! (0x%x)\n", err);
 		pthread_mutex_unlock(&renderer->render_mutex);
 		return;
 	}
-	int use_kerning = FT_HAS_KERNING(size->face);
+	face = size->face;
+
+	int use_kerning = FT_HAS_KERNING(face);
 	int left=x;
 	int step_y=height;
 
@@ -457,7 +463,7 @@ void Font::RenderString(int x, int y, const int width, const char *text, const u
 		if (unicode_value == -1)
 			break;
 
-		int index = FT_Get_Char_Index(size->face, unicode_value);
+		int index = FT_Get_Char_Index(face, unicode_value);
 
 		if (!index)
 			continue;
@@ -470,8 +476,9 @@ void Font::RenderString(int x, int y, const int width, const char *text, const u
 		//kerning
 		if(use_kerning)
 		{
-			FT_Get_Kerning(size->face, lastindex, index, 0, &kerning);
-			x+=(kerning.x+32)>>6; // kerning!
+			FT_Get_Kerning(face, lastindex, index, 0, &kerning);
+			//x+=(kerning.x+32)>>6; // kerning!
+			x += (kerning.x) >> 6; // kerning!
 		}
 
 		// width clip
@@ -555,20 +562,17 @@ void Font::RenderString(int x, int y, const int width, const std::string & text,
 int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 {
 	pthread_mutex_lock( &renderer->render_mutex );
-	FT_Error err;
-	FTC_ScalerRec scaler;
-	scaler.face_id = font.face_id;
-	scaler.width   = font.width;
-	scaler.height  = font.height;
-	scaler.pixel   = true;
-	err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
+
+	FT_Error err = FTC_Manager_LookupSize(renderer->cacheManager, &scaler, &size);
 	if (err != 0)
 	{
-		dprintf(DEBUG_NORMAL, "FTC_Manager_Lookup_Size failed! (0x%x)\n", err);
+		dprintf(DEBUG_NORMAL, "%s:FTC_Manager_LookupSize failed (0x%x)\n", __FUNCTION__, err);
 		pthread_mutex_unlock(&renderer->render_mutex);
 		return -1;
 	}
-	int use_kerning = FT_HAS_KERNING(size->face);
+	face = size->face;
+
+	int use_kerning = FT_HAS_KERNING(face);
 	int x=0;
 	int lastindex=0; // 0==missing glyph (never has kerning)
 	FT_Vector kerning;
@@ -582,7 +586,7 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 		if (unicode_value == -1)
 			break;
 
-		int index = FT_Get_Char_Index(size->face, unicode_value);
+		int index = FT_Get_Char_Index(face, unicode_value);
 
 		if (!index)
 			continue;
@@ -594,8 +598,9 @@ int Font::getRenderWidth(const char *text, const bool utf8_encoded)
 		//kerning
 		if(use_kerning)
 		{
-			FT_Get_Kerning(size->face, lastindex, index, 0, &kerning);
-			x+=(kerning.x+32)>>6; // kerning!
+			FT_Get_Kerning(face, lastindex, index, 0, &kerning);
+//			x+=(kerning.x+32)>>6; // kerning!
+			x+=(kerning.x)>>6; // kerning!
 		}
 
 		x+=glyph->xadvance+1;

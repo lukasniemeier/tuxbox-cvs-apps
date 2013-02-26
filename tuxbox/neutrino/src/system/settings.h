@@ -340,6 +340,8 @@ struct SNeutrinoSettings
 	int audio_left_right_selectable;
 
 	//screen configuration
+	int screen_xres;
+	int screen_yres;
 	int screen_StartX;
 	int screen_StartY;
 	int screen_EndX;

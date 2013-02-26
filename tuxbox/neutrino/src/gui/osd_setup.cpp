@@ -184,6 +184,7 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 
 		fontsizenotifier->changeNotify(NONEXISTANT_LOCALE, NULL);
+
 		return menu_return::RETURN_REPAINT;
 	}
 	else if(actionKey == "channel_logodir")
@@ -263,17 +264,17 @@ int COsdSetup::showOsdSetup()
 
 	//osd progressbar color
 	CMenuOptionChooser *osd_pbcolor_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_COLORMENU_PROGRESSBAR, &g_settings.progressbar_color, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	//osd fontsize setup
+	CMenuForwarder *osd_fontsize_fw = new CMenuForwarder(LOCALE_FONTMENU_HEAD, true, NULL, this, "show_fontsize_setup", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
 	//osd timeout setup forwarder
-	CMenuForwarder *osd_timeout_fw = new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL,  this, "show_timeout_setup", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+	CMenuForwarder *osd_timeout_fw = new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL,  this, "show_timeout_setup", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
 	//osd screen setup
 	CScreenSetup *osd_screen = new CScreenSetup();
-	CMenuForwarder *osd_screen_fw = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, osd_screen, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+	CMenuForwarder *osd_screen_fw = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, osd_screen, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
 	//osd infobar setup
-	CMenuForwarder *osd_infobar_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR, true, NULL, this, "show_infobar_setup", CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
+	CMenuForwarder *osd_infobar_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR, true, NULL, this, "show_infobar_setup", CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
 	//osd channellist setup
-	CMenuForwarder *osd_chanlist_fw = new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLIST, true, NULL, this, "show_channellist_setup", CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
-	//osd fontzize setup
-	CMenuForwarder *osd_fontsize_fw = new CMenuForwarder(LOCALE_FONTMENU_HEAD, true, NULL, this, "show_fontsize_setup", CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3);
+	CMenuForwarder *osd_chanlist_fw = new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLIST, true, NULL, this, "show_channellist_setup", CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3);
 
 	//osd volumbar position
  	CMenuOptionChooser* osd_volumbarpos_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_VOLUMEBAR_DISP_POS, &g_settings.volumebar_disp_pos, VOLUMEBAR_DISP_POS_OPTIONS, VOLUMEBAR_DISP_POS_OPTIONS_COUNT, true);
@@ -294,14 +295,13 @@ int COsdSetup::showOsdSetup()
 		//--------------------------------------------
 		osd_setup_colors->addItem(GenericMenuSeparatorLine);
 		osd_setup_colors->addItem(osd_themes_fw);	//themes setup
-		
+	osd_setup->addItem(osd_fontsize_fw);	//fontsize setup		
 	osd_setup->addItem(osd_timeout_fw);	//timeout
 	osd_setup->addItem(osd_screen_fw);	//screen setup
 	osd_setup->addItem(GenericMenuSeparatorLine);
 	//-------------------------------------------
 	osd_setup->addItem(osd_infobar_fw);	//infobar setup
 	osd_setup->addItem(osd_chanlist_fw);	//channellist setup
-	osd_setup->addItem(osd_fontsize_fw);	//fontsize setup
 #ifdef HAVE_DBOX_HARDWARE
 	CAlphaSetup* osd_alpha = NULL;
 	if ((g_info.box_Type == CControld::TUXBOX_MAKER_PHILIPS) || (g_info.box_Type == CControld::TUXBOX_MAKER_SAGEM))
@@ -595,18 +595,35 @@ void COsdSetup::AddFontSettingItem(CMenuWidget *fontSettings, const SNeutrinoSet
 /* font settings  */
 int COsdSetup::showOsdFontSizeSetup()
 {
-	// dynamic created objects
-	std::vector<CMenuTarget*> toDelete;
+	char val_x[4] = {0};
+	char val_y[4] = {0};
+	snprintf(val_x,sizeof(val_x), "%03d",g_settings.screen_xres);
+	snprintf(val_y,sizeof(val_y), "%03d",g_settings.screen_yres);
 
 	CMenuWidget * fontSettings = new CMenuWidget(menue_title, menue_icon, width);
-
 	fontSettings->addIntroItems(LOCALE_FONTMENU_HEAD);
+
+	CMenuWidget * fontscale = new CMenuWidget(LOCALE_FONTMENU_HEAD, NEUTRINO_ICON_COLORS, width/*, MN_WIDGET_ID_OSDSETUP_FONTSCALE*/);
+	fontscale->addIntroItems(LOCALE_FONTMENU_SCALING);
+
+	CStringInput xres_count(LOCALE_FONTMENU_SCALING_X, val_x,/*50,200,*/ 3, LOCALE_FONTMENU_SCALING, LOCALE_FONTMENU_SCALING_X_HINT2, "0123456789 ", fontsizenotifier);
+	CMenuForwarder *m_x = new CMenuForwarder(LOCALE_FONTMENU_SCALING_X, true, val_x, &xres_count);
+
+	CStringInput yres_count(LOCALE_FONTMENU_SCALING_Y, val_y,/*50,200,*/ 3, LOCALE_FONTMENU_SCALING, LOCALE_FONTMENU_SCALING_Y_HINT2, "0123456789 ", fontsizenotifier);
+	CMenuForwarder *m_y = new CMenuForwarder(LOCALE_FONTMENU_SCALING_Y, true, val_y, &yres_count);
+
+	fontscale->addItem(m_x);
+	fontscale->addItem(m_y);
+	fontSettings->addItem(new CMenuForwarder(LOCALE_FONTMENU_SCALING, true, NULL, fontscale)); //OK
 
 	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_MENU_TITLE);
 	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_MENU);
 	AddFontSettingItem(fontSettings, SNeutrinoSettings::FONT_TYPE_MENU_INFO);
 
 	fontSettings->addItem(GenericMenuSeparatorLine);
+
+	// dynamic created objects
+	std::vector<CMenuTarget*> toDelete;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -633,6 +650,7 @@ int COsdSetup::showOsdFontSizeSetup()
 
 	int res = fontSettings->exec(NULL, "");
 	delete fontSettings;
+	delete fontscale;
 
 	// delete dynamic created objects
 	unsigned int toDeleteSize = toDelete.size();
@@ -643,8 +661,40 @@ int COsdSetup::showOsdFontSizeSetup()
 	return res;
 }
 
-bool CFontSizeNotifier::changeNotify(const neutrino_locale_t, void *)
+bool CFontSizeNotifier::changeNotify(const neutrino_locale_t OptionName, void * data)
 {
+	if (data != NULL) {
+		int xre = g_settings.screen_xres;
+		int yre = g_settings.screen_yres;
+		char dat[4];
+		char val[4];
+		sscanf((char*) data, "%hhu", &dat[0]);
+		sprintf(val, "%hhu", dat[0]);
+
+		if (ARE_LOCALES_EQUAL(OptionName, LOCALE_FONTMENU_SCALING_X))
+		{
+			xre = atoi(val);
+			//fallback for min/max bugs ;)
+			if( xre < 50 || xre > 200 ) {
+				xre = g_settings.screen_xres;
+				snprintf((char *)data,sizeof(data), "%03d",g_settings.screen_xres);
+			}
+		}
+		if (ARE_LOCALES_EQUAL(OptionName, LOCALE_FONTMENU_SCALING_Y))
+		{
+			yre = atoi(val);
+			if( yre < 50 || yre > 200 ) {
+				yre = g_settings.screen_yres;
+				snprintf((char *)data,sizeof(data), "%03d",g_settings.screen_yres);
+			}
+		}
+		if (xre != g_settings.screen_xres || yre != g_settings.screen_yres) {
+			printf("[neutrino] new font scale settings x: %d%% y: %d%%\n", xre, yre);
+			g_settings.screen_xres = xre;
+			g_settings.screen_yres = yre;
+		}
+	}
+
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FONTSIZE_HINT)); // UTF-8
 	hintBox.paint();
 

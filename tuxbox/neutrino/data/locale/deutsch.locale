@@ -513,11 +513,16 @@ flashupdate.writeflash ganzes Flashimage einspielen
 flashupdate.writeflashmtd einzelne Partition einspielen
 flashupdate.wrongbase Die Releasezyklus Version weicht ab, bitte\nzuerst neues Komplett-Image installieren!
 fontmenu.channellist Kanalliste
-fontmenu.epg EPG
-fontmenu.eventlist Eventlist
-fontmenu.gamelist Gameliste
-fontmenu.head Schriftgrößen
+fontmenu.epg EPG (Programmführer)
+fontmenu.eventlist Event-Liste
+fontmenu.gamelist Spiele-Liste
+fontmenu.head Schrift
 fontmenu.infobar Infobar
+fontmenu.scaling Schriftgrössenfaktor
+fontmenu.scaling_x Horizontal (in %)
+fontmenu.scaling_x_hint2 Horizontal (in %) min 50 / max 200
+fontmenu.scaling_y Vertikal (in %)
+fontmenu.scaling_y_hint2 Vertikal (in %) min 50 / max 200
 fontsize.channel_num_zap Direktauswahl
 fontsize.channellist Kanalliste
 fontsize.channellist_descr Beschreibung
@@ -1473,7 +1478,7 @@ timersettings.zapto_safety_time_before.hint_2 des jeweiligen Timers abgezogen we
 timing.chanlist Kanalliste
 timing.epg EPG
 timing.filebrowser Filebrowser
-timing.head Timeouts
+timing.head OSD Timeouts
 timing.hint_1 Einblendzeit in Sek., die das OSD auf dem TV
 timing.hint_2 angezeigt wird (permanentes Einblenden mit 0.)
 timing.infobar Infobar
@@ -1507,7 +1512,7 @@ videomenu.csync Sync.-Korrektur
 videomenu.head Video
 videomenu.osd OSD
 videomenu.rgb_centering RGB-Zentrierung
-videomenu.screensetup OSD-Bereich
+videomenu.screensetup Bildbereich
 videomenu.tv-scart TV Scart
 videomenu.vcr-scart VCR Scart
 videomenu.vcrsignal VCR-Ausgang Signalart

@@ -65,7 +65,6 @@ CStringInput::CStringInput(const neutrino_locale_t Name, char* Value, int Size, 
 	iconfile = Icon ? Icon : "";
 
 	observ = Observ;
-	init();
 }
 
 CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int Size, bool ValueIsUtf8, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, const char * const Valid_Chars, CChangeObserver* Observ, const char * const Icon)
@@ -457,6 +456,7 @@ const char * CStringInput::getHint1(void)
 
 void CStringInput::paint()
 {
+	init();
 	int iconoffset, c_rad_mid = RADIUS_MID;
 
 	frameBuffer->paintBoxRel(x, y, width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);

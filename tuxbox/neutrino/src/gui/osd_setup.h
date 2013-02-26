@@ -42,7 +42,7 @@
 class CFontSizeNotifier : public CChangeObserver
 {
 	public:
-		bool changeNotify(const neutrino_locale_t, void *);
+		bool changeNotify(const neutrino_locale_t OptionName, void * data);
 };
 
 class COsdSetup : public CMenuTarget, CChangeObserver
