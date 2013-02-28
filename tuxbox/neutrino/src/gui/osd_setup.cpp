@@ -603,7 +603,7 @@ int COsdSetup::showOsdFontSizeSetup()
 	CMenuWidget * fontSettings = new CMenuWidget(menue_title, menue_icon, width);
 	fontSettings->addIntroItems(LOCALE_FONTMENU_HEAD);
 
-	CMenuWidget * fontscale = new CMenuWidget(LOCALE_FONTMENU_HEAD, NEUTRINO_ICON_COLORS, width/*, MN_WIDGET_ID_OSDSETUP_FONTSCALE*/);
+	CMenuWidget * fontscale = new CMenuWidget(LOCALE_FONTMENU_HEAD, menue_icon, width);
 	fontscale->addIntroItems(LOCALE_FONTMENU_SCALING);
 
 	CStringInput xres_count(LOCALE_FONTMENU_SCALING_X, val_x,/*50,200,*/ 3, LOCALE_FONTMENU_SCALING, LOCALE_FONTMENU_SCALING_X_HINT2, "0123456789 ", fontsizenotifier);
@@ -627,7 +627,7 @@ int COsdSetup::showOsdFontSizeSetup()
 
 	for (int i = 0; i < 5; i++)
 	{
-		CMenuWidget * fontSettingsSubMenu = new CMenuWidget(font_sizes_groups[i].groupname, NEUTRINO_ICON_COLORS, width);
+		CMenuWidget * fontSettingsSubMenu = new CMenuWidget(font_sizes_groups[i].groupname, menue_icon, width);
 		toDelete.push_back(fontSettingsSubMenu);
 		fontSettingsSubMenu->addIntroItems();
 		for (unsigned int j = 0; j < font_sizes_groups[i].count; j++)
@@ -680,7 +680,7 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t OptionName, void * 
 				snprintf((char *)data,sizeof(data), "%03d",g_settings.screen_xres);
 			}
 		}
-		if (ARE_LOCALES_EQUAL(OptionName, LOCALE_FONTMENU_SCALING_Y))
+		else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_FONTMENU_SCALING_Y))
 		{
 			yre = atoi(val);
 			if( yre < 50 || yre > 200 ) {
@@ -688,6 +688,7 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t OptionName, void * 
 				snprintf((char *)data,sizeof(data), "%03d",g_settings.screen_yres);
 			}
 		}
+
 		if (xre != g_settings.screen_xres || yre != g_settings.screen_yres) {
 			printf("[neutrino] new font scale settings x: %d%% y: %d%%\n", xre, yre);
 			g_settings.screen_xres = xre;

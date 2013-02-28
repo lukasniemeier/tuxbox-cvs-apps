@@ -87,7 +87,6 @@ CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int
 	iconfile = Icon ? Icon : "";
 
 	observ = Observ;
-	init();
 }
 
 CStringInput::~CStringInput()
