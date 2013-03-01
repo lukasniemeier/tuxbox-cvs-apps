@@ -702,7 +702,6 @@ void CMenuWidget::addIntroItems(neutrino_locale_t subhead_text, neutrino_locale_
 //-------------------------------------------------------------------------------------------------------------------------------
 CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name, const neutrino_msg_t DirectKey, const std::string & IconName)
 {
-	height               = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionName           = name;
 	active               = Active;
 	optionValue          = OptionValue;
@@ -721,6 +720,11 @@ CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name,
 	iconName             = IconName;
 }
 
+int CMenuOptionNumberChooser::getHeight(void) const
+{
+	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+}
+
 int CMenuOptionNumberChooser::exec(CMenuTarget*)
 {
 	if (((*optionValue) >= upper_bound) || ((*optionValue) < lower_bound))
@@ -736,6 +740,7 @@ int CMenuOptionNumberChooser::exec(CMenuTarget*)
 int CMenuOptionNumberChooser::paint(bool selected)
 {
 	CFrameBuffer * frameBuffer = CFrameBuffer::getInstance();
+	int height = getHeight();
 
 	unsigned char color   = COL_MENUCONTENT;
 	fb_pixel_t    bgcolor = COL_MENUCONTENT_PLUS_0;
@@ -789,7 +794,6 @@ int CMenuOptionNumberChooser::paint(bool selected)
 
 CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName)
 {
-	height            = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionNameString  = g_Locale->getText(OptionName);
 	optionName        = OptionName;
 	options           = Options;
@@ -803,7 +807,6 @@ CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int *
 
 CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName)
 {
-	height            = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionNameString  = OptionName;
 	optionName        = NONEXISTANT_LOCALE;
 	options           = Options;
@@ -813,6 +816,11 @@ CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const Optio
 	observ            = Observ;
 	directKey         = DirectKey;
 	iconName          = IconName;
+}
+
+int CMenuOptionChooser::getHeight(void) const
+{
+	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 }
 
 void CMenuOptionChooser::setOptionValue(const int newvalue)
@@ -858,6 +866,7 @@ int CMenuOptionChooser::exec(CMenuTarget*)
 int CMenuOptionChooser::paint( bool selected )
 {
 	CFrameBuffer * frameBuffer = CFrameBuffer::getInstance();
+	int height = getHeight();
 
 	unsigned char color   = COL_MENUCONTENT;
 	fb_pixel_t    bgcolor = COL_MENUCONTENT_PLUS_0;
@@ -914,7 +923,6 @@ int CMenuOptionChooser::paint( bool selected )
 
 CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t OptionName, char* OptionValue, bool Active, CChangeObserver* Observ)
 {
-	height      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionName  = OptionName;
 	active      = Active;
 	optionValue = OptionValue;
@@ -922,6 +930,11 @@ CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t Optio
 
 	directKey   = CRCInput::RC_nokey;
 	iconName    = "";
+}
+
+int CMenuOptionStringChooser::getHeight(void) const
+{
+	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 }
 
 void CMenuOptionStringChooser::removeOptions()
@@ -965,6 +978,8 @@ int CMenuOptionStringChooser::exec(CMenuTarget*)
 
 int CMenuOptionStringChooser::paint( bool selected )
 {
+	int height = getHeight();
+
 	unsigned char color   = COL_MENUCONTENT;
 	fb_pixel_t    bgcolor = COL_MENUCONTENT_PLUS_0;
 	if (selected)

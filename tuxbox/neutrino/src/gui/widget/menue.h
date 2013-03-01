@@ -202,14 +202,8 @@ class CAbstractMenuOptionChooser : public CMenuItem
 {
  protected:
 	neutrino_locale_t optionName;
-	int               height;
 	int *             optionValue;
 
-	int getHeight(void) const
-		{
-			return height;
-		}
-	
 	bool isSelectable(void) const
 		{
 			return active;
@@ -232,6 +226,7 @@ class CMenuOptionNumberChooser : public CAbstractMenuOptionChooser
 	CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset = 0, const int special_value = 0, const neutrino_locale_t special_value_name = NONEXISTANT_LOCALE, const char * non_localized_name = NULL, const neutrino_msg_t DirectKey = CRCInput::RC_nokey, const std::string & IconName = "");
 	
 	int paint(bool selected);
+	int getHeight(void) const;
 
 	int exec(CMenuTarget* parent);
 };
@@ -259,6 +254,7 @@ class CMenuOptionChooser : public CAbstractMenuOptionChooser
 	int getOptionValue(void) const;
 
 	int paint(bool selected);
+	int getHeight(void) const;
 	std::string getOptionName() {return optionNameString;};
 
 	int exec(CMenuTarget* parent);
@@ -267,7 +263,6 @@ class CMenuOptionChooser : public CAbstractMenuOptionChooser
 class CMenuOptionStringChooser : public CMenuItem
 {
 		neutrino_locale_t        optionName;
-		int                      height;
 		char *                   optionValue;
 		std::vector<std::string> options;
 		CChangeObserver *        observ;
@@ -279,10 +274,7 @@ class CMenuOptionStringChooser : public CMenuItem
 		void addOption(const char * value);
 		void removeOptions(void);
 		int paint(bool selected);
-		int getHeight(void) const
-		{
-			return height;
-		}
+		int getHeight(void) const;
 		bool isSelectable(void) const
 		{
 			return active;
