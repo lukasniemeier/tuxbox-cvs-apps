@@ -58,6 +58,7 @@ CStringInput::CStringInput(const neutrino_locale_t Name, char* Value, int Size, 
 	valueString = NULL;
 	valueStringIsUtf8 = false;
 	size =  Size;
+	selected = 0;
 
 	hint_1 = Hint_1;
 	hint_2 = Hint_2;
@@ -80,6 +81,7 @@ CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int
 	valueString = Value;
 	valueStringIsUtf8 = ValueIsUtf8;
 	size = Size;
+	selected = 0;
 
 	hint_1 = Hint_1;
 	hint_2 = Hint_2;
@@ -124,10 +126,7 @@ void CStringInput::init()
 
 	x = ((720-width)>>1);
 	y = ((500-height)>>1);
-	selected = 0;
-
 }
-
 
 void CStringInput::NormalKeyPressed(const neutrino_msg_t key)
 {
