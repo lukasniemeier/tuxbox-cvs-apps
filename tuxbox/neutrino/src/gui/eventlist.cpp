@@ -99,8 +99,18 @@ EventList::EventList()
 	m_search_channel_id = 1;
 	m_search_bouquet_id= 1;
 
-	//width  = 580;
-	//height = 480;
+	liststart = 0;
+	sort_mode = 0;
+
+	init();
+}
+
+EventList::~EventList()
+{
+}
+
+void EventList::init()
+{
 	width  = w_max (590, 20);
 	height = h_max (480, 20);
 
@@ -116,18 +126,10 @@ EventList::EventList()
 	fwidth1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->getRenderWidth("DDD, 00:00,  ");
 	fwidth2 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->getRenderWidth("[999 min] ");
 
-
 	listmaxshow = (height-theight-iheight-0)/fheight;
 	height = theight+iheight+0+listmaxshow*fheight; // recalc height
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
-	liststart = 0;
-	sort_mode = 0;
-}
-
-
-EventList::~EventList()
-{
 }
 
 void EventList::UpdateTimerList(void)

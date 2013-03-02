@@ -140,6 +140,7 @@ class EventList
 	public:
 		EventList();
 		~EventList();
+		void init();
 		int exec(const t_channel_id channel_id, const std::string& channelname, const CChannelEventList &followlist = CChannelEventList()); // UTF-8
 };
 

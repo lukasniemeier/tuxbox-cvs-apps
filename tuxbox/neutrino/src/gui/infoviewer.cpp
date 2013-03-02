@@ -120,6 +120,7 @@ CInfoViewer::CInfoViewer()
 	gotTime          = g_Sectionsd->getIsTimeSet();
 	CA_Status        = false;
 	virtual_zap_mode = false;
+	lcdUpdateTimer   = 0;
 }
 
 void CInfoViewer::start()
@@ -138,7 +139,8 @@ void CInfoViewer::start()
 	time_dot_width = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME]->getRenderWidth(":");
 	time_width = time_left_width* 2+ time_dot_width;
 
-	lcdUpdateTimer = g_RCInput->addTimer( LCD_UPDATE_TIME_TV_MODE, false, true );
+	if (lcdUpdateTimer == 0)
+		lcdUpdateTimer = g_RCInput->addTimer( LCD_UPDATE_TIME_TV_MODE, false, true );
 }
 
 void CInfoViewer::showSatfind()

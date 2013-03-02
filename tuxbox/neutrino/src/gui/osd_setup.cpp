@@ -700,6 +700,9 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t OptionName, void * 
 	hintBox.paint();
 
 	CNeutrinoApp::getInstance()->SetupFonts();
+	g_InfoViewer->start();
+	g_EpgData->start();
+	g_EventList->init();
 
 	hintBox.hide();
 
