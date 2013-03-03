@@ -100,6 +100,9 @@ int CScreenSetup::exec(CMenuTarget* parent, const std::string &)
 				g_settings.screen_StartY = y_coord[0];
 				g_settings.screen_EndY = y_coord[1];
 				frameBuffer->setScreenSize(g_settings.screen_StartX, g_settings.screen_StartY, g_settings.screen_EndX, g_settings.screen_EndY);
+				// reinit
+				g_EpgData->start();
+				g_EventList->init();
 				loop = false;
 				break;
 
