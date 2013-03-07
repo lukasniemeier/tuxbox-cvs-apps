@@ -12,6 +12,8 @@
 	Copyright (C) 2009 T. Graf 'dbt'
 	Homepage: http://www.dbox2-tuning.net/
 
+	Copyright (C) 2013 Stefan Seyfried
+
 	License: GPL
 
 	This program is free software; you can redistribute it and/or modify
@@ -44,6 +46,7 @@
 
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
+#include <gui/widget/stringinput_ext.h>
 #include <gui/widget/hintbox.h>
 
 #include <driver/screen_max.h>
@@ -140,7 +143,7 @@ const CMenuOptionChooser::keyval SATSETUP_SCANTP_POL[SATSETUP_SCANTP_POL_COUNT] 
 	{ 1, LOCALE_SCANTP_POL_V }
 };
 
-#define SATSETUP_DISEQC_OPTION_COUNT 6
+#define SATSETUP_DISEQC_OPTION_COUNT 7
 const CMenuOptionChooser::keyval SATSETUP_DISEQC_OPTIONS[SATSETUP_DISEQC_OPTION_COUNT] =
 {
 	{ NO_DISEQC          , LOCALE_SATSETUP_NODISEQC    },
@@ -148,6 +151,7 @@ const CMenuOptionChooser::keyval SATSETUP_DISEQC_OPTIONS[SATSETUP_DISEQC_OPTION_
 	{ DISEQC_1_0         , LOCALE_SATSETUP_DISEQC10    },
 	{ DISEQC_1_1         , LOCALE_SATSETUP_DISEQC11    },
 	{ DISEQC_1_2         , LOCALE_SATSETUP_DISEQC12    },
+	{ DISEQC_UNICABLE    , LOCALE_SATSETUP_UNICABLE    },
 	{ SMATV_REMOTE_TUNING, LOCALE_SATSETUP_SMATVREMOTE }
 
 };
@@ -233,10 +237,12 @@ int CScanSetup::showScanService()
 	//prepare sat-lnb-settings
 	CMenuWidget* extSatSettings = NULL;
 	CMenuWidget* extMotorSettings = NULL;
+	CMenuWidget* extUnicableSettings = NULL;
 	CStringInput* toff_lat = NULL;
 	CStringInput* toff_long = NULL;
 	CMotorControl* motorControl = NULL;
 	CSatDiseqcNotifier* satDiseqcNotifier = NULL;
+	CIntInput* uniqrg = NULL;
 
 	//sat-lnb-settings
 	if(g_info.delivery_system == DVB_S)
@@ -244,7 +250,7 @@ int CScanSetup::showScanService()
  		g_Zapit->getScanSatelliteList(satList);
 
 		//prepare diseqc
-		CMenuOptionStringChooser* ojSat = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.satNameNoDiseqc, ((scanSettings.diseqcMode == DISEQC_1_2) || (scanSettings.diseqcMode == NO_DISEQC)));
+		CMenuOptionStringChooser* ojSat = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.satNameNoDiseqc, ((scanSettings.diseqcMode == DISEQC_1_2) || (scanSettings.diseqcMode == NO_DISEQC)|| scanSettings.diseqcMode == DISEQC_UNICABLE));
 
 		for (uint i=0; i < sat_list_size; i++)
 		{
@@ -253,7 +259,7 @@ int CScanSetup::showScanService()
 		}
 
 		//prepare diseqc repeats
-		CMenuOptionNumberChooser * ojDiseqcRepeats = new CMenuOptionNumberChooser(LOCALE_SATSETUP_DISEQCREPEAT, (int *)&scanSettings.diseqcRepeat, (scanSettings.diseqcMode != NO_DISEQC) && (scanSettings.diseqcMode != DISEQC_1_0), 0, 2);
+		CMenuOptionNumberChooser * ojDiseqcRepeats = new CMenuOptionNumberChooser(LOCALE_SATSETUP_DISEQCREPEAT, (int *)&scanSettings.diseqcRepeat, (scanSettings.diseqcMode != NO_DISEQC) && (scanSettings.diseqcMode != DISEQC_1_0) && scanSettings.diseqcMode != DISEQC_UNICABLE, 0, 2);
 
 		//extended sat settings
 		extSatSettings = new CMenuWidget(LOCALE_SATSETUP_EXTENDED, NEUTRINO_ICON_SETTINGS);
@@ -262,7 +268,7 @@ int CScanSetup::showScanService()
 		extSatSettings->addIntroItems();
 
 		//prepare diseqc mode
-		CMenuForwarder* ojExtSatSettings = new CMenuForwarder(LOCALE_SATSETUP_EXTENDED, (scanSettings.diseqcMode != NO_DISEQC), NULL, extSatSettings, NULL, CRCInput::RC_1);
+		CMenuForwarder* ojExtSatSettings = new CMenuForwarder(LOCALE_SATSETUP_EXTENDED, (scanSettings.diseqcMode != NO_DISEQC && scanSettings.diseqcMode != DISEQC_UNICABLE), NULL, extSatSettings, NULL, CRCInput::RC_1);
 
 		//make sat list
 		for( uint i=0; i < sat_list_size; i++)
@@ -318,9 +324,18 @@ int CScanSetup::showScanService()
 			extMotorSettings->addItem(oj);
 		}
 
+		extUnicableSettings = new CMenuWidget(LOCALE_SATSETUP_UNICABLE_SETTINGS, NEUTRINO_ICON_SETTINGS);
+		extUnicableSettings->addIntroItems();
+		CMenuOptionNumberChooser *uniscr = new CMenuOptionNumberChooser(LOCALE_SATSETUP_UNICABLE_SCR, (int *)&scanSettings.uni_scr, true, 0, 7);
+		uniqrg = new CIntInput(LOCALE_SATSETUP_UNICABLE_QRG, (long &)scanSettings.uni_qrg, 4, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, NULL);
+		extUnicableSettings->addItem(uniscr);
+		extUnicableSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_UNICABLE_QRG, true, uniqrg->getValue(), uniqrg));
+		CMenuForwarder* ojExtUnicableSettings = new CMenuForwarder(LOCALE_SATSETUP_UNICABLE, (scanSettings.diseqcMode == DISEQC_UNICABLE), NULL, extUnicableSettings, NULL, CRCInput::RC_3);
+
 		//prepare sat list with diseqc options
-		satDiseqcNotifier = new CSatDiseqcNotifier(ojSat, ojExtSatSettings, ojExtMotorSettings, ojDiseqcRepeats);
+		satDiseqcNotifier = new CSatDiseqcNotifier(ojSat, ojExtSatSettings, ojExtMotorSettings, ojDiseqcRepeats, ojExtUnicableSettings);
 		CMenuOptionChooser* ojDiseqc = new CMenuOptionChooser(LOCALE_SATSETUP_DISEQC, (int *)&scanSettings.diseqcMode, SATSETUP_DISEQC_OPTIONS, SATSETUP_DISEQC_OPTION_COUNT, true, satDiseqcNotifier);
+
 
 		//show entries
 		scansetup->addItem( ojScantype );
@@ -332,6 +347,7 @@ int CScanSetup::showScanService()
 
 		scansetup->addItem( ojExtSatSettings );
 		scansetup->addItem( ojExtMotorSettings );
+		scansetup->addItem( ojExtUnicableSettings );
 	}
 	else
 	{//cable
@@ -388,11 +404,13 @@ int CScanSetup::showScanService()
 
 	delete extSatSettings;
 	delete extMotorSettings;
+	delete extUnicableSettings;
 	delete toff_lat;
 	delete toff_long;
 	delete motorControl;
 	delete satDiseqcNotifier;
 	delete scanTs;
+	delete uniqrg;
 
 	return res;
 }
@@ -578,6 +596,15 @@ bool CSatDiseqcNotifier::changeNotify(const neutrino_locale_t, void * Data)
 		extMenu->setActive(true);
 		extMotorMenu->setActive(true);
 		repeatMenu->setActive(true);
+	}
+	else
+	if (*((int*) Data) == DISEQC_UNICABLE)
+	{
+		satMenu->setActive(true);
+		extMenu->setActive(false);
+		extMotorMenu->setActive(false);
+		repeatMenu->setActive(false);
+		extUnicableMenu->setActive(true);
 	}
 	else
 	{

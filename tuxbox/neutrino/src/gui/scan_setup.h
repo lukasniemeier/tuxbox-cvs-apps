@@ -63,11 +63,12 @@ class CSatDiseqcNotifier : public CChangeObserver
 		CMenuItem* extMenu;
 		CMenuItem* extMotorMenu;
 		CMenuItem* repeatMenu;
+		CMenuItem* extUnicableMenu;
 	protected:
 		CSatDiseqcNotifier( ) : CChangeObserver(){};  // prevent calling constructor without data we need
 	public:
-		CSatDiseqcNotifier( CMenuItem* SatMenu, CMenuItem* ExtMenu, CMenuItem* ExtMotorMenu, CMenuItem* RepeatMenu) : CChangeObserver()
-		{ satMenu = SatMenu; extMenu = ExtMenu; extMotorMenu = ExtMotorMenu; repeatMenu = RepeatMenu;};
+		CSatDiseqcNotifier( CMenuItem* SatMenu, CMenuItem* ExtMenu, CMenuItem* ExtMotorMenu, CMenuItem* RepeatMenu, CMenuItem* ExtUnicableMenu) : CChangeObserver()
+		{ satMenu = SatMenu; extMenu = ExtMenu; extMotorMenu = ExtMotorMenu; repeatMenu = RepeatMenu; extUnicableMenu = ExtUnicableMenu; };
 		bool changeNotify(const neutrino_locale_t, void * Data);
 };
 

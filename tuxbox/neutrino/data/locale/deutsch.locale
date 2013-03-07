@@ -1254,6 +1254,10 @@ satsetup.satellite Satellit
 satsetup.savesettingsnow Einstellungen jetzt speichern
 satsetup.smatvremote SMATV Remote Tuning
 satsetup.south Süd
+satsetup.unicable Unicable
+satsetup.unicable_qrg Unicable Frequenz
+satsetup.unicable_scr Unicable SCR#
+satsetup.unicable_settings Unicable Einstellungen
 satsetup.usegotoxx Benutze GotoXX
 satsetup.west West
 scantp.fec FEC

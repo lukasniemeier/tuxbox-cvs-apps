@@ -598,6 +598,8 @@ class CScanSettings
 	t_satellite_position	  satPosition[MAX_SATELLITES];
 	char	                  satName[MAX_SATELLITES][30];
 	delivery_system_t         delivery_system;
+	int                       uni_qrg;
+	int                       uni_scr;
 
 	int		scanSectionsd;
 

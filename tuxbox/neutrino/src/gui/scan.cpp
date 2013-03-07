@@ -4,6 +4,8 @@
 	Copyright (C) 2001 Steffen Hehn 'McClean'
 	Homepage: http://dbox.cyberphoria.org/
 
+	Copyright (C) 2007-2009, 2013 Stefan Seyfried
+
 	Kommentar:
 
 	Diese GUI wurde von Grund auf neu programmiert und sollte nun vom
@@ -151,6 +153,9 @@ printf("[neutrino] TP_scan %d TP_freq %s TP_rate %s TP_fec %d TP_pol %d TP_mod %
 
 	/* send diseqc type to zapit */
 	diseqcType = CNeutrinoApp::getInstance()->getScanSettings().diseqcMode;
+	if (diseqcType == DISEQC_UNICABLE)
+		g_Zapit->setUnicableParam(CNeutrinoApp::getInstance()->getScanSettings().uni_scr,
+					  CNeutrinoApp::getInstance()->getScanSettings().uni_qrg);
 	g_Zapit->setDiseqcType(diseqcType);
 
 	/* send diseqc repeat to zapit */

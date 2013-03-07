@@ -2,7 +2,7 @@
 #define __locals_intern__
 
 /*
- * $Id: locals_intern.h,v 1.205 2012/11/03 07:04:00 rhabarber1848 Exp $
+ * $Id$
  *
  * (C) 2004 by thegoodguy <thegoodguy@berlios.de>
  *
@@ -1281,6 +1281,10 @@ const char * locale_real_names[] =
 	"satsetup.savesettingsnow",
 	"satsetup.smatvremote",
 	"satsetup.south",
+	"satsetup.unicable",
+	"satsetup.unicable_qrg",
+	"satsetup.unicable_scr",
+	"satsetup.unicable_settings",
 	"satsetup.usegotoxx",
 	"satsetup.west",
 	"scantp.fec",

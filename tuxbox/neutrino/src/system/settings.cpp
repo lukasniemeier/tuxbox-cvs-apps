@@ -4,6 +4,9 @@
 
 	Neutrino-GUI  -   DBoxII-Project
 
+	(C) 2002-2012 tuxbox developers
+	(C) 2008-2009, 2013 Stefan Seyfried
+
 	License: GPL
 
 	This program is free software; you can redistribute it and/or modify
@@ -129,7 +132,7 @@ void CScanSettings::toSatList( CZapitClient::ScanSatelliteList& satList) const
 			satList.push_back(sat);
 		}
 	}
-	else if  (diseqcMode == NO_DISEQC)
+	else if  (diseqcMode == NO_DISEQC || diseqcMode == DISEQC_UNICABLE)
 	{
 		strncpy(sat.satName, satNameNoDiseqc, 30);
 		sat.diseqc = 0;
@@ -187,6 +190,8 @@ void CScanSettings::useDefaults(const delivery_system_t _delivery_system)
 	scanType	= CZapitClient::ST_ALL;
 	diseqcMode	= NO_DISEQC;
 	diseqcRepeat	= 0;
+	uni_qrg		= 1210;
+	uni_scr		= 0;
 
 	motorRotationSpeed = 8;
 	useGotoXX = 0;
@@ -234,6 +239,8 @@ bool CScanSettings::loadSettings(const char * const fileName, const delivery_sys
 
 	diseqcMode = (diseqc_t) configfile.getInt32("diseqcMode"  , diseqcMode);
 	diseqcRepeat = configfile.getInt32("diseqcRepeat", diseqcRepeat);
+	uni_qrg = configfile.getInt32("uni_qrg", uni_qrg);
+	uni_scr = configfile.getInt32("uni_scr", uni_scr);
 	bouquetMode = (CZapitClient::bouquetMode) configfile.getInt32("bouquetMode" , bouquetMode);
 	scanType=(CZapitClient::scanType) configfile.getInt32("scanType", scanType);
 	strcpy(satNameNoDiseqc, configfile.getString("satNameNoDiseqc", satNameNoDiseqc).c_str());
@@ -294,6 +301,8 @@ bool CScanSettings::saveSettings(const char * const fileName)
 
 	configfile.setInt32( "delivery_system", delivery_system);
 	configfile.setInt32( "diseqcMode", diseqcMode );
+	configfile.setInt32( "uni_scr", uni_scr );
+	configfile.setInt32( "uni_qrg", uni_qrg );
 	configfile.setInt32( "diseqcRepeat", diseqcRepeat );
 	configfile.setInt32( "bouquetMode", bouquetMode );
 	configfile.setInt32( "scanType", scanType );

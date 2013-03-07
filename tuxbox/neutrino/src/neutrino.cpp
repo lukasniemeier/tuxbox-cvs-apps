@@ -8,7 +8,7 @@
 	Homepage: http://dbox.cyberphoria.org/
 
 	Copyright (C) 2008 Novell, Inc. Author: Stefan Seyfried
-	Copyright (C) 2007, 2008, 2009 Stefan Seyfried
+	Copyright (C) 2007-2010, 2013 Stefan Seyfried
 
 	Kommentar:
 
@@ -4056,6 +4056,8 @@ int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 			CNeutrinoApp::getInstance()->getScanSettings().toMotorPosList(motorPosList);
 			g_Zapit->setScanMotorPosList(motorPosList);
 		}
+		/* set unicable, is only used if diseqcMode == DISEQC_UNICABLE */
+		g_Zapit->setUnicableParam(scanSettings.uni_scr, scanSettings.uni_qrg);
 		// Houdini set DiseqcType/Repeat so you don't have to reboot for changes to take effect
 		/* send diseqc type to zapit */
 		g_Zapit->setDiseqcType(CNeutrinoApp::getInstance()->getScanSettings().diseqcMode);

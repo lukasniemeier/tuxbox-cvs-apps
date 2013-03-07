@@ -1254,6 +1254,10 @@ satsetup.satellite Satellite
 satsetup.savesettingsnow save settings now
 satsetup.smatvremote SMATV Remote Tuning
 satsetup.south South
+satsetup.unicable Unicable
+satsetup.unicable_qrg Unicable Frequency
+satsetup.unicable_scr Unicable SCR#
+satsetup.unicable_settings Unicable Settings
 satsetup.usegotoxx Use GotoXX
 satsetup.west West
 scantp.fec FEC
