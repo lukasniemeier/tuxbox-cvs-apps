@@ -3065,9 +3065,7 @@ void leaveStandby(void)
 			frontend->setDiseqcRepeats(config.getInt32("diseqcRepeats", 0));
 			//motorRotationSpeed = scanconfig.getInt32("motorRotationSpeed", 8); // default: 0.8 degrees per second
 			diseqcType = (diseqc_t)config.getInt32("diseqcType", NO_DISEQC);
-			int uni_scr = config.getInt32("uni_scr", 0);
-			int uni_qrg = config.getInt32("uni_qrg", 0);
-			frontend->setUnicable(uni_scr, uni_qrg);
+			frontend->setUnicable(config.getInt32("uni_scr", 0), config.getInt32("uni_qrg", 0));
 			frontend->setDiseqcType(diseqcType);
 
 			for (unsigned int i = 0; i < MAX_LNBS; i++) {
