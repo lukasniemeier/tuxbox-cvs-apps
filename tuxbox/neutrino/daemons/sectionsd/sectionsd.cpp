@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.344 2012/09/23 08:25:00 rhabarber1848 Exp $
+//  $Id: sectionsd.cpp,v 1.345 2013/03/07 19:30:00 GetAway Exp Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2606,7 +2606,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.344 2012/09/23 08:25:00 rhabarber1848 Exp $\n"
+		"$Id: sectionsd.cpp,v 1.345 2013/03/07 19:30:00 GetAway Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -3810,7 +3810,7 @@ static void sendEventList(int connfd, const unsigned char serviceTyp1, const uns
 						count += sizeof(event_id_t) + 4 + 4 + eName.length() + 1;
 						if (eText.empty())
 						{
-							count += eExtendedText.substr(0, 50).length();
+							count += eExtendedText.substr(0, 95).length();
 						}
 						else
 						{
@@ -3831,7 +3831,8 @@ static void sendEventList(int connfd, const unsigned char serviceTyp1, const uns
 
 							if (eText.empty())
 							{
-								strcpy(liste, eExtendedText.substr(0, 50).c_str());
+								/* we need about 95 chars for infobox, when using smallest font zoom factor*/
+								strcpy(liste, eExtendedText.substr(0, 95).c_str());
 								liste += strlen(liste);
 							}
 							else
@@ -8589,7 +8590,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.344 2012/09/23 08:25:00 rhabarber1848 Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.345 2013/03/07 19:30:00 GetAway Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
