@@ -4,6 +4,7 @@
  * simple commandline client for zapit
  *
  * Copyright (C) 2002 by Andreas Oberritter <obi@tuxbox.org>
+ * Copyright (C) 2007-2010,2013 Stefan Seyfried
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,6 +69,7 @@ int usage (const char * basename)
 		  << "\t--pal\t\t\tswitch to PAL mode" << std::endl
 		  << "\t-m <cmdtype> <addr> <cmd> <number or params> <param1> <param2>" << std::endl
 		  << "\t\t\t\tsend DiSEqC 1.2 motor command" << std::endl
+		  << "\t-u <scr> <freq>\t\tset unicable parameters" << std::endl
 #ifdef HAVE_DBOX_HARDWARE
 		  << "    those require the aviaEXT driver:" << std::endl
 		  << "\t--iecon\t\t\tactivate IEC" << std::endl
@@ -154,6 +156,8 @@ int main (int argc, char** argv)
 	uint8_t motorParam2 = 0;
 	uint8_t motorAddr = 0;
 	uint32_t diseqc[5];
+	int uni_scr = -1;
+	int uni_qrg = -1;
 	unsigned int tmp;
 
 	/* command line */
@@ -340,6 +344,12 @@ int main (int argc, char** argv)
 			mute = 0;
 			continue;
 		}
+		else if (!strcmp(argv[i], "-u") && i < argc - 2)
+		{
+			uni_scr = atoi(argv[++i]);
+			uni_qrg = atoi(argv[++i]);
+			continue;
+		}
 #ifdef HAVE_DBOX_HARDWARE
                 else if (!strncmp(argv[i], "--iecon", 7))
                 {
@@ -464,6 +474,13 @@ int main (int argc, char** argv)
 		zapit.shutdown();
 		std::cout << "zapit shot down :)" << std::endl;
 		return 0;
+	}
+
+	if (uni_scr != -1)
+	{
+		zapit.setUnicableParam(uni_scr, uni_qrg);
+		if (diseqcType == -1)
+			return 0;
 	}
 
 	if (enterStandby)
