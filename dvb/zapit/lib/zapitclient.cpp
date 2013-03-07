@@ -5,7 +5,7 @@
  *
  * (C) 2002 by thegoodguy <thegoodguy@berlios.de> & the DBoxII-Project
  *
- * (C) 2007, 2008, 2009 Stefan Seyfried
+ * (C) 2007-2010, 2013 Stefan Seyfried
  *
  * License: GPL
  *
@@ -760,6 +760,25 @@ void CZapitClient::setDiseqcType(const diseqc_t diseqc)
 void CZapitClient::setDiseqcRepeat(const uint32_t repeat)
 {
 	send(CZapitMessages::CMD_SCANSETDISEQCREPEAT, (const char *) & repeat, sizeof(repeat));
+	close_connection();
+}
+
+void CZapitClient::setUnicableParam(const int scr, const int qrg)
+{
+	CZapitMessages::unicableParam p;
+	p.scr = scr;
+	p.qrg = qrg;
+	send(CZapitMessages::CMD_SET_UNICABLE_OPTS, (const char *) &p, sizeof(p));
+	close_connection();
+}
+
+void CZapitClient::getUnicableParam(int &scr, int &qrg)
+{
+	CZapitMessages::unicableParam p;
+	send(CZapitMessages::CMD_GET_UNICABLE_OPTS);
+	CBasicClient::receive_data((char *) &p, sizeof(p));
+	scr = p.scr;
+	qrg = p.qrg;
 	close_connection();
 }
 

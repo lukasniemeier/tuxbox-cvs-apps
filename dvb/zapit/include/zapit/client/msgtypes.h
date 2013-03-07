@@ -158,6 +158,8 @@ class CZapitMessages
 			CMD_SET_UNCOMMITTED_SWITCH_MODE    = 96,
 			CMD_GET_UNCOMMITTED_SWITCH_MODE    = 97,
 			CMD_LOADSCANSETTINGS               = 98,
+			CMD_SET_UNICABLE_OPTS		   = 99,
+			CMD_GET_UNICABLE_OPTS		   = 100,
 
 #ifdef HAVE_TRIPLEDRAGON
 			CMD_SET_ZOOMLEVEL		   = 120,
@@ -379,6 +381,12 @@ class CZapitMessages
 	struct startChannel
 	{
 		unsigned int channel;
+	};
+
+	struct unicableParam
+	{
+		int scr;
+		int qrg;
 	};
 
 #ifdef HAVE_TRIPLEDRAGON

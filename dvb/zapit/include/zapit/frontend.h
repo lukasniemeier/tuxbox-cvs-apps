@@ -49,6 +49,9 @@ class CFrontend
 		int32_t lnbOffsetsLow[MAX_LNBS];
 		/* high lnb offsets */
 		int32_t lnbOffsetsHigh[MAX_LNBS];
+		/* unicable frequency and SCR# */
+		int uni_qrg;
+		int uni_scr;
 		/* current Transponderdata */
 		TP_params currentTransponder;
 #ifndef HAVE_TRIPLEDRAGON
@@ -79,6 +82,7 @@ class CFrontend
 		void				sendDiseqcPowerOn(void);
 		void				sendDiseqcReset(void);
 		void				sendDiseqcSmatvRemoteTuningCommand(const uint32_t frequency);
+		uint32_t			TuneUnicable(const uint32_t frequency, const int high_band, const int horizontal, const int bank);
 		void				sendDiseqcStandby(void);
 		void				sendDiseqcZeroByteCommand(const uint8_t frm, const uint8_t addr, const uint8_t cmd);
 		void				sendToneBurst(const fe_sec_mini_cmd_t burst, const uint32_t ms);
@@ -96,6 +100,8 @@ class CFrontend
 		uint8_t				getDiseqcPosition(void) const		{ return currentTransponder.diseqc; }
 		uint8_t				getDiseqcRepeats(void) const		{ return diseqcRepeats; }
 		diseqc_t			getDiseqcType(void) const		{ return diseqcType; }
+		int				getUnicableSCR(void) const		{ return uni_scr; }
+		int				getUnicableQRG(void) const		{ return uni_qrg; }
 		uint32_t			getFrequency(void) const;
 		void				setUncommittedSwitchMode(const int mode);
 		int				getUncommittedSwitchMode(void) const;
@@ -123,6 +129,7 @@ class CFrontend
 
 		void				setDiseqcRepeats(const uint8_t repeats)	{ diseqcRepeats = repeats; }
 		void				setDiseqcType(const diseqc_t type);
+		void				setUnicable(const int scr, const int qrg) { uni_scr = scr; uni_qrg = qrg; };
 		void				setLnbOffset(const bool high, const uint8_t index, const int offset);
 		int					setParameters(TP_params *TP);
 		int					setParameters(dvb_frontend_parameters *feparams, const uint8_t polarization = VERTICAL, const uint8_t diseqc = 0);

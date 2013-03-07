@@ -110,13 +110,11 @@ typedef enum {
 	SMATV_REMOTE_TUNING,
 	DISEQC_1_0,
 	DISEQC_1_1,
-	DISEQC_1_2
-#if HAVE_DVB_API_VERSION >= 3 && ! defined(HAVE_TRIPLEDRAGON)
-	,
+	DISEQC_1_2,
 	DISEQC_2_0,
 	DISEQC_2_1,
-	DISEQC_2_2
-#endif
+	DISEQC_2_2,
+	DISEQC_UNICABLE
 } diseqc_t;
 
 /* dvb transmission types */

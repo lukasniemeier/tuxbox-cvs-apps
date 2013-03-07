@@ -2,6 +2,7 @@
  * $Id: frontend.cpp,v 1.72 2012/03/04 08:24:09 rhabarber1848 Exp $
  *
  * (C) 2002-2003 Andreas Oberritter <obi@tuxbox.org>
+ * (C) 2007-2009, 2013 Stefan Seyfried
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -323,13 +324,16 @@ void CFrontend::setFrontend(const dvb_frontend_parameters *feparams)
 	if (fd == -1)
 		return;
 
-	errno = 0;
-
-	while ((errno == 0) || (errno == EOVERFLOW))
-		quiet_fop(ioctl, FE_GET_EVENT, &event);
-#if HAVE_DVB_API_VERSION < 3
+	/* 'const *' is passed in, but we might need to modify it... */
 	dvb_frontend_parameters feparams2;
 	memcpy(&feparams2, feparams, sizeof(dvb_frontend_parameters));
+
+	if (diseqcType == DISEQC_UNICABLE)
+		feparams2.frequency = TuneUnicable(feparams->frequency,
+						   currentToneMode == SEC_TONE_ON,
+						   currentTransponder.polarization == SEC_VOLTAGE_18,
+						   /*!!currentTransponder.diseqc*/ 0); // TODO: mini-a/b switch
+#if HAVE_DVB_API_VERSION < 3
 	/* the dreambox cable driver likes to get the frequency in kHz */
 	if (info.type == FE_QAM) {
 		feparams2.Frequency /= 1000;
@@ -342,10 +346,12 @@ void CFrontend::setFrontend(const dvb_frontend_parameters *feparams)
 		if (info.type == FE_QAM)
 			feparams2.u.qam.FEC_inner = FEC_AUTO;
 	}
-	fop(ioctl, FE_SET_FRONTEND, &feparams2);
-#else
-	fop(ioctl, FE_SET_FRONTEND, feparams);
 #endif
+	errno = 0;
+	while ((errno == 0) || (errno == EOVERFLOW))
+		quiet_fop(ioctl, FE_GET_EVENT, &event);
+
+	fop(ioctl, FE_SET_FRONTEND, &feparams2);
 }
 
 #define TIME_STEP 200
@@ -503,7 +509,10 @@ void CFrontend::secSetTone(const fe_sec_tone_mode_t toneMode, const uint32_t ms)
 {
 	TIMER_START();
 
-	if (fop_sec(ioctl, FE_SET_TONE, toneMode) == 0) {
+	if (diseqcType == DISEQC_UNICABLE) {
+		currentToneMode = toneMode;
+		fop_sec(ioctl, FE_SET_TONE, SEC_TONE_OFF); /* just to make sure... */
+	} else if (fop_sec(ioctl, FE_SET_TONE, toneMode) == 0) {
 		currentToneMode = toneMode;
 		usleep(1000 * ms);
 	}
@@ -515,7 +524,10 @@ void CFrontend::secSetVoltage(const fe_sec_voltage_t voltage, const uint32_t ms)
 {
 	TIMER_START();
 
-	if (fop_sec(ioctl, FE_SET_VOLTAGE, voltage) == 0) {
+	if (diseqcType == DISEQC_UNICABLE) {
+		currentTransponder.polarization = voltage;
+		fop_sec(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_13); /* voltage must not be 18V */
+	} else if (fop_sec(ioctl, FE_SET_VOLTAGE, voltage) == 0) {
 		currentTransponder.polarization = voltage;
 		usleep(1000 * ms);
 	}
@@ -546,8 +558,13 @@ void CFrontend::sendDiseqcCommand(const struct dvb_diseqc_master_cmd *cmd, const
 	secCommand command;
 
 	sequence.miniCommand = SEC_MINI_NONE;
-	sequence.continuousTone = currentToneMode;
-	sequence.voltage = currentTransponder.polarization;
+	if (diseqcType == DISEQC_UNICABLE) {
+		sequence.continuousTone = SEC_TONE_OFF;
+		sequence.voltage = SEC_VOLTAGE_18;
+	} else {
+		sequence.continuousTone = currentToneMode;
+		sequence.voltage = currentTransponder.polarization;
+	}
 	command.type = SEC_CMDTYPE_DISEQC_RAW;
 	command.u.diseqc.cmdtype	= cmd->msg[0];
 	command.u.diseqc.addr	= cmd->msg[1];
@@ -641,7 +658,6 @@ void CFrontend::setDiseqcType(const diseqc_t newDiseqcType)
 	case DISEQC_1_2:
 		INFO("DISEQC_1_2");
 		break;
-#if HAVE_DVB_API_VERSION >= 3
 	case DISEQC_2_0:
 		INFO("DISEQC_2_0");
 		break;
@@ -651,7 +667,9 @@ void CFrontend::setDiseqcType(const diseqc_t newDiseqcType)
 	case DISEQC_2_2:
 		INFO("DISEQC_2_2");
 		break;
-#endif
+	case DISEQC_UNICABLE:
+		INFO("DISEQC_UNICABLE");
+		break;
 	default:
 		WARN("Invalid DiSEqC type");
 		return;
@@ -921,6 +939,9 @@ void CFrontend::setSec(const uint8_t sat_no, const uint8_t pol, const bool high_
 	secSetTone(SEC_TONE_OFF, 1); // this resets currentToneMode!
 	secSetVoltage(v, 30);
 
+	if (diseqcType == DISEQC_UNICABLE)
+		goto out;	/* shortcut */
+
 	if ((diseqcType == DISEQC_1_1) && (uncommitted_switch_mode > 0))
 	{
 		static uint8_t prevSatNo = 255; // initialised with greater than max Satellites (64)
@@ -989,6 +1010,7 @@ void CFrontend::setSec(const uint8_t sat_no, const uint8_t pol, const bool high_
 	if (diseqcType == SMATV_REMOTE_TUNING)
 		sendDiseqcSmatvRemoteTuningCommand(frequency);
 
+ out:
 	currentToneMode = t;
 	if (diseqcType == MINI_DISEQC)
 		sendToneBurst(b, 15);
@@ -1044,6 +1066,33 @@ void CFrontend::sendDiseqcSmatvRemoteTuningCommand(const uint32_t frequency)
 	cmd.msg[5] = (((frequency / 1000) << 4) & 0xF0) | ((frequency / 100) & 0x0F);
 
 	sendDiseqcCommand(&cmd, 15);
+}
+
+uint32_t CFrontend::TuneUnicable(const uint32_t frequency, const int high_band,
+				 const int horizontal, const int bank)
+{
+	struct dvb_diseqc_master_cmd cmd = { { 0xe0, 0x10, 0x5a, 0x00, 0x00, 0x00 }, 5 };
+	unsigned int t = (frequency / 1000 + uni_qrg + 2) / 4 - 350;
+	if (t >= 1024 || uni_scr < 0 || uni_scr > 7 || info.type != FE_QPSK)
+	{
+		WARN("ooops. t > 1024? (%d) or uni_scr out of range? (%d)", t, uni_scr);
+		return 0;
+	}
+
+	uint32_t ret = (t + 350) * 4000 - frequency;
+	INFO("[unicable] 18V=%d TONE=%d, freq=%d qrg=%d scr=%d bank=%d ret=%d",
+			horizontal, high_band, frequency, uni_qrg, uni_scr, bank, ret);
+	cmd.msg[3] = (t >> 8)		|	/* highest 3 bits of t */
+		(uni_scr << 5)		|	/* adress */
+		(bank << 4)		|	/* input 0/1 */
+		(horizontal << 3)	|	/* horizontal == 0x08 */
+		(high_band) << 2;		/* high_band  == 0x04 */
+	cmd.msg[4] = t & 0xFF;
+	fop_sec(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
+	usleep(15 * 1000);		/* en50494 says: >4ms and < 22 ms */
+	sendDiseqcCommand(&cmd, 50);	/* en50494 says: >2ms and < 60 ms */
+	fop_sec(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_13);
+	return ret;
 }
 
 void CFrontend::sendUncommittedSwitchesCommand(uint8_t usCommand)

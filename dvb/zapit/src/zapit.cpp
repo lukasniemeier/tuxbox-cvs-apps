@@ -5,6 +5,7 @@
  *
  * (C) 2001, 2002 by Philipp Leusmann <faralla@berlios.de>
  * (C) 2002, 2003 by Andreas Oberritter <obi@tuxbox.org>
+ * (C) 2007-2010, 2013 Stefan Seyfried
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -729,6 +730,8 @@ void saveSettings(bool write)
 				config.setInt32("diseqcRepeats", frontend->getDiseqcRepeats());
 				config.setInt32("diseqcType", frontend->getDiseqcType());
 				config.setInt32("uncommitted_switch_mode", frontend->getUncommittedSwitchMode());
+				config.setInt32("uni_qrg", frontend->getUnicableQRG());
+				config.setInt32("uni_scr", frontend->getUnicableSCR());
 				break;
 
 			default:
@@ -2450,6 +2453,23 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 		break;
 	}
 
+	case CZapitMessages::CMD_SET_UNICABLE_OPTS:
+	{
+		CZapitMessages::unicableParam p;
+		CBasicServer::receive_data(connfd, &p, sizeof(p));
+		frontend->setUnicable(p.scr, p.qrg);
+		break;
+	}
+
+	case CZapitMessages::CMD_GET_UNICABLE_OPTS:
+	{
+		CZapitMessages::unicableParam p;
+		p.scr = frontend->getUnicableSCR();
+		p.qrg = frontend->getUnicableQRG();
+		CBasicServer::send_data(connfd, &p, sizeof(p));
+		break;
+	}
+
 #ifdef HAVE_DBOX_HARDWARE
 	case CZapitMessages::CMD_SET_AE_IEC_ON:
 	{
@@ -3045,6 +3065,9 @@ void leaveStandby(void)
 			frontend->setDiseqcRepeats(config.getInt32("diseqcRepeats", 0));
 			//motorRotationSpeed = scanconfig.getInt32("motorRotationSpeed", 8); // default: 0.8 degrees per second
 			diseqcType = (diseqc_t)config.getInt32("diseqcType", NO_DISEQC);
+			int uni_scr = config.getInt32("uni_scr", 0);
+			int uni_qrg = config.getInt32("uni_qrg", 0);
+			frontend->setUnicable(uni_scr, uni_qrg);
 			frontend->setDiseqcType(diseqcType);
 
 			for (unsigned int i = 0; i < MAX_LNBS; i++) {

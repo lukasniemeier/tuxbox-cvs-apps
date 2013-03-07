@@ -414,6 +414,10 @@ class CZapitClient:public CBasicClient
 	/* set diseqcRepeat*/
 	void setDiseqcRepeat(const uint32_t repeat);
 
+	/* set the unicable tuning parameters */
+	void setUnicableParam(const int scr, const int qrg);
+	void getUnicableParam(int &scr, int &qrg);
+
 	/* set diseqcRepeat*/
 	void setScanBouquetMode(const bouquetMode mode);
 
