@@ -1402,7 +1402,7 @@ streamingserver.noconnect No connection to streamingserver.\nRecording canceled.
 stringinput.caps caps / no caps
 stringinput.clear clear all
 subtitles.head Subtitles
-timer.eventrecord.msg   ... TO be DONE, or not to be done
+timer.eventrecord.msg The event is scheduled for recording.\nTo edit the schedule open the timer list.
 timer.eventrecord.title Schedule Record
 timer.eventtimed.msg The event is scheduled.\nThe dbox2 will power on and \nswitch to this channel at the given time.
 timer.eventtimed.title Schedule Event

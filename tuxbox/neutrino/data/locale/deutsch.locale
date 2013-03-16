@@ -1248,7 +1248,7 @@ satsetup.long Längengrad Ort
 satsetup.minidiseqc Mini-DiSEqC
 satsetup.motorcontrol Manueller Motor-Setup
 satsetup.motorspeed Motorgeschwindigkeit
-satsetup.nodiseqc Kein DiSEqC
+satsetup.nodiseqc kein DiSEqC
 satsetup.north Nord
 satsetup.satellite Satellit
 satsetup.savesettingsnow Einstellungen jetzt speichern
