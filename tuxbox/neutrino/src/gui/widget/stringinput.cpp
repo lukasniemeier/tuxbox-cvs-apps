@@ -297,6 +297,7 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 	strncpy(oldval, value, size);
 	dispval[0] = 0;
 
+	init();
 	paint();
 
 	unsigned long long timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
@@ -454,7 +455,6 @@ const char * CStringInput::getHint1(void)
 
 void CStringInput::paint()
 {
-	init();
 	int iconoffset, c_rad_mid = RADIUS_MID;
 
 	frameBuffer->paintBoxRel(x, y, width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
@@ -558,9 +558,6 @@ void CStringInputSMS::initSMS(const char * const Valid_Chars)
 			Chars[i][j++] = ' ';	// prevent empty char lists
 		arraySizes[i] = j;
 	}
-
-	height+=260;
-	y = ((500-height)>>1);
 }
 
 void CStringInputSMS::NormalKeyPressed(const neutrino_msg_t key)
@@ -673,6 +670,9 @@ const struct button_label CStringInputSMSButtons[2] =
 
 void CStringInputSMS::paint()
 {
+	height+=260;
+	y = ((500-height)>>1);
+
 	CStringInput::paint();
 
 	int iconw, iconh;
@@ -703,6 +703,7 @@ int CPINInput::exec( CMenuTarget* parent, const std::string & )
 	for(int count=strlen(value)-1;count<size-1;count++)
 		strcat(value, " ");
 
+	CStringInput::init();
 	paint();
 
 	bool loop = true;
@@ -813,6 +814,8 @@ const char * CPLPINInput::getHint1(void)
 
 int CPLPINInput::exec( CMenuTarget* parent, const std::string & )
 {
+	CStringInput::init();
+
 	fb_pixel_t * pixbuf = new fb_pixel_t[(width+ 2* borderwidth) * (height+ 2* borderwidth)];
 
 	if (pixbuf != NULL)
