@@ -530,9 +530,8 @@ const struct button_label CImageInfoButtons[5] =
 
 void CImageInfo::paintFoot(int xf, int yf)
 {
-	int ButtonHeight = ssheight;
-	frameBuffer->paintBoxRel(xf, yf, width, ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, xf + 5, yf, width/6, 5, CImageInfoButtons, width);
+	frameBuffer->paintBoxRel(xf, yf, width, ssheight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, xf + 5, yf, (width - 10) / 5, 5, CImageInfoButtons);
 }
 
 void CImageInfo::paint()

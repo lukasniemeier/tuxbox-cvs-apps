@@ -1343,7 +1343,7 @@ struct button_label CChannelListButtons[] =
 
 void CChannelList::paintFoot()
 {
-	int ButtonWidth = width/4;
+	int ButtonWidth = (width - 20) / 4;
 	int buttonHeight = 7 + std::min(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 	frameBuffer->paintHLineRel(x, width, y + (height - buttonHeight), COL_INFOBAR_SHADOW_PLUS_0);
 	
@@ -1359,7 +1359,7 @@ void CChannelList::paintFoot()
 	}
 		
 	frameBuffer->paintBoxRel(x, y + (height - buttonHeight), width, buttonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + (height - buttonHeight), ButtonWidth, sizeof(CChannelListButtons)/sizeof(CChannelListButtons[0]), CChannelListButtons, width);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + (height - buttonHeight), ButtonWidth, 4, CChannelListButtons);
 }
 
 void CChannelList::paint()

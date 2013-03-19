@@ -1040,7 +1040,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 				if (mode == VLC_MODE)
 					InfobarButtons[SNeutrinoSettings::BUTTON_RED].locale = LOCALE_AUDIOPLAYER_STOP;
 				else
-					InfobarButtons[SNeutrinoSettings::BUTTON_RED].locale = LOCALE_MOVIEPLAYER_TSHELP17;
+					InfobarButtons[SNeutrinoSettings::BUTTON_RED].locale = LOCALE_MOVIEPLAYER_PLUGIN;
 			}
 			else
 			{
@@ -1060,7 +1060,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 			if(calledFromMPlayer)
 			{
 				if (mode == VLC_MODE)
-					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_MOVIEPLAYER_VLCHELP2;
+					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_MOVIEPLAYER_RESYNC;
 				else
 				{
 					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_INFOVIEWER_LANGUAGES;
@@ -1139,7 +1139,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 	}
 		if (paint)
 			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale,
-				startX, by, ButtonWidth, 1, &InfobarButtons[button], 720, false, COL_INFOBAR_SHADOW_PLUS_1, txt);
+				startX, by, ButtonWidth, 1, &InfobarButtons[button], 0, false, COL_INFOBAR_SHADOW_PLUS_1, txt);
 }
 
 #ifdef ENABLE_RADIOTEXT

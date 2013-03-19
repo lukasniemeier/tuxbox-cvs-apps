@@ -171,5 +171,5 @@ void CBEChannelSelectWidget::paintFoot()
 	int y_foot = y + height;
 	frameBuffer->paintBoxRel(x, y_foot, width, ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y_foot, width/2, 2, CBEBouquetSelectWidgetButtons);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y_foot, (width - 10) / 2, 2, CBEBouquetSelectWidgetButtons);
 }

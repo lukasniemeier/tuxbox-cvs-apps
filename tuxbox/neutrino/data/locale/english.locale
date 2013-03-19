@@ -424,6 +424,7 @@ eventfinder.start_search Start Search
 eventlistbar.channelswitch schedule
 eventlistbar.eventsort sorting
 eventlistbar.recordevent record
+eventlistbar.reload reload
 experimentalsettings Experimental Settings
 experimentalsettings.head Experimental Settings
 favorites.addchannel The current channel will be added \nto the bouquet "My Favorites".\nThis will take a few seconds...
@@ -936,6 +937,8 @@ movieplayer.goto.h2 +,- -> relative jump
 movieplayer.head Movie Player
 movieplayer.nostreamingserver The streaming server could not be reached.
 movieplayer.pleasewait Please wait.\nConnecting to the streaming server...
+movieplayer.plugin Plugin
+movieplayer.resync Resync
 movieplayer.toomanybookmarks There are too many bookmarks.\nYou need to delete one of them first.
 movieplayer.tshelp1 Stop
 movieplayer.tshelp10 approx. 10 minutes back

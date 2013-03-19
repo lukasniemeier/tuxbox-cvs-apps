@@ -682,7 +682,7 @@ void CStringInputSMS::paint()
 	int c_rad_mid = RADIUS_MID;
 	frameBuffer->paintBoxRel(x, y + height - 25, width, 25, COL_INFOBAR_SHADOW_PLUS_1, c_rad_mid, CORNER_BOTTOM);
 
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 8, y+height-25, 230, 2, CStringInputSMSButtons);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 8, y + height - 25, (width - 16) / 2, 2, CStringInputSMSButtons);
 }
 
 void CPINInput::paintChar(int pos)

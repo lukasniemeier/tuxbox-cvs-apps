@@ -41,7 +41,7 @@ void paintButtons(CFrameBuffer * const frameBuffer,
 							const unsigned int buttonwidth, 
 							const unsigned int count, 
 							const struct button_label * const content, 
-							const unsigned int maxwidth = 720,
+							const unsigned int maxwidth = 0,
 							bool vertical_paint = false,
 							const unsigned char bcolor = COL_INFOBAR_SHADOW_PLUS_1,
 							const char * alt_buttontext = NULL);

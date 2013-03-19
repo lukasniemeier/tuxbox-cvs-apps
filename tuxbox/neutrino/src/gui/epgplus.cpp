@@ -595,7 +595,7 @@ struct button_label buttonLabels[6] =
 void EpgPlus::Footer::paintButtons(button_label* _buttonLabels, int numberOfButtons)
 {
 	int yPos = y + getUsedHeight() - fontButtons->getHeight();
-	int buttonWidth = (width - 10) / 6; //40
+	int buttonWidth = (width - 10) / numberOfButtons; //40
 
 	frameBuffer->paintBoxRel(x, yPos, width, fontButtons->getHeight(), COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 	::paintButtons(frameBuffer, fontButtons, g_Locale, x + 5, yPos , buttonWidth, numberOfButtons, _buttonLabels);

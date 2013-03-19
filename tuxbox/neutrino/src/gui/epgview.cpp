@@ -955,7 +955,7 @@ const struct button_label epgviewButtons[3] =
 
 void CEpgData::showTimerEventBar(bool _show)
 {
-	int ButtonWidth = ox / 4; // 4 cells
+	int ButtonWidth = (ox - 16) / 4; // 4 cells
 	int fheight = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + BUTTONBAR_FONT_OFFSET;
 	int by = sy + oy + (fheight >> 3) - 1;
 
@@ -973,11 +973,11 @@ void CEpgData::showTimerEventBar(bool _show)
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8, by, ButtonWidth, 1, &epgviewButtons[0]);
 
 	// Button: Timer Channelswitch
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
 
 	// Button: more screenings
 	if (!followlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2]);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2]);
 }
 
 

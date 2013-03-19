@@ -426,8 +426,8 @@ void CBouquetList::paint()
 
 	//footbar
 	int fy = y + theight + listmaxshow * fheight ;
-	int ButtonWith = width/3;
+	int ButtonWith = (width - 8) / 3;
 	int icony = fy + theight / 2 - 12;
 	frameBuffer->paintBoxRel(x, fy, width, theight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 4, icony, ButtonWith, sizeof(CBouquetListButtons)/sizeof(CBouquetListButtons[0]), CBouquetListButtons, width);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 4, icony, ButtonWith, 6, CBouquetListButtons);
 }

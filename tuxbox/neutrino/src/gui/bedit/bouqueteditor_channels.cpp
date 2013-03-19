@@ -142,7 +142,7 @@ const struct button_label CBEChannelWidgetButtons[4] =
 void CBEChannelWidget::paintFoot()
 {
 	frameBuffer->paintBoxRel(x,y+height, width,ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, width/5, 4, CBEChannelWidgetButtons);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, (width - 20) / 4, 4, CBEChannelWidgetButtons);
 }
 
 void CBEChannelWidget::hide()

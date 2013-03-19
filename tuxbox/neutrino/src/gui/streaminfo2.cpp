@@ -501,8 +501,8 @@ void CStreamInfo2::paint(int/*mode*/)
 
 		StreamInfoButtons[0].locale = LOCALE_STREAMINFO_RESIZE;
 		
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, xpos, button_y-20, ButtonWidth, 1, &StreamInfoButtons[0], NULL, NULL, COL_MENUCONTENT_PLUS_0);
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, width - 110, button_y-20, ButtonWidth, 1, &StreamInfoButtons[1], NULL, NULL, COL_MENUCONTENT_PLUS_0);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, xpos, button_y - 20, ButtonWidth, 1, &StreamInfoButtons[0], 0, false, COL_MENUCONTENT_PLUS_0);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, width - 110, button_y - 20, ButtonWidth, 1, &StreamInfoButtons[1], 0, false, COL_MENUCONTENT_PLUS_0);
 	}
 
 }

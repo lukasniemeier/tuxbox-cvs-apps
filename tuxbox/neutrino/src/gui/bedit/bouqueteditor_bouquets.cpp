@@ -159,7 +159,7 @@ void CBEBouquetWidget::paintFoot()
 			CBEBouquetWidgetButtons1[4].locale = LOCALE_BOUQUETEDITOR_LOCK;
 		break;
 	}
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y + height+2, (width-20)/5, 5, CBEBouquetWidgetButtons1, width-20);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y + height + 2, (width - 10) / 5, 5, CBEBouquetWidgetButtons1);
 }
 
 void CBEBouquetWidget::hide()

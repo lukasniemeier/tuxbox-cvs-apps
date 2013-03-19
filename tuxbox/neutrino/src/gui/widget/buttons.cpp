@@ -34,7 +34,7 @@
  * buttonwidth		set width of button include width of icon, space and caption
  * count				set count of buttons
  * content			set iconfile and locale constant, for an empty text let locale constant empty , so you can paint icons without captions, 
- * maxwidth			optional, default value is 720 (full screenwidth) sets maximal width there can paint buttons, should be the same like width eg. from a menue
+ * maxwidth			optional, default value is 0, sets maximal width there can paint buttons, should be the same like width eg. from a menu
  * vertical_paint	optional, default value is false (horizontal) sets direction of painting
  * backgroundcolor  optional, default value is COL_INFOBAR_SHADOW_PLUS_1, use it to render font with other backgroundcolor (example: streaminfo2.cpp)
  */
@@ -56,8 +56,10 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 	int iconh, iconw, max_iconw = 0;
 	int xstart  = x, ystart = y;
 	int space = 4;
+	unsigned int maxTextwidth = 0;
 	unsigned int bestButtonwidth = maxwidth/count;
 	unsigned int maxButtonwidth = bestButtonwidth > buttonwidth ? bestButtonwidth : buttonwidth;
+	unsigned int x_max = x + count * maxButtonwidth;
 	
 	for (unsigned int i = 0; i < count; i++)
 	{
@@ -78,10 +80,12 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 		max_iconw = max_iconw>iconw ? max_iconw : iconw; 
 	
 		// get width of  buttontext
-		fwidth = ((max_iconw+2*space+real_textwidth) > (maxButtonwidth)) ? maxButtonwidth : real_textwidth;
+		maxTextwidth += maxButtonwidth - max_iconw - space;
+		fwidth = (real_textwidth > maxTextwidth) ? maxTextwidth : real_textwidth;
+		maxTextwidth -= fwidth;
 		
 		// calculate finally buttonwidth
-		bwidth = max_iconw + 2*space + fwidth;	
+		bwidth = max_iconw + space + fwidth;
 			
 		// calculate baseline startposition of icon and text in y
 		ybase = ystart + fheight - fheight / 2;
@@ -91,7 +95,9 @@ void paintButtons(CFrameBuffer * const frameBuffer, Font * const font,
 		// paint icon and text
 		frameBuffer->paintIcon(icon, xstart , yicon_start);
 		int xbuttontext = xstart + max_iconw + space;
-		font->RenderString(xbuttontext, ytext_start, bwidth, buttontext, bcolor /*COL_INFOBAR_SHADOW + 1*/, 0, true); // UTF-8
+		if (xbuttontext + fwidth > x_max)
+			fwidth = x_max - xbuttontext; // don't overflow max width
+		font->RenderString(xbuttontext, ytext_start, fwidth, buttontext, bcolor, 0, true); // UTF-8
 		
 		/* 	set next startposition x, if text is length=0 then offset is =renderwidth of icon, 
  		* 		for generating buttons without captions, 

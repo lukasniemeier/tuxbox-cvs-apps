@@ -494,7 +494,8 @@ const struct button_label CMotorControlMenueButtons5[3] =
 void CMotorControl::paintMenu()
 {
 	ypos_menue = y + head_height + status_height;
-	int buttonwidth = width/2;
+	int buttonsMaxWidth = width - 20;
+	int buttonWidth = buttonsMaxWidth / 2;
 	int xposButton = x + 10;
 	int font = SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
 	
@@ -511,15 +512,15 @@ void CMotorControl::paintMenu()
 	ypos_menue += 10;
 	
 	// buttons 0 / Ok / home
-	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonwidth-28, 3, CMotorControlMenueButtons1);
+	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonWidth - 28, 3, CMotorControlMenueButtons1, buttonsMaxWidth);
 	
 	// buttons left / right
 	ypos_menue += mheight;
-	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonwidth,2, CMotorControlMenueButtons2);
+	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonWidth, 2, CMotorControlMenueButtons2, buttonsMaxWidth);
 	
 	// button red
 	ypos_menue += mheight;
-	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonwidth,1, CMotorControlMenueButtons3);
+	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonWidth, 1, CMotorControlMenueButtons3, buttonsMaxWidth);
 	
 	// variant buttons	
 	if (installerMenue)
@@ -541,10 +542,10 @@ void CMotorControl::paintMenu()
 		CMotorControlMenueButtons4[5].locale = LOCALE_MOTORCONTROL_DECREASE_STEP_SIZE;
 	 }
 	ypos_menue += mheight;
- 	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonwidth, 6, CMotorControlMenueButtons4, width, true); //vertical	 
+	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton, ypos_menue, buttonWidth, 6, CMotorControlMenueButtons4, 0, true); //vertical
 	 
 	//ypos_menue += mheight;
-	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton+buttonwidth, ypos_menue, buttonwidth, 3, CMotorControlMenueButtons5, width, true); //vertical
+	::paintButtons(frameBuffer, g_Font[font], g_Locale, xposButton + buttonWidth, ypos_menue, buttonWidth, 3, CMotorControlMenueButtons5, 0, true); //vertical
 }
 
 void CMotorControl::startSatFind(void)
