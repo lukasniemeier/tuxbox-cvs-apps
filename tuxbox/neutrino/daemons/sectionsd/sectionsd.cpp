@@ -1,5 +1,5 @@
 //
-//  $Id: sectionsd.cpp,v 1.345 2013/03/07 19:30:00 GetAway Exp Exp $
+//  $Id: sectionsd.cpp,v 1.346 2013/03/20 22:40:00 GetAway Exp $
 //
 //    sectionsd.cpp (network daemon for SI-sections)
 //    (dbox-II-project)
@@ -2476,7 +2476,7 @@ static void sendAllEvents(int connfd, t_channel_id serviceUniqueKey, bool oldFor
 							count += sizeof(event_id_t) + 4 + 4 + (*e)->getName().length() + 1;
 							if (((*e)->getText()).empty())
 							{
-								count += (*e)->getExtendedText().substr(0, 50).length();
+								count += (*e)->getExtendedText().substr(0, 95).length();
 							}
 							else
 							{
@@ -2497,7 +2497,7 @@ static void sendAllEvents(int connfd, t_channel_id serviceUniqueKey, bool oldFor
 	
 								if (((*e)->getText()).empty())
 								{
-									strcpy(liste, (*e)->getExtendedText().substr(0, 50).c_str());
+									strcpy(liste, (*e)->getExtendedText().substr(0, 95).c_str());
 									liste += strlen(liste);
 								}
 								else
@@ -2606,7 +2606,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 	char stati[MAX_SIZE_STATI];
 
 	snprintf(stati, MAX_SIZE_STATI,
-		"$Id: sectionsd.cpp,v 1.345 2013/03/07 19:30:00 GetAway Exp $\n"
+		"$Id: sectionsd.cpp,v 1.346 2013/03/20 22:40:00 GetAway Exp $\n"
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
@@ -8590,7 +8590,7 @@ int main(int argc, char **argv)
 	
 	struct sched_param parm;
 
-	printf("$Id: sectionsd.cpp,v 1.345 2013/03/07 19:30:00 GetAway Exp $\n");
+	printf("$Id: sectionsd.cpp,v 1.346 2013/03/20 22:40:00 GetAway Exp $\n");
 #ifdef ENABLE_FREESATEPG
 	printf("[sectionsd] FreeSat enabled\n");
 #endif
