@@ -977,7 +977,7 @@ void CEpgData::showTimerEventBar(bool _show)
 
 	// Button: more screenings
 	if (!followlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2]);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2], 2 * ButtonWidth - 2 * (ICON_LARGE_WIDTH + 2) - 4);
 }
 
 
