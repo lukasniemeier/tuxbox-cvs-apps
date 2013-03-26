@@ -87,7 +87,8 @@ class CInfoViewer
 	int		ChanInfoX;
 
 	CSectionsdClient::CurrentNextInfo info_CurrentNext;
-        t_channel_id   channel_id;
+	CSectionsdClient::CurrentNextInfo oldinfo;
+	t_channel_id   channel_id;
 
 	char           aspectRatio;
 		
