@@ -480,45 +480,25 @@ int CTimerList::show()
 		}
 		else if ((msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup) && !timerlist.empty())
 		{
-			int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
-			selected -= step;
-			if((prev_selected-step) < 0)		// because of uint
-				selected = timerlist.size() - 1;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
+			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			int new_selected = selected - step;
+			if (new_selected < 0)
+				new_selected = timerlist.size() - 1;
+			updateSelection(new_selected);
 		}
 		else if ((msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown) && !timerlist.empty())
 		{
-			unsigned int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
-			selected += step;
-
-			if(selected >= timerlist.size())
-				if (((timerlist.size() / listmaxshow) + 1) * listmaxshow == timerlist.size() + listmaxshow) // last page has full entries
-					selected = 0;
+			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			unsigned int new_selected = selected + step;
+			unsigned int t_size = timerlist.size();
+			if (new_selected >= t_size)
+			{
+				if ((t_size / listmaxshow + 1) * listmaxshow == t_size + listmaxshow) // last page has full entries
+					new_selected = 0;
 				else
-					selected = ((step == listmaxshow) && (selected < (((timerlist.size() / listmaxshow) + 1) * listmaxshow))) ? (timerlist.size() - 1) : 0;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
+					new_selected = ((step == listmaxshow) && (new_selected < ((t_size / listmaxshow + 1) * listmaxshow))) ? (t_size - 1) : 0;
+			}
+			updateSelection(new_selected);
 		}
 		else if ((msg == CRCInput::RC_right || msg == CRCInput::RC_ok) && !(timerlist.empty()))
 		{
@@ -829,6 +809,25 @@ void CTimerList::paint()
 
 	paintFoot();
 	visible = true;
+}
+
+void CTimerList::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paint();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
+	}
 }
 
 const char * CTimerList::convertTimerType2String(const CTimerd::CTimerEventTypes type) // UTF-8

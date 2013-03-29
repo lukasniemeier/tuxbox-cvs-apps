@@ -58,6 +58,7 @@ class CListBox : public CMenuTarget
 		virtual void paintHead();
 		virtual void paintFoot();
 		virtual void hide();
+		virtual void updateSelection(unsigned int newpos);
 
 		
 		//------hier Methoden überschreiben-------

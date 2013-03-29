@@ -98,6 +98,7 @@ class CChannelList
 		void clearItem2DetailsLine ();
 		void paintItem2DetailsLine (int pos,unsigned  int ch_index);
 		void paintItem(int pos);
+		void updateSelection(unsigned int newpos);
 		void paint();
 		void paintHead();
 		void paintFoot();

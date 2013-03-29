@@ -287,42 +287,27 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 			res = -1;
 			loop=false;
 		}
-		else if ((msg_repeatok == CRCInput::RC_up) && !(bookmarks.empty()))
+		else if ((msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup) && !(bookmarks.empty()))
 		{
-			int prevselected=selected;
-			if(selected==0)
-			{
-				selected = bookmarks.size()-1;
-			}
-			else
-				selected--;
-			paintItem(prevselected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-			{
-				paint();
-			}
-			else
-			{
-				paintItem(selected - liststart);
-			}
+			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			int new_selected = selected - step;
+			if (new_selected < 0)
+				new_selected = bookmarks.size() - 1;
+			updateSelection(new_selected);
 		}
-		else if ((msg_repeatok == CRCInput::RC_down) && !(bookmarks.empty()))
+		else if ((msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown) && !(bookmarks.empty()))
 		{
-			int prevselected=selected;
-			selected = (selected+1)%bookmarks.size();
-			paintItem(prevselected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
+			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			unsigned int new_selected = selected + step;
+			unsigned int b_size = bookmarks.size();
+			if (new_selected >= b_size)
 			{
-				paint();
+				if ((b_size / listmaxshow + 1) * listmaxshow == b_size + listmaxshow) // last page has full entries
+					new_selected = 0;
+				else
+					new_selected = ((step == listmaxshow) && (new_selected < ((b_size / listmaxshow + 1) * listmaxshow))) ? (b_size - 1) : 0;
 			}
-			else
-			{
-				paintItem(selected - liststart);
-			}
+			updateSelection(new_selected);
 		}
 		else if ((msg == CRCInput::RC_ok) && !(bookmarks.empty()))
 		{
@@ -503,4 +488,24 @@ void CBookmarkManager::paint()
 
 	paintFoot();
 	visible = true;
+}
+
+//------------------------------------------------------------------------
+void CBookmarkManager::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paint();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
+	}
 }

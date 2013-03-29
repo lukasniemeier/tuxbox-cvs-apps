@@ -93,6 +93,7 @@ class CBookmarkManager
 	void paintHead();
 	void paintFoot();
 	void hide();
+	void updateSelection(unsigned int newpos);
 
 
 

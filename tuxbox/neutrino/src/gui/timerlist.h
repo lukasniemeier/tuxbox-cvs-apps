@@ -77,6 +77,7 @@ class CTimerList : public CMenuTarget
 		void paintHead();
 		void paintFoot();
 		void hide();
+		void updateSelection(unsigned int newpos);
 		int modifyTimer();
 		int newTimer();
 

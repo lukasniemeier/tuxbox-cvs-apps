@@ -81,6 +81,7 @@ class CPluginList : public CMenuTarget
 		void paintItems();
 		void paint();
 		void paintHead();
+		void updateSelection(unsigned int newpos);
 
 	protected:
 

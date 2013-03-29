@@ -251,6 +251,25 @@ int CChannelList::getActiveChannelNumber(void) const
 	return (selected + 1);
 }
 
+void CChannelList::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paint();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
+	}
+}
+
 int CChannelList::show()
 {
 	neutrino_msg_t      msg;
@@ -306,63 +325,35 @@ int CChannelList::show()
 		}
 		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
 		{
-			int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
-			selected -= step;
-			if((prev_selected-step) < 0)		// because of uint
-				selected = chanlist.size() - 1;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
-				
+			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			int new_selected = selected - step;
+			if (new_selected < 0)
+				new_selected = chanlist.size() - 1;
+			updateSelection(new_selected);
 			paintHead();
 		}
 		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			unsigned int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
-			selected += step;
-
-			if(selected >= chanlist.size())
-				if (((chanlist.size() / listmaxshow) + 1) * listmaxshow == chanlist.size() + listmaxshow) // last page has full entries
-					selected = 0;
+			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			unsigned int new_selected = selected + step;
+			unsigned int c_size = chanlist.size();
+			if (new_selected >= c_size)
+			{
+				if ((c_size / listmaxshow + 1) * listmaxshow == c_size + listmaxshow) // last page has full entries
+					new_selected = 0;
 				else
-					selected = ((step == listmaxshow) && (selected < (((chanlist.size() / listmaxshow)+1) * listmaxshow))) ? (chanlist.size() - 1) : 0;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
-				
+					new_selected = ((step == listmaxshow) && (new_selected < ((c_size / listmaxshow + 1) * listmaxshow))) ? (c_size - 1) : 0;
+			}
+			updateSelection(new_selected);
 			paintHead();
 		}
-		else if (msg_repeatok == g_settings.key_bouquet_up && bouquetList != NULL)
+		else if ((msg_repeatok == g_settings.key_bouquet_up || msg_repeatok == g_settings.key_bouquet_down) && bouquetList != NULL)
 		{
 			if (!bouquetList->Bouquets.empty())
 			{
-				int nNext = (bouquetList->getActiveBouquetNumber()+1) % bouquetList->Bouquets.size();
-				bouquetList->activateBouquet( nNext );
-				res = bouquetList->showChannelList();
-				loop = false;
-			}
-		}
-		else if (msg_repeatok == g_settings.key_bouquet_down && bouquetList != NULL)
-		{
-			if (!bouquetList->Bouquets.empty())
-			{
-				int nNext = (bouquetList->getActiveBouquetNumber()+bouquetList->Bouquets.size()-1) % bouquetList->Bouquets.size();
+				int dir = (msg_repeatok == g_settings.key_bouquet_up) ? 1 : -1;
+				int b_size = bouquetList->Bouquets.size();
+				int nNext = (bouquetList->getActiveBouquetNumber() + b_size + dir) % b_size;
 				bouquetList->activateBouquet(nNext);
 				res = bouquetList->showChannelList();
 				loop = false;

@@ -167,6 +167,32 @@ void CBEBouquetWidget::hide()
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height+ButtonHeight);
 }
 
+void CBEBouquetWidget::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		selected = newpos;
+
+		if (state == beDefault)
+		{
+			unsigned int oldliststart = liststart;
+			liststart = (selected / listmaxshow) * listmaxshow;
+			if (oldliststart != liststart)
+				paint();
+			else
+			{
+				paintItem(prev_selected - liststart);
+				paintItem(selected - liststart);
+			}
+		}
+		else // state == beMoving
+		{
+			internalMoveBouquet(prev_selected, selected);
+		}
+	}
+}
+
 int CBEBouquetWidget::exec(CMenuTarget* parent, const std::string&)
 {
 	neutrino_msg_t      msg;
@@ -254,70 +280,28 @@ int CBEBouquetWidget::exec(CMenuTarget* parent, const std::string&)
 		{
 			if (!(Bouquets.empty()))
 			{
-				int step = 0;
-				int prev_selected = selected;
-
-				step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
-				selected -= step;
-				if((prev_selected-step) < 0)		// because of uint
-				{
-					selected = Bouquets.size()-1;
-				}
-
-				if (state == beDefault)
-				{
-					paintItem(prev_selected - liststart);
-					unsigned int oldliststart = liststart;
-					liststart = (selected/listmaxshow)*listmaxshow;
-					if(oldliststart!=liststart)
-					{
-						paint();
-					}
-					else
-					{
-						paintItem(selected - liststart);
-					}
-				}
-				else if (state == beMoving)
-				{
-					internalMoveBouquet(prev_selected, selected);
-				}
+				int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+				int new_selected = selected - step;
+				if (new_selected < 0)
+					new_selected = Bouquets.size() - 1;
+				updateSelection(new_selected);
 			}
 		}
 		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			unsigned int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
-			selected += step;
-
-			if(selected >= Bouquets.size())
+			if (!(Bouquets.empty()))
 			{
-				if (((Bouquets.size() / listmaxshow) + 1) * listmaxshow == Bouquets.size() + listmaxshow) // last page has full entries
-					selected = 0;
-				else
-					selected = ((step == listmaxshow) && (selected < (((Bouquets.size() / listmaxshow) + 1) * listmaxshow))) ? (Bouquets.size() - 1) : 0;
-			}
-
-
-			if (state == beDefault)
-			{
-				paintItem(prev_selected - liststart);
-				unsigned int oldliststart = liststart;
-				liststart = (selected/listmaxshow)*listmaxshow;
-				if(oldliststart!=liststart)
+				unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+				unsigned int new_selected = selected + step;
+				unsigned int b_size = Bouquets.size();
+				if (new_selected >= b_size)
 				{
-					paint();
+					if ((b_size / listmaxshow + 1) * listmaxshow == b_size + listmaxshow) // last page has full entries
+						new_selected = 0;
+					else
+						new_selected = ((step == listmaxshow) && (new_selected < ((b_size / listmaxshow + 1) * listmaxshow))) ? (b_size - 1) : 0;
 				}
-				else
-				{
-					paintItem(selected - liststart);
-				}
-			}
-			else if (state == beMoving)
-			{
-				internalMoveBouquet(prev_selected, selected);
+				updateSelection(new_selected);
 			}
 		}
 		else if(msg==CRCInput::RC_red)

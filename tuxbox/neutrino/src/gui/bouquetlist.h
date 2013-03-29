@@ -93,6 +93,7 @@ class CBouquetList
 		void paint();
 		void paintHead();
 		void hide();
+		void updateSelection(unsigned int newpos);
 
 	public:
 		CBouquetList();

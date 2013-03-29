@@ -319,58 +319,25 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 		if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
 		{
-			int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
-			selected -= step;
-			if((prev_selected-step) < 0)		// because of uint
-				selected = evtlist.size() - 1;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
-			
-			if ((g_settings.key_channelList_addremind != CRCInput::RC_nokey) ||
-			   ((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) &&
-			    (g_settings.key_channelList_addrecord != CRCInput::RC_nokey)))
-			{
-				showFunctionBar(true);
-			}
+			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			int new_selected = selected - step;
+			if (new_selected < 0)
+				new_selected = evtlist.size() - 1;
+			updateSelection(new_selected);
 		}
 		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
-			selected += step;
-
-			if(selected >= evtlist.size())
-				if (((evtlist.size() / listmaxshow) + 1) * listmaxshow == evtlist.size() + listmaxshow) // last page has full entries
-					selected = 0;
-				else
-					selected = ((step == (int)listmaxshow) && (selected < (((evtlist.size() / listmaxshow) + 1) * listmaxshow))) ? (evtlist.size() - 1) : 0;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
-			
-			if ((g_settings.key_channelList_addremind != CRCInput::RC_nokey) ||
-			   ((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) &&
-			    (g_settings.key_channelList_addrecord != CRCInput::RC_nokey)))
+			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			unsigned int new_selected = selected + step;
+			unsigned int e_size = evtlist.size();
+			if (new_selected >= e_size)
 			{
-				showFunctionBar(true);
+				if ((e_size / listmaxshow + 1) * listmaxshow == e_size + listmaxshow) // last page has full entries
+					new_selected = 0;
+				else
+					new_selected = ((step == listmaxshow) && (new_selected < ((e_size / listmaxshow + 1) * listmaxshow))) ? (e_size - 1) : 0;
 			}
+			updateSelection(new_selected);
 		}
 		else if (msg == g_settings.key_channelList_sort)
 		{
@@ -793,6 +760,32 @@ void EventList::paint()
 
 	frameBuffer->paintBoxRel(x+ width- 15,ypos, 15, sb,  COL_MENUCONTENT_PLUS_1);
 	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs*(sb-4)/sbc , 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
+}
+
+void EventList::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paint();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
+
+		if ((g_settings.key_channelList_addremind != CRCInput::RC_nokey) ||
+		   ((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) &&
+		    (g_settings.key_channelList_addrecord != CRCInput::RC_nokey)))
+		{
+			showFunctionBar(true);
+		}
+	}
 }
 
 //

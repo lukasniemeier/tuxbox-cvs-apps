@@ -216,43 +216,25 @@ int CBouquetList::show()
 		}
 		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
 		{
-			int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
-			selected -= step;
-			if((prev_selected-step) < 0)		// because of uint
-				selected = Bouquets.size()-1;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
+			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			int new_selected = selected - step;
+			if (new_selected < 0)
+				new_selected = Bouquets.size() - 1;
+			updateSelection(new_selected);
 		}
 		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			unsigned int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
-			selected += step;
-
-			if(selected >= Bouquets.size())
-				if (((Bouquets.size() / listmaxshow) + 1) * listmaxshow == Bouquets.size() + listmaxshow) // last page has full entries
-					selected = 0;
+			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			unsigned int new_selected = selected + step;
+			unsigned int b_size = Bouquets.size();
+			if (new_selected >= b_size)
+			{
+				if ((b_size / listmaxshow + 1) * listmaxshow == b_size + listmaxshow) // last page has full entries
+					new_selected = 0;
 				else
-					selected = ((step == listmaxshow) && (selected < (((Bouquets.size() / listmaxshow) + 1) * listmaxshow))) ? (Bouquets.size() - 1) : 0;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
+					new_selected = ((step == listmaxshow) && (new_selected < ((b_size / listmaxshow + 1) * listmaxshow))) ? (b_size - 1) : 0;
+			}
+			updateSelection(new_selected);
 		}
 		else if ( msg == CRCInput::RC_ok )
 		{
@@ -286,20 +268,8 @@ int CBouquetList::show()
 				pos = digits;
 			}
 
-			int prevselected=selected;
-			selected = (chn - 1) % Bouquets.size(); // is % necessary (i.e. can firstselected be > Bouquets.size()) ?
-			paintItem(prevselected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-			{
-				paint();
-			}
-			else
-			{
-				paintItem(selected - liststart);
-			}
-
+			unsigned int new_selected = (chn - 1) % Bouquets.size(); // is % necessary (i.e. can firstselected be > Bouquets.size()) ?
+			updateSelection(new_selected);
 		}
 		else if( ( msg == CRCInput::RC_red ) ||
 				 ( msg == CRCInput::RC_green ) ||
@@ -337,7 +307,6 @@ void CBouquetList::hide()
 {
 	frameBuffer->paintBackgroundBoxRel(x, y, width, height + theight);
 }
-
 
 void CBouquetList::paintItem(int pos)
 {
@@ -430,4 +399,23 @@ void CBouquetList::paint()
 	int icony = fy + theight / 2 - 12;
 	frameBuffer->paintBoxRel(x, fy, width, theight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 4, icony, ButtonWith, 6, CBouquetListButtons);
+}
+
+void CBouquetList::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paint();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
+	}
 }

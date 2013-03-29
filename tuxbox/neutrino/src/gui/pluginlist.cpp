@@ -155,59 +155,27 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 		{
 			loop=false;
 		}
-		else if (msg_repeatok == g_settings.key_channelList_pageup)
+		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
 		{
-			if ((int(selected)-int(listmaxshow))<0)
-				selected=0;
-			else
-				selected -= listmaxshow;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			paintItems();
+			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+			int new_selected = selected - step;
+			if (new_selected < 0)
+				new_selected = pluginlist.size() - 1;
+			updateSelection(new_selected);
 		}
-		else if (msg_repeatok == g_settings.key_channelList_pagedown)
+		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			selected+=listmaxshow;
-			if (selected>pluginlist.size()-1)
-				selected=pluginlist.size()-1;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			paintItems();
-		}
-		else if (msg_repeatok == CRCInput::RC_up)
-		{
-			int prevselected=selected;
-			if(selected==0)
+			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+			unsigned int new_selected = selected + step;
+			unsigned int p_size = pluginlist.size();
+			if (new_selected >= p_size)
 			{
-				selected = pluginlist.size()-1;
+				if ((p_size / listmaxshow + 1) * listmaxshow == p_size + listmaxshow) // last page has full entries
+					new_selected = 0;
+				else
+					new_selected = ((step == listmaxshow) && (new_selected < ((p_size / listmaxshow + 1) * listmaxshow))) ? (p_size - 1) : 0;
 			}
-			else
-				selected--;
-			paintItem(prevselected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-			{
-				paintItems();
-			}
-			else
-			{
-				paintItem(selected - liststart);
-			}
-		}
-		else if (msg_repeatok == CRCInput::RC_down)
-		{
-			int prevselected=selected;
-			selected = (selected+1)%pluginlist.size();
-			paintItem(prevselected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-			{
-				paintItems();
-			}
-			else
-			{
-				paintItem(selected - liststart);
-			}
+			updateSelection(new_selected);
 		}
 		else if (msg == CRCInput::RC_right || msg == CRCInput::RC_ok)
 		{
@@ -366,6 +334,25 @@ void CPluginList::paintItems()
    for(unsigned int count=0;count<listmaxshow;count++)
 	{
 		paintItem(count);
+	}
+}
+
+void CPluginList::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paintItems();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
 	}
 }
 

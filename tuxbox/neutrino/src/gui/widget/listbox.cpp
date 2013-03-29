@@ -112,6 +112,25 @@ void CListBox::hide()
 	frameBuffer->paintBackgroundBoxRel(x,y, width,height+ButtonHeight);
 }
 
+void CListBox::updateSelection(unsigned int newpos)
+{
+	if (selected != newpos)
+	{
+		unsigned int prev_selected = selected;
+		unsigned int oldliststart = liststart;
+
+		selected = newpos;
+		liststart = (selected / listmaxshow) * listmaxshow;
+		if (oldliststart != liststart)
+			paint();
+		else
+		{
+			paintItem(prev_selected - liststart);
+			paintItem(selected - liststart);
+		}
+	}
+}
+
 unsigned int	CListBox::getItemCount()
 {
 	return 10;
@@ -174,44 +193,32 @@ int CListBox::exec(CMenuTarget* parent, const std::string &)
 		}
 		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
 		{
-			int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
-			selected -= step;
-			if((prev_selected-step) < 0)		// because of uint
-				selected = getItemCount() - 1;
-
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
+			int itemCount = getItemCount();
+			if (itemCount > 0)
+			{
+				int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
+				int new_selected = selected - step;
+				if (new_selected < 0)
+					new_selected = itemCount - 1;
+				updateSelection(new_selected);
+			}
 		}
 		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			unsigned int step = 0;
-			int prev_selected = selected;
-
-			step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
-			selected += step;
-
-			if(selected >= getItemCount())
-				if (((getItemCount() / listmaxshow) + 1) * listmaxshow == getItemCount() + listmaxshow) // last page has full entries
-					selected = 0;
-				else
-					selected = ((step == listmaxshow) && (selected < (((getItemCount() / listmaxshow) + 1) * listmaxshow))) ? (getItemCount() - 1) : 0;
-			
-			paintItem(prev_selected - liststart);
-			unsigned int oldliststart = liststart;
-			liststart = (selected/listmaxshow)*listmaxshow;
-			if(oldliststart!=liststart)
-				paint();
-			else
-				paintItem(selected - liststart);
+			unsigned int itemCount = getItemCount();
+			if (itemCount > 0)
+			{
+				unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
+				unsigned int new_selected = selected + step;
+				if (new_selected >= itemCount)
+				{
+					if ((itemCount / listmaxshow + 1) * listmaxshow == itemCount + listmaxshow) // last page has full entries
+						new_selected = 0;
+					else
+						new_selected = ((step == listmaxshow) && (new_selected < ((itemCount / listmaxshow + 1) * listmaxshow))) ? (itemCount - 1) : 0;
+				}
+				updateSelection(new_selected);
+			}
 		}
 		else if( msg ==CRCInput::RC_ok)
 		{

@@ -115,6 +115,7 @@ class EventList
 		void paint();
 		void paintHead();
 		void hide();
+		void updateSelection(unsigned int newpos);
 		void showFunctionBar(bool show);
 		
 		CTimerdClient Timer;
