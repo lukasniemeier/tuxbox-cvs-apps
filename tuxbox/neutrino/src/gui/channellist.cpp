@@ -319,7 +319,6 @@ void CChannelList::updateSelection(unsigned int newpos)
 			paintItem(prev_selected - liststart);
 			paintItem(selected - liststart);
 		}
-		paintDetails(selected);
 	}
 }
 
@@ -342,10 +341,11 @@ int CChannelList::show()
 
 	calcSize();
 	paintHead();
-//	paintButtonBar(); // remove to re-paint buttons
+	paintButtonBar();
 //	updateEvents();
 	paintItemDetailsBox();
 	paint();
+	paintDetails(selected);
 
 	int oldselected = selected;
 	int zapOnExit = false;
@@ -436,9 +436,10 @@ int CChannelList::show()
 			{
 				displayList = 1;
 				paintHead();
-				//paintButtonBar(); // remove to re-paint buttons
+				paintButtonBar();
 				paintItemDetailsBox();
 				paint();
+				paintDetails(selected);
 			}
 		}
 		else if ( ( msg == CRCInput::RC_yellow ) &&
@@ -449,10 +450,9 @@ int CChannelList::show()
 		}
 		else if ( msg == CRCInput::RC_blue )
 		{
-			paintHead(); // update button bar when lines marked to "remove to re-paint buttons" are removed
+			paintHead();
 			if (g_settings.channellist_additional) {
 				displayList = !displayList;
-				paintButtonBar();
 				if (!displayList)
 					showdescription(selected);
 				else
@@ -461,7 +461,9 @@ int CChannelList::show()
 			else {
 				displayNext = !displayNext;
 				paint();
+				paintDetails(selected);
 			}
+			paintButtonBar();
 		}
 		else if ( msg == CRCInput::RC_help )
 		{
@@ -483,9 +485,18 @@ int CChannelList::show()
 
 			displayList = 1;
 			paintHead();
-			//paintButtonBar(); // remove to re-paint buttons
+			paintButtonBar();
 			paintItemDetailsBox();
 			paint();
+			paintDetails(selected);
+		}
+		else if (msg == (CRCInput::RC_up   | CRCInput::RC_Release) ||
+				 msg == (CRCInput::RC_down | CRCInput::RC_Release) ||
+				 msg == (g_settings.key_channelList_pageup   | CRCInput::RC_Release) ||
+				 msg == (g_settings.key_channelList_pagedown | CRCInput::RC_Release) )
+		{
+			paintButtonBar();
+			paintDetails(selected);
 		}
 		else
 		{
@@ -1259,7 +1270,6 @@ void CChannelList::paintItem(int pos)
 	int c_rad_small;
 	uint8_t    color;
 	fb_pixel_t bgcolor;
-	bool paintbuttons = false;
 	unsigned int curr = liststart + pos;
 
 	if (curr == selected)
@@ -1268,7 +1278,6 @@ void CChannelList::paintItem(int pos)
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		paintItem2DetailsLine(pos);
 		c_rad_small = RADIUS_SMALL;
-		paintbuttons = true;
 	}
 	else
 	{
@@ -1302,10 +1311,6 @@ void CChannelList::paintItem(int pos)
 		} else {
 			p_event = &chan->currentEvent;
 		}
-
-		//paint buttons
-		if (paintbuttons)
-			paintButtonBar();
 
 		//number
 		int numpos = x+5+numwidth- g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getRenderWidth(tmp);
@@ -1404,9 +1409,8 @@ void CChannelList::paintItem(int pos)
 		// name
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x + 5 + numwidth + 10 + prg_offset, ypos + fheight, width - numwidth - 20 - 12 - prg_offset, nameAndDescription, color);
 
-		if (curr == selected) // at last LCD and Infobox
+		if (curr == selected) // at last LCD
 		{
-			//paintDetails(curr);
 			CLCD::getInstance()->showMenuText(0, chan->name.c_str(), -1, true); // UTF-8
 			CLCD::getInstance()->showMenuText(1, p_event->description.c_str());
 		}
@@ -1459,8 +1463,6 @@ void CChannelList::paintHead()
 	if (gotTime){
 		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + full_width - 10 - timestr_len, y + theight + 2, timestr_len + 1, timestr, COL_MENUHEAD, 0, true); // UTF-8
 	}
-
-	// paintFoot(); // activate to re-paint buttons
 }
 
 struct button_label CChannelListButtons[] =
@@ -1547,8 +1549,6 @@ void CChannelList::paint()
 	{
 		paintItem(count);
 	}
-
-	paintDetails(selected); // at last reduce flickering of listing
 }
 
 void CChannelList::paint_pig (int _x, int _y, int w, int h)
