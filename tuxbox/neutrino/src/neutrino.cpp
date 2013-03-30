@@ -306,6 +306,7 @@ const font_sizes_struct neutrino_font[FONT_TYPE_COUNT] =
 	{LOCALE_FONTSIZE_CHANNELLIST        ,  20, FONT_STYLE_BOLD   , 1},
 	{LOCALE_FONTSIZE_CHANNELLIST_DESCR  ,  20, FONT_STYLE_REGULAR, 1},
 	{LOCALE_FONTSIZE_CHANNELLIST_NUMBER ,  14, FONT_STYLE_BOLD   , 2},
+	{LOCALE_FONTSIZE_CHANNELLIST_EVENT  ,  16, FONT_STYLE_REGULAR, 2},
 	{LOCALE_FONTSIZE_CHANNEL_NUM_ZAP    ,  40, FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_INFOBAR_NUMBER     ,  50, FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_INFOBAR_CHANNAME   ,  30, FONT_STYLE_BOLD   , 0},
@@ -407,8 +408,10 @@ int CNeutrinoApp::loadSetup()
 	g_settings.progressbar_color		= configfile.getBool("progressbar_color"         , true );
 	g_settings.infobar_show			= configfile.getInt32("infobar_show"             , 0);
 	g_settings.show_mute_icon		= configfile.getInt32("show_mute_icon"		,1);
+	g_settings.channellist_additional = configfile.getInt32("channellist_additional", 0); //default off
 	g_settings.channellist_epgtext_align_right		= configfile.getBool("channellist_epgtext_align_right"          , false);
 	g_settings.channellist_extended		= configfile.getBool("channellist_extended"          , false);
+	g_settings.channellist_foot	= configfile.getInt32("channellist_foot"          , 1);//default next Event
 	strcpy( g_settings.infobar_channel_logodir, configfile.getString( "infobar_channel_logodir", "/var/share/tuxbox/neutrino/icons/").c_str()); 
 	g_settings.infobar_show_channellogo	= configfile.getInt32("infobar_show_channellogo"		,COsdSetup::INFOBAR_NO_LOGO);
 	g_settings.infobar_channellogo_background		= configfile.getInt32("infobar_channellogo_background"		,COsdSetup::INFOBAR_NO_BACKGROUND);
@@ -992,8 +995,10 @@ void CNeutrinoApp::saveSetup()
 	configfile.setBool("progressbar_color"		, g_settings.progressbar_color);
 	configfile.setInt32("infobar_show"             , g_settings.infobar_show);
 	configfile.setInt32("show_mute_icon"			, g_settings.show_mute_icon);
+	configfile.setInt32("channellist_additional", g_settings.channellist_additional);
 	configfile.setBool("channellist_epgtext_align_right"                 , g_settings.channellist_epgtext_align_right);
 	configfile.setBool("channellist_extended"                 , g_settings.channellist_extended);
+	configfile.setInt32("channellist_foot"                 , g_settings.channellist_foot);
 	configfile.setInt32("infobar_show_channellogo"			, g_settings.infobar_show_channellogo);
 	configfile.setString("infobar_channel_logodir"	, g_settings.infobar_channel_logodir);
 	configfile.setInt32( "infobar_channellogo_background"	, g_settings.infobar_channellogo_background);

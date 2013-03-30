@@ -218,9 +218,17 @@ bouqueteditor.switchmode TV/Radio
 bouquetlist.bouquetselect Bouquet auswählen
 bouquetlist.head Bouquets
 cablesetup.provider Kabelanbieter
+channellist.additional Zusatzinformationen
+channellist.additional_off aus
+channellist.additional_on ein
+channellist.additional_on_minitv ein (mit MiniTV)
 channellist.epgtext_align_left links
 channellist.epgtext_align_right rechts
 channellist.extended Sendungsfortschritt anzeigen
+channellist.foot Kanalinformationen
+channellist.foot_freq Tuning-Parameter
+channellist.foot_next Nachfolgesendung
+channellist.foot_off aus
 channellist.head Alle Kanäle
 channellist.history Programmverlauf
 channellist.nonefound Es wurden keine Kanäle gefunden!\nFühren Sie bitte eine Kanalsuche durch\n(d-box-Taste -> Service)
@@ -527,6 +535,7 @@ fontmenu.scaling_y_hint2 Vertikal (in %) min 50 / max 200
 fontsize.channel_num_zap Direktauswahl
 fontsize.channellist Kanalliste
 fontsize.channellist_descr Beschreibung
+fontsize.channellist_event Eventliste
 fontsize.channellist_number Nummer
 fontsize.epg_date EPG Datum
 fontsize.epg_info1 EPG Info 1
@@ -1538,6 +1547,7 @@ videomenu.videosignal_rgb RGB + CVBS
 videomenu.videosignal_svideo S-Video
 videomenu.videosignal_yuv_c YUV + CVBS
 videomenu.videosignal_yuv_v YUV + VBS
+word.from ab
 zapit.scantype Service-Auswahl
 zapit.scantype.all Alle Services
 zapit.scantype.radio Nur Radio

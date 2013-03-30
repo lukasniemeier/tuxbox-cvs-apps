@@ -218,9 +218,17 @@ bouqueteditor.switchmode TV/Radio
 bouquetlist.bouquetselect Bouquet select
 bouquetlist.head Bouquets
 cablesetup.provider cable provider
+channellist.additional Additional informations
+channellist.additional_off off
+channellist.additional_on on
+channellist.additional_on_minitv on (with MiniTV)
 channellist.epgtext_align_left left
 channellist.epgtext_align_right right
 channellist.extended Show progressbars
+channellist.foot Channel Information
+channellist.foot_freq Sat/Freq Info
+channellist.foot_next next Event
+channellist.foot_off off
 channellist.head All Services
 channellist.history Channel history
 channellist.nonefound No channels were found!\nPlease execute a scan\n(dbox-key -> service)
@@ -527,6 +535,7 @@ fontmenu.scaling_y_hint2 Vertical (in %) min 50 / max 200
 fontsize.channel_num_zap direct selection
 fontsize.channellist Channellist
 fontsize.channellist_descr Description
+fontsize.channellist_event Event list
 fontsize.channellist_number Number
 fontsize.epg_date EPG Date
 fontsize.epg_info1 EPG Info 1
@@ -1538,6 +1547,7 @@ videomenu.videosignal_rgb RGB + CVBS
 videomenu.videosignal_svideo S-Video
 videomenu.videosignal_yuv_c YUV + CVBS
 videomenu.videosignal_yuv_v YUV + VBS
+word.from from
 zapit.scantype scan for services
 zapit.scantype.all all services
 zapit.scantype.radio only radio

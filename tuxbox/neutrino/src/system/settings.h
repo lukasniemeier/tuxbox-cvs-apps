@@ -68,8 +68,10 @@ struct SNeutrinoSettings
 	int progressbar_color;
 	int infobar_show;
 	int show_mute_icon;
+	int channellist_additional;
 	int channellist_epgtext_align_right;
 	int channellist_extended;
+	int channellist_foot;
 	char infobar_channel_logodir[100];
 	int infobar_show_channellogo;
 	int infobar_channellogo_background;
@@ -366,7 +368,7 @@ struct SNeutrinoSettings
 
 
 	// Font sizes
-#define FONT_TYPE_COUNT 22
+#define FONT_TYPE_COUNT 23
 	enum FONT_TYPES {
 		FONT_TYPE_MENU                =  0,
 		FONT_TYPE_MENU_TITLE          =  1,
@@ -384,12 +386,13 @@ struct SNeutrinoSettings
 		FONT_TYPE_CHANNELLIST         = 13,
 		FONT_TYPE_CHANNELLIST_DESCR   = 14,
 		FONT_TYPE_CHANNELLIST_NUMBER  = 15,
-		FONT_TYPE_CHANNEL_NUM_ZAP     = 16,
-		FONT_TYPE_INFOBAR_NUMBER      = 17,
-		FONT_TYPE_INFOBAR_CHANNAME    = 18,
-		FONT_TYPE_INFOBAR_INFO        = 19,
-		FONT_TYPE_INFOBAR_SMALL       = 20,
-		FONT_TYPE_FILEBROWSER_ITEM    = 21
+		FONT_TYPE_CHANNELLIST_EVENT   = 16,
+		FONT_TYPE_CHANNEL_NUM_ZAP     = 17,
+		FONT_TYPE_INFOBAR_NUMBER      = 18,
+		FONT_TYPE_INFOBAR_CHANNAME    = 19,
+		FONT_TYPE_INFOBAR_INFO        = 20,
+		FONT_TYPE_INFOBAR_SMALL       = 21,
+		FONT_TYPE_FILEBROWSER_ITEM    = 22
 	};
 
 	// lcdd

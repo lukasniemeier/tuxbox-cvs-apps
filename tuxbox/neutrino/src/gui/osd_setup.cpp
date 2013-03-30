@@ -53,11 +53,12 @@
 
 #include <system/debug.h>
 
-const SNeutrinoSettings::FONT_TYPES channellist_font_sizes[4] =
+const SNeutrinoSettings::FONT_TYPES channellist_font_sizes[5] =
 {
 	SNeutrinoSettings::FONT_TYPE_CHANNELLIST,
 	SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR,
 	SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER,
+	SNeutrinoSettings::FONT_TYPE_CHANNELLIST_EVENT,
 	SNeutrinoSettings::FONT_TYPE_CHANNEL_NUM_ZAP
 };
 
@@ -102,7 +103,7 @@ const SNeutrinoSettings::FONT_TYPES other_font_sizes[4] =
 font_sizes_groups font_sizes_groups[6] =
 {
 	{LOCALE_FONTMENU_CHANNELLIST, 4, channellist_font_sizes, "fontsize.dcha"},
-	{LOCALE_FONTMENU_EVENTLIST  , 4, eventlist_font_sizes  , "fontsize.deve"},
+	{LOCALE_FONTMENU_EVENTLIST  , 5, eventlist_font_sizes  , "fontsize.deve"},
 	{LOCALE_FONTMENU_EPG        , 4, epg_font_sizes        , "fontsize.depg"},
 	{LOCALE_FONTMENU_INFOBAR    , 4, infobar_font_sizes    , "fontsize.dinf"},
 	{LOCALE_FONTMENU_GAMELIST   , 2, gamelist_font_sizes   , "fontsize.dgam"},
@@ -520,6 +521,14 @@ int COsdSetup::showOsdInfobarSetup()
 	return res;
 }
 
+#define CHANNELLIST_ADDITIONAL_OPTION_COUNT 3
+const CMenuOptionChooser::keyval CHANNELLIST_ADDITIONAL_OPTIONS[CHANNELLIST_ADDITIONAL_OPTION_COUNT] =
+{
+	{ 0, LOCALE_CHANNELLIST_ADDITIONAL_OFF },
+	{ 1, LOCALE_CHANNELLIST_ADDITIONAL_ON },
+	{ 2, LOCALE_CHANNELLIST_ADDITIONAL_ON_MINITV }
+};
+
 #define CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT 2
 const CMenuOptionChooser::keyval  CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS[CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT]=
 {
@@ -527,19 +536,36 @@ const CMenuOptionChooser::keyval  CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS[CHANNE
 	{ 1 , LOCALE_CHANNELLIST_EPGTEXT_ALIGN_RIGHT }
 };
 
+#define CHANNELLIST_FOOT_OPTIONS_COUNT 3
+const CMenuOptionChooser::keyval  CHANNELLIST_FOOT_OPTIONS[CHANNELLIST_FOOT_OPTIONS_COUNT]=
+{
+	{ 0 , LOCALE_CHANNELLIST_FOOT_FREQ },
+	{ 1 , LOCALE_CHANNELLIST_FOOT_NEXT },
+	{ 2 , LOCALE_CHANNELLIST_FOOT_OFF }
+};
+
 //channellist
 int COsdSetup::showOsdChannelListSetup()
 {
 	CMenuWidget * ocls = new CMenuWidget(menue_title, menue_icon, width);
 
+	// channellist additional
+	CMenuOptionChooser *ocls_additional	= new CMenuOptionChooser(LOCALE_CHANNELLIST_ADDITIONAL, &g_settings.channellist_additional, CHANNELLIST_ADDITIONAL_OPTIONS, CHANNELLIST_ADDITIONAL_OPTION_COUNT, true);
+	// epg align
 	CMenuOptionChooser *ocls_align_ch 	= new CMenuOptionChooser(LOCALE_MISCSETTINGS_CHANNELLIST_EPGTEXT_ALIGN, &g_settings.channellist_epgtext_align_right, CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS, CHANNELLIST_EPGTEXT_ALIGN_RIGHT_OPTIONS_COUNT, true);
+	// extended channel list
 	CMenuOptionChooser *ocls_ext_ch 	= new CMenuOptionChooser(LOCALE_CHANNELLIST_EXTENDED, &g_settings.channellist_extended, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	// foot
+	CMenuOptionChooser *ocls_foot		= new CMenuOptionChooser(LOCALE_CHANNELLIST_FOOT, &g_settings.channellist_foot, CHANNELLIST_FOOT_OPTIONS, CHANNELLIST_FOOT_OPTIONS_COUNT, true);
+
 
 	//show items
 	ocls->addIntroItems(LOCALE_MISCSETTINGS_CHANNELLIST);
 	//-------------------------------------------------
+	ocls->addItem(ocls_additional);
 	ocls->addItem(ocls_align_ch);
 	ocls->addItem(ocls_ext_ch);
+	ocls->addItem(ocls_foot);
 
 	int res = ocls->exec(NULL, "");
 	delete ocls;
