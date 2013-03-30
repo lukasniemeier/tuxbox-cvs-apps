@@ -65,6 +65,7 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 
 CImageInfo::CImageInfo()
 {
+	pig = new CPIG (0);
 	frameBuffer 	= CFrameBuffer::getInstance();
 
 	font_head 	= SNeutrinoSettings::FONT_TYPE_MENU_TITLE;
@@ -90,7 +91,7 @@ CImageInfo::CImageInfo()
 	pigh = 144;
 #else
 	pigw = 215;
-	pigh = 170;
+	pigh = 190;
 #endif
 	
 	x = endX - pigw -16;
@@ -120,8 +121,11 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 
 	paint();
 
-	pig = new CPIG (0);
-	paint_pig( x, y, pigw, pigh);
+	// paint PIG
+	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv)
+	{
+		paint_pig(x, y, pigw, pigh);
+	}
 
 	neutrino_msg_t msg;
 
@@ -170,7 +174,6 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 	}
 
 	hide();
-	delete pig;
 
 	return menu_return::RETURN_REPAINT;
 }
@@ -193,6 +196,7 @@ void CImageInfo::paint_pig(int xPig, int yPig, int w, int h)
 #else
 	frameBuffer->paintBoxRel(xPig, yPig, w, h, COL_MENUCONTENT_PLUS_0);
 #endif
+	pig->set_coord(0, 0, 0, 0);
 	pig->show (xPig, yPig, w, h);
 }
 

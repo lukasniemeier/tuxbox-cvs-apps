@@ -296,6 +296,7 @@ void CStreamInfo2::paint_pig(int _x, int _y, int w, int h)
 #else
 	frameBuffer->paintBoxRel(_x, _y, w, h, COL_BLACK); //black
 #endif
+	pig->set_coord(0, 0, 0, 0);
 	pig->show(_x, _y, w, h);
 }
 
@@ -464,12 +465,15 @@ void CStreamInfo2::paint(int/*mode*/)
 		ypos = y+hheight+8;
 
 		// paint PIG
+		if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv)
+		{
 #if defined BOXMODEL_DM500 || defined HAVE_IPBOX_HARDWARE
-		// the dm500 seems to like only half / quarter resolution...
-		paint_pig(pigboxes_x + 60,  ypos, 180, 144);
+			// the dm500 seems to like only half / quarter resolution...
+			paint_pig(pigboxes_x + 60, ypos, 180, 144);
 #else
-		paint_pig( pigboxes_x,  ypos , 240, 190);
+			paint_pig(pigboxes_x, ypos, 240, 190);
 #endif
+		}
 
 		// Info Output
 		paint_techinfo ( xpos, ypos );
