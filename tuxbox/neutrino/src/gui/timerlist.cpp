@@ -417,7 +417,7 @@ void CTimerList::updateEvents(void)
 	}
 	sort(timerlist.begin(), timerlist.end());
 
-	height = (g_settings.screen_EndY-g_settings.screen_StartY)-(INFO_HEIGHT+50);
+	height = h_max(576, INFO_HEIGHT+50);
 	listmaxshow = (height-theight-0)/(fheight*2);
 	height = theight+0+listmaxshow*fheight*2;	// recalc height
 	if(timerlist.size() < listmaxshow)
