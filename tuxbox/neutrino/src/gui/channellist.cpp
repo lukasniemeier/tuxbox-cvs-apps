@@ -495,6 +495,7 @@ int CChannelList::show()
 				 msg == (g_settings.key_channelList_pageup   | CRCInput::RC_Release) ||
 				 msg == (g_settings.key_channelList_pagedown | CRCInput::RC_Release) )
 		{
+			paintHead();
 			paintButtonBar();
 			paintDetails(selected);
 		}
