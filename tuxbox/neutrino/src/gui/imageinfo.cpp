@@ -77,15 +77,15 @@ CImageInfo::CImageInfo()
 	iheight		= g_Font[font_info]->getHeight();
 	sheight		= g_Font[font_small]->getHeight();
 	ssheight	= g_Font[font_small_text]->getHeight();
+
+	width	= w_max(720, 10);
+	height	= h_max(572, 10);
 	
-	startX 	= 45; //mainwindow position
-	startY 	= 35;
-	endX 	= 720-startX;
-	endY 	= 572-startY;
-	
-	width 	= endX-startX;
-	height 	= endY-startY;
-	
+	startX	= getScreenStartX(width); //mainwindow position
+	startY	= getScreenStartY(height);
+	endX	= startX + width;
+	endY	= startY + height;
+
 #if defined BOXMODEL_DM500 || defined HAVE_IPBOX_HARDWARE
 	pigw = 180;
 	pigh = 144;

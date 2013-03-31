@@ -56,7 +56,6 @@ CStreamInfo2::CStreamInfo2()
 	pig = new CPIG (0);
 	frameBuffer = CFrameBuffer::getInstance();
 
-
 	font_head = SNeutrinoSettings::FONT_TYPE_MENU_TITLE;
 	font_info = SNeutrinoSettings::FONT_TYPE_MENU;
 	font_small = SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL;
@@ -65,13 +64,13 @@ CStreamInfo2::CStreamInfo2()
 	iheight     = g_Font[font_info]->getHeight();
 	sheight     = g_Font[font_small]->getHeight();
 
-	x 	= 60; //mainwindow position
-	y 	= 45;
-	endX 	= 720-x;
-	endY 	= 572-y;
-	
-	width 	= endX-x-10;
-	height 	= endY-y;
+	width	= w_max(SCREEN_X, 10);
+	height	= h_max(SCREEN_Y, 10);
+
+	x	= getScreenStartX(width); //mainwindow position
+	y	= getScreenStartY(height);
+	endX	= x + width;
+	endY	= y + height;
 
 	max_height = SCREEN_Y-1;
 	max_width  = SCREEN_X-1;
