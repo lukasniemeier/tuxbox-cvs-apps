@@ -145,8 +145,6 @@ void CChannelList::calcSize()
 	else
 		width = full_width;
 
-	height = h_max(576 / 20 * 16, 0);
-
 	/* assuming all color icons must have same size */
 	int icol_w, icol_h;
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_RED, &icol_w, &icol_h);
@@ -161,9 +159,11 @@ void CChannelList::calcSize()
 	if (fheight == 0)
 		fheight = 1; /* avoid crash on invalid font */
 
+	info_height = 2*fheight + g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->getHeight() + 10;
+	height = h_max(576, info_height);
+
 	listmaxshow = (height - theight - footerHeight -0)/fheight;
 	height = theight + footerHeight + listmaxshow * fheight;
-	info_height = 2*fheight + g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->getHeight() + 10;
 
 	x = getScreenStartX(full_width);
 	y = getScreenStartY(height + info_height);
