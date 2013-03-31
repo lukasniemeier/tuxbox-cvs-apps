@@ -237,12 +237,9 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);
 	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	x = getScreenStartX (width);
-	y = getScreenStartY (height + info_height);
-	listmaxshow = (height-theight-0)/(fheight*2);
 	liststart = 0;
 	
-	height = (g_settings.screen_EndY-g_settings.screen_StartY)-(info_height+50);
+	height = h_max(576, info_height+50);
 	listmaxshow = (height-theight-0)/(fheight*2);
 	height = theight+0+listmaxshow*fheight*2;	// recalc height
 	if(bookmarks.size() < listmaxshow)
