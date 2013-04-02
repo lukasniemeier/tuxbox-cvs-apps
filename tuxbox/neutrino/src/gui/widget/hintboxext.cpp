@@ -191,6 +191,8 @@ void CHintBoxExt::init(const neutrino_locale_t Caption, const int Width, const c
 	if (nw > m_width)
 		m_width = nw;
 
+	m_width = w_max(m_width, SHADOW_OFFSET);
+
 	m_window = NULL;
 }
 
@@ -207,8 +209,8 @@ void CHintBoxExt::paint(void)
 		return;
 	}
 
-	m_window = new CFBWindow((((g_settings.screen_EndX- g_settings.screen_StartX) - m_width ) >> 1) + g_settings.screen_StartX,
-			       (((g_settings.screen_EndY- g_settings.screen_StartY) - m_height) >> 2) + g_settings.screen_StartY,
+	m_window = new CFBWindow(getScreenStartX(m_width),
+			       ((g_settings.screen_EndY - g_settings.screen_StartY - m_height) >> 2) + g_settings.screen_StartY,
 			       m_width + SHADOW_OFFSET,
 			       m_height + SHADOW_OFFSET);
 	refresh();

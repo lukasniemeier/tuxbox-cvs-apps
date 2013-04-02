@@ -40,7 +40,7 @@ CStreamInfo::CStreamInfo()
 	hheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	width       = w_max (400, 50);
-	height      = hheight+14*mheight+ 10;
+	height      = h_max (hheight + 14 * mheight + 10, 0);
 
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);

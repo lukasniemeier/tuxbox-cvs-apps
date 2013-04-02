@@ -37,6 +37,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 
@@ -70,8 +71,8 @@ CExtendedInput::CExtendedInput(const neutrino_locale_t Name, char* Value, const 
 		//	if (hint_2 != NULL)
 		height += iheight;
 
-	x = ((720-width)>>1);
-	y = ((500-height)>>1);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 }
 
 CExtendedInput::~CExtendedInput()
@@ -115,8 +116,8 @@ void CExtendedInput::calculateDialog()
 		//	if (hint_2 != NULL)
 		height += iheight;
 
-	x = ((720-width)>>1);
-	y = ((500-height)>>1);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 }
 
 

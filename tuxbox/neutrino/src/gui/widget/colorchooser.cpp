@@ -40,6 +40,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 #include <gui/widget/messagebox.h>
@@ -71,10 +72,10 @@ CColorChooser::CColorChooser(const neutrino_locale_t Name, unsigned char *R, uns
 	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	observer = Observer;
 	name = Name;
-	width = 360;
-	height = hheight + mheight * 4 + 4;
-	x=((720-width) >> 1) -20;
-	y=(576-height)>>1;
+	width = w_max(360, 0);
+	height = h_max(hheight + mheight * 4 + 4, 0);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 
 	value[VALUE_R]     = R;
 	value[VALUE_G]     = G;

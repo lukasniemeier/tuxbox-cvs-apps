@@ -46,6 +46,7 @@
 #include <driver/encoding.h>
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 #include <driver/audioplay.h>
 #include <driver/audiometadata.h>
 
@@ -249,12 +250,8 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 		m_current = 0;
 
 	m_selected = 0;
-	m_width = 710;
-	if((g_settings.screen_EndX - g_settings.screen_StartX) < m_width+ConnectLineBox_Width)
-		m_width=(g_settings.screen_EndX - g_settings.screen_StartX) - ConnectLineBox_Width;
-	m_height = 570;
-	if((g_settings.screen_EndY - g_settings.screen_StartY) < m_height)
-		m_height = (g_settings.screen_EndY - g_settings.screen_StartY);
+	m_width = w_max(710, ConnectLineBox_Width);
+	m_height = h_max(570, 0);
 	m_sheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	m_buttonHeight = std::min(25, m_sheight);
 	m_theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
@@ -264,9 +261,8 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 	m_listmaxshow = (m_height - m_info_height - m_title_height - m_theight - 2*m_buttonHeight) / (m_fheight);
 	m_height = m_theight + m_info_height + m_title_height + 2*m_buttonHeight + m_listmaxshow * m_fheight; // recalc height
 
-	m_x = (((g_settings.screen_EndX - g_settings.screen_StartX) - (m_width + ConnectLineBox_Width)) / 2) 
-	+ g_settings.screen_StartX + ConnectLineBox_Width;
-	m_y = (((g_settings.screen_EndY- g_settings.screen_StartY) - m_height)/ 2) + g_settings.screen_StartY;
+	m_x = getScreenStartX(m_width + ConnectLineBox_Width) + ConnectLineBox_Width;
+	m_y = getScreenStartY(m_height);
 	m_idletime=time(NULL);
 	m_screensaver=false;
 
@@ -791,8 +787,8 @@ int CAudioPlayerGui::show()
 /* show a hint box with current char (too slow at the moment?)*/
 // 					char selectedKey[1];
 // 					sprintf(selectedKey,"%c",smsKey);
-// 					int x1=(g_settings.screen_EndX- g_settings.screen_StartX)/2 + g_settings.screen_StartX-50;
-// 					int y1=(g_settings.screen_EndY- g_settings.screen_StartY)/2 + g_settings.screen_StartY;
+// 					int x1 = getScreenStartX(0) - 50;
+// 					int y1 = getScreenStartY(0);
 // 					int h = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNEL_NUM_ZAP]->getHeight();
 // 					int w = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNEL_NUM_ZAP]->getRenderWidth(selectedKey);
 // 					m_frameBuffer->paintBoxRel(x1 - 7, y1 - h - 5, w + 14, h + 10, COL_MENUCONTENT_PLUS_6);
@@ -2330,8 +2326,8 @@ void CAudioPlayerGui::GetMetaData(CAudiofileExt &File)
 bool CAudioPlayerGui::getNumericInput(neutrino_msg_t& msg, int& val) {
 
 	neutrino_msg_data_t data;
-	int x1 = (g_settings.screen_EndX - g_settings.screen_StartX) / 2 + g_settings.screen_StartX - 50;
-	int y1 = (g_settings.screen_EndY - g_settings.screen_StartY) / 2 + g_settings.screen_StartY;
+	int x1 = getScreenStartX(0) - 50;
+	int y1 = getScreenStartY(0);
 	char str[11];
 	do
 	{

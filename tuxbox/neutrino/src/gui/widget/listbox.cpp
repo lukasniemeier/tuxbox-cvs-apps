@@ -40,7 +40,7 @@ CListBox::CListBox(const char * const Caption)
 	liststart = 0;
 	selected =  0;
 	width = w_max (400, 100);
-	height = 420;
+	height = h_max (420, 0);
 	ButtonHeight = 25;
 	modified = false;
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();

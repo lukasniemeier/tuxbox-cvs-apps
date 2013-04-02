@@ -37,6 +37,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 #include <gui/widget/messagebox.h>
@@ -57,10 +58,10 @@ CLcdControler::CLcdControler(const neutrino_locale_t Name, CChangeObserver* Obse
 	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	observer = Observer;
 	name = Name;
-	width = 390;
-	height = hheight+ mheight* 4+ +mheight/2;
-	x=((720-width) >> 1) -20;
-	y=(576-height)>>1;
+	width = w_max(390, 0);
+	height = h_max(hheight + mheight * 4 + mheight / 2, 0);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 
 	contrast = CLCD::getInstance()->getContrast();
 	brightness = CLCD::getInstance()->getBrightness();

@@ -41,6 +41,7 @@
 #include <gui/widget/messagebox.h>
 
 #include <driver/encoding.h>
+#include <driver/screen_max.h>
 
 #include <algorithm>
 #include <iostream>
@@ -61,8 +62,6 @@
 #include <curl/types.h>
 #include <curl/easy.h>
 #endif
-
-#include <driver/encoding.h>
 
 #include <xmltree/xmlinterface.h>
 
@@ -382,11 +381,11 @@ void CFileBrowser::commonInit()
 	selected = 0;
 	selections.clear();
 
-	x = g_settings.screen_StartX + 20;
-	y = g_settings.screen_StartY + 20;
+	width = w_max(720, 40);
+	height = h_max(576, 40);
 
-	width = (g_settings.screen_EndX - g_settings.screen_StartX - 40);
-	height = (g_settings.screen_EndY - g_settings.screen_StartY - 40);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 
 	theight = fnt_title->getHeight();
 	fheight = fnt_item->getHeight();

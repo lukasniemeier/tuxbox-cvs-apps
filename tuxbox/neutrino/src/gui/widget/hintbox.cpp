@@ -40,7 +40,7 @@
 #include <neutrino.h>
 #include <driver/screen_max.h>
 
-#define HINTBOX_MAX_HEIGHT 420
+#define HINTBOX_MAX_HEIGHT (h_max(420, 0))
 
 
 CHintBox::CHintBox(const neutrino_locale_t Caption, const char * const Text, const int Width, const char * const Icon)
@@ -135,8 +135,8 @@ void CHintBox::paint(void)
 		return;
 	}
 
-	window = new CFBWindow((((g_settings.screen_EndX- g_settings.screen_StartX) - width ) >> 1) + g_settings.screen_StartX,
-			       (((g_settings.screen_EndY- g_settings.screen_StartY) - height) >> 2) + g_settings.screen_StartY,
+	window = new CFBWindow(getScreenStartX(width),
+			       ((g_settings.screen_EndY - g_settings.screen_StartY - height) >> 2) + g_settings.screen_StartY,
 			       width + SHADOW_OFFSET,
 			       height + SHADOW_OFFSET);
 	refresh();

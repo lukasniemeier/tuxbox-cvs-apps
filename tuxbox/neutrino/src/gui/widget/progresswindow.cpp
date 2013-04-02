@@ -34,6 +34,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 
@@ -43,14 +44,14 @@ CProgressWindow::CProgressWindow()
 	frameBuffer = CFrameBuffer::getInstance();
 	hheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	width       = 500;
-	height      = hheight+5*mheight+20;
+	width       = w_max(500, 0);
+	height      = h_max(hheight + 5 * mheight + 20, 0);
 
 	global_progress = local_progress = 101;
 	statusText = "";
 
-	x= ( ( ( g_settings.screen_EndX- g_settings.screen_StartX ) - width ) >> 1 ) + g_settings.screen_StartX;
-	y=(576-height)>>1;
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 		
 	progressbar_x = x + 10;
 	progressbar_h = 16;

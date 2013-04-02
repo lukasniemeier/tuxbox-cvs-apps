@@ -67,8 +67,8 @@ CMotorControl::CMotorControl()
 	width = w_max (550, 30);
 	height = h_max (head_height + status_height + menue_height, 30);
 	
-	x = ((720 - width) >> 1);
-	y = (576 - height) >> 1;
+	x = getScreenStartX (width);
+	y = getScreenStartY (height);
 	
 	stepSize = 1; //default: 1 step
 	stepMode = STEP_MODE_TIMED;

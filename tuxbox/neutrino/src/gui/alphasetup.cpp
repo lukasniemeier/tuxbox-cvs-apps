@@ -69,7 +69,7 @@ CAlphaSetup::CAlphaSetup(const neutrino_locale_t Name)
 	width = w_max (360, 100);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height = hheight+ mheight*3;
+	height = h_max (hheight + mheight * 3, 0);
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 

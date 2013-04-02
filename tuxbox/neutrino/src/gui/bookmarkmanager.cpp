@@ -228,10 +228,8 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	frameBuffer = CFrameBuffer::getInstance();
 	visible = false;
 	selected = 0;
-	// Max
+
 	width = w_max (720, 30);
-	if(g_settings.screen_EndX-g_settings.screen_StartX < width)
-		width=g_settings.screen_EndX-g_settings.screen_StartX-10;
 
 	int iconw = 0, iconh = 0;
 	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);

@@ -75,22 +75,6 @@ CPluginList::CPluginList(const neutrino_locale_t Name, const uint listtype)
 	name = Name;
 	pluginlisttype = listtype;
 	selected = 0;
-	width = w_max (500, 100);
-	if(width>(g_settings.screen_EndX-g_settings.screen_StartX))
-		width=(g_settings.screen_EndX-g_settings.screen_StartX);
-	height = 526;
-	if((height+50)>(g_settings.screen_EndY-g_settings.screen_StartY))
-		height=(g_settings.screen_EndY-g_settings.screen_StartY) - 50; // 2*25 pixel frei
-	theight  = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
-	//
-	fheight1 = g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMLARGE]->getHeight();
-	fheight2 = g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMSMALL]->getHeight();
-	fheight = fheight1 + fheight2 + 2;
-	//
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight+0+listmaxshow*fheight; // recalc height
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
 	liststart = 0;
 }
 
@@ -302,11 +286,13 @@ void CPluginList::paint()
 {
 	hide();
 	width = w_max (500, 100);
-   if(width>(g_settings.screen_EndX-g_settings.screen_StartX))
-      width=(g_settings.screen_EndX-g_settings.screen_StartX);
-	height = 526;
-   if((height+50)>(g_settings.screen_EndY-g_settings.screen_StartY))
-      height=(g_settings.screen_EndY-g_settings.screen_StartY) - 50; // 2*25 pixel frei
+	height = h_max (526, 50);
+	theight  = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	//
+	fheight1 = g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMLARGE]->getHeight();
+	fheight2 = g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMSMALL]->getHeight();
+	fheight = fheight1 + fheight2 + 2;
+	//
 	listmaxshow = (height-theight-0)/fheight;
 	height = theight+0+listmaxshow*fheight; // recalc height
 	x = getScreenStartX (width);

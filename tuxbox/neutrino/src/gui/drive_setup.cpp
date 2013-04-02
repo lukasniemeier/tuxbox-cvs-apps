@@ -203,7 +203,7 @@ CDriveSetup::CDriveSetup():configfile('\t')
 	width 	= w_max (600, 50);
 	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
-	height 	= hheight+13*mheight+ 10;
+	height 	= h_max (hheight+13*mheight+10, 0);
 	selected_main = -1;
 	x	= getScreenStartX (width);
 	y	= getScreenStartY (height);

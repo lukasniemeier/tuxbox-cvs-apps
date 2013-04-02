@@ -55,17 +55,18 @@
 #endif
 
 #include "textbox.h"
+#include <driver/screen_max.h>
 #include <gui/widget/icons.h>
 
 #define	TEXT_BORDER_WIDTH			 8
 #define	SCROLL_FRAME_WIDTH			15
 #define	SCROLL_MARKER_BORDER		 2
 
-#define MAX_WINDOW_WIDTH  (g_settings.screen_EndX - g_settings.screen_StartX - 40)
-#define MAX_WINDOW_HEIGHT (g_settings.screen_EndY - g_settings.screen_StartY - 40)	
+#define MAX_WINDOW_WIDTH  (w_max(720, 40))
+#define MAX_WINDOW_HEIGHT (h_max(576, 40))
 
-#define MIN_WINDOW_WIDTH  ((g_settings.screen_EndX - g_settings.screen_StartX)>>1)
-#define MIN_WINDOW_HEIGHT 40	
+#define MIN_WINDOW_WIDTH  (w_max(720, 0) >> 1)
+#define MIN_WINDOW_HEIGHT 40
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -218,10 +219,10 @@ void CTextBox::initVar(void)
 	m_nCurrentLine = 0;
 	m_nCurrentPage = 0;
 
-	m_cFrame.iX		= g_settings.screen_StartX + ((g_settings.screen_EndX - g_settings.screen_StartX - MIN_WINDOW_WIDTH) >>1);
 	m_cFrame.iWidth	= MIN_WINDOW_WIDTH;
-	m_cFrame.iY		= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - MIN_WINDOW_HEIGHT) >>1);
 	m_cFrame.iHeight	= MIN_WINDOW_HEIGHT;
+	m_cFrame.iX		= getScreenStartX(m_cFrame.iWidth);
+	m_cFrame.iY		= getScreenStartY(m_cFrame.iHeight);
 
 	m_nMaxHeight = MAX_WINDOW_HEIGHT;
 	m_nMaxWidth = MAX_WINDOW_WIDTH;

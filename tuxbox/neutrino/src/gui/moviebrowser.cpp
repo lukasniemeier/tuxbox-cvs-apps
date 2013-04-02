@@ -58,6 +58,7 @@
 #include <algorithm>
 
 #include <stdlib.h>
+#include <driver/screen_max.h>
 #include <gui/moviebrowser.h>
 #include <gui/movieplayer.h>
 #include <gui/filebrowser.h>
@@ -147,11 +148,11 @@ const CMenuOptionChooser::keyval MESSAGEBOX_PARENTAL_LOCKAGE_OPTIONS[MESSAGEBOX_
 	{ 99, LOCALE_MOVIEBROWSER_INFO_PARENTAL_LOCKAGE_ALWAYS }
 };
 
-#define MAX_WINDOW_WIDTH  (g_settings.screen_EndX - g_settings.screen_StartX - 40)
-#define MAX_WINDOW_HEIGHT (g_settings.screen_EndY - g_settings.screen_StartY - 40)	
+#define MAX_WINDOW_WIDTH  (w_max(720, 40))
+#define MAX_WINDOW_HEIGHT (h_max(576, 40))
 
-#define MIN_WINDOW_WIDTH  ((g_settings.screen_EndX - g_settings.screen_StartX)>>1)
-#define MIN_WINDOW_HEIGHT 200	
+#define MIN_WINDOW_WIDTH  (w_max(720, 0) >> 1)
+#define MIN_WINDOW_HEIGHT 200
 
 #define TITLE_BACKGROUND_COLOR ((CFBWindow::color_t)COL_MENUHEAD_PLUS_0)
 #define TITLE_FONT_COLOR ((CFBWindow::color_t)COL_MENUHEAD)
@@ -589,8 +590,6 @@ void CMovieBrowser::initGlobalSettings(void)
 	}
 
 	/***** Browser List **************/
-	m_settings.browserFrameHeight = g_settings.screen_EndY - g_settings.screen_StartY - 20 - ((g_settings.screen_EndY - g_settings.screen_StartY - 20)>>1) - (INTER_FRAME_SPACE>>1);
-
 	m_settings.browserFrameHeight = 250;
 	
 	m_settings.browserRowNr = 6;
@@ -622,10 +621,10 @@ void CMovieBrowser::initGlobalSettings(void)
 void CMovieBrowser::initFrames(void)
 {
 	//TRACE("[mb]->initFrames\r\n");
-	m_cBoxFrame.iX = 			g_settings.screen_StartX + 10;
-	m_cBoxFrame.iY = 			g_settings.screen_StartY + 10;
-	m_cBoxFrame.iWidth = 			g_settings.screen_EndX - g_settings.screen_StartX - 20;
-	m_cBoxFrame.iHeight = 			g_settings.screen_EndY - g_settings.screen_StartY - 20;
+	m_cBoxFrame.iWidth = 			w_max(720, 20);
+	m_cBoxFrame.iHeight = 			h_max(720, 20);
+	m_cBoxFrame.iX = 			getScreenStartX(m_cBoxFrame.iWidth);
+	m_cBoxFrame.iY = 			getScreenStartY(m_cBoxFrame.iHeight);
 
 	m_cBoxFrameTitleRel.iX = 		0;
 	m_cBoxFrameTitleRel.iY = 		0;

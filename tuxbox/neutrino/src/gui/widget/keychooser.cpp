@@ -38,6 +38,8 @@
 #include <global.h>
 #include <neutrino.h>
 
+#include <driver/screen_max.h>
+
 #include <gui/color.h>
 
 
@@ -154,10 +156,10 @@ void CKeyChooserItem::paint()
 	int hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	int mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 
-	width       = 350;
-	height      = hheight + 2 * mheight;
-	x           = ((720-width) >> 1) -20;
-	y           = (576-height) >> 1;
+	width       = w_max(350, 0);
+	height      = h_max(hheight + 2 * mheight, 0);
+	x           = getScreenStartX(width);
+	y           = getScreenStartY(height);
 
 	CFrameBuffer * frameBuffer = CFrameBuffer::getInstance();
 

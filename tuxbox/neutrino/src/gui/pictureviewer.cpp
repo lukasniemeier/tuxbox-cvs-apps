@@ -122,11 +122,7 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 	struct stat sFileInfo;
 	selected = 0;
 	width = w_max (710, 30);
-	if((g_settings.screen_EndX- g_settings.screen_StartX) < width)
-		width=(g_settings.screen_EndX- g_settings.screen_StartX);
-	height = 570;
-	if((g_settings.screen_EndY- g_settings.screen_StartY) < height)
-		height=(g_settings.screen_EndY- g_settings.screen_StartY);
+	height = h_max (570, 0);
 	sheight      = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	buttonHeight = std::min(25, sheight);
 

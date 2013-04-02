@@ -75,9 +75,9 @@ CScanTs::CScanTs()
 	hheight		= g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	mheight		= g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	width 		= w_max (500, 100);
-	height 		= hheight + (9 * mheight); //9 lines
+	height 		= h_max (hheight + 9 * mheight, 0); //9 lines
 	x 		= getScreenStartX (width);
-	y 		= (576 - height) >> 1;
+	y 		= getScreenStartY (height);
 	radar = 0;
 	xpos_radar = x + 420;
 	ypos_radar = y + hheight + (mheight >> 1);

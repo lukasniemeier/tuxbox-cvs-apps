@@ -37,6 +37,7 @@
 
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 
 #include <gui/color.h>
 
@@ -124,8 +125,8 @@ void CStringInput::init()
 			height += iheight;
 	}
 
-	x = ((720-width)>>1);
-	y = ((500-height)>>1);
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 }
 
 void CStringInput::NormalKeyPressed(const neutrino_msg_t key)

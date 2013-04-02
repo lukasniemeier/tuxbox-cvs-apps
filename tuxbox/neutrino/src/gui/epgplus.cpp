@@ -610,8 +610,8 @@ EpgPlus::EpgPlus()
 
 	// this->usableScreenWidth  = 580;
 	// this->usableScreenHeight = 480;
-	usableScreenWidth  = w_max(g_settings.screen_EndX, 4);
-	usableScreenHeight = h_max(g_settings.screen_EndY, 4);
+	usableScreenWidth  = w_max(720, 4);
+	usableScreenHeight = h_max(576, 4);
 
 	selectedChannelEntry = NULL;
 	init();
@@ -832,14 +832,14 @@ void EpgPlus::init()
 	entryHeight        = ChannelEntry::getUsedHeight();
 	int footerHeight   = Footer::getUsedHeight();
 
-	usableScreenWidth  = w_max(g_settings.screen_EndX, 4);
-	usableScreenHeight = h_max(g_settings.screen_EndY, 4);
+	usableScreenWidth  = w_max(720, 4);
+	usableScreenHeight = h_max(576, 4);
 
 	maxNumberOfDisplayableEntries = (usableScreenHeight - headerHeight - timeLineHeight - horGap1Height - horGap2Height - footerHeight) / entryHeight;
 
 	usableScreenHeight = headerHeight + timeLineHeight + horGap1Height + maxNumberOfDisplayableEntries * entryHeight + horGap2Height + footerHeight; // recalc deltaY
-	usableScreenX = ((g_settings.screen_EndX - g_settings.screen_StartX - usableScreenWidth) / 2) + g_settings.screen_StartX;
-	usableScreenY = ((g_settings.screen_EndY - g_settings.screen_StartY - usableScreenHeight) / 2) + g_settings.screen_StartY;
+	usableScreenX = getScreenStartX(usableScreenWidth);
+	usableScreenY = getScreenStartY(usableScreenHeight);
 
 	headerX     = usableScreenX;
 	headerY     = usableScreenY;

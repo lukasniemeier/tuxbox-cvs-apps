@@ -46,6 +46,7 @@
 #include <driver/encoding.h>
 #include <driver/fontrenderer.h>
 #include <driver/rcinput.h>
+#include <driver/screen_max.h>
 #include <driver/audioplay.h>
 #include <driver/audiofile.h>
 #include <driver/audiometadata.h>
@@ -133,12 +134,8 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 	// set zapit in standby mode
 	g_Zapit->setStandby(true);
 
-	m_width = 710;
-	if((g_settings.screen_EndX - g_settings.screen_StartX) < m_width+ConnectLineBox_Width)
-		m_width=(g_settings.screen_EndX - g_settings.screen_StartX) - ConnectLineBox_Width;
-	m_height = 570;
-	if((g_settings.screen_EndY - g_settings.screen_StartY) < m_height)
-		m_height = (g_settings.screen_EndY - g_settings.screen_StartY);
+	m_width = w_max(710, ConnectLineBox_Width);
+	m_height = h_max(570, 0);
 	m_sheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	m_buttonHeight = std::min(25, m_sheight);
 	m_theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
@@ -149,9 +146,8 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 	m_listmaxshow = (m_height - m_info_height - m_title_height - m_theight - 2*m_buttonHeight) / (m_fheight);
 	m_height = m_theight + m_info_height + m_title_height + 2*m_buttonHeight + m_listmaxshow * m_fheight; // recalc height
 
-	m_x = (((g_settings.screen_EndX - g_settings.screen_StartX) - (m_width + ConnectLineBox_Width)) / 2)
-		+ g_settings.screen_StartX + ConnectLineBox_Width;
-	m_y = (((g_settings.screen_EndY- g_settings.screen_StartY) - m_height)/ 2) + g_settings.screen_StartY;
+	m_x = getScreenStartX(m_width + ConnectLineBox_Width) + ConnectLineBox_Width;
+	m_y = getScreenStartY(m_height);
 
 	// Stop sectionsd
 	g_Sectionsd->setPauseScanning(true);

@@ -55,6 +55,7 @@
 
 #include "msgbox.h"
 
+#include <driver/screen_max.h>
 #include <gui/widget/icons.h>
 #include <neutrino.h>
 
@@ -62,11 +63,11 @@
 #define ADD_FOOT_HEIGHT	 		14
 #define	TEXT_BORDER_WIDTH		8
 
-#define MAX_WINDOW_WIDTH  		(g_settings.screen_EndX - g_settings.screen_StartX )
-#define MAX_WINDOW_HEIGHT 		(g_settings.screen_EndY - g_settings.screen_StartY - 40)	
+#define MAX_WINDOW_WIDTH  		(w_max(720, 0))
+#define MAX_WINDOW_HEIGHT 		(h_max(576, 40))
 
-#define MIN_WINDOW_WIDTH  		(MAX_WINDOW_WIDTH>>1)
-#define MIN_WINDOW_HEIGHT 		40	
+#define MIN_WINDOW_WIDTH  		(MAX_WINDOW_WIDTH >> 1)
+#define MIN_WINDOW_HEIGHT 		40
 
 #define DEFAULT_TITLE_FONT		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]
 #define DEFAULT_FOOT_FONT		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]
@@ -140,8 +141,8 @@ CMsgBox::CMsgBox(const char *text,
 
 	if(_mode & CENTER)
 	{
-		m_cBoxFrame.iX	= g_settings.screen_StartX + ((g_settings.screen_EndX - g_settings.screen_StartX - m_cBoxFrame.iWidth) >>1);
-		m_cBoxFrame.iY	= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - m_cBoxFrame.iHeight) >>2);
+		m_cBoxFrame.iX	= getScreenStartX(m_cBoxFrame.iWidth);
+		m_cBoxFrame.iY	= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - m_cBoxFrame.iHeight) >> 2);
 	}
 
 	m_nResult = default_result;
@@ -236,10 +237,10 @@ void CMsgBox::initVar(void)
 		m_nWindowFrameBorderWidth = 0;
 
 	// set the main frame to default
-	m_cBoxFrame.iX		= g_settings.screen_StartX + ((g_settings.screen_EndX - g_settings.screen_StartX - MIN_WINDOW_WIDTH) >>1);
 	m_cBoxFrame.iWidth	= MIN_WINDOW_WIDTH;
-	m_cBoxFrame.iY		= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - MIN_WINDOW_HEIGHT) >>2);
 	m_cBoxFrame.iHeight	= MIN_WINDOW_HEIGHT;
+	m_cBoxFrame.iX		= getScreenStartX(m_cBoxFrame.iWidth);
+	m_cBoxFrame.iY		= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - m_cBoxFrame.iHeight) >> 2);
 
 	m_pcWindow = NULL;
 
@@ -772,8 +773,8 @@ bool CMsgBox::setText(const std::string* newText)
 			// since the frames size has changed, we have to recenter the window again */
 			if(m_nMode & CENTER)
 			{
-				m_cBoxFrame.iX		= g_settings.screen_StartX + ((g_settings.screen_EndX - g_settings.screen_StartX - m_cBoxFrame.iWidth) >>1);
-				m_cBoxFrame.iY		= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - m_cBoxFrame.iHeight) >>1);
+				m_cBoxFrame.iX		= getScreenStartX(m_cBoxFrame.iWidth);
+				m_cBoxFrame.iY		= g_settings.screen_StartY + ((g_settings.screen_EndY - g_settings.screen_StartY - m_cBoxFrame.iHeight) >> 2);
 			}
 		}
 	}
@@ -852,11 +853,13 @@ int ShowMsg2UTF(	const char * const Title,
 				//CMsgBox::CENTER | 
 				//CMsgBox::AUTO_WIDTH | 
 				//CMsgBox::AUTO_HIGH;
-	CBox position (			g_settings.screen_StartX+30,
-					g_settings.screen_StartY+30,
-					g_settings.screen_EndX - g_settings.screen_StartX-60,
-					g_settings.screen_EndY - g_settings.screen_StartY-60);
-	
+
+	int width = w_max(720, 60);
+	int height = h_max(576, 60);
+	int x = getScreenStartX(width);
+	int y = getScreenStartY(height);
+	CBox position(x, y, width, height);
+
 	int oldfontsize = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize();
 	bool bigfonts = false;
 	int ret, res;

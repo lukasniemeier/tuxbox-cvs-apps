@@ -254,10 +254,6 @@ CTimerList::CTimerList()
 	frameBuffer = CFrameBuffer::getInstance();
 	visible = false;
 	selected = 0;
-	width 	= w_max (600, 50);
-
-	x	= getScreenStartX (width);
-	y	= getScreenStartY (height+INFO_HEIGHT);
 	liststart = 0;
 	Timer = new CTimerdClient();
 	skipEventID=0;
@@ -417,6 +413,7 @@ void CTimerList::updateEvents(void)
 	}
 	sort(timerlist.begin(), timerlist.end());
 
+	width = w_max(600, 50);
 	height = h_max(576, INFO_HEIGHT+50);
 	listmaxshow = (height-theight-0)/(fheight*2);
 	height = theight+0+listmaxshow*fheight*2;	// recalc height
