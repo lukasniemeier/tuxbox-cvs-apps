@@ -375,6 +375,9 @@ int CNeutrinoApp::loadSetup()
 	g_settings.epg_max_events 	= configfile.getString("epg_max_events", "6000");
 	g_settings.epg_dir 		= configfile.getString("epg_dir", "");
 
+	// EPG-View
+	g_settings.bigFonts = configfile.getInt32("bigFonts", 0);
+
 	// NTP-Server for sectionsd
 	g_settings.network_ntpserver	= configfile.getString("network_ntpserver", "130.60.7.42");
 	g_settings.network_ntprefresh	= configfile.getString("network_ntprefresh", "30" );
@@ -977,6 +980,9 @@ void CNeutrinoApp::saveSetup()
 	configfile.setString("epg_old_events"          ,g_settings.epg_old_events );
 	configfile.setString("epg_max_events"          ,g_settings.epg_max_events );
 	configfile.setString("epg_dir"                 ,g_settings.epg_dir);
+
+	// EPG-View
+	configfile.setInt32("bigFonts", g_settings.bigFonts);
 
 	//misc
 	configfile.setBool("standby_save_power"        , g_settings.standby_save_power);

@@ -433,6 +433,11 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	GetEPGData(channel_id, id, &startzeit );
 	if (doLoop)
 	{
+		if (!bigFonts && g_settings.bigFonts) {
+			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getSize() * BIG_FONT_FAKTOR / 10);
+			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * BIG_FONT_FAKTOR / 10);
+		}
+		bigFonts = g_settings.bigFonts;
 		evtlist = g_Sectionsd->getEventsServiceKey(channel_id);
 		// Houdini added for Private Premiere EPG start sorted by start date/time
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
@@ -767,6 +772,11 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 							loop = false;
 						else
 						{
+							if (!bigFonts && g_settings.bigFonts) {
+								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getSize() * BIG_FONT_FAKTOR / 10);
+								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * BIG_FONT_FAKTOR / 10);
+							}
+							bigFonts = g_settings.bigFonts;
 							show(channel_id, id, &startzeit, false);
 							showPos = 0;
 						}
@@ -784,6 +794,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getSize() * 10 / BIG_FONT_FAKTOR);
 						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * 10 / BIG_FONT_FAKTOR);
 					}
+					g_settings.bigFonts = bigFonts;
 					show(channel_id, id, &startzeit, false);
 					showPos=0;
 					break;

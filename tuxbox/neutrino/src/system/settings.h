@@ -68,6 +68,7 @@ struct SNeutrinoSettings
 	int progressbar_color;
 	int infobar_show;
 	int show_mute_icon;
+	int bigFonts;
 	int channellist_additional;
 	int channellist_epgtext_align_right;
 	int channellist_extended;
