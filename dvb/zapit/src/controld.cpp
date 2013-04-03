@@ -340,7 +340,8 @@ void controldSaveSettings()
 {
 	/* does not really belong here? */
 	controldconfig->setInt32("volume_type", settings.volume_type);
-	controldconfig->saveConfig(CONF_FILE);
+	if (controldconfig->getModifiedFlag())
+		controldconfig->saveConfig(CONF_FILE);
 }
 
 void shutdownBox()
@@ -951,7 +952,7 @@ void setAviaChip()
 void controld_main(void)
 {
 	/* load configuration */
-	controldconfig = new CConfigFile(',');
+	controldconfig = new CConfigFile(',', false);
 
 	if (!controldconfig->loadConfig(CONF_FILE))
 	{
