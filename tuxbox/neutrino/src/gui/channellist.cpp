@@ -165,7 +165,7 @@ void CChannelList::calcSize()
 	listmaxshow = (height - theight - footerHeight -0)/fheight;
 	height = theight + footerHeight + listmaxshow * fheight;
 
-	x = getScreenStartX(full_width);
+	x = getScreenStartX(full_width - ConnectLineBox_Width);
 	y = getScreenStartY(height + info_height);
 
 	infozone_width = full_width - width;
