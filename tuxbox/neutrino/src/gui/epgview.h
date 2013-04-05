@@ -61,6 +61,7 @@ class CEpgData
 		std::string 		epg_start;
 		std::string 		epg_end;
 		int			epg_done;
+		bool 			call_fromfollowlist;
 
 		unsigned long long	prev_id;
 		time_t			prev_zeit;
@@ -90,7 +91,7 @@ class CEpgData
 
 		CEpgData();
 		void start( );
-		int show(const t_channel_id channel_id, unsigned long long id = 0, time_t* startzeit = NULL, bool doLoop = true );
+		int show(const t_channel_id channel_id, unsigned long long id = 0, time_t* startzeit = NULL, bool doLoop = true, bool callFromfollowlist = false );
 		void hide();
 };
 

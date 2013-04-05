@@ -447,12 +447,12 @@ static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)
 	return a.startTime< b.startTime;
 }
 
-int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_t* a_startzeit, bool doLoop )
+int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_t* a_startzeit, bool doLoop, bool callFromfollowlist )
 {
 	int res = menu_return::RETURN_REPAINT;
 	static unsigned long long id;
 	static time_t startzeit;
-
+	call_fromfollowlist = callFromfollowlist;
 	if(a_startzeit)
 		startzeit=*a_startzeit;
 	id=a_id;
@@ -649,13 +649,13 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	}
 
 	GetPrevNextEPGData( epgData.eventID, &epgData.epg_times.startzeit );
-	if (prev_id != 0)
+	if ((prev_id != 0) && !call_fromfollowlist)
 	{
 		frameBuffer->paintBoxRel(sx+ 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_3);
 		g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ 10, sy+ oy- 3, widthr, "<", COL_MENUCONTENT + 3);
 	}
 
-	if (next_id != 0)
+	if ((next_id != 0) && !call_fromfollowlist)
 	{
 		frameBuffer->paintBoxRel(sx+ ox- botboxheight+ 8- 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_3);
 		g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ ox- botboxheight+ 8, sy+ oy- 3, widthr, ">", COL_MENUCONTENT + 3);
@@ -681,7 +681,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 			switch ( msg )
 			{
 				case CRCInput::RC_left:
-					if (prev_id != 0)
+					if ((prev_id != 0) && !call_fromfollowlist)
 					{
 						frameBuffer->paintBoxRel(sx+ 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_1);
 						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ 10, sy+ oy- 3, widthr, "<", COL_MENUCONTENT + 1);
@@ -692,7 +692,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 					break;
 
 				case CRCInput::RC_right:
-					if (next_id != 0)
+					if ((next_id != 0) && !call_fromfollowlist)
 					{
 						frameBuffer->paintBoxRel(sx+ ox- botboxheight+ 8- 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_1);
 						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ ox- botboxheight+ 8, sy+ oy- 3, widthr, ">", COL_MENUCONTENT + 1);
@@ -733,7 +733,12 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 								CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_TIMER, NULL, &recDir);
 								hide();
 								recDirs.exec(NULL,"");
-								show(channel_id,epgData.eventID,&epgData.epg_times.startzeit,false);
+								if (!bigFonts && g_settings.bigFonts) {
+									g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getSize() * BIG_FONT_FAKTOR / 10);
+									g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * BIG_FONT_FAKTOR / 10);
+								}
+								bigFonts = g_settings.bigFonts;
+								show(channel_id, id, &startzeit, false, call_fromfollowlist);
 								recDir = recDirs.get_selected_dir();
 							}
 							
@@ -792,9 +797,11 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 
 				// more screenings
 				case CRCInput::RC_blue:
-					if (!followlist.empty())
+					if (!followlist.empty() && !call_fromfollowlist)
 					{
 						hide();
+						time_t tmp_sZeit = epgData.epg_times.startzeit;
+						unsigned long long tmp_eID = epgData.eventID;
 						EventList* eventList = new EventList();
 						res = eventList->exec(channel_id, g_Locale->getText(LOCALE_EPGVIEWER_MORE_SCREENINGS_SHORT), followlist); // UTF-8
 						delete eventList;
@@ -807,7 +814,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 								g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * BIG_FONT_FAKTOR / 10);
 							}
 							bigFonts = g_settings.bigFonts;
-							show(channel_id, id, &startzeit, false);
+							show(channel_id, tmp_eID, &tmp_sZeit, false);
 							showPos = 0;
 						}
 					}
@@ -825,7 +832,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getSize() * 10 / BIG_FONT_FAKTOR);
 					}
 					g_settings.bigFonts = bigFonts;
-					show(channel_id, id, &startzeit, false);
+					show(channel_id, id, &startzeit, false, call_fromfollowlist);
 					showPos=0;
 					break;
 
@@ -1018,7 +1025,7 @@ void CEpgData::showTimerEventBar(bool _show)
 	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
 
 	// Button: more screenings
-	if (!followlist.empty())
+	if (!followlist.empty() && !call_fromfollowlist)
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2], 2 * ButtonWidth - 2 * (ICON_LARGE_WIDTH + 2) - 4);
 }
 

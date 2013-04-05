@@ -553,12 +553,12 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 #endif
 		else if (msg==CRCInput::RC_help || msg==CRCInput::RC_right || msg==CRCInput::RC_ok)
 		{
-			if (!showfollow && evtlist[selected].eventID != 0)
+			if (evtlist[selected].eventID != 0)
 			{
 				hide();
 
 //				res = g_EpgData->show(channel_id, evtlist[selected].eventID, &evtlist[selected].startTime);
-				res = g_EpgData->show(evtlist[selected].get_channel_id(), evtlist[selected].eventID, &evtlist[selected].startTime);
+				res = g_EpgData->show(evtlist[selected].get_channel_id(), evtlist[selected].eventID, &evtlist[selected].startTime, true, showfollow);
 				if ( res == menu_return::RETURN_EXIT_ALL )
 				{
 					loop = false;
@@ -743,7 +743,7 @@ void EventList::paint()
 
 	liststart = (selected/listmaxshow)*listmaxshow;
 
-	if (!showfollow && evtlist[0].eventID != 0)
+	if (evtlist[0].eventID != 0)
 	{
 		int iconw = 0, iconh = 0;
 		frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
