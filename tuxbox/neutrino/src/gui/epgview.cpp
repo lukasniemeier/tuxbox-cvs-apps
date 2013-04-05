@@ -143,7 +143,7 @@ void CEpgData::start()
 	toph = topboxheight;
 }
 
-void CEpgData::addTextToArray(const std::string & text) // UTF-8
+void CEpgData::addTextToArray(const std::string & text, int screening) // UTF-8
 {
 	//printf("line: >%s<\n", text.c_str() );
 	if (text==" ")
@@ -151,17 +151,17 @@ void CEpgData::addTextToArray(const std::string & text) // UTF-8
 		emptyLineCount ++;
 		if(emptyLineCount<2)
 		{
-			epgText.push_back(text);
+			epgText.push_back(epg_pair(text, screening));
 		}
 	}
 	else
 	{
 		emptyLineCount = 0;
-		epgText.push_back(text);
+		epgText.push_back(epg_pair(text, screening));
 	}
 }
 
-void CEpgData::processTextToArray(std::string text) // UTF-8
+void CEpgData::processTextToArray(std::string text, int screening) // UTF-8
 {
 	std::string	aktLine = "";
 	std::string	aktWord = "";
@@ -181,14 +181,14 @@ void CEpgData::processTextToArray(std::string text) // UTF-8
 
 			// check the wordwidth - add to this line if size ok
 			int aktWordWidth = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth(aktWord);
-			if((aktWordWidth+aktWidth)<(ox- 20- 15))
+			if((aktWordWidth+aktWidth)<(ox- 10- 15))
 			{//space ok, add
 				aktWidth += aktWordWidth;
 				aktLine += aktWord;
 			
 				if(*text_=='\n')
 				{	//enter-handler
-					addTextToArray( aktLine );
+					addTextToArray( aktLine, screening);
 					aktLine = "";
 					aktWidth= 0;
 				}	
@@ -196,7 +196,7 @@ void CEpgData::processTextToArray(std::string text) // UTF-8
 			}
 			else
 			{//new line needed
-				addTextToArray( aktLine );
+				addTextToArray( aktLine, screening);
 				aktLine = aktWord;
 				aktWidth = aktWordWidth;
 				aktWord = "";
@@ -213,7 +213,7 @@ void CEpgData::processTextToArray(std::string text) // UTF-8
 		text_++;
 	}
 	//add the rest
-	addTextToArray( aktLine + aktWord );
+	addTextToArray( aktLine + aktWord, screening );
 }
 
 void CEpgData::showText( int startPos, int ypos )
@@ -224,15 +224,45 @@ void CEpgData::showText( int startPos, int ypos )
 
 	int textSize = epgText.size();
 	int y=ypos;
-
+	const char tok = ' ';
+	int offset = 0, count = 0;
+	int max_mon_w = 0, max_wday_w = 0;
+	int digi = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth("29..");
+	for(int i = 0; i < 12;i++){
+		max_mon_w = std::max(max_mon_w, g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth(std::string(g_Locale->getText(CLocaleManager::getMonth(i))) + ".", true)); // UTF-8
+		if(i > 6)
+		      continue;
+		max_wday_w = std::max(max_wday_w, g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth(std::string(g_Locale->getText(CLocaleManager::getWeekday(i))) + ".", true)); // UTF-8
+	}
 	frameBuffer->paintBoxRel(sx, y, ox- 15, sb, COL_MENUCONTENT_PLUS_0); // background of the text box
-
 	for(int i = startPos; i < textSize && i < startPos + medlinecount; i++, y += medlineheight)
 	{
-		if ( i< info1_lines )
-			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->RenderString(sx+10, y+medlineheight, ox- 15- 15, epgText[i], COL_MENUCONTENT, 0, true); // UTF-8
-		else
-			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10, y+medlineheight, ox- 15- 15, epgText[i], COL_MENUCONTENT, 0, true); // UTF-8
+		if(epgText[i].second){
+			std::string::size_type pos1 = epgText[i].first.find_first_not_of(tok, 0);
+			std::string::size_type pos2 = epgText[i].first.find_first_of(tok, pos1);
+			while( pos2 != string::npos || pos1 != string::npos ){
+				switch(count){
+					case 1:
+					offset += max_wday_w;
+					break;
+					case 3:
+					offset += max_mon_w;
+					break;
+					default:
+					offset += digi;
+					break;
+				}
+				g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10+offset, y+medlineheight, ox- 15- 15, epgText[i].first.substr(pos1, pos2 - pos1), (epgText[i].second==2)? COL_MENUCONTENTINACTIVE: COL_MENUCONTENT, 0, true); // UTF-8
+				count++;
+				pos1 = epgText[i].first.find_first_not_of(tok, pos2);
+				pos2 = epgText[i].first.find_first_of(tok, pos1);
+			}
+			offset = 0;
+			count = 0;
+		}
+		else{
+			g_Font[( i< info1_lines ) ?SNeutrinoSettings::FONT_TYPE_EPG_INFO1:SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10, y+medlineheight, ox- 15- 15, epgText[i].first, COL_MENUCONTENT, 0, true); // UTF-8
+		}
 	}
 
 	int sbc = ((textSize - 1)/ medlinecount) + 1;
@@ -567,7 +597,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	if (hasFollowScreenings(channel_id, epgData.title, epgData.epg_times.startzeit)) {
 		processTextToArray(""); // UTF-8
 		processTextToArray(std::string(g_Locale->getText(LOCALE_EPGVIEWER_MORE_SCREENINGS)) + ':'); // UTF-8
-		FollowScreenings();
+		FollowScreenings(epgData.epg_times.startzeit);
 	}
 
 	//show the epg
@@ -861,7 +891,7 @@ void CEpgData::GetEPGData(const t_channel_id channel_id, unsigned long long id, 
 		}
 
 		struct tm *pStartZeit = localtime(&(epgData.epg_times).startzeit);
-		char temp[11];
+		char temp[11] = {0};
 		strftime( temp, sizeof(temp), "%d.%m.%Y", pStartZeit);
 		epg_date = g_Locale->getText(CLocaleManager::getWeekday(pStartZeit));
 		epg_date += ". ";
@@ -919,12 +949,13 @@ void CEpgData::GetPrevNextEPGData( unsigned long long id, time_t* startzeit )
 // -- 2002-05-03 rasc
 //
 
-void CEpgData::FollowScreenings()
+void CEpgData::FollowScreenings(const time_t startzeit)
 {
-  CChannelEventList::iterator e;
-  struct  tm		*tmStartZeit;
-  std::string		screening_dates,screening_nodual;
-  char			tmpstr[256];
+	CChannelEventList::iterator e;
+	struct  tm		*tmStartZeit;
+	std::string		screening_dates, screening_nodual;
+	int 			flag = 1;
+	char			tmpstr[256] = {0};
 
 	screening_dates = screening_nodual = "";
 
@@ -932,22 +963,22 @@ void CEpgData::FollowScreenings()
 	{
 		tmStartZeit = localtime(&(e->startTime));
 
-		screening_dates = "    ";
-
-		screening_dates += g_Locale->getText(CLocaleManager::getWeekday(tmStartZeit));
+		screening_dates = g_Locale->getText(CLocaleManager::getWeekday(tmStartZeit));
 		screening_dates += '.';
 
-		strftime(tmpstr, sizeof(tmpstr), "  %d.", tmStartZeit );
+		strftime(tmpstr, sizeof(tmpstr), " %d.", tmStartZeit );
 		screening_dates += tmpstr;
 
 		screening_dates += g_Locale->getText(CLocaleManager::getMonth(tmStartZeit));
 
-		strftime(tmpstr, sizeof(tmpstr), ".  %H:%M ", tmStartZeit );
+		strftime(tmpstr, sizeof(tmpstr), ". %H:%M ", tmStartZeit );
 		screening_dates += tmpstr;
+
+		flag = (e->startTime <= startzeit) ? 2 : 1;
 
 		if (screening_dates != screening_nodual){
 			screening_nodual=screening_dates;
-			processTextToArray(screening_dates ); // UTF-8
+			processTextToArray(screening_dates, flag ); // UTF-8
 		}
 	}
 }
