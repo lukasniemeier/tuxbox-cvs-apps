@@ -16,7 +16,7 @@ EPGPlus.channelentry_width Breite der Kanalnamen
 EPGPlus.channelevententry_font Sendungen
 EPGPlus.edit_fonts Schriften einstellen
 EPGPlus.edit_sizes Abmessungen einstellen
-EPGPlus.event_info Eventinfo
+EPGPlus.event_info Info
 EPGPlus.font_style_bold Fett
 EPGPlus.font_style_italic Kursiv
 EPGPlus.font_style_regular Normal

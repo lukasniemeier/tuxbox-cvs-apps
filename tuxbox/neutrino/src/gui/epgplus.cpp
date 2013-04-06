@@ -584,12 +584,12 @@ void EpgPlus::Footer::paintEventDetails(const std::string& description, const st
 
 struct button_label buttonLabels[6] =
 {
+	{ NEUTRINO_ICON_BUTTON_DBOX      , LOCALE_EPGPLUS_HIDE       },
+	{ NEUTRINO_ICON_BUTTON_HELP      , LOCALE_EPGPLUS_EVENT_INFO },
 	{ NEUTRINO_ICON_BUTTON_RED       , LOCALE_EPGPLUS_ACTIONS    },
 	{ NEUTRINO_ICON_BUTTON_GREEN     , LOCALE_EPGPLUS_PAGE_DOWN  },
 	{ NEUTRINO_ICON_BUTTON_YELLOW    , LOCALE_EPGPLUS_PAGE_UP    },
-	{ NEUTRINO_ICON_BUTTON_BLUE      , LOCALE_EPGPLUS_OPTIONS    },
-	{ NEUTRINO_ICON_BUTTON_HELP	 , LOCALE_EPGPLUS_EVENT_INFO },
-	{ NEUTRINO_ICON_BUTTON_DBOX      , LOCALE_EPGPLUS_HIDE       }
+	{ NEUTRINO_ICON_BUTTON_BLUE      , LOCALE_EPGPLUS_OPTIONS    }
 };
 
 void EpgPlus::Footer::paintButtons(button_label* _buttonLabels, int numberOfButtons)
@@ -889,6 +889,8 @@ void EpgPlus::init()
 	refreshAll = false;
 	currentViewMode = ViewMode_Scroll;
 	currentSwapMode = SwapMode_ByPage;
+	buttonLabels[3].locale = LOCALE_EPGPLUS_PAGE_DOWN;
+	buttonLabels[4].locale = LOCALE_EPGPLUS_PAGE_UP;
 
 	header = new Header(frameBuffer, headerX, headerY, headerWidth);
 	timeLine = new TimeLine(frameBuffer, timeLineX, timeLineY, timeLineWidth, eventsTableX, eventsTableWidth);
@@ -1794,12 +1796,12 @@ EpgPlus::MenuOptionChooserSwitchSwapMode::~MenuOptionChooserSwitchSwapMode()
 		switch (epgPlus->currentSwapMode)
 		{
 			case SwapMode_ByPage:
-				buttonLabels[1].locale = LOCALE_EPGPLUS_PAGE_DOWN;
-				buttonLabels[2].locale = LOCALE_EPGPLUS_PAGE_UP;
+				buttonLabels[3].locale = LOCALE_EPGPLUS_PAGE_DOWN;
+				buttonLabels[4].locale = LOCALE_EPGPLUS_PAGE_UP;
 				break;
 			case SwapMode_ByBouquet:
-				buttonLabels[1].locale = LOCALE_EPGPLUS_PREV_BOUQUET;
-				buttonLabels[2].locale = LOCALE_EPGPLUS_NEXT_BOUQUET;
+				buttonLabels[3].locale = LOCALE_EPGPLUS_PREV_BOUQUET;
+				buttonLabels[4].locale = LOCALE_EPGPLUS_NEXT_BOUQUET;
 				break;
 		}
 		epgPlus->refreshAll = true;

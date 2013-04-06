@@ -16,7 +16,7 @@ EPGPlus.channelentry_width width of channel names
 EPGPlus.channelevententry_font Program
 EPGPlus.edit_fonts Edit fonts
 EPGPlus.edit_sizes Edit sizes
-EPGPlus.event_info Event Info
+EPGPlus.event_info Info
 EPGPlus.font_style_bold bold
 EPGPlus.font_style_italic italic
 EPGPlus.font_style_regular regular
