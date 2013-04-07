@@ -629,7 +629,7 @@ int CAudioPlayerGui::show()
 				{
 					// keylevel 2 can only be reached if the currently played file
 					// is no stream, so we do not have to test for this case
-					long seconds=0;
+					int seconds=0;
 					CIntInput secondsInput(LOCALE_AUDIOPLAYER_JUMP_DIALOG_TITLE,
 							seconds,
 							5,
@@ -727,7 +727,7 @@ int CAudioPlayerGui::show()
 				{
 					// keylevel 2 can only be reached if the currently played file
 					// is no stream, so we do not have to test for this case
-					long seconds=0;
+					int seconds=0;
 					CIntInput secondsInput(LOCALE_AUDIOPLAYER_JUMP_DIALOG_TITLE,
 							seconds,
 							5,

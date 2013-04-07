@@ -610,7 +610,7 @@ void CTimeInput::onAfterExec()
 }
 //-----------------------------#################################-------------------------------------------------------
 
-CIntInput::CIntInput(const neutrino_locale_t Name, long& Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ)
+CIntInput::CIntInput(const neutrino_locale_t Name, int& Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ)
 	: CExtendedInput(Name, myValueStringInput, Hint_1, Hint_2, Observ)
 {
 	myValue = &Value;
@@ -621,11 +621,11 @@ CIntInput::CIntInput(const neutrino_locale_t Name, long& Value, const unsigned i
 		m_size = MAX_CINTINPUT_SIZE-1;
  	if (*myValue == 0)
  	{
-		sprintf(myValueStringInput,"%-15ld",0l);
-		sprintf(myValueStringOutput,"%15ld",0l);
+		sprintf(myValueStringInput,"%-7d",0);
+		sprintf(myValueStringOutput,"%7d",0);
  	} else {
-		sprintf(myValueStringInput,"%-*ld",m_size,*myValue);
-		sprintf(myValueStringOutput,"%*ld",m_size,*myValue);
+		sprintf(myValueStringInput,"%-*d",m_size,*myValue);
+		sprintf(myValueStringOutput,"%*d",m_size,*myValue);
 	}
 
 	frameBuffer = CFrameBuffer::getInstance();
@@ -641,18 +641,18 @@ void CIntInput::onBeforeExec()
 {
  	if (*myValue == 0)
  	{
-		sprintf(myValueStringInput,"%-15ld",0l);
-		sprintf(myValueStringOutput,"%15ld",0l);
+		sprintf(myValueStringInput,"%-7d",0);
+		sprintf(myValueStringOutput,"%7d",0);
  	} else {
-		sprintf(myValueStringInput,"%-*ld",m_size,*myValue);
-		sprintf(myValueStringOutput,"%*ld",m_size,*myValue);
+		sprintf(myValueStringInput,"%-*d",m_size,*myValue);
+		sprintf(myValueStringOutput,"%*d",m_size,*myValue);
 	}
 }
 
 void CIntInput::onAfterExec()
 {
-	sscanf(myValueStringInput, "%ld", myValue);
-	sprintf(myValueStringOutput,"%ld",*myValue);
+	sscanf(myValueStringInput, "%d", myValue);
+	sprintf(myValueStringOutput,"%d",*myValue);
 }
 
 //-----------------------------#################################-------------------------------------------------------

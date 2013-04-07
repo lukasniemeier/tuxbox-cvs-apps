@@ -201,7 +201,7 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	StreamingNotifier.addItem(oj10);
 
 #ifndef ENABLE_MOVIEPLAYER2
-	CIntInput mp_setup_buffer_size(LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE, (long&)g_settings.streaming_buffer_segment_size,3, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT1, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT2);
+	CIntInput mp_setup_buffer_size(LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE, (int&)g_settings.streaming_buffer_segment_size,3, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT1, LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE_HINT2);
 	CMenuForwarder* mf9 = new CMenuForwarder(LOCALE_STREAMINGMENU_STREAMING_BUFFER_SEGMENT_SIZE, g_settings.streaming_use_buffer, mp_setup_buffer_size.getValue(), &mp_setup_buffer_size);
 	COnOffNotifier bufferNotifier;
 	bufferNotifier.addItem(mf9);

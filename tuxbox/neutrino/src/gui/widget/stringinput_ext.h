@@ -210,7 +210,7 @@ class CIntInput : public CExtendedInput
 	char myValueStringInput[MAX_CINTINPUT_SIZE];
 	char myValueStringOutput[MAX_CINTINPUT_SIZE];
 
- 	long* myValue;
+	int* myValue;
 	unsigned int m_size;
 	protected:
 		virtual void onBeforeExec();
@@ -220,7 +220,7 @@ class CIntInput : public CExtendedInput
 		/**
 		 *@param Size how many digits can be entered
 		 */
-		CIntInput(const neutrino_locale_t Name, long& Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ = NULL);
+		CIntInput(const neutrino_locale_t Name, int& Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ = NULL);
 		char* getValue() {
 			return myValueStringOutput;
 		}
