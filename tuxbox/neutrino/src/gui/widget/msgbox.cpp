@@ -868,8 +868,6 @@ int ShowMsg2UTF(	const char * const Title,
 		bigfonts = !bigfonts;
 		if (bigfonts)
 			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(oldfontsize * 15 / 10);
-		else
-			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(oldfontsize);
 
 		CMsgBox* msgBox = new CMsgBox(	Text,
 					g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2],
@@ -885,10 +883,11 @@ int ShowMsg2UTF(	const char * const Title,
 		res = msgBox->result();
 
 		delete msgBox;
+
+		if (bigfonts)
+			g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(oldfontsize);
 	} while (ret == -1);
 
-	if (bigfonts)
-		g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->setSize(oldfontsize);
 	g_settings.bigFonts = bigfonts;
 
 	return res;
