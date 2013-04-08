@@ -739,6 +739,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 								}
 								bigFonts = g_settings.bigFonts;
 								show(channel_id, id, &startzeit, false, call_fromfollowlist);
+								showPos = 0;
 								recDir = recDirs.get_selected_dir();
 							}
 							
