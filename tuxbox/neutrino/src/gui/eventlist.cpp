@@ -398,7 +398,9 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 						CRecDirChooser recDirs(LOCALE_TIMERLIST_RECORDING_DIR, NEUTRINO_ICON_TIMER, NULL, &recDir);
 						hide();
 						recDirs.exec(NULL,"");
+						paintHead();
 						paint();
+						showFunctionBar(true);
 						recDir = recDirs.get_selected_dir();
 					}
 					
