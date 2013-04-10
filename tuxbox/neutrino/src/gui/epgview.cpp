@@ -476,6 +476,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	if (epgData.title.empty()) /* no epg info found */
 	{
 		ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_EPGVIEWER_NOTFOUND);
+		hide();
 		return res;
 	}
 
