@@ -604,15 +604,6 @@ void EpgPlus::Footer::paintButtons(button_label* _buttonLabels, int numberOfButt
 EpgPlus::EpgPlus()
 {
 	frameBuffer = CFrameBuffer::getInstance();
-
-	currentViewMode = ViewMode_Scroll;
-	currentSwapMode = SwapMode_ByPage;
-
-	// this->usableScreenWidth  = 580;
-	// this->usableScreenHeight = 480;
-	usableScreenWidth  = w_max(720, 4);
-	usableScreenHeight = h_max(576, 4);
-
 	selectedChannelEntry = NULL;
 	init();
 }
