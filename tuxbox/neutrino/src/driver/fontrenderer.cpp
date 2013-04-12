@@ -392,7 +392,7 @@ void Font::RenderString(int x, int y, const int width, const char *text, const u
 #ifdef FB_USE_PALETTE
 #define PRE_CALC_TRANSLATION_TABLE
 #ifdef PRE_CALC_TRANSLATION_TABLE
-	fb_pixel_t colors[256];
+	static fb_pixel_t colors[256] = {0};
 
 	int coff = 7 - ((color + 2) & 7);
 	for (int i = (256 - 32); i >= 0; i -= 32)
@@ -429,7 +429,7 @@ void Font::RenderString(int x, int y, const int width, const char *text, const u
 	int deltab = (((int)bgcolor >> bo) & ((1 << bl) - 1)) - fgb;
 	int deltat = (((int)bgcolor >> to) & ((1 << tl) - 1)) - fgt;
 
-	fb_pixel_t colors[256];
+	static fb_pixel_t colors[256] = {0};
 
 	for (int i = 0; i < 256; i++)
 	{
