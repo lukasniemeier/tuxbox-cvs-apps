@@ -155,11 +155,12 @@ void CChannelList::calcSize()
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &icol_w, &icol_h);
 	theight = std::max(theight, icol_h);
 
-	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	if (fheight == 0)
-		fheight = 1; /* avoid crash on invalid font */
+	fheight = std::max(g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight(),
+			std::max(g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->getHeight(),
+			std::max(g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->getHeight(),
+			1))); /* min 1 to avoid crash on invalid font */
 
-	info_height = 2*fheight + g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->getHeight() + 10;
+	info_height = 3*fheight + 10;
 	height = h_max(576, info_height);
 
 	listmaxshow = (height - theight - footerHeight -0)/fheight;
