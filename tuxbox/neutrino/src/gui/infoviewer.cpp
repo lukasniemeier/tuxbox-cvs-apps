@@ -163,6 +163,7 @@ void CInfoViewer::showSatfind()
 	char freq[20];
 	char percent[10];
 	char pos[6];
+	int percent_width;
 	int sig;
 	int snr;
 	int ber;
@@ -191,11 +192,13 @@ void CInfoViewer::showSatfind()
 
 		sprintf (percent, "sig %d%%", sig);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 10, BoxEndY+ 25, BoxEndX- ChanInfoX- 10, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
-		pbsig.paintProgressBar(ChanInfoX+ 72,  BoxEndY+ 7, 60, 15, sig, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
+		percent_width = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(percent);
+		pbsig.paintProgressBar(ChanInfoX+ 10+ percent_width+ 5, BoxEndY+ 7, 60, 15, sig, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
 
 		sprintf (percent, "snr %d%%", snr);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 140, BoxEndY+ 25, BoxEndX- ChanInfoX- 140, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
-		pbsnr.paintProgressBar(ChanInfoX+202 ,  BoxEndY+ 7, 60, 15, snr, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
+		percent_width = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(percent);
+		pbsnr.paintProgressBar(ChanInfoX+ 140+ percent_width+ 5, BoxEndY+ 7, 60, 15, snr, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
 
 		sprintf (percent, "ber %d%%", ber);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 270, BoxEndY+ 25, BoxEndX- ChanInfoX- 270, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
