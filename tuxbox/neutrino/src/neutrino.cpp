@@ -288,7 +288,7 @@ CNeutrinoApp* CNeutrinoApp::getInstance()
 }
 
 
-const font_sizes_struct neutrino_font[FONT_TYPE_COUNT] =
+const font_sizes_struct neutrino_font[SNeutrinoSettings::FONT_TYPE_COUNT] =
 {
 	{LOCALE_FONTSIZE_MENU               ,  20, FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_MENU_TITLE         ,  30, FONT_STYLE_BOLD   , 0},
@@ -1766,7 +1766,7 @@ void CNeutrinoApp::SetupFonts()
 	else
 		style[2] = g_fontRenderer->AddFont(font.filename[2]);
 
-	for (int i = 0; i < FONT_TYPE_COUNT; i++)
+	for (int i = 0; i < SNeutrinoSettings::FONT_TYPE_COUNT; i++)
 	{
 		g_Font[i] = g_fontRenderer->getFont(fontname, style[neutrino_font[i].style], configfile.getInt32(locale_real_names[neutrino_font[i].name], neutrino_font[i].defaultsize) + neutrino_font[i].size_offset * font.size_offset);
 	}
