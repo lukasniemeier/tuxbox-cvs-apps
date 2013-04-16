@@ -439,6 +439,7 @@ int CTimerList::show()
 	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
 	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+	time_width = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth("00.00. 00:00    ");
 
 	neutrino_msg_t      msg;
 	neutrino_msg_data_t data;
@@ -617,12 +618,12 @@ void CTimerList::paintItem(int pos)
 		char zStopTime[25] = {0};
 		struct tm *stopTime = localtime(&(timer.stopTime));
 		strftime(zStopTime,20,"%d.%m. %H:%M",stopTime);
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10,ypos+fheight, 150, zAlarmTime, color, fheight, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10, ypos+fheight, time_width, zAlarmTime, color, fheight, true); // UTF-8
 		if(timer.stopTime != 0)
 		{
-			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10,ypos+2*fheight, 150, zStopTime, color, fheight, true); // UTF-8
+			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10, ypos+2*fheight, time_width, zStopTime, color, fheight, true); // UTF-8
 		}
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+160,ypos+fheight, (real_width-160)/2-5, convertTimerRepeat2String(timer.eventRepeat), color, fheight, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width, ypos+fheight, (real_width-10-time_width)/2-5, convertTimerRepeat2String(timer.eventRepeat), color, fheight, true); // UTF-8
 
 		if (timer.eventRepeat != CTimerd::TIMERREPEAT_ONCE)
 		{
@@ -633,9 +634,9 @@ void CTimerList::paintItem(int pos)
 				sprintf(srepeatcount,"00");
 			else
 				sprintf(srepeatcount,"%ux",timer.repeatCount);
-			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+160+(real_width-300)/2,ypos+fheight, (real_width-160)/2-5, srepeatcount, color, fheight, true); // UTF-8
+			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width+(real_width-10-time_width-140)/2, ypos+fheight, (real_width-10-time_width)/2-5, srepeatcount, color, fheight, true); // UTF-8
 		}
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+160+(real_width-160)/2,ypos+fheight, (real_width-160)/2-5, convertTimerType2String(timer.eventType), color, fheight, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width+(real_width-10-time_width)/2, ypos+fheight, (real_width-10-time_width)/2-5, convertTimerType2String(timer.eventType), color, fheight, true); // UTF-8
 		std::string zAddData("");
 		switch(timer.eventType)
 		{
@@ -706,7 +707,7 @@ void CTimerList::paintItem(int pos)
 			break;
 			default:{}
 		}
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+160,ypos+2*fheight, real_width-165, zAddData, color, fheight, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width, ypos+2*fheight, real_width-10-time_width-5, zAddData, color, fheight, true); // UTF-8
 		// LCD Display
 		if(liststart+pos==selected)
 		{

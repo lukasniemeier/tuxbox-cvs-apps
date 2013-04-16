@@ -51,6 +51,7 @@ class CTimerList : public CMenuTarget
 		unsigned int		listmaxshow;
 		int			fheight; //fontheight timerlist-content (text)
 		int			theight; //fontheight timerlist-title
+		int			time_width;
 		bool			visible;			
 
 		CTimerdClient 		*Timer;
