@@ -91,13 +91,8 @@ extern "C" int  tuxtxt_start(int tpid);
 extern "C" int  tuxtxt_stop();
 #endif
 
-int time_left_width;
-int time_dot_width;
-int time_width;
-int time_height;
-char old_timestr[10];
 /* hack: remember the last shown event IDs to reduce flickering */
-static event_id_t last_curr_id = 0, last_next_id = 0;
+event_id_t CInfoViewer::last_curr_id = 0, CInfoViewer::last_next_id = 0;
 
 extern CZapitClient::SatelliteList satList;
 

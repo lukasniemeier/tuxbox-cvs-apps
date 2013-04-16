@@ -90,6 +90,14 @@ class CInfoViewer
 	CSectionsdClient::CurrentNextInfo oldinfo;
 	t_channel_id   channel_id;
 
+	int time_left_width;
+	int time_dot_width;
+	int time_width;
+	int time_height;
+	char old_timestr[10];
+
+	static event_id_t last_curr_id, last_next_id;
+
 	char           aspectRatio;
 		
 	uint           sec_timer_id;
