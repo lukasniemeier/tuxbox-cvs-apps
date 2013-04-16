@@ -706,24 +706,15 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		if (evt.get_channel_id() == messaging_current_servicekey && // but only if it is the current channel...
 		    (messaging_got_CN != 0x03)) { // ...and if we don't have them already.
 			unlockMessaging();
-			SIevent *eptr = new SIevent(evt);
-			if (!eptr)
-			{
-				printf("[sectionsd::addEvent] new SIevent1 failed.\n");
-				throw std::bad_alloc();
-			}
-
-			SIeventPtr e(eptr);
-
 			writeLockEvents();
-			if (e->runningStatus() > 2) { // paused or currently running
-				if (!myCurrentEvent || (myCurrentEvent && (*myCurrentEvent).uniqueKey() != e->uniqueKey())) {
+			if (evt.runningStatus() > 2) { // paused or currently running
+				if (!myCurrentEvent || (myCurrentEvent && (*myCurrentEvent).uniqueKey() != evt.uniqueKey())) {
 					if (myCurrentEvent)
 						delete myCurrentEvent;
 					myCurrentEvent = new SIevent(evt);
 					writeLockMessaging();
 					messaging_got_CN |= 0x01;
-					if (myNextEvent && (*myNextEvent).uniqueKey() == e->uniqueKey()) {
+					if (myNextEvent && (*myNextEvent).uniqueKey() == evt.uniqueKey()) {
 						dprintf("addevent-cn: removing next-event\n");
 						/* next got "promoted" to current => trigger re-read */
 						delete myNextEvent;
@@ -732,17 +723,17 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 					}
 					unlockMessaging();
 					dprintf("addevent-cn: added running (%d) event 0x%04x '%s'\n",
-						e->runningStatus(), e->eventID, e->getName().c_str());
+						evt.runningStatus(), evt.eventID, evt.getName().c_str());
 				} else {
 					writeLockMessaging();
 					messaging_got_CN |= 0x01;
 					unlockMessaging();
 					dprintf("addevent-cn: not add runn. (%d) event 0x%04x '%s'\n",
-						e->runningStatus(), e->eventID, e->getName().c_str());
+						evt.runningStatus(), evt.eventID, evt.getName().c_str());
 				}
 			} else {
-				if ((!myNextEvent    || (myNextEvent    && (*myNextEvent).uniqueKey()    != e->uniqueKey() && (*myNextEvent).times.begin()->startzeit < e->times.begin()->startzeit)) &&
-				    (!myCurrentEvent || (myCurrentEvent && (*myCurrentEvent).uniqueKey() != e->uniqueKey()))) {
+				if ((!myNextEvent    || (myNextEvent    && (*myNextEvent).uniqueKey()    != evt.uniqueKey() && (*myNextEvent).times.begin()->startzeit < evt.times.begin()->startzeit)) &&
+				    (!myCurrentEvent || (myCurrentEvent && (*myCurrentEvent).uniqueKey() != evt.uniqueKey()))) {
 					if (myNextEvent)
 						delete myNextEvent;
 					myNextEvent = new SIevent(evt);
@@ -750,10 +741,10 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 					messaging_got_CN |= 0x02;
 					unlockMessaging();
 					dprintf("addevent-cn: added next    (%d) event 0x%04x '%s'\n",
-						e->runningStatus(), e->eventID, e->getName().c_str());
+						evt.runningStatus(), evt.eventID, evt.getName().c_str());
 				} else {
 					dprintf("addevent-cn: not added next(%d) event 0x%04x '%s'\n",
-						e->runningStatus(), e->eventID, e->getName().c_str());
+						evt.runningStatus(), evt.eventID, evt.getName().c_str());
 					writeLockMessaging();
 					messaging_got_CN |= 0x02;
 					unlockMessaging();
