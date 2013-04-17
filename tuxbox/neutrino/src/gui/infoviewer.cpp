@@ -186,24 +186,24 @@ void CInfoViewer::showSatfind()
 		frameBuffer->paintBoxRel(ChanInfoX, BoxEndY, BoxEndX-ChanInfoX, 30, COL_INFOBAR_PLUS_0);
 
 		sprintf (percent, "sig %d%%", sig);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 10, BoxEndY+ 25, BoxEndX- ChanInfoX- 10, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 10, BoxEndY+ 25, BoxEndX- ChanInfoX- 10, percent, COL_INFOBAR_PLUS_0);
 		percent_width = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(percent);
 		pbsig.paintProgressBar(ChanInfoX+ 10+ percent_width+ 5, BoxEndY+ 7, 60, 15, sig, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
 
 		sprintf (percent, "snr %d%%", snr);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 140, BoxEndY+ 25, BoxEndX- ChanInfoX- 140, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 140, BoxEndY+ 25, BoxEndX- ChanInfoX- 140, percent, COL_INFOBAR_PLUS_0);
 		percent_width = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(percent);
 		pbsnr.paintProgressBar(ChanInfoX+ 140+ percent_width+ 5, BoxEndY+ 7, 60, 15, snr, 100, 0, 0, COL_INFOBAR_PLUS_0, 0, "", COL_INFOBAR);
 
 		sprintf (percent, "ber %d%%", ber);
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 270, BoxEndY+ 25, BoxEndX- ChanInfoX- 270, percent, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 270, BoxEndY+ 25, BoxEndX- ChanInfoX- 270, percent, COL_INFOBAR_PLUS_0);
 
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 350, BoxEndY+ 25, BoxEndX- ChanInfoX- 350, freq, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 350, BoxEndY+ 25, BoxEndX- ChanInfoX- 350, freq, COL_INFOBAR_PLUS_0);
 
 		if (satpos != 0 && (g_info.delivery_system == DVB_S))
 		{
 			sprintf (pos, "%d.%d%c", satpos < 0 ? -satpos / 10 : satpos / 10, satpos < 0 ? -satpos % 10 : satpos % 10, satpos < 0 ? 'W' : 'E');
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(BoxEndX- 60, BoxEndY+ 25, 60, pos, COL_INFOBAR_PLUS_0, 0, true); // UTF-8
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(BoxEndX- 60, BoxEndY+ 25, 60, pos, COL_INFOBAR_PLUS_0);
 		}
 	}
 }
