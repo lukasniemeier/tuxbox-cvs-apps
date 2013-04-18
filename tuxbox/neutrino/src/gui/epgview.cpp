@@ -552,7 +552,9 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		std::vector<std::string>::iterator description;
 		std::vector<std::string>::iterator item;
 		for (description = epgData.itemDescriptions.begin(), item = epgData.items.begin(); description != epgData.itemDescriptions.end(); ++description, ++item) {
-			sprintf(line, "%s: %s", (*(description)).c_str(), (*(item)).c_str());
+			sprintf(line, "%s: %s",
+					(isUTF8(*description) ? (*description) : Latin1_to_UTF8(*description)).c_str(),
+					Latin1_to_UTF8(*item).c_str());
 			processTextToArray(line);
 		}
 	}
