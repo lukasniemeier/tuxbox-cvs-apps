@@ -917,7 +917,7 @@ void CUpnpBrowserGui::paintDevicePos(unsigned int pos)
 
 	std::string name = m_devices[pos + m_indexdevice].friendlyname;
 
-	int w = g_Font[SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM]->getRenderWidth(name) + 5;
+	int w = g_Font[SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM]->getRenderWidth(name, true) + 5; // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM]->RenderString(m_x + 10, ypos + m_fheight, m_width - 30 - w,
 		num, color, m_fheight, true); // UTF-8
 	g_Font[SNeutrinoSettings::FONT_TYPE_FILEBROWSER_ITEM]->RenderString(m_x + m_width - 15 - w, ypos + m_fheight,

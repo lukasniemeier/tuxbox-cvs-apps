@@ -850,7 +850,7 @@ void  EventList::showFunctionBar (bool show)
 		}
 		
 		frameBuffer->getIconSize(icon, &iconw, &iconh);
-		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption));
+		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption, true));
 
 		// paint 1st button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[0]);
@@ -866,7 +866,7 @@ void  EventList::showFunctionBar (bool show)
 		btncaption = g_Locale->getText(LOCALE_EVENTFINDER_SEARCH);
 		
 		frameBuffer->getIconSize(icon, &iconw, &iconh);
-		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption));
+		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption, true));
 	
 		// paint second button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[1]);
@@ -891,7 +891,7 @@ void  EventList::showFunctionBar (bool show)
 		}
 		
 		frameBuffer->getIconSize(icon, &iconw, &iconh);
-		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption));
+		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption, true));
 
 		// paint 3rd button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[2]);
@@ -907,7 +907,7 @@ void  EventList::showFunctionBar (bool show)
 		btncaption =  g_Locale->getText(LOCALE_EVENTLISTBAR_EVENTSORT);
 		
 		frameBuffer->getIconSize(icon, &iconw, &iconh);
-		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption));
+		cellwidth = std::min(ButtonWidth, iconw + 4 + space + g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getRenderWidth(btncaption, true));
 	
 		// paint 4th button
 		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, bx, by, ButtonWidth, 1, &EventListButtons[3]);

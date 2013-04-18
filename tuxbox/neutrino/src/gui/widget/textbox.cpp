@@ -404,7 +404,7 @@ void CTextBox::refreshTextLineArray(void)
 			}
 	
 			aktWord = m_cText.substr(pos_prev, pos - pos_prev + 1);
-			aktWordWidth = m_pcFontText->getRenderWidth(aktWord);
+			aktWordWidth = m_pcFontText->getRenderWidth(aktWord, true);
 			pos_prev = pos + 1;
 			//if(aktWord.find("&quot;") == )
 			if(1)
@@ -558,7 +558,7 @@ void CTextBox::refreshText(void)
 			
 			if( m_nMode & CENTER )
 			{
-				x_center = (m_cFrameTextRel.iWidth - m_pcFontText->getRenderWidth(m_cLineArray[i]))>>1;
+				x_center = (m_cFrameTextRel.iWidth - m_pcFontText->getRenderWidth(m_cLineArray[i]), true)>>1;
 			}
 			
 			m_pcWindow->RenderString(	m_pcFontText,

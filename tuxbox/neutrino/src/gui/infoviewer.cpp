@@ -1268,7 +1268,7 @@ void CInfoViewer::showMotorMoving(int duration)
 	strcat(text, buffer);
 	strcat(text, " s)");
 	
-	ShowHintUTF(LOCALE_MESSAGEBOX_INFO, text, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(text) + 10, duration); // UTF-8
+	ShowHintUTF(LOCALE_MESSAGEBOX_INFO, text, g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(text, true) + 10, duration); // UTF-8
 }
 
 #ifdef ENABLE_RADIOTEXT

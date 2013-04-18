@@ -180,8 +180,8 @@ void CEpgData::processTextToArray(std::string text, int screening) // UTF-8
 				aktWord += *text_;
 
 			// check the wordwidth - add to this line if size ok
-			int aktWordWidth = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth(aktWord);
-			if((aktWordWidth+aktWidth)<(ox- 10- 15))
+			int aktWordWidth = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth(aktWord, true);
+			if((aktWordWidth+aktWidth)<=(ox- 15- 15))
 			{//space ok, add
 				aktWidth += aktWordWidth;
 				aktLine += aktWord;

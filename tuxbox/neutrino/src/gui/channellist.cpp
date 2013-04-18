@@ -1737,7 +1737,7 @@ void CChannelList::processTextToArray(std::string text) // UTF-8
 				aktWord += *text_;
 
 			int aktWordWidth = g_Font[eventFont]->getRenderWidth(aktWord, true);
-			if ((aktWordWidth+aktWidth)<(infozone_width - 20))
+			if ((aktWordWidth+aktWidth)<=(infozone_width - 20))
 			{//space ok, add
 				aktWidth += aktWordWidth;
 				aktLine += aktWord;

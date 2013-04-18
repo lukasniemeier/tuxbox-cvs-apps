@@ -1345,13 +1345,13 @@ void CFileBrowser::paintHead()
 
 	/* too long? Leave out the "Filebrowser" or "Shoutcast" prefix
 	 * the allocated space is sufficient since it is surely shorter than before */
-	if (fnt_title->getRenderWidth(l_name) > width - 11)
+	if (fnt_title->getRenderWidth(l_name, true) > width - 11)
 		l = sprintf(l_name, "%s", FILESYSTEM_ENCODING_TO_UTF8_STRING(name).c_str());
 	if (l_name[l - 1] == '/')
 		l_name[--l] = '\0';
 
 	/* still too long? the last part is probably more interesting than the first part... */
-	while ((fnt_title->getRenderWidth(&l_name[i]) > width - 11)
+	while ((fnt_title->getRenderWidth(&l_name[i], true) > width - 11)
 		&& (i < l))
 		i++;
 
@@ -1425,7 +1425,7 @@ void CFileBrowser::paintFoot()
 			char cKey[2] = {m_SMSKeyInput.getOldKey(), 0};
 			cKey[0] = toupper(cKey[0]);
 			int len = fnt_small->getRenderWidth(cKey);
-			fnt_small->RenderString(x + width - 10 - len, by2 + foheight, len, cKey, COL_MENUHEAD, 0, true);
+			fnt_small->RenderString(x + width - 10 - len, by2 + foheight, len, cKey, COL_MENUHEAD);
 
 		}
 	}
