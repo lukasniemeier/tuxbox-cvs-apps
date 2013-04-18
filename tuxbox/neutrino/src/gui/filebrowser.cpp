@@ -184,7 +184,7 @@ unsigned char SMSKeyInput::handleMsg(const neutrino_msg_t msg)
 		else if(m_oldKey == 'r' && timeoutNotReached)
 			key = 's';
 		else if(m_oldKey == 's' && timeoutNotReached)
-			key = 's';
+			key = '7';
 		else
 			key = 'p';
 	}
