@@ -739,8 +739,10 @@ enum XML_Error XML_Parser::doContent(int startTagLevel, const ENCODING *enc, con
             if (!tag) return XML_ERROR_NO_MEMORY;
 
             tag->buf=new char[INIT_TAG_BUF_SIZE];
-            if (!tag->buf) return XML_ERROR_NO_MEMORY;
-
+            if (!tag->buf) {
+              delete tag;
+              return XML_ERROR_NO_MEMORY;
+            }
             tag->bufEnd=tag->buf+INIT_TAG_BUF_SIZE;
           }
 
@@ -757,8 +759,10 @@ enum XML_Error XML_Parser::doContent(int startTagLevel, const ENCODING *enc, con
               int bufSize=ROUND_UP(tag->rawNameLength*4, sizeof(XML_Char));
 
               tag->buf=(char *) realloc(tag->buf, bufSize);
-              if (!tag->buf) return XML_ERROR_NO_MEMORY;
-
+              if (!tag->buf) {
+                delete tag;
+                return XML_ERROR_NO_MEMORY;
+              }
               tag->bufEnd=tag->buf+bufSize;
             };
 
@@ -794,8 +798,10 @@ enum XML_Error XML_Parser::doContent(int startTagLevel, const ENCODING *enc, con
               bufSize=(tag->bufEnd-tag->buf) << 1;
               tag->buf=(char *) realloc(tag->buf, bufSize);
 
-              if (!tag->buf) return XML_ERROR_NO_MEMORY;
-
+              if (!tag->buf) {
+                delete tag;
+                return XML_ERROR_NO_MEMORY;
+              }
               tag->bufEnd=tag->buf+bufSize;
 
               if (nextPtr) tag->rawName=tag->buf;
