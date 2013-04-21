@@ -1388,7 +1388,7 @@ void CChannelList::paintItem(int pos)
 			}
 			else{
 				// align left
-				g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x + numwidth + 14 + ch_name_len + 5 + prg_offset, ypos + fheight, ch_desc_len, p_event->description, color);
+				g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x + numwidth + 10 + ch_name_len + 5 + prg_offset, ypos + fheight, ch_desc_len, p_event->description, color);
 			}
 		}
 		else
