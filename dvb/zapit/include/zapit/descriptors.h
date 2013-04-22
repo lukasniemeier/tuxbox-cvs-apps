@@ -60,7 +60,7 @@ int cable_delivery_system_descriptor(const unsigned char * const buffer, const t
 void VBI_data_descriptor(const unsigned char * const buffer);
 void VBI_teletext_descriptor(const unsigned char * const buffer);
 void bouquet_name_descriptor(const unsigned char * const buffer);
-void service_descriptor(const unsigned char * const buffer, const t_service_id service_id, const t_transport_stream_id transport_stream_id, const t_original_network_id original_network_id, const t_satellite_position satellite_position, const uint8_t DiSEqC, const uint32_t frequency, const std::string sat_provider);
+void service_descriptor(const unsigned char * const buffer, const t_service_id service_id, const t_transport_stream_id transport_stream_id, const t_original_network_id original_network_id, const t_satellite_position satellite_position, const uint8_t DiSEqC, const uint32_t frequency, const std::string &sat_provider);
 void country_availability_descriptor(const unsigned char * const buffer);
 void linkage_descriptor(const unsigned char * const buffer);
 int NVOD_reference_descriptor(const unsigned char * const buffer, const unsigned int num, t_transport_stream_id * const, t_original_network_id * const, t_service_id * const);

@@ -41,7 +41,7 @@
 #include <neutrino.h>
 
 
-CMessageBox::CMessageBox(const neutrino_locale_t Caption, const char * const Text, const int Width, const char * const Icon, const CMessageBox::result_ Default, const uint ShowButtons) : CHintBoxExt(Caption, Text, Width, Icon)
+CMessageBox::CMessageBox(const neutrino_locale_t Caption, const char * const Text, const int Width, const char * const Icon, const CMessageBox::result_ &Default, const uint ShowButtons) : CHintBoxExt(Caption, Text, Width, Icon)
 {
 	returnDefaultOnTimeout = false;
 
@@ -52,7 +52,7 @@ CMessageBox::CMessageBox(const neutrino_locale_t Caption, const char * const Tex
 	showbuttons = ShowButtons;
 }
 
-CMessageBox::CMessageBox(const neutrino_locale_t Caption, ContentLines& Lines, const int Width, const char * const Icon, const CMessageBox::result_ Default, const uint ShowButtons) : CHintBoxExt(Caption, Lines, Width, Icon)
+CMessageBox::CMessageBox(const neutrino_locale_t Caption, ContentLines& Lines, const int Width, const char * const Icon, const CMessageBox::result_ &Default, const uint ShowButtons) : CHintBoxExt(Caption, Lines, Width, Icon)
 {
 	returnDefaultOnTimeout = false;
 
@@ -258,7 +258,7 @@ int CMessageBox::exec(int timeout)
 	return res;
 }
 
-int ShowMsgUTF(const neutrino_locale_t Caption, const char * const Text, const CMessageBox::result_ Default, const uint ShowButtons, const char * const Icon, const int Width, const int timeout, bool returnDefaultOnTimeout)
+int ShowMsgUTF(const neutrino_locale_t Caption, const char * const Text, const CMessageBox::result_ &Default, const uint ShowButtons, const char * const Icon, const int Width, const int timeout, bool returnDefaultOnTimeout)
 {
    	CMessageBox* messageBox = new CMessageBox(Caption, Text, Width, Icon, Default, ShowButtons);
 	messageBox->returnDefaultValueOnTimeout(returnDefaultOnTimeout);
@@ -269,12 +269,12 @@ int ShowMsgUTF(const neutrino_locale_t Caption, const char * const Text, const C
 	return res;
 }
 
-int ShowLocalizedMessage(const neutrino_locale_t Caption, const neutrino_locale_t Text, const CMessageBox::result_ Default, const uint ShowButtons, const char * const Icon, const int Width, const int timeout, bool returnDefaultOnTimeout)
+int ShowLocalizedMessage(const neutrino_locale_t Caption, const neutrino_locale_t Text, const CMessageBox::result_ &Default, const uint ShowButtons, const char * const Icon, const int Width, const int timeout, bool returnDefaultOnTimeout)
 {
 	return ShowMsgUTF(Caption, g_Locale->getText(Text), Default, ShowButtons, Icon, Width, timeout,returnDefaultOnTimeout);
 }
 
-int ShowMsgUTF(const neutrino_locale_t Caption, const std::string & Text, const CMessageBox::result_ Default, const uint ShowButtons, const char * const Icon, const int Width, const int timeout, bool returnDefaultOnTimeout)
+int ShowMsgUTF(const neutrino_locale_t Caption, const std::string & Text, const CMessageBox::result_ &Default, const uint ShowButtons, const char * const Icon, const int Width, const int timeout, bool returnDefaultOnTimeout)
 {
 	return ShowMsgUTF(Caption, Text.c_str(), Default, ShowButtons, Icon, Width, timeout,returnDefaultOnTimeout);
 }

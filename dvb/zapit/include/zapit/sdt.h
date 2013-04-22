@@ -26,6 +26,6 @@
 
 uint32_t get_sdt_TsidOnid(void);
 int nvod_service_ids(const t_transport_stream_id, const t_original_network_id, const t_service_id, const unsigned int num, t_transport_stream_id * const, t_original_network_id * const, t_service_id * const);
-int parse_sdt(const t_satellite_position satellite_position, const t_transport_stream_id, const t_original_network_id, const unsigned char diseqc, const uint32_t, const std::string sat_provider);
+int parse_sdt(const t_satellite_position satellite_position, const t_transport_stream_id, const t_original_network_id, const unsigned char diseqc, const uint32_t, const std::string &sat_provider);
 
 #endif /* __zapit_sdt_h__ */

@@ -1129,7 +1129,7 @@ CTimerEvent_Record::CTimerEvent_Record(time_t _announce, time_t _alarm, time_t _
 				       event_id_t epgID, 
 				       time_t epg_starttime, unsigned char apids,
 				       CTimerd::CTimerEventRepeat evrepeat,
-				       uint repeatcount, const std::string recDir) :
+				       uint repeatcount, const std::string &recDir) :
 	CTimerEvent(getEventType(), _announce, _alarm, _stop, evrepeat, repeatcount)
 {
 	eventInfo.epgID = epgID;

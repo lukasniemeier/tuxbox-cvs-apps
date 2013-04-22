@@ -291,7 +291,7 @@ int get_nits(dvb_frontend_parameters *feparams, uint8_t polarization, const t_sa
 	return status;
 }
 
-int get_sdts(const t_satellite_position satellite_position, const char * const frontendType, const std::string sat_provider)
+int get_sdts(const t_satellite_position satellite_position, const char * const frontendType, const std::string &sat_provider)
 {
 	uint32_t TsidOnid;
 

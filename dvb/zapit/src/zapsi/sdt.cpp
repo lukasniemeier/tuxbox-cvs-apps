@@ -132,7 +132,7 @@ int nvod_service_ids(
 	return -1;
 }
 
-int parse_sdt(const t_satellite_position satellite_position, const t_transport_stream_id p_transport_stream_id, const t_original_network_id  p_original_network_id, const unsigned char DiSEqC, const uint32_t frequency, const std::string sat_provider)
+int parse_sdt(const t_satellite_position satellite_position, const t_transport_stream_id p_transport_stream_id, const t_original_network_id  p_original_network_id, const unsigned char DiSEqC, const uint32_t frequency, const std::string &sat_provider)
 {
 	CDemux dmx;
 
