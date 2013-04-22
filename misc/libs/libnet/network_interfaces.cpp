@@ -57,7 +57,7 @@ bool write_file(const std::string filename, const std::list<std::string> line)
 	if (!out.is_open())
 		return false;
 
-	for (std::list<std::string>::const_iterator it = line.begin(); it != line.end(); it++)
+	for (std::list<std::string>::const_iterator it = line.begin(); it != line.end(); ++it)
 		out << (*it) << std::endl;
 
 	return true;
@@ -65,7 +65,7 @@ bool write_file(const std::string filename, const std::list<std::string> line)
 
 std::list<std::string>::iterator add_attributes(const std::map<std::string, std::string> attribute, std::list<std::string> &line, std::list<std::string>::iterator here)
 {
-	for (std::map<std::string, std::string>::const_iterator it = attribute.begin(); it != attribute.end(); it++)
+	for (std::map<std::string, std::string>::const_iterator it = attribute.begin(); it != attribute.end(); ++it)
 	{
 		std::ostringstream out;
 		out << '\t' << (it -> first) << ' ' << (it -> second);
@@ -113,7 +113,7 @@ bool write_interface(const std::string filename, const std::string name, const b
 			
 			if (!(in >> s))
 			{
-				it++;
+				++it;
 				continue;
 			}
 			
@@ -136,22 +136,22 @@ bool write_interface(const std::string filename, const std::string name, const b
 						}
 					}
 					if (advance)
-						it++;
+						++it;
 				}
 				else
-					it++;
+					++it;
 				continue;
 			}
 
 			if (!(in >> s))
 			{
-				it++;
+				++it;
 				continue;
 			}
 			
 			if (s != std::string(name))
 			{
-				it++;
+				++it;
 				continue;
 			}
 		}
@@ -167,7 +167,7 @@ bool write_interface(const std::string filename, const std::string name, const b
 			line.insert(it, "auto " + name);
 		
 		/* add attributes */
-		it++;
+		++it;
 		it = add_attributes(attribute, line, it);
 
 		/* remove current attributes */
@@ -177,13 +177,13 @@ bool write_interface(const std::string filename, const std::string name, const b
 
 			if (!(in >> s))             /* retain empty lines */	
 			{
-				it++;
+				++it;
 				continue;
 			}
 		
 			if (s[0] == '#')            /* retain comments */
 			{
-				it++;
+				++it;
 				continue;
 			}
 			
@@ -329,7 +329,7 @@ bool getInetAttributes(const std::string name, bool &automatic_start, std::strin
 	broadcast = "";
 	gateway   = "";
 
-	for (std::map<std::string, std::string>::const_iterator it = attribute.begin(); it != attribute.end(); it++)
+	for (std::map<std::string, std::string>::const_iterator it = attribute.begin(); it != attribute.end(); ++it)
 	{
 		if ((*it).first == "address")
 			address = (*it).second;

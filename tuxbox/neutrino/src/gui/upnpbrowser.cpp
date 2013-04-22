@@ -539,7 +539,7 @@ void CUpnpBrowserGui::playnext(void)
 			m_folderplay = false;
 			return;
 		}
-		for (i=results.begin(); i!=results.end(); i++)
+		for (i=results.begin(); i!=results.end(); ++i)
 		{
 			if (i->first=="NumberReturned")
 			{
@@ -659,7 +659,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 					delete entries;
 				return endall;
 			}
-			for (i=results.begin(); i!=results.end(); i++)
+			for (i=results.begin(); i!=results.end(); ++i)
 			{
 				if (i->first=="NumberReturned")
 				{

@@ -233,7 +233,7 @@ void CVCRControl::CDevice::getAPIDs(const unsigned char ap, APIDList & apid_list
 			APIDDesc a = {apid_min, apid_min_idx, false};
 			apid_list.push_back(a);
 		}		
-		for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
+		for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); ++it)
 			printf("Record APID 0x%X %d\n",it->apid, it->ac3);
 
 	}
@@ -504,7 +504,7 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	g_RemoteControl->processAPIDnames();
 	APIDList apid_list;
 	getAPIDs(apids,apid_list);
-	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
+	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); ++it)
 	{
 		audio_pids.epgAudioPid = it->apid;
 		audio_pids.epgAudioPidName = g_RemoteControl->current_PIDs.APIDs[it->index].desc;
@@ -576,7 +576,7 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	APIDList apid_list;
 	getAPIDs(apids,apid_list);
 	apids_selected="";
-	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
+	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); ++it)
 	{
 		if(it != apid_list.begin())
 			apids_selected += " ";
@@ -641,7 +641,7 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	g_RemoteControl->current_EPGid = epgid;
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
-	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
+	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); ++it)
 	{
 		extMessage += "\t\t\t<audio pid=\"";
 		sprintf(tmp, "%u", it->apid);
@@ -771,7 +771,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	}
 	APIDList apid_list;
 	getAPIDs(apids,apid_list);
-	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); it++)
+	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); ++it)
 	{
 		pids[numpids++] = it->apid;
 		if(sptsmode)

@@ -477,7 +477,7 @@ void CRemoteControl::copySubChannelsToZapit(void)
 {
 	CZapitClient::subServiceList zapitList;
 
-	for (CSubServiceListSorted::const_iterator e = subChannels.begin(); e != subChannels.end(); e++)
+	for (CSubServiceListSorted::const_iterator e = subChannels.begin(); e != subChannels.end(); ++e)
 		zapitList.push_back(e->getAsZapitSubService());
 
 	g_Zapit->setSubServices(zapitList);

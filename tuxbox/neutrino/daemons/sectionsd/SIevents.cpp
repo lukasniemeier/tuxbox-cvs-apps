@@ -159,7 +159,7 @@ int SIevent::saveXML2(FILE *file) const
 	for (std::map<std::string, std::string>::const_iterator
 		i = langName.begin() ;
 		i != langName.end() ;
-		i++) {
+		++i) {
 		if (i->second.length()) {
 			fprintf(file, "\t\t\t<name lang=\"%s\" string=\"", i->first.c_str());
 			saveStringToXMLfile(file, i->second.c_str());
@@ -169,7 +169,7 @@ int SIevent::saveXML2(FILE *file) const
 	for (std::map<std::string, std::string>::const_iterator
 		i = langText.begin() ;
 		i != langText.end() ;
-		i++) {
+		++i) {
 		if (i->second.length()) {
 			fprintf(file, "\t\t\t<text lang=\"%s\" string=\"", i->first.c_str());
 			saveStringToXMLfile(file, i->second.c_str());
@@ -189,7 +189,7 @@ int SIevent::saveXML2(FILE *file) const
 	for (std::map<std::string, std::string>::const_iterator
 		i = langExtendedText.begin() ;
 		i != langExtendedText.end() ;
-		i++) {
+		++i) {
 		if (i->second.length()) {
 			fprintf(file, "\t\t\t<extended_text lang=\"%s\" string=\"", i->first.c_str());
 			saveStringToXMLfile(file, i->second.c_str());
@@ -550,7 +550,7 @@ void SIevents::mergeAndRemoveTimeShiftedEvents(const SIservices &services)
 				// Jetzt die nvods druchgehen und deren Uhrzeiten in obiges Event einfuegen
 				for(SInvodReferences::iterator n=k->nvods.begin(); n!=k->nvods.end(); ++n) {
 					// Alle druchgehen und deren Events suchen
-					for(iterator en=begin(); en!=end(); en++) {
+					for(iterator en=begin(); en!=end(); ++en) {
 						if(en->service_id==n->getServiceID()) {
 							newEvent.times.insert(en->times.begin(), en->times.end());
 //              newEvent.times.insert(SItime(en->startzeit, en->dauer));

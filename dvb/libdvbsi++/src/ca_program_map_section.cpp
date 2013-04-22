@@ -45,7 +45,7 @@ size_t CaLengthField::writeToBuffer(uint8_t * const buffer) const
 	}
 	else {
 		buffer[total++] = (sizeIndicator << 7) | lengthFieldSize;
-		for (std::list<uint8_t>::const_iterator i = lengthValueByte.begin(); i != lengthValueByte.end(); i++)
+		for (std::list<uint8_t>::const_iterator i = lengthValueByte.begin(); i != lengthValueByte.end(); ++i)
 			buffer[total++] = *i;
 	}
 

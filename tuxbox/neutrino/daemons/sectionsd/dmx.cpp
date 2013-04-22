@@ -187,7 +187,7 @@ bool DMX::check_complete(const unsigned char table_id, const unsigned short exte
 							onid,
 							tsid));
 		if (di != myDMXOrderUniqueKey.end()) {
-			di++;
+			++di;
 		}
 		while ((di != myDMXOrderUniqueKey.end()) && ((uint8_t) ((di->first >> 56) & 0xff) == table_id) &&
 			((uint16_t) ((di->first >> 40) & 0xffff) == extension_id) &&
@@ -201,7 +201,7 @@ bool DMX::check_complete(const unsigned char table_id, const unsigned short exte
 			}
 			else {
 				current_section_number = (uint8_t) (di->first >> 32) & 0xff;
-				di++;
+				++di;
 			}
 		}
 	}

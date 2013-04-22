@@ -463,7 +463,7 @@ void CEventWatchDog::unregisterNotifier( uint watchdogEvent, CEventWatchdogNotif
 
 	EventWatchdogNotifiers* notifiers = Notifiers.find(watchdogEvent)->second;
 	EventWatchdogNotifiers::iterator it;
-	for (it=notifiers->end(); it>=notifiers->begin(); it--)
+	for (it=notifiers->end(); it>=notifiers->begin(); --it)
 	{
 		if (*it == notifier)
 		{

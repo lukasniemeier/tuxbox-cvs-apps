@@ -745,7 +745,7 @@ void saveSettings(bool write)
 			if (audio_config_file) {
 				for (map<t_channel_id, unsigned short>::iterator audio_map_it = audio_map.begin();
 						audio_map_it != audio_map.end();
-						audio_map_it++) {
+						++audio_map_it) {
 					(void)fwrite(&(audio_map_it->first), sizeof(t_channel_id), 1, audio_config_file);
 					(void)fwrite(&(audio_map_it->second), sizeof(unsigned short), 1, audio_config_file);
 				}
@@ -2024,7 +2024,7 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 			// save to motor.conf
 			//printf("[zapit] saving motor.conf\n");
 			fd = fopen(MOTORCONFIGFILE, "w");
-			for (mpos_it = motorPositions.begin(); mpos_it != motorPositions.end(); mpos_it++)
+			for (mpos_it = motorPositions.begin(); mpos_it != motorPositions.end(); ++mpos_it)
 			{
 				//printf("[zapit] saving %d %d\n", mpos_it->first, mpos_it->second);
 				fprintf(fd, "%d %d\n", mpos_it->first, mpos_it->second);
@@ -2301,7 +2301,7 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 	  either complete the CSubService struct in remotecontrol.cpp, but frequency doesn't seem to be available there 
 	  or look for the correct transponder (search without frequency) */
 			if (transponders.find(CREATE_TRANSPONDER_ID_FROM_FREQUENCY_SATELLITEPOSITION_ORIGINALNETWORK_TRANSPORTSTREAM_ID(frequency, cc->getSatellitePosition(), original_network_id, msgAddSubService.transport_stream_id)) == transponders.end())
-				for (t = transponders.begin(); t != transponders.end(); t++)
+				for (t = transponders.begin(); t != transponders.end(); ++t)
 				{
 					if((GET_SATELLITEPOSITION_FROM_TRANSPONDER_ID(t->first) == cc->getSatellitePosition()) &&
 					   (GET_ORIGINAL_NETWORK_ID_FROM_TRANSPONDER_ID(t->first) == original_network_id) &&

@@ -77,7 +77,7 @@ CExtendedInput::CExtendedInput(const neutrino_locale_t Name, char* Value, const 
 
 CExtendedInput::~CExtendedInput()
 {
-	for (std::vector<CExtendedInput_Item*>::iterator it = inputFields.begin(); it < inputFields.end(); it++)
+	for (std::vector<CExtendedInput_Item*>::iterator it = inputFields.begin(); it < inputFields.end(); ++it)
 		delete *it;
 }
 

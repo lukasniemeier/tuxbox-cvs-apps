@@ -182,7 +182,7 @@ t_channel_id CNeutrinoAPI::ChannelNameToChannelId(std::string search_channel_nam
 	CStringArray channel_names = ySplitStringVector(search_channel_name, ",");
 	CZapitClient::BouquetChannelList *channellist = GetChannelList(CZapitClient::MODE_CURRENT);
 	CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
-	for(; channel != channellist->end();channel++)
+	for(; channel != channellist->end(); ++channel)
 	{
 		std::string channel_name = channel->name;
 		for(unsigned int j=0;j<channel_names.size();j++)
@@ -249,7 +249,7 @@ bool CNeutrinoAPI::GetChannelEvents(void)
 	if (eList.begin() == eList.end())
 		return false;
 	
-	for (eventIterator = eList.begin(); eventIterator != eList.end(); eventIterator++)
+	for (eventIterator = eList.begin(); eventIterator != eList.end(); ++eventIterator)
 		ChannelListEvents[(*eventIterator).get_channel_id()] = &(*eventIterator);
 
 	return true;

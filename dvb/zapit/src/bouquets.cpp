@@ -200,7 +200,7 @@ static const char * const printf_string_without_names[2] =
 
 void writeChannelList(FILE * const bouq_fd, const ChannelList & list, const bool write_names, const char * const channel_printf_string)
 {
-	for (ChannelList::const_iterator it = list.begin(); it != list.end(); it++)
+	for (ChannelList::const_iterator it = list.begin(); it != list.end(); ++it)
 	{
 		const CZapitChannel * c = *it;
 		if (write_names)
@@ -241,7 +241,7 @@ void CBouquetManager::saveBouquets(bool includeBouquetOthers)
 		
 	fprintf(bouq_fd, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<zapit>\n");
 
-	for (BouquetList::const_iterator it = Bouquets.begin(); it != Bouquets.end(); it++)
+	for (BouquetList::const_iterator it = Bouquets.begin(); it != Bouquets.end(); ++it)
 	{
 		// TODO: use locales
 		if (includeBouquetOthers || (((*it) != remainChannels) && (strncmp((*it)->Name.c_str(),"Neue Sender",11) != 0)))
@@ -510,24 +510,24 @@ void CBouquetManager::makeRemainingChannelsBouquet(void)
 	ChannelList unusedChannels;
 	set<t_channel_id> chans_processed;
 
-	for (vector<CBouquet*>::const_iterator it = Bouquets.begin(); it != Bouquets.end(); it++)
+	for (vector<CBouquet*>::const_iterator it = Bouquets.begin(); it != Bouquets.end(); ++it)
 	{
-		for (vector<CZapitChannel*>::iterator jt = (*it)->tvChannels.begin(); jt != (*it)->tvChannels.end(); jt++)
+		for (vector<CZapitChannel*>::iterator jt = (*it)->tvChannels.begin(); jt != (*it)->tvChannels.end(); ++jt)
 			chans_processed.insert((*jt)->getChannelID());
-		for (vector<CZapitChannel*>::iterator jt = (*it) ->radioChannels.begin(); jt != (*it)->radioChannels.end(); jt++)
+		for (vector<CZapitChannel*>::iterator jt = (*it) ->radioChannels.begin(); jt != (*it)->radioChannels.end(); ++jt)
 			chans_processed.insert((*jt)->getChannelID());
 	}
 
 	// TODO: use locales
 	remainChannels = addBouquet(Bouquets.empty() ? "Alle Kan\xC3\xA4le" : "Andere"); // UTF-8 encoded
 
-	for (tallchans::iterator it = allchans.begin(); it != allchans.end(); it++)
+	for (tallchans::iterator it = allchans.begin(); it != allchans.end(); ++it)
 		if (chans_processed.find(it->first) == chans_processed.end())
 			unusedChannels.push_back(&(it->second));
 
 	sort(unusedChannels.begin(), unusedChannels.end(), CmpChannelByChName());
 
-	for (ChannelList::const_iterator it = unusedChannels.begin(); it != unusedChannels.end(); it++)
+	for (ChannelList::const_iterator it = unusedChannels.begin(); it != unusedChannels.end(); ++it)
 		remainChannels->addService(findChannelByChannelID((*it)->getChannelID()));
 
 	if ((remainChannels->tvChannels.empty()) && (remainChannels->radioChannels.empty()))

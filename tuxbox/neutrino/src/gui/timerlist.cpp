@@ -403,7 +403,7 @@ void CTimerList::updateEvents(void)
 	Timer->getTimerList (timerlist);
 	//Remove last deleted event from List
 	CTimerd::TimerList::iterator timer = timerlist.begin();
-	for(; timer != timerlist.end();timer++)
+	for(; timer != timerlist.end(); ++timer)
 	{
 		if(timer->eventID==skipEventID)
 		{
@@ -1063,7 +1063,7 @@ int CTimerList::newTimer()
  	CMenuWidget mcradio(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_TIMER, width);
 	mcradio.addIntroItems();
 
-	for(; bouquet != bouquetlist.end();bouquet++)
+	for(; bouquet != bouquetlist.end(); ++bouquet)
 	{	
 		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_TIMER, width);
 		toDelete.push_back(mwtv);
@@ -1075,7 +1075,7 @@ int CTimerList::newTimer()
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_TV, true); // UTF-8
 		CZapitClient::BouquetChannelList::iterator channel = subchannellist.begin();
 		mwtv->addIntroItems();
-		for(; channel != subchannellist.end();channel++)
+		for(; channel != subchannellist.end(); ++channel)
 		{
 			char cChannelId[3+16+1+1];
 			sprintf(cChannelId,
@@ -1095,7 +1095,7 @@ int CTimerList::newTimer()
 		zapit.getBouquetChannels(bouquet->bouquet_nr,subchannellist,CZapitClient::MODE_RADIO, true); // UTF-8
 		channel = subchannellist.begin();
 		mwradio->addIntroItems();
-		for(; channel != subchannellist.end();channel++)
+		for(; channel != subchannellist.end(); ++channel)
 		{
 			char cChannelId[3+16+1+1];
 			sprintf(cChannelId,
@@ -1186,7 +1186,7 @@ bool askUserOnTimerConflict(time_t announceTime, time_t stopTime)
 	timerbuf += g_Locale->getText(LOCALE_TIMERLIST_OVERLAPPING_TIMER2); 
 	timerbuf += "\n";
 	for (CTimerd::TimerList::iterator it = overlappingTimers.begin();
-	     it != overlappingTimers.end();it++)
+	     it != overlappingTimers.end(); ++it)
 	{
 		char at[25] = {0};
 		struct tm *annTime = localtime(&(it->alarmTime));
@@ -1228,7 +1228,7 @@ bool askUserOnTimerConflict(time_t announceTime, time_t stopTime)
 	{
 		printf("delete all conflict timers\n");
 		for (CTimerd::TimerList::iterator it = overlappingTimers.begin();
-		     it != overlappingTimers.end();it++)
+		     it != overlappingTimers.end(); ++it)
 		{
 			Timer.removeTimerEvent(it->eventID);
 		}

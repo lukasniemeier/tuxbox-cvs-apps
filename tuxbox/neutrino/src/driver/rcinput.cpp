@@ -443,7 +443,7 @@ void CRCInput::load_conf(bool initialize) {
 		{
 			for (std::map<uint, neutrino_msg_data_t>::iterator it = user_translate_data[i].begin();
 			     it != user_translate_data[i].end();
-			     it++)
+			     ++it)
 				free((void*)it->second);
 
 			user_translate_data[i].clear();
@@ -561,7 +561,7 @@ void CRCInput::debug_dump()
 	{
 		printf("[rcinput/debug_dump] Content of user_translate_table/user_translate_data[%c]:\n", modint2ch(i));
 		for (std::map<uint, neutrino_msg_t>::iterator it = user_translate_table[i].begin();
-		     it != user_translate_table[i].end(); it ++)
+		     it != user_translate_table[i].end(); ++it)
 		{
 			uint keycode = it->first;
 			std::map<uint, neutrino_msg_data_t>::iterator dat = user_translate_data[i].find(keycode); 

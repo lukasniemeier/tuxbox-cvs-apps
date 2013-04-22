@@ -74,7 +74,7 @@ int CZapitChannel::addAudioChannel(const unsigned short pid, const bool isAc3, c
 {
 	std::vector <CZapitAudioChannel *>::iterator aI;
 
-	for (aI = audioChannels.begin(); aI != audioChannels.end(); aI++)
+	for (aI = audioChannels.begin(); aI != audioChannels.end(); ++aI)
 		if ((* aI)->pid == pid) {
 			(* aI)->description = description;
             (* aI)->componentTag = componentTag;
@@ -94,14 +94,14 @@ void CZapitChannel::resetPids(void)
 {
 	std::vector<CZapitAudioChannel *>::iterator aI;
 
-	for ( aI = audioChannels.begin(); aI != audioChannels.end(); aI++ )
+	for ( aI = audioChannels.begin(); aI != audioChannels.end(); ++aI )
 		delete *aI;
 
 	audioChannels.clear();
 	currentAudioChannel = 0;
 
 	std::vector<CZapitAbsSub *>::iterator subI;
-	for ( subI = channelSubs.begin(); subI != channelSubs.end(); subI++ )
+	for ( subI = channelSubs.begin(); subI != channelSubs.end(); ++subI )
 	{
 		delete *subI;
 	}
@@ -127,7 +127,7 @@ void CZapitChannel::addTTXSubtitle ( const unsigned int pid, const std::string l
 
 	std::vector<CZapitAbsSub*>::iterator subI;
 	// Check if it already exists
-	for ( subI=channelSubs.begin(); subI!=channelSubs.end();subI++ )
+	for ( subI=channelSubs.begin(); subI!=channelSubs.end(); ++subI )
 	{
 		if ( ( *subI )->thisSubType==CZapitAbsSub::TTX )
 		{
@@ -175,7 +175,7 @@ void CZapitChannel::addDVBSubtitle ( const unsigned int pid, const std::string l
 	CZapitDVBSub* oldSub = 0;
 	CZapitDVBSub* tmpSub = 0;
 	std::vector<CZapitAbsSub*>::iterator subI;
-	for ( subI=channelSubs.begin(); subI!=channelSubs.end();subI++ )
+	for ( subI=channelSubs.begin(); subI!=channelSubs.end(); ++subI )
 	{
 		if ( ( *subI )->thisSubType==CZapitAbsSub::DVB )
 		{

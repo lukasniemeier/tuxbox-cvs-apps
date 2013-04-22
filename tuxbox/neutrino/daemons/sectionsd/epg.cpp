@@ -59,11 +59,11 @@ int main(int /*argc*/, char** /*argv*/)
 //  for_each(epgset.begin(), epgset.end(), printSmallSectionHeader());
 //  for_each(epgset.begin(), epgset.end(), printSIsection());
   SIevents events;
-  for(SIsectionsEIT::iterator k=epgset.begin(); k!=epgset.end(); k++)
+  for(SIsectionsEIT::iterator k=epgset.begin(); k!=epgset.end(); ++k)
     events.insert((k->events()).begin(), (k->events()).end());
 
   SIservices services;
-  for(SIsectionsSDT::iterator k=sdtset.begin(); k!=sdtset.end(); k++)
+  for(SIsectionsSDT::iterator k=sdtset.begin(); k!=sdtset.end(); ++k)
     services.insert((k->services()).begin(), (k->services()).end());
 
   // Damit wir die Zeiten der nvods richtig einsortiert bekommen

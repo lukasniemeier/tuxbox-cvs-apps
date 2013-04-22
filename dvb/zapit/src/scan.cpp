@@ -201,11 +201,11 @@ void stop_scan(const bool success)
 	eventServer->sendEvent(success ? CZapitClient::EVT_SCAN_COMPLETE : CZapitClient::EVT_SCAN_FAILED, CEventServer::INITID_ZAPIT);
 	if (scanBouquetManager)
 	{
-		for (vector<CBouquet*>::iterator it = scanBouquetManager->Bouquets.begin(); it != scanBouquetManager->Bouquets.end(); it++)
+		for (vector<CBouquet*>::iterator it = scanBouquetManager->Bouquets.begin(); it != scanBouquetManager->Bouquets.end(); ++it)
 		{
-			for (vector<CZapitChannel*>::iterator jt = (*it)->tvChannels.begin(); jt != (*it)->tvChannels.end(); jt++)
+			for (vector<CZapitChannel*>::iterator jt = (*it)->tvChannels.begin(); jt != (*it)->tvChannels.end(); ++jt)
 				delete (*jt);
-			for (vector<CZapitChannel*>::iterator jt = (*it)->radioChannels.begin(); jt != (*it)->radioChannels.end(); jt++)
+			for (vector<CZapitChannel*>::iterator jt = (*it)->radioChannels.begin(); jt != (*it)->radioChannels.end(); ++jt)
 				delete (*jt);
 		}
 		delete scanBouquetManager;
@@ -390,7 +390,7 @@ void write_transponder(FILE *fd, const transponder_id_t transponder_id, const tr
 {
 	bool emptyTransponder = true;
 
-	for (tallchans::const_iterator cI = allchans.begin(); cI != allchans.end(); cI++)
+	for (tallchans::const_iterator cI = allchans.begin(); cI != allchans.end(); ++cI)
 	{
 		if (cI->second.getTransponderId() == transponder_id)
 		{
@@ -624,11 +624,11 @@ void scan_provider(xmlNodePtr search, const char * const providerName, uint8_t d
 				if (cI->second.getTransponderId() == tI->first)
 				{
 					tallchans::iterator remove_this = cI;
-					cI++;
+					++cI;
 					allchans.erase(remove_this);
 				}
 				else
-					cI++;
+					++cI;
 			}
 			stiterator tmp = tI;
 			tI++;
@@ -675,7 +675,7 @@ void scan_provider(xmlNodePtr search, const char * const providerName, uint8_t d
 	 * should the NIT be parsed on every transponder?
 	 */
 	std::map <t_channel_id, uint8_t>::iterator stI;
-	for (stI = service_types.begin(); stI != service_types.end(); stI++)
+	for (stI = service_types.begin(); stI != service_types.end(); ++stI)
 	{
 		tallchans_iterator scI = allchans.find(stI->first);
 
@@ -740,7 +740,7 @@ void *start_scanthread(void *imsg)
 		/* get name of current satellite oder cable provider */
 		strcpy(providerName, xmlGetAttribute(search, "name"));
 
-		for (spI = scanProviders.begin(); spI != scanProviders.end(); spI++) {
+		for (spI = scanProviders.begin(); spI != scanProviders.end(); ++spI) {
 			if (!strcmp(spI->second.c_str(), providerName))
 			{
 				/* increase sat counter */
@@ -902,7 +902,7 @@ int scan_transponder(TP_params *TP)
 	scanBouquetManager = new CBouquetManager();
 
 	diseqc_pos = TP->diseqc;
-	for (spI = scanProviders.begin(); spI != scanProviders.end(); spI++)
+	for (spI = scanProviders.begin(); spI != scanProviders.end(); ++spI)
 		if (diseqc_pos == spI->first) {
 			strcpy(providerName, spI->second.c_str());
 			break;

@@ -1521,7 +1521,7 @@ int SIsections :: readSections(const unsigned short pid, const unsigned char fil
 	//unsigned char maxNr = 0;
 	unsigned char lastNr = 0;
 
-	for (SIsections::iterator k = begin(); k != end(); k++) {
+	for (SIsections::iterator k = begin(); k != end(); ++k) {
 		if ((k->tableIDextension() != actualTableIDextension) || (k->tableID() != actualTableID)) {
 			// Neue Table-ID-Extension
 			//maxNr = k->lastSectionNumber();

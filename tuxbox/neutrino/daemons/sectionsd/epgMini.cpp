@@ -50,8 +50,8 @@ int main(int argc, char **argv)
   // Die for-Schleifen sind laestig,
   // Evtl. sollte man aus den sets maps machen, damit man den key einfacher aendern
   // kann und somit find() funktioniert
-  for(SIsectionsSDT::iterator k=sdtset.begin(); k!=sdtset.end(); k++)
-    for(SIservices::iterator ks=k->services().begin(); ks!=k->services().end(); ks++) {
+  for(SIsectionsSDT::iterator k=sdtset.begin(); k!=sdtset.end(); ++k)
+    for(SIservices::iterator ks=k->services().begin(); ks!=k->services().end(); ++ks) {
       // Erst mal die Controlcodes entfernen
 //      printf("Servicename: '%s'\n", ks->serviceName.c_str());
       char servicename[50];

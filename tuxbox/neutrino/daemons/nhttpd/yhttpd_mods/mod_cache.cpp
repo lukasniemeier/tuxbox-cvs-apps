@@ -162,7 +162,7 @@ void CmodCache::RemoveCategoryFromCache(std::string category)
 	{
 		restart = false;
 		TCacheList::iterator i = CacheList.begin();
-		for ( ; i!= CacheList.end(); i++ )
+		for ( ; i!= CacheList.end(); ++i )
 		{
 			TCache *item = &((*i).second);
 			if(item->category == category)
@@ -206,7 +206,7 @@ void CmodCache::yshowCacheInfo(CyhookHandler *hh)
 	yresult += string_printf("<tr><td>URL</td><td>Mime</td><td>Filename</td><td>Category</td><td>Created</td><td>Remove</td></tr>\n"); 
 	pthread_mutex_lock(&mutex); 
 	TCacheList::iterator i = CacheList.begin();
-	for ( ; i!= CacheList.end(); i++ )
+	for ( ; i!= CacheList.end(); ++i )
 	{
 		TCache *item = &((*i).second);
 		char timeStr[80];

@@ -201,7 +201,7 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
 	mctv.addIntroItems();
 
-	for(; bouquet != bouquetlist.end();bouquet++)
+	for(; bouquet != bouquetlist.end(); ++bouquet)
 	{
 		CMenuWidget* mwtv = new CMenuWidget(LOCALE_TIMERLIST_CHANNELSELECT, NEUTRINO_ICON_SETTINGS, width);
 		toDelete.push_back(mwtv);
@@ -209,7 +209,7 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 		zapit.getBouquetChannels(bouquet->bouquet_nr,channellist,mode, true); // UTF-8
 		CZapitClient::BouquetChannelList::iterator channel = channellist.begin();
 		mwtv->addIntroItems();
-		for(; channel != channellist.end();channel++)
+		for(; channel != channellist.end(); ++channel)
 		{
 			char cChannelId[32];
 			sprintf(cChannelId,

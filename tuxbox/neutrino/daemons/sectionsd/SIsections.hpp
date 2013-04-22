@@ -677,7 +677,7 @@ public:
 		SIsections sections;
 		int rc=sections.readSections(0x12, 0x4e, 0xff);
 
-		for (SIsections::iterator k=sections.begin(); k!=sections.end(); k++)
+		for (SIsections::iterator k=sections.begin(); k!=sections.end(); ++k)
 			insert(*k);
 
 		return rc;
@@ -694,7 +694,7 @@ public:
 		SIsections sections;
 		int rc=sections.readSections(pid, 0xa1, 0xfe);
 
-		for (SIsections::iterator k=sections.begin(); k!=sections.end(); k++)
+		for (SIsections::iterator k=sections.begin(); k!=sections.end(); ++k)
 			insert(*k);
 
 		return rc;
@@ -710,7 +710,7 @@ public:
 		SIsections sections;
 		int rc=sections.readSections(0x12, 0x50, 0xf0);
 
-		for (SIsections::iterator k=sections.begin(); k!=sections.end(); k++)
+		for (SIsections::iterator k=sections.begin(); k!=sections.end(); ++k)
 			insert(*k);
 
 		return rc;
@@ -926,7 +926,7 @@ public:
 		SIsections sections;
 		int rc=sections.readSections(0x11, 0x42, 0xff);
 
-		for (SIsections::iterator k=sections.begin(); k!=sections.end(); k++)
+		for (SIsections::iterator k=sections.begin(); k!=sections.end(); ++k)
 			insert(*k);
 
 		return rc;
@@ -947,7 +947,7 @@ public:
 		SIsections sections;
 		int rc=sections.readSections(0x11, 0x4a, 0xff);
 
-		for (SIsections::iterator k=sections.begin(); k!=sections.end(); k++)
+		for (SIsections::iterator k=sections.begin(); k!=sections.end(); ++k)
 			insert(*k);
 
 		return rc;
@@ -968,7 +968,7 @@ public:
 		SIsections sections;
 		int rc=sections.readSections(0x10, 0x40, 0xff);
 
-		for (SIsections::iterator k=sections.begin(); k!=sections.end(); k++)
+		for (SIsections::iterator k=sections.begin(); k!=sections.end(); ++k)
 			insert(*k);
 
 		return rc;

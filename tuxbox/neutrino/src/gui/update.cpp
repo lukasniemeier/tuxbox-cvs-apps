@@ -233,7 +233,7 @@ bool CFlashUpdate::selectHttpImage(void)
 
 	SelectionWidget.exec(NULL, "");
 
-	for (std::vector<CUpdateMenuTarget*>::iterator it = update_menu_targets.begin(); it != update_menu_targets.end(); it++)
+	for (std::vector<CUpdateMenuTarget*>::iterator it = update_menu_targets.begin(); it != update_menu_targets.end(); ++it)
 		delete *it;
 
 	if (selected == -1)
@@ -320,7 +320,7 @@ bool CFlashUpdate::checkVersion4Update()
 		CFile * CFileSelected = NULL;
 
 		UpdatesBrowser.ChangeDir(gTmpPath);
-		for (CFileList::iterator file = UpdatesBrowser.filelist.begin(); file != UpdatesBrowser.filelist.end(); file++)
+		for (CFileList::iterator file = UpdatesBrowser.filelist.begin(); file != UpdatesBrowser.filelist.end(); ++file)
 		{
 			if (!(S_ISDIR(file->Mode)))
 			{

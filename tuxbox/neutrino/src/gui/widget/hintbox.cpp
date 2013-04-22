@@ -100,7 +100,7 @@ CHintBox::CHintBox(const neutrino_locale_t Caption, const char * const Text, con
 	if (nw > width)
 		width = nw;
 
-	for (std::vector<char *>::const_iterator it = line.begin(); it != line.end(); it++)
+	for (std::vector<char *>::const_iterator it = line.begin(); it != line.end(); ++it)
 	{
 		nw = additional_width + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(*it, true); // UTF-8
 		if (nw > width)
@@ -173,7 +173,7 @@ void CHintBox::refresh(void)
 	int count = entries_per_page;
 	int ypos  = theight + (fheight >> 1);
 
-	for (std::vector<char *>::const_iterator it = line.begin() + (entries_per_page * current_page); ((it != line.end()) && (count > 0)); it++, count--)
+	for (std::vector<char *>::const_iterator it = line.begin() + (entries_per_page * current_page); ((it != line.end()) && (count > 0)); ++it, count--)
 		window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU], 10, (ypos += fheight), width, *it, (CFBWindow::color_t)COL_MENUCONTENT, 0, true); // UTF-8
 
 	if (entries_per_page < line.size())

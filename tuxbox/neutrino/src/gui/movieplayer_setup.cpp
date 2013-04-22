@@ -184,7 +184,7 @@ int CMoviePlayerSetup::showMoviePlayerSetup()
 	COnOffNotifier StreamingNotifier;
 	if (toNotify != NULL)
 	{
-		for (std::vector<CMenuItem*>::iterator it = toNotify->begin(); it != toNotify->end(); it++)
+		for (std::vector<CMenuItem*>::iterator it = toNotify->begin(); it != toNotify->end(); ++it)
 			StreamingNotifier.addItem(*it);
 	}
 	StreamingNotifier.addItem(mf1);

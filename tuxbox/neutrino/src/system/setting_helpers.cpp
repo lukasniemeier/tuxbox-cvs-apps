@@ -66,7 +66,7 @@ bool COnOffNotifier::changeNotify(const neutrino_locale_t, void *Data)
 {
 	bool active = (*(int*)(Data) != offValue);
 
-	for (std::vector<CMenuItem*>::iterator it = toDisable.begin(); it != toDisable.end(); it++)
+	for (std::vector<CMenuItem*>::iterator it = toDisable.begin(); it != toDisable.end(); ++it)
 		(*it)->setActive(active);
 
 	return false;

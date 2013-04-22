@@ -829,7 +829,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		 * match *or* from a different channel, then no event for this channel is stored */
 		while (x != mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.begin())
 		{
-			x--;
+			--x;
 			if ((*x)->get_channel_id() != e_chid)
 				break;
 			else
@@ -902,13 +902,13 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 			if (back)
 			{
 				lastEvent = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end();
-				lastEvent--;
+				--lastEvent;
 
 				//preserve events of current channel
 				readLockMessaging();
 				while ((lastEvent != mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin()) &&
 					((*lastEvent)->get_channel_id() == messaging_current_servicekey)) {
-					lastEvent--;
+					--lastEvent;
 				}
 				unlockMessaging();
 			}
@@ -1045,13 +1045,13 @@ static void addNVODevent(const SIevent &evt)
 		//FIXME: Set Old Events to 0 if limit is reached...
 		MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator lastEvent =
 										mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end();
-		lastEvent--;
+		--lastEvent;
 
 		//preserve events of current channel
 		readLockMessaging();
 		while ((lastEvent != mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin()) &&
 			((*lastEvent)->get_channel_id() == messaging_current_servicekey)) {
-		  lastEvent--;
+		  --lastEvent;
 		}
 		unlockMessaging();
 		unlockEvents();
@@ -1181,7 +1181,7 @@ static void removeOldEvents(const long seconds)
 	while ((e != mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end()) && (!messaging_zap_detected)) {
 		unlockEvents();
 		goodtimefound = false;
-		for (SItimes::iterator t = (*e)->times.begin(); t != (*e)->times.end(); t++) {
+		for (SItimes::iterator t = (*e)->times.begin(); t != (*e)->times.end(); ++t) {
 			if (t->startzeit + (long)t->dauer >= zeit - seconds) {
 				goodtimefound=true;
 				// one time found -> exit times loop
@@ -1824,7 +1824,7 @@ static const SIevent& findNextSIeventForServiceUniqueKey(const t_channel_id serv
 {
 	time_t azeit = time(NULL);
 
-	for (MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin(); e != mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end(); e++)
+	for (MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin(); e != mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end(); ++e)
 		if ((*e)->get_channel_id() == serviceUniqueKey)
 		{
 			for (SItimes::iterator t = (*e)->times.begin(); t != (*e)->times.end(); ++t)
@@ -3703,7 +3703,7 @@ static void commandActualEPGchannelName(int connfd, char *data, const unsigned d
 bool channel_in_requested_list(std::vector <t_channel_id> *chidlist, t_channel_id chid)
 {
 	if (chidlist->empty()) return true;
-	for (std::vector <t_channel_id>::iterator i=chidlist->begin(); i!=chidlist->end(); i++) {
+	for (std::vector <t_channel_id>::iterator i=chidlist->begin(); i!=chidlist->end(); ++i) {
 		if (*i == chid) return true;
 	}
 	return false;

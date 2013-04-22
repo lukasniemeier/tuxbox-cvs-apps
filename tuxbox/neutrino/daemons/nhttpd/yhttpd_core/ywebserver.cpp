@@ -389,7 +389,7 @@ bool CWebserver::CheckKeepAliveAllowedByIP(std::string client_ip)
 	{
 		if(trim(*it) == client_ip)
 			do_keep_alive = false;
-		it++;
+		++it;
 	}
 	pthread_mutex_unlock( &mutex );
 	return do_keep_alive;
