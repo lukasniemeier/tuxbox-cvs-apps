@@ -72,6 +72,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 	}
 
 	if (lseek(fd, BMP_TORASTER_OFFSET, SEEK_SET) == -1) {
+		close(fd);
 		return(FH_ERROR_FORMAT);
 	}
 
@@ -79,6 +80,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 	raster = buff[0] + (buff[1]<<8) + (buff[2]<<16) + (buff[3]<<24);
 
 	if (lseek(fd, BMP_BPP_OFFSET, SEEK_SET) == -1) {
+		close(fd);
 		return(FH_ERROR_FORMAT);
 	}
 
@@ -97,6 +99,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 				if(tbuffer==NULL)
 				{
 					printf("Error: malloc\n");
+					close(fd);
 					return (FH_ERROR_MALLOC);
 				}
 				for (i=0; i<y; i++) {
@@ -148,6 +151,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 			if(tbuffer==NULL)
 			{
 				printf("Error: malloc\n");
+				close(fd);
 				return (FH_ERROR_MALLOC);
 			}
 			unsigned char c1,c2;
@@ -186,6 +190,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 			if(tbuffer==NULL)
 			{
 				printf("Error: malloc\n");
+				close(fd);
 				return (FH_ERROR_MALLOC);
 			}
 			for (i=0; i<y; i++) 
@@ -205,6 +210,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 		}
 		break;
 		case 16: /* 16bit RGB */
+			close(fd);
 			return(FH_ERROR_FORMAT);
 			break;
 		case 24: /* 24bit RGB */
@@ -227,6 +233,7 @@ int fh_bmp_load(const char *name,unsigned char **buffer,int* xp,int* yp)
 			}
 			break;
 		default:
+			close(fd);
 			return(FH_ERROR_FORMAT);
 	}
 
@@ -245,6 +252,7 @@ int fh_bmp_getsize(const char *name,int *x,int *y, int /*wanted_width*/, int /*w
 		return(FH_ERROR_FILE);
 	}
 	if (lseek(fd, BMP_SIZE_OFFSET, SEEK_SET) == -1) {
+		close(fd);
 		return(FH_ERROR_FORMAT);
 	}
 	
