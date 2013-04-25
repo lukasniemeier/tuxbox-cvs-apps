@@ -1029,7 +1029,6 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 	int bx = BoxStartX + (ChanWidth / 3);
 	int by = BoxEndY + (InfoHeightY_Info >> 3) + ((g_settings.infobar_sat_display && !calledFromMPlayer) ? 25 : 0);
 	int startX = bx;
-	int xoffset = 0;
 	bool paint = true;
 
 	switch (button)
@@ -1062,10 +1061,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 				if (mode == VLC_MODE)
 					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_MOVIEPLAYER_RESYNC;
 				else
-				{
 					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_INFOVIEWER_LANGUAGES;
-					xoffset = 18;
-				}
 			}
 			else
 			{
@@ -1079,7 +1075,6 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 					InfobarButtons[SNeutrinoSettings::BUTTON_GREEN].locale = LOCALE_INFOVIEWER_LANGUAGES;
 				else
 					paint = false;
-				xoffset = 8;	
 
 				int ac3state;
 				if ( ( g_RemoteControl->current_PIDs.PIDs.selected_apid < count ) &&
@@ -1092,7 +1087,7 @@ void CInfoViewer::showButton(const int button, const bool calledFromMPlayer, con
 
 				showIcon_Audio(ac3state);
 			}
-			startX = BoxEndX - ICON_OFFSET - 3 * ButtonWidth + xoffset;
+			startX = BoxEndX - ICON_OFFSET - 3 * ButtonWidth;
 			break;
 
 		case SNeutrinoSettings::BUTTON_YELLOW:  // yellow button for subservices / NVODs  // USERMENU // Movieplayer
