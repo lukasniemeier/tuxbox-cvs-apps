@@ -792,7 +792,7 @@ int CMenuOptionNumberChooser::paint(bool selected)
 
 
 
-CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName)
+CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown)
 {
 	optionNameString  = g_Locale->getText(OptionName);
 	optionName        = OptionName;
@@ -803,9 +803,10 @@ CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int *
 	observ            = Observ;
 	directKey         = DirectKey;
 	iconName          = IconName;
+	pulldown          = Pulldown;
 }
 
-CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName)
+CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown)
 {
 	optionNameString  = OptionName;
 	optionName        = NONEXISTANT_LOCALE;
@@ -816,6 +817,7 @@ CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const Optio
 	observ            = Observ;
 	directKey         = DirectKey;
 	iconName          = IconName;
+	pulldown          = Pulldown;
 }
 
 int CMenuOptionChooser::getHeight(void) const
@@ -834,33 +836,63 @@ int CMenuOptionChooser::getOptionValue(void) const
 }
 
 
-int CMenuOptionChooser::exec(CMenuTarget*)
+int CMenuOptionChooser::exec(CMenuTarget* parent)
 {
 	bool wantsRepaint = false;
-	unsigned int count;
+	int ret = menu_return::RETURN_NONE;
 
-	for(count = 0; count < number_of_options; count++)
+	if (pulldown)
 	{
-		if (options[count].key == (*optionValue))
+		int select = -1;
+		char cnt[5];
+
+		if (parent)
+			parent->hide();
+
+		CMenuWidget* menu = new CMenuWidget(optionNameString.c_str(), NEUTRINO_ICON_SETTINGS);
+		menu->addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
+		CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
+		for(unsigned int count = 0; count < number_of_options; count++)
 		{
-			*optionValue = options[(count+1) % number_of_options].key;
-			break;
+			bool selected = false;
+			if (options[count].key == (*optionValue))
+				selected = true;
+			sprintf(cnt, "%d", count);
+			CMenuForwarder *mn_option = new CMenuForwarder(options[count].value, true, NULL, selector, cnt);
+			mn_option->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true /*for selected item*/);
+			menu->addItem(mn_option, selected);
 		}
+		menu->exec(NULL, "");
+		ret = menu_return::RETURN_REPAINT;
+		if (select >= 0)
+			*optionValue = options[select].key;
+		delete menu;
+		delete selector;
 	}
-	// if options are removed optionValue may not exist anymore -> use 1st available option
-	if ((count == number_of_options) && number_of_options) {
-		*optionValue = options[0].key;
+	else
+	{
+		unsigned int count;
+		for(count = 0; count < number_of_options; count++)
+		{
+			if (options[count].key == (*optionValue))
+			{
+				*optionValue = options[(count+1) % number_of_options].key;
+				break;
+			}
+		}
+		// if options are removed optionValue may not exist anymore -> use 1st available option
+		if ((count == number_of_options) && number_of_options)
+			*optionValue = options[0].key;
+		paint(true);
 	}
 
-	paint(true);
-	if(observ)
-	{
+	if (observ)
 		wantsRepaint = observ->changeNotify(optionName, optionValue);
-	}
-	if ( wantsRepaint )
-		return menu_return::RETURN_REPAINT;
-	else
-		return menu_return::RETURN_NONE;
+
+	if (wantsRepaint)
+		ret = menu_return::RETURN_REPAINT;
+
+	return ret;
 }
 
 int CMenuOptionChooser::paint( bool selected )
@@ -921,15 +953,15 @@ int CMenuOptionChooser::paint( bool selected )
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
-CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t OptionName, char* OptionValue, bool Active, CChangeObserver* Observ)
+CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t OptionName, char* OptionValue, bool Active, CChangeObserver* Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown)
 {
 	optionName  = OptionName;
 	active      = Active;
 	optionValue = OptionValue;
 	observ      = Observ;
-
-	directKey   = CRCInput::RC_nokey;
-	iconName    = "";
+	directKey   = DirectKey;
+	iconName    = IconName;
+	pulldown    = Pulldown;
 }
 
 int CMenuOptionStringChooser::getHeight(void) const
@@ -952,28 +984,60 @@ void CMenuOptionStringChooser::addOption(const char * const value)
 	options.push_back(std::string(value));
 }
 
-int CMenuOptionStringChooser::exec(CMenuTarget*)
+int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 {
 	bool wantsRepaint = false;
-	//select next value
-	for(unsigned int count = 0; count < options.size(); count++)
+	int ret = menu_return::RETURN_NONE;
+
+	if (pulldown)
 	{
-		if ((strcmp(options[count].c_str(), optionValue) == 0) || (optionValue[0] == '\0'))
+		int select = -1;
+		char cnt[5];
+
+		if (parent)
+			parent->hide();
+
+		CMenuWidget* menu = new CMenuWidget(optionName, NEUTRINO_ICON_SETTINGS);
+		menu->addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
+		CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
+		for (unsigned int count = 0; count < options.size(); count++)
 		{
-			strcpy(optionValue, options[(count + 1) % options.size()].c_str());
-			break;
+			bool selected = false;
+			if (strcmp(options[count].c_str(), optionValue) == 0)
+				selected = true;
+			sprintf(cnt, "%d", count);
+			CMenuForwarderNonLocalized *mn_option = new CMenuForwarderNonLocalized(options[count].c_str(), true, NULL, selector, cnt);
+			mn_option->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true /*for selected item*/);
+			menu->addItem(mn_option, selected);
 		}
+		menu->exec(NULL, "");
+		ret = menu_return::RETURN_REPAINT;
+		if (select >= 0)
+			strcpy(optionValue, options[select].c_str());
+		delete menu;
+		delete selector;
+	}
+	else
+	{
+		//select next value
+		for(unsigned int count = 0; count < options.size(); count++)
+		{
+			if ((strcmp(options[count].c_str(), optionValue) == 0) || (optionValue[0] == '\0'))
+			{
+				strcpy(optionValue, options[(count + 1) % options.size()].c_str());
+				break;
+			}
+		}
+		paint(true);
 	}
 
-	paint(true);
-	if(observ)
-	{
+	if (observ)
 		wantsRepaint = observ->changeNotify(optionName, optionValue);
-	}
-	if ( wantsRepaint )
-		return menu_return::RETURN_REPAINT;
-	else
-		return menu_return::RETURN_NONE;
+
+	if (wantsRepaint)
+		ret = menu_return::RETURN_REPAINT;
+
+	return ret;
 }
 
 int CMenuOptionStringChooser::paint( bool selected )
