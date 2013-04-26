@@ -208,19 +208,7 @@ void CScanSettings::useDefaults(const delivery_system_t _delivery_system)
 	// i do not know how to do it correctly for old API -- seife
 	TP_mod		= QAM_256;
 #endif
-
-	switch (delivery_system)
-	{
-		case DVB_C:
-			strcpy(satNameNoDiseqc, "Kabel Deutschland");
-			break;
-		case DVB_S:
-			strcpy(satNameNoDiseqc, "Astra 19.2E");
-			break;
-		case DVB_T:
-			strcpy(satNameNoDiseqc, "");
-			break;
-	}
+	strcpy(satNameNoDiseqc, "none");
 }
 
 bool CScanSettings::loadSettings(const char * const fileName, const delivery_system_t _delivery_system)
