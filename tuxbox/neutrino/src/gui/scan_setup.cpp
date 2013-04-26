@@ -247,15 +247,25 @@ int CScanSetup::showScanService()
 	//sat-lnb-settings
 	if(g_info.delivery_system == DVB_S)
 	{
+		satList.clear();
  		g_Zapit->getScanSatelliteList(satList);
 
 		//prepare diseqc
-		CMenuOptionStringChooser* ojSat = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, scanSettings.satNameNoDiseqc, ((scanSettings.diseqcMode == DISEQC_1_2) || (scanSettings.diseqcMode == NO_DISEQC)|| scanSettings.diseqcMode == DISEQC_UNICABLE));
+		CMenuOptionStringChooser* ojSat = new CMenuOptionStringChooser(LOCALE_SATSETUP_SATELLITE, (char*)&scanSettings.satNameNoDiseqc, ((scanSettings.diseqcMode == DISEQC_1_2) || (scanSettings.diseqcMode == NO_DISEQC)|| scanSettings.diseqcMode == DISEQC_UNICABLE), NULL, CRCInput::RC_nokey, "", true);
 
-		for (uint i=0; i < sat_list_size; i++)
-		{
-			ojSat->addOption(satList[i].satName);
-			dprintf(DEBUG_DEBUG, "got scanprovider (sat): %s\n", satList[i].satName );
+		bool sfound = false;
+		for (CZapitClient::SatelliteList::iterator it = satList.begin(); it != satList.end(); ++it) {
+
+			ojSat->addOption(it->satName);
+
+			if (!sfound && strcmp(scanSettings.satNameNoDiseqc, it->satName) == 0)
+				sfound = true;
+			dprintf(DEBUG_DEBUG, "got scanprovider (sat): %s\n", it->satName);
+		}
+
+		if (!sfound && !satList.empty()) {
+			CZapitClient::SatelliteList::iterator it = satList.begin();
+			snprintf(scanSettings.satNameNoDiseqc, sizeof(scanSettings.satNameNoDiseqc), "%s", it->satName);
 		}
 
 		//prepare diseqc repeats
@@ -354,14 +364,23 @@ int CScanSetup::showScanService()
 
 		CZapitClient::SatelliteList providerList;
 		g_Zapit->getScanSatelliteList(providerList);
-		
-		//prepare/show providers
-		CMenuOptionStringChooser* oj = new CMenuOptionStringChooser(LOCALE_CABLESETUP_PROVIDER, (char*)&scanSettings.satNameNoDiseqc, true);
 
-		for( uint i=0; i< provider_list_size; i++)
-		{
-			oj->addOption(providerList[i].satName);
-			dprintf(DEBUG_DEBUG, "got scanprovider (cable): %s\n", providerList[i].satName );
+		// sat/provider selector
+		CMenuOptionStringChooser * ojProv = new CMenuOptionStringChooser(LOCALE_CABLESETUP_PROVIDER, (char*)&scanSettings.satNameNoDiseqc, true, NULL, CRCInput::RC_nokey, "", true);
+
+		bool sfound = false;
+		for (CZapitClient::SatelliteList::iterator it = providerList.begin(); it != providerList.end(); ++it) {
+
+			ojProv->addOption(it->satName);
+
+			if (!sfound && strcmp(scanSettings.satNameNoDiseqc, it->satName) == 0)
+				sfound = true;
+			dprintf(DEBUG_DEBUG, "got scanprovider (cable): %s\n", it->satName);
+		}
+
+		if (!sfound && !providerList.empty()) {
+			CZapitClient::SatelliteList::iterator it = providerList.begin();
+			snprintf(scanSettings.satNameNoDiseqc, sizeof(scanSettings.satNameNoDiseqc), "%s", it->satName);
 		}
 
 		//show general entries
@@ -369,7 +388,7 @@ int CScanSetup::showScanService()
 		scansetup->addItem( ojBouquets );
 		
 		//show cable provider
-		scansetup->addItem( oj);
+		scansetup->addItem( ojProv );
 	}
 
 	//prepare scan mode (fast->on/off)
@@ -522,7 +541,7 @@ void CScanSetup::initScanSettings()
 				scanSettings.satMotorPos[i] = satList[i].motorPosition;
 				strcpy(scanSettings.satName[i], satList[i].satName);
 				//scanSettings.satDiseqc[i] = satList[i].satDiseqc;
-				if (satList[i].satPosition == currentSatellitePosition)
+				if (satList[i].satPosition == currentSatellitePosition) // make that sense?
 					strcpy(scanSettings.satNameNoDiseqc, satList[i].satName);
 			}
 			for (uint i = satList.size(); i < MAX_SATELLITES; i++)
@@ -540,7 +559,7 @@ void CScanSetup::initScanSettings()
 		CZapitClient::SatelliteList providerList;
 		g_Zapit->getScanSatelliteList(providerList);
 
-		printf("[scan-setup] received %d providers\n", providerList.size());
+		printf("[scan-setup] received %d cable provider(s)\n", providerList.size());
 		provider_list_size = providerList.size();	
 	}
 	
