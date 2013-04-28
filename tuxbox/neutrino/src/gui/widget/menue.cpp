@@ -617,10 +617,15 @@ void CMenuWidget::paint()
 	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 	frameBuffer->paintBoxRel(x, y, width + sb_width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 
-	int iconw, iconh;
-	frameBuffer->getIconSize(iconfile.c_str(), &iconw, &iconh);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 8 + iconw + 10, y + hheight + 2, width - 8 - iconw - 10, nameString.c_str(), COL_MENUHEAD, 0, true); // UTF-8
-	frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - iconh / 2);
+	int head_iconoffset = 0;
+	if (!iconfile.empty())
+	{
+		int iconw, iconh;
+		frameBuffer->getIconSize(iconfile.c_str(), &iconw, &iconh);
+		frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - iconh / 2);
+		head_iconoffset = 8 + iconw;
+	}
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + head_iconoffset + 10, y + hheight + 2, width - head_iconoffset - 10, nameString.c_str(), COL_MENUHEAD, 0, true); // UTF-8
 
 	item_start_y = y+hheight;
 	paintItems();
