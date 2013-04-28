@@ -848,13 +848,14 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 
 	if (pulldown)
 	{
+		int menu_width = dx;
 		int select = -1;
 		char cnt[5];
 
 		if (parent)
 			parent->hide();
 
-		CMenuWidget* menu = new CMenuWidget(optionNameString.c_str(), NEUTRINO_ICON_SETTINGS);
+		CMenuWidget* menu = new CMenuWidget(optionNameString.c_str(), "", menu_width);
 		menu->addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 		CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 		for(unsigned int count = 0; count < number_of_options; count++)
@@ -996,13 +997,14 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 
 	if (pulldown)
 	{
+		int menu_width = dx;
 		int select = -1;
 		char cnt[5];
 
 		if (parent)
 			parent->hide();
 
-		CMenuWidget* menu = new CMenuWidget(optionName, NEUTRINO_ICON_SETTINGS);
+		CMenuWidget* menu = new CMenuWidget(optionName, "", menu_width);
 		menu->addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 		CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 		for (unsigned int count = 0; count < options.size(); count++)
