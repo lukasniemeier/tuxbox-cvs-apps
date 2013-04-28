@@ -3677,7 +3677,6 @@ bool CBookItemMenuForwarderNotifier::changeNotify(const neutrino_locale_t, void*
 
 CMenuSelector::CMenuSelector(const char * OptionName, const bool Active , char * OptionValue, int* ReturnInt ,int ReturnIntValue ) : CMenuItem()
 {
-	height     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionValueString = NULL;
 	optionName = 		OptionName;
 	optionValue = 		OptionValue;
@@ -3688,7 +3687,6 @@ CMenuSelector::CMenuSelector(const char * OptionName, const bool Active , char *
 
 CMenuSelector::CMenuSelector(const char * OptionName, const bool Active , std::string& OptionValue, int* ReturnInt ,int ReturnIntValue ) : CMenuItem()
 {
-	height     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	optionValueString = &OptionValue;
 	optionName =        OptionName;
 	strncpy(buffer,OptionValue.c_str(),BUFFER_MAX);
@@ -3698,6 +3696,11 @@ CMenuSelector::CMenuSelector(const char * OptionName, const bool Active , std::s
 	returnIntValue =    ReturnIntValue;
 	returnInt =         ReturnInt;
 };
+
+int CMenuSelector::getHeight(void) const
+{
+	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+}
 
 int CMenuSelector::exec(CMenuTarget* /*parent*/)
 { 
@@ -3716,28 +3719,16 @@ int CMenuSelector::exec(CMenuTarget* /*parent*/)
 
 int CMenuSelector::paint(bool selected)
 {
-	CFrameBuffer * frameBuffer = CFrameBuffer::getInstance();
+	int height = getHeight();
 
-	unsigned char color   = COL_MENUCONTENT;
-	fb_pixel_t    bgcolor = COL_MENUCONTENT_PLUS_0;
-	if (selected)
-	{
-		color   = COL_MENUCONTENTSELECTED;
-		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
-	}
-	if (!active)
-	{
-		color   = COL_MENUCONTENTINACTIVE;
-		bgcolor = COL_MENUCONTENTINACTIVE_PLUS_0;
-	}
+	//paint item
+	prepareItem(selected, height);
 
-	frameBuffer->paintBoxRel(x, y, dx, height, bgcolor);
+	//paint item icon
+	paintItemButton(selected, height, NEUTRINO_ICON_BUTTON_OKAY);
 
-	int stringstartposName = x + offx + 10;
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName,   y+height,dx- (stringstartposName - x), optionName, color, 0, true); // UTF-8
-
-	if (selected)
-		CLCD::getInstance()->showMenuText(0, optionName, -1, true); // UTF-8
+	//paint text
+	paintItemCaption(selected, height, optionName);
 
 	return y+height;
 }

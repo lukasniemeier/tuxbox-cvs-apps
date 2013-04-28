@@ -427,14 +427,13 @@ class CMenuSelector : public CMenuItem
 		std::string* optionValueString;
 		int  returnIntValue;
 		int* returnInt;
-		int height;
 		char buffer[BUFFER_MAX];
 	public:
 		CMenuSelector(const char * OptionName, const bool Active = true, char * OptionValue = NULL, int* ReturnInt = NULL,int ReturnIntValue = 0);
 		CMenuSelector(const char * OptionName, const bool Active , std::string & OptionValue, int* ReturnInt = NULL,int ReturnIntValue = 0);
 		int exec(CMenuTarget* parent);
 		int paint(bool selected);
-		int getHeight(void) const{return height;};
+		int getHeight(void) const;
 		bool isSelectable(void) const {	return active;}
 };
 

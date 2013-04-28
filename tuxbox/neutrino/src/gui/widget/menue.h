@@ -80,6 +80,11 @@ class CMenuItem
 	protected:
 		int x, y, dx, offx;
 		bool used;
+		unsigned char item_color;
+		fb_pixel_t item_bgcolor;
+
+		void initItemColors(const bool select_mode);
+
 	public:
 		bool           active;
 		neutrino_msg_t directKey;
@@ -116,9 +121,15 @@ class CMenuItem
 		}
 		virtual void setActive(const bool Active);
 
-		virtual void paintItemButton(const int startX, const int frame_height, const bool select_mode, const std::string& icon_Name = NEUTRINO_ICON_BUTTON_RIGHT);
+		virtual void paintItemButton(const bool select_mode, const int &item_height, const std::string& icon_Name = NEUTRINO_ICON_BUTTON_RIGHT);
+
+		virtual void paintItemBackground (const bool select_mode, const int &item_height);
+
+		virtual void prepareItem(const bool select_mode, const int &item_height);
 
 		virtual void setItemButton(const std::string& icon_Name, const bool is_select_button = false);
+
+		virtual void paintItemCaption(const bool select_mode, const int &item_height, const char * left_text = NULL, const char * right_text = NULL);
 };
 
 class CMenuSeparator : public CMenuItem
