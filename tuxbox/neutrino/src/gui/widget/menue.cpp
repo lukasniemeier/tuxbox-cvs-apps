@@ -669,14 +669,14 @@ void CMenuWidget::paint()
 	if(hheight+itemHeightTotal < height)
 		height=hheight+itemHeightTotal;
 
-	x = getScreenStartX(width);
-	y = getScreenStartY(height);
-
 	int sb_width;
 	if(total_pages > 1)
 		sb_width=15;
 	else
 		sb_width=0;
+
+	x = getScreenStartX(width + sb_width);
+	y = getScreenStartY(height);
 
 	int c_rad_mid = RADIUS_MID;
 	
