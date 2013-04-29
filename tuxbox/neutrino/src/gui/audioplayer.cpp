@@ -92,10 +92,10 @@
 #define DVR	ADAP "/dvr0"
 #endif
 
-#ifdef ConnectLineBox_Width
-#undef ConnectLineBox_Width
-#endif
-#define ConnectLineBox_Width	16
+//#ifdef ConnectLineBox_Width
+//#undef ConnectLineBox_Width
+//#endif
+#define ConnectLineBox_Width	12
 
 #define AUDIOPLAYERGUI_SMSKEY_TIMEOUT 1000
 #define SHOW_FILE_LOAD_LIMIT 50
@@ -250,7 +250,7 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 		m_current = 0;
 
 	m_selected = 0;
-	m_width = w_max(710, ConnectLineBox_Width);
+	m_width = w_max(720, 2 * ConnectLineBox_Width);
 	m_height = h_max(570, 0);
 	m_sheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	m_buttonHeight = std::min(25, m_sheight);
@@ -260,9 +260,8 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 	m_info_height = m_fheight*2;
 	m_listmaxshow = (m_height - m_info_height - m_title_height - m_theight - 2*m_buttonHeight) / (m_fheight);
 	m_height = m_theight + m_info_height + m_title_height + 2*m_buttonHeight + m_listmaxshow * m_fheight; // recalc height
+	calcSize();
 
-	m_x = getScreenStartX(m_width + ConnectLineBox_Width) + ConnectLineBox_Width;
-	m_y = getScreenStartY(m_height);
 	m_idletime=time(NULL);
 	m_screensaver=false;
 
@@ -387,6 +386,13 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 
 //------------------------------------------------------------------------
 
+void CAudioPlayerGui::calcSize()
+{
+	m_x = getScreenStartX(m_width - (m_playlist.empty() ? 0 : ConnectLineBox_Width));
+	m_y = getScreenStartY(m_height);
+}
+//------------------------------------------------------------------------
+
 int CAudioPlayerGui::show()
 {
 	neutrino_msg_t      msg;
@@ -431,6 +437,7 @@ int CAudioPlayerGui::show()
 				clear_before_update = false;
 			}
 			update = false;
+			calcSize();
 			paint();
 		}
 		g_RCInput->getMsg(&msg, &data, 10); // 1 sec timeout to update play/stop state display
@@ -1881,29 +1888,34 @@ void CAudioPlayerGui::paintItemID3DetailsLine (int pos)
 						m_height - m_title_height - m_info_height);
 
 	// paint Line if detail info (and not valid list pos)
-	if (!m_playlist.empty() && (pos >= 0))
+	if (!m_playlist.empty() && (pos > -1))
 	{
 		// paint id3 infobox
-		int yoffs = g_settings.rounded_corners ? 7 : 0;
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos2+yoffs, 1, m_info_height-2*yoffs, col2);
-		m_frameBuffer->paintBoxRel(m_x - 3, ypos2+yoffs, 3, m_info_height-2*yoffs, col1);
 		m_frameBuffer->paintBoxFrame(m_x, ypos2, m_width, m_info_height, 2,col1, RADIUS_MID);
 		m_frameBuffer->paintBoxRel(m_x + 2, ypos2 + 2 , m_width - 4, m_info_height - 4, col3, RADIUS_MID);
 
-		// 1. col thick line
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 4, ypos1, 4, m_fheight, col2, RADIUS_SMALL, CORNER_LEFT);
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 3, ypos1, 8, m_fheight, col1, RADIUS_SMALL, CORNER_LEFT); // item marker
 
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 4, ypos2a - ypos1a, col1);
+		// 1. top line vert.
+		m_frameBuffer->paintBoxRel(xpos+11, ypos1+4, 1,m_fheight-8, col2); // item marker gray vert.
+		m_frameBuffer->paintBoxRel(xpos+8,  ypos1+4, 3,m_fheight-8, col1); // white vert.
 
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 12, 4, col1);
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos2a, 12, 4, col1);
+		// 2. top line hor.
+		m_frameBuffer->paintBoxRel(xpos, ypos1a  , 8, 3, col1); //top small hor. line
+		m_frameBuffer->paintBoxRel(xpos, ypos1a+3, 8, 1, col2); // hor. gray top xxx
 
-		// 2. col small line
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 1, ypos2a - ypos1a + 4, col2);
+		// 3. long line
+		m_frameBuffer->paintBoxRel(xpos,   ypos1a,   3,ypos2a-ypos1a,   col1); // white
+		m_frameBuffer->paintBoxRel(xpos+3, ypos1a+4, 1,ypos2a-ypos1a-4, col2); //vert. gray
 
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 16, ypos1a, 12, 1, col2);
-		m_frameBuffer->paintBoxRel(xpos + ConnectLineBox_Width - 12, ypos2a,  8, 1, col2);
+		// 4. bottom line vert.
+		m_frameBuffer->paintBoxRel(xpos, ypos2a  , 8,3, col1); // white
+		m_frameBuffer->paintBoxRel(xpos, ypos2a+3, 8,1, col2); // gray
+
+		// 5. col thick line bottom
+		int yoffs = g_settings.rounded_corners ? 10 : 0;
+		m_frameBuffer->paintBoxRel(m_x-1, ypos2+yoffs, 1, m_info_height-2*yoffs, col2);
+		m_frameBuffer->paintBoxRel(m_x-4, ypos2+yoffs, 3, m_info_height-2*yoffs, col1);
+
 
 		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(m_x + 10, ypos2 + 2 + 1*m_fheight, m_width- 80,
 				m_playlist[m_selected].MetaData.title, COL_MENUCONTENTDARK, 0, true); // UTF-8
