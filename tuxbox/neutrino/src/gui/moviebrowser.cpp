@@ -3008,7 +3008,8 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CMenuWidget serieMenu(LOCALE_MOVIEBROWSER_INFO_HEAD, NEUTRINO_ICON_STREAMING);
 	serieMenu.addIntroItems(LOCALE_MOVIEBROWSER_SERIE_HEAD);
 	serieMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_SERIE_NAME,   true, movie_info->serieName,&serieUserInput));
-	serieMenu.addItem(GenericMenuSeparatorLine);
+	if (!m_vHandleSerienames.empty())
+		serieMenu.addItem(GenericMenuSeparatorLine);
 	for(unsigned int i=0; i < m_vHandleSerienames.size(); i++)
 		serieMenu.addItem( new CMenuSelector(m_vHandleSerienames[i]->serieName.c_str(), true,  movie_info->serieName));
 
