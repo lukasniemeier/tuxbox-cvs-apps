@@ -633,9 +633,7 @@ class CScanSettings
 	void toSatList( CZapitClient::ScanSatelliteList& ) const;
 	void toMotorPosList( CZapitClient::ScanMotorPosList& ) const;
 
-	void useDefaults(const delivery_system_t _delivery_system);
-
-	bool loadSettings(const char * const fileName, const delivery_system_t _delivery_system);
+	bool loadSettings(const char * const fileName, const delivery_system_t dsys);
 	bool saveSettings(const char * const fileName);
 };
 

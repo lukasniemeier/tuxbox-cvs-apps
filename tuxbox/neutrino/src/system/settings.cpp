@@ -36,7 +36,10 @@ CScanSettings::CScanSettings(void)
 	: configfile('\t')
 {
 	delivery_system = DVB_S;
-	satNameNoDiseqc[0] = 0;
+	bouquetMode	= CZapitClient::BM_UPDATEBOUQUETS;
+	scanType	= CZapitClient::ST_ALL;
+	strcpy(satNameNoDiseqc, "none");
+
 	for( int i = 0; i < MAX_SATELLITES; i++)
 	{
 		satName[i][0] = 0;
@@ -183,60 +186,31 @@ void CScanSettings::toMotorPosList(CZapitClient::ScanMotorPosList& motorPosList)
 	}
 }
 
-void CScanSettings::useDefaults(const delivery_system_t _delivery_system)
+bool CScanSettings::loadSettings(const char * const fileName, const delivery_system_t dsys)
 {
-	delivery_system	= _delivery_system;
-	bouquetMode	= CZapitClient::BM_UPDATEBOUQUETS;
-	scanType	= CZapitClient::ST_ALL;
-	diseqcMode	= NO_DISEQC;
-	diseqcRepeat	= 0;
-	uni_qrg		= 1210;
-	uni_scr		= 0;
+	bool ret = configfile.loadConfig(fileName);
 
-	motorRotationSpeed = 8;
-	useGotoXX = 0;
-	gotoXXLatitude = 00.000000;
-	gotoXXLongitude = 00.000000;
-	gotoXXLaDirection = 1;
-	gotoXXLoDirection = 1;
-
-#ifdef HAVE_TRIPLEDRAGON
-	TP_mod		= 0;
-#elif HAVE_DVB_API_VERSION >= 3
-	TP_mod		= QAM_AUTO;
-#else
-	// i do not know how to do it correctly for old API -- seife
-	TP_mod		= QAM_256;
-#endif
-	strcpy(satNameNoDiseqc, "none");
-}
-
-bool CScanSettings::loadSettings(const char * const fileName, const delivery_system_t _delivery_system)
-{
-	useDefaults(_delivery_system);
-
-	if(!configfile.loadConfig(fileName))
-		return false;
-
-	if (configfile.getInt32("delivery_system", -1) != delivery_system)
+	if (configfile.getInt32("delivery_system", -1) != dsys)
 	{
 		// configfile is not for this delivery system
 		configfile.clear();
-		return false;
+		ret = false;
 	}
 
-	diseqcMode = (diseqc_t) configfile.getInt32("diseqcMode"  , diseqcMode);
-	diseqcRepeat = configfile.getInt32("diseqcRepeat", diseqcRepeat);
-	uni_qrg = configfile.getInt32("uni_qrg", uni_qrg);
-	uni_scr = configfile.getInt32("uni_scr", uni_scr);
-	bouquetMode = (CZapitClient::bouquetMode) configfile.getInt32("bouquetMode" , bouquetMode);
+	delivery_system = dsys;
+
+	diseqcMode = (diseqc_t) configfile.getInt32("diseqcMode", NO_DISEQC);
+	diseqcRepeat = configfile.getInt32("diseqcRepeat", 0);
+	uni_qrg = configfile.getInt32("uni_qrg", 1210);
+	uni_scr = configfile.getInt32("uni_scr", 0);
+	bouquetMode = (CZapitClient::bouquetMode) configfile.getInt32("bouquetMode", bouquetMode);
 	scanType=(CZapitClient::scanType) configfile.getInt32("scanType", scanType);
 	strcpy(satNameNoDiseqc, configfile.getString("satNameNoDiseqc", satNameNoDiseqc).c_str());
 
 	motorRotationSpeed = configfile.getInt32("motorRotationSpeed", 8);
 	useGotoXX = configfile.getInt32("useGotoXX", 0);
-	gotoXXLatitude = strtod(configfile.getString("gotoXXLatitude", "00.000000").c_str(), NULL);
-	gotoXXLongitude = strtod(configfile.getString("gotoXXLongitude", "00.000000").c_str(), NULL);
+	gotoXXLatitude = strtod(configfile.getString("gotoXXLatitude", "0.0").c_str(), NULL);
+	gotoXXLongitude = strtod(configfile.getString("gotoXXLongitude", "0.0").c_str(), NULL);
 	gotoXXLaDirection = configfile.getInt32("gotoXXLaDirection", 1);
 	gotoXXLoDirection = configfile.getInt32("gotoXXLoDirection", 1);
 
@@ -271,16 +245,22 @@ bool CScanSettings::loadSettings(const char * const fileName, const delivery_sys
 	// i do not know how to do it correctly for old API -- seife
 	TP_mod = configfile.getInt32("TP_mod", QAM_256); // default qam 256
 #endif
-	strcpy(TP_freq, configfile.getString("TP_freq", "10100000").c_str());
-	strcpy(TP_rate, configfile.getString("TP_rate", "27500000").c_str());
-	strncpy(TP_satname, configfile.getString("TP_satname", "Astra 19.2E").c_str(), 30);
+
+	if(delivery_system == DVB_S) {
+		strcpy(TP_freq, configfile.getString("TP_freq", "10100000").c_str());
+		strcpy(TP_rate, configfile.getString("TP_rate", "27500000").c_str());
+	} else {
+		strcpy(TP_freq, configfile.getString("TP_freq", "362000000").c_str());
+		strcpy(TP_rate, configfile.getString("TP_rate", "6875000").c_str());
+	}
+	strncpy(TP_satname, configfile.getString("TP_satname", "").c_str(), 30);
 	TP_diseqc = *diseqscOfSat(TP_satname);
 #if HAVE_DVB_API_VERSION >= 3
 	if(TP_fec == 4) TP_fec = 5;
 #endif
 	scanSectionsd = configfile.getInt32("scanSectionsd", 0);
 
-	return true;
+	return ret;
 }
 
 bool CScanSettings::saveSettings(const char * const fileName)
