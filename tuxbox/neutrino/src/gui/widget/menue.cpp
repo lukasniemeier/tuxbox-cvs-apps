@@ -891,14 +891,9 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 
 	if (pulldown)
 	{
-		int menu_width = dx;
 		int select = -1;
 		char cnt[5];
-
-		if (parent)
-			parent->hide();
-
-		CMenuWidget* menu = new CMenuWidget(optionNameString.c_str(), "", menu_width);
+		CMenuWidget* menu = new CMenuWidget(optionNameString.c_str(), "", dx);
 		menu->addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 		CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 		for(unsigned int count = 0; count < number_of_options; count++)
@@ -911,8 +906,7 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 			mn_option->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true /*for selected item*/);
 			menu->addItem(mn_option, selected);
 		}
-		menu->exec(NULL, "");
-		ret = menu_return::RETURN_REPAINT;
+		ret = menu->exec(parent, "");
 		if (select >= 0)
 			*optionValue = options[select].key;
 		delete menu;
@@ -1012,14 +1006,9 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 
 	if (pulldown)
 	{
-		int menu_width = dx;
 		int select = -1;
 		char cnt[5];
-
-		if (parent)
-			parent->hide();
-
-		CMenuWidget* menu = new CMenuWidget(optionName, "", menu_width);
+		CMenuWidget* menu = new CMenuWidget(optionName, "", dx);
 		menu->addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 		CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
 		for (unsigned int count = 0; count < options.size(); count++)
@@ -1032,8 +1021,7 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 			mn_option->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true /*for selected item*/);
 			menu->addItem(mn_option, selected);
 		}
-		menu->exec(NULL, "");
-		ret = menu_return::RETURN_REPAINT;
+		ret = menu->exec(parent, "");
 		if (select >= 0)
 			strcpy(optionValue, options[select].c_str());
 		delete menu;
