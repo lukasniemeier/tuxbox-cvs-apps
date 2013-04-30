@@ -914,6 +914,7 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 	}
 	else
 	{
+		//select next value
 		unsigned int count;
 		for(count = 0; count < number_of_options; count++)
 		{
@@ -1030,7 +1031,8 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 	else
 	{
 		//select next value
-		for(unsigned int count = 0; count < options.size(); count++)
+		unsigned int count;
+		for(count = 0; count < options.size(); count++)
 		{
 			if ((strcmp(options[count].c_str(), optionValue) == 0) || (optionValue[0] == '\0'))
 			{
@@ -1038,6 +1040,9 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 				break;
 			}
 		}
+		// if options are removed optionValue may not exist anymore -> use 1st available option
+		if ((count == options.size()) && !options.empty())
+			strcpy(optionValue, options[0].c_str());
 		paint(true);
 	}
 
