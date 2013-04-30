@@ -886,6 +886,7 @@ int CMenuOptionChooser::getOptionValue(void) const
 
 int CMenuOptionChooser::exec(CMenuTarget* parent)
 {
+	bool optionValueChanged = true;
 	bool wantsRepaint = false;
 	int ret = menu_return::RETURN_NONE;
 
@@ -909,6 +910,8 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 		ret = menu->exec(parent, "");
 		if (select >= 0)
 			*optionValue = options[select].key;
+		else
+			optionValueChanged = false;
 		delete menu;
 		delete selector;
 	}
@@ -930,7 +933,7 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 		paint(true);
 	}
 
-	if (observ)
+	if (observ && optionValueChanged)
 		wantsRepaint = observ->changeNotify(optionName, optionValue);
 
 	if (wantsRepaint)
@@ -1002,6 +1005,7 @@ void CMenuOptionStringChooser::addOption(const char * const value)
 
 int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 {
+	bool optionValueChanged = true;
 	bool wantsRepaint = false;
 	int ret = menu_return::RETURN_NONE;
 
@@ -1025,6 +1029,8 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 		ret = menu->exec(parent, "");
 		if (select >= 0)
 			strcpy(optionValue, options[select].c_str());
+		else
+			optionValueChanged = false;
 		delete menu;
 		delete selector;
 	}
@@ -1046,7 +1052,7 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 		paint(true);
 	}
 
-	if (observ)
+	if (observ && optionValueChanged)
 		wantsRepaint = observ->changeNotify(optionName, optionValue);
 
 	if (wantsRepaint)
