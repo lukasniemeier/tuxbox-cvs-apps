@@ -565,24 +565,13 @@ void CScanSetup::initScanSettings()
 	
 }
 
-typedef struct scan_mode_t
-{
-	const int scan_type;
-	const neutrino_locale_t locale;
-} scan_mode_struct_t;
-
-const scan_mode_struct_t scan_mode[SCANTS_SCAN_OPTION_COUNT] =
-{
-	{CScanTs::SCAN_COMPLETE	, LOCALE_SCANTP_SCAN_ALL_SATS},
-	{CScanTs::SCAN_ONE_TP	, LOCALE_SCANTP_SCAN_ONE_TP},
- 	{CScanTs::SCAN_ONE_SAT	, LOCALE_SCANTP_SCAN_ONE_SAT},
-};
-
 std::string CScanSetup::getScanModeString(const int& scan_type)
 {
 	int st = scan_type;
-	return g_Locale->getText(scan_mode[st].locale);
-
+	if (g_info.delivery_system == DVB_S)
+		return g_Locale->getText(SCANTS_SCAN_OPTIONS[st].value);
+	else
+		return g_Locale->getText(SCANTS_CABLESCAN_OPTIONS[st].value);
 }
 
 bool CScanSetup::changeNotify(const neutrino_locale_t OptionName, void * Data)
@@ -666,7 +655,10 @@ bool CTP_scanNotifier::changeNotify(const neutrino_locale_t, void *Data)
 			toDisable3[0]->setActive(true);
 	}
 
-	*scan_mode_string = g_Locale->getText(scan_mode[tp_scan_mode].locale);
+	if (g_info.delivery_system == DVB_S)
+		*scan_mode_string = g_Locale->getText(SCANTS_SCAN_OPTIONS[tp_scan_mode].value);
+	else
+		*scan_mode_string = g_Locale->getText(SCANTS_CABLESCAN_OPTIONS[tp_scan_mode].value);
 
 	return false;
 }
