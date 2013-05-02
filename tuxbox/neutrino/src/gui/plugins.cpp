@@ -156,6 +156,7 @@ void CPlugins::loadPlugins()
 	number_of_plugins = 0;
 	plugin_list.clear();
 
+	sindex = 100;
 	scanDir(PLUGINDIR_MNT);
 	scanDir(PLUGINDIR_VAR);
 	scanDir(PLUGINDIR);
@@ -180,6 +181,7 @@ bool CPlugins::parseCfg(plugin *plugin_data)
 
 	while(linecount < 20 && getline(inFile, line[linecount++])){};
 
+	plugin_data->index = sindex++;
 	plugin_data->fb = false;
 	plugin_data->rc = false;
 	plugin_data->lcd = false;
@@ -202,6 +204,10 @@ bool CPlugins::parseCfg(plugin *plugin_data)
 		if (cmd == "pluginversion")
 		{
 			plugin_data->version = atoi(parm.c_str());
+		}
+		else if (cmd == "index")
+		{
+			plugin_data->index = atoi(parm.c_str());
 		}
 		else if (cmd == "name")
 		{

@@ -62,6 +62,7 @@ class CPlugins
 
 		struct plugin
 		{
+			int index;
 			std::string filename;
 			std::string cfgfile;
 			std::string pluginfile;
@@ -82,13 +83,14 @@ class CPlugins
 			bool hide;
 			bool operator< (const plugin& a) const
 			{
-				return this->filename < a.filename ;
+				return this->index < a.index ;
 			}
 		};
 
 		int fb, rc, lcd, pid;
 		int number_of_plugins;
 
+		int sindex;
 		std::vector<plugin> plugin_list;
 		std::string plugin_dir;
 		std::string scriptOutput;
@@ -117,6 +119,8 @@ class CPlugins
 		inline const std::string & getDescription      (const int number) const { return plugin_list[number].description       ; }
 		inline       int           getType             (const int number) const { return plugin_list[number].type              ; }
 		inline       bool          isHidden            (const int number) const { return plugin_list[number].hide              ; }
+		inline       int           getIndex            (const int number) const { return plugin_list[number].index             ; }
+
 		inline       bool          isUsingLcd          (const int number) const { return plugin_list[number].lcd               ; }
 
 		void startPlugin(int number, int param = 0, int param2 = 0);
