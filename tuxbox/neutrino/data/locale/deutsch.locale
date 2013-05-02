@@ -1290,13 +1290,13 @@ scantp.mod_qpsk QPSK
 scantp.pol Polarisation
 scantp.pol_h H
 scantp.pol_v V
-scantp.rate Symbol rate
-scantp.scan Scan Mode
+scantp.rate Symbolrate
+scantp.scan Scan-Modus
 scantp.scan_all_sats Alle Sats
 scantp.scan_complete Komplett
 scantp.scan_one_sat Einen Sat
 scantp.scan_one_tp Einen Transponder
-scantp.scanmode Schnell Scan
+scantp.scanmode Schnell-Scan
 scants.abort_body Soll die Suche wirklich abgebrochen werden?
 scants.abort_header Abbruch der Kanalsuche
 scants.actcable Kabel:
@@ -1335,7 +1335,7 @@ servicemenu.restart Neutrino neu starten
 servicemenu.restart_failed Neustart von Neutrino schlug fehl.
 servicemenu.restart_hint Neutrino wird neu gestartet...
 servicemenu.restart_refused_recording Aufnahme läuft. Restart nicht möglich.
-servicemenu.scanmodes Scan Modi
+servicemenu.scanmodes Scan-Modi
 servicemenu.scants Kanalsuche
 servicemenu.ucodecheck UCodes überprüfen
 servicemenu.update Software-Aktualisierung
