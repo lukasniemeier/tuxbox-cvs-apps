@@ -138,7 +138,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const int &item_height,
 
 	//left text
 	int stringstartposName = x + offx + 10;
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName, y + item_height, dx - (stringstartposName - x), left_text, item_color, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposName, y + item_height, dx - (stringstartposName - x) - 10, left_text, item_color, 0, true); // UTF-8
 
 	//right text
 	if (right_text != NULL)
@@ -146,7 +146,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const int &item_height,
 		int stringwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(right_text, right_text_is_utf8);
 		int stringstartposOption = std::max(stringstartposName + g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth(left_text, true) + 10,
 				x + dx - stringwidth - 10); //+ offx
-		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y + item_height, dx - (stringstartposOption - x), right_text, item_color, 0, right_text_is_utf8);
+		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposOption, y + item_height, dx - (stringstartposOption - x) - 10, right_text, item_color, 0, right_text_is_utf8);
 	}
 }
 
@@ -1277,7 +1277,7 @@ int CMenuSeparator::paint(bool /*selected*/)
 			if (type & LINE)
 				frameBuffer->paintBoxRel(stringstartposX - 5, y, stringwidth + 10, height, item_bgcolor);
 
-			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposX, y + height, dx - (stringstartposX - x), l_text, item_color, 0, true); // UTF-8
+			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(stringstartposX, y + height, dx - (stringstartposX - x) - 10, l_text, item_color, 0, true); // UTF-8
 
 			if (type & SUB_HEAD)
 				CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, l_text);
