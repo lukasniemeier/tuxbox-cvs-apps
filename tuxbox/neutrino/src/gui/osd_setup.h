@@ -51,6 +51,8 @@ class COsdSetup : public CMenuTarget, CChangeObserver
 		CColorSetupNotifier *colorSetupNotifier;
 		CFontSizeNotifier *fontsizenotifier;
 
+		CMenuWidget *osd_setup;
+
 		int width, selected;
 
 		neutrino_locale_t menue_title;

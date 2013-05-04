@@ -122,6 +122,8 @@ COsdSetup::COsdSetup(const neutrino_locale_t title, const char * const IconName)
 
 	fontsizenotifier = new CFontSizeNotifier;
 
+	osd_setup = NULL;
+
 	menue_title = title;
 	menue_icon = IconName;
 
@@ -242,7 +244,7 @@ const CMenuOptionChooser::keyval  SHOW_MUTE_ICON_OPTIONS[SHOW_MUTE_ICON_OPTIONS_
 int COsdSetup::showOsdSetup()
 {
 	//osd main settings
-	CMenuWidget *osd_setup 		= new CMenuWidget(menue_title, menue_icon, width);
+	osd_setup = new CMenuWidget(menue_title, menue_icon, width);
 	osd_setup->setPreselected(selected);
 
 	//osd settings color sbubmenue
@@ -282,7 +284,7 @@ int COsdSetup::showOsdSetup()
 	//osd mute icon options
  	CMenuOptionChooser* osd_mute_icon_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_SHOW_MUTE_ICON, &g_settings.show_mute_icon, SHOW_MUTE_ICON_OPTIONS, SHOW_MUTE_ICON_OPTIONS_COUNT, true);
 	//osd corner chooser
-	CMenuOptionChooser* osd_corners_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_ROUNDED_CORNERS, &g_settings.rounded_corners, COLORMENU_CORNERSETTINGS_TYPE_OPTIONS, COLORMENU_CORNERSETTINGS_TYPE_OPTION_COUNT, true );
+	CMenuOptionChooser* osd_corners_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_ROUNDED_CORNERS, &g_settings.rounded_corners, COLORMENU_CORNERSETTINGS_TYPE_OPTIONS, COLORMENU_CORNERSETTINGS_TYPE_OPTION_COUNT, true, this);
 
 	//osd main settings, intros
 	osd_setup->addIntroItems(menue_title != LOCALE_MAINSETTINGS_OSD ? LOCALE_MAINSETTINGS_OSD : NONEXISTANT_LOCALE);
@@ -738,8 +740,13 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t OptionName, void * 
 
 bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 {
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_ROUNDED_CORNERS))
+	{
+		osd_setup->hide();
+		return true;
+	}
 #ifdef ENABLE_RADIOTEXT
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT))
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_INFOVIEWER_RADIOTEXT))
 	{
 		if (g_settings.radiotext_enable)
 		{
