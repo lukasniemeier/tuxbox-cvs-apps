@@ -355,7 +355,6 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 				sort_mode=0;
 				sort(evtlist.begin(),evtlist.end(),sortByDateTime);
 			}
-
 			// find selected
 			for ( selected=0 ; selected < evtlist.size(); selected++ )
 			{
@@ -367,10 +366,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 				liststart=0;
 			else
 				liststart=(selected/listmaxshow)*listmaxshow;
-			hide();
-			paintHead();
 			paint();
-			showFunctionBar(true);
 		}
 
 //  -- I commented out the following part (code is working)
@@ -626,7 +622,6 @@ void EventList::paintItem(unsigned int pos)
 	uint8_t    color;
 	fb_pixel_t bgcolor;
 	int ypos = y+ theight+0 + pos*fheight;
-	std::string datetime1_str, datetime2_str, duration_str;
 	unsigned int curpos = liststart + pos;
 	int c_rad_mid;
 
@@ -653,6 +648,8 @@ void EventList::paintItem(unsigned int pos)
 
 	if (curpos < evtlist.size())
 	{
+		std::string datetime1_str, datetime2_str, duration_str;
+
 		if (evtlist[curpos].eventID != 0)
 		{
 			char tmpstr[256];
