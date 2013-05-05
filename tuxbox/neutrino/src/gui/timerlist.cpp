@@ -76,8 +76,6 @@
 #include <string.h>
 #include <algorithm>
 
-#define INFO_HEIGHT 60
-
 
 class CTimerListNewNotifier : public CChangeObserver
 {
@@ -414,13 +412,13 @@ void CTimerList::updateEvents(void)
 	sort(timerlist.begin(), timerlist.end());
 
 	width = w_max(600, 50);
-	height = h_max(576, INFO_HEIGHT+50);
-	listmaxshow = (height-theight-0)/(fheight*2);
-	height = theight+0+listmaxshow*fheight*2;	// recalc height
+	height = h_max(576, 50);
+	listmaxshow = (height-theight-footHeight-0)/(fheight*2);
+	height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	if(timerlist.size() < listmaxshow)
 	{
 		listmaxshow=timerlist.size();
-		height = theight+0+listmaxshow*fheight*2;	// recalc height
+		height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	}
 	if (!timerlist.empty() && selected==timerlist.size())
 	{
@@ -429,7 +427,7 @@ void CTimerList::updateEvents(void)
 	}
 
 	x	= getScreenStartX (width);
-	y	= getScreenStartY (height+INFO_HEIGHT);
+	y	= getScreenStartY (height);
 }
 
 
@@ -439,6 +437,8 @@ int CTimerList::show()
 	frameBuffer->getIconSize(NEUTRINO_ICON_TIMER, &iconw, &iconh);
 	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
+	footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 	time_width = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth("00.00. 00:00    ");
 
 	neutrino_msg_t      msg;
@@ -572,7 +572,7 @@ void CTimerList::hide()
 {
 	if(visible)
 	{
-		frameBuffer->paintBackgroundBoxRel(x, y, width, height+ INFO_HEIGHT+ 5);
+		frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 		visible = false;
 	}
 }
@@ -769,16 +769,13 @@ const struct button_label TimerListButtons[5] =
 void CTimerList::paintFoot()
 {
 	int ButtonWidth = (width - 20) / 5;
-	int iconw = 0, iconh = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
-	int footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 
-	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	frameBuffer->paintBoxRel(x, y + height - footHeight, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	if (timerlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + ButtonWidth, y + height, ButtonWidth, 3, &(TimerListButtons[1]));
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + ButtonWidth, y + height - footHeight, ButtonWidth, 3, &(TimerListButtons[1]));
 	else
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, ButtonWidth, 5, TimerListButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height - footHeight, ButtonWidth, 5, TimerListButtons);
 }
 
 void CTimerList::paint()

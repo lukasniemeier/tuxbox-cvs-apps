@@ -53,8 +53,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define info_height 60
-
 #include <driver/screen_max.h>
 
 CBookmark::CBookmark(const std::string & inName, const std::string & inUrl, const std::string & inTime)
@@ -235,15 +233,17 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);
 	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
+	footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 	liststart = 0;
 	
-	height = h_max(576, info_height+50);
-	listmaxshow = (height-theight-0)/(fheight*2);
-	height = theight+0+listmaxshow*fheight*2;	// recalc height
+	height = h_max(576, 50);
+	listmaxshow = (height-theight-footHeight-0)/(fheight*2);
+	height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	if(bookmarks.size() < listmaxshow)
 	{
 		listmaxshow=bookmarks.size();
-		height = theight+0+listmaxshow*fheight*2;	// recalc height
+		height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	}
 	if (!bookmarks.empty() && selected==bookmarks.size())
 	{
@@ -251,7 +251,7 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 		liststart = (selected/listmaxshow)*listmaxshow;
 	}
 	x = getScreenStartX (width);
-	y = getScreenStartY (height + info_height);
+	y = getScreenStartY (height);
 
 
 	int res = -1;
@@ -403,7 +403,7 @@ void CBookmarkManager::hide()
 {
 	if(visible)
 	{
-		frameBuffer->paintBackgroundBoxRel(x, y, width, height+ info_height+ 5);
+		frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 		visible = false;
 	}
 }
@@ -443,16 +443,13 @@ const struct button_label BookmarkmanagerButtonOK[1] =
 void CBookmarkManager::paintFoot()
 {
 	int ButtonWidth = (width - 20) / 4;
-	int iconw = 0, iconh = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
-	int footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
 
-	frameBuffer->paintBoxRel(x, y + height, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height, ButtonWidth, 1, BookmarkmanagerButtonOK);
+	frameBuffer->paintBoxRel(x, y + height - footHeight, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height - footHeight, ButtonWidth, 1, BookmarkmanagerButtonOK);
 
 	if (!bookmarks.empty())
 	{
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, ButtonWidth, 2, BookmarkmanagerButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height - footHeight, ButtonWidth, 2, BookmarkmanagerButtons);
 	}
 }
 
