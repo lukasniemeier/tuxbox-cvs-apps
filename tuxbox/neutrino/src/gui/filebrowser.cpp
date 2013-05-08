@@ -384,9 +384,6 @@ void CFileBrowser::commonInit()
 	width = w_max(720, 40);
 	height = h_max(576, 40);
 
-	x = getScreenStartX(width);
-	y = getScreenStartY(height);
-
 	theight = fnt_title->getHeight();
 	fheight = fnt_item->getHeight();
 	foheight = fnt_small->getHeight()+6; //initial height value for buttonbar; TODO get value from buttonbar
@@ -396,6 +393,9 @@ void CFileBrowser::commonInit()
 
 	//recalc height
 	height = theight + listmaxshow * fheight + 2 * foheight;
+
+	x = getScreenStartX(width);
+	y = getScreenStartY(height);
 
 	m_SMSKeyInput.setTimeout(SMSKEY_TIMEOUT);
 }
