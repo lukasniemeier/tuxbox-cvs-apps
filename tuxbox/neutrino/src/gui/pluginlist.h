@@ -73,6 +73,7 @@ class CPluginList : public CMenuTarget
 		int		fheight1,fheight2;
 
 		int 		width;
+		int 		sb_width;
 		int 		height;
 		int 		x;
 		int 		y;

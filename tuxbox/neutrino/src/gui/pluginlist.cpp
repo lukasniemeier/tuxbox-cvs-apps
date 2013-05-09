@@ -203,7 +203,7 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 void CPluginList::hide()
 {
 	int c_rad_mid = RADIUS_MID;
-	frameBuffer->paintBackgroundBoxRel(x, y, width + 15, height + ((c_rad_mid * 2) + 1));
+	frameBuffer->paintBackgroundBoxRel(x, y, width + sb_width + SHADOW_OFFSET, height + (c_rad_mid / 3 * 2) + SHADOW_OFFSET);
 }
 
 void CPluginList::paintItem(int pos)
@@ -255,15 +255,7 @@ void CPluginList::paintItem(int pos)
 
 void CPluginList::paintHead()
 {
-	int sb_width = 0;
-	if(listmaxshow <= pluginlist.size()+1)
-		sb_width=15;
-
-	int c_rad_mid = RADIUS_MID;
-
-	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
-	frameBuffer->paintBoxRel(x, y, width + sb_width, theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-	frameBuffer->paintBoxRel(x, y + theight, width, height- theight - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), COL_MENUCONTENT_PLUS_0);
+	frameBuffer->paintBoxRel(x, y, width + sb_width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 
 	int iconoffset = 0;
 	if(pluginlisttype == CPlugins::P_TYPE_GAME)
@@ -284,7 +276,8 @@ void CPluginList::paintHead()
 
 void CPluginList::paint()
 {
-	hide();
+	int c_rad_mid = RADIUS_MID;
+
 	width = w_max (500, 100);
 	height = h_max (526, 50);
 	theight  = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
@@ -295,12 +288,16 @@ void CPluginList::paint()
 	//
 	listmaxshow = (height-theight-0)/fheight;
 	height = theight+0+listmaxshow*fheight; // recalc height
-	x = getScreenStartX (width);
-	y = getScreenStartY (height);
-	
-   liststart = (selected/listmaxshow)*listmaxshow;
+	sb_width = (pluginlist.size() > listmaxshow) ? 15 : 0;
+	x = getScreenStartX(width + sb_width);
+	y = getScreenStartY(height + (c_rad_mid / 3 * 2));
+
+	liststart = (selected/listmaxshow)*listmaxshow;
 
 	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, g_Locale->getText(name));
+
+	frameBuffer->paintBoxRel(x + SHADOW_OFFSET, y + SHADOW_OFFSET, width + sb_width, height + (c_rad_mid / 3 * 2), COL_MENUCONTENTDARK_PLUS_0, c_rad_mid);
+	frameBuffer->paintBoxRel(x, y + height - ((c_rad_mid * 2) + 1) + (c_rad_mid / 3 * 2), width + sb_width, ((c_rad_mid * 2) + 1), COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 
 	paintHead();
 	paintItems();
@@ -308,7 +305,7 @@ void CPluginList::paint()
 
 void CPluginList::paintItems()
 {
-	if(listmaxshow <= pluginlist.size()+1)
+	if(pluginlist.size() > listmaxshow)
 	{
 		// Scrollbar
 		int nrOfPages = ((pluginlist.size()-1) / listmaxshow)+1; 
@@ -345,9 +342,9 @@ void CPluginList::updateSelection(unsigned int newpos)
 CPluginList::result_ CPluginList::pluginSelected()
 {
 	g_PluginList->startPlugin(pluginlist[selected]->number);
+	hide();
 	if (!g_PluginList->getScriptOutput().empty())
 	{
-		hide();
 		ShowMsgUTF(LOCALE_PLUGINS_RESULT, Latin1_to_UTF8(g_PluginList->getScriptOutput()),
 				   CMessageBox::mbrBack,CMessageBox::mbBack,NEUTRINO_ICON_SHELL);
 	}
