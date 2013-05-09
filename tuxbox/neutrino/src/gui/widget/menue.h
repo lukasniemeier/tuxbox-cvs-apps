@@ -307,6 +307,7 @@ class CMenuWidget : public CMenuTarget
 		std::string			iconfile;
 
 		int			width;
+		int			sb_width;
 		int			height;
 		int			wanted_height;
 		int			x;

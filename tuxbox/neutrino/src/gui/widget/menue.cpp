@@ -606,7 +606,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 
 void CMenuWidget::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x, y, width + 15 + SHADOW_OFFSET, height + (CORNER_RADIUS_MID / 3 * 2) + SHADOW_OFFSET);
+	frameBuffer->paintBackgroundBoxRel(x, y, width + sb_width + SHADOW_OFFSET, height + (CORNER_RADIUS_MID / 3 * 2) + SHADOW_OFFSET);
 
 	/* x = -1 is a marker which prevents the item from being painted on setActive changes */
 	for (unsigned int count = 0; count < items.size(); count++)
@@ -669,11 +669,7 @@ void CMenuWidget::paint()
 	if(hheight+itemHeightTotal < height)
 		height=hheight+itemHeightTotal;
 
-	int sb_width;
-	if(total_pages > 1)
-		sb_width=15;
-	else
-		sb_width=0;
+	sb_width = (total_pages > 1) ? 15 : 0;
 
 	int c_rad_mid = RADIUS_MID;
 
