@@ -144,9 +144,10 @@ struct button_label CBEBouquetWidgetButtons1[5] =
 
 void CBEBouquetWidget::paintFoot()
 {
-	frameBuffer->paintBoxRel(x,y+height, width,ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	int fy = y + height - ButtonHeight;
+	int ButtonWidth = (width - 10) / 5;
+	frameBuffer->paintBoxRel(x, fy, width, ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 //	frameBuffer->paintHLine(x, x+width,  y, COL_INFOBAR_SHADOW_PLUS_0);
-
 	switch( blueFunction)
 	{
 		case beRename:
@@ -159,12 +160,12 @@ void CBEBouquetWidget::paintFoot()
 			CBEBouquetWidgetButtons1[4].locale = LOCALE_BOUQUETEDITOR_LOCK;
 		break;
 	}
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y + height + 2, (width - 10) / 5, 5, CBEBouquetWidgetButtons1);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, fy + 2, ButtonWidth, 5, CBEBouquetWidgetButtons1);
 }
 
 void CBEBouquetWidget::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height+ButtonHeight);
+	frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 }
 
 void CBEBouquetWidget::updateSelection(unsigned int newpos)
@@ -201,13 +202,13 @@ int CBEBouquetWidget::exec(CMenuTarget* parent, const std::string&)
 	int res = menu_return::RETURN_REPAINT;
 
 	width  = w_max (550, 0);
-	height = h_max (440, 50);
+	height = h_max (465, 50);
 
-	ButtonHeight = 25;
+	ButtonHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + 6;
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight+0+listmaxshow*fheight; // recalc height
+	listmaxshow = (height - theight - ButtonHeight - 0) / fheight;
+	height = theight + ButtonHeight + 0 + listmaxshow * fheight; // recalc height
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 

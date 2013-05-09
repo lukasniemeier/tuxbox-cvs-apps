@@ -54,14 +54,13 @@ CBEChannelSelectWidget::CBEChannelSelectWidget(const std::string & Caption, unsi
 	bouquet = Bouquet;
 	mode =    Mode;
 
-    width  = w_max (550, 0);
-    height = h_max (440, 50);
-	ButtonHeight = 25;
-
+	width  = w_max (550, 0);
+	height = h_max (465, 50);
+	ButtonHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + 6;
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight+0+listmaxshow*fheight; // recalc height
+	listmaxshow = (height - theight - ButtonHeight - 0) / fheight;
+	height = theight + ButtonHeight + 0 + listmaxshow * fheight; // recalc height
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 	liststart = 0;
@@ -168,8 +167,8 @@ const struct button_label CBEBouquetSelectWidgetButtons[2] =
 
 void CBEChannelSelectWidget::paintFoot()
 {
-	int y_foot = y + height;
+	int y_foot = y + height - ButtonHeight;
+	int ButtonWidth = (width - 10) / 2;
 	frameBuffer->paintBoxRel(x, y_foot, width, ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y_foot, (width - 10) / 2, 2, CBEBouquetSelectWidgetButtons);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 5, y_foot + 2, ButtonWidth, 2, CBEBouquetSelectWidgetButtons);
 }

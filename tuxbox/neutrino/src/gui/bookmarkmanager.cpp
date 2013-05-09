@@ -442,15 +442,12 @@ const struct button_label BookmarkmanagerButtonOK[1] =
 //------------------------------------------------------------------------
 void CBookmarkManager::paintFoot()
 {
+	int y_foot = y + height - footHeight;
 	int ButtonWidth = (width - 20) / 4;
-
-	frameBuffer->paintBoxRel(x, y + height - footHeight, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y + height - footHeight, ButtonWidth, 1, BookmarkmanagerButtonOK);
-
+	frameBuffer->paintBoxRel(x, y_foot, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + width - 1 * ButtonWidth, y_foot, ButtonWidth, 1, BookmarkmanagerButtonOK);
 	if (!bookmarks.empty())
-	{
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height - footHeight, ButtonWidth, 2, BookmarkmanagerButtons);
-	}
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y_foot, ButtonWidth, 2, BookmarkmanagerButtons);
 }
 
 //------------------------------------------------------------------------

@@ -671,19 +671,20 @@ const struct button_label CStringInputSMSButtons[2] =
 
 void CStringInputSMS::paint()
 {
-	height+=260;
-	y = ((500-height)>>1);
+	int iconw, iconh;
+	frameBuffer->getIconSize(NEUTRINO_ICON_NUMERIC_PAD, &iconw, &iconh);
+	int ButtonHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + 6;
+	height += iheight + 30 + iconh + 25 + ButtonHeight;
+	y = getScreenStartY(height);
 
 	CStringInput::paint();
 
-	int iconw, iconh;
-	frameBuffer->getIconSize(NEUTRINO_ICON_NUMERIC_PAD, &iconw, &iconh);
 	frameBuffer->paintIcon(NEUTRINO_ICON_NUMERIC_PAD, x + width / 2 - iconw / 2, y + hheight + mheight + iheight * 3 + 30, COL_MENUCONTENT);
 
-	int c_rad_mid = RADIUS_MID;
-	frameBuffer->paintBoxRel(x, y + height - 25, width, 25, COL_INFOBAR_SHADOW_PLUS_1, c_rad_mid, CORNER_BOTTOM);
-
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 8, y + height - 25, (width - 16) / 2, 2, CStringInputSMSButtons);
+	int y_foot = y + height - ButtonHeight;
+	int ButtonWidth = (width - 16) / 2;
+	frameBuffer->paintBoxRel(x, y_foot, width, ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 8, y_foot + 2, ButtonWidth, 2, CStringInputSMSButtons);
 }
 
 void CPINInput::paintChar(int pos)

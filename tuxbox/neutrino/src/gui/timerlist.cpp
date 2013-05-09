@@ -768,14 +768,13 @@ const struct button_label TimerListButtons[5] =
 
 void CTimerList::paintFoot()
 {
+	int y_foot = y + height - footHeight;
 	int ButtonWidth = (width - 20) / 5;
-
-	frameBuffer->paintBoxRel(x, y + height - footHeight, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-
+	frameBuffer->paintBoxRel(x, y_foot, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 	if (timerlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + ButtonWidth, y + height - footHeight, ButtonWidth, 3, &(TimerListButtons[1]));
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + ButtonWidth, y_foot, ButtonWidth, 3, &(TimerListButtons[1]));
 	else
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height - footHeight, ButtonWidth, 5, TimerListButtons);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y_foot, ButtonWidth, 5, TimerListButtons);
 }
 
 void CTimerList::paint()

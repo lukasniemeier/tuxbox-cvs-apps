@@ -40,13 +40,13 @@ CListBox::CListBox(const char * const Caption)
 	liststart = 0;
 	selected =  0;
 	width = w_max (400, 100);
-	height = h_max (420, 0);
-	ButtonHeight = 25;
+	height = h_max (445, 0);
+	ButtonHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + 6;
 	modified = false;
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight+0+listmaxshow*fheight; // recalc height
+	listmaxshow = (height - theight - ButtonHeight - 0) / fheight;
+	height = theight + ButtonHeight + 0 + listmaxshow * fheight; // recalc height
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 }
@@ -58,7 +58,7 @@ void CListBox::setModified(void)
 
 void CListBox::paint()
 {
-	int c_rad_small = RADIUS_SMALL;;
+	int c_rad_small = RADIUS_SMALL;
 	liststart = (selected/listmaxshow)*listmaxshow;
 	int ypos = y+ theight;
 	int sb = fheight* listmaxshow;
@@ -85,21 +85,23 @@ void CListBox::paintHead()
 
 void CListBox::paintFoot()
 {
+	int y_foot = y + height - ButtonHeight;
+	int y_text = y + height - 2;
 	int ButtonWidth = width / 4;
-	frameBuffer->paintBoxRel(x,y+height, width,ButtonHeight, COL_MENUHEAD_PLUS_0);
+	frameBuffer->paintBoxRel(x, y_foot, width, ButtonHeight, COL_MENUHEAD_PLUS_0);
 	frameBuffer->paintHLine(x, x+width,  y, COL_INFOBAR_SHADOW_PLUS_0);
 
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x+width- 4* ButtonWidth+ 8, y+height+1);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+width- 4* ButtonWidth+ 38, y+height+24 - 2, width, "edit", COL_INFOBAR);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x + width - 4 * ButtonWidth + 8, y_foot + 1);
+	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 4 * ButtonWidth + 38, y_text, width, "edit", COL_INFOBAR);
 
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, x+width- 3* ButtonWidth+ 8, y+height+4);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+width- 3* ButtonWidth+ 29, y+height+24 - 2, width- 26, "add", COL_INFOBAR);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, x + width - 3 * ButtonWidth + 8, y_foot + 4);
+	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 3 * ButtonWidth + 29, y_text, width - 26, "add", COL_INFOBAR);
 
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_RED, x+width- 2* ButtonWidth+ 8, y+height+4);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+width- 2* ButtonWidth+ 29, y+height+24 - 2, width- 26, "remove", COL_INFOBAR);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_RED, x + width - 2 * ButtonWidth + 8, y_foot + 4);
+	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 2 * ButtonWidth + 29, y_text, width - 26, "remove", COL_INFOBAR);
 
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HOME, x+width - ButtonWidth+ 8, y+height+1);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x+width - ButtonWidth+ 38, y+height+24 - 2, width, "ready", COL_INFOBAR);
+	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HOME, x + width - ButtonWidth + 8, y_foot + 1);
+	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - ButtonWidth + 38, y_text, width, "ready", COL_INFOBAR);
 }
 
 void CListBox::paintItem(int pos)
@@ -109,7 +111,7 @@ void CListBox::paintItem(int pos)
 
 void CListBox::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height+ButtonHeight);
+	frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 }
 
 void CListBox::updateSelection(unsigned int newpos)

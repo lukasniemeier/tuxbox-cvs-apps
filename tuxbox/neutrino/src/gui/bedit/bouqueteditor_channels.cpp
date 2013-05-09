@@ -141,13 +141,15 @@ const struct button_label CBEChannelWidgetButtons[4] =
 
 void CBEChannelWidget::paintFoot()
 {
-	frameBuffer->paintBoxRel(x,y+height, width,ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y + height, (width - 20) / 4, 4, CBEChannelWidgetButtons);
+	int fy = y + height - ButtonHeight;
+	int ButtonWidth = (width - 20) / 4;
+	frameBuffer->paintBoxRel(x, fy, width, ButtonHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, fy + 2, ButtonWidth, 4, CBEChannelWidgetButtons);
 }
 
 void CBEChannelWidget::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x,y, width,height+ButtonHeight);
+	frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 }
 
 void CBEChannelWidget::updateSelection(unsigned int newpos)
@@ -184,12 +186,12 @@ int CBEChannelWidget::exec(CMenuTarget* parent, const std::string &)
 	int res = menu_return::RETURN_REPAINT;
 
 	width  = w_max (550, 0);
-	height = h_max (440, 50);
-	ButtonHeight = 25;
+	height = h_max (465, 50);
+	ButtonHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + 6;
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height = theight + 0 + listmaxshow * fheight; // recalc height
+	listmaxshow = (height - theight - ButtonHeight - 0) / fheight;
+	height = theight + ButtonHeight + 0 + listmaxshow * fheight; // recalc height
 	x = getScreenStartX (width);
 	y = getScreenStartY (height);
 

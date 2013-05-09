@@ -168,14 +168,15 @@ int CBouquetList::show()
 	int res = -1;
 
 	width  = w_max (500, 0);
-	height = h_max (440, 40);
+	height = h_max (465, 40);
 
 	theight     = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
 	fheight     = g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->getHeight();
-	listmaxshow = (height-theight-0)/fheight;
-	height      = theight + listmaxshow * fheight; // recalc height
+	footHeight  = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + 6;
+	listmaxshow = (height - theight - footHeight - 0) / fheight;
+	height      = theight + footHeight + listmaxshow * fheight; // recalc height
 	x = getScreenStartX (width);
-	y = getScreenStartY (height) - theight/2;
+	y = getScreenStartY (height);
 
 	if (Bouquets.empty())
 	{
@@ -305,7 +306,7 @@ int CBouquetList::show()
 
 void CBouquetList::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(x, y, width, height + theight);
+	frameBuffer->paintBackgroundBoxRel(x, y, width, height);
 }
 
 void CBouquetList::paintItem(int pos)
@@ -394,11 +395,10 @@ void CBouquetList::paint()
 	frameBuffer->paintBoxRel(x+ width- 13, ypos+ 2+ sbs*(sb-4)/sbc, 11, (sb-4)/sbc, COL_MENUCONTENT_PLUS_3, RADIUS_SMALL);
 
 	//footbar
-	int fy = y + theight + listmaxshow * fheight ;
+	int fy = y + height - footHeight;
 	int ButtonWith = (width - 8) / 3;
-	int icony = fy + theight / 2 - 12;
-	frameBuffer->paintBoxRel(x, fy, width, theight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 4, icony, ButtonWith, 6, CBouquetListButtons);
+	frameBuffer->paintBoxRel(x, fy, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 4, fy + 2, ButtonWith, 6, CBouquetListButtons);
 }
 
 void CBouquetList::updateSelection(unsigned int newpos)

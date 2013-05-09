@@ -83,6 +83,7 @@ class CBouquetList
 		unsigned int		maxpos;
 		int					fheight; // Fonthoehe Bouquetlist-Inhalt
 		int					theight; // Fonthoehe Bouquetlist-Titel
+		int					footHeight;
 
 		int		width;
 		int		height;

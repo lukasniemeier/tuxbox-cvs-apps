@@ -125,16 +125,18 @@ void CEpgData::start()
 	/* This defines the size of the EPG window. We leave 35 pixels left and right,
 	 * 25 pixels top and bottom. It adjusts itself to the "visible screen" settings
 	 */
-	ox = w_max (768, 70);
-	oy = h_max (576, 50 + 30); // 30 for the bottom button box.
+	ox = w_max (720, 70);
+	oy = h_max (576, 50);
 
 	topheight     = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_TITLE]->getHeight();
 	topboxheight  = topheight + 6;
 	botheight     = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->getHeight();
 	botboxheight  = botheight + 6;
+	buttonheight  = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + BUTTONBAR_FONT_OFFSET;
 
 	sx = getScreenStartX (ox);
-	sy = getScreenStartY (oy) - 30/2;
+	sy = getScreenStartY (oy);
+	oy -= buttonheight;
 	/* this is the text box height - and the height of the scroll bar */
 	sb = oy - topboxheight - botboxheight;
 	medlineheight = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight();
@@ -457,9 +459,6 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		startzeit=*a_startzeit;
 	id=a_id;
 
-	int height = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->getHeight();
-	int fheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() + BUTTONBAR_FONT_OFFSET;
-
 	GetEPGData(channel_id, id, &startzeit );
 	if (doLoop)
 	{
@@ -636,11 +635,11 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		{
 			if( tags[i].streamContent == 1 && (tags[i].componentType == 2 || tags[i].componentType == 3) )
 			{	
-				frameBuffer->paintIcon(NEUTRINO_ICON_16_9, ox + sx - (ICON_LARGE_WIDTH + 2 ) - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + (fheight >> 1) - (ICON_HEIGHT >> 1));
+				frameBuffer->paintIcon(NEUTRINO_ICON_16_9, ox + sx - (ICON_LARGE_WIDTH + 2 ) - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + (buttonheight >> 1) - (ICON_HEIGHT >> 1));
 			}
 			else if( tags[i].streamContent == 2 && tags[i].componentType == 5 )
 			{
-				frameBuffer->paintIcon(NEUTRINO_ICON_DD, ox + sx - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + (fheight >> 1) - (ICON_HEIGHT >> 1));
+				frameBuffer->paintIcon(NEUTRINO_ICON_DD, ox + sx - (ICON_LARGE_WIDTH + 2) - 4, sy + oy + (buttonheight >> 1) - (ICON_HEIGHT >> 1));
 			}
 		}
 	}
@@ -648,7 +647,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	if ( epg_done!= -1 )	//show event progressbar
 	{		
  		CProgressBar pb(true, -1, -1, 100, 0, 0, true); //only green color 
-		pb.paintProgressBarDefault (sx + 10 + widthl + 10 + ((ox-104-widthr-widthl-10-10-20)>>1), sy+oy-height, 104, height-6, epg_done, 100);	
+		pb.paintProgressBarDefault (sx + 10 + widthl + 10 + ((ox-104-widthr-widthl-10-10-20)>>1), sy+oy-botheight, 104, botheight-6, epg_done, 100);
 	}
 
 	GetPrevNextEPGData( epgData.eventID, &epgData.epg_times.startzeit );
@@ -874,7 +873,7 @@ void CEpgData::hide()
 	}
 
 	frameBuffer->paintBackgroundBoxRel(sx, sy, ox, oy);
-        showTimerEventBar (false);
+	showTimerEventBar(false);
 }
 
 void CEpgData::GetEPGData(const t_channel_id channel_id, unsigned long long id, time_t* startzeit )
@@ -1009,17 +1008,16 @@ const struct button_label epgviewButtons[3] =
 void CEpgData::showTimerEventBar(bool _show)
 {
 	int ButtonWidth = (ox - 16) / 4; // 4 cells
-	int fheight = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + BUTTONBAR_FONT_OFFSET;
-	int by = sy + oy + (fheight >> 3) - 1;
+	int by = sy + oy + 2;
 
 	// hide only?
 	if (! _show)
 	{
-		frameBuffer->paintBackgroundBoxRel(sx, sy + oy, ox, fheight);
+		frameBuffer->paintBackgroundBoxRel(sx, sy + oy, ox, buttonheight);
 		return;
 	}
 
-	frameBuffer->paintBoxRel(sx, sy + oy, ox, fheight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
+	frameBuffer->paintBoxRel(sx, sy + oy, ox, buttonheight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 
 	// Button: Timer Record & Channelswitch
 	if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
