@@ -9,5 +9,5 @@ InetConnection=DSL
 ConnectTimeout=5
 # Account bei weather.com		Bei worldweatheronline.com wird der LicenseKey als API-Key verwendet
 #PartnerID=
-API-Key=
+API-Key=32z7znf5z7bwm2nednkyevb7
 

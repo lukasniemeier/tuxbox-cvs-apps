@@ -43,7 +43,7 @@
 #include "lcd.h"
 #include "color.h"
 
-#define P_VERSION 3.63
+#define P_VERSION 3.64
 #define S_VERSION ""
 
 char CONVERT_LIST[]="/var/tuxbox/config/tuxwetter/convert.list";
