@@ -256,7 +256,7 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 	CMenuWidget * MoviePluginSelector = new CMenuWidget(LOCALE_MAINSETTINGS_STREAMING, NEUTRINO_ICON_FEATURES, width);
 
 	// intros
-	MoviePluginSelector->addIntroItems(LOCALE_MOVIEPLAYER_DEFPLUGIN);
+	MoviePluginSelector->addIntroItems(LOCALE_MOVIEPLAYER_DEFPLUGIN, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 
 	std::string pluginName;
 	char id[5];

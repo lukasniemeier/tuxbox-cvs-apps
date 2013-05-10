@@ -63,7 +63,6 @@ class CPluginList : public CMenuTarget
 
 		unsigned int	    liststart;
 		unsigned int	    listmaxshow;
-		int		    key;
 		neutrino_locale_t   name;
 		uint pluginlisttype;
 
@@ -87,6 +86,7 @@ class CPluginList : public CMenuTarget
 	protected:
 
 		unsigned int selected;
+		neutrino_locale_t buttonname;
 		std::vector<pluginitem *> pluginlist;
 
 		virtual CPluginList::result_ pluginSelected();

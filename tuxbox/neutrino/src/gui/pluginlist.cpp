@@ -74,6 +74,7 @@ CPluginList::CPluginList(const neutrino_locale_t Name, const uint listtype)
 	frameBuffer = CFrameBuffer::getInstance();
 	name = Name;
 	pluginlisttype = listtype;
+	buttonname = LOCALE_MENU_BACK;
 	selected = 0;
 	liststart = 0;
 }
@@ -107,7 +108,7 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 	pluginlist.clear();
 
 	pluginitem* tmp = new pluginitem();
-	tmp->name = g_Locale->getText(LOCALE_MENU_BACK);
+	tmp->name = g_Locale->getText(buttonname);
 	pluginlist.push_back(tmp);
 
 	for(unsigned int count=0;count < (unsigned int)g_PluginList->getNumberOfPlugins();count++)
@@ -355,6 +356,7 @@ CPluginList::result_ CPluginList::pluginSelected()
 CPluginChooser::CPluginChooser(const neutrino_locale_t Name, const uint listtype, char* pluginname)
 	: CPluginList(Name, listtype), selected_plugin(pluginname)
 {
+	buttonname = LOCALE_MENU_CANCEL;
 }
 
 CPluginList::result_ CPluginChooser::pluginSelected()

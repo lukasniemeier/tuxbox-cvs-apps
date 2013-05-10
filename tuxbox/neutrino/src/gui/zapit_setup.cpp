@@ -199,7 +199,7 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 	zapit.getBouquets(bouquetlist, false, true, mode); // UTF-8
 	CZapitClient::BouquetList::iterator bouquet = bouquetlist.begin();
 	CMenuWidget mctv(LOCALE_TIMERLIST_BOUQUETSELECT, NEUTRINO_ICON_SETTINGS, width);
-	mctv.addIntroItems();
+	mctv.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 
 	for(; bouquet != bouquetlist.end(); ++bouquet)
 	{
