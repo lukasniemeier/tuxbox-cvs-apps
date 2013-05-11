@@ -98,10 +98,21 @@ CMsgBox::CMsgBox(const char *text,
 	//TRACE("->CMsgBox::CMsgBox\r\n");
 	initVar();
 
-	if(title != NULL)	m_cTitle 	= title;
-	if(fontTitle != NULL)	m_pcFontTitle 	= fontTitle;
-	if(icon != NULL)	m_cIcon 	= icon;
-	if(position != NULL)	m_cBoxFrame	= *position;
+	if(title != NULL)
+		m_cTitle = title;
+	if(fontTitle != NULL)
+	{
+		m_pcFontTitle = fontTitle;
+		m_nFontTitleHeight = fontTitle->getHeight();
+	}
+	if(icon != NULL)
+	{
+		m_cIcon = icon;
+		frameBuffer->getIconSize(icon, &m_nTitleIconWidth, &m_nTitleIconHeight);
+		m_nFontTitleHeight = std::max(m_nTitleIconHeight, m_nFontTitleHeight);
+	}
+	if(position != NULL)
+		m_cBoxFrame	= *position;
 	m_nMode = _mode;
 	//TRACE(" CMsgBox::cText: %d ,m_cTitle %d,m_nMode %d\t\r\n",strlen(text),m_cTitle.size(),m_nMode);
 
@@ -445,13 +456,11 @@ void CMsgBox::refreshTitle(void)
 	if (!m_cIcon.empty())
 	{
 		// draw icon and title text
-		int iconw, iconh;
-		CFrameBuffer::getInstance()->getIconSize(m_cIcon.c_str(), &iconw, &iconh);
-		m_pcWindow->paintIcon(m_cIcon.c_str(), m_cBoxFrameTitleRel.iX + 8, m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
+		m_pcWindow->paintIcon(m_cIcon.c_str(), m_cBoxFrameTitleRel.iX + 8, m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - m_nTitleIconHeight / 2);
 		m_pcWindow->RenderString(	m_pcFontTitle,
-						m_cBoxFrameTitleRel.iX + 8 + iconw + TEXT_BORDER_WIDTH,
+						m_cBoxFrameTitleRel.iX + 8 + m_nTitleIconWidth + TEXT_BORDER_WIDTH,
 						m_cBoxFrameTitleRel.iHeight + 2,
-						m_cBoxFrameTitleRel.iWidth - 8 - iconw - TEXT_BORDER_WIDTH,
+						m_cBoxFrameTitleRel.iWidth - 8 - m_nTitleIconWidth - TEXT_BORDER_WIDTH,
 						m_cTitle.c_str(),
 						(CFBWindow::color_t)COL_MENUHEAD,
 						0,

@@ -101,7 +101,22 @@ void CHintBoxExt::init(const neutrino_locale_t Caption, const int Width, const c
 {
 	m_width   = Width;
 	int nw = 0;
-	m_theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+
+	if (Icon != NULL)
+	{
+		m_iconfile = Icon;
+		int iconw;
+		CFrameBuffer::getInstance()->getIconSize(Icon, &iconw, &m_ticonheight);
+		m_ticonoffset = 8 + iconw;
+	}
+	else
+	{
+		m_iconfile = "";
+		m_ticonheight = 0;
+		m_ticonoffset = 0;
+	}
+
+	m_theight = std::max(m_ticonheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	m_fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	m_height  = m_theight + m_fheight;
 	m_maxEntriesPerPage = 0;
@@ -178,13 +193,7 @@ void CHintBoxExt::init(const neutrino_locale_t Caption, const int Width, const c
 	else
 		additional_width = 20 +  0;
 
-	if (Icon != NULL)
-	{
-		m_iconfile = Icon;
-		additional_width += 30;
-	}
-	else
-		m_iconfile = "";
+	additional_width += m_ticonoffset;
 
 	nw = additional_width + g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(m_caption), true); // UTF-8
 
@@ -230,16 +239,9 @@ void CHintBoxExt::refresh(void)
 
 	// title
 	m_window->paintBoxRel(0, 0, m_width, m_theight, (CFBWindow::color_t)COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
-
-	int iconoffset = 0;
 	if (!m_iconfile.empty())
-	{
-		int iconw, iconh;
-		CFrameBuffer::getInstance()->getIconSize(m_iconfile.c_str(), &iconw, &iconh);
-		m_window->paintIcon(m_iconfile.c_str(), 8, m_theight / 2 - iconh / 2);
-		iconoffset = 8 + iconw;
-	}
-	m_window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], iconoffset + 10, m_theight + 2, m_width - iconoffset - 10, g_Locale->getText(m_caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
+		m_window->paintIcon(m_iconfile.c_str(), 8, m_theight / 2 - m_ticonheight / 2);
+	m_window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], m_ticonoffset + 10, m_theight + 2, m_width - m_ticonoffset - 10, g_Locale->getText(m_caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
 
 	// background of text panel
 	m_window->paintBoxRel(0, m_theight, m_width, (m_maxEntriesPerPage + 1) * m_fheight, (CFBWindow::color_t)COL_MENUCONTENT_PLUS_0);

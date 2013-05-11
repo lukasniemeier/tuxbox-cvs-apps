@@ -626,10 +626,12 @@ void CMovieBrowser::initFrames(void)
 	m_cBoxFrame.iX = 			getScreenStartX(m_cBoxFrame.iWidth);
 	m_cBoxFrame.iY = 			getScreenStartY(m_cBoxFrame.iHeight);
 
+	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_EPGINFO, &m_iconWidthTitle, &m_iconHeightTitle);
+
 	m_cBoxFrameTitleRel.iX = 		0;
 	m_cBoxFrameTitleRel.iY = 		0;
 	m_cBoxFrameTitleRel.iWidth = 		m_cBoxFrame.iWidth;
-	m_cBoxFrameTitleRel.iHeight = 		m_pcFontTitle->getHeight();
+	m_cBoxFrameTitleRel.iHeight = 		std::max(m_iconHeightTitle, m_pcFontTitle->getHeight());
 
 	m_cBoxFrameBrowserList.iX = 		m_cBoxFrame.iX;
 	m_cBoxFrameBrowserList.iY = 		m_cBoxFrame.iY + m_cBoxFrameTitleRel.iHeight;
@@ -1656,21 +1658,20 @@ void CMovieBrowser::refreshTitle(void)
 								RADIUS_MID,
 								CORNER_TOP);
 	
-	int iconw = 0, iconh = 0;
-	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_EPGINFO, &iconw, &iconh);
 	m_pcWindow->paintIcon(NEUTRINO_ICON_EPGINFO, 
 								m_cBoxFrameTitleRel.iX + 6, 
-								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
+								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - m_iconHeightTitle / 2);
 									
 	m_pcWindow->RenderString(	m_pcFontTitle,
-								m_cBoxFrameTitleRel.iX + 6 + iconw + TEXT_BORDER_WIDTH, 
+								m_cBoxFrameTitleRel.iX + 6 + m_iconWidthTitle + TEXT_BORDER_WIDTH,
 								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight + 2, 
-								m_cBoxFrameTitleRel.iWidth - 6 - iconw - TEXT_BORDER_WIDTH, 
+								m_cBoxFrameTitleRel.iWidth - 6 - m_iconWidthTitle - TEXT_BORDER_WIDTH,
 								m_textTitle.c_str(), 
 								TITLE_FONT_COLOR, 
 								0, 
 								true); // UTF-8
 
+	int iconw, iconh;
 	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
 	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, 
 								m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - iconw - 12, 

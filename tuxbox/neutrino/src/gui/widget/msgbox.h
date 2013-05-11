@@ -116,6 +116,8 @@ class CMsgBox
 
 		Font*	m_pcFontTitle;
 		int		m_nFontTitleHeight;
+		int		m_nTitleIconWidth;
+		int		m_nTitleIconHeight;
 
 		Font*	m_pcFontFoot;
 		int		m_nFontFootHeight;

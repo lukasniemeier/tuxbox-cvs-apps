@@ -54,6 +54,8 @@ class CHintBox
 
 	int                      fheight;
 	int                      theight;
+	int                      ticonheight;
+	int                      ticonoffset;
 	neutrino_locale_t        caption;
 	char *                   message;
 	std::vector<char *>      line;

@@ -74,6 +74,8 @@ class CBookmarkManager
 	unsigned int		listmaxshow;
 	int		fheight; //fontheight timerlist-content (text)
 	int		theight; //fontheight timerlist-title
+	int		ticonwidth;
+	int		ticonheight;
 	int		footHeight;
 	bool		visible;			
 	int		width;

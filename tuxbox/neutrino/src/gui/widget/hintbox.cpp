@@ -53,7 +53,21 @@ CHintBox::CHintBox(const neutrino_locale_t Caption, const char * const Text, con
 
 	width   = Width;
 
-	theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	if (Icon != NULL)
+	{
+		iconfile = Icon;
+		int iconw;
+		CFrameBuffer::getInstance()->getIconSize(Icon, &iconw, &ticonheight);
+		ticonoffset = 8 + iconw;
+	}
+	else
+	{
+		iconfile = "";
+		ticonheight = 0;
+		ticonoffset = 0;
+	}
+
+	theight = std::max(ticonheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	height  = theight + fheight;
 
@@ -87,13 +101,7 @@ CHintBox::CHintBox(const neutrino_locale_t Caption, const char * const Text, con
 	else
 		additional_width = 20 +  0;
 
-	if (Icon != NULL)
-	{
-		iconfile = Icon;
-		additional_width += 30;
-	}
-	else
-		iconfile = "";
+	additional_width += ticonoffset;
 
 	nw = additional_width + g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(caption), true); // UTF-8
 
@@ -156,16 +164,9 @@ void CHintBox::refresh(void)
 
 	// title
 	window->paintBoxRel(0, 0, width, theight, (CFBWindow::color_t)COL_MENUHEAD_PLUS_0, c_rad_mid , CORNER_TOP);
-
-	int iconoffset = 0;
 	if (!iconfile.empty())
-	{
-		int iconw, iconh;
-		CFrameBuffer::getInstance()->getIconSize(iconfile.c_str(), &iconw, &iconh);
-		window->paintIcon(iconfile.c_str(), 8, theight / 2 - iconh / 2);
-		iconoffset = 8 + iconw;
-	}
-	window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], iconoffset + 10, theight + 2, width - iconoffset - 10, g_Locale->getText(caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
+		window->paintIcon(iconfile.c_str(), 8, theight / 2 - ticonheight / 2);
+	window->RenderString(g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE], ticonoffset + 10, theight + 2, width - ticonoffset - 10, g_Locale->getText(caption), (CFBWindow::color_t)COL_MENUHEAD, 0, true); // UTF-8
 
 	// background of text panel
 	window->paintBoxRel(0, theight, width, (entries_per_page + 1) * fheight, (CFBWindow::color_t)COL_MENUCONTENT_PLUS_0, c_rad_mid , CORNER_BOTTOM);

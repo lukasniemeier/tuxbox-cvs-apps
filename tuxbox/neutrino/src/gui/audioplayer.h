@@ -106,6 +106,8 @@ class CAudioPlayerGui : public CMenuTarget
 	unsigned int   m_listmaxshow;
 	int            m_fheight; // Fonthoehe Playlist-Inhalt
 	int            m_theight; // Fonthoehe Playlist-Titel
+	int            m_ticonwidth;
+	int            m_ticonheight;
 	int            m_sheight; // Fonthoehe MP Info
 	int            m_buttonHeight;
 	int            m_title_height;

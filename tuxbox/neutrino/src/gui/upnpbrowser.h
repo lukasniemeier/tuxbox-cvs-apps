@@ -85,6 +85,8 @@ class CUpnpBrowserGui : public CMenuTarget
 	unsigned int   m_selecteddevice;
 	int            m_fheight; // Fonthoehe Inhalt
 	int            m_theight; // Fonthoehe Titel
+	int            m_ticonwidth;
+	int            m_ticonheight;
 	int            m_mheight; // Fonthoehe Info
 	int            m_sheight; // Fonthoehe Status
 	int            m_buttonHeight;

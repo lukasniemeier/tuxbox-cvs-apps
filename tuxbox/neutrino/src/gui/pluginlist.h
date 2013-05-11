@@ -65,9 +65,12 @@ class CPluginList : public CMenuTarget
 		unsigned int	    listmaxshow;
 		neutrino_locale_t   name;
 		uint pluginlisttype;
+		std::string iconfile;
 
 		int		fheight; // Fonthoehe Channellist-Inhalt
 		int		theight; // Fonthoehe Channellist-Titel
+		int		ticonwidth;
+		int		ticonheight;
 
 		int		fheight1,fheight2;
 

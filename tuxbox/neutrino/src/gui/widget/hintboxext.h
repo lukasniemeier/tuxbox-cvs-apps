@@ -58,6 +58,8 @@ class CHintBoxExt
 
 	int                      m_fheight;
 	int                      m_theight;
+	int                      m_ticonheight;
+	int                      m_ticonoffset;
 	neutrino_locale_t        m_caption;
 	char *                   m_message;
 	ContentLines             m_lines;

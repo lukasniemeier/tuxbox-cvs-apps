@@ -125,10 +125,8 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 	height = h_max (570, 0);
 	sheight      = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	buttonHeight = std::min(25, sheight);
-
-	int iconh = 0, dummy = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &dummy, &iconh);
-	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
+	frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &ticonwidth, &ticonheight);
+	theight      = std::max(ticonheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight      = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	listmaxshow = (height-theight-2*buttonHeight)/(fheight);
 	height = theight+2*buttonHeight+listmaxshow*fheight;	// recalc height
@@ -597,15 +595,14 @@ void CPictureViewerGui::paintItem(int pos)
 void CPictureViewerGui::paintHead()
 {
 //	printf("paintHead{\n");
-	int iconw = 0, iconh = 0;
 	int theight_mid = theight / 2;
-	frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &iconw, &iconh);
-	int ypos = y + theight_mid - (iconh / 2);
+	int ypos = y + theight_mid - (ticonheight / 2);
 
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 	frameBuffer->paintIcon(NEUTRINO_ICON_MP3, x + 7, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 7 + iconw + 10, y + theight + 2, width - 7 - iconw - 10, g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 7 + ticonwidth + 10, y + theight + 2, width - 7 - ticonwidth - 10, g_Locale->getText(LOCALE_PICTUREVIEWER_HEAD), COL_MENUHEAD, 0, true); // UTF-8
 
+	int iconw, iconh;
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 	int xpos = x + width - iconw - 6;
 	ypos = y + theight_mid - (iconh / 2);

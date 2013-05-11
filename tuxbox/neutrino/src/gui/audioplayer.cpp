@@ -254,7 +254,8 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 	m_height = h_max(570, 0);
 	m_sheight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight();
 	m_buttonHeight = std::min(25, m_sheight);
-	m_theight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	m_frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &m_ticonwidth, &m_ticonheight);
+	m_theight = std::max(m_ticonheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	m_fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	m_title_height = m_fheight*2 + 20 + m_sheight + 4;
 	m_info_height = m_fheight*2;
@@ -1596,7 +1597,6 @@ void CAudioPlayerGui::paintHead()
 	if (!m_show_playlist)
 		return;
 
-	int iconw = 0, iconh = 0;
 	int c_rad_mid = RADIUS_MID;
 	std::string strCaption;
 	if (m_inetmode)
@@ -1605,15 +1605,15 @@ void CAudioPlayerGui::paintHead()
 		strCaption = g_Locale->getText(LOCALE_AUDIOPLAYER_HEAD);
 	m_frameBuffer->paintBoxRel(m_x, m_y + m_title_height, m_width, m_theight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 
-	m_frameBuffer->getIconSize(NEUTRINO_ICON_MP3, &iconw, &iconh);
-	int ypos = m_y + m_title_height + (m_theight / 2) - (iconh / 2);
+	int ypos = m_y + m_title_height + (m_theight / 2) - (m_ticonheight / 2);
 	m_frameBuffer->paintIcon(NEUTRINO_ICON_MP3, m_x + 7, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 7 + iconw + 10, m_y + m_title_height + m_theight + 2,
-									m_width - 7 - iconw - 10, strCaption, COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(m_x + 7 + m_ticonwidth + 10, m_y + m_title_height + m_theight + 2,
+									m_width - 7 - m_ticonwidth - 10, strCaption, COL_MENUHEAD, 0, true); // UTF-8
 
 #ifdef ENABLE_GUI_MOUNT
 	if (!m_inetmode)
 	{
+		int iconw, iconh;
 		m_frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
 		ypos = m_y + m_title_height + (m_theight / 2) - (iconh / 2);
 		m_frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, m_x + m_width - iconw - 8, ypos);

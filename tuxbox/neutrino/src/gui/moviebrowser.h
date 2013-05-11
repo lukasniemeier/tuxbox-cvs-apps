@@ -261,6 +261,8 @@ class CMovieBrowser : public CMenuTarget
 		Font* m_pcFontFoot;
 		Font* m_pcFontTitle;
 		std::string m_textTitle;
+		int m_iconWidthTitle;
+		int m_iconHeightTitle;
 		
 		MB_PARENTAL_LOCK m_parentalLock;
 		MB_STORAGE_TYPE m_storageType;

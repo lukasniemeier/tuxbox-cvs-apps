@@ -230,8 +230,8 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	width = w_max (720, 30);
 
 	int iconw = 0, iconh = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);
-	theight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
+	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &ticonwidth, &ticonheight);
+	theight = std::max(ticonheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	fheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_OKAY, &iconw, &iconh);
 	footHeight = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight());
@@ -414,14 +414,12 @@ void CBookmarkManager::paintHead()
 	frameBuffer->paintBoxRel(x, y, width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 
 	int theight_mid = theight / 2;
-	int iconw = 0, iconh = 0;
-	frameBuffer->getIconSize(NEUTRINO_ICON_BOOKMARKMANAGER, &iconw, &iconh);
-
-	int ypos = y + theight_mid - (iconh / 2);
+	int ypos = y + theight_mid - (ticonheight / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BOOKMARKMANAGER, x + 5, ypos);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 5 + iconw + 10, y + theight + 2, width - 5 - iconw - 10, g_Locale->getText(LOCALE_BOOKMARKMANAGER_NAME), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 5 + ticonwidth + 10, y + theight + 2, width - 5 - ticonwidth - 10, g_Locale->getText(LOCALE_BOOKMARKMANAGER_NAME), COL_MENUHEAD, 0, true); // UTF-8
 
 #if 0
+	int iconw, iconh;
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 	ypos = y + theight_mid - (iconh / 2);
 	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x + width - iconw - 8, ypos);

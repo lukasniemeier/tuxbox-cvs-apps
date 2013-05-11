@@ -77,6 +77,14 @@ CPluginList::CPluginList(const neutrino_locale_t Name, const uint listtype)
 	buttonname = LOCALE_MENU_BACK;
 	selected = 0;
 	liststart = 0;
+	if (listtype == CPlugins::P_TYPE_GAME)
+		iconfile = NEUTRINO_ICON_GAMES;
+	else if (listtype == CPlugins::P_TYPE_SCRIPT)
+		iconfile = NEUTRINO_ICON_SHELL;
+	else
+		iconfile = "";
+	ticonwidth = 0;
+	ticonheight = 0;
 }
 
 CPluginList::~CPluginList()
@@ -261,18 +269,10 @@ void CPluginList::paintHead()
 	frameBuffer->paintBoxRel(x, y, width + sb_width, theight, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
 
 	int iconoffset = 0;
-	if(pluginlisttype == CPlugins::P_TYPE_GAME)
+	if (!iconfile.empty())
 	{
-		int iconw, iconh;
-		frameBuffer->getIconSize(NEUTRINO_ICON_GAMES, &iconw, &iconh);
-		frameBuffer->paintIcon(NEUTRINO_ICON_GAMES, x + 8, y + theight / 2 - iconh / 2);
-		iconoffset = 8 + iconw;
-	} else if (pluginlisttype == CPlugins::P_TYPE_SCRIPT)
-	{
-		int iconw, iconh;
-		frameBuffer->getIconSize(NEUTRINO_ICON_SHELL, &iconw, &iconh);
-		frameBuffer->paintIcon(NEUTRINO_ICON_SHELL, x + 8, y + theight / 2 - iconh / 2);
-		iconoffset = 8 + iconw;
+		frameBuffer->paintIcon(iconfile, x + 8, y + theight / 2 - ticonheight / 2);
+		iconoffset = 8 + ticonwidth;
 	}
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + iconoffset + 10, y + theight + 2, width - iconoffset - 10, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8		
 }
@@ -283,7 +283,9 @@ void CPluginList::paint()
 
 	width = w_max (500, 100);
 	height = h_max (526, 50);
-	theight  = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	if (!iconfile.empty())
+		frameBuffer->getIconSize(iconfile.c_str(), &ticonwidth, &ticonheight);
+	theight  = std::max(ticonheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	//
 	fheight1 = g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMLARGE]->getHeight();
 	fheight2 = g_Font[SNeutrinoSettings::FONT_TYPE_GAMELIST_ITEMSMALL]->getHeight();
@@ -294,7 +296,6 @@ void CPluginList::paint()
 	sb_width = (pluginlist.size() > listmaxshow) ? 15 : 0;
 	x = getScreenStartX(width + sb_width);
 	y = getScreenStartY(height + (c_rad_mid / 3 * 2));
-
 	liststart = (selected/listmaxshow)*listmaxshow;
 
 	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, g_Locale->getText(name));

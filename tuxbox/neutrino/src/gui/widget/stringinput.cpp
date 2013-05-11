@@ -64,7 +64,10 @@ CStringInput::CStringInput(const neutrino_locale_t Name, char* Value, int Size, 
 	hint_1 = Hint_1;
 	hint_2 = Hint_2;
 	validchars = Valid_Chars;
+
 	iconfile = Icon ? Icon : "";
+	hiconheight = 0;
+	hiconoffset = 0;
 
 	observ = Observ;
 }
@@ -87,7 +90,10 @@ CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int
 	hint_1 = Hint_1;
 	hint_2 = Hint_2;
 	validchars = Valid_Chars;
+
 	iconfile = Icon ? Icon : "";
+	hiconheight = 0;
+	hiconoffset = 0;
 
 	observ = Observ;
 }
@@ -108,12 +114,17 @@ void CStringInput::init()
 		width = 420;
 
 	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(name), true); // UTF-8
-	if (!(iconfile.empty()))
-		neededWidth += 28;
+	if (!iconfile.empty())
+	{
+		int iconw;
+		frameBuffer->getIconSize(iconfile.c_str(), &iconw, &hiconheight);
+		hiconoffset = 8 + iconw;
+		neededWidth += hiconoffset;
+	}
 	if (neededWidth+20> width)
 		width = neededWidth+20;
 
-	hheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight();
+	hheight = std::max(hiconheight, g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getHeight());
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	iheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getHeight();
 
@@ -456,22 +467,14 @@ const char * CStringInput::getHint1(void)
 
 void CStringInput::paint()
 {
-	int iconoffset, c_rad_mid = RADIUS_MID;
+	int c_rad_mid = RADIUS_MID;
 
 	frameBuffer->paintBoxRel(x, y, width, hheight, COL_MENUHEAD_PLUS_0, c_rad_mid, CORNER_TOP);
 	frameBuffer->paintBoxRel(x, y + hheight, width, height - hheight, COL_MENUCONTENT_PLUS_0, c_rad_mid, CORNER_BOTTOM);
 
-	if (!(iconfile.empty()))
-	{
-		int iconw, iconh;
-		frameBuffer->getIconSize(iconfile.c_str(), &iconw, &iconh);
-		frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - iconh / 2);
-		iconoffset = 8 + iconw;
-	}
-	else
-		iconoffset = 0;
-
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + iconoffset + 10, y + hheight + 2, width - iconoffset - 10, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
+	if (!iconfile.empty())
+		frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - hiconheight / 2);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + hiconoffset + 10, y + hheight + 2, width - hiconoffset - 10, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
 
 	if (hint_1 != NONEXISTANT_LOCALE)
 	{
