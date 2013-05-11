@@ -386,9 +386,13 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 	/* calculate play state icon position, useful for using customized icons with other sizes */
 	int icon_w = 0, icon_h = 0;
 	frameBuffer->getIconSize(icon, &icon_w, &icon_h);
+	if (icon_w > ChanWidth)
+		icon_w = ChanWidth;
+	if (icon_h > ChanHeight)
+		icon_h = ChanHeight;
 	int icon_x = BoxStartX + ChanWidth / 2 - icon_w / 2;
 	int icon_y = BoxStartY + ChanHeight / 2 - icon_h / 2;
-	frameBuffer->paintIcon(icon, icon_x, icon_y);
+	frameBuffer->paintIcon(icon, icon_x, icon_y, 1, icon_w, icon_h);
 
 	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME]->RenderString(
 				ChanNameX + 10,
