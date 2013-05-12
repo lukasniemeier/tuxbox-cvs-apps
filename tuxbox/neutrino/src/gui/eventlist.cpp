@@ -114,8 +114,10 @@ void EventList::init()
 	width  = w_max (590, 20);
 	height = h_max (480, 20);
 
+	int iconw, iconh;
 	iheight  = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + 2;
-	theight  = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_TITLE]->getHeight();
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
+	theight  = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_TITLE]->getHeight());
 	fheight1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE]->getHeight();
 	{
 		int h1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->getHeight();
