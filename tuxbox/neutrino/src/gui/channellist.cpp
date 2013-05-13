@@ -1488,7 +1488,7 @@ void CChannelList::paintButtonBar()
 		if (displayList)
 			CChannelListButtons[2].locale = LOCALE_FONTSIZE_CHANNELLIST_DESCR;
 		else
-			CChannelListButtons[2].locale = LOCALE_FONTMENU_EVENTLIST;
+			CChannelListButtons[2].locale = LOCALE_INFOVIEWER_NEXT;
 	}
 	else
 	{
