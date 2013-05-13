@@ -337,8 +337,8 @@ int CChannelList::show()
 	}
 	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, name.c_str());
 
-	displayNext = 0; // always start with current events
-	displayList = 1; // always start with event list
+	displayNext = false; // always start with current events
+	displayList = true;  // always start with event list
 
 	calcSize();
 	paintHead();
@@ -433,7 +433,6 @@ int CChannelList::show()
 			}
 			else
 			{
-				displayList = 1;
 				paintHead();
 				paintButtonBar();
 				paintItemDetailsBox();
@@ -451,10 +450,10 @@ int CChannelList::show()
 		{
 			if (g_settings.channellist_additional) {
 				displayList = !displayList;
-				if (!displayList)
-					showdescription(selected);
-				else
+				if (displayList)
 					paint_events(selected);
+				else
+					showdescription(selected);
 			}
 			else {
 				displayNext = !displayNext;
@@ -481,7 +480,6 @@ int CChannelList::show()
 				g_EpgData->show(chanlist[selected]->channel_id);
 			}
 
-			displayList = 1;
 			paintHead();
 			paintButtonBar();
 			paintItemDetailsBox();
@@ -493,10 +491,7 @@ int CChannelList::show()
 				 msg == (g_settings.key_channelList_pageup   | CRCInput::RC_Release) ||
 				 msg == (g_settings.key_channelList_pagedown | CRCInput::RC_Release) )
 		{
-			displayList = 1;
 			paintHead();
-			if (g_settings.channellist_additional)
-				paintButtonBar();
 			paintDetails(selected);
 		}
 		else
@@ -1205,8 +1200,12 @@ void CChannelList::paintDetails(unsigned int index)
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- 10- from_len, y+ height+ 5+ 3*fheight, from_len, cFrom, COL_MENUCONTENTDARK, 0, true); // UTF-8
 		}
 	}
-	if ((g_settings.channellist_additional) && (p_event != NULL))
-		paint_events(index);
+	if (g_settings.channellist_additional) {
+		if (displayList)
+			paint_events(selected);
+		else
+			showdescription(selected);
+	}
 }
 
 
