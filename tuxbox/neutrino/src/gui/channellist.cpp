@@ -370,7 +370,6 @@ int CChannelList::show()
 		}
 		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
 		{
-			displayList = 1;
 			int step = (msg_repeatok == g_settings.key_channelList_pageup) ? listmaxshow : 1;  // browse or step 1
 			int new_selected = selected - step;
 			if (new_selected < 0)
@@ -379,7 +378,6 @@ int CChannelList::show()
 		}
 		else if (msg_repeatok == CRCInput::RC_down || msg_repeatok == g_settings.key_channelList_pagedown)
 		{
-			displayList = 1;
 			unsigned int step = (msg_repeatok == g_settings.key_channelList_pagedown) ? listmaxshow : 1;  // browse or step 1
 			unsigned int new_selected = selected + step;
 			unsigned int c_size = chanlist.size();
@@ -451,7 +449,6 @@ int CChannelList::show()
 		}
 		else if ( msg == CRCInput::RC_blue )
 		{
-			paintHead();
 			if (g_settings.channellist_additional) {
 				displayList = !displayList;
 				if (!displayList)
@@ -496,8 +493,10 @@ int CChannelList::show()
 				 msg == (g_settings.key_channelList_pageup   | CRCInput::RC_Release) ||
 				 msg == (g_settings.key_channelList_pagedown | CRCInput::RC_Release) )
 		{
+			displayList = 1;
 			paintHead();
-			paintButtonBar();
+			if (g_settings.channellist_additional)
+				paintButtonBar();
 			paintDetails(selected);
 		}
 		else
@@ -1125,6 +1124,9 @@ void CChannelList::paintDetails(unsigned int index)
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString (x+ full_width- 10- seit_len, y+ height+ 5+    fheight   , seit_len, cSeit, COL_MENUCONTENTDARK, 0, true); // UTF-8
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_NUMBER]->RenderString(x+ full_width- 10- noch_len, y+ height+ 5+ 2* fheight- 2, noch_len, cNoch, COL_MENUCONTENTDARK, 0, true); // UTF-8
 	}
+	else {
+		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ fheight, full_width - 20, g_Locale->getText(LOCALE_EPGLIST_NOEVENTS), COL_MENUCONTENTDARK, 0, true); // UTF-8
+	}
 	if(g_settings.channellist_foot == 0) {
 		TP_params 	TP;
 		g_Zapit->get_current_TP(&TP);
@@ -1618,8 +1620,8 @@ void CChannelList::paint_events(int index)
 		}
 		i++;
 	}
-	if (!(evtlist.empty()))
-		evtlist.clear();
+
+	evtlist.clear();
 }
 
 static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)
@@ -1679,25 +1681,21 @@ int CChannelList::getSelectedChannelIndex() const
 void CChannelList::showdescription(int index)
 {
 	ffheight = g_Font[eventFont]->getHeight();
-	CChannelEvent *p_event=NULL;
-	p_event = &chanlist[index]->currentEvent;
+	CChannelEvent *p_event = &chanlist[index]->currentEvent;
 	g_Sectionsd->getEPGid(p_event->eventID, p_event->startTime, &epgData);
 
 #warning fixme sectionsd should deliver data in UTF-8 format
 	if (!(epgData.info2.empty()))
-	{
-		frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
 		processTextToArray(Latin1_to_UTF8(epgData.info2));
-		for (int i = 1; (i < (int)epgText.size()+1) && ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height)); i++)
-			g_Font[eventFont]->RenderString(x+ width+5, y+ theight+ pig_height + i*ffheight, infozone_width - 20, epgText[i-1], COL_MENUCONTENT, 0, true);
-	}
 	else if (!(epgData.info1.empty()))
-	{
-		frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
 		processTextToArray(Latin1_to_UTF8(epgData.info1));
-		for (int i = 1; (i < (int)epgText.size()+1) && ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height)); i++)
-			g_Font[eventFont]->RenderString(x+ width+5, y+ theight+ pig_height + i*ffheight, infozone_width - 20, epgText[i-1], COL_MENUCONTENT, 0, true);
-	}
+	else
+		processTextToArray(g_Locale->getText(LOCALE_EPGVIEWER_NODETAILED)); // UTF-8
+
+	frameBuffer->paintBoxRel(x+ width,y+ theight+pig_height, infozone_width, infozone_height,COL_MENUCONTENT_PLUS_0);
+	for (int i = 1; (i < (int)epgText.size()+1) && ((y+ theight+ pig_height + i*ffheight) < (y+ theight+ pig_height + infozone_height)); i++)
+		g_Font[eventFont]->RenderString(x+ width+5, y+ theight+ pig_height + i*ffheight, infozone_width - 20, epgText[i-1], COL_MENUCONTENT, 0, true);
+
 	epgData.info1.clear();
 	epgData.info2.clear();
 	epgText.clear();
