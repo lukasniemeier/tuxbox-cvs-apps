@@ -82,10 +82,12 @@ static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)
 }
 
 // unique operators
+#if 0
 bool uniqueByIdAndDateTime (const CChannelEvent& a, const CChannelEvent& b)
 {
 	return (a.eventID == b.eventID && a.startTime == b.startTime);
 }
+#endif
 
 EventList::EventList()
 {
@@ -981,6 +983,7 @@ int EventList::findEvents(void)
 					v.push_back(channel_id);
 				}
 			}
+			// search in unique channel list => duplicate events impossible
 			sort(v.begin(), v.end());
 			std::vector<t_channel_id>::iterator last_it = unique(v.begin(), v.end());
 			std::vector<t_channel_id>::iterator it;
@@ -990,7 +993,10 @@ int EventList::findEvents(void)
 		}
 		sort_mode = 0;
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
+#if 0
+		// remove duplicates
 		evtlist.resize(unique(evtlist.begin(), evtlist.end(), uniqueByIdAndDateTime) - evtlist.begin());
+#endif
 		current_event = (unsigned int)-1;
 		time_t azeit=time(NULL);
 		
