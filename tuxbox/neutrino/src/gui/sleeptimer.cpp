@@ -40,31 +40,21 @@
 
 #include <gui/sleeptimer.h>
 
-#include <gui/widget/hintbox.h>
-#include <gui/widget/messagebox.h>
+#include <global.h>
+
 #include <gui/widget/stringinput.h>
 
-#include <timerdclient/timerdclient.h>
-
 #include <stdlib.h>
-
-#include <daemonc/remotecontrol.h>
-extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
-#include <gui/infoviewer.h>
-extern CInfoViewer*	g_InfoViewer; /*infoviewer.cpp*/
 
 //
 // -- Input Widget for setting shutdown time
 // -- Menue Handler Interface
 // -- to fit the MenueClasses from McClean
-// -- Add current channel to Favorites and display user messagebox
 //
 
 int CSleepTimerWidget::exec(CMenuTarget* parent, const std::string &)
 {
 	int    res = menu_return::RETURN_EXIT_ALL;
-	int    shutdown_min=0;
-	char   value[16];
 	CStringInput  *inbox;
 
 	if (parent)
@@ -72,8 +62,7 @@ int CSleepTimerWidget::exec(CMenuTarget* parent, const std::string &)
 		parent->hide();
 	}
    
-	CTimerdClient * timerdclient = new CTimerdClient;
-	shutdown_min = timerdclient->getSleepTimerRemaining();  // remaining shutdown time?
+	shutdown_min = g_Timerd->getSleepTimerRemaining();  // remaining shutdown time?
 //	if(shutdown_min == 0)		// no timer set
 //		shutdown_min = 10;		// set to 10 min default
 	sprintf(value,"%03d",shutdown_min);
@@ -88,26 +77,28 @@ int CSleepTimerWidget::exec(CMenuTarget* parent, const std::string &)
 			sprintf(value,"%03d",current_epg_zeit_dauer_rest);
 		}
 	}
-	inbox = new CStringInput(LOCALE_SLEEPTIMERBOX_TITLE, value, 3, LOCALE_SLEEPTIMERBOX_HINT1, LOCALE_SLEEPTIMERBOX_HINT2, "0123456789 ");
+	inbox = new CStringInput(LOCALE_SLEEPTIMERBOX_TITLE, value, 3, LOCALE_SLEEPTIMERBOX_HINT1, LOCALE_SLEEPTIMERBOX_HINT2, "0123456789 ", this, NEUTRINO_ICON_TIMER);
 	inbox->exec (NULL, "");
-	inbox->hide ();
 
 	delete inbox;
+	return res;
+}
 
+bool CSleepTimerWidget::changeNotify(const neutrino_locale_t, void *)
+{
 	if(shutdown_min!=atoi(value))
 	{
 		shutdown_min = atoi (value);
 		printf("sleeptimer min: %d\n",shutdown_min);
 		if (shutdown_min == 0)			// if set to zero remove existing sleeptimer
 		{
-			if(timerdclient->getSleeptimerID() > 0)
+			if(g_Timerd->getSleeptimerID() > 0)
 			{
-				timerdclient->removeTimerEvent(timerdclient->getSleeptimerID());
+				g_Timerd->removeTimerEvent(g_Timerd->getSleeptimerID());
 			}
 		}
 		else							// set the sleeptimer to actual time + shutdown mins and announce 1 min before
-			timerdclient->setSleeptimer(time(NULL) + ((shutdown_min -1) * 60),time(NULL) + shutdown_min * 60,0);
+			g_Timerd->setSleeptimer(time(NULL) + ((shutdown_min -1) * 60),time(NULL) + shutdown_min * 60,0);
 	}
-	delete timerdclient;
-	return res;
+	return false;
 }

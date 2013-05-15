@@ -25,11 +25,15 @@
 
 #include <gui/widget/menue.h>
 
-class CSleepTimerWidget: public CMenuTarget
+class CSleepTimerWidget: public CMenuTarget, CChangeObserver
 {
+ private:
+	int shutdown_min;
+	char value[16];
+
  public:
 	int exec(CMenuTarget* parent, const std::string & actionKey);
+	bool changeNotify(const neutrino_locale_t, void *);
 };
-
 
 #endif
