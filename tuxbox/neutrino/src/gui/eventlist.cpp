@@ -1160,7 +1160,12 @@ int CEventFinderMenu::showMenu(void)
 	}
 	else if(*m_search_list == EventList::SEARCH_LIST_BOUQUET)
 	{
-		m_search_channelname = bouquetList->Bouquets[*m_search_bouquet_id]->channelList->getName();
+		if (*m_search_bouquet_id >= bouquetList->Bouquets.size())
+			*m_search_bouquet_id = bouquetList->getActiveBouquetNumber();
+		if (!bouquetList->Bouquets.empty())
+			m_search_channelname = bouquetList->Bouquets[*m_search_bouquet_id]->channelList->getName();
+		else
+			m_search_channelname = "";
 	}
 	else if(*m_search_list == EventList::SEARCH_LIST_ALL)
 	{
@@ -1206,7 +1211,12 @@ bool CEventFinderMenu::changeNotify(const neutrino_locale_t OptionName, void *)
 		}
 		else if (*m_search_list == EventList::SEARCH_LIST_BOUQUET)
 		{
-			m_search_channelname = bouquetList->Bouquets[*m_search_bouquet_id]->channelList->getName();
+			if (*m_search_bouquet_id >= bouquetList->Bouquets.size())
+				*m_search_bouquet_id = bouquetList->getActiveBouquetNumber();
+			if (!bouquetList->Bouquets.empty())
+				m_search_channelname = bouquetList->Bouquets[*m_search_bouquet_id]->channelList->getName();
+			else
+				m_search_channelname = "";
 			m_search_channelname_mf->setActive(true);
 		}
 		else if (*m_search_list == EventList::SEARCH_LIST_ALL)
