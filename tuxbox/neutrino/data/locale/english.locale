@@ -425,6 +425,7 @@ esound.port Esound Port
 eventfinder.head Search in EPG
 eventfinder.keyword Keyword
 eventfinder.search Search
+eventfinder.search_all_epg All EPG data
 eventfinder.search_within_epg Search within
 eventfinder.search_within_list Search within
 eventfinder.searching Search for keyword in EPG...

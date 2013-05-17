@@ -1061,14 +1061,15 @@ int CEventListHandler::exec(CMenuTarget* parent, const std::string &/*actionkey*
 /************************************************************************************************
 *  class CEventFinderMenu
 ************************************************************************************************/
-#define SEARCH_EPG_OPTION_COUNT 3
+#define SEARCH_EPG_OPTION_COUNT 4
 const CMenuOptionChooser::keyval SEARCH_EPG_OPTIONS[SEARCH_EPG_OPTION_COUNT] =
 {
 //	{ EventList::SEARCH_EPG_NONE, 	LOCALE_PICTUREVIEWER_RESIZE_NONE     },
 	{ EventList::SEARCH_EPG_TITLE, 	LOCALE_FONTSIZE_EPG_TITLE    },
 	{ EventList::SEARCH_EPG_INFO1, 	LOCALE_FONTSIZE_EPG_INFO1    },
-	{ EventList::SEARCH_EPG_INFO2, 	LOCALE_FONTSIZE_EPG_INFO2    }
-//	,{ EventList::SEARCH_EPG_GENRE, LOCALE_MOVIEBROWSER_INFO_GENRE_MAJOR }
+	{ EventList::SEARCH_EPG_INFO2, 	LOCALE_FONTSIZE_EPG_INFO2    },
+//	{ EventList::SEARCH_EPG_GENRE, 	LOCALE_MOVIEBROWSER_INFO_GENRE_MAJOR },
+	{ EventList::SEARCH_EPG_ALL, 	LOCALE_EVENTFINDER_SEARCH_ALL_EPG }
 };
 
 #define SEARCH_LIST_OPTION_COUNT 3

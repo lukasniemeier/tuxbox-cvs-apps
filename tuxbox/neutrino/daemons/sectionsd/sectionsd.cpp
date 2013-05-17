@@ -2410,27 +2410,26 @@ static void sendAllEvents(int connfd, t_channel_id serviceUniqueKey, bool oldFor
 				serviceIDfound = 1;
 				
 				bool copy = true;
-				if(search == 0); // nothing to do here
-				else if(search == 1)
+				if (search)
 				{
-					std::string eName = (*e)->getName();
-					std::transform(eName.begin(), eName.end(), eName.begin(), tolower);
-					if(eName.find(search_text) == std::string::npos)
-						copy = false;
-				}
-				else if(search == 2)
-				{
-					std::string eText = (*e)->getText();
-					std::transform(eText.begin(), eText.end(), eText.begin(), tolower);
-					if(eText.find(search_text) == std::string::npos)
-						copy = false;
-				}
-				else if(search == 3)
-				{
-					std::string eExtendedText = (*e)->getExtendedText();
-					std::transform(eExtendedText.begin(), eExtendedText.end(), eExtendedText.begin(), tolower);
-					if(eExtendedText.find(search_text) == std::string::npos)
-						copy = false;
+					if ((search == 1 /*EventList::SEARCH_EPG_TITLE*/) || (search == 5 /*EventList::SEARCH_EPG_ALL*/))
+					{
+						std::string eName = (*e)->getName();
+						std::transform(eName.begin(), eName.end(), eName.begin(), tolower);
+						copy = (eName.find(search_text) != std::string::npos);
+					}
+					if ((search == 2 /*EventList::SEARCH_EPG_INFO1*/) || (!copy && (search == 5 /*EventList::SEARCH_EPG_ALL*/)))
+					{
+						std::string eText = (*e)->getText();
+						std::transform(eText.begin(), eText.end(), eText.begin(), tolower);
+						copy = (eText.find(search_text) != std::string::npos);
+					}
+					if ((search == 3 /*EventList::SEARCH_EPG_INFO2*/) || (!copy && (search == 5 /*EventList::SEARCH_EPG_ALL*/)))
+					{
+						std::string eExtendedText = (*e)->getExtendedText();
+						std::transform(eExtendedText.begin(), eExtendedText.end(), eExtendedText.begin(), tolower);
+						copy = (eExtendedText.find(search_text) != std::string::npos);
+					}
 				}
 				
 				if(copy)
