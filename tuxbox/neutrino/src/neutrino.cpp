@@ -1771,6 +1771,14 @@ void CNeutrinoApp::SetupFonts()
 		g_Font[i] = g_fontRenderer->getFont(fontname, style[neutrino_font[i].style], configfile.getInt32(locale_real_names[neutrino_font[i].name], neutrino_font[i].defaultsize) + neutrino_font[i].size_offset * font.size_offset);
 	}
 	free(fontname);
+
+	/* recalculate infobar, EPGDate and eventlist position */
+	if (g_InfoViewer)
+		g_InfoViewer->start();
+	if (g_EpgData)
+		g_EpgData->start();
+	if (g_EventList)
+		g_EventList->init();
 }
 
 /**************************************************************************************
