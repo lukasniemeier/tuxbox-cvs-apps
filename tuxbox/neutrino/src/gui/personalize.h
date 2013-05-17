@@ -62,6 +62,7 @@ typedef struct menu_item_t
 	neutrino_locale_t locale_name;
 	int* personalize_mode;
 	int item_mode;
+	bool* item_active;
 }menu_item_struct_t;
 
 typedef struct personalize_settings_t
@@ -140,8 +141,8 @@ class CPersonalizeGui : public CMenuTarget
 		int 	getWidgetCount() {return widget_count;};
 		int 	getWidgetId(CMenuWidget *widget);
 		void	setShortcut(const int& short_cut = 1) {shortcut = short_cut;};
-		void 	addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
-		void 	addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);
+		void 	addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION, const bool *item_active = NULL);
+		void 	addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode = NULL, const bool defaultselected = false, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION, const bool *item_active = NULL);
 		void	addIntroItems(CMenuWidget *widget);
 		void	addIntroItems(const int& widget_id);
 		void 	addSeparator(CMenuWidget &menu, const neutrino_locale_t locale_text = NONEXISTANT_LOCALE, const int& item_mode = PERSONALIZE_SHOW_AS_ITEM_OPTION);

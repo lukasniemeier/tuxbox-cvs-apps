@@ -40,14 +40,15 @@
         
         
         Parameters:
-	addItem(CMenuWidget *widget, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool item_mode),
-	addItem(const int& widget_id, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const bool item_mode),
+	addItem(CMenuWidget *widget, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const int item_mode, const bool *item_active),
+	addItem(const int& widget_id, CMenuItem *menuItem, const int *personalize_mode, const bool defaultselected, const int item_mode, const bool *item_active),
 	
 	CMenuWidget *widget 		= pointer to menue widget object, also to get with 'getWidget(const int& id)'
 	const int& widget_id		= index of widget (overloaded), this index is definied in vector 'v_widget', to get with 'getWidgetId()' 
 	CMenuItem *menuItem		= pointer to a menuitem object, can be forwarders, locked forwarders and separators...NO CHOOSERS!
 	const int *personalize_mode	= optional, default NULL, pointer to a specified personalize setting look at: PERSONALIZE_MODE, this regulates the personalize mode
-	const bool item_mode		= optional, default true, if you don't want to see this item in personalize menue, then set it to false
+	const int item_mode		= optional, default PERSONALIZE_SHOW_AS_ITEM_OPTION, if you don't want to see this item in personalize menue, then set it to PERSONALIZE_SHOW_NO
+	const bool *item_active		= optional, default NULL, pointer to a variable to control visibility of this item from outside
 	
 	Icon handling:
 	If you define an icon in the item object, this will be shown in the personalized menu but not the personilazitions menue itself, otherwise a shortcut will be create
@@ -403,9 +404,6 @@ void CPersonalizeGui::SaveAndExit()
 				v_int_settings[i].old_val = *v_int_settings[i].p_val;
 			//CNeutrinoApp::getInstance()->saveSetup();
 
-			for (int i = 0; i<(widget_count); i++)
-				v_widget[i]->resetWidget();
-			
 			addPersonalizedItems();
 			hintBox.hide();
 		}
@@ -469,17 +467,17 @@ void CPersonalizeGui::addIntroItems(CMenuWidget *widget)
 
 
 //overloaded version from 'addItem', first parameter is an id from widget collection 'v_widget'
-void CPersonalizeGui::addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode)
+void CPersonalizeGui::addItem(const int& widget_id, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode, const bool *item_active)
 {
-	addItem(v_widget[widget_id], menu_Item, personalize_mode, defaultselected, item_mode);
+	addItem(v_widget[widget_id], menu_Item, personalize_mode, defaultselected, item_mode, item_active);
 }
 
 //adds a personalized menu item object to menu with personalizing parameters
-void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode)
+void CPersonalizeGui::addItem(CMenuWidget *widget, CMenuItem *menu_Item, const int *personalize_mode, const bool defaultselected, const int& item_mode, const bool *item_active)
 {
  	CMenuForwarder *fw = static_cast <CMenuForwarder*> (menu_Item);
 	
-	menu_item_t item = {widget, menu_Item, defaultselected, fw->getTextLocale(), (int*)personalize_mode, item_mode};
+	menu_item_t item = {widget, menu_Item, defaultselected, fw->getTextLocale(), (int*)personalize_mode, item_mode, (bool*)item_active};
 
 	if (item_mode == PERSONALIZE_SHOW_AS_ACCESS_OPTION)
 	{
@@ -508,12 +506,12 @@ void CPersonalizeGui::addSeparator(CMenuWidget &widget, const neutrino_locale_t 
 {
 	if (locale_text == NONEXISTANT_LOCALE)
 	{
-		menu_item_t to_add_sep = {&widget, GenericMenuSeparatorLine, false, locale_text, NULL, item_mode};
+		menu_item_t to_add_sep = {&widget, GenericMenuSeparatorLine, false, locale_text, NULL, item_mode, NULL};
 		v_item.push_back(to_add_sep);
 	}
 	else
 	{
-		menu_item_t to_add_sep = {&widget, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, item_mode};
+		menu_item_t to_add_sep = {&widget, new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, locale_text), false, locale_text, NULL, item_mode, NULL};
 		v_item.push_back(to_add_sep);
 	}
 }
@@ -527,7 +525,10 @@ void CPersonalizeGui::addPersonalizedItems()
 	int widget_id = 0;
 	int short_cut = shortcut;
 	int old_p_mode = PERSONALIZE_MODE_NOTVISIBLE;
-	
+
+	for (int i = 0; i<(widget_count); i++)
+		v_widget[i]->resetWidget();
+
  	for (uint i = 0; i < v_item.size(); i++)
 	{
 		int i_mode = v_item[i].item_mode;
@@ -557,7 +558,11 @@ void CPersonalizeGui::addPersonalizedItems()
 				int p_mode 		= *v_item[i].personalize_mode;
 				neutrino_msg_t d_key 	= fw->directKey;
 				bool add_shortcut 	= false;
-								
+
+				//update visibility
+				if (v_item[i].item_active != NULL)
+					fw->active = *v_item[i].item_active;
+
 				//get shortcut
 				if (fw->iconName.empty() && fw->active ) //if no icon is defined and item is active, allow to generate a shortcut, 
 				{
