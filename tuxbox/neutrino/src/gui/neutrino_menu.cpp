@@ -168,8 +168,9 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SCARTMODE, true, NULL, this, "scart", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_scartmode);
 
 	//games
-	bool show_games = g_PluginList->hasPlugin(CPlugins::P_TYPE_GAME);
-	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_GAMES, show_games, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_games);
+	menuGamesIsVisible = g_PluginList->hasPlugin(CPlugins::P_TYPE_GAME);
+	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_GAMES, menuGamesIsVisible, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE),
+		&g_settings.personalize_games, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ITEM_OPTION, &menuGamesIsVisible);
 
 	//separator
 	personalize->addSeparator(MENU_MAIN); 
@@ -212,8 +213,9 @@ void CNeutrinoApp::InitMenuMain()
 #endif
 
 	// scripts 
-	bool show_scripts = g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT);
-	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, show_scripts, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)), &g_settings.personalize_scripts);
+	menuScriptsIsVisible = g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT);
+	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SCRIPTS, menuScriptsIsVisible, NULL, new CPluginList(LOCALE_MAINMENU_SCRIPTS,CPlugins::P_TYPE_SCRIPT)),
+		&g_settings.personalize_scripts, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ITEM_OPTION, &menuScriptsIsVisible);
 
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_INTERNETRADIO) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_UPNP)
 	personalize->addSeparator(MENU_MAIN, NONEXISTANT_LOCALE, CPersonalizeGui::PERSONALIZE_SHOW_NO); //don't show this separator in personal menu

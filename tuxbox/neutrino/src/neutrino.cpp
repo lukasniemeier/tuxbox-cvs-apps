@@ -246,8 +246,8 @@ CNeutrinoApp::CNeutrinoApp()
 	zapto_tv_on_init_done = false;
 	zapto_radio_on_init_done = false;
 	obeyStartMode   = true;
-
-
+	menuGamesIsVisible = true;
+	menuScriptsIsVisible = true;
 }
 
 /*-------------------------------------------------------------------------------------
@@ -3310,6 +3310,14 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		else if (msg == NeutrinoMessages::RELOAD_PLUGINS)
 		{
 			g_PluginList->loadPlugins();
+			bool show_games = g_PluginList->hasPlugin(CPlugins::P_TYPE_GAME);
+			bool show_scripts = g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT);
+			if (show_games != menuGamesIsVisible || show_scripts != menuScriptsIsVisible)
+			{
+				menuGamesIsVisible = show_games;
+				menuScriptsIsVisible = show_scripts;
+				CPersonalizeGui::getInstance()->addPersonalizedItems();
+			}
 			return messages_return::handled;
 		}
 		else if (msg == NeutrinoMessages::EVT_START_PLUGIN)
@@ -4101,6 +4109,14 @@ int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 		hintBox->paint();
 
 		g_PluginList->loadPlugins();
+		bool show_games = g_PluginList->hasPlugin(CPlugins::P_TYPE_GAME);
+		bool show_scripts = g_PluginList->hasPlugin(CPlugins::P_TYPE_SCRIPT);
+		if (show_games != menuGamesIsVisible || show_scripts != menuScriptsIsVisible)
+		{
+			menuGamesIsVisible = show_games;
+			menuScriptsIsVisible = show_scripts;
+			CPersonalizeGui::getInstance()->addPersonalizedItems();
+		}
 
 		hintBox->hide();
 		delete hintBox;

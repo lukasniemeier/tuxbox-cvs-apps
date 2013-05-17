@@ -187,6 +187,9 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		bool 				waitforshutdown;
 		bool				volumeBarIsVisible;
 
+		bool				menuGamesIsVisible;
+		bool				menuScriptsIsVisible;
+
 		// USERMENU
 		CTimerList			*Timerlist;
 		bool showUserMenu(int button);
