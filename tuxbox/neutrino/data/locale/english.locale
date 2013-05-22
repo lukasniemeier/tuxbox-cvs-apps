@@ -1521,7 +1521,7 @@ usermenu.button_yellow User menu yellow
 usermenu.head User menu 
 usermenu.item_bar ---- Border ----
 usermenu.item_epg_misc EPG functions
-usermenu.item_none   
+usermenu.item_none (empty)
 usermenu.item_vtxt Videotext
 usermenu.name Name
 videomenu.csync sync correction

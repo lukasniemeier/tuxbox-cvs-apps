@@ -1521,7 +1521,7 @@ usermenu.button_yellow Benutzermenü 'gelb'
 usermenu.head Benutzermenü
 usermenu.item_bar ---- Trennung ----
 usermenu.item_epg_misc EPG Funktionen
-usermenu.item_none  
+usermenu.item_none (frei)
 usermenu.item_vtxt Videotext
 usermenu.name Name
 videomenu.csync Sync.-Korrektur
