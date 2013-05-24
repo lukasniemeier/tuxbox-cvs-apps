@@ -471,20 +471,29 @@ int CChannelList::show()
 				p_event = &(chanlist[selected]->nextEvent);
 			}
 
+			int ret = menu_return::RETURN_REPAINT;
 			if(p_event && p_event->eventID)
 			{
-				g_EpgData->show(chanlist[selected]->channel_id,p_event->eventID,&(p_event->startTime));
+				ret = g_EpgData->show(chanlist[selected]->channel_id, p_event->eventID, &(p_event->startTime));
 			}
 			else
 			{
-				g_EpgData->show(chanlist[selected]->channel_id);
+				ret = g_EpgData->show(chanlist[selected]->channel_id);
 			}
 
-			paintHead();
-			paintButtonBar();
-			paintItemDetailsBox();
-			paint();
-			paintDetails(selected);
+			if (ret == menu_return::RETURN_EXIT_ALL)
+			{
+				res = -2;
+				loop = false;
+			}
+			else
+			{
+				paintHead();
+				paintButtonBar();
+				paintItemDetailsBox();
+				paint();
+				paintDetails(selected);
+			}
 		}
 		else if (msg == (CRCInput::RC_up   | CRCInput::RC_Release) ||
 				 msg == (CRCInput::RC_down | CRCInput::RC_Release) ||
