@@ -351,6 +351,7 @@ int CChannelList::show()
 	int oldselected = selected;
 	int zapOnExit = false;
 	bool bShowBouquetList = false;
+	bool dont_hide = false;
 
 	unsigned long long timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
 
@@ -399,6 +400,7 @@ int CChannelList::show()
 				int nNext = (bouquetList->getActiveBouquetNumber() + b_size + dir) % b_size;
 				bouquetList->activateBouquet(nNext);
 				res = bouquetList->showChannelList();
+				dont_hide = true;
 				loop = false;
 			}
 		}
@@ -519,7 +521,9 @@ int CChannelList::show()
 			}
 		}
 	}
-	hide();
+
+	if (!dont_hide)
+		hide();
 
 	if (bShowBouquetList)
 	{
