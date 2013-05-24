@@ -548,7 +548,8 @@ void CChannelList::hide()
 {
 	if (g_settings.channellist_additional == ADDITIONAL_MTV) // with miniTV
 	{
-		pig->hide();
+		if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv)
+			pig->hide();
 	}
 	frameBuffer->paintBackgroundBoxRel(x, y, full_width, height+ info_height+ 5);
 	clearItem2DetailsLine();
@@ -1573,7 +1574,6 @@ void CChannelList::paint_pig (int _x, int _y, int w, int h)
 #else
 	frameBuffer->paintBoxRel(_x, _y, w, h, COL_MENUCONTENT_PLUS_0);
 #endif
-	pig->set_coord (0, 0, 0, 0);
 	pig->show (_x, _y, w, h);
 }
 

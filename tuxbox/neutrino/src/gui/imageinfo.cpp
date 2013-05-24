@@ -180,7 +180,8 @@ int CImageInfo::exec(CMenuTarget* parent, const std::string &)
 
 void CImageInfo::hide()
 {
-	pig->hide();
+	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv)
+		pig->hide();
 	frameBuffer->paintBackgroundBoxRel(0,0, 720, 572); //clean complete screen
 }
 
@@ -196,7 +197,6 @@ void CImageInfo::paint_pig(int xPig, int yPig, int w, int h)
 #else
 	frameBuffer->paintBoxRel(xPig, yPig, w, h, COL_MENUCONTENT_PLUS_0);
 #endif
-	pig->set_coord(0, 0, 0, 0);
 	pig->show (xPig, yPig, w, h);
 }
 

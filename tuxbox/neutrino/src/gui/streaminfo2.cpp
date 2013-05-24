@@ -284,7 +284,8 @@ int CStreamInfo2::doSignalStrengthLoop ()
 
 void CStreamInfo2::hide()
 {
-	pig->hide();
+	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv)
+		pig->hide();
 	frameBuffer->paintBackgroundBoxRel(0,0, max_width,max_height);
 }
 
@@ -295,7 +296,6 @@ void CStreamInfo2::paint_pig(int _x, int _y, int w, int h)
 #else
 	frameBuffer->paintBoxRel(_x, _y, w, h, COL_BLACK); //black
 #endif
-	pig->set_coord(0, 0, 0, 0);
 	pig->show(_x, _y, w, h);
 }
 

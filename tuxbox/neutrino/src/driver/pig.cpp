@@ -302,6 +302,7 @@ void CPIG::hide (void)
 	z.setPIG(0, 0, 0, 0, true);
 	status = HIDE;
 #endif
+	set_coord(0, 0, 0, 0);
 }
 
 
