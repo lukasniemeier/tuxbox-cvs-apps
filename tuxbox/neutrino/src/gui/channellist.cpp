@@ -531,7 +531,8 @@ int CChannelList::show()
 			res = -2;
 	}
 
-	CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
+	if (!dont_hide)
+		CLCD::getInstance()->setMode(CLCD::MODE_TVRADIO);
 
 	if(zapOnExit)
 	{
