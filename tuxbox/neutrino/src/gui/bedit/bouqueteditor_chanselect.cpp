@@ -130,6 +130,9 @@ void CBEChannelSelectWidget::paintItem(uint itemNr, int paintNr, bool _selected)
 
 void CBEChannelSelectWidget::onOkKeyPressed()
 {
+	if (selected >= Channels.size())
+		return;
+
 	setModified();
 	if (isChannelInBouquet(selected))
 		g_Zapit->removeChannelFromBouquet( bouquet, Channels[selected].channel_id);

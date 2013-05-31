@@ -1091,7 +1091,8 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REFRESH_EPG, true, NULL, &menuTargetRefreshEpg    , NULL, CRCInput::RC_green , NEUTRINO_ICON_BUTTON_GREEN ), false);
 				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REMIND     , true, NULL, &menuTargetAddReminder   , NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
 
-				menuWidgetActions.exec(NULL, "");
+				if (selectedChannelEntry)
+					menuWidgetActions.exec(NULL, "");
 
 				frameBuffer->RestoreScreen(usableScreenX, usableScreenY, usableScreenWidth, usableScreenHeight, savedScreen);
 			}
@@ -1329,7 +1330,8 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 #ifdef DEBUG_
 				std::cout << "zapTo " << this->selectedChannelEntry->index << std::endl;
 #endif
-				channelList->zapTo(selectedChannelEntry->index);
+				if (selectedChannelEntry)
+					channelList->zapTo(selectedChannelEntry->index);
 			}
 			else if (msg==CRCInput::RC_help)
 			{
