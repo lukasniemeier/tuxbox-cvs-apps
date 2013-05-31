@@ -627,9 +627,6 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 
 	if (!(info_CurrentNext.flags & (CSectionsdClient::epgflags::has_anything | CSectionsdClient::epgflags::not_broadcast)))
 	{
-		// nicht gefunden / noch nicht geladen
-		/* see the comment in showData() for a reasoning for this calculation */
-		int CurrInfoY = (BoxStartY + InfoHeightY + ChanNameY + time_height)/2;	// lower end of current info box
 		neutrino_locale_t loc;
 		if (! gotTime)
 			loc = LOCALE_INFOVIEWER_WAITTIME;
@@ -637,7 +634,7 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 			loc = LOCALE_INFOVIEWER_EPGWAIT;
 		else
 			loc = LOCALE_INFOVIEWER_EPGNOTLOAD;
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(ChanNameX+ 10, CurrInfoY, BoxEndX- (ChanNameX+ 20), g_Locale->getText(loc), COL_INFOBAR, 0, true); // UTF-8
+		display_Info(g_Locale->getText(loc), NULL);
 	}
 	else
 	{
