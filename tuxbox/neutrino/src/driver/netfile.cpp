@@ -1698,8 +1698,9 @@ void ShoutCAST_ParseMetaData(char *md, CSTATE *state)
 		{
 			ptr = strchr(md, '=');
 			strncpy(state->title, ptr + 2, 4096);
-			ptr = strchr(state->title, ';');
-			if(ptr) 
+			if ((ptr = strchr(state->title, '\n')) != NULL)
+				*(ptr - 1) = 0;
+			else if ((ptr = strchr(state->title, ';')) != NULL)
 				*(ptr - 1) = 0;
 			state->artist[0] = 0;
 		}
@@ -1707,8 +1708,9 @@ void ShoutCAST_ParseMetaData(char *md, CSTATE *state)
 		{
 			SKIP(ptr);
 			strcpy(state->title, ptr);
-			ptr = strchr(state->title, ';');
-			if(ptr) 
+			if ((ptr = strchr(state->title, '\n')) != NULL)
+				*(ptr - 1) = 0;
+			else if ((ptr = strchr(state->title, ';')) != NULL)
 				*(ptr - 1) = 0;
 
 			ptr = strstr(md, "StreamTitle=");
