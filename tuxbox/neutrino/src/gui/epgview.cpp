@@ -878,6 +878,7 @@ void CEpgData::hide()
 
 void CEpgData::GetEPGData(const t_channel_id channel_id, unsigned long long id, time_t* startzeit )
 {
+	epgData.title.clear();
 	epgText.clear();
 	emptyLineCount = 0;
 

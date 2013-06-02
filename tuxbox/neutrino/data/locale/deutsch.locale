@@ -418,7 +418,7 @@ epgviewer.audio Audio
 epgviewer.genre Genre
 epgviewer.length Spieldauer (Min.)
 epgviewer.nodetailed Keine ausführlichen Informationen verfügbar
-epgviewer.notfound keine Programminformationen (EPG) gefunden
+epgviewer.notfound Keine Programminformationen (EPG) gefunden
 esound.info Drücke Home um den Esound Soundserver zu beenden
 esound.name Esound Soundserver
 esound.port Esound Port

@@ -418,7 +418,7 @@ epgviewer.audio Audio
 epgviewer.genre Genre
 epgviewer.length Length (min.)
 epgviewer.nodetailed No detailed informations available
-epgviewer.notfound no epg found
+epgviewer.notfound No EPG found
 esound.info press Home to end to Esound soundserver
 esound.name Esound Soundserver
 esound.port Esound Port
