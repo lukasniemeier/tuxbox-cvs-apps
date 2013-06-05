@@ -716,10 +716,16 @@ void saveSettings(bool write)
 	if (write) {
 		config.setBool("saveLastChannel", saveLastChannel);
 		config.setInt32("lastChannelMode", (currentMode & RADIO_MODE) ? 1 : 0);
-		config.setInt32("lastChannelRadio", lastChannelRadio);
-		config.setInt32("lastChannelTV", lastChannelTV);
-		config.setInt32("startChannelRadio", startChannelRadio);
-		config.setInt32("startChannelTV", startChannelTV);
+		if (saveLastChannel)
+		{
+			config.setInt32("lastChannelRadio", lastChannelRadio);
+			config.setInt32("lastChannelTV", lastChannelTV);
+		}
+		else
+		{
+			config.setInt32("startChannelRadio", startChannelRadio);
+			config.setInt32("startChannelTV", startChannelTV);
+		}
 		config.setBool("saveAudioPIDs", save_audioPIDs);
 		config.setBool("makeRemainingChannelsBouquet", bouquetManager->remainingChannelsBouquet);
 
