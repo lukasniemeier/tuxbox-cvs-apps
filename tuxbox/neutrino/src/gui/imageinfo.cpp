@@ -607,7 +607,7 @@ void CImageInfo::paint()
 	ypos += iheight;
 
 	//license lines
-	ypos += sheight;
+	ypos += iheight;
 	paintLicense(ypos);
 
 	//paint foot		
