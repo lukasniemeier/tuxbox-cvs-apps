@@ -97,6 +97,7 @@ void CLCDAPI::DrawText(int px, int py, int psize, int pcolor, int pfont, char *p
 		return;
 	}
 	font->RenderString(px, py, 130, pmsg, color, 0, true); // UTF-8
+	delete font;
 }
 
 bool CLCDAPI::ShowPng(char *filename)

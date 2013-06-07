@@ -68,6 +68,9 @@ CLCD::CLCD()
 	m_progressLocal = 0;
 #endif // LCD_UPDATE
 	fontRenderer = NULL;
+	fonts.menu = NULL;
+	fonts.time = NULL;
+	fonts.channelname = NULL;
 	muted = false;
 	percentOver = 0;
 	volume = 0;
@@ -199,8 +202,10 @@ const char * const background_path[NUMBER_OF_PATHS] = {
 
 bool CLCD::lcdInit(const char *fontfile, const char *fontfile2, const char *fontfile3)
 {
-	if (fontRenderer != NULL)
-		delete fontRenderer;
+	delete fonts.menu;
+	delete fonts.time;
+	delete fonts.channelname;
+	delete fontRenderer;
 
 	fontRenderer = new LcdFontRenderClass(&display);
 	const char * style_name = fontRenderer->AddFont(fontfile);
