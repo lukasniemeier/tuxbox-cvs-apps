@@ -80,17 +80,16 @@ int EpgPlus::channelsTableWidth = 0;
 int EpgPlus::sliderBackColor = 0;
 int EpgPlus::sliderKnobColor = 0;
 
-static EpgPlus::FontSetting fontSettingDefaultTable[] =
-{
-	{ EpgPlus::EPGPlus_header_font                     , "EPGPlus.header_font"                           , LOCALE_EPGPLUS_HEADER_FONT                      , "md_khmurabi_10.ttf", "Bold"   , 20, true},
-	{ EpgPlus::EPGPlus_timeline_fonttime               , "EPGPlus.timeline_fonttime"                     , LOCALE_EPGPLUS_TIMELINE_FONTTIME                , "micron.ttf", "Bold"   , 16, true},
-	{ EpgPlus::EPGPlus_timeline_fontdate               , "EPGPlus.timeline_fontdate"                     , LOCALE_EPGPLUS_TIMELINE_FONTDATE                , "micron.ttf", "Bold"   , 14, true},
-	{ EpgPlus::EPGPlus_channelentry_font               , "EPGPlus.channelentry_font"                     , LOCALE_EPGPLUS_CHANNELENTRY_FONT                , "micron.ttf", "Bold"   , 16, true},
-	{ EpgPlus::EPGPlus_channelevententry_font          , "EPGPlus.channelevententry_font"                , LOCALE_EPGPLUS_CHANNELEVENTENTRY_FONT           , "micron.ttf", "Regular", 16, true},
-	{ EpgPlus::EPGPlus_footer_fontbouquetchannelname   , "EPGPlus.footer_fontbouquetchannelname"         , LOCALE_EPGPLUS_FOOTER_FONTBOUQUETCHANNELNAME    , "micron.ttf", "Bold"   , 24, true},
-	{ EpgPlus::EPGPlus_footer_fonteventdescription     , "EPGPlus.footer_fonteventdescription"           , LOCALE_EPGPLUS_FOOTER_FONTEVENTDESCRIPTION      , "micron.ttf", "Regular", 16, true},
-	{ EpgPlus::EPGPlus_footer_fonteventshortdescription, "EPGPlus.footer_fonteventshortdescription"      , LOCALE_EPGPLUS_FOOTER_FONTEVENTSHORTDESCRIPTION , "micron.ttf", "Regular", 16, true},
-	{ EpgPlus::EPGPlus_footer_fontbuttons              , "EPGPlus.footer_fontbuttons"                    , LOCALE_EPGPLUS_FOOTER_FONTBUTTONS               , "md_khmurabi_10.ttf", "Regular", 16, true},
+static EpgPlus::FontSetting fontSettingTable[] = {
+	{ EpgPlus::EPGPlus_header_font                     , "Bold"   , 22 },
+	{ EpgPlus::EPGPlus_timeline_fonttime               , "Bold"   , 16 },
+	{ EpgPlus::EPGPlus_timeline_fontdate               , "Bold"   , 14 },
+	{ EpgPlus::EPGPlus_channelentry_font               , "Bold"   , 16 },
+	{ EpgPlus::EPGPlus_channelevententry_font          , "Regular", 16 },
+	{ EpgPlus::EPGPlus_footer_fontbouquetchannelname   , "Bold"   , 24 },
+	{ EpgPlus::EPGPlus_footer_fonteventdescription     , "Regular", 16 },
+	{ EpgPlus::EPGPlus_footer_fonteventshortdescription, "Regular", 16 },
+	{ EpgPlus::EPGPlus_footer_fontbuttons              , "Regular", 16 }
 };
 
 static EpgPlus::ColorSetting colorSettingDefaultTable[] =
@@ -138,7 +137,7 @@ EpgPlus::Settings::~Settings()
 
 EpgPlus::Settings::Settings(bool doInit)
 {
-	fontSettings  = new FontSetting [sizeof(fontSettingDefaultTable) / sizeof(FontSetting)];
+	fontSettings  = new FontSetting [sizeof(fontSettingTable) / sizeof(FontSetting)];
 	colorSettings = new ColorSetting[sizeof(colorSettingDefaultTable)/ sizeof(ColorSetting)];
 	sizeSettings  = new SizeSetting [sizeof(sizeSettingDefaultTable) / sizeof(SizeSetting)];
 
@@ -146,9 +145,9 @@ EpgPlus::Settings::Settings(bool doInit)
 	{
 		for (size_t i = 0; i < NumberOfFontSettings; ++i)
 		{
-			fontSettings[i] = fontSettingDefaultTable[i];
+			fontSettings[i] = fontSettingTable[i];
 			if (bigfont && (fontSettings[i].settingID == EpgPlus::EPGPlus_channelentry_font || fontSettings[i].settingID == EpgPlus::EPGPlus_channelevententry_font))
-				fontSettings[i].size = fontSettingDefaultTable[i].size * 3 / 2;
+				fontSettings[i].size = fontSettingTable[i].size * 3 / 2;
 		}
 		for (size_t i = 0; i < NumberOfColorSettings; ++i)
 			colorSettings[i] = colorSettingDefaultTable[i];
@@ -766,20 +765,15 @@ void EpgPlus::init()
 {
 	settings = new EpgPlus::Settings(true);
 
+	std::string FileName = std::string (g_settings.font_file);
 	for (size_t i = 0; i < NumberOfFontSettings; ++i)
 	{
 		FontSetting* fontSetting = &settings->fontSettings[i];
-		std::string FileName;
-		FileName += std::string(FONTDIR);
-		FileName += "/";
-		FileName += fontSetting->name;
-
-		std::string defaultStyle = g_fontRenderer->AddFont(FileName.c_str());
-		std::string family       = g_fontRenderer->getFamily(FileName.c_str());
-		Font* font               = g_fontRenderer->getFont(family.c_str(), fontSetting->name, fontSetting->size);
+		std::string family = g_fontRenderer->getFamily (FileName.c_str());
+		Font *font = g_fontRenderer->getFont(family.c_str(), fontSetting->style, fontSetting->size);
 
 		if (font == NULL)
-			font = g_fontRenderer->getFont(family.c_str(), defaultStyle.c_str(), fontSetting->size);
+			font = g_fontRenderer->getFont(family.c_str(), "Regular", fontSetting->size);
 
 		fonts[fontSetting->settingID] = font;
 	}

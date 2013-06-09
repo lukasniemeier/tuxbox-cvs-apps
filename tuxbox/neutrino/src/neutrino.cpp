@@ -248,6 +248,8 @@ CNeutrinoApp::CNeutrinoApp()
 	obeyStartMode   = true;
 	menuGamesIsVisible = true;
 	menuScriptsIsVisible = true;
+	memset(&font, 0, sizeof(neutrino_font_descr_struct));
+	memset(&lcd_font, 0, sizeof(lcd_font_descr_struct));
 }
 
 /*-------------------------------------------------------------------------------------
@@ -731,6 +733,8 @@ int CNeutrinoApp::loadSetup()
 	strcpy(g_settings.softupdate_proxyusername, configfile.getString("softupdate_proxyusername", "" ).c_str());
 	strcpy(g_settings.softupdate_proxypassword, configfile.getString("softupdate_proxypassword", "" ).c_str());
 #endif
+	// GUI font
+	strcpy(g_settings.font_file, configfile.getString( "font_file", FONTDIR"/LiberationSans-Regular.ttf" ).c_str());
 
 	//BouquetHandling
 	g_settings.bouquetlist_mode = configfile.getInt32( "bouquetlist_mode", 0 );
@@ -1276,6 +1280,8 @@ void CNeutrinoApp::saveSetup()
 	configfile.setString("softupdate_proxyusername" , g_settings.softupdate_proxyusername );
 	configfile.setString("softupdate_proxypassword" , g_settings.softupdate_proxypassword );
 #endif
+	// GUI font
+	configfile.setString("font_file", g_settings.font_file);
 
 	//BouquetHandling
 	configfile.setInt32( "bouquetlist_mode", g_settings.bouquetlist_mode );
@@ -1625,7 +1631,9 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 	softupdate = false;
 	fromflash = false;
 
-	font.filename[0] = NULL;
+	font.name = NULL;
+	font.filename = NULL;
+	lcd_font.filename[0] = NULL;
 
 	for(int x=1; x<argc; x++)
 	{
@@ -1639,30 +1647,28 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 			dprintf(DEBUG_NORMAL, "enable flash\n");
 			fromflash = true;
 		}
-		else if (!strcmp(argv[x], "--font"))
+		else if (!strcmp(argv[x], "--lcdfont"))
 		{
-			if ((x + 2) < argc)
+			if ((x + 1) < argc)
 			{
-				font.is_unicode = -1;
-				font.size_offset = atoi(argv[x + 1]);
-				font.filename[0] = argv[x + 2];
-				if ((x + 3) < argc)
+				lcd_font.filename[0] = argv[x + 1];
+				if ((x + 2) < argc)
 				{
-					font.filename[1] = argv[x + 3];
+					lcd_font.filename[1] = argv[x + 2];
 					x++;
 				}
 				else
-					font.filename[1] = NULL;
+					lcd_font.filename[1] = NULL;
 
-				if ((x + 3) < argc)
+				if ((x + 2) < argc)
 				{
-					font.filename[2] = argv[x + 3];
+					lcd_font.filename[2] = argv[x + 2];
 					x++;
 				}
 				else
-					font.filename[2] = NULL;
+					lcd_font.filename[2] = NULL;
 			}
-			x += 2;
+			x++;
 		}
 		else if (((!strcmp(argv[x], "-v")) || (!strcmp(argv[x], "--verbose"))) && (x+1 < argc))
 		{
@@ -1673,7 +1679,7 @@ void CNeutrinoApp::CmdParser(int argc, char **argv)
 		}
 		else
 		{
-			fprintf(stderr, "Usage: neutrino [-u | --enable-update] [-f | --enable-flash] [-v | --verbose 0..3] [--font sizeoffset /dir/file.ttf [/dir/bold.ttf [/dir/italic.ttf]]]\n");
+			fprintf(stderr, "Usage: neutrino [-u | --enable-update] [-f | --enable-flash] [-v | --verbose 0..3] [--lcdfont /dir/menu.ttf [/dir/time.ttf [/dir/channelname.ttf]]]\n");
 			exit(0);
 		}
 	}
@@ -1706,31 +1712,29 @@ void CNeutrinoApp::SetupFrameBuffer()
 *                                                                                     *
 **************************************************************************************/
 
-const neutrino_font_descr_struct predefined_font[2] =
+const lcd_font_descr_struct predefined_lcd_font[2] =
 {
-	{ {FONTDIR "/micron.ttf"        , FONTDIR "/micron_bold.ttf", FONTDIR "/micron_italic.ttf"}, 0, 0},
-	{ {FONTDIR "/md_khmurabi_10.ttf", NULL                      , NULL                        }, 0, 1}
-};
-
-const char* predefined_lcd_font[2][3] =
-{
-	{FONTDIR "/12.pcf.gz", FONTDIR "/14B.pcf.gz", FONTDIR "/15B.pcf.gz"},
-	{FONTDIR "/md_khmurabi_10.ttf", NULL, NULL}
+	{ {FONTDIR "/12.pcf.gz", FONTDIR "/14B.pcf.gz", FONTDIR "/15B.pcf.gz"} },
+	{ {FONTDIR "/LiberationSans-Regular.ttf", NULL, NULL} }
 };
 
 bool CNeutrinoApp::ChangeFonts(int unicode_locale)
 {
-	if (font.is_unicode == -1) /* user defined font, don't mess with that */
-		return false;
 	if (unicode_locale == CLocaleManager::NO_SUCH_LOCALE)	/* should not happen, but anyway.. */
 		return false;				/* avoid crash from negative array index */
-	if (font.is_unicode != unicode_locale)
+	if (loadLocale_ret != unicode_locale)
 	{
-		font = predefined_font[unicode_locale];
-		CLCD::getInstance()->reinit(predefined_lcd_font[unicode_locale][0],
-		                            predefined_lcd_font[unicode_locale][1],
-		                            predefined_lcd_font[unicode_locale][2]);
-		SetupFonts();
+		loadLocale_ret = unicode_locale;
+		if (unicode_locale == CLocaleManager::UNICODE_FONT &&
+		    strcmp(g_settings.font_file, FONTDIR"/LiberationSans-Regular.ttf") != 0)
+		{
+			strcpy(g_settings.font_file, FONTDIR"/LiberationSans-Regular.ttf");
+			SetupFonts();
+		}
+		if (lcd_font.filename[0] == NULL)
+			CLCD::getInstance()->reinit(predefined_lcd_font[unicode_locale].filename[0],
+			                            predefined_lcd_font[unicode_locale].filename[1],
+			                            predefined_lcd_font[unicode_locale].filename[2]);
 	}
 	return true;
 }
@@ -1738,41 +1742,51 @@ bool CNeutrinoApp::ChangeFonts(int unicode_locale)
 void CNeutrinoApp::SetupFonts()
 {
 	const char * style[3];
-	char *fontname;
 
 	if (g_fontRenderer != NULL)
 		delete g_fontRenderer;
 
 	g_fontRenderer = new FBFontRenderClass(72 * g_settings.screen_xres / 100, 72 * g_settings.screen_yres / 100);
 
-	style[0] = g_fontRenderer->AddFont(font.filename[0]);
+	if(font.filename != NULL)
+		free((void *)font.filename);
 
-	fontname = strdup(g_fontRenderer->getFamily(font.filename[0]).c_str());
-	fprintf(stderr, "[neutrino] SetupFonts filename: %s fontname: %s\n", font.filename[0], fontname);
+	printf("[neutrino] settings font file %s\n", g_settings.font_file);
 
-	if (font.filename[1] == NULL)
-	{
-		g_fontRenderer->AddFont(font.filename[0], true);
-		style[1] = "Bold Regular";
+	if(access(g_settings.font_file, F_OK)) {
+		if(!access(FONTDIR"/LiberationSans-Regular.ttf", F_OK)){
+			font.filename = strdup(FONTDIR"/LiberationSans-Regular.ttf");
+			strcpy(g_settings.font_file, font.filename);
+		}
+		else{
+			fprintf( stderr,"[neutrino] font file [%s] not found\n neutrino exit\n",FONTDIR"/LiberationSans-Regular.ttf");
+			_exit(0);
+		}
+
 	}
-	else
-		style[1] = g_fontRenderer->AddFont(font.filename[1]);
-
-	if (font.filename[2] == NULL)
-	{
-		g_fontRenderer->AddFont(font.filename[0], true);  // make italics
-		style[2] = "Italic";
+	else{
+		font.filename = strdup(g_settings.font_file);
 	}
-	else
-		style[2] = g_fontRenderer->AddFont(font.filename[2]);
+	style[0] = g_fontRenderer->AddFont(font.filename);
+
+	if(font.name != NULL)
+		free((void *)font.name);
+
+	font.name = strdup(g_fontRenderer->getFamily(font.filename).c_str());
+
+	printf("[neutrino] font family %s\n", font.name);
+
+	style[1] = "Bold Regular";
+
+	style[2] = g_fontRenderer->AddFont(font.filename, true);  // make italics
 
 	for (int i = 0; i < SNeutrinoSettings::FONT_TYPE_COUNT; i++)
 	{
-		g_Font[i] = g_fontRenderer->getFont(fontname, style[neutrino_font[i].style], configfile.getInt32(locale_real_names[neutrino_font[i].name], neutrino_font[i].defaultsize) + neutrino_font[i].size_offset * font.size_offset);
+		delete g_Font[i];
+		g_Font[i] = g_fontRenderer->getFont(font.name, style[neutrino_font[i].style], configfile.getInt32(locale_real_names[neutrino_font[i].name], neutrino_font[i].defaultsize)/* + neutrino_font[i].size_offset * font.size_offset*/);
 	}
-	free(fontname);
 
-	/* recalculate infobar, EPGDate and eventlist position */
+	/* recalculate infobar, EPGData and eventlist position */
 	if (g_InfoViewer)
 		g_InfoViewer->start();
 	if (g_EpgData)
@@ -2116,7 +2130,7 @@ int CNeutrinoApp::run(int argc, char **argv)
 	
 	/* load locales before setting up any fonts to determine whether we need a true unicode font */
 	bool display_language_selection;
-	CLocaleManager::loadLocale_ret_t loadLocale_ret = g_Locale->loadLocale(g_settings.language);
+	loadLocale_ret = g_Locale->loadLocale(g_settings.language);
 	if (loadLocale_ret == CLocaleManager::NO_SUCH_LOCALE)
 	{
 		strcpy(g_settings.language, "deutsch");	// Fallback if rest fails
@@ -2135,18 +2149,18 @@ int CNeutrinoApp::run(int argc, char **argv)
 	else
 		display_language_selection = false;
 
-	if (font.filename[0] == NULL) /* no font specified in command line */
+	unsigned int use_true_unicode_font = (loadLocale_ret == CLocaleManager::ISO_8859_1_FONT) ? 0 : 1;
+	if (use_true_unicode_font)
+		strcpy(g_settings.font_file, FONTDIR"/LiberationSans-Regular.ttf");
+	if (lcd_font.filename[0] == NULL) /* no lcd font specified in command line */
 	{
-		unsigned int use_true_unicode_font = (loadLocale_ret == CLocaleManager::ISO_8859_1_FONT) ? 0 : 1;
-
-		font = predefined_font[use_true_unicode_font];
-		CLCD::getInstance()->init(predefined_lcd_font[use_true_unicode_font][0],
-		                          predefined_lcd_font[use_true_unicode_font][1],
-		                          predefined_lcd_font[use_true_unicode_font][2]);
+		CLCD::getInstance()->init(predefined_lcd_font[use_true_unicode_font].filename[0],
+		                          predefined_lcd_font[use_true_unicode_font].filename[1],
+		                          predefined_lcd_font[use_true_unicode_font].filename[2]);
 	}
 	else
 	{
-		CLCD::getInstance()->init(font.filename[0]);
+		CLCD::getInstance()->init(lcd_font.filename[0], lcd_font.filename[1], lcd_font.filename[2]);
 	}
 
 	CLCD::getInstance()->showVolume(g_Controld->getVolume((CControld::volume_type)g_settings.audio_avs_Control));

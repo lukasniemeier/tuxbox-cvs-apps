@@ -528,11 +528,12 @@ fontmenu.eventlist Event-Liste
 fontmenu.gamelist Spiele-Liste
 fontmenu.head Schrift
 fontmenu.infobar Infobar
-fontmenu.scaling Schriftgrössenfaktor
+fontmenu.scaling Schriftgrößenfaktor
 fontmenu.scaling_x Horizontal (in %)
 fontmenu.scaling_x_hint2 Horizontal (in %) min 50 / max 200
 fontmenu.scaling_y Vertikal (in %)
 fontmenu.scaling_y_hint2 Vertikal (in %) min 50 / max 200
+fontmenu.sizes Schriftgrößen
 fontsize.channel_num_zap Direktauswahl
 fontsize.channellist Kanalliste
 fontsize.channellist_descr Beschreibung
@@ -1058,7 +1059,8 @@ options.serial seriell
 osdsettings.colormenu.background Hintergrundfarbe
 osdsettings.colormenu.background_head Hintergrundfarbe
 osdsettings.colormenu.fade Menüs faden
-osdsettings.colormenu.font Schriftgröße
+osdsettings.colormenu.font Neutrino Schriftart
+osdsettings.colormenu.fontsize Schriftgröße
 osdsettings.colormenu.gtx_alpha Transparenz (GTX)
 osdsettings.colormenu.head Farben
 osdsettings.colormenu.menucolors Menüfarben

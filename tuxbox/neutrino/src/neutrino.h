@@ -64,9 +64,9 @@
 
 typedef struct neutrino_font_descr
 {
-	const char *filename[3]; /* name of regular, bold, italics font file */
-	int        size_offset;
-	int        is_unicode; /* -1 == don't know (external font), 0 == no, 1 == yes */
+	const char * name;
+	const char * filename; /* name of regular font file */
+	/*int        size_offset;*/
 } neutrino_font_descr_struct;
 
 typedef struct font_sizes
@@ -76,6 +76,11 @@ typedef struct font_sizes
 	const unsigned int      style;
 	const unsigned int      size_offset;
 } font_sizes_struct;
+
+typedef struct lcd_font_descr
+{
+	const char * filename[3]; /* name of menu, time, channelname lcd font file */
+} lcd_font_descr_struct;
 
 typedef struct font_sizes_groups
 {
@@ -160,6 +165,8 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		CScanSettings			scanSettings;
 
 		neutrino_font_descr_struct	font;
+		lcd_font_descr_struct 		lcd_font;
+		int				loadLocale_ret;
 
 		int				mode;
 		int				lastMode;

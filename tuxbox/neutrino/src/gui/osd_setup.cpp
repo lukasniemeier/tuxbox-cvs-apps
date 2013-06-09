@@ -169,6 +169,20 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		int res = showOsdChannelListSetup();
 		return res;
 	}
+	else if (actionKey=="select_font")
+	{
+		CFileBrowser fileBrowser;
+		CFileFilter fileFilter;
+		fileFilter.addFilter("ttf");
+		fileBrowser.Filter = &fileFilter;
+		if (fileBrowser.exec(FONTDIR))
+		{
+			strcpy(g_settings.font_file, fileBrowser.getSelectedFile()->Name.c_str());
+			printf("[neutrino] new font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
+			CNeutrinoApp::getInstance()->SetupFonts();
+		}
+		return menu_return::RETURN_REPAINT;
+	}
 	else if (actionKey=="show_fontsize_setup")
 	{
 		int res = showOsdFontSizeSetup();
@@ -631,6 +645,12 @@ int COsdSetup::showOsdFontSizeSetup()
 	CMenuWidget * fontSettings = new CMenuWidget(menue_title, menue_icon, width);
 	fontSettings->addIntroItems(LOCALE_FONTMENU_HEAD);
 
+	// select gui font file
+	CMenuForwarder *mf = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_FONT, true, NULL, this, "select_font", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	fontSettings->addItem(mf);
+	fontSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FONTMENU_SIZES));
+
+	// submenu font scaling
 	CMenuWidget * fontscale = new CMenuWidget(LOCALE_FONTMENU_HEAD, menue_icon, width);
 	fontscale->addIntroItems(LOCALE_FONTMENU_SCALING);
 

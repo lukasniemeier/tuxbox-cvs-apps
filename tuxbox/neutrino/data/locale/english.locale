@@ -533,6 +533,7 @@ fontmenu.scaling_x Horizontal (in %)
 fontmenu.scaling_x_hint2 Horizontal (in %) min 50 / max 200
 fontmenu.scaling_y Vertical (in %)
 fontmenu.scaling_y_hint2 Vertical (in %) min 50 / max 200
+fontmenu.sizes Font sizes
 fontsize.channel_num_zap direct selection
 fontsize.channellist Channellist
 fontsize.channellist_descr Description
@@ -1058,7 +1059,8 @@ options.serial serial
 osdsettings.colormenu.background Background
 osdsettings.colormenu.background_head Background
 osdsettings.colormenu.fade Fade Menus
-osdsettings.colormenu.font Font Size
+osdsettings.colormenu.font Select GUI font
+osdsettings.colormenu.fontsize Font Size
 osdsettings.colormenu.gtx_alpha Transparency (GTX)
 osdsettings.colormenu.head Colors
 osdsettings.colormenu.menucolors Menu Colors

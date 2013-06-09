@@ -479,6 +479,9 @@ struct SNeutrinoSettings
 	int	uboot_lcd_contrast;
 	int	uboot_lcd_bias;
 
+	//osd
+	char	font_file[100];
+
 	// USERMENU
 	typedef enum
 	{
