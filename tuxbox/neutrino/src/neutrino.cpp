@@ -1767,7 +1767,7 @@ void CNeutrinoApp::SetupFonts()
 	else{
 		font.filename = strdup(g_settings.font_file);
 	}
-	style[0] = g_fontRenderer->AddFont(font.filename);
+	style[FONT_STYLE_REGULAR] = g_fontRenderer->AddFont(font.filename);
 
 	if(font.name != NULL)
 		free((void *)font.name);
@@ -1776,9 +1776,9 @@ void CNeutrinoApp::SetupFonts()
 
 	printf("[neutrino] font family %s\n", font.name);
 
-	style[1] = "Bold Regular";
+	style[FONT_STYLE_BOLD] = "Bold Regular";
 
-	style[2] = g_fontRenderer->AddFont(font.filename, true);  // make italics
+	style[FONT_STYLE_ITALIC] = g_fontRenderer->AddFont(font.filename, true);  // make italics
 
 	for (int i = 0; i < SNeutrinoSettings::FONT_TYPE_COUNT; i++)
 	{
