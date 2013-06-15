@@ -1545,7 +1545,9 @@ void CChannelList::paint()
 
 	if (g_settings.channellist_additional == ADDITIONAL_MTV) // with miniTV
 	{
-		if(CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv) {
+		if (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_tv &&
+		    pig->getStatus() == CPIG::HIDE)
+		{
 			// paint PIG
 #if defined BOXMODEL_DM500 || defined HAVE_IPBOX_HARDWARE
 			// the dm500 seems to like only half / quarter resolution...
