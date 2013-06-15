@@ -2459,6 +2459,10 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 					{
 						recordingstatus ? channelList->zapTo(nNewChannel):  channelList->zapTo(bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->getKey(nNewChannel)-1);
 					}
+					else if(nNewChannel == -1 && recordingstatus == 0)
+					{
+						bouquetList->adjustToChannel(channelList->getActiveChannelNumber());
+					}
 				}
 				else
 				{
