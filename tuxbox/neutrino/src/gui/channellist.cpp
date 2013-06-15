@@ -74,6 +74,8 @@ extern "C" int  tuxtxt_stop();
 
 #define ConnectLineBox_Width	12
 
+CPIG * CChannelList::pig = NULL;
+
 CChannelList::CChannel::CChannel(const int _key, const int _number, const std::string& _name, const t_satellite_position _satellitePosition, const t_channel_id ids)
 {
 	key                 = _key;
@@ -89,7 +91,8 @@ CChannelList::CChannel::CChannel(const int _key, const int _number, const std::s
 CChannelList::CChannelList(const char * const Name, bool hMode)
 {
 	frameBuffer = CFrameBuffer::getInstance();
-	pig = new CPIG(0);
+	if (pig == NULL)
+		pig = new CPIG(0);
 	x = y = 0;
 	info_height = 0;
 	name = Name;
@@ -108,7 +111,6 @@ CChannelList::~CChannelList()
 		delete (*it);
 	}
 	chanlist.clear();
-	delete pig;
 }
 
 int CChannelList::exec()

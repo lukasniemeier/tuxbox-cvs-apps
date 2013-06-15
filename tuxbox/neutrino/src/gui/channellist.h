@@ -93,7 +93,7 @@ class CChannelList
 		int			eventFont;
 		int			ffheight;
 
-		CPIG *pig;
+		static CPIG *pig;
 
 		std::string             name;
 		std::vector<CChannel*>	chanlist;
