@@ -1504,8 +1504,8 @@ void CNeutrinoApp::channelsInit(int init_mode, int _mode)
 	// same for the RADIO channels
 	if (channelListRADIO)
 		delete channelListRADIO;
-
 	channelListRADIO = new CChannelList(g_Locale->getText(LOCALE_CHANNELLIST_HEAD));
+
 	g_Zapit->getChannels(zapitChannels, CZapitClient::MODE_RADIO, CZapitClient::SORT_BOUQUET, true); // UTF-8
 	for(uint i=0; i<zapitChannels.size(); i++)
 	{
@@ -1571,22 +1571,26 @@ void CNeutrinoApp::channelsInit4Record(void)
 
 	CZapitClient::BouquetChannelList zapitChannels;
 	CZapitClient::BouquetList zapitBouquets;
+	int channel_nr = 0;
 
 	//deleting old channelList for mode-switching.
 	if (channelListRecord)
 		delete channelListRecord;
-
 	channelListRecord = new CChannelList(g_Locale->getText(LOCALE_CHANNELLIST_HEAD));
+
 	g_Zapit->getChannels(zapitChannels, CZapitClient::MODE_CURRENT, CZapitClient::SORT_BOUQUET, true); // UTF-8
 	for(uint i=0; i<zapitChannels.size(); i++)
 	{
-		channelListRecord->addChannel(zapitChannels[i].nr, zapitChannels[i].nr, zapitChannels[i].name, zapitChannels[i].satellitePosition, zapitChannels[i].channel_id); // UTF-8
+		channel_nr++;
+		channelListRecord->addChannel(channel_nr, channel_nr, zapitChannels[i].name, zapitChannels[i].satellitePosition, zapitChannels[i].channel_id); // UTF-8
 	}
+
+	channel_nr = 0;
 
 	if (bouquetListRecord)
 		delete bouquetListRecord;
 	bouquetListRecord = new CBouquetList();
-	bouquetListRecord ->orgChannelList = channelListRecord;
+	bouquetListRecord->orgChannelList = channelListRecord;
 
 	/* load non-empty bouquets only */
 	g_Zapit->getBouquets(zapitBouquets, false, true); // UTF-8
@@ -1599,7 +1603,8 @@ void CNeutrinoApp::channelsInit4Record(void)
 
 		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			CChannelList::CChannel* channel = new CChannelList::CChannel(zapitChannels[j].nr, zapitChannels[j].nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
+			channel_nr++;
+			CChannelList::CChannel* channel = new CChannelList::CChannel(channel_nr, channel_nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
 
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListRecord->Bouquets[i]->channelList->addChannel(channel);
@@ -2457,9 +2462,9 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 					int nNewChannel = bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->show();
 					if(nNewChannel>-1)
 					{
-						recordingstatus ? channelList->zapTo(nNewChannel):  channelList->zapTo(bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->getKey(nNewChannel)-1);
+						channelList->zapTo(bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->getKey(nNewChannel)-1);
 					}
-					else if(nNewChannel == -1 && recordingstatus == 0)
+					else if(nNewChannel == -1)
 					{
 						bouquetList->adjustToChannel(channelList->getActiveChannelNumber());
 					}

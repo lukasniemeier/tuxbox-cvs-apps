@@ -102,7 +102,7 @@ void CBouquetList::adjustToChannel( int nChannelNr)
 {
 	for (uint i=0; i<Bouquets.size(); i++)
 	{
-		int nChannelPos = CNeutrinoApp::getInstance ()->recordingstatus ?nChannelNr-1: Bouquets[i]->channelList->hasChannel(nChannelNr);
+		int nChannelPos = Bouquets[i]->channelList->hasChannel(nChannelNr);
 		if (nChannelPos > -1)
 		{
 			selected = i;

@@ -1315,7 +1315,7 @@ void CChannelList::paintItem(int pos)
 			title_offset=6;
 		}
 		
-		snprintf((char*) tmp, sizeof(tmp), "%d", this->historyMode ? pos : CNeutrinoApp::getInstance ()->recordingstatus ? curr+1 : chan->number);
+		snprintf((char*) tmp, sizeof(tmp), "%d", this->historyMode ? pos : chan->number);
 
 		CChannelEvent *p_event = NULL;
 		if (displayNext) {
