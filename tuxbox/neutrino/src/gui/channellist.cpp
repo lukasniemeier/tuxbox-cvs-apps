@@ -88,7 +88,7 @@ CChannelList::CChannel::CChannel(const int _key, const int _number, const std::s
 }
 
 
-CChannelList::CChannelList(const char * const Name, bool hMode)
+CChannelList::CChannelList(const char * const Name, bool hMode, bool UsedInBouquet)
 {
 	frameBuffer = CFrameBuffer::getInstance();
 	if (pig == NULL)
@@ -101,15 +101,15 @@ CChannelList::CChannelList(const char * const Name, bool hMode)
 	tuned=0xfffffff;
 	zapProtection = NULL;
 	this->historyMode = hMode;
+	usedInBouquet = UsedInBouquet;
 	eventFont = SNeutrinoSettings::FONT_TYPE_CHANNELLIST_EVENT;
 }
 
 CChannelList::~CChannelList()
 {
-	for (std::vector<CChannel *>::iterator it = chanlist.begin(); it != chanlist.end(); ++it)
-	{
-		delete (*it);
-	}
+	if (!usedInBouquet)
+		for (std::vector<CChannel *>::iterator it = chanlist.begin(); it != chanlist.end(); ++it)
+			delete (*it);
 	chanlist.clear();
 }
 

@@ -111,6 +111,7 @@ class CChannelList
 
 		CEPGData		epgData;
 		bool historyMode;
+		bool usedInBouquet;
 		bool displayNext;
 		bool displayList;
 
@@ -136,7 +137,7 @@ class CChannelList
 		void processTextToArray(std::string text);
 
 	public:
-		CChannelList(const char * const Name, bool historyMode = false );
+		CChannelList(const char * const Name, bool historyMode = false, bool UsedInBouquet = false);
 		~CChannelList();
 		void addChannel(int key, int number, const std::string& name, const t_satellite_position satellitePosition, t_channel_id ids = 0); // UTF-8
 		void addChannel(CChannel* chan);

@@ -61,7 +61,7 @@ class CBouquet
 		{
 			unique_key = Unique_key;
 			bLocked = locked;
-			channelList = new CChannelList(Name);
+			channelList = new CChannelList(Name, false, true);
 		}
 
 		~CBouquet()

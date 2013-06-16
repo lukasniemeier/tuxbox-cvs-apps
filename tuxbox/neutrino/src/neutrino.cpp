@@ -1480,7 +1480,7 @@ void CNeutrinoApp::channelsInit(int init_mode, int _mode)
 
 		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			CChannelList::CChannel* channel = new CChannelList::CChannel(zapitChannels[j].nr, zapitChannels[j].nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
+			CChannelList::CChannel* channel = channelListTV->getChannel(zapitChannels[j].nr);
 	
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListTV->Bouquets[i]->channelList->addChannel(channel);
@@ -1528,7 +1528,7 @@ void CNeutrinoApp::channelsInit(int init_mode, int _mode)
 
 		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			CChannelList::CChannel* channel = new CChannelList::CChannel(zapitChannels[j].nr, zapitChannels[j].nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
+			CChannelList::CChannel* channel = channelListRADIO->getChannel(zapitChannels[j].nr);
 
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListRADIO->Bouquets[i]->channelList->addChannel(channel);
@@ -1604,7 +1604,7 @@ void CNeutrinoApp::channelsInit4Record(void)
 		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
 			channel_nr++;
-			CChannelList::CChannel* channel = new CChannelList::CChannel(channel_nr, channel_nr, zapitChannels[j].name, zapitChannels[j].satellitePosition, zapitChannels[j].channel_id); // UTF-8
+			CChannelList::CChannel* channel = channelListRecord->getChannel(channel_nr);
 
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
 			bouquetListRecord->Bouquets[i]->channelList->addChannel(channel);
