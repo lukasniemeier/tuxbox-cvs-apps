@@ -108,8 +108,10 @@ CChannelList::CChannelList(const char * const Name, bool hMode, bool UsedInBouqu
 CChannelList::~CChannelList()
 {
 	if (!usedInBouquet)
+	{
 		for (std::vector<CChannel *>::iterator it = chanlist.begin(); it != chanlist.end(); ++it)
 			delete (*it);
+	}
 	chanlist.clear();
 }
 
@@ -360,7 +362,8 @@ int CChannelList::show()
 
 		if (msg == CRCInput::RC_timeout || msg == g_settings.key_channelList_cancel)
 		{
-			selected = oldselected;
+			if (!usedInBouquet)
+				selected = oldselected;
 			loop=false;
 		}
 		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == g_settings.key_channelList_pageup)
@@ -414,7 +417,8 @@ int CChannelList::show()
 			 (CRCInput::isNumeric(msg)) )
 		{
 			//pushback key if...
-			selected = oldselected;
+			if (!usedInBouquet)
+				selected = oldselected;
 			g_RCInput->postMsg( msg, data );
 			loop=false;
 		}
