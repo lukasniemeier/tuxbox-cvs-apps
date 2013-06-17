@@ -430,27 +430,8 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 						else
 							pos = (selected + count) % items.size();
 
-						CMenuItem* item = items[pos];
-
-						if (item->isSelectable())
-						{
-							if ((pos < page_start[current_page + 1]) &&
-							    (pos >= page_start[current_page]))
-							{ // Item is currently on screen
-								//clear prev. selected
-								items[selected]->paint(false);
-								//select new
-								item->paint(true);
-								selected = pos;
-								break;
-							}
-							else
-							{
-								selected = pos;
-								paintItems();
-								break;
-							}
-						}
+						if (updateSelection(pos))
+							break;
 					}
 					break;
 				}
@@ -507,22 +488,8 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 							pos = page_start[current_page] - 1;
 							for (unsigned int count = pos; count > 0; count--)
 							{
-								CMenuItem* item = items[pos];
-								if (item->isSelectable())
-								{
-									if ((pos < page_start[current_page + 1]) && (pos >= page_start[current_page]))
-									{
-										items[selected]->paint(false);
-										item->paint(true);
-										selected = pos;
-									}
-									else
-									{
-										selected = pos;
-										paintItems();
-									}
+								if (updateSelection(pos))
 									break;
-								}
 								pos--;
 							}
 						}
@@ -531,22 +498,8 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 							pos = 0;
 							for (unsigned int count = 0; count < items.size(); count++)
 							{
-								CMenuItem* item = items[pos];
-								if (item->isSelectable())
-								{
-									if ((pos < page_start[current_page + 1]) && (pos >= page_start[current_page]))
-									{
-										items[selected]->paint(false);
-										item->paint(true);
-										selected = pos;
-									}
-									else
-									{
-										selected = pos;
-										paintItems();
-									}
+								if (updateSelection(pos))
 									break;
-								}
 								pos++;
 							}
 						}
@@ -558,22 +511,8 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 							pos = items.size() - 1;
 						for (unsigned int count = pos; count < items.size(); count++)
 						{
-							CMenuItem* item = items[pos];
-							if (item->isSelectable())
-							{
-								if ((pos < page_start[current_page + 1]) && (pos >= page_start[current_page]))
-								{
-									items[selected]->paint(false);
-									item->paint(true);
-									selected = pos;
-								}
-								else
-								{
-									selected = pos;
-									paintItems();
-								}
+							if (updateSelection(pos))
 								break;
-							}
 							pos++;
 						}
 					}
@@ -732,7 +671,7 @@ void CMenuWidget::paintItems()
 			}
 			else
 			{
-				ypos = item->paint(selected==((signed int) count) );
+				ypos = item->paint(selected == count);
 			}
 		}
 		else
@@ -741,6 +680,30 @@ void CMenuWidget::paintItems()
 			item->init(-1, 0, 0, 0);
 		}
 	}
+}
+
+bool CMenuWidget::updateSelection(int pos)
+{
+	CMenuItem* item = items[pos];
+	if (item->isSelectable())
+	{
+		if ((pos < page_start[current_page + 1]) &&
+		    (pos >= page_start[current_page]))
+		{ // Item is currently on screen
+			//clear prev. selected
+			items[selected]->paint(false);
+			//select new
+			item->paint(true);
+			selected = pos;
+		}
+		else
+		{
+			selected = pos;
+			paintItems();
+		}
+		return true;
+	}
+	return false;
 }
 
 /*adds the typical menu intro with optional subhead, separator, back button and separatorline to menu*/

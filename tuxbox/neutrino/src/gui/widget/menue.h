@@ -320,6 +320,7 @@ class CMenuWidget : public CMenuTarget
 		unsigned int         total_pages;
 
 		virtual void paintItems();
+		virtual bool updateSelection(int pos);
 
 	public:
 		CMenuWidget();
