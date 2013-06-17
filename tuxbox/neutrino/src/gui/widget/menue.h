@@ -303,7 +303,7 @@ class CMenuWidget : public CMenuTarget
 		std::string		nameString;
 		CFrameBuffer		*frameBuffer;
 		std::vector<CMenuItem*>	items;
-		std::vector<unsigned int> page_start;
+		std::vector<int> page_start;
 		std::string			iconfile;
 
 		int			width;
