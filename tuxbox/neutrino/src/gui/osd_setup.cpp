@@ -180,6 +180,7 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 			strcpy(g_settings.font_file, fileBrowser.getSelectedFile()->Name.c_str());
 			printf("[neutrino] new font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
 			CNeutrinoApp::getInstance()->SetupFonts();
+			font_file_name = fileBrowser.getSelectedFile()->getFileName();
 		}
 		return menu_return::RETURN_REPAINT;
 	}
@@ -646,7 +647,10 @@ int COsdSetup::showOsdFontSizeSetup()
 	fontSettings->addIntroItems(LOCALE_FONTMENU_HEAD);
 
 	// select gui font file
-	CMenuForwarder *mf = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_FONT, true, NULL, this, "select_font", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CFile font_file;
+	font_file.Name = g_settings.font_file;
+	font_file_name = font_file.getFileName();
+	CMenuForwarder *mf = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_FONT, true, font_file_name, this, "select_font", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 	fontSettings->addItem(mf);
 	fontSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FONTMENU_SIZES));
 

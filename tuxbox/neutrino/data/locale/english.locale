@@ -1059,7 +1059,7 @@ options.serial serial
 osdsettings.colormenu.background Background
 osdsettings.colormenu.background_head Background
 osdsettings.colormenu.fade Fade Menus
-osdsettings.colormenu.font Select GUI font
+osdsettings.colormenu.font Select font
 osdsettings.colormenu.fontsize Font Size
 osdsettings.colormenu.gtx_alpha Transparency (GTX)
 osdsettings.colormenu.head Colors

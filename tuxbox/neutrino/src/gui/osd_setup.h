@@ -58,6 +58,8 @@ class COsdSetup : public CMenuTarget, CChangeObserver
 		neutrino_locale_t menue_title;
 		std::string menue_icon;
 
+		std::string font_file_name;
+
 		int showOsdSetup();
 		int showOsdMenueColorSetup();
 		int showOsdInfobarColorSetup();

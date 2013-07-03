@@ -1059,7 +1059,7 @@ options.serial seriell
 osdsettings.colormenu.background Hintergrundfarbe
 osdsettings.colormenu.background_head Hintergrundfarbe
 osdsettings.colormenu.fade Menüs faden
-osdsettings.colormenu.font Neutrino Schriftart
+osdsettings.colormenu.font Schriftart
 osdsettings.colormenu.fontsize Schriftgröße
 osdsettings.colormenu.gtx_alpha Transparenz (GTX)
 osdsettings.colormenu.head Farben
