@@ -1944,19 +1944,19 @@ bool CMovieBrowser::onButtonPressBrowserList(neutrino_msg_t msg)
 	
 	if(msg==CRCInput::RC_up)
 	{
-		m_pcBrowser->scrollLineUp(1);
+		m_pcBrowser->scrollLineUp();
 	}
 	else if (msg == CRCInput::RC_down)
 	{
-		m_pcBrowser->scrollLineDown(1);
+		m_pcBrowser->scrollLineDown();
 	}
 	else if (msg == g_settings.key_channelList_pageup)
 	{
-		m_pcBrowser->scrollPageUp(1);
+		m_pcBrowser->scrollPageUp();
 	}
 	else if (msg == g_settings.key_channelList_pagedown)
 	{
-		m_pcBrowser->scrollPageDown(1);
+		m_pcBrowser->scrollPageDown();
 	}
 	else
 	{
@@ -1979,19 +1979,19 @@ bool CMovieBrowser::onButtonPressLastPlayList(neutrino_msg_t msg)
 	
 	if(msg==CRCInput::RC_up)
 	{
-		m_pcLastPlay->scrollLineUp(1);
+		m_pcLastPlay->scrollLineUp();
 	}
 	else if (msg == CRCInput::RC_down)
 	{
-		m_pcLastPlay->scrollLineDown(1);
+		m_pcLastPlay->scrollLineDown();
 	}
 	else if (msg == g_settings.key_channelList_pageup)
 	{
-		m_pcLastPlay->scrollPageUp(1);
+		m_pcLastPlay->scrollPageUp();
 	}
 	else if (msg == g_settings.key_channelList_pagedown)
 	{
-		m_pcLastPlay->scrollPageDown(1);
+		m_pcLastPlay->scrollPageDown();
 	}
 	else
 	{
@@ -2014,19 +2014,19 @@ bool CMovieBrowser::onButtonPressLastRecordList(neutrino_msg_t msg)
 	
 	if(msg==CRCInput::RC_up)
 	{
-		m_pcLastRecord->scrollLineUp(1);
+		m_pcLastRecord->scrollLineUp();
 	}
 	else if (msg == CRCInput::RC_down)
 	{
-		m_pcLastRecord->scrollLineDown(1);
+		m_pcLastRecord->scrollLineDown();
 	}
 	else if (msg == g_settings.key_channelList_pageup)
 	{
-		m_pcLastRecord->scrollPageUp(1);
+		m_pcLastRecord->scrollPageUp();
 	}
 	else if (msg == g_settings.key_channelList_pagedown)
 	{
-		m_pcLastRecord->scrollPageDown(1);
+		m_pcLastRecord->scrollPageDown();
 	}
 	else
 	{
@@ -2062,19 +2062,19 @@ bool CMovieBrowser::onButtonPressFilterList(neutrino_msg_t msg)
 
 	if (msg_repeatok == CRCInput::RC_up)
 	{
-		m_pcFilter->scrollLineUp(1);
+		m_pcFilter->scrollLineUp();
 	}
 	else if (msg_repeatok == CRCInput::RC_down)
 	{
-		m_pcFilter->scrollLineDown(1);
+		m_pcFilter->scrollLineDown();
 	}
 	else if (msg_repeatok == g_settings.key_channelList_pageup)
 	{
-		m_pcFilter->scrollPageUp(1);
+		m_pcFilter->scrollPageUp();
 	}
 	else if (msg_repeatok == g_settings.key_channelList_pagedown)
 	{
-		m_pcFilter->scrollPageDown(1);
+		m_pcFilter->scrollPageDown();
 	}
 	else if (msg == CRCInput::RC_ok)
 	{
@@ -2128,11 +2128,11 @@ bool CMovieBrowser::onButtonPressMovieInfoList(neutrino_msg_t msg)
 	
 	if(msg == CRCInput::RC_up)
 	{
-		m_pcInfo->scrollPageUp(1);
+		m_pcInfo->scrollPageUp();
 	}
 	else if (msg == CRCInput::RC_down)
 	{
-		m_pcInfo->scrollPageDown(1);
+		m_pcInfo->scrollPageDown();
 	}
 	else
 	{

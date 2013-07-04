@@ -714,11 +714,11 @@ int CMsgBox::exec(int timeout, int returnDefaultOnTimeout, bool helpkey)
 		}
 		else if (msg == CRCInput::RC_up )
 		{
-				scrollPageUp(1);
+				scrollPageUp();
 		}
 		else if (msg == CRCInput::RC_down)
 		{
-				scrollPageDown(1);
+				scrollPageDown();
 		}
 		else if(msg==CRCInput::RC_left)
 		{

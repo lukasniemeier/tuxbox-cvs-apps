@@ -147,8 +147,8 @@ class CMsgBox
 		bool    hide(void);
 		int     exec(int timeout,int returnDefaultOnTimeout = false, bool ret_on_helpkey = false);
 		void    refresh(void);
-		void    scrollPageDown(const int pages);
-		void    scrollPageUp(const int pages);
+		void    scrollPageDown(const int pages = 1);
+		void    scrollPageUp(const int pages = 1);
 		int		result(void) const;
 
 		bool	setText(const std::string* newText);

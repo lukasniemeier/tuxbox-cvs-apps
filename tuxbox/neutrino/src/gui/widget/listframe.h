@@ -130,10 +130,10 @@ class CListFrame
 		/* Functions */
 		void    refresh(void);
 		void    refreshLine(int line);
-		void    scrollPageDown(const int pages);
-		void    scrollPageUp(const int pages);				
-		void 	scrollLineDown(const int lines);
-		void 	scrollLineUp(const int lines);
+		void    scrollPageDown(const int pages = 1);
+		void    scrollPageUp(const int pages = 1);
+		void 	scrollLineDown(const int lines = 1);
+		void 	scrollLineUp(const int lines = 1);
 		bool	setLines(LF_LINES* lines);
 		bool	setTitle(char* title);
 		bool    setSelectedLine(int selection);

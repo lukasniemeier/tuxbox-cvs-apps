@@ -722,7 +722,7 @@ void CListFrame::scrollLineDown(const int lines)
 		if(m_nSelectedLine - m_nCurrentLine > m_nLinesPerPage-1) {
 			// yes, scroll to next page
 			//TRACE("[CListFrame]  m_nSelectedLine: %d, \r\n",m_nSelectedLine);
-			scrollPageDown(1);
+			scrollPageDown();
 		} else {
 			refreshLine(m_nSelectedLine-lines);
 			refreshLine(m_nSelectedLine);
@@ -752,7 +752,7 @@ void CListFrame::scrollLineUp(const int lines)
 		if(m_nSelectedLine < m_nCurrentLine ) {
 			// yes, scroll to next page
 			//TRACE("[CListFrame]  m_nSelectedLine: %d, \r\n",m_nSelectedLine);
-			scrollPageUp(1);
+			scrollPageUp();
 		} else {
 			refreshLine(m_nSelectedLine+lines);
 			refreshLine(m_nSelectedLine);
