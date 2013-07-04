@@ -716,8 +716,8 @@ void CListFrame::scrollLineDown(const int lines)
 	if( !(m_nMode & SCROLL)) return;
 	if( m_nNrOfLines <= 1) return;
 	
-	if(m_nSelectedLine < m_nNrOfLines - 1) {
-		m_nSelectedLine++;
+	if(m_nSelectedLine + lines < m_nNrOfLines) {
+		m_nSelectedLine += lines;
 		// check if the cursor moves out of the window
 		if(m_nSelectedLine - m_nCurrentLine > m_nLinesPerPage-1) {
 			// yes, scroll to next page
@@ -746,8 +746,8 @@ void CListFrame::scrollLineUp(const int lines)
 	if( !(m_nMode & SCROLL)) return;
 	if( m_nNrOfLines <= 1) return;
 
-	if(m_nSelectedLine > 0) {
-		m_nSelectedLine--;
+	if(m_nSelectedLine - lines >= 0) {
+		m_nSelectedLine -= lines;
 		// check if the cursor moves out of the window
 		if(m_nSelectedLine < m_nCurrentLine ) {
 			// yes, scroll to next page
