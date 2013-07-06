@@ -174,28 +174,28 @@ using namespace std;
 
 const CMenuOptionChooser::keyval PERSONALIZE_STD_OPTIONS[PERSONALIZE_STD_OPTION_COUNT] =
 {
-	{ 0, LOCALE_PERSONALIZE_NOTVISIBLE      },                                      // The option is NOT visible on the menu's
-	{ 1, LOCALE_PERSONALIZE_VISIBLE         },                                      // The option is visible on the menu's
-	{ 2, LOCALE_PERSONALIZE_PIN      },                                      // PIN Protect the item on the menu
+	{ CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE, LOCALE_PERSONALIZE_NOTVISIBLE   },  // The option is NOT visible on the menu's
+	{ CPersonalizeGui::PERSONALIZE_MODE_VISIBLE   , LOCALE_PERSONALIZE_VISIBLE      },  // The option is visible on the menu's
+	{ CPersonalizeGui::PERSONALIZE_MODE_PIN       , LOCALE_PERSONALIZE_PIN          }   // PIN Protect the item on the menu
 };
 
 const CMenuOptionChooser::keyval PERSONALIZE_EDP_OPTIONS[PERSONALIZE_EDP_OPTION_COUNT] =
 {
-	{ 0, LOCALE_PERSONALIZE_DISABLED        },                                      // The menu is NOT enabled / accessible
-	{ 1, LOCALE_PERSONALIZE_ENABLED         },                                      // The menu is enabled / accessible
-	{ 2, LOCALE_PERSONALIZE_PIN      },                                      // The menu is enabled and protected with PIN
+	{ CPersonalizeGui::PERSONALIZE_MODE_DISABLED  , LOCALE_PERSONALIZE_DISABLED     },  // The menu is NOT enabled / accessible
+	{ CPersonalizeGui::PERSONALIZE_MODE_ENABLED   , LOCALE_PERSONALIZE_ENABLED      },  // The menu is enabled / accessible
+	{ CPersonalizeGui::PERSONALIZE_MODE_PIN       , LOCALE_PERSONALIZE_PIN          }   // The menu is enabled and protected with PIN
 };
 
 const CMenuOptionChooser::keyval PERSONALIZE_EOD_OPTIONS[PERSONALIZE_EOD_OPTION_COUNT] =
 {
-	{ 0, LOCALE_PERSONALIZE_DISABLED        },                                      // The option is NOT enabled / accessible
-	{ 1, LOCALE_PERSONALIZE_ENABLED         },                                      // The option is enabled / accessible
+	{ CPersonalizeGui::PERSONALIZE_MODE_DISABLED  , LOCALE_PERSONALIZE_DISABLED     },  // The option is NOT enabled / accessible
+	{ CPersonalizeGui::PERSONALIZE_MODE_ENABLED   , LOCALE_PERSONALIZE_ENABLED      }   // The option is enabled / accessible
 };
 
 const CMenuOptionChooser::keyval PERSONALIZE_YON_OPTIONS[PERSONALIZE_YON_OPTION_COUNT] =
 {
-	{ 0, LOCALE_PERSONALIZE_NOTPROTECTED    },                                      // The menu/option is NOT protected
-	{ 1, LOCALE_PERSONALIZE_PINPROTECT      },                                      // The menu/option is protected by a PIN
+	{ CPersonalizeGui::PROTECT_MODE_NOT_PROTECTED , LOCALE_PERSONALIZE_NOTPROTECTED },  // The menu/option is NOT protected
+	{ CPersonalizeGui::PROTECT_MODE_PIN_PROTECTED , LOCALE_PERSONALIZE_PINPROTECT   }   // The menu/option is protected by a PIN
 };
 
 

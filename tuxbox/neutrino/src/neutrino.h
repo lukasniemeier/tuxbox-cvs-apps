@@ -120,7 +120,60 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 			DIRECTORMODE_PORTAL	= -3,
 			DIRECTORMODE_TOGGLE	= -2
 		};
-	
+
+	enum
+		{
+			STARTMODE_UNKNOWN     = -1,
+			STARTMODE_RESTORE     = 0,
+			STARTMODE_TV          = 1,
+			STARTMODE_RADIO       = 2,
+			STARTMODE_SCART       = 3,
+			STARTMODE_AUDIOPLAYER = 4,
+			STARTMODE_INETRADIO   = 5,
+			STARTMODE_ESOUND      = 6,
+			STARTMODE_STANDBY     = 7
+		};
+
+	enum
+		{
+			UBOOT_CONSOLE_NULL,
+			UBOOT_CONSOLE_SERIAL,
+			UBOOT_CONSOLE_FB
+		};
+
+	enum
+		{
+			SECTIONSD_RUN,
+			SECTIONSD_STOP,
+			SECTIONSD_RESTART
+		};
+
+	enum
+		{
+			STANDBY_OFF_WITH_POWER,
+			STANDBY_OFF_WITH_POWER_OK,
+			STANDBY_OFF_WITH_POWER_HOME,
+			STANDBY_OFF_WITH_POWER_HOME_OK
+		};
+
+	enum
+		{
+			VOLUMEBAR_DISP_POS_TOP_RIGHT,
+			VOLUMEBAR_DISP_POS_TOP_LEFT,
+			VOLUMEBAR_DISP_POS_BOTTOM_LEFT,
+			VOLUMEBAR_DISP_POS_BOTTOM_RIGHT,
+			VOLUMEBAR_DISP_POS_DEFAULT_CENTER,
+			VOLUMEBAR_DISP_POS_HIGHER_CENTER,
+			VOLUMEBAR_DISP_POS_OFF
+		};
+
+	enum
+		{
+			SHOW_MUTE_ICON_NO,
+			SHOW_MUTE_ICON_YES,
+			SHOW_MUTE_ICON_NOT_IN_AC3MODE
+		};
+
 		void saveSetup();
 
  private:
@@ -146,19 +199,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 			init_mode_init 		= 1,
 			init_mode_record 	= 2,
 			init_mode_switch 	= 3,
-		};
-		
-	enum
-		{
-			STARTMODE_UNKNOWN	= -1,
-			STARTMODE_RESTORE	= 0,
-			STARTMODE_TV		= 1,
-			STARTMODE_RADIO		= 2,
-			STARTMODE_SCART		= 3,
-			STARTMODE_AUDIOPLAYER	= 4,
-			STARTMODE_INETRADIO	= 5,
-			STARTMODE_ESOUND	= 6,
-			STARTMODE_STANDBY	= 7,
 		};
 
 		CConfigFile			configfile;

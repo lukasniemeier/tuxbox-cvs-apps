@@ -895,7 +895,7 @@ void CInfoViewer::showSubchan()
 		int dx = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->getRenderWidth(text, subChannelNameIsUTF) + 20;
 		int dy = 25;
 		
-		if( g_settings.infobar_subchan_disp_pos == 4 )				
+		if( g_settings.infobar_subchan_disp_pos == SUBCHAN_DISP_POS_INFOBAR )
 		{
 			// show full infobar for subschannel 
 			g_RCInput->postMsg( NeutrinoMessages::SHOW_INFOBAR , 0 );
@@ -913,27 +913,23 @@ void CInfoViewer::showSubchan()
 				dy= dy +5;
 	
 			int x=0,y=0;
-			if( g_settings.infobar_subchan_disp_pos == 0 )
+			if( g_settings.infobar_subchan_disp_pos == SUBCHAN_DISP_POS_TOP_RIGHT )
 			{
-				// Rechts-Oben
 				x = g_settings.screen_EndX - dx - 10;
 				y = g_settings.screen_StartY + 10;
 			}
-			else if( g_settings.infobar_subchan_disp_pos == 1 )
+			else if( g_settings.infobar_subchan_disp_pos == SUBCHAN_DISP_POS_TOP_LEFT )
 			{
-				// Links-Oben
 				x = g_settings.screen_StartX + 10;
 				y = g_settings.screen_StartY + 10;
 			}
-			else if( g_settings.infobar_subchan_disp_pos == 2 )
+			else if( g_settings.infobar_subchan_disp_pos == SUBCHAN_DISP_POS_BOTTOM_LEFT )
 			{
-				// Links-Unten
 				x = g_settings.screen_StartX + 10;
 				y = g_settings.screen_EndY - dy - 10;
 			}
-			else if( g_settings.infobar_subchan_disp_pos == 3 )
+			else if( g_settings.infobar_subchan_disp_pos == SUBCHAN_DISP_POS_BOTTOM_RIGHT )
 			{
-				// Rechts-Unten
 				x = g_settings.screen_EndX - dx - 10;
 				y = g_settings.screen_EndY - dy - 10;
 			}
@@ -1918,7 +1914,7 @@ returns mode of painted channel logo,
 	
 	bool logo_available;
 	
-	if (g_settings.infobar_show_channellogo) // show logo only if "infobar_show_channellogo" adjusted to true, else use defaults
+	if (g_settings.infobar_show_channellogo != NO_LOGO)
 	{
 
 		// check if logo is available
@@ -1947,7 +1943,7 @@ returns mode of painted channel logo,
 			}
 							
 			{	
-				if (g_settings.infobar_show_channellogo == 1) // paint logo in numberbox
+				if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELLUM)
 				{
 					// calculate mid of numberbox
 					int satNameHeight = 0; // no sat name display now, picon doesnt need to set an offset for y
@@ -1970,7 +1966,7 @@ returns mode of painted channel logo,
 						res =  1;
 					}
 				}
-				else if (g_settings.infobar_show_channellogo == 2) // paint logo in place of channel name
+				else if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELNAME)
 				{
 					// check logo dimensions
 					if ((logo_w > chan_w) || (logo_h > ChanHeight))
@@ -1989,7 +1985,7 @@ returns mode of painted channel logo,
 						res =  2;
 					}
 				}
-				else if (g_settings.infobar_show_channellogo == 3) // paint logo beside channel name
+				else if (g_settings.infobar_show_channellogo == LOGO_BESIDE_CHANNELNAME)
 				{
 					// check logo dimensions
 					int Logo_max_width = chan_w - logo_w - 10;
@@ -2016,11 +2012,11 @@ returns mode of painted channel logo,
 				}
 			
 				// paint logo background (shaded/framed)
-				if ((g_settings.infobar_channellogo_background !=0) && (res !=0)) // with background
+				if ((g_settings.infobar_channellogo_background != NO_BACKGROUND) && (res != 0))
 				{	
 					int frame_w = 2, logo_bg_x=0, logo_bg_y=0, logo_bg_w=0, logo_bg_h=0;
 					
-					if (g_settings.infobar_channellogo_background == 1) // framed
+					if (g_settings.infobar_channellogo_background == LOGO_FRAMED)
 					{
 						//sh_offset = 2;
 						logo_bg_x = logo_x-frame_w;
@@ -2028,7 +2024,7 @@ returns mode of painted channel logo,
 						logo_bg_w = logo_w+frame_w*2;
 						logo_bg_h = logo_h+frame_w*2;
 					}
-					else if (g_settings.infobar_channellogo_background == 2) // shaded
+					else if (g_settings.infobar_channellogo_background == LOGO_SHADED)
 					{
 						//sh_offset = 3;
 						logo_bg_x = logo_x+SHADOW_OFFSET;
@@ -2106,17 +2102,18 @@ void CInfoViewer::showEpgInfo()   //message on event change
 	if ((eventname != info_CurrentNext.current_name) && (mode != 0))
 	{
 		eventname = info_CurrentNext.current_name;
-		if (g_settings.infobar_show == 1)
+		if (g_settings.infobar_show == EPGINFO_SIMPLE_MESSAGE)
 		{
-			if (eventname.length() !=0) // simple message
+			if (eventname.length() != 0)
  			{
 				std::string event = eventname + "\n" + g_Locale->getText(LOCALE_INFOVIEWER_MESSAGE_TO) + nextStart;
 				std::string event_message =  ZapitTools::Latin1_to_UTF8(event.c_str());
 				ShowHintUTF(LOCALE_INFOVIEWER_MESSAGE_NOW, event_message.c_str(), 420 , 6, NEUTRINO_ICON_EPGINFO);
 			}
 		}
-		else if (g_settings.infobar_show == 2) // complex message, show infobar
+		else if (g_settings.infobar_show == EPGINFO_COMPLEX_MESSAGE)
 		{
+			// complex message, show infobar
 			g_RCInput->postMsg(NeutrinoMessages::SHOW_INFOBAR , 0);
 		}
 	}

@@ -45,12 +45,6 @@
 #include <string>
 #include <vector>
 
-	enum {
-		ADDITIONAL_OFF,
-		ADDITIONAL_ON,
-		ADDITIONAL_MTV
-	};
-
 class CChannelList
 {
 	public:
@@ -137,6 +131,20 @@ class CChannelList
 		void processTextToArray(std::string text);
 
 	public:
+		enum
+		{
+			ADDITIONAL_OFF,
+			ADDITIONAL_ON,
+			ADDITIONAL_MTV
+		};
+
+		enum
+		{
+			FOOT_FREQ,
+			FOOT_NEXT,
+			FOOT_OFF
+		};
+
 		CChannelList(const char * const Name, bool historyMode = false, bool UsedInBouquet = false);
 		~CChannelList();
 		void addChannel(int key, int number, const std::string& name, const t_satellite_position satellitePosition, t_channel_id ids = 0); // UTF-8

@@ -350,11 +350,11 @@ void CVCRControl::CFileAndServerDevice::RestoreNeutrino(void)
 	g_Zapit->setRecordMode( false );
 
 	// sectionsd starten, wenn er gestoppt oder neu gestartet wurde
-	if (StopSectionsd == 1)
+	if (StopSectionsd == CNeutrinoApp::SECTIONSD_STOP)
 	{
 		g_Sectionsd->setPauseScanning(false);
 	}
-	else if (StopSectionsd == 2)
+	else if (StopSectionsd == CNeutrinoApp::SECTIONSD_RESTART)
 	{
 		g_Sectionsd->setPauseScanning(false);
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
@@ -420,11 +420,11 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 	if(StopPlayBack && g_Zapit->isPlayBackActive())	// wenn playback gestoppt werden soll und noch l�uft
 		g_Zapit->stopPlayBack();		// dann playback stoppen
 
-	if (StopSectionsd == 1)				// wenn sectionsd gestoppt werden soll
+	if (StopSectionsd == CNeutrinoApp::SECTIONSD_STOP)
 	{
  		g_Sectionsd->setPauseScanning(true);	// sectionsd stoppen
 	}
-	else if (StopSectionsd == 2)			// wenn sectionsd neu gestartet werden soll
+	else if (StopSectionsd == CNeutrinoApp::SECTIONSD_RESTART)
 	{
 		g_Sectionsd->Restart();			// sectionsd neu starten (pausiert automatisch)
 		g_Sectionsd->RegisterNeutrino();

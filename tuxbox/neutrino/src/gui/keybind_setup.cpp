@@ -39,6 +39,8 @@
 #include <global.h>
 #include <neutrino.h>
 
+#include <gui/bouquetlist.h>
+
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
 #include <gui/widget/keychooser.h>
@@ -134,9 +136,9 @@ const neutrino_locale_t keydescription[] =
 #define KEYBINDINGMENU_BOUQUETHANDLING_OPTION_COUNT 3
 const CMenuOptionChooser::keyval KEYBINDINGMENU_BOUQUETHANDLING_OPTIONS[KEYBINDINGMENU_BOUQUETHANDLING_OPTION_COUNT] =
 {
-	{ 0, LOCALE_KEYBINDINGMENU_BOUQUETCHANNELS_ON_OK },
-	{ 1, LOCALE_KEYBINDINGMENU_BOUQUETLIST_ON_OK     },
-	{ 2, LOCALE_KEYBINDINGMENU_ALLCHANNELS_ON_OK     }
+	{ bsmChannels   , LOCALE_KEYBINDINGMENU_BOUQUETCHANNELS_ON_OK },
+	{ bsmBouquets   , LOCALE_KEYBINDINGMENU_BOUQUETLIST_ON_OK     },
+	{ bsmAllChannels, LOCALE_KEYBINDINGMENU_ALLCHANNELS_ON_OK     }
 };
 
 int CKeybindSetup::showSetup()

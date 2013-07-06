@@ -75,20 +75,6 @@ class COsdSetup : public CMenuTarget, CChangeObserver
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 		bool changeNotify(const neutrino_locale_t OptionName, void *);
 
-		enum INFOBAR_CHANNEL_LOGO_POS_OPTIONS	
-		{
-			INFOBAR_NO_LOGO,
-			INFOBAR_LOGO_AS_CHANNELLUM,
-			INFOBAR_LOGO_AS_CHANNELNAME,
-			INFOBAR_LOGO_BESIDE_CHANNELNAME
-		};
-
-		enum INFOBAR_CHANNEL_LOGO_BACKROUND_OPTIONS	
-		{
-			INFOBAR_NO_BACKGROUND,
-			INFOBAR_LOGO_FRAMED,
-			INFOBAR_LOGO_SHADED
-		};
 };
 
 #endif

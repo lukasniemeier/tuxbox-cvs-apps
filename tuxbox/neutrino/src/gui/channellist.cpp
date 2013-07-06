@@ -139,7 +139,7 @@ int CChannelList::exec()
 void CChannelList::calcSize()
 {
 	full_width = w_max(720, 2 * ConnectLineBox_Width);
-	if (g_settings.channellist_additional)
+	if (g_settings.channellist_additional != ADDITIONAL_OFF)
 #if defined BOXMODEL_DM500 || defined HAVE_IPBOX_HARDWARE
 		// the dm500 seems to like only half / quarter resolution...
 		width = full_width - 180 -10;
@@ -448,7 +448,7 @@ int CChannelList::show()
 		}
 		else if ( msg == CRCInput::RC_blue )
 		{
-			if (g_settings.channellist_additional) {
+			if (g_settings.channellist_additional != ADDITIONAL_OFF) {
 				displayList = !displayList;
 				if (displayList)
 					paint_events(selected);
@@ -1135,7 +1135,7 @@ void CChannelList::paintDetails(unsigned int index)
 	else {
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ fheight, full_width - 20, g_Locale->getText(LOCALE_EPGLIST_NOEVENTS), COL_MENUCONTENTDARK, 0, true); // UTF-8
 	}
-	if(g_settings.channellist_foot == 0) {
+	if(g_settings.channellist_foot == FOOT_FREQ) {
 		TP_params 	TP;
 		g_Zapit->get_current_TP(&TP);
 		std::string desc = "";
@@ -1198,7 +1198,7 @@ void CChannelList::paintDetails(unsigned int index)
 
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ 3*fheight, full_width - 30, desc.c_str(), COL_MENUCONTENTDARK, 0, true);
 	}
-	else if( !displayNext && g_settings.channellist_foot == 1) { // next Event 1
+	else if( !displayNext && g_settings.channellist_foot == FOOT_NEXT) {
 		char buf[128] = {0};
 		char cFrom[50] = {0}; // UTF-8
 		CSectionsdClient::CurrentNextInfo CurrentNext;
@@ -1213,7 +1213,7 @@ void CChannelList::paintDetails(unsigned int index)
 			g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST_DESCR]->RenderString(x+ full_width- 10- from_len, y+ height+ 5+ 3*fheight, from_len, cFrom, COL_MENUCONTENTDARK, 0, true); // UTF-8
 		}
 	}
-	if (g_settings.channellist_additional) {
+	if (g_settings.channellist_additional != ADDITIONAL_OFF) {
 		if (displayList)
 			paint_events(selected);
 		else
@@ -1494,7 +1494,7 @@ void CChannelList::paintButtonBar()
 	int ButtonWidth = (full_width - 20) / 4;
 
 	//manage now/next button
-	if (g_settings.channellist_additional)
+	if (g_settings.channellist_additional != ADDITIONAL_OFF)
 	{
 		if (displayList)
 			CChannelListButtons[2].locale = LOCALE_FONTSIZE_CHANNELLIST_DESCR;
@@ -1534,7 +1534,7 @@ void CChannelList::paint()
 
 	// paint background for main box
 	frameBuffer->paintBoxRel(x, y+theight, width, height-footerHeight-theight, COL_MENUCONTENT_PLUS_0);
-	if (g_settings.channellist_additional)
+	if (g_settings.channellist_additional != ADDITIONAL_OFF)
 		// paint background for right box
 		frameBuffer->paintBoxRel(x+width,y+theight,infozone_width,pig_height+infozone_height,COL_MENUCONTENT_PLUS_0);
 

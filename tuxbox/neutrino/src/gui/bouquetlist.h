@@ -44,9 +44,9 @@
 
 typedef enum bouquetSwitchMode
 {
-    bsmBouquets,	// pressing OK shows list of all Bouquets
-    bsmChannels,	// pressing OK shows list of all channels of active bouquets
-    bsmAllChannels	// OK shows lsit of all channels
+    bsmChannels,	// pressing OK shows list of all channels of active bouquet
+    bsmBouquets,	// pressing OK shows list of all bouquets
+    bsmAllChannels	// pressing OK shows list of all channels
 } BouquetSwitchMode;
 
 class CBouquet

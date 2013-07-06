@@ -74,6 +74,15 @@ class CMoviePlayerGui : public CMenuTarget
             SOFTRESET   = 99
         };
 
+	enum resolution
+		{
+			RES_352X288,
+			RES_352X576,
+			RES_480X576,
+			RES_704X576,
+			RES_704X288
+		};
+
  private:
         static int     lastParental;
 

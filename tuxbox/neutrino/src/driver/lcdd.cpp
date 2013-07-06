@@ -512,7 +512,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	int x = 1;
 	for (int i = 0; i < namelines; i++) {
 		y += 14;
-		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN] == 1)  // centered
+		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN] == EPGALIGN_CENTER)
 		{
 			int w = fonts.channelname->getRenderWidth(cname[i].c_str(), big_utf8);
 			x = (LCD_COLS - w) / 2;
@@ -529,7 +529,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	{
 		for (int i = 0; i < eventlines; i++) {
 			y += 10;
-			if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN] == 1)  // centered
+			if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGALIGN] == EPGALIGN_CENTER)
 			{
 				int w = fonts.menu->getRenderWidth(event[i].c_str(), small_utf8);
 				x = (LCD_COLS - w) / 2;
@@ -712,15 +712,15 @@ void CLCD::showPercentOver(const unsigned char perc, const bool perform_update, 
 	percentOver = perc;
 	if (mode == MODE_TVRADIO || mode == MODE_MOVIE)
 	{
-		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 0)
+		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == STATUSLINE_PLAYTIME)
 		{
 			left = 12; top = 55; width = 60;
 		}
-		else if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 2)
+		else if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == STATUSLINE_BOTH)
 		{
 			left = 12; top = 3; width = 104;
 		}
-		else if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == 3)
+		else if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == STATUSLINE_BOTH_AUDIO)
 		{
 			left = 12; top = 3; width = 84;
 
@@ -897,20 +897,20 @@ void CLCD::setMode(const MODES m, const char * const title)
 	case MODE_MOVIE:
 		switch (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])
 		{
-		case 0:
+		case STATUSLINE_PLAYTIME:
 			display.load_screen(&(background[BACKGROUND_LCD2]));
 			showPercentOver(percentOver, false, mode);
 			break;
-		case 1:
+		case STATUSLINE_VOLUME:
 			display.load_screen(&(background[BACKGROUND_LCD]));
 			showVolume(volume, false);
 			break;
-		case 2:
+		case STATUSLINE_BOTH:
 			display.load_screen(&(background[BACKGROUND_LCD3]));
 			showVolume(volume, false);
 			showPercentOver(percentOver, false, mode);
 			break;
-		case 3:
+		case STATUSLINE_BOTH_AUDIO:
 			display.load_screen(&(background[BACKGROUND_LCD4]));
 			showVolume(volume, false);
 			showPercentOver(percentOver, false, mode);

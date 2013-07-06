@@ -55,6 +55,12 @@ class CFlashUpdate : public CProgressWindow
 	bool checkVersion4Update();
 
  public:
+	enum
+	{
+		UPDATEMODE_MANUAL,
+		UPDATEMODE_INTERNET
+	};
+
 	CFlashUpdate();
 	int exec( CMenuTarget* parent, const std::string & actionKey );
 

@@ -459,12 +459,12 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 	perror("Datei " MOVIEPLAYER_START_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " MOVIEPLAYER_START_SCRIPT " not found. Please create if needed.\n");
 
 	// Stop or restart sectionsd according to configuration
-	if (g_settings.streaming_stopsectionsd == 1)
+	if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_STOP)
 	{
 		// Stop sectionsd
 		g_Sectionsd->setPauseScanning(true);
 	}
-	else if (g_settings.streaming_stopsectionsd == 2)
+	else if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_RESTART)
 	{
 		// Restart sectionsd (stops automatically)
 		g_Sectionsd->Restart();
@@ -559,11 +559,11 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 	perror("Datei " MOVIEPLAYER_END_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " MOVIEPLAYER_END_SCRIPT " not found. Please create if needed.\n");
 
 	// Start sectionsd if stopped or restarted
-	if (g_settings.streaming_stopsectionsd == 1)
+	if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_STOP)
 	{
 		g_Sectionsd->setPauseScanning(false);
 	}
-	else if (g_settings.streaming_stopsectionsd == 2)
+	else if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_RESTART)
 	{
 		g_Sectionsd->setPauseScanning(false);
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
@@ -625,23 +625,23 @@ bool VlcRequestStream(char* mrl, int  transcodeVideo, int transcodeAudio)
 	const char * res_vert;
 	switch(g_settings.streaming_resolution)
 	{
-		case 0:
+		case CMoviePlayerGui::RES_352X288:
 			res_horiz = "352";
 			res_vert = "288";
 			break;
-		case 1:
+		case CMoviePlayerGui::RES_352X576:
 			res_horiz = "352";
 			res_vert = "576";
 			break;
-		case 2:
+		case CMoviePlayerGui::RES_480X576:
 			res_horiz = "480";
 			res_vert = "576";
 			break;
-		case 3:
+		case CMoviePlayerGui::RES_704X576:
 			res_horiz = "704";
 			res_vert = "576";
 			break;
-		case 4:
+		case CMoviePlayerGui::RES_704X288:
 			res_horiz = "704";
 			res_vert = "288";
 			break;

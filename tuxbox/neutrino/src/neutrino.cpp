@@ -101,12 +101,12 @@
 #include "gui/personalize.h"
 #include "gui/scan_setup.h"
 #include "gui/esound.h"
-#include "gui/osd_setup.h"
 #include "gui/osdlang_setup.h"
 #ifdef ENABLE_SAMBASERVER
 #include "gui/sambaserver_setup.h"
 #endif
 #include "gui/rc_lock.h"
+#include "gui/update.h"
 
 #include <system/setting_helpers.h>
 #include <system/settings.h>
@@ -400,26 +400,26 @@ int CNeutrinoApp::loadSetup()
 	g_settings.shutdown_real		= configfile.getBool("shutdown_real"             , false);
 	g_settings.shutdown_real_rcdelay	= configfile.getBool("shutdown_real_rcdelay"     , false);
 #endif
-	g_settings.standby_off_with		= configfile.getInt32("standby_off_with" , 0 );
+	g_settings.standby_off_with		= configfile.getInt32("standby_off_with" , STANDBY_OFF_WITH_POWER );
 	strcpy(g_settings.shutdown_count, configfile.getString("shutdown_count","0").c_str());
-	g_settings.volumebar_disp_pos		= configfile.getInt32("volumebar_disp_pos" , 4 );
+	g_settings.volumebar_disp_pos		= configfile.getInt32("volumebar_disp_pos" , VOLUMEBAR_DISP_POS_DEFAULT_CENTER );
 	g_settings.infobar_sat_display		= configfile.getBool("infobar_sat_display"       , true );
-	g_settings.infobar_subchan_disp_pos	= configfile.getInt32("infobar_subchan_disp_pos" , 4 );
+	g_settings.infobar_subchan_disp_pos	= configfile.getInt32("infobar_subchan_disp_pos" , CInfoViewer::SUBCHAN_DISP_POS_INFOBAR );
 	g_settings.misc_spts			= configfile.getBool("misc_spts"                 , false );
 #ifndef TUXTXT_CFG_STANDALONE
 	g_settings.tuxtxt_cache			= configfile.getBool("tuxtxt_cache"              , false );
 #endif
 	g_settings.virtual_zap_mode		= configfile.getBool("virtual_zap_mode"          , false);
 	g_settings.progressbar_color		= configfile.getBool("progressbar_color"         , true );
-	g_settings.infobar_show			= configfile.getInt32("infobar_show"             , 0);
-	g_settings.show_mute_icon		= configfile.getInt32("show_mute_icon"		,1);
-	g_settings.channellist_additional = configfile.getInt32("channellist_additional", 0); //default off
+	g_settings.infobar_show			= configfile.getInt32("infobar_show"             , CInfoViewer::EPGINFO_NO_MESSAGE);
+	g_settings.show_mute_icon		= configfile.getInt32("show_mute_icon"		, SHOW_MUTE_ICON_YES);
+	g_settings.channellist_additional = configfile.getInt32("channellist_additional", CChannelList::ADDITIONAL_OFF);
 	g_settings.channellist_epgtext_align_right		= configfile.getBool("channellist_epgtext_align_right"          , false);
 	g_settings.channellist_extended		= configfile.getBool("channellist_extended"          , false);
-	g_settings.channellist_foot	= configfile.getInt32("channellist_foot"          , 1);//default next Event
+	g_settings.channellist_foot	= configfile.getInt32("channellist_foot"          , CChannelList::FOOT_NEXT);
 	strcpy( g_settings.infobar_channel_logodir, configfile.getString( "infobar_channel_logodir", "/var/share/tuxbox/neutrino/icons/").c_str()); 
-	g_settings.infobar_show_channellogo	= configfile.getInt32("infobar_show_channellogo"		,COsdSetup::INFOBAR_NO_LOGO);
-	g_settings.infobar_channellogo_background		= configfile.getInt32("infobar_channellogo_background"		,COsdSetup::INFOBAR_NO_BACKGROUND);
+	g_settings.infobar_show_channellogo	= configfile.getInt32("infobar_show_channellogo"		, CInfoViewer::NO_LOGO);
+	g_settings.infobar_channellogo_background		= configfile.getInt32("infobar_channellogo_background"		, CInfoViewer::NO_BACKGROUND);
 	g_settings.startmode			= configfile.getInt32("startmode" , STARTMODE_RESTORE );
 
 	g_settings.radiotext_enable		= configfile.getBool("radiotext_enable"          , false);
@@ -606,7 +606,7 @@ int CNeutrinoApp::loadSetup()
 	//recording (server + vcr)
 	g_settings.recording_type = configfile.getInt32("recording_type", RECORDING_OFF);
 	g_settings.recording_stopplayback = configfile.getBool("recording_stopplayback", false);
-	g_settings.recording_stopsectionsd = configfile.getInt32("recording_stopsectionsd", 1);
+	g_settings.recording_stopsectionsd = configfile.getInt32("recording_stopsectionsd", SECTIONSD_STOP);
 	g_settings.recording_server_ip = configfile.getString("recording_server_ip", "10.10.10.10");
 	strcpy( g_settings.recording_server_port, configfile.getString( "recording_server_port", "4000").c_str() );
 	g_settings.recording_server_wakeup = configfile.getInt32( "recording_server_wakeup", 0 );
@@ -660,11 +660,15 @@ int CNeutrinoApp::loadSetup()
 	g_settings.streaming_force_transcode_video = configfile.getInt32( "streaming_force_transcode_video", 0 );
 	g_settings.streaming_transcode_video_codec = configfile.getInt32( "streaming_transcode_video_codec", 0 );
 	g_settings.streaming_force_avi_rawaudio = configfile.getInt32( "streaming_force_avi_rawaudio", 0 );
+#ifdef ENABLE_MOVIEPLAYER
+	g_settings.streaming_resolution = configfile.getInt32( "streaming_resolution", CMoviePlayerGui::RES_352X288 );
+#else
 	g_settings.streaming_resolution = configfile.getInt32( "streaming_resolution", 0 );
+#endif
 	g_settings.streaming_vlc10 = configfile.getInt32( "streaming_vlc10", 0);
 	g_settings.streaming_use_buffer = configfile.getInt32("streaming_use_buffer", 1);
 	g_settings.streaming_buffer_segment_size = configfile.getInt32("streaming_buffer_segment_size", 24);
-	g_settings.streaming_stopsectionsd = configfile.getInt32("streaming_stopsectionsd", 1);
+	g_settings.streaming_stopsectionsd = configfile.getInt32("streaming_stopsectionsd", SECTIONSD_STOP);
 	g_settings.streaming_show_tv_in_browser = configfile.getInt32("streaming_show_tv_in_browser", 0);
 	g_settings.streaming_allow_multiselect = configfile.getBool("streaming_allow_multiselect", false);
 	g_settings.streaming_use_reclength = configfile.getBool("streaming_use_reclength", false);
@@ -727,7 +731,7 @@ int CNeutrinoApp::loadSetup()
 
 #ifndef DISABLE_INTERNET_UPDATE
 	//Software-update
-	g_settings.softupdate_mode = configfile.getInt32( "softupdate_mode", 1 );
+	g_settings.softupdate_mode = configfile.getInt32( "softupdate_mode", CFlashUpdate::UPDATEMODE_INTERNET );
 	strcpy(g_settings.softupdate_url_file, configfile.getString("softupdate_url_file", "/etc/update.urls").c_str());
 	strcpy(g_settings.softupdate_proxyserver, configfile.getString("softupdate_proxyserver", "" ).c_str());
 	strcpy(g_settings.softupdate_proxyusername, configfile.getString("softupdate_proxyusername", "" ).c_str());
@@ -737,7 +741,7 @@ int CNeutrinoApp::loadSetup()
 	strcpy(g_settings.font_file, configfile.getString( "font_file", FONTDIR"/LiberationSans-Regular.ttf" ).c_str());
 
 	//BouquetHandling
-	g_settings.bouquetlist_mode = configfile.getInt32( "bouquetlist_mode", 0 );
+	g_settings.bouquetlist_mode = configfile.getInt32( "bouquetlist_mode", bsmChannels );
 
 	// parentallock
 	if (!parentallocked)
@@ -848,7 +852,7 @@ int CNeutrinoApp::loadSetup()
 	if(fromflash)
 	{
 		g_settings.uboot_baudrate	= 9600;
-		g_settings.uboot_console	= 1;
+		g_settings.uboot_console	= UBOOT_CONSOLE_SERIAL;
 		g_settings.uboot_dbox_duplex	= 0;
 		g_settings.uboot_lcd_inverse	= -1;
 		g_settings.uboot_lcd_contrast	= -1;
@@ -864,11 +868,11 @@ int CNeutrinoApp::loadSetup()
 				if(strncmp(buffer,"console=",8) == 0)
 				{
 					if(strncmp(&buffer[8], "null", 4)==0)
-						g_settings.uboot_console = 0;
+						g_settings.uboot_console = UBOOT_CONSOLE_NULL;
 					else if(strncmp(&buffer[8], "ttyS0", 5)==0)
-						g_settings.uboot_console = 1;
+						g_settings.uboot_console = UBOOT_CONSOLE_SERIAL;
 					else if(strncmp(&buffer[8], "tty", 3)==0)
-						g_settings.uboot_console = 2;
+						g_settings.uboot_console = UBOOT_CONSOLE_FB;
 				}
 				else if(strncmp(buffer,"baudrate=", 9) == 0)
 				{
@@ -931,10 +935,10 @@ void CNeutrinoApp::saveSetup()
 
 			switch(g_settings.uboot_console)
 			{
-			case 1:
+			case UBOOT_CONSOLE_SERIAL:
 				buffer = "ttyS0";
 				break;
-			case 2:
+			case UBOOT_CONSOLE_FB:
 				buffer = "tty";
 				break;
 			default:
@@ -2446,18 +2450,18 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 			}
 			else if(msg == CRCInput::RC_ok)
 			{
-				int bouqMode = g_settings.bouquetlist_mode;//bsmChannels;
+				int bouqMode = g_settings.bouquetlist_mode;
 
 				if((bouquetList!=NULL) && (bouquetList->Bouquets.empty()))
 				{
 					dprintf(DEBUG_DEBUG, "bouquets are empty\n");
 					bouqMode = bsmAllChannels;
 				}
-				if((bouquetList!=NULL) && (bouqMode == 1/*bsmBouquets*/))
+				if((bouquetList!=NULL) && (bouqMode == bsmBouquets))
 				{
 					bouquetList->exec(true);
 				}
-				else if((bouquetList!=NULL) && (bouqMode == 0/*bsmChannels*/))
+				else if((bouquetList!=NULL) && (bouqMode == bsmChannels))
 				{
 					int nNewChannel = bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->show();
 					if(nNewChannel>-1)
@@ -2685,12 +2689,27 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 	}
 
 	if (!waitforshutdown) {
-		if (msg == CRCInput::RC_ok && g_settings.standby_off_with == 1 && mode == mode_standby && data == 0)
+		if (msg == CRCInput::RC_ok &&
+		    g_settings.standby_off_with == STANDBY_OFF_WITH_POWER_OK &&
+		    mode == mode_standby &&
+	        data == 0)
+		{
 			g_RCInput->postMsg( NeutrinoMessages::STANDBY_OFF, 0 );
-		else if (msg == CRCInput::RC_home && g_settings.standby_off_with == 2 && mode == mode_standby && data == 0)
+		}
+		else if (msg == CRCInput::RC_home &&
+		         g_settings.standby_off_with == STANDBY_OFF_WITH_POWER_HOME &&
+		         mode == mode_standby &&
+		         data == 0)
+		{
 			g_RCInput->postMsg( NeutrinoMessages::STANDBY_OFF, 0 );
-		else if ((msg == CRCInput::RC_home || msg == CRCInput::RC_ok) && g_settings.standby_off_with == 3 && mode == mode_standby && data == 0)
+		}
+		else if ((msg == CRCInput::RC_home || msg == CRCInput::RC_ok) &&
+		         g_settings.standby_off_with == STANDBY_OFF_WITH_POWER_HOME_OK &&
+		         mode == mode_standby &&
+		         data == 0)
+		{
 			g_RCInput->postMsg( NeutrinoMessages::STANDBY_OFF, 0 );
+		}
 		else if (msg == CRCInput::RC_standby)
 		{
 			if (data == 0)
@@ -3451,16 +3470,19 @@ void CNeutrinoApp::ExitRun(const bool write_si)
 bool CNeutrinoApp::doShowMuteIcon()
 {
 	char current_volume;
-	if (g_settings.show_mute_icon)
+	if (g_settings.show_mute_icon != SHOW_MUTE_ICON_NO)
 	{
 		current_volume = g_Controld->getVolume((CControld::volume_type)g_settings.audio_avs_Control);
 		if (current_volume == 0)	// show mute icon if volume = 0
 		{
-			if (g_settings.show_mute_icon == 1)	// show_mute_icon sets to "yes"
+			if (g_settings.show_mute_icon == SHOW_MUTE_ICON_YES)
 				return true;
-			else if (g_settings.show_mute_icon == 2 && g_settings.audio_DolbyDigital == false)
+			else if (g_settings.show_mute_icon == SHOW_MUTE_ICON_NOT_IN_AC3MODE &&
+			         g_settings.audio_DolbyDigital == false)
+			{
 				// show mute icon if volume = 0 in dependence of enabled or disabled AC3-Mode
 				return true;
+			}
 		}
 	}
 	return false;
@@ -3532,41 +3554,35 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 	const int bwbot = 47; 	// border width y from bottom
 	int x, y;
 	int a_step = atoi(g_settings.audio_step);
-	volumeBarIsVisible = ((g_settings.volumebar_disp_pos != 6) ? true : false);
+	volumeBarIsVisible = ((g_settings.volumebar_disp_pos != VOLUMEBAR_DISP_POS_OFF) ? true : false);
 	
-	if( g_settings.volumebar_disp_pos == 0 )
+	if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_TOP_RIGHT )
 	{
-		// upper right
 		x = g_settings.screen_EndX - dx - bwx - 40;
 		y = g_settings.screen_StartY + dy + bwtop;
 	}
-	else if( g_settings.volumebar_disp_pos == 1 )
+	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_TOP_LEFT )
 	{
-		// upper left
 		x = g_settings.screen_StartX + bwx;
 		y = g_settings.screen_StartY + dy + bwtop;
 	}
-	else if( g_settings.volumebar_disp_pos == 2 )
+	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_BOTTOM_LEFT )
 	{
-		// bottom left
 		x = g_settings.screen_StartX + bwx;
 		y = g_settings.screen_EndY - bwbot;
 	}
-	else if( g_settings.volumebar_disp_pos == 3 )
+	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_BOTTOM_RIGHT )
 	{
-		// bottom right
 		x = g_settings.screen_EndX - dx - bwx;
 		y = g_settings.screen_EndY- bwbot;
 	}
-	else if( g_settings.volumebar_disp_pos == 5 )
+	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_HIGHER_CENTER )
 	{
-		// center higher
 		x = (((g_settings.screen_EndX- g_settings.screen_StartX)- dx) / 2) + g_settings.screen_StartX;
 		y = g_settings.screen_EndY - bwbot-140;
 	}
-	else /* if (g_settings.volumebar_disp_pos == 4) */
+	else /* if (g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_DEFAULT_CENTER) */
 	{
-		// center default
 		x = (((g_settings.screen_EndX- g_settings.screen_StartX)- dx) / 2) + g_settings.screen_StartX;
 		y = g_settings.screen_EndY - bwbot;
 	}

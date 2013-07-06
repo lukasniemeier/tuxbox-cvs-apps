@@ -266,7 +266,7 @@ bool CFlashUpdate::checkVersion4Update()
 
 #ifndef DISABLE_INTERNET_UPDATE
 #ifdef HAVE_DBOX_HARDWARE
-	if(g_settings.softupdate_mode==1) //internet-update
+	if(g_settings.softupdate_mode == UPDATEMODE_INTERNET)
 	{
 		if(!selectHttpImage())
 			return false;
@@ -427,7 +427,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &)
 	showGlobalStatus(20);
 
 #ifndef DISABLE_INTERNET_UPDATE
-	if(g_settings.softupdate_mode==1) //internet-update
+	if(g_settings.softupdate_mode == UPDATEMODE_INTERNET)
 	{
 		if(!getUpdateImage(newVersion))
 		{
@@ -447,7 +447,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &)
 #ifndef DISABLE_INTERNET_UPDATE
 #ifdef HAVE_DREAMBOX_HARDWARE
 	// This check was previously used only on squashfs-images
-	if(g_settings.softupdate_mode==1) //internet-update
+	if(g_settings.softupdate_mode == UPDATEMODE_INTERNET)
 	{
 		showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_MD5CHECK)); // UTF-8
 
