@@ -542,7 +542,6 @@ CMoviePlayerGui::exec(CMenuTarget *parent, const std::string &actionKey)
 	{
 		g_Sectionsd->setPauseScanning(false);
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
-		CNeutrinoApp::getInstance()->SendSectionsdConfig();
 	}
 
 	// Restore last mode

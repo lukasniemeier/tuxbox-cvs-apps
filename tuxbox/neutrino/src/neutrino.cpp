@@ -4193,7 +4193,6 @@ int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 		g_Sectionsd->RegisterNeutrino();
 		g_Sectionsd->setPauseScanning(false);
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
-		SendSectionsdConfig();
 		returnval = menu_return::RETURN_REPAINT; // just to show that something was done
 	}
 #ifdef ENABLE_MOVIEPLAYER2

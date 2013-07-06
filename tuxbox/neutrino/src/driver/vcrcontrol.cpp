@@ -358,7 +358,6 @@ void CVCRControl::CFileAndServerDevice::RestoreNeutrino(void)
 	{
 		g_Sectionsd->setPauseScanning(false);
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
-		CNeutrinoApp::getInstance()->SendSectionsdConfig();
 	}
 
 	// alten mode wieder herstellen (ausser wen zwischenzeitlich auf oder aus sb geschalten wurde)
