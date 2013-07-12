@@ -2049,7 +2049,7 @@ returns mode of painted channel logo,
 
 void CInfoViewer::showLcdPercentOver()
 {
-	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] != 1)
+	if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] != CLCD::STATUSLINE_VOLUME)
 	{
 		static long long old_interval = 0;
 		int runningPercent=-1;

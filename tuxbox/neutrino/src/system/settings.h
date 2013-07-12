@@ -561,7 +561,7 @@ const time_settings_struct_t timing_setting[TIMING_SETTING_COUNT] =
 #define DEFAULT_LCD_INVERSE			0x00
 #define DEFAULT_LCD_AUTODIMM			0x00
 #define DEFAULT_LCD_SHOW_VOLUME			CLCD::STATUSLINE_VOLUME
-#define DEFAULT_LCD_EPGMODE			0x01	/* 0x1 = name 0x2 = epgtitle 0x4 = separator */
+#define DEFAULT_LCD_EPGMODE			CLCD::EPG_NAME
 #define DEFAULT_LCD_BIAS			0x00	/* 0x0 = default for philips rev 2, 0x1 = default for all others */
 #define DEFAULT_LCD_EPGALIGN		CLCD::EPGALIGN_LEFT
 

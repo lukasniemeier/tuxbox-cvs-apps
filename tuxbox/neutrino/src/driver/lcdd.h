@@ -91,6 +91,13 @@ class CLCD
 			EPGALIGN_LEFT,
 			EPGALIGN_CENTER
 		};
+		enum EPGMODE
+		{
+			EPG_NAME    = 1, // show service name
+			EPG_TITLE   = 2, // show EPG title
+			EPG_SEPLINE = 4, // draw separator line between name and title
+			EPG_SHORT   = 8  // show only one line of service name
+		};
 
 
 	private:

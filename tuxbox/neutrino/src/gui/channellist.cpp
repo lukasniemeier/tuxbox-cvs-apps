@@ -686,7 +686,7 @@ void CChannelList::zapTo(int pos, bool forceStoreToLastChannels)
 #endif
 
 		tuned = pos;
-		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE] & 0x02)
+		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE] & CLCD::EPG_TITLE)
 		{	/* microoptimization: only poll sectionsd if epg title display is configured
 			   not sure if this is necessary, but the extra check won't hurt... */
 			CSectionsdClient::CurrentNextInfo info;

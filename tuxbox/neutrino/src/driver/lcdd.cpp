@@ -439,10 +439,10 @@ static std::string splitString(const std::string & text, const int maxwidth, Lcd
 void CLCD::showTextScreen(const std::string & big, const std::string & small, const int showmode, const bool perform_wakeup)
 {
 	/* the "showmode" variable is a bit map:
-		0x01	show "big" string
-		0x02	show "small" string
-		0x04	show separator line if big and small are present / shown
-		0x08	show only one line of "big" string
+		EPG_NAME	show "big" string
+		EPG_SHORT	show only one line of "big" string
+		EPG_TITLE	show "small" string
+		EPG_SEPLINE	show separator line if big and small are present / shown
 	 */
 
 	/* draw_fill_rect is braindead: it actually fills _inside_ the described rectangle,
@@ -455,10 +455,10 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	std::string cname[2];
 	std::string event[4];
 	int namelines = 0, eventlines = 0, maxnamelines = 2;
-	if (showmode & 8)
+	if (showmode & EPG_SHORT)
 		maxnamelines = 1;
 
-	if ((showmode & 1) && !big.empty())
+	if ((showmode & EPG_NAME) && !big.empty())
 	{
 		bool dumb = false;
 		big_utf8 = isUTF8(big);
@@ -482,7 +482,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 	// one nameline => 2 eventlines, 2 namelines => 1 eventline
 	int maxeventlines = 4 - (namelines * 3 + 1) / 2;
 
-	if ((showmode & 2) && !small.empty())
+	if ((showmode & EPG_TITLE) && !small.empty())
 	{
 		bool dumb = false;
 		small_utf8 = isUTF8(small);
@@ -520,7 +520,7 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 		fonts.channelname->RenderString(x, y, LCD_COLS + 10, cname[i].c_str(), CLCDDisplay::PIXEL_ON, 0, big_utf8);
 	}
 	y++;
-	if (eventlines > 0 && namelines > 0 && showmode & 4)
+	if (eventlines > 0 && namelines > 0 && (showmode & EPG_SEPLINE))
 	{
 		y++;
 		display.draw_line(0, y, LCD_COLS - 1, y, CLCDDisplay::PIXEL_ON);
@@ -546,11 +546,6 @@ void CLCD::showTextScreen(const std::string & big, const std::string & small, co
 
 void CLCD::showServicename(const std::string name, const bool perform_wakeup)
 {
-	/*
-	   1 = show servicename
-	   2 = show epg title
-	   4 = draw separator line between name and EPG
-	 */
 	int showmode = g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE];
 
 	//printf("CLCD::showServicename '%s' epg: '%s'\n", name.c_str(), epg_title.c_str());
@@ -589,7 +584,7 @@ void CLCD::setMoviePlaymode(const AUDIOMODES playmode)
 void CLCD::setMovieInfo(const std::string big, const std::string small)
 {
 	int showmode = g_settings.lcd_setting[SNeutrinoSettings::LCD_EPGMODE];
-	showmode |= 3; // take only the separator line from the config
+	showmode |= EPG_NAME | EPG_TITLE; // take only the separator line from the config
 
 	movie_big = big;
 	movie_small = small;
@@ -670,11 +665,11 @@ void CLCD::showVolume(const char vol, const bool perform_update)
 {
 	volume = vol;
 	if (
-	    ((mode == MODE_TVRADIO) && (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) ||
-	    ((mode == MODE_MOVIE) && (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) ||
+	    ((mode == MODE_TVRADIO || mode == MODE_MOVIE) &&
+	     g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] != STATUSLINE_PLAYTIME) ||
 	    (mode == MODE_SCART) ||
 	    (mode == MODE_AUDIO)
-	    )
+	   )
 	{
 		display.draw_fill_rect (11,53,73,61, CLCDDisplay::PIXEL_OFF);
 		//strichlin
