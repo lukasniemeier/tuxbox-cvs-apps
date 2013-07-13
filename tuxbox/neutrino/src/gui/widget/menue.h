@@ -152,7 +152,7 @@ class CMenuSeparator : public CMenuItem
 		};
 
 
-		CMenuSeparator(const int Type = 0, const neutrino_locale_t Text = NONEXISTANT_LOCALE);
+		CMenuSeparator(const int Type = EMPTY, const neutrino_locale_t Text = NONEXISTANT_LOCALE);
 		virtual ~CMenuSeparator(){}
 
 		int paint(bool selected=false);
