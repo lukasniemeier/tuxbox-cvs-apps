@@ -842,9 +842,13 @@ bool CFileBrowser::exec(const char * const dirname)
 	name = dirname;
 	std::replace(name.begin(), name.end(), '\\', '/');
 
+	int selection = -1;
+	if (name == Path)
+		selection = selected;
+
 	paintHead();
-	ChangeDir(name);
-	paint();
+	ChangeDir(name, selection);
+	//paint();
 	paintFoot();
 
 	int oldselected = selected;
@@ -1038,7 +1042,10 @@ bool CFileBrowser::exec(const char * const dirname)
 								ChangeDir(filelist[selected].Url);
 							else
 #endif
+							{
+								selections.push_back(selected);
 								ChangeDir(filelist[selected].Name);
+							}
 						}
 						else
 						{
