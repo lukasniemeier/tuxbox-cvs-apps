@@ -420,7 +420,7 @@ void CTimerList::updateEvents(void)
 		listmaxshow=timerlist.size();
 		height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	}
-	if (!timerlist.empty() && selected==timerlist.size())
+	if (!timerlist.empty() && selected >= timerlist.size())
 	{
 		selected=timerlist.size()-1;
 		liststart = (selected/listmaxshow)*listmaxshow;
