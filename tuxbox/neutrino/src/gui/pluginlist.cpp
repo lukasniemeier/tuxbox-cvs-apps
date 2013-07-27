@@ -130,7 +130,7 @@ int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 			pluginlist.push_back(tmp);
 		}
 	}
-	if (selected >= pluginlist.size() - 1)
+	if (selected >= pluginlist.size())
 		selected = pluginlist.size() - 1;
 
 	paint();
