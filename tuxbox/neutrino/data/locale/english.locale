@@ -1086,7 +1086,7 @@ osdsettings.show_mute_icon Mute-Icon on volume 0
 osdsettings.themeselect Select Theme
 osdsettings.volumebar_disp_pos Volumebar
 parentallock.changepin change PIN code
-parentallock.changepin_hint1 Enter your new youth protection pin code here!
+parentallock.changepin_hint1 Enter your new parental lock pin code here!
 parentallock.changetolocked on locked bouquets
 parentallock.head Enter PIN code
 parentallock.lockage lock program
@@ -1097,7 +1097,7 @@ parentallock.lockedchannel Locked sender...
 parentallock.lockedprogram Locked program (from %d years up)
 parentallock.never never
 parentallock.onsignal on broadcasted lock
-parentallock.parentallock Youth protection
+parentallock.parentallock Parental lock
 parentallock.prompt prompt for PIN
 personalize.access Access options
 personalize.apply_settings Apply changes?
@@ -1111,7 +1111,7 @@ personalize.help_line3 can be set to visible, not visible, activate, deactivate
 personalize.help_line4 or PIN-protected.
 personalize.help_line5 The access to personalization can be protected
 personalize.help_line6 with PIN. The PIN is identical for all protected menus
-personalize.help_line7 (not for youth protection).
+personalize.help_line7 (not for parental lock).
 personalize.help_line8 Default PIN is: 0000
 personalize.menuconfiguration Menu Configuration
 personalize.menudisabledhint The requested menu is currently disabled
@@ -1211,7 +1211,7 @@ recordingmenu.server_ip Recording Server IP
 recordingmenu.server_mac MAC Address
 recordingmenu.server_port Recording Server Port
 recordingmenu.server_wakeup Recording Server WOL
-recordingmenu.setupnow activate changes
+recordingmenu.setupnow Activate changes
 recordingmenu.splitsize Maximum File Size (MB)
 recordingmenu.stopplayback Stop playback
 recordingmenu.stream_subtitle_pid Record Subtitles
