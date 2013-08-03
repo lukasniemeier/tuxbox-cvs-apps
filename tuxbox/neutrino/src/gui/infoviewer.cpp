@@ -537,9 +537,9 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 
 	int ChannelLogoMode = showChannelLogo(channel_id); // get logo mode, paint channel logo if adjusted
 
-	if (ChannelLogoMode != 1) // no logo in numberbox
+	if (ChannelLogoMode != LOGO_AS_CHANNELLUM) // no logo in numberbox
 	{
-		// show logo in numberbox
+		// show channel number in numberbox
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->RenderString(BoxStartX + ((ChanWidth - g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getRenderWidth(strChanNum))>>1), ChanNumYPos, ChanWidth, strChanNum, col_NumBoxText);
 	}
 
@@ -1888,14 +1888,6 @@ void CInfoViewer::Set_CA_Status(int Status)
 }
 
 int CInfoViewer::showChannelLogo( const t_channel_id logo_channel_id  )
-/* ****************************************************************************
-returns mode of painted channel logo,
-0 = no logo painted
-1 = in number box 
-2 = in place of channel name
-3 = beside channel name
-*******************************************************************************
-*/
 {
 	char strChanId[16];
 	sprintf((char*) strChanId, "%llx", logo_channel_id);
@@ -1909,10 +1901,10 @@ returns mode of painted channel logo,
 
 	int x_mid, y_mid, logo_w = 0, logo_h = 0; 
 	int logo_x=0, logo_y=0;
-	int res = 0;
+	int res = NO_LOGO;
 	int start_x = ChanNameX, chan_w = BoxEndX- (start_x+ 20)- time_width- 15;
 	
-	bool logo_available;
+	bool logo_available = false;
 	
 	if (g_settings.infobar_show_channellogo != NO_LOGO)
 	{
@@ -1928,8 +1920,6 @@ returns mode of painted channel logo,
 			strAbsIconPath = strAbsIconChNamePath; // strLogoName;
 			logo_available = true;
 		}
-		else
-			logo_available = false;
 		
 		if (logo_available)
 		{
@@ -1939,9 +1929,8 @@ returns mode of painted channel logo,
 			if ((logo_w == 0) || (logo_h == 0)) // corrupt logo size?
 			{
 				printf("[infoviewer] channel logo: \n -> %s (%s) has no size\n -> please check logo file!\n",strAbsIconPath.c_str(), ChannelName.c_str());
-				return 0;
 			}
-							
+			else
 			{	
 				if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELLUM)
 				{
@@ -1953,8 +1942,7 @@ returns mode of painted channel logo,
 					// check logo dimensions
 					if ((logo_w > ChanWidth) || (logo_h > ChanHeight))	
 					{
-						printf(strErrText.c_str(),ChanWidth, ChanHeight, logo_w, logo_h, g_settings.infobar_show_channellogo);
-						res = 0;
+						printf(strErrText.c_str(), ChanWidth, ChanHeight, logo_w, logo_h, LOGO_AS_CHANNELLUM);
 					}
 					else
 					{
@@ -1963,7 +1951,7 @@ returns mode of painted channel logo,
 						// get position of channel logo, must be centered in number box
 						logo_x = x_mid - logo_w/2;
 						logo_y = y_mid - logo_h/2;
-						res =  1;
+						res = LOGO_AS_CHANNELLUM;
 					}
 				}
 				else if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELNAME)
@@ -1971,8 +1959,7 @@ returns mode of painted channel logo,
 					// check logo dimensions
 					if ((logo_w > chan_w) || (logo_h > ChanHeight))
 					{
-						printf(strErrText.c_str(), chan_w, ChanHeight, logo_w, logo_h, g_settings.infobar_show_channellogo);
-						res =  0;
+						printf(strErrText.c_str(), chan_w, ChanHeight, logo_w, logo_h, LOGO_AS_CHANNELNAME);
 					}
 					else
 					{
@@ -1982,7 +1969,7 @@ returns mode of painted channel logo,
 						y_mid = (ChanNameY+time_height) - time_height/2;
 						logo_x = start_x+10;
 						logo_y = y_mid - logo_h/2;				
-						res =  2;
+						res = LOGO_AS_CHANNELNAME;
 					}
 				}
 				else if (g_settings.infobar_show_channellogo == LOGO_BESIDE_CHANNELNAME)
@@ -1991,8 +1978,7 @@ returns mode of painted channel logo,
 					int Logo_max_width = chan_w - logo_w - 10;
 					if ((logo_w > Logo_max_width) || (logo_h > ChanHeight))
 					{
-						printf(strErrText.c_str(), Logo_max_width, ChanHeight, logo_w, logo_h, g_settings.infobar_show_channellogo);
-						res =  0;
+						printf(strErrText.c_str(), Logo_max_width, ChanHeight, logo_w, logo_h, LOGO_BESIDE_CHANNELNAME);
 					}
 					else
 					{
@@ -2003,16 +1989,12 @@ returns mode of painted channel logo,
 	
 						// set channel name x pos
 						ChanNameX =  start_x + logo_w + 10;
-						res =  3;
+						res = LOGO_BESIDE_CHANNELNAME;
 					}
 				}			
-				else
-				{
-					res = 0;
-				}
 			
 				// paint logo background (shaded/framed)
-				if ((g_settings.infobar_channellogo_background != NO_BACKGROUND) && (res != 0))
+				if ((g_settings.infobar_channellogo_background != NO_BACKGROUND) && (res != NO_LOGO))
 				{	
 					int frame_w = 2, logo_bg_x=0, logo_bg_y=0, logo_bg_w=0, logo_bg_h=0;
 					
@@ -2036,9 +2018,10 @@ returns mode of painted channel logo,
 				}
 
 				// paint the logo
-				if (res !=0) {
+				if (res != NO_LOGO)
+				{
 					if (!frameBuffer->paintIcon(strAbsIconPath, logo_x, logo_y)) 
-						return 0; // paint logo was failed
+						res = NO_LOGO; // paint logo was failed
 				}
 			}
 		}
