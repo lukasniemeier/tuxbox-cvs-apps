@@ -2660,7 +2660,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 
 	if (msg == CRCInput::RC_ignore)
 	{
-		delete (unsigned char*) data;
+		delete [] (unsigned char*) data;
 		return messages_return::handled;
 	}
 
