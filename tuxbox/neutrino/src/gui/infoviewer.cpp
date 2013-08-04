@@ -537,7 +537,7 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 
 	int ChannelLogoMode = showChannelLogo(channel_id); // get logo mode, paint channel logo if adjusted
 
-	if (ChannelLogoMode != LOGO_AS_CHANNELLUM) // no logo in numberbox
+	if (ChannelLogoMode != LOGO_AS_CHANNELNUM) // no logo in numberbox
 	{
 		// show channel number in numberbox
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->RenderString(BoxStartX + ((ChanWidth - g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getRenderWidth(strChanNum))>>1), ChanNumYPos, ChanWidth, strChanNum, col_NumBoxText);
@@ -1908,7 +1908,6 @@ int CInfoViewer::showChannelLogo( const t_channel_id logo_channel_id  )
 	
 	if (g_settings.infobar_show_channellogo != NO_LOGO)
 	{
-
 		// check if logo is available
 		if (access(strAbsIconChIDPath.c_str(), 0) != -1)
 		{
@@ -1932,7 +1931,7 @@ int CInfoViewer::showChannelLogo( const t_channel_id logo_channel_id  )
 			}
 			else
 			{	
-				if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELLUM)
+				if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELNUM)
 				{
 					// calculate mid of numberbox
 					int satNameHeight = 0; // no sat name display now, picon doesnt need to set an offset for y
@@ -1942,7 +1941,7 @@ int CInfoViewer::showChannelLogo( const t_channel_id logo_channel_id  )
 					// check logo dimensions
 					if ((logo_w > ChanWidth) || (logo_h > ChanHeight))	
 					{
-						printf(strErrText.c_str(), ChanWidth, ChanHeight, logo_w, logo_h, LOGO_AS_CHANNELLUM);
+						printf(strErrText.c_str(), ChanWidth, ChanHeight, logo_w, logo_h, LOGO_AS_CHANNELNUM);
 					}
 					else
 					{
@@ -1951,7 +1950,7 @@ int CInfoViewer::showChannelLogo( const t_channel_id logo_channel_id  )
 						// get position of channel logo, must be centered in number box
 						logo_x = x_mid - logo_w/2;
 						logo_y = y_mid - logo_h/2;
-						res = LOGO_AS_CHANNELLUM;
+						res = LOGO_AS_CHANNELNUM;
 					}
 				}
 				else if (g_settings.infobar_show_channellogo == LOGO_AS_CHANNELNAME)
