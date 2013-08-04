@@ -64,8 +64,8 @@ CStreamInfo2::CStreamInfo2()
 	iheight     = g_Font[font_info]->getHeight();
 	sheight     = g_Font[font_small]->getHeight();
 
-	width	= w_max(SCREEN_X, 10);
-	height	= h_max(SCREEN_Y, 10);
+	width	= w_max(SCREEN_X, 20);
+	height	= h_max(SCREEN_Y, 20);
 
 	x	= getScreenStartX(width); //mainwindow position
 	y	= getScreenStartY(height);
@@ -475,9 +475,9 @@ void CStreamInfo2::paint(int/*mode*/)
 		}
 
 		// Info Output
-		paint_techinfo ( xpos, ypos );
+		paint_techinfo(xpos, ypos);
 
-		paint_signal_fe_box ( pigboxes_x,(ypos + 175), 240, 190);
+		paint_signal_fe_box(pigboxes_x, ypos + 185, 240, 190);
 		
 		// buttons
 		int button_y = ypos+background_h-8;
@@ -496,7 +496,7 @@ void CStreamInfo2::paint(int/*mode*/)
 		frameBuffer->paintBoxRel(0, 0, max_width, max_height, COL_MENUCONTENT_PLUS_0);
 
 		// -- paint large signal graph
-		paint_signal_fe_box ( x,  y, width, height - 100);
+		paint_signal_fe_box(x, y, width, height - 100);
 		
 		// -- buttons
 		int button_y = y + height;
@@ -668,6 +668,12 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	sprintf((char*) buf, "0x%04x", si.pmtpid);
 	g_Font[font_small]->RenderString(xpos, ypos, width-10, "PMTpid:", COL_MENUCONTENT, 0, true); // UTF-8
 	g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8 
+
+	//pcrpid
+	ypos+= sheight;
+	sprintf((char*) buf, "0x%04x", si.pcrpid);
+	g_Font[font_small]->RenderString(xpos, ypos, width-10, "PCRpid:", COL_MENUCONTENT, 0, true); // UTF-8
+	g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8
 
 	//vpid
 	ypos+= sheight;
