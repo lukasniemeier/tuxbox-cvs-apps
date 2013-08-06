@@ -3550,41 +3550,41 @@ void CNeutrinoApp::setVolume(const neutrino_msg_t key, const bool bDoPaint)
 	const int iw = 24;	// icon width
 	const int dx = w + b*2 + iw + nw + r; 	// width + 2*border + icon + numbers + round
 	const int bwx = 20;	// border width x from left and right
-	const int bwtop = 47; 	// border width y from top
-	const int bwbot = 47; 	// border width y from bottom
+	const int bwtop = 20; 	// border width y from top
+	const int bwbot = 20; 	// border width y from bottom
 	int x, y;
 	int a_step = atoi(g_settings.audio_step);
 	volumeBarIsVisible = ((g_settings.volumebar_disp_pos != VOLUMEBAR_DISP_POS_OFF) ? true : false);
 	
 	if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_TOP_RIGHT )
 	{
-		x = g_settings.screen_EndX - dx - bwx - 40;
-		y = g_settings.screen_StartY + dy + bwtop;
+		x = g_settings.screen_EndX - dx - bwx;
+		y = g_settings.screen_StartY + bwtop;
 	}
 	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_TOP_LEFT )
 	{
 		x = g_settings.screen_StartX + bwx;
-		y = g_settings.screen_StartY + dy + bwtop;
+		y = g_settings.screen_StartY + bwtop;
 	}
 	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_BOTTOM_LEFT )
 	{
 		x = g_settings.screen_StartX + bwx;
-		y = g_settings.screen_EndY - bwbot;
+		y = g_settings.screen_EndY - dy - bwbot;
 	}
 	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_BOTTOM_RIGHT )
 	{
 		x = g_settings.screen_EndX - dx - bwx;
-		y = g_settings.screen_EndY- bwbot;
+		y = g_settings.screen_EndY - dy - bwbot;
 	}
 	else if( g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_HIGHER_CENTER )
 	{
 		x = (((g_settings.screen_EndX- g_settings.screen_StartX)- dx) / 2) + g_settings.screen_StartX;
-		y = g_settings.screen_EndY - bwbot-140;
+		y = g_settings.screen_EndY - dy - bwbot - 140;
 	}
 	else /* if (g_settings.volumebar_disp_pos == VOLUMEBAR_DISP_POS_DEFAULT_CENTER) */
 	{
 		x = (((g_settings.screen_EndX- g_settings.screen_StartX)- dx) / 2) + g_settings.screen_StartX;
-		y = g_settings.screen_EndY - bwbot;
+		y = g_settings.screen_EndY - dy - bwbot;
 	}
 
 	fb_pixel_t * pixbuf = NULL;
