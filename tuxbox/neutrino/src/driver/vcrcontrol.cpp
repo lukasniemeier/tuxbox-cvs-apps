@@ -761,7 +761,15 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		pids[0] = si.vpid;
 		numpids = 1;
 		if(sptsmode)
-			transfer_pids(si.vpid,0x00,0);
+			transfer_pids(si.vpid, EN_TYPE_VIDEO, 0);
+
+		if (si.pcrpid != si.vpid)
+		{
+			pids[1] = si.pcrpid;
+			numpids = 2;
+			if(sptsmode)
+				transfer_pids(si.pcrpid, EN_TYPE_PCR, 0);
+		}
 	}
 	else
 	{
@@ -774,7 +782,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	{
 		pids[numpids++] = it->apid;
 		if(sptsmode)
-			transfer_pids(it->apid,0x01, it->ac3 ? 1 : 0);
+			transfer_pids(it->apid, EN_TYPE_AUDIO, it->ac3 ? 1 : 0);
 	}
 	if(!apid_list.empty())
 		g_Zapit->setAudioChannel(apid_list.begin()->index);

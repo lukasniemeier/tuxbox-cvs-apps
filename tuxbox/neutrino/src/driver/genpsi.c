@@ -37,13 +37,10 @@ $Id: genpsi.c,v 1.2 2006/01/16 12:45:54 sat_man Exp $
 #define ES_TYPE_MPA			0x03
 #define ES_TYPE_AC3			0x81
 
-#define EN_TYPE_VIDEO		0x00
-#define EN_TYPE_AUDIO		0x01
-#define EN_TYPE_TELTEX		0x02
-#define EN_TYPE_PCR			0x03
 typedef struct 
 {
 	 short	nba;
+	 uint16_t	pcrpid;
 	 uint16_t	vpid;
 	 uint16_t	apid[10];
 	 short	isAC3[10];
@@ -55,6 +52,7 @@ void transfer_pids(uint16_t pid,uint16_t pidart,short isAC3)
 	switch(pidart)
 	{
 		case EN_TYPE_VIDEO:
+			avPids.pcrpid=pid;
 			avPids.vpid=pid;
 			break;
 		case EN_TYPE_AUDIO:
@@ -64,7 +62,9 @@ void transfer_pids(uint16_t pid,uint16_t pidart,short isAC3)
 			break;
 		case EN_TYPE_TELTEX:
 			break;
-
+		case EN_TYPE_PCR:
+			avPids.pcrpid=pid;
+			break;
 		default:
 			break;
 	}
@@ -157,8 +157,8 @@ int genpsi(int fd2)
 //-- write row with desc. for pcr stream (eq. video) -- 
 	pkt[ofs]   = EN_TYPE_PCR;
 	pkt[ofs+1] = 0x02;
-	pkt[ofs+2] = (avPids.vpid>>8);
-	pkt[ofs+3] = (avPids.vpid & 0xFF);
+	pkt[ofs+2] = (avPids.pcrpid>>8);
+	pkt[ofs+3] = (avPids.pcrpid & 0xFF);
  
 //-- calculate CRC --
 	calc_crc32psi(&pkt[data_len], &pkt[OFS_HDR_2], data_len-OFS_HDR_2 );
@@ -180,8 +180,8 @@ int genpsi(int fd2)
 	pkt[OFS_HDR_2+2]  = (patch_len & 0xFF); 
 //-- patch pcr PID --
 	ofs = OFS_PMT_DATA;
-	pkt[ofs]  |= (avPids.vpid>>8);
-	pkt[ofs+1] = (avPids.vpid & 0xFF);
+	pkt[ofs]  |= (avPids.pcrpid>>8);
+	pkt[ofs+1] = (avPids.pcrpid & 0xFF);
 //-- write row with desc. for ES video stream --
 	ofs = OFS_STREAM_TAB;
 	pkt[ofs]   = ES_TYPE_MPEG12;
@@ -205,6 +205,7 @@ int genpsi(int fd2)
 //-- write TS packet --
 	bytes += write(fd2, pkt, SIZE_TS_PKT);
 //-- finish --
+	avPids.pcrpid=0;
 	avPids.vpid=0;
 	avPids.nba=0;
 	return 1;

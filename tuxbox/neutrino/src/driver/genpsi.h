@@ -26,6 +26,11 @@ $Id: genpsi.h,v 1.1 2005/08/15 14:47:52 metallica Exp $
 #define __genpsi_h__
 #include <inttypes.h>
 
+#define EN_TYPE_VIDEO		0x00
+#define EN_TYPE_AUDIO		0x01
+#define EN_TYPE_TELTEX		0x02
+#define EN_TYPE_PCR			0x03
+
 int genpsi(int fd2);
 void transfer_pids(uint16_t pid,uint16_t pidart,short isAC3);
 

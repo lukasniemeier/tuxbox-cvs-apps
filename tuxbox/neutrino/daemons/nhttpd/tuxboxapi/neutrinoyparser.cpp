@@ -478,6 +478,7 @@ std::string  CNeutrinoYParser::func_get_mode(CyhookHandler */*hh*/, std::string 
 //-------------------------------------------------------------------------
 std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler */*hh*/, std::string para)
 {
+	std::string yresult;
 	CZapitClient::responseGetPIDs pids;
 	int apid=0,apid_no=0,apid_idx=0;
 	pids.PIDs.vpid=0;
@@ -490,7 +491,10 @@ std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler */*hh*/, std::s
 		apid_idx=apid_no;
 	if(!pids.APIDs.empty())
 		apid = pids.APIDs[apid_idx].pid;
-	return string_printf("0x%04x,0x%04x,0x%04x",pids.PIDs.pmtpid,pids.PIDs.vpid,apid);
+	yresult = string_printf("0x%04x,0x%04x,0x%04x", pids.PIDs.pmtpid, pids.PIDs.vpid, apid);
+	if (pids.PIDs.pcrpid != pids.PIDs.vpid)
+		yresult += string_printf(",0x%04x", pids.PIDs.pcrpid);
+	return yresult;
 }
 //-------------------------------------------------------------------------
 // y-func : get_radio_pids (returns: 0x0000)
@@ -671,6 +675,7 @@ std::string  CNeutrinoYParser::func_get_current_stream_info(CyhookHandler *hh, s
 	hh->ParamList["apid"] = itoh(serviceinfo.apid);
 	hh->ParamList["vtxtpid"] = (serviceinfo.vtxtpid != 0)?itoh(serviceinfo.vtxtpid):"nicht verf&uuml;gbar";
 	hh->ParamList["pmtpid"] = (serviceinfo.pmtpid != 0)?itoh(serviceinfo.pmtpid):"nicht verf&uuml;gbar";
+	hh->ParamList["pcrpid"] = (serviceinfo.pcrpid != 0)?itoh(serviceinfo.pcrpid):"nicht verf&uuml;gbar";
 	if (serviceinfo.polarisation != 2) /* only satellite has polarisation */
 	{
 		hh->ParamList["tsfrequency"] = string_printf("%d.%03d MHz", serviceinfo.tsfrequency / 1000, serviceinfo.tsfrequency % 1000);
