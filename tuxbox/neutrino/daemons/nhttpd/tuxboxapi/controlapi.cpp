@@ -225,11 +225,11 @@ void CControlAPI::Execute(CyhookHandler *hh)
 		;
 	else if(std::string(yCgiCallList[index].mime_type) == "+xml")		// Parameter xml?
 		if (hh->ParamList["xml"] != "")
-			hh->SetHeader(HTTP_OK, "text/xml");
+			hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
 		else
-			hh->SetHeader(HTTP_OK, "text/html");
+			hh->SetHeader(HTTP_OK, "text/html; charset=iso-8859-1");
 	else
-		hh->SetHeader(HTTP_OK, yCgiCallList[index].mime_type);
+		hh->SetHeader(HTTP_OK, std::string(yCgiCallList[index].mime_type) + "; charset=iso-8859-1");
 	// response
 	hh->status = HANDLED_READY;
 	if (hh->Method == M_HEAD)	// HEAD or function call
@@ -348,11 +348,11 @@ void CControlAPI::ExecCGI(CyhookHandler *hh)
 	std::string script, result;
 	// override standard header
 	if (hh->ParamList.size() > 1 && hh->ParamList["xml"].empty())
-		hh->SetHeader(HTTP_OK, "text/html");
+		hh->SetHeader(HTTP_OK, "text/html; charset=iso-8859-1");
 	else if (hh->ParamList.size() > 1 && !hh->ParamList["xml"].empty())
-		hh->SetHeader(HTTP_OK, "text/xml");
+		hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
 	else
-		hh->SetHeader(HTTP_OK, "text/plain");
+		hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
 	if (!hh->ParamList.empty())
 	{
 		script = hh->ParamList["1"];
@@ -1068,7 +1068,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 
 	if (hh->ParamList.empty())
 	{
-		hh->SetHeader(HTTP_OK, "text/plain");
+		hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
 		CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(CZapitClient::MODE_CURRENT);
 		CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
 		for(; channel != channellist->end();channel++)
@@ -1084,7 +1084,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 	}
 	else if (hh->ParamList["xml"].empty())
 	{
-		hh->SetHeader(HTTP_OK, "text/plain");
+		hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
 		if (hh->ParamList["1"] == "ext")
 		{
 			CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(CZapitClient::MODE_CURRENT);
@@ -1169,7 +1169,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 	//	stoptime : show only items until stoptime reached
 	else if (!(hh->ParamList["xml"].empty()))
 	{
-		hh->SetHeader(HTTP_OK, "text/xml");
+		hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
 
 		t_channel_id channel_id = (t_channel_id)-1;
 
@@ -2273,7 +2273,7 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 	}
 	else
 	{
-		hh->SetHeader(HTTP_OK, "text/html");
+		hh->SetHeader(HTTP_OK, "text/html; charset=iso-8859-1");
 		hh->Write(url);
 	}
 }
