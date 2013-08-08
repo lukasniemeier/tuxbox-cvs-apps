@@ -718,8 +718,8 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 
 	CutBackNeutrino(channel_id, mode);
 
-	int repeatcount=0;
 #ifdef HAVE_DBOX_HARDWARE
+	int repeatcount=0;
 	int actmode=g_Zapit->PlaybackState(); // get actual decoder mode
 	bool sptsmode=g_settings.misc_spts;   // take default from settings
 
@@ -756,18 +756,20 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	unsigned int pos;
 
 	CZapitClient::CCurrentServiceInfo si = g_Zapit->getCurrentServiceInfo();
+	if (GenPsi && sptsmode)
+		reset_pids();
 	if (si.vpid != 0)
 	{
 		pids[0] = si.vpid;
 		numpids = 1;
-		if(sptsmode)
+		if (GenPsi && sptsmode)
 			transfer_pids(si.vpid, EN_TYPE_VIDEO, 0);
 
 		if (si.pcrpid != si.vpid)
 		{
 			pids[1] = si.pcrpid;
 			numpids = 2;
-			if(sptsmode)
+			if (GenPsi && sptsmode)
 				transfer_pids(si.pcrpid, EN_TYPE_PCR, 0);
 		}
 	}
@@ -781,7 +783,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	for(APIDList::iterator it = apid_list.begin(); it != apid_list.end(); ++it)
 	{
 		pids[numpids++] = it->apid;
-		if(sptsmode)
+		if (GenPsi && sptsmode)
 			transfer_pids(it->apid, EN_TYPE_AUDIO, it->ac3 ? 1 : 0);
 	}
 	if(!apid_list.empty())
@@ -1109,8 +1111,8 @@ bool CVCRControl::CServerDevice::Record(const t_channel_id channel_id, int mode,
 
 	CutBackNeutrino(channel_id, mode);
 
-	int repeatcount=0;
 #ifdef HAVE_DBOX_HARDWARE
+	int repeatcount=0;
 	int actmode=g_Zapit->PlaybackState() ; // get actual decoder mode
 
 	// aviaEXT is loaded, actual mode is not SPTS and switchoption is set , only in tvmode

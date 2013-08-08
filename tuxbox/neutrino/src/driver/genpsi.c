@@ -69,6 +69,13 @@ void transfer_pids(uint16_t pid,uint16_t pidart,short isAC3)
 			break;
 	}
 }
+void reset_pids(void)
+{
+	avPids.pcrpid = 0;
+	avPids.vpid = 0;
+	avPids.nba = 0;
+}
+
 //-- special enigma stream description packet for  --
 //-- at least 1 video, 1 audo and 1 PCR-Pid stream --
 //------------------------------------------------------------------------------------
@@ -204,9 +211,6 @@ int genpsi(int fd2)
 	calc_crc32psi(&pkt[data_len], &pkt[OFS_HDR_2], data_len-OFS_HDR_2 );
 //-- write TS packet --
 	bytes += write(fd2, pkt, SIZE_TS_PKT);
-//-- finish --
-	avPids.pcrpid=0;
-	avPids.vpid=0;
-	avPids.nba=0;
+
 	return 1;
 }
