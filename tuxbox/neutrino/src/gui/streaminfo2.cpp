@@ -665,13 +665,19 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	
 	//pmtpid
 	ypos+= sheight+5; //blank line
-	sprintf((char*) buf, "0x%04x", si.pmtpid);
+	if (si.pmtpid != 0)
+		sprintf((char*) buf, "0x%04x", si.pmtpid);
+	else
+		sprintf((char*) buf, "%s", g_Locale->getText(LOCALE_STREAMINFO_NOT_AVAILABLE));
 	g_Font[font_small]->RenderString(xpos, ypos, width-10, "PMTpid:", COL_MENUCONTENT, 0, true); // UTF-8
 	g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8 
 
 	//pcrpid
 	ypos+= sheight;
-	sprintf((char*) buf, "0x%04x", si.pcrpid);
+	if (si.pcrpid != 0)
+		sprintf((char*) buf, "0x%04x", si.pcrpid);
+	else
+		sprintf((char*) buf, "%s", g_Locale->getText(LOCALE_STREAMINFO_NOT_AVAILABLE));
 	g_Font[font_small]->RenderString(xpos, ypos, width-10, "PCRpid:", COL_MENUCONTENT, 0, true); // UTF-8
 	g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8
 
@@ -688,7 +694,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	//apid	
 	if (g_RemoteControl->current_PIDs.APIDs.empty()){
 		ypos+= sheight;
-		sprintf((char*) buf, "Apid(s): %s", g_Locale->getText(LOCALE_STREAMINFO_NOT_AVAILABLE));
+		sprintf((char*) buf, "Apid(s):  %s", g_Locale->getText(LOCALE_STREAMINFO_NOT_AVAILABLE));
 		g_Font[font_small]->RenderString(xpos, ypos, width-10, buf, COL_MENUCONTENT, 0, true); // UTF-8
 	} else {
 		unsigned int i;
