@@ -492,7 +492,7 @@ std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler */*hh*/, std::s
 	if(!pids.APIDs.empty())
 		apid = pids.APIDs[apid_idx].pid;
 	yresult = string_printf("0x%04x,0x%04x,0x%04x", pids.PIDs.pmtpid, pids.PIDs.vpid, apid);
-	if (pids.PIDs.pcrpid != pids.PIDs.vpid)
+	if (pids.PIDs.pcrpid != 0 && pids.PIDs.pcrpid != pids.PIDs.vpid)
 		yresult += string_printf(",0x%04x", pids.PIDs.pcrpid);
 	return yresult;
 }

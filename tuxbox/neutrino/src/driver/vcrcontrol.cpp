@@ -765,7 +765,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 		if (GenPsi && sptsmode)
 			transfer_pids(si.vpid, EN_TYPE_VIDEO, 0);
 
-		if (si.pcrpid != si.vpid)
+		if (si.pcrpid != 0 && si.pcrpid != si.vpid)
 		{
 			pids[1] = si.pcrpid;
 			numpids = 2;
