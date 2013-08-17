@@ -1849,7 +1849,14 @@ bool CNeutrinoApp::doGuiRecord(char * preselectedDir, bool addTimer, char * file
 				eventinfo.epg_starttime = 0;
 				strcpy(eventinfo.epgTitle, "");
 			}
-			eventinfo.apids = TIMERD_APIDS_CONF;
+			if (filename != NULL)
+			{
+				CTimerd::responseGetTimer timer;
+				g_Timerd->getTimer(timer, recording_id);
+				eventinfo.apids = timer.apids;
+			}
+			else
+				eventinfo.apids = TIMERD_APIDS_CONF;
 			bool doRecord = true;
 			if (g_settings.recording_type == RECORDING_FILE)
 			{
