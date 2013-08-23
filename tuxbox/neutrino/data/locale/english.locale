@@ -1429,6 +1429,7 @@ timerlist.apids_dflt record default audio streams
 timerlist.bouquetselect choose bouquet
 timerlist.channel Channel
 timerlist.channelselect choose channel
+timerlist.close Exit
 timerlist.delete Delete
 timerlist.menumodify Modify timer
 timerlist.menunew New timer

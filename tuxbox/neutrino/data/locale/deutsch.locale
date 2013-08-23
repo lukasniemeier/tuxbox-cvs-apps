@@ -1429,6 +1429,7 @@ timerlist.apids_dflt Voreingestellte Tonspuren aufn.
 timerlist.bouquetselect Bouquet wählen
 timerlist.channel Kanal
 timerlist.channelselect Kanal wählen
+timerlist.close Schließen
 timerlist.delete Löschen
 timerlist.menumodify Timer bearbeiten
 timerlist.menunew Neuer Timer

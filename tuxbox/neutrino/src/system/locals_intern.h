@@ -1456,6 +1456,7 @@ const char * locale_real_names[] =
 	"timerlist.bouquetselect",
 	"timerlist.channel",
 	"timerlist.channelselect",
+	"timerlist.close",
 	"timerlist.delete",
 	"timerlist.menumodify",
 	"timerlist.menunew",
