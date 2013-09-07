@@ -785,7 +785,7 @@ requests to sectionsd.
 				}
 				else
 				{
-					if (( msg != CRCInput::RC_timeout ) && (msg != CRCInput::RC_ok))
+					if (!tsmode && (msg != CRCInput::RC_timeout) && (msg != CRCInput::RC_ok))
 						g_RCInput->postMsg( msg, data );
 					res = messages_return::cancel_info;
 				}
