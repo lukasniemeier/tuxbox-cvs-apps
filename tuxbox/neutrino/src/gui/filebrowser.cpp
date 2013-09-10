@@ -380,8 +380,8 @@ void CFileBrowser::commonInit()
 	selected = 0;
 	selections.clear();
 
-	width = w_max(720, 40);
-	height = h_max(576, 40);
+	width = w_max(720, 30);
+	height = h_max(576, 30);
 
 	theight = fnt_title->getHeight();
 	fheight = fnt_item->getHeight();
@@ -1226,8 +1226,8 @@ void CFileBrowser::paintItem(unsigned int pos)
 			colwidth2 = 0;
 		else
 			colwidth2 = fnt_item->getRenderWidth("rwxrwxrwx");
-		colwidth3 = fnt_item->getRenderWidth("222.222G");
-		colwidth1 = width - 35 - colwidth2 - colwidth3 - 10;
+		colwidth3 = fnt_item->getRenderWidth("200.200G"); // zero is mostly the bigger digit
+		colwidth1 = width - 35 - colwidth2 - colwidth3 - 25;
 
 		frameBuffer->paintBoxRel(x,ypos, width- 15, fheight, bgcolor, c_rad_small);
 
@@ -1260,7 +1260,21 @@ void CFileBrowser::paintItem(unsigned int pos)
 			}
 			frameBuffer->paintIcon(fileicon, x+5 , ypos + (fheight-16) / 2 );
 
-			fnt_item->RenderString(x + 35, ypos + fheight, colwidth1 - 10 , FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName()), color, 0, true); // UTF-8
+			char f_name[256];
+			std::string FileName = FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName());
+			int i = FileName.length();
+			sprintf(f_name, "%s", FileName.c_str());
+
+			/* too long? cut it! */
+			while ((fnt_item->getRenderWidth(&f_name[0], true) >= colwidth1) && (i > 2)) {
+				f_name[--i] = '\0';
+			}
+
+			if ( i < FileName.length()) {
+				f_name[i-2] = '\0';
+				sprintf(f_name, "%s%s", &f_name[0], "...");
+			}
+			fnt_item->RenderString(x + 35, ypos + fheight, colwidth1, &f_name[0], color, 0, true); // UTF-8
 
 			if( S_ISREG(actual_file->Mode) )
 			{
