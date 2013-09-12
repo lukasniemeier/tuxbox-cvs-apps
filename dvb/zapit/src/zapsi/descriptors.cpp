@@ -39,14 +39,6 @@
 #ifdef _DVBFRONTEND_H_
 #error HAVE_TRIPLEDRAGON && _DVBFRONTEND_H_
 #endif
-#else /* !TRIPLEDRAGON */
-#if HAVE_DVB_API_VERSION < 3
-#define frequency Frequency
-#define symbol_rate SymbolRate
-#define inversion Inversion
-#define fec_inner FEC_inner
-#define modulation QAM
-#endif
 #endif
 extern tallchans allchans;              //  defined in zapit.cpp
 extern transponder_list_t transponders; //  defined in zapit.cpp

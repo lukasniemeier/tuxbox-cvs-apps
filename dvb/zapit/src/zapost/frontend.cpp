@@ -38,13 +38,6 @@
 #define min(x,y)	((x < y) ? x : y)
 #define max(x,y)	((x > y) ? x : y)
 
-#if HAVE_DVB_API_VERSION < 3
-#define frequency Frequency
-#define inversion Inversion
-#define modulation QAM
-#define FE_SET_VOLTAGE SEC_SET_VOLTAGE
-#endif
-
 #define SOUTH	0
 #define NORTH	1
 #define EAST	0

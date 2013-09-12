@@ -1159,10 +1159,13 @@ void CChannelList::paintDetails(unsigned int index)
 			case FEC_1_2:	desc+= "1/2";  break;
 			case FEC_2_3:	desc+= "2/3";  break;
 			case FEC_3_4:	desc+= "3/4";  break;
-			case FEC_4_5:	desc+= "4/5";  break;
 			case FEC_5_6:	desc+= "5/6";  break;
+			case FEC_7_8:   desc+= "7/8";  break;
+#if HAVE_DVB_API_VERSION >= 3
+			case FEC_4_5:	desc+= "4/5";  break;
 			case FEC_6_7:	desc+= "6/7";  break;
 			case FEC_8_9:	desc+= "8/9";  break;
+#endif
 			case FEC_AUTO:	desc+= "AUTO"; break;
 				default:	desc+= "UNKNOWN"; break;
 		}

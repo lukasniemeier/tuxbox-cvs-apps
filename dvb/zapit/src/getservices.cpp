@@ -29,21 +29,6 @@
 #include <configfile.h>
 #include <sys/stat.h>
 
-#if !defined HAVE_TRIPLEDRAGON && HAVE_DVB_API_VERSION < 3
-#define frequency Frequency
-#define symbol_rate SymbolRate
-#define inversion Inversion
-#define fec_inner FEC_inner
-#define modulation QAM
-#define bandwidth bandWidth
-#define code_rate_LP LP_CodeRate
-#define code_rate_HP HP_CodeRate
-#define constellation Constellation
-#define transmission_mode TransmissionMode
-#define guard_interval guardInterval
-#define hierarchy_information HierarchyInformation
-#endif
-
 extern transponder_list_t transponders;
 extern tallchans allchans;
 

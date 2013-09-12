@@ -58,6 +58,18 @@
 #define	FE_SET_TONE		SEC_SET_TONE
 #define	FE_SET_VOLTAGE		SEC_SET_VOLTAGE
 #define FE_DISEQC_RESET_OVERLOAD	SEC_RESET_OVERLOAD
+#define frequency Frequency
+#define symbol_rate SymbolRate
+#define inversion Inversion
+#define fec_inner FEC_inner
+#define modulation QAM
+#define bandwidth bandWidth
+#define code_rate_LP LP_CodeRate
+#define code_rate_HP HP_CodeRate
+#define constellation Constellation
+#define transmission_mode TransmissionMode
+#define guard_interval guardInterval
+#define hierarchy_information HierarchyInformation
 
 struct dvb_diseqc_master_cmd {
         __u8 msg [6];   /*  { framing, address, command, data [3] } */
