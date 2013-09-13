@@ -84,6 +84,16 @@ Wurde der Eintrag "FONT=" bereits weggelassen, sollte auch dieser Eintrag nicht
 verwendet werden, damit das Plugin den zum "pakenham.ttf" passenden Wert von 30
 verwendet.
 
+Mit der Angabe
+
+MENUTIMEOUT=
+
+kann das MENÜ-Timeout von z.Z. 60 Sek., das aus der neutrino.conf(timing.menu)
+ausgelesen wird, überschrieben werden. Der Wert 0 schaltet das Timeout für das
+FlexMenü aus. Es wird dann solange angezeigt, bis der Home-Button gedrückt wird.
+120 Sekunden werden gesetzt, wenn neutrino.conf fehlt oder nicht gelesen werden
+kann und keine Angabe mit MENUTIMEOUT gemacht wurde.
+
 Der Eintrag
 
 PAGING=1

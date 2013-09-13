@@ -42,7 +42,7 @@ static char CFG_FILE[128]="/var/tuxbox/config/shellexec.conf";
 #define LCD_CPL 	12
 #define LCD_RDIST 	10
 
-#define SH_VERSION  2.56
+#define SH_VERSION  2.57
 typedef struct {int fnum; FILE *fh[16];} FSTRUCT, *PFSTRUCT;
 
 static int direct[32];
@@ -471,6 +471,10 @@ FSTRUCT fstr;
 						sscanf(strchr(line_buffer,'=')+1,"%d",&FSIZE_MED);
 						FSIZE_BIG=(FSIZE_MED*5)/4;
 						FSIZE_SMALL=(FSIZE_MED*4)/5;
+					}
+					if(strstr(line_buffer,"MENUTIMEOUT=")==line_buffer)
+					{
+						sscanf(strchr(line_buffer,'=')+1,"%d",&mtmo);
 					}
 					if(strstr(line_buffer,"PAGING=")==line_buffer)
 					{
@@ -907,6 +911,8 @@ time_t tm1,tm2;
 
 			case -1:
 				knew=0;
+				if (mtmo == 0)
+					break;
 				time(&tm2);
 //printf("TLeft: %3d\r",mtmo-(tm2-tm1));				
 				if((tm2-tm1)<mtmo)
