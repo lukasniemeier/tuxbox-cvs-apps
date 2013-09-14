@@ -1147,13 +1147,18 @@ void CChannelList::paintDetails(unsigned int index)
 			sprintf (buf, "%d",  TP.feparams.frequency / 1000000);
 		desc = desc + buf + " ";
 
-		if (g_info.delivery_system == DVB_S)
-			sprintf(buf, "%d", TP.feparams.u.qpsk.symbol_rate / 1000);
-		else
-			sprintf(buf, "%d", TP.feparams.u.qam.symbol_rate / 1000);
+#ifdef HAVE_TRIPLEDRAGON
+		sprintf(buf, "%d", TP.feparams.symbolrate / 1000);
+#else
+		sprintf(buf, "%d", TP.feparams.u.qam.symbol_rate / 1000);
+#endif
 		desc = desc + buf + " ";
 
-		switch(TP.feparams.u.qam.fec_inner)
+#ifdef HAVE_TRIPLEDRAGON
+		switch (TP.feparams.fec)
+#else
+		switch (TP.feparams.u.qam.fec_inner)
+#endif
 		{
 			case FEC_NONE:	desc+= "NONE"; break;
 			case FEC_1_2:	desc+= "1/2";  break;
@@ -1171,6 +1176,9 @@ void CChannelList::paintDetails(unsigned int index)
 		}
 		desc+= " DVB ";
 
+#ifdef HAVE_TRIPLEDRAGON
+		desc+= "QPSK";
+#else
 		switch (TP.feparams.u.qam.modulation)
 		{
 			case 0x00:	desc+= "QPSK"; break;
@@ -1181,6 +1189,7 @@ void CChannelList::paintDetails(unsigned int index)
 			case 0x05:	desc+= "QAM_256"; break;
 				default:   desc+= "QAM_AUTO"; break;
 		}
+#endif
 
 		if (!(name.empty()))
 			desc+= " (" + name + ")";
@@ -1197,7 +1206,6 @@ void CChannelList::paintDetails(unsigned int index)
 			}
 			desc =  desc + " (" + sstr + ")";
 		}
-
 
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ 3*fheight, full_width - 30, desc.c_str(), COL_MENUCONTENTDARK, 0, true);
 	}
