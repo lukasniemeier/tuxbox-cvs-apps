@@ -1714,11 +1714,7 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 	{
 		TP_params TP;
 		get_transponder(&TP);
-#if HAVE_DVB_API_VERSION < 3
-		INFO("current frequency: %lu", (long unsigned int)TP.feparams.Frequency);
-#else
 		INFO("current frequency: %lu", (long unsigned int)TP.feparams.frequency);
-#endif
 		CBasicServer::send_data(connfd, &TP, sizeof(TP));
 		break;
 	}
