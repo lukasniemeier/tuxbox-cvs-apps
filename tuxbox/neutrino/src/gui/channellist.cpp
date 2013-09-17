@@ -1191,9 +1191,8 @@ void CChannelList::paintDetails(unsigned int index)
 		}
 #endif
 
-		if (!(name.empty()))
-			desc+= " (" + name + ")";
-		else if (g_info.delivery_system == DVB_S) {
+		if (g_info.delivery_system == DVB_S)
+		{
 			char sstr[20];
 			for (CZapitClient::SatelliteList::const_iterator satList_it = satList.begin(); satList_it != satList.end(); ++satList_it)
 			{
