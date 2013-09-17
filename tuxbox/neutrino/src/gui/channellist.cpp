@@ -1135,7 +1135,7 @@ void CChannelList::paintDetails(unsigned int index)
 	else {
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ fheight, full_width - 20, g_Locale->getText(LOCALE_EPGLIST_NOEVENTS), COL_MENUCONTENTDARK, 0, true); // UTF-8
 	}
-	if(g_settings.channellist_foot == FOOT_FREQ) {
+	if (g_settings.channellist_foot == FOOT_FREQ && g_Zapit->getCurrentServiceID() == getActiveChannel_ChannelID()) {
 		TP_params 	TP;
 		g_Zapit->get_current_TP(&TP);
 		std::string desc = "";
