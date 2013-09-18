@@ -266,7 +266,9 @@ CChannelList::CChannel* CChannelList::getChannel( int number)
 
 int CChannelList::getKey(int id)
 {
-	return chanlist[id]->key;
+	if (id > -1 && id < (int)chanlist.size())
+		return chanlist[id]->key;
+	return 0;
 }
 
 static const std::string empty_string;
@@ -275,29 +277,28 @@ const std::string & CChannelList::getActiveChannelName(void) const
 {
 	if (selected < chanlist.size())
 		return chanlist[selected]->name;
-	else
-		return empty_string;
+	return empty_string;
 }
 
 t_satellite_position CChannelList::getActiveSatellitePosition(void) const
 {
 	if (selected < chanlist.size())
 		return chanlist[selected]->satellitePosition;
-	else
-		return 0;
+	return 0;
 }
 
 t_channel_id CChannelList::getActiveChannel_ChannelID(void) const
 {
 	if (selected < chanlist.size())
 		return chanlist[selected]->channel_id;
-	else
-		return 0;
+	return 0;
 }
 
 int CChannelList::getActiveChannelNumber(void) const
 {
-	return (selected + 1);
+	if (selected < chanlist.size())
+		return chanlist[selected]->number;
+	return 0;
 }
 
 void CChannelList::updateSelection(unsigned int newpos)
@@ -1297,6 +1298,12 @@ void CChannelList::paintItem(int pos)
 		color   = COL_MENUCONTENTSELECTED;
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		paintItem2DetailsLine(pos);
+		c_rad_small = RADIUS_SMALL;
+	}
+	else if (getKey(curr) == CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber())
+	{
+		color   = !displayNext ? COL_MENUCONTENT + 1 : COL_MENUCONTENTINACTIVE;
+		bgcolor = !displayNext ? COL_MENUCONTENT_PLUS_1 : COL_MENUCONTENTINACTIVE_PLUS_0;
 		c_rad_small = RADIUS_SMALL;
 	}
 	else
