@@ -1193,17 +1193,11 @@ void CChannelList::paintDetails(unsigned int index)
 
 		if (g_info.delivery_system == DVB_S)
 		{
-			char sstr[20];
-			for (CZapitClient::SatelliteList::const_iterator satList_it = satList.begin(); satList_it != satList.end(); ++satList_it)
-			{
-				if (satList_it->satPosition == getActiveSatellitePosition())
-				{
-					snprintf(sstr, 19, "%d", satList_it->satPosition);
-					sstr[19] = '\0';
-					break;
-				}
-			}
-			desc =  desc + " (" + sstr + ")";
+			int satpos = getActiveSatellitePosition();
+			char satpos_str[6];
+			snprintf(satpos_str, 5, "%d.%d%c", satpos < 0 ? -satpos / 10 : satpos / 10, satpos < 0 ? -satpos % 10 : satpos % 10, satpos < 0 ? 'W' : 'E');
+			satpos_str[5] = '\0';
+			desc = desc + " (" + satpos_str + ")";
 		}
 
 		g_Font[SNeutrinoSettings::FONT_TYPE_CHANNELLIST]->RenderString(x+ 10, y+ height+ 5+ 3*fheight, full_width - 30, desc.c_str(), COL_MENUCONTENTDARK, 0, true);
