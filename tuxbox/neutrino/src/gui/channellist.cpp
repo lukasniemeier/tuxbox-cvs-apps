@@ -393,6 +393,8 @@ int CChannelList::show()
 		{
 			if (!bouquetList->Bouquets.empty())
 			{
+				if (!usedInBouquet)
+					selected = oldselected;
 				int dir = (msg_repeatok == g_settings.key_bouquet_up) ? 1 : -1;
 				int b_size = bouquetList->Bouquets.size();
 				int nNext = (bouquetList->getActiveBouquetNumber() + b_size + dir) % b_size;
@@ -429,6 +431,8 @@ int CChannelList::show()
 
 			if ( g_EventList->exec(chanlist[selected]->channel_id, chanlist[selected]->name) == menu_return::RETURN_EXIT_ALL) // UTF-8
 			{
+				if (!usedInBouquet)
+					selected = oldselected;
 				res = -2;
 				loop = false;
 			}
@@ -444,6 +448,8 @@ int CChannelList::show()
 		else if ( ( msg == CRCInput::RC_yellow ) &&
 				  ( bouquetList != NULL ) )
 		{
+			if (!usedInBouquet)
+				selected = oldselected;
 			bShowBouquetList = true;
 			loop=false;
 		}
@@ -484,6 +490,8 @@ int CChannelList::show()
 
 			if (ret == menu_return::RETURN_EXIT_ALL)
 			{
+				if (!usedInBouquet)
+					selected = oldselected;
 				res = -2;
 				loop = false;
 			}
@@ -510,11 +518,15 @@ int CChannelList::show()
 			{
 				/* need to make sure that channel list is closed,
 				   because entries might not be valid anymore */
+				if (!usedInBouquet)
+					selected = oldselected;
 				loop = false;
 				res = -2;
 			}
 			if ( CNeutrinoApp::getInstance()->handleMsg( msg, data ) & messages_return::cancel_all )
 			{
+				if (!usedInBouquet)
+					selected = oldselected;
 				loop = false;
 				res = - 2;
 			}
