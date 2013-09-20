@@ -1304,6 +1304,7 @@ void CChannelList::paintItem(int pos)
 	uint8_t    color;
 	fb_pixel_t bgcolor;
 	unsigned int curr = liststart + pos;
+	bool curr_is_active = (getKey(curr) == CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber());
 
 	if (curr == selected)
 	{
@@ -1312,7 +1313,7 @@ void CChannelList::paintItem(int pos)
 		paintItem2DetailsLine(pos);
 		c_rad_small = RADIUS_SMALL;
 	}
-	else if (getKey(curr) == CNeutrinoApp::getInstance()->channelList->getActiveChannelNumber())
+	else if (curr_is_active)
 	{
 		color   = !displayNext ? COL_MENUCONTENT + 1 : COL_MENUCONTENTINACTIVE;
 		bgcolor = !displayNext ? COL_MENUCONTENT_PLUS_1 : COL_MENUCONTENTINACTIVE_PLUS_0;
@@ -1405,10 +1406,10 @@ void CChannelList::paintItem(int pos)
 					}
 					
 					// progressbar colors
-					int pb_activeCol , pb_passiveCol ;
+					fb_pixel_t pb_activeCol, pb_passiveCol;
 					if (curr != selected){
-						pb_activeCol = COL_MENUCONTENT_PLUS_3;
-						pb_passiveCol = COL_MENUCONTENT_PLUS_1;
+						pb_activeCol = curr_is_active ? COL_MENUCONTENT_PLUS_4 : COL_MENUCONTENT_PLUS_3;
+						pb_passiveCol = curr_is_active ? COL_MENUCONTENT_PLUS_2 : COL_MENUCONTENT_PLUS_1;
 					}
 					else {
 						pb_activeCol = COL_MENUCONTENTSELECTED_PLUS_2;
@@ -1433,10 +1434,10 @@ void CChannelList::paintItem(int pos)
 			// progressbar with diagonal zero line
 			if(g_settings.channellist_extended)
 			{
-				int pbz_activeCol , pbz_passiveCol ;
+				fb_pixel_t pbz_activeCol, pbz_passiveCol;
 				if (curr != selected){
-					pbz_activeCol = COL_MENUCONTENT_PLUS_1;
-					pbz_passiveCol = COL_MENUCONTENT_PLUS_0;
+					pbz_activeCol = (curr_is_active && !displayNext) ? COL_MENUCONTENT_PLUS_2 : COL_MENUCONTENT_PLUS_1;
+					pbz_passiveCol = (curr_is_active && !displayNext) ? COL_MENUCONTENT_PLUS_1 : COL_MENUCONTENT_PLUS_0;
 				}
 				else {
 					pbz_activeCol = COL_MENUCONTENTSELECTED_PLUS_2;
