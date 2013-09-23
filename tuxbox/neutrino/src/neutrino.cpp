@@ -1576,6 +1576,7 @@ void CNeutrinoApp::channelsInit4Record(void)
 	CZapitClient::BouquetChannelList zapitChannels;
 	CZapitClient::BouquetList zapitBouquets;
 	int channel_nr = 0;
+	std::map<int, int> channel_nr_map;
 
 	//deleting old channelList for mode-switching.
 	if (channelListRecord)
@@ -1586,10 +1587,9 @@ void CNeutrinoApp::channelsInit4Record(void)
 	for(uint i=0; i<zapitChannels.size(); i++)
 	{
 		channel_nr++;
+		channel_nr_map[zapitChannels[i].nr] = channel_nr;
 		channelListRecord->addChannel(channel_nr, channel_nr, zapitChannels[i].name, zapitChannels[i].satellitePosition, zapitChannels[i].channel_id); // UTF-8
 	}
-
-	channel_nr = 0;
 
 	if (bouquetListRecord)
 		delete bouquetListRecord;
@@ -1607,7 +1607,7 @@ void CNeutrinoApp::channelsInit4Record(void)
 
 		for (uint j = 0; j < zapitChannels.size(); j++)
 		{
-			channel_nr++;
+			channel_nr = channel_nr_map[zapitChannels[j].nr];
 			CChannelList::CChannel* channel = channelListRecord->getChannel(channel_nr);
 
 			/* observe that "bouquetList->Bouquets[i]" refers to the bouquet we just created using bouquetList->addBouquet */
