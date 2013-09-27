@@ -690,7 +690,7 @@ void CFlashExpert::writemtd(const std::string & filename, int mtdNumber)
 }
 
 
-void CFlashExpert::showMTDSelector(const std::string & actionkey)
+int CFlashExpert::showMTDSelector(const std::string & actionkey)
 {
 	//mtd-selector erzeugen
 	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, NEUTRINO_ICON_UPDATE, width);
@@ -702,11 +702,12 @@ void CFlashExpert::showMTDSelector(const std::string & actionkey)
 		sprintf(sActionKey, "%s%d", actionkey.c_str(), i);
 		mtdselector->addItem(new CMenuForwarderNonLocalized(mtdInfo->getMTDName(i).c_str(), true, NULL, this, sActionKey, CRCInput::convertDigitToKey(i+1)));
 	}
-	mtdselector->exec(NULL,"");
+	int res = mtdselector->exec(NULL,"");
 	delete mtdselector;
+	return res;
 }
 
-void CFlashExpert::showFileSelector(const std::string & actionkey)
+int CFlashExpert::showFileSelector(const std::string & actionkey)
 {
 	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, NEUTRINO_ICON_UPDATE, width);
 	fileselector->addIntroItems(LOCALE_FLASHUPDATE_FILESELECTOR);
@@ -737,14 +738,16 @@ void CFlashExpert::showFileSelector(const std::string & actionkey)
 		}
 		free(namelist);
 	}
-	fileselector->exec(NULL,"");
+	int res = fileselector->exec(NULL,"");
 	delete fileselector;
+	return res;
 }
 
 
 int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 {
-	
+	int res = menu_return::RETURN_REPAINT;
+
 	if(parent)
 	{
 		parent->hide();
@@ -756,15 +759,15 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if(actionKey=="writeflash")
 	{
-		showFileSelector("");
+		res = showFileSelector("");
 	}
 	else if(actionKey=="readflashmtd")
 	{
-		showMTDSelector("readmtd");
+		res = showMTDSelector("readmtd");
 	}
 	else if(actionKey=="writeflashmtd")
 	{
-		showMTDSelector("writemtd");
+		res = showMTDSelector("writemtd");
 	}
 	else
 	{
@@ -780,7 +783,7 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 		{
 			printf("mtd-write\n\n");
 			selectedMTD = iWritemtd;
-			showFileSelector("");
+			res = showFileSelector("");
 		}
 		else
 		{
@@ -794,10 +797,10 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 				selectedMTD=-1;
 			}
 		}
-		hide();
-		return menu_return::RETURN_EXIT_ALL;
+		if (res != menu_return::RETURN_EXIT_ALL)
+			res = menu_return::RETURN_EXIT;
 	}
 
 	hide();
-	return menu_return::RETURN_REPAINT;
+	return res;
 }

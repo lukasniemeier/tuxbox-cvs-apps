@@ -72,8 +72,8 @@ class CFlashExpert : public CProgressWindow
 		int selectedMTD;
 		int width;
 
-		void showMTDSelector(const std::string & actionkey);
-		void showFileSelector(const std::string & actionkey);
+		int showMTDSelector(const std::string & actionkey);
+		int showFileSelector(const std::string & actionkey);
 
 		void readmtd(int readmtd);
 		void writemtd(const std::string & filename, int mtdNumber);
