@@ -1261,7 +1261,7 @@ void CFileBrowser::paintItem(unsigned int pos)
 
 			char f_name[256];
 			std::string FileName = FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName());
-			int i = FileName.length();
+			unsigned int i = FileName.length();
 			sprintf(f_name, "%s", FileName.c_str());
 
 			/* too long? cut it! */
