@@ -259,7 +259,6 @@ CTimerList::CTimerList()
 
 CTimerList::~CTimerList()
 {
-	timerlist.clear();
 	delete Timer;
 }
 
@@ -397,7 +396,6 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 
 void CTimerList::updateEvents(void)
 {
-	timerlist.clear();
 	Timer->getTimerList (timerlist);
 	//Remove last deleted event from List
 	CTimerd::TimerList::iterator timer = timerlist.begin();
@@ -1153,10 +1151,7 @@ int CTimerList::newTimer()
 
 	// delete dynamic created objects
 	for(unsigned int count=0;count<toDelete.size();count++)
-	{
 		delete toDelete[count];
-	}
-	toDelete.clear();
 
 	return ret;
 }

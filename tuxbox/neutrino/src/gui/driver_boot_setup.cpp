@@ -194,7 +194,6 @@ int CDriverBootSetup::showSetup()
 	unsigned int toDeleteSize = toDelete.size();
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
-	toDelete.clear();
 
 	return res;
 }

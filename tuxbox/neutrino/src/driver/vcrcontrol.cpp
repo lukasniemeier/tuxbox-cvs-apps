@@ -526,8 +526,6 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	}
 
 	cMovieInfo.encodeMovieInfoXml(&extMessage,movieInfo);
-	
-	movieInfo.audioPids.clear();
 
 	return extMessage;
 }

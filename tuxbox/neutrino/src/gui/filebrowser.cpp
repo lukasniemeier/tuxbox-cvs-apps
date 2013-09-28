@@ -378,7 +378,6 @@ void CFileBrowser::commonInit()
 	Dirs_Selectable = false;
 	Dir_Mode = false;
 	selected = 0;
-	selections.clear();
 
 	width = w_max(720, 30);
 	height = h_max(576, 30);

@@ -1008,7 +1008,6 @@ void CTimerEvent::saveToConfig(CConfigFile *config)
 {
 	dprintf("CTimerEvent::saveToConfig\n");
 	std::vector<int> allIDs;
-	allIDs.clear();
 	if (!(config->getString("IDS").empty()))
 	{
 		// sonst bekommen wir den bloeden 0er

@@ -1659,9 +1659,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 	if (hh->ParamList["format"] == "id")
 		send_id = true;
 
-	timerlist.clear();
 	NeutrinoAPI->Timerd->getTimerList(timerlist);
-
 	CTimerd::TimerList::iterator timer = timerlist.begin();
 
 	for(; timer != timerlist.end();timer++)
@@ -2058,7 +2056,6 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 		else
 		{
 			CTimerd::TimerList timerlist;
-			timerlist.clear();
 			NeutrinoAPI->Timerd->getTimerList(timerlist);
 			CTimerd::TimerList::iterator timer = timerlist.begin();
 

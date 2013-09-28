@@ -735,14 +735,8 @@ std::string  CNeutrinoYParser::func_get_timer_list(CyhookHandler */*hh*/, std::s
 	std::string yresult;
 	CTimerd::TimerList timerlist;				// List of bouquets
 
-	timerlist.clear();
 	NeutrinoAPI->Timerd->getTimerList(timerlist);
 	sort(timerlist.begin(), timerlist.end());
-
-	CZapitClient::BouquetChannelList channellist_tv;     
-	CZapitClient::BouquetChannelList channellist_radio;     
-	channellist_tv.clear();
-	channellist_radio.clear();
 
 	int i = 1;
 	char classname= 'a';
@@ -960,7 +954,6 @@ std::string  CNeutrinoYParser::func_set_timer_form(CyhookHandler *hh, std::strin
 
 	// program row
 	CZapitClient::BouquetChannelList channellist;
-	channellist.clear();
 	NeutrinoAPI->Zapit->getChannels(channellist,CZapitClient::MODE_TV);
 	t_channel_id current_channel = (cmd == "new") ? NeutrinoAPI->Zapit->getCurrentServiceID() : timer.channel_id;
 	CZapitClient::BouquetChannelList::iterator channel = channellist.begin();

@@ -112,7 +112,6 @@ CPictureViewerGui::CPictureViewerGui()
 
 CPictureViewerGui::~CPictureViewerGui()
 {
-	playlist.clear();
 	delete m_viewer;
 }
 

@@ -90,10 +90,7 @@ CPluginList::CPluginList(const neutrino_locale_t Name, const uint listtype)
 CPluginList::~CPluginList()
 {
 	for(unsigned int count=0;count<pluginlist.size();count++)
-	{
 		delete pluginlist[count];
-	}
-	pluginlist.clear();
 }
 
 int CPluginList::exec(CMenuTarget* parent, const std::string & /*actionKey*/)

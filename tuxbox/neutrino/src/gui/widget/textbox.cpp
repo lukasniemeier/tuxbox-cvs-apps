@@ -185,9 +185,7 @@ CTextBox::CTextBox()
 CTextBox::~CTextBox()
 {
 	//TRACE("[CTextBox] del\r\n");
-	m_cLineArray.clear();
 	hide();
-
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -228,8 +226,6 @@ void CTextBox::initVar(void)
 	m_nMaxWidth = MAX_WINDOW_WIDTH;
 	
 	m_textBackgroundColor = COL_MENUCONTENT_PLUS_0;
-
-	m_cLineArray.clear();
 }
 
 //////////////////////////////////////////////////////////////////////

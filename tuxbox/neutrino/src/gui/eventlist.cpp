@@ -138,7 +138,6 @@ void EventList::init()
 
 void EventList::UpdateTimerList(void)
 {
-	timerlist.clear();
 	Timer.getTimerList (timerlist);
 	Timer.getRecordingSafety(timerPre,timerPost);
 }
@@ -232,7 +231,6 @@ void EventList::readEvents(const t_channel_id channel_id)
 									evtlist.push_back(evtlist2[loop]);
 								}
 							}
-							evtlist2.clear();
 						}
 					}
 				}

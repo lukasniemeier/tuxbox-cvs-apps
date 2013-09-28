@@ -485,7 +485,6 @@ void CInfoViewer::showTitle(const int ChanNum, const std::string & Channel, cons
 		}
 		if ((channel_id != new_channel_id) || (evtlist.empty()))
 		{
-			evtlist.clear();
 			evtlist = g_Sectionsd->getEventsServiceKey(new_channel_id);
 			if (!evtlist.empty())
 				sort(evtlist.begin(),evtlist.end(), sortByDateTime);

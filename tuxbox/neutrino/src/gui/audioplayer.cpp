@@ -186,7 +186,6 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 	m_inetmode = inetmode;
 	m_visible = false;
 	m_selected = 0;
-	m_metainfo.clear();
 
 	m_select_title_by_name = g_settings.audioplayer_select_title_by_name==1;
 
@@ -220,8 +219,6 @@ CAudioPlayerGui::CAudioPlayerGui(bool inetmode)
 
 CAudioPlayerGui::~CAudioPlayerGui()
 {
-	m_playlist.clear();
-	m_title2Pos.clear();
 	g_Zapit->setStandby (false);
 	g_Sectionsd->setPauseScanning (false);
 }

@@ -63,7 +63,6 @@ CBouquetList::~CBouquetList()
 {
 	for (std::vector<CBouquet *>::iterator it = Bouquets.begin(); it != Bouquets.end(); ++it)
 		delete (*it);
-	Bouquets.clear();
 }
 
 CBouquet* CBouquetList::addBouquet(const char * const name, int BouquetKey, bool locked)

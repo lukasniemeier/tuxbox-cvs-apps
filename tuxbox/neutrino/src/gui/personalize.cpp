@@ -222,7 +222,7 @@ CPersonalizeGui* CPersonalizeGui::getInstance()
 
 CPersonalizeGui::~CPersonalizeGui()
 {
-	v_widget.clear();
+
 }
 
 int CPersonalizeGui::exec(CMenuTarget* parent, const string & actionKey)

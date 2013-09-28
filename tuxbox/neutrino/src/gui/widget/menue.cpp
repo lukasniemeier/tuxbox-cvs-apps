@@ -289,8 +289,6 @@ CMenuWidget::~CMenuWidget()
 		    (item != GenericMenuCancel))
 			delete item;
 	}
-	items.clear();
-	page_start.clear();
 }
 
 void CMenuWidget::addItem(CMenuItem* menuItem, const bool defaultselected)
@@ -956,7 +954,7 @@ void CMenuOptionStringChooser::removeOptions()
 
 CMenuOptionStringChooser::~CMenuOptionStringChooser()
 {
-	removeOptions();
+
 }
 
 void CMenuOptionStringChooser::addOption(const char * const value)

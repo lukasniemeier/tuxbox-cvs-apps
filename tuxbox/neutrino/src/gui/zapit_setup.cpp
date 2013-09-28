@@ -222,17 +222,13 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 		}
 		if (!channellist.empty())
 			mctv.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwtv));
-		channellist.clear();
 	}
 
 	int res = mctv.exec(NULL, "");
 
 	// delete dynamic created objects
 	for(unsigned int count=0;count<toDelete.size();count++)
-	{
 		delete toDelete[count];
-	}
-	toDelete.clear();
 
 	return res;
 }

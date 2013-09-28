@@ -112,7 +112,6 @@ CChannelList::~CChannelList()
 		for (std::vector<CChannel *>::iterator it = chanlist.begin(); it != chanlist.end(); ++it)
 			delete (*it);
 	}
-	chanlist.clear();
 }
 
 int CChannelList::exec()
@@ -1656,8 +1655,6 @@ void CChannelList::paint_events(int index)
 		}
 		i++;
 	}
-
-	evtlist.clear();
 }
 
 static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)

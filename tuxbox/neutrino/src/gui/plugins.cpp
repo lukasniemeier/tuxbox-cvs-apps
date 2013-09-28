@@ -165,7 +165,7 @@ void CPlugins::loadPlugins()
 
 CPlugins::~CPlugins()
 {
-	plugin_list.clear();
+
 }
 
 bool CPlugins::parseCfg(plugin *plugin_data)

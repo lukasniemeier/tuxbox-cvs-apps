@@ -450,7 +450,6 @@ int COsdSetup::showOsdTimeoutSetup()
 	unsigned int toDeleteSize = toDelete.size();
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
-	toDelete.clear();
 
 	return res;
 }
@@ -711,7 +710,6 @@ int COsdSetup::showOsdFontSizeSetup()
 	unsigned int toDeleteSize = toDelete.size();
 	for (unsigned int i = 0; i < toDeleteSize; i++)
 		delete toDelete[i];
-	toDelete.clear();
 
 	return res;
 }

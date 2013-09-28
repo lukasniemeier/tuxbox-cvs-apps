@@ -514,10 +514,7 @@ CMTDInfo::CMTDInfo()
 CMTDInfo::~CMTDInfo()
 {
 	for(int x=0;x<getMTDCount();x++)
-	{
 		delete mtdData[x];
-	}
-	mtdData.clear();
 }
 
 

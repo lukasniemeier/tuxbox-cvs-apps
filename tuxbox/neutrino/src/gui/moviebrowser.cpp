@@ -376,26 +376,6 @@ CMovieBrowser::~CMovieBrowser()
 	//TRACE("[mb] del\r\n");
 	//saveSettings(&m_settings);		
 	hide();
-	m_dir.clear();
-
-	m_dirNames.clear();
-	for(unsigned int i=0; i < m_vMovieInfo.size(); i++)
-	{
-		m_vMovieInfo[i].audioPids.clear();
-	}
-	m_vMovieInfo.clear();
-	m_vHandleBrowserList.clear();
-	m_vHandleRecordList.clear();
-	m_vHandlePlayList.clear();
-	m_vHandleSerienames.clear();
-
-	for(int i = 0; i < LF_MAX_ROWS; i++)
-	{
-		m_browserListLines.lineArray[i].clear();
-		m_recordListLines.lineArray[i].clear();
-		m_playListLines.lineArray[i].clear();
-		m_FilterLines.lineArray[i].clear();
-	}
 }
 
 CMovieBrowser* CMovieBrowser::getInstance()
@@ -420,11 +400,6 @@ void CMovieBrowser::fileInfoStale(void)
 	
 	 // Also release memory buffers, since we have to reload this stuff next time anyhow 
 	m_dirNames.clear();
-	
-	for(unsigned int i=0; i < m_vMovieInfo.size(); i++)
-	{
-		m_vMovieInfo[i].audioPids.clear();
-	}
 	
 	m_vMovieInfo.clear();
 	m_vHandleBrowserList.clear();
