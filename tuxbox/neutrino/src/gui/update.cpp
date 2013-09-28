@@ -120,22 +120,6 @@ public:
 };
 
 
-class CNonLocalizedMenuSeparator : public CMenuSeparator
-{
-	const char * the_text;
-
-public:
-	CNonLocalizedMenuSeparator(const char *_text, const neutrino_locale_t Text) : CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, Text)
-		{
-			the_text = _text;
-		}
-
-	virtual const char * getString(void)
-		{
-			return the_text;
-		}
-};
-
 #ifndef DISABLE_INTERNET_UPDATE
 bool CFlashUpdate::selectHttpImage(void)
 {
@@ -191,7 +175,9 @@ bool CFlashUpdate::selectHttpImage(void)
 		}
 		updates_lists.push_back(url.substr(startpos, endpos - startpos));
 
-		SelectionWidget.addItem(new CNonLocalizedMenuSeparator(updates_lists.rbegin()->c_str(), LOCALE_FLASHUPDATE_SELECTIMAGE));
+		CMenuSeparator* sep = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FLASHUPDATE_SELECTIMAGE);
+		sep->setString(updates_lists.back());
+		SelectionWidget.addItem(sep);
 
 		if (httpTool.downloadFile(url, gTmpPath LIST_OF_UPDATES_LOCAL_FILENAME, 20))
 		{
