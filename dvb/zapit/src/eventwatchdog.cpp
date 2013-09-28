@@ -325,11 +325,11 @@ void *CEventWatchDog::watchdogThread(void *arg)
 			pthread_exit(NULL);
 		}
 
-		CZapitClient zapit;
 		struct pollfd pfd[1];
 		pfd[0].fd = fd_ev;
 		pfd[0].events = POLLIN;
 #if 0
+		CZapitClient zapit;
 		int pollret;
 		while ((pollret = poll(pfd, 1, 2500)) >= 0) {
 			if (pollret == 0) {
@@ -342,6 +342,7 @@ void *CEventWatchDog::watchdogThread(void *arg)
 					}
 				}
 			}
+		}
 #endif
 		while (poll(pfd, 1, -1) >= 0) {
 			if (!(pfd[0].revents & POLLIN))
