@@ -759,6 +759,7 @@ int CFlashExpert::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if(actionKey=="writeflash")
 	{
+		selectedMTD = -1;
 		res = showFileSelector("");
 	}
 	else if(actionKey=="readflashmtd")
