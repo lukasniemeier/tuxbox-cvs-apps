@@ -233,7 +233,7 @@ int CRecordSetup::showRecordSetup()
 		temp[9] = 0; // terminate for sure
 		CMenuWidget* dirRecordingSettings = new CMenuWidget(LOCALE_RECORDINGMENU_FILESETTINGS, NEUTRINO_ICON_RECORDING, width);
 		toDelete.push_back(dirRecordingSettings);
-		dirMenu->addItem(new CMenuForwarderNonLocalized(temp, true, g_settings.recording_dir[i], dirRecordingSettings));
+		dirMenu->addItem(new CMenuForwarder(temp, true, g_settings.recording_dir[i], dirRecordingSettings));
 
 		// subhead
 		snprintf(temp, 10, " %d", i + 1);

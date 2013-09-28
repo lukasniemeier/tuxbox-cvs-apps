@@ -128,7 +128,7 @@ int CAudioSelectMenuHandler::doMenu()
 			std::ostringstream actionKey;
 			actionKey << "AUD: " << i;
 
-			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(
+			CMenuForwarder* fw = new CMenuForwarder(
 					g_RemoteControl->current_PIDs.APIDs[i].desc,
 					true, NULL, this, actionKey.str().c_str(),
 					CRCInput::convertDigitToKey(++digit));
@@ -183,7 +183,7 @@ int CAudioSelectMenuHandler::doMenu()
 			}
 			text.append(getISO639Description(g_RemoteControl->current_PIDs.SubPIDs[i].desc));
 
-			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(text.c_str(),
+			CMenuForwarder* fw = new CMenuForwarder(text.c_str(),
 					active, NULL, this, actionKey.str().c_str(),
 					CRCInput::convertDigitToKey(++digit));
 			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);

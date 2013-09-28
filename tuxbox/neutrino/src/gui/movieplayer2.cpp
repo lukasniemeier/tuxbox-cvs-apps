@@ -3101,7 +3101,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				std::ostringstream actionKey;
 				actionKey << "AUD: " << count;
 
-				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+				CMenuForwarder* fw = new CMenuForwarder(apidtitle.c_str(),
 						true, NULL, APIDChanger, actionKey.str().c_str(),
 						CRCInput::convertDigitToKey(++digit));
 				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
@@ -3148,7 +3148,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				std::ostringstream actionKey;
 				actionKey << "AUD: " << count;
 
-				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+				CMenuForwarder* fw = new CMenuForwarder(apidtitle.c_str(),
 						true, NULL, APIDChanger, actionKey.str().c_str(),
 						CRCInput::convertDigitToKey(++digit));
 				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
@@ -3187,7 +3187,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 						std::ostringstream actionKey;
 						actionKey << "TTX: " << movieinfo.subPids[i].subPage;
 
-						CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+						CMenuForwarder* fw = new CMenuForwarder(apidtitle.c_str(),
 								hasTuxtxtPlugin, NULL, APIDChanger, actionKey.str().c_str(),
 								CRCInput::convertDigitToKey(++digit));
 						fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
@@ -3236,7 +3236,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 				std::ostringstream actionKey;
 				actionKey << "DVB: " << subpid;
 
-				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(apidtitle.c_str(),
+				CMenuForwarder* fw = new CMenuForwarder(apidtitle.c_str(),
 						hasDvbsubPlugin, NULL, APIDChanger, actionKey.str().c_str(),
 						CRCInput::convertDigitToKey(++digit));
 				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);

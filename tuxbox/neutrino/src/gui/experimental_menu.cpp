@@ -65,7 +65,7 @@ int CExperimentalSettingsMenuHandler::doMenu ()
 
 	// the following to lines are examples
 	//ExperimentalSettings.addItem( new CMenuOptionNumberChooser(NONEXISTANT_LOCALE, (int*) &g_settings.show_ca_status, true, 0, 1, 0, 0, LOCALE_OPTIONS_OFF, "show CA Status"));
-	//ExperimentalSettings.addItem(new CMenuForwarderNonLocalized("experimental1", true, NULL, new					CChMosaicHandler(), id, CRCInput::RC_nokey, ""), false);
+	//ExperimentalSettings.addItem(new CMenuForwarder("experimental1", true, NULL, new CChMosaicHandler(), id, CRCInput::RC_nokey, ""), false);
 	
 	
 	return ExperimentalSettings.exec(NULL, "");

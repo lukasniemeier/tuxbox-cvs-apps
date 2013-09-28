@@ -467,7 +467,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 						if (StreamFeaturesChanger == NULL)
 							StreamFeaturesChanger = new CStreamFeaturesChangeExec();
 						keyhelper.get(&key, &icon, cnt == 0 ? CRCInput::RC_blue : CRCInput::RC_nokey);
-						menu_item = new CMenuForwarderNonLocalized(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, key, icon);
+						menu_item = new CMenuForwarder(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, key, icon);
 						menu->addItem(menu_item, (cnt == 0));
 						cnt++;
 					}
@@ -486,7 +486,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 						if (StreamFeaturesChanger == NULL)
 							StreamFeaturesChanger = new CStreamFeaturesChangeExec();
 						keyhelper.get(&key, &icon, cnt == 0 ? CRCInput::RC_blue : CRCInput::RC_nokey);
-						menu_item = new CMenuForwarderNonLocalized(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, key, icon);
+						menu_item = new CMenuForwarder(g_PluginList->getName(count), true, NULL, StreamFeaturesChanger, id, key, icon);
 						menu->addItem(menu_item, (cnt == 0));
 						cnt++;
 					}

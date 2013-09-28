@@ -125,7 +125,7 @@ int COsdLangSetup::showSetup()
 				if(pos != NULL)
 				{
 					*pos = '\0';
-					CMenuForwarderNonLocalized* oj = new CMenuForwarderNonLocalized(locale, true, "", this, locale);
+					CMenuForwarder* oj = new CMenuForwarder(locale, true, "", this, locale);
 					oj->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 					osdl_setup->addItem(oj, strcmp(g_settings.language, locale) == 0);
 				}

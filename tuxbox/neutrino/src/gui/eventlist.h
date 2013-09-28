@@ -157,7 +157,7 @@ class CEventListHandler : public CMenuTarget
 class CEventFinderMenu : public CMenuTarget, CChangeObserver
 {
 	private:
-		CMenuForwarderNonLocalized* m_search_channelname_mf;
+		CMenuForwarder* m_search_channelname_mf;
 
 		int* 		m_event;
 		int*		m_search_epg_item;

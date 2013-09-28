@@ -195,7 +195,7 @@ void CRecDirChooser::initMenu(void)
 				dirOptionText[i]=tmp;
 			}
 			snprintf(indexStr,10,"MID:%d",i);
-			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(g_settings.recording_dir[i].c_str(), true, dirOptionText[i], this, indexStr);
+			CMenuForwarder* fw = new CMenuForwarder(g_settings.recording_dir[i].c_str(), true, dirOptionText[i], this, indexStr);
 			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			addItem(fw, i == 0); // select first item
 		}

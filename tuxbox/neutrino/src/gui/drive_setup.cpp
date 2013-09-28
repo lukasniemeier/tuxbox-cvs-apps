@@ -801,7 +801,7 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 	CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
 
 	//extended settings: filesystem format options
-	vector<CMenuForwarderNonLocalized*> v_fs_opts_items;
+	vector<CMenuForwarder*> v_fs_opts_items;
 	for (size_t i=0; i<MAXCOUNT_FSTYPES; i++){
 		for (size_t j = 0; j<v_fs_modules.size(); j++){
 			if (v_fs_modules[j] != fstype[i].fsname)
@@ -810,8 +810,8 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 			if (v_input_fs_options[i] == NULL )
 				v_input_fs_options[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, d_settings.drive_fs_format_option[i], 32,
 								LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz- ");
-			CMenuForwarderNonLocalized * fw_item= NULL;
-			fw_item = new CMenuForwarderNonLocalized(fstype[i].fsname.c_str(), true, d_settings.drive_fs_format_option[i], v_input_fs_options[i]);
+			CMenuForwarder * fw_item= NULL;
+			fw_item = new CMenuForwarder(fstype[i].fsname.c_str(), true, d_settings.drive_fs_format_option[i], v_input_fs_options[i]);
 			v_fs_opts_items.push_back(fw_item);
 		}
 	}
@@ -839,14 +839,14 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 void CDriveSetup::showMMCParameterMenu(CMenuWidget* w_mmc)
 {
 	//prepare mmc parameter input
-	std::vector<CMenuForwarderNonLocalized*> v_fw_mmc_load_parameters;
+	std::vector<CMenuForwarder*> v_fw_mmc_load_parameters;
 	for (uint i=0; i < MAXCOUNT_MMC_MODULES; i++){
 		if (v_input_mmc_parameters[i] == NULL)
 			v_input_mmc_parameters[i] = new CStringInputSMS(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_LOADCMD_OPTIONS_INPUT, &d_settings.drive_mmc_modul_parameter[i], 20, false,
 										LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_MODUL_MMC_OPTIONS_INPUT_L1, NONEXISTANT_LOCALE, "1234567890abcdefghijklmnopqrstuvwxyz-= ");
 
 		string m_name = have_mmc_modul[i] ? mmc_modules[i]: mmc_modules[i] + " " + g_Locale->getText(LOCALE_DRIVE_SETUP_MMC_MODUL_NOT_INSTALLED);
-		v_fw_mmc_load_parameters.push_back(new CMenuForwarderNonLocalized(m_name.c_str(), have_mmc_modul[i], d_settings.drive_mmc_modul_parameter[i], v_input_mmc_parameters[i]));
+		v_fw_mmc_load_parameters.push_back(new CMenuForwarder(m_name.c_str(), have_mmc_modul[i], d_settings.drive_mmc_modul_parameter[i], v_input_mmc_parameters[i]));
 	}
 
 	//mmc:paint submenue mmc parameters
@@ -971,7 +971,7 @@ void CDriveSetup::showHddSetupSub()
 	string dev_name = g_Locale->getText(mn_data[current_device].entry_locale);
 
 	//menue sub: generate part items
-	CMenuForwarderNonLocalized *sub_part_entry[MAXCOUNT_PARTS];
+	CMenuForwarder *sub_part_entry[MAXCOUNT_PARTS];
 	string partname[MAXCOUNT_PARTS];
 	string item_name[MAXCOUNT_PARTS];
 	for (uint i = 0; i<MAXCOUNT_PARTS; i++) 
@@ -980,7 +980,7 @@ void CDriveSetup::showHddSetupSub()
  		partname[i] = partitions[current_device][i];
 
 		item_name[i] = getPartEntryString(partname[i]).c_str(), isActivePartition(partname[i]);
-		sub_part_entry[i] = new CMenuForwarderNonLocalized(item_name[i].c_str(), isActivePartition(partname[i]), NULL, part[i], NULL/*part_num_actionkey[i]*/, CRCInput::convertDigitToKey(i+1));
+		sub_part_entry[i] = new CMenuForwarder(item_name[i].c_str(), isActivePartition(partname[i]), NULL, part[i], NULL/*part_num_actionkey[i]*/, CRCInput::convertDigitToKey(i+1));
 	}
 	// generate all usable DATA from Device
 	generateAllUsableDataOfDevice(current_device);

@@ -2941,7 +2941,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	CIntInput*          pBookPosIntInput[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 	CIntInput*	    pBookTypeIntInput[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 	CMenuWidget*        pBookItemMenu[MAX_NUMBER_OF_BOOKMARK_ITEMS];
-	CMenuForwarderNonLocalized* pBookItemMenuForwarder[MAX_NUMBER_OF_BOOKMARK_ITEMS];
+	CMenuForwarder* pBookItemMenuForwarder[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 	CBookItemMenuForwarderNotifier* pBookItemMenuForwarderNotifier[MAX_NUMBER_OF_BOOKMARK_ITEMS];
 
 	CIntInput bookStartIntInput (LOCALE_MOVIEBROWSER_EDIT_BOOK, (int&)movie_info->bookmarks.start,        5, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO1, LOCALE_MOVIEBROWSER_EDIT_BOOK_POS_INFO2);
@@ -2971,7 +2971,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_POSITION, true,  pBookPosIntInput[i]->getValue(), pBookPosIntInput[i]));
 		pBookItemMenu[i]->addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE,     true,  pBookTypeIntInput[i]->getValue(),pBookTypeIntInput[i]));
 
-		pBookItemMenuForwarder[i] = new CMenuForwarderNonLocalized(movie_info->bookmarks.user[i].name.c_str(), true, pBookPosIntInput[i]->getValue(), pBookItemMenu[i]);
+		pBookItemMenuForwarder[i] = new CMenuForwarder(movie_info->bookmarks.user[i].name.c_str(), true, pBookPosIntInput[i]->getValue(), pBookItemMenu[i]);
 		pBookItemMenuForwarderNotifier[i]->setItem(pBookItemMenuForwarder[i]);
 
 		bookmarkMenu.addItem(pBookItemMenuForwarder[i]);
@@ -3194,7 +3194,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 #endif
 #ifdef MOVEMANAGER
 	mainMenu.addItem(GenericMenuSeparatorLine);
-	mainMenu.addItem( new CMenuForwarderNonLocalized("Kopierwerk",        true, NULL,  CMoveManager::getInstance(),   NULL));
+	mainMenu.addItem( new CMenuForwarder("Kopierwerk",        true, NULL,  CMoveManager::getInstance(),   NULL));
 #endif // MOVEMANAGER
 	mainMenu.addItem(GenericMenuSeparatorLine);
 	mainMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_HELP_HEAD,        true, NULL, movieHelp,   NULL,                                  CRCInput::RC_help,   NEUTRINO_ICON_BUTTON_HELP));
@@ -3316,7 +3316,7 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 				
 			snprintf(book[i], 19,"%5d min",position[menu_nr]/60);
 			sprintf(menu_nr_str, "%d", menu_nr);
-			startPosItem = new CMenuForwarderNonLocalized(m_movieSelectionHandler->bookmarks.user[i].name.c_str(), true, book[i], &startPosChanger, menu_nr_str);
+			startPosItem = new CMenuForwarder(m_movieSelectionHandler->bookmarks.user[i].name.c_str(), true, book[i], &startPosChanger, menu_nr_str);
 			startPosItem->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			startPosSelectionMenu.addItem(startPosItem);
 			menu_nr++;
@@ -3628,12 +3628,12 @@ void CMovieBrowser::autoFindSerie(void)
 
 ************************************************************************/
 
-CBookItemMenuForwarderNotifier::CBookItemMenuForwarderNotifier(CMenuForwarderNonLocalized* MenuForwarder)
+CBookItemMenuForwarderNotifier::CBookItemMenuForwarderNotifier(CMenuForwarder* MenuForwarder)
 {
 	menuForwarder = MenuForwarder;
 }
 
-void CBookItemMenuForwarderNotifier::setItem(CMenuForwarderNonLocalized* MenuForwarder)
+void CBookItemMenuForwarderNotifier::setItem(CMenuForwarder* MenuForwarder)
 {
 	menuForwarder = MenuForwarder;
 }
@@ -3942,7 +3942,7 @@ int CDirMenu::show(void)
 	{
 		sprintf(tmp,"%d",i);
 		tmp[1]=0;
-		CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized((*dirList)[i].name.c_str(), (dirState[i] != DIR_STATE_UNKNOWN), dirOptionText[i], this, tmp);
+		CMenuForwarder* fw = new CMenuForwarder((*dirList)[i].name.c_str(), (dirState[i] != DIR_STATE_UNKNOWN), dirOptionText[i], this, tmp);
 		fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 		dirMenu.addItem(fw, i == 0);
 	}

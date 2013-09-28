@@ -386,10 +386,10 @@ class CMovieBrowser : public CMenuTarget
 class CBookItemMenuForwarderNotifier : public CChangeObserver
 {
 	private:
-		CMenuForwarderNonLocalized* menuForwarder;
+		CMenuForwarder* menuForwarder;
 	public:
-		CBookItemMenuForwarderNotifier(CMenuForwarderNonLocalized* MenuForwarder = NULL);
-		void setItem(CMenuForwarderNonLocalized* MenuForwarder);
+		CBookItemMenuForwarderNotifier(CMenuForwarder* MenuForwarder = NULL);
+		void setItem(CMenuForwarder* MenuForwarder);
 		bool changeNotify(const neutrino_locale_t, void* Data);
 };
 

@@ -135,9 +135,9 @@ void CThemes::readThemes(CMenuWidget &themes)
 					*pos = '\0';
 					if ( p == 1 ) {
 						userThemeFile = "{U}" + (std::string)file;
-						oj = new CMenuForwarderNonLocalized(file, true, "", this, userThemeFile.c_str());
+						oj = new CMenuForwarder(file, true, "", this, userThemeFile.c_str());
 					} else
-						oj = new CMenuForwarderNonLocalized(file, true, "", this, file);
+						oj = new CMenuForwarder(file, true, "", this, file);
 					oj->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 					themes.addItem( oj );
 				}

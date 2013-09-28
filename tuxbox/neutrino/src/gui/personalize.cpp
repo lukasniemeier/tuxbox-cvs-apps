@@ -271,7 +271,7 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_PINCODE, true, g_settings.personalize_pincode, &pinChangeWidget));
 	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_PERSONALIZE_ACCESS));
 	
-	CMenuForwarderNonLocalized *p_mn[widget_count];
+	CMenuForwarder *p_mn[widget_count];
 	string mn_name;
 	
  	for (int i = 0; i<(widget_count); i++)
@@ -281,7 +281,7 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 		string s(i_str.str());
 		string action_key = s;
 		mn_name = v_widget[i]->getName();
-		p_mn[i] = new CMenuForwarderNonLocalized(mn_name.c_str(), true, NULL, this, action_key.c_str(), CRCInput::convertDigitToKey(i+1));
+		p_mn[i] = new CMenuForwarder(mn_name.c_str(), true, NULL, this, action_key.c_str(), CRCInput::convertDigitToKey(i+1));
  		pMenu->addItem(p_mn[i]);
 	}
 

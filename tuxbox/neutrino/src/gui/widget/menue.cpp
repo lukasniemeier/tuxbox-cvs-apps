@@ -981,7 +981,7 @@ int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 			if (strcmp(options[count].c_str(), optionValue) == 0)
 				selected = true;
 			sprintf(cnt, "%d", count);
-			CMenuForwarderNonLocalized *mn_option = new CMenuForwarderNonLocalized(options[count].c_str(), true, NULL, selector, cnt);
+			CMenuForwarder *mn_option = new CMenuForwarder(options[count].c_str(), true, NULL, selector, cnt);
 			mn_option->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true /*for selected item*/);
 			menu->addItem(mn_option, selected);
 		}
@@ -1063,6 +1063,32 @@ CMenuForwarder::CMenuForwarder(const neutrino_locale_t Text, const bool Active, 
 	iconName = IconName ? IconName : "";
 }
 
+CMenuForwarder::CMenuForwarder(const char * const Text, const bool Active, const char * const Option, CMenuTarget* Target, const char * const ActionKey, neutrino_msg_t DirectKey, const char * const IconName)
+{
+	option = Option;
+	option_string = NULL;
+	text = NONEXISTANT_LOCALE;
+	the_text = Text;
+	active = Active;
+	jumpTarget = Target;
+	actionKey = ActionKey ? ActionKey : "";
+	directKey = DirectKey;
+	iconName = IconName ? IconName : "";
+}
+
+CMenuForwarder::CMenuForwarder(const char * const Text, const bool Active, const std::string &Option, CMenuTarget* Target, const char * const ActionKey, neutrino_msg_t DirectKey, const char * const IconName)
+{
+	option = NULL;
+	option_string = &Option;
+	text = NONEXISTANT_LOCALE;
+	the_text = Text;
+	active = Active;
+	jumpTarget = Target;
+	actionKey = ActionKey ? ActionKey : "";
+	directKey = DirectKey;
+	iconName = IconName ? IconName : "";
+}
+
 int CMenuForwarder::getHeight(void) const
 {
 	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
@@ -1083,6 +1109,16 @@ void CMenuForwarder::setOption(const char *Option)
 void CMenuForwarder::setTextLocale(const neutrino_locale_t Text)
 {
 	text=Text;
+
+	if (used && x != -1)
+		paint();
+}
+
+// used gets set by the addItem() function. This is for set to paint non localized Text by just not calling the addItem() function.
+// Without this, the changeNotifiers would become machine-dependent.
+void CMenuForwarder::setText(const char * const Text)
+{
+	the_text = Text;
 
 	if (used && x != -1)
 		paint();
@@ -1113,7 +1149,9 @@ const char * CMenuForwarder::getOption(void)
 
 const char * CMenuForwarder::getName(void)
 {
-	return g_Locale->getText(text);
+	if (text != NONEXISTANT_LOCALE)
+		return g_Locale->getText(text);
+	return the_text.c_str();
 }
 
 int CMenuForwarder::paint(bool selected)
@@ -1134,32 +1172,6 @@ int CMenuForwarder::paint(bool selected)
 	return y+ height;
 }
 
-
-//-------------------------------------------------------------------------------------------------------------------------------
-const char * CMenuForwarderNonLocalized::getName(void)
-{
-	return the_text.c_str();
-}
-
-CMenuForwarderNonLocalized::CMenuForwarderNonLocalized(const char * const Text, const bool Active, const char * const Option, CMenuTarget* Target, const char * const ActionKey, neutrino_msg_t DirectKey, const char * const IconName) : CMenuForwarder(NONEXISTANT_LOCALE, Active, Option, Target, ActionKey, DirectKey, IconName)
-{
-	the_text = Text;
-}
-
-CMenuForwarderNonLocalized::CMenuForwarderNonLocalized(const char * const Text, const bool Active, const std::string &Option, CMenuTarget* Target, const char * const ActionKey, neutrino_msg_t DirectKey, const char * const IconName) : CMenuForwarder(NONEXISTANT_LOCALE, Active, Option, Target, ActionKey, DirectKey, IconName)
-{
-    the_text = Text;
-}
-
-// used gets set by the addItem() function. This is for set to paint non localized Text by just not calling the addItem() function.
-// Without this, the changeNotifiers would become machine-dependent.
-void CMenuForwarderNonLocalized::setText(const char * const Text)
-{
-	the_text = Text;
-
-	if (used && x != -1)
-		paint();
-}
 
 //-------------------------------------------------------------------------------------------------------------------------------
 CMenuSeparator::CMenuSeparator(const int Type, const neutrino_locale_t Text)

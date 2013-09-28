@@ -60,7 +60,7 @@ CMountChooser::CMountChooser(const neutrino_locale_t Name, const std::string & I
 			s += g_settings.network_nfs_dir[i];
 			s +=")";
 			snprintf(indexStr,2,"%d",i);
-			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(s.c_str(), true, NULL, this, (std::string("MID:") + std::string(indexStr)).c_str());
+			CMenuForwarder* fw = new CMenuForwarder(s.c_str(), true, NULL, this, (std::string("MID:") + std::string(indexStr)).c_str());
 			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			addItem(fw,	(strcmp(selectedLocalDir, g_settings.network_nfs_local_dir[i]) == 0));
 		}

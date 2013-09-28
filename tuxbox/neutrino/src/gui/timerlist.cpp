@@ -1078,12 +1078,12 @@ int CTimerList::newTimer()
 				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 				",",
 				channel->channel_id);
-			CMenuForwarderNonLocalized *tv_ch_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
+			CMenuForwarder *tv_ch_item = new CMenuForwarder(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
 			tv_ch_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			mwtv->addItem(tv_ch_item);	
 		}
 		if (!subchannellist.empty())
-			mctv.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwtv));
+			mctv.addItem(new CMenuForwarder(bouquet->name, true, NULL, mwtv));
 		subchannellist.clear();
 
 		//radio
@@ -1098,12 +1098,12 @@ int CTimerList::newTimer()
 				PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 				",",
 				channel->channel_id);
-			CMenuForwarderNonLocalized *radio_ch_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
+			CMenuForwarder *radio_ch_item = new CMenuForwarder(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
 			radio_ch_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			mwradio->addItem(radio_ch_item);
 		}
 		if (!subchannellist.empty())
-			mcradio.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwradio));
+			mcradio.addItem(new CMenuForwarder(bouquet->name, true, NULL, mwradio));
 	}
 	//selct mode (tv/radio)
 	CMenuWidget mm(LOCALE_TIMERLIST_MODESELECT, NEUTRINO_ICON_TIMER, width);

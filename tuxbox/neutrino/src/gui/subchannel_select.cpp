@@ -101,14 +101,14 @@ int CSubChannelSelectMenu::doMenu()
 				nvod_time_x[0] = 0;
 
 			sprintf(nvod_s, "%s - %s %s", nvod_time_a, nvod_time_e, nvod_time_x);
-			SubChannelSelector.addItem(new CMenuForwarderNonLocalized(nvod_s, true, NULL, this, nvod_id), count == g_RemoteControl->selected_subchannel);
+			SubChannelSelector.addItem(new CMenuForwarder(nvod_s, true, NULL, this, nvod_id), count == g_RemoteControl->selected_subchannel);
 		}
 		else
 		{
 			if (count == 0)
-				SubChannelSelector.addItem(new CMenuForwarderNonLocalized(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+				SubChannelSelector.addItem(new CMenuForwarder(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
 			else
-				SubChannelSelector.addItem(new CMenuForwarderNonLocalized(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::convertDigitToKey(count)), count == g_RemoteControl->selected_subchannel);
+				SubChannelSelector.addItem(new CMenuForwarder(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::convertDigitToKey(count)), count == g_RemoteControl->selected_subchannel);
 		}
 
 		count++;

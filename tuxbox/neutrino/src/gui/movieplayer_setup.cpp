@@ -271,7 +271,7 @@ int CMoviePlayerSetup::showMoviePlayerSelectPlugin()
 			sprintf(id, "%d", count);
 			enabled_count++;
 
-			CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(pluginName.c_str(),
+			CMenuForwarder* fw = new CMenuForwarder(pluginName.c_str(),
 				true, NULL, this, id, CRCInput::convertDigitToKey(enabled_count));
 			fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 

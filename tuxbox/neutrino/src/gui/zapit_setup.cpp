@@ -216,12 +216,12 @@ int CZapitSetup::InitZapitChannelHelper(CZapitClient::channelsMode mode)
 				"ZC%c:%d,",
 				(mode==CZapitClient::MODE_TV)?'T':'R',
 				channel->nr);
-			CMenuForwarderNonLocalized * chan_item = new CMenuForwarderNonLocalized(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
+			CMenuForwarder * chan_item = new CMenuForwarder(channel->name, true, NULL, this, (std::string(cChannelId) + channel->name).c_str());
 			chan_item->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 			mwtv->addItem(chan_item);
 		}
 		if (!channellist.empty())
-			mctv.addItem(new CMenuForwarderNonLocalized(bouquet->name, true, NULL, mwtv));
+			mctv.addItem(new CMenuForwarder(bouquet->name, true, NULL, mwtv));
 	}
 
 	int res = mctv.exec(NULL, "");

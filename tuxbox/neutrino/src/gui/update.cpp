@@ -201,7 +201,7 @@ bool CFlashUpdate::selectHttpImage(void)
 				descriptions.push_back(description); /* workaround since CMenuForwarder does not store the Option String itself */
 
 				update_menu_targets.push_back(new CUpdateMenuTarget(i, &selected));
-				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(names[i].c_str(), true, descriptions[i].c_str(), update_menu_targets.back());
+				CMenuForwarder* fw = new CMenuForwarder(names[i].c_str(), true, descriptions[i].c_str(), update_menu_targets.back());
 				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 				SelectionWidget.addItem(fw);
 				i++;
@@ -686,7 +686,7 @@ int CFlashExpert::showMTDSelector(const std::string & actionkey)
 	{
 		char sActionKey[20];
 		sprintf(sActionKey, "%s%d", actionkey.c_str(), i);
-		mtdselector->addItem(new CMenuForwarderNonLocalized(mtdInfo->getMTDName(i).c_str(), true, NULL, this, sActionKey, CRCInput::convertDigitToKey(i+1)));
+		mtdselector->addItem(new CMenuForwarder(mtdInfo->getMTDName(i).c_str(), true, NULL, this, sActionKey, CRCInput::convertDigitToKey(i+1)));
 	}
 	int res = mtdselector->exec(NULL,"");
 	delete mtdselector;
@@ -715,7 +715,7 @@ int CFlashExpert::showFileSelector(const std::string & actionkey)
 			   || (int(filen.find(".flfs")) != -1)
 			   )
 			{
-				CMenuForwarderNonLocalized* fw = new CMenuForwarderNonLocalized(filen.c_str(), true, NULL, this, (actionkey + filen).c_str());
+				CMenuForwarder* fw = new CMenuForwarder(filen.c_str(), true, NULL, this, (actionkey + filen).c_str());
 				fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 				fileselector->addItem(fw);
 #warning TODO: make sure filen is UTF-8 encoded
