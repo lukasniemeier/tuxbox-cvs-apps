@@ -384,11 +384,10 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		{
 			if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF && evtlist[0].eventID != 0)
 			{
-				CTimerdClient timerdclient;
 				int timerID;
 				//unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].startTime + evtlist[selected].duration,evtlist[selected].eventID,&timerID);
 				unsigned char is_timer = isTimer(evtlist[selected].startTime, evtlist[selected].duration, evtlist[selected].get_channel_id(), &timerID);
-				if(timerdclient.isTimerdAvailable() && !(is_timer & EventList::TIMER_RECORD))
+				if(Timer.isTimerdAvailable() && !(is_timer & EventList::TIMER_RECORD))
 				{
 					std::string recDir = g_settings.recording_dir[0];
 					if (g_settings.recording_choose_direct_rec_dir && g_settings.recording_type == RECORDING_FILE)
@@ -410,8 +409,8 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 
 					if ((recDir != "") || (RECORDING_FILE != g_settings.recording_type))
 					{
-//						if (timerdclient.addRecordTimerEvent(channel_id,
-						if (timerdclient.addRecordTimerEvent(evtlist[selected].get_channel_id(),
+//						if (Timer.addRecordTimerEvent(channel_id,
+						if (Timer.addRecordTimerEvent(evtlist[selected].get_channel_id(),
 										     evtlist[selected].startTime,
 										     evtlist[selected].startTime + evtlist[selected].duration,
 										     evtlist[selected].eventID, evtlist[selected].startTime,
@@ -421,8 +420,8 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 							if(askUserOnTimerConflict(evtlist[selected].startTime,
 										  evtlist[selected].startTime + evtlist[selected].duration))
 							{
-//								timerdclient.addRecordTimerEvent(channel_id,
-								timerdclient.addRecordTimerEvent(evtlist[selected].get_channel_id(),
+//								Timer.addRecordTimerEvent(channel_id,
+								Timer.addRecordTimerEvent(evtlist[selected].get_channel_id(),
 									 evtlist[selected].startTime,
 									 evtlist[selected].startTime + evtlist[selected].duration,
 									 evtlist[selected].eventID, evtlist[selected].startTime,
@@ -433,7 +432,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 								if(is_timer & EventList::TIMER_ZAPTO)
 								{
 									printf("remove zapto timer\n");
-									timerdclient.removeTimerEvent(timerID);
+									Timer.removeTimerEvent(timerID);
 								}
 							}
 						} 
@@ -443,7 +442,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 							if(is_timer & EventList::TIMER_ZAPTO)
 							{
 								printf("remove zapto timer\n");
-								timerdclient.removeTimerEvent(timerID);
+								Timer.removeTimerEvent(timerID);
 							}
 						}
 						UpdateTimerList();
@@ -451,11 +450,11 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 						showFunctionBar(true);
 					}
 				}
-				else if (timerdclient.isTimerdAvailable() )
+				else if (Timer.isTimerdAvailable() )
 				{
 					// Timer already available in Timerlist, remove now
 					printf("remove record timer\n");
-					timerdclient.removeTimerEvent(timerID);
+					Timer.removeTimerEvent(timerID);
 					UpdateTimerList();
 					paintItem(selected - liststart);
 					showFunctionBar(true);
@@ -468,20 +467,19 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 		{
 			if (evtlist[0].eventID != 0)
 			{
-				CTimerdClient timerdclient;
 				int timerID;
 //				unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].startTime + evtlist[selected].duration,evtlist[selected].eventID,&timerID);
 				unsigned char is_timer = isTimer(evtlist[selected].startTime,evtlist[selected].duration,evtlist[selected].get_channel_id(),&timerID);
-				if(timerdclient.isTimerdAvailable() && !(is_timer & EventList::TIMER_ZAPTO))
+				if(Timer.isTimerdAvailable() && !(is_timer & EventList::TIMER_ZAPTO))
 				{
 					// first delete zapto timer if any
 					if(is_timer & EventList::TIMER_RECORD)
 					{
 						printf("remove record timer\n");
-						timerdclient.removeTimerEvent(timerID);
+						Timer.removeTimerEvent(timerID);
 					}
-//					timerdclient.addZaptoTimerEvent(channel_id,
-					timerdclient.addZaptoTimerEvent(evtlist[selected].get_channel_id(),
+//					Timer.addZaptoTimerEvent(channel_id,
+					Timer.addZaptoTimerEvent(evtlist[selected].get_channel_id(),
 									evtlist[selected].startTime,
 									evtlist[selected].startTime - ANNOUNCETIME, 0,
 									evtlist[selected].eventID, evtlist[selected].startTime, 0, true);
@@ -490,11 +488,11 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 					showFunctionBar(true);
 					//ShowLocalizedMessage(LOCALE_TIMER_EVENTTIMED_TITLE, LOCALE_TIMER_EVENTTIMED_MSG, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_INFO);
 				}
-				else if(timerdclient.isTimerdAvailable())
+				else if(Timer.isTimerdAvailable())
 				{
 					// Timer already available in Timerlist, remove now
 					printf("remove zapto timer\n");
-					timerdclient.removeTimerEvent(timerID);
+					Timer.removeTimerEvent(timerID);
 					UpdateTimerList();
 					paintItem(selected - liststart);
 					showFunctionBar(true);

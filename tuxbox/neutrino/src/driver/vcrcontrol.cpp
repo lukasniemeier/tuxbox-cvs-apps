@@ -458,10 +458,8 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	{
 //#define SHORT_EPG
 #ifdef SHORT_EPG
-		CSectionsdClient sdc;
 		CShortEPGData epgdata;
-		
-		if (sdc.getEPGidShort(epgid, &epgdata))
+		if (g_Sectionsd->getEPGidShort(epgid, &epgdata))
 		{
 #warning fixme sectionsd should deliver data in UTF-8 format
 			tmpstring = Latin1_to_UTF8(epgdata.title);
@@ -469,9 +467,8 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 			info2 = Latin1_to_UTF8(epgdata.info2);
 		}
 #else
-		CSectionsdClient sdc;
 		CEPGData epgdata;
-		if (sdc.getEPGid(epgid, epg_time,&epgdata))
+		if (g_Sectionsd->getEPGid(epgid, epg_time, &epgdata))
 		{
 #warning fixme sectionsd should deliver data in UTF-8 format
 			tmpstring = Latin1_to_UTF8(epgdata.title);
@@ -593,9 +590,8 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	tmpstring = "not available";
 	if (epgid != 0)
 	{
-		CSectionsdClient sdc;
 		CShortEPGData epgdata;
-		if (sdc.getEPGidShort(epgid, &epgdata))
+		if (g_Sectionsd->getEPGidShort(epgid, &epgdata))
 		{
 #warning fixme sectionsd should deliver data in UTF-8 format
 			tmpstring = Latin1_to_UTF8(epgdata.title);
@@ -940,12 +936,11 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 
 void CVCRControl::CFileDevice::appendEPGInfo(char *buf, unsigned int size, const event_id_t epgid) {
 	
-	CSectionsdClient sdc;
 	CShortEPGData epgdata;
 	std::string epgInfo;
 	if (size > 0)
 		buf[0] = '\0';
-	if (sdc.getEPGidShort(epgid, &epgdata))
+	if (g_Sectionsd->getEPGidShort(epgid, &epgdata))
 		epgInfo = epgdata.info1;
 	else
 		epgInfo = "";
@@ -970,12 +965,11 @@ void CVCRControl::CFileDevice::appendEPGInfo(char *buf, unsigned int size, const
 
 void CVCRControl::CFileDevice::appendEPGTitle(char *buf, unsigned int size, const event_id_t epgid, const std::string& epgTitleTimer) {
 	
-	CSectionsdClient sdc;
 	CShortEPGData epgdata;
 	std::string epgTitle;
 	if (size > 0)
 		buf[0] = '\0';
-	if (sdc.getEPGidShort(epgid, &epgdata))
+	if (g_Sectionsd->getEPGidShort(epgid, &epgdata))
 		epgTitle = epgdata.title;
 	else
 		epgTitle = epgTitleTimer;

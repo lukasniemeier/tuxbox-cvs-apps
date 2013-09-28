@@ -140,8 +140,7 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 		m_viewer->SetAspectRatio(16.0/9);
 	else if(g_settings.video_Format == CControldClient::VIDEOFORMAT_AUTO)
 	{
-		CControldClient cdc;
-		cdc.setVideoFormat(CControldClient::VIDEOFORMAT_4_3);
+		g_Controld->setVideoFormat(CControldClient::VIDEOFORMAT_4_3);
 		m_viewer->SetAspectRatio(4.0/3);
 	}
 	else
