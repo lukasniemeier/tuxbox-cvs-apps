@@ -680,7 +680,7 @@ int CFlashExpert::showMTDSelector(const std::string & actionkey)
 {
 	//mtd-selector erzeugen
 	CMenuWidget* mtdselector = new CMenuWidget(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, NEUTRINO_ICON_UPDATE, width);
-	mtdselector->addIntroItems(LOCALE_FLASHUPDATE_MTDSELECTOR);
+	mtdselector->addIntroItems(LOCALE_FLASHUPDATE_MTDSELECTOR, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	CMTDInfo* mtdInfo =CMTDInfo::getInstance();
 	for (int i = 0; i < mtdInfo->getMTDCount(); i++)
 	{
@@ -696,7 +696,7 @@ int CFlashExpert::showMTDSelector(const std::string & actionkey)
 int CFlashExpert::showFileSelector(const std::string & actionkey)
 {
 	CMenuWidget* fileselector = new CMenuWidget(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, NEUTRINO_ICON_UPDATE, width);
-	fileselector->addIntroItems(LOCALE_FLASHUPDATE_FILESELECTOR);
+	fileselector->addIntroItems(LOCALE_FLASHUPDATE_FILESELECTOR, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
 	struct dirent **namelist;
 	int n = scandir("/tmp", &namelist, 0, alphasort);
 	if (n < 0)
