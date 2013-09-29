@@ -570,7 +570,8 @@ void CListFrame::refreshList(void)
 									y, 
 									m_cFrameListRel.iWidth, 
 									m_nFontListHeight,  
-									LIST_BACKGROUND_COLOR_SELECTED);
+									LIST_BACKGROUND_COLOR_SELECTED,
+									RADIUS_SMALL);
 		}
 		int width;
 		int x = m_cFrameListRel.iX + TEXT_BORDER_WIDTH;
@@ -622,7 +623,8 @@ void CListFrame::refreshLine(int line)
 										y, 
 										m_cFrameListRel.iWidth, 
 										m_nFontListHeight,  
-										LIST_BACKGROUND_COLOR_SELECTED);
+										LIST_BACKGROUND_COLOR_SELECTED,
+										RADIUS_SMALL);
 	}
 	else
 	{
