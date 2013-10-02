@@ -1068,7 +1068,7 @@ CMenuForwarder::CMenuForwarder(const char * const Text, const bool Active, const
 	option = Option;
 	option_string = NULL;
 	text = NONEXISTANT_LOCALE;
-	the_text = Text;
+	forwarder_text = Text;
 	active = Active;
 	jumpTarget = Target;
 	actionKey = ActionKey ? ActionKey : "";
@@ -1081,7 +1081,7 @@ CMenuForwarder::CMenuForwarder(const char * const Text, const bool Active, const
 	option = NULL;
 	option_string = &Option;
 	text = NONEXISTANT_LOCALE;
-	the_text = Text;
+	forwarder_text = Text;
 	active = Active;
 	jumpTarget = Target;
 	actionKey = ActionKey ? ActionKey : "";
@@ -1118,7 +1118,7 @@ void CMenuForwarder::setTextLocale(const neutrino_locale_t Text)
 // Without this, the changeNotifiers would become machine-dependent.
 void CMenuForwarder::setText(const char * const Text)
 {
-	the_text = Text;
+	forwarder_text = Text;
 
 	if (used && x != -1)
 		paint();
@@ -1151,7 +1151,7 @@ const char * CMenuForwarder::getName(void)
 {
 	if (text != NONEXISTANT_LOCALE)
 		return g_Locale->getText(text);
-	return the_text.c_str();
+	return forwarder_text.c_str();
 }
 
 int CMenuForwarder::paint(bool selected)

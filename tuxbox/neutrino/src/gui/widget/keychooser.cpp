@@ -45,7 +45,6 @@
 
 class CKeyValue : public CMenuSeparator
 {
-	std::string the_text;
 public:
 	int         keyvalue;
 
@@ -55,10 +54,10 @@ public:
 
 	virtual const char * getString(void)
 		{
-			the_text  = g_Locale->getText(LOCALE_KEYCHOOSERMENU_CURRENTKEY);
-			the_text += ": ";
-			the_text += CRCInput::getKeyName(keyvalue);
-			return the_text.c_str();
+			separator_text  = g_Locale->getText(text);
+			separator_text += ": ";
+			separator_text += CRCInput::getKeyName(keyvalue);
+			return separator_text.c_str();
 		};
 };
 

@@ -135,6 +135,8 @@ class CMenuItem
 class CMenuSeparator : public CMenuItem
 {
 		int               type;
+
+	protected:
 		std::string	  separator_text;
 
 	public:
@@ -171,7 +173,7 @@ class CMenuForwarder : public CMenuItem
 
  protected:
 	neutrino_locale_t text;
-	std::string the_text;
+	std::string forwarder_text;
 
 	virtual const char * getOption(void);
 	virtual const char * getName(void);
