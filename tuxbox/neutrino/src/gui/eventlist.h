@@ -90,10 +90,10 @@ class EventList
 		CChannelEventList evtlist;
 		void readEvents(const t_channel_id channel_id);
 		unsigned int	selected;
-		unsigned int	current_event;
 		unsigned int	liststart;
 		unsigned int	listmaxshow;
 		unsigned int	numwidth;
+		int		current_event;
 		int		fheight; // Fonthoehe Channellist-Inhalt
 		int		fheight1,fheight2;
 		int		fwidth1,fwidth2;

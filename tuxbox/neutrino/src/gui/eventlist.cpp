@@ -93,7 +93,7 @@ EventList::EventList()
 {
 	frameBuffer = CFrameBuffer::getInstance();
 	selected = 0;
-	current_event = 0;
+	current_event = -1;
 	
 	m_search_list = SEARCH_LIST_NONE;
 	m_search_epg_item = SEARCH_LIST_NONE;
@@ -242,7 +242,7 @@ void EventList::readEvents(const t_channel_id channel_id)
 		sort(evtlist.begin(),evtlist.end(),sortByDateTime);
 	}
 
-	current_event = (unsigned int)-1;
+	current_event = -1;
 	for ( e=evtlist.begin(); e!=evtlist.end(); ++e )
 	{
 		if ( e->startTime > azeit ) {
@@ -258,12 +258,19 @@ void EventList::readEvents(const t_channel_id channel_id)
 		evt.description = ZapitTools::UTF8_to_Latin1(g_Locale->getText(LOCALE_EPGLIST_NOEVENTS));
 #warning FIXME: evtlist should be utf8-encoded
 		evt.eventID = 0;
+		evt.startTime = 0;
+		evt.duration = 0;
 		evtlist.push_back(evt);
 
 	}
-	if (current_event == (unsigned int)-1)
-		current_event = 0;
-	selected= current_event;
+	if (current_event > -1)
+	{
+		selected = current_event;
+		if (evtlist[current_event].startTime + (long)evtlist[current_event].duration < azeit)
+			current_event = -1;
+	}
+	else
+		selected = 0;
 
 	return;
 }
@@ -631,7 +638,7 @@ void EventList::paintItem(unsigned int pos)
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		c_rad_mid = RADIUS_MID;
 	}
-	else if (curpos == current_event)
+	else if ((int)curpos == current_event)
 	{
 		color   = COL_MENUCONTENT + 1;
 		bgcolor = COL_MENUCONTENT_PLUS_1;
@@ -993,7 +1000,7 @@ int EventList::findEvents(void)
 		// remove duplicates
 		evtlist.resize(unique(evtlist.begin(), evtlist.end(), uniqueByIdAndDateTime) - evtlist.begin());
 #endif
-		current_event = (unsigned int)-1;
+		current_event = -1;
 		time_t azeit=time(NULL);
 		
 		CChannelEventList::iterator e;
@@ -1008,12 +1015,20 @@ int EventList::findEvents(void)
 		{
 			CChannelEvent evt;
 			evt.description = ZapitTools::UTF8_to_Latin1(g_Locale->getText(LOCALE_EPGLIST_NOEVENTS));
+#warning FIXME: evtlist should be utf8-encoded
 			evt.eventID = 0;
+			evt.startTime = 0;
+			evt.duration = 0;
 			evtlist.push_back(evt);
 		}
-		if (current_event == (unsigned int)-1)
-			current_event = 0;
-		selected= current_event;
+		if (current_event > -1)
+		{
+			selected = current_event;
+			if (evtlist[current_event].startTime + (long)evtlist[current_event].duration < azeit)
+				current_event = -1;
+		}
+		else
+			selected = 0;
 		
 		name = (std::string)g_Locale->getText(LOCALE_EVENTFINDER_SEARCH) + ": '" + ZapitTools::Latin1_to_UTF8(m_search_keyword.c_str()) + "'";
 	}
