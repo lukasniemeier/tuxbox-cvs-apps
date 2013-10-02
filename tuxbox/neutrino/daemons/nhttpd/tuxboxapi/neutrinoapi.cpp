@@ -334,7 +334,7 @@ std::string CNeutrinoAPI::timerEventType2Str(CTimerd::CTimerEventTypes type)
 		result = "Shutdown";
 		break;
 	case CTimerd::TIMER_NEXTPROGRAM:
-		result = "N&auml;chstes Programm";
+		result = "N&#xE4;chstes Programm";
 		break;
 	case CTimerd::TIMER_ZAPTO:
 		result = "Umschalten";
@@ -349,7 +349,7 @@ std::string CNeutrinoAPI::timerEventType2Str(CTimerd::CTimerEventTypes type)
 		result = "Erinnerung";
 		break;
 	case CTimerd::TIMER_EXEC_PLUGIN:
-		result = "Plugin ausf&uuml;hren";
+		result = "Plugin ausf&#xFC;hren";
 		break;
 	case CTimerd::TIMER_SLEEPTIMER:
 		result = "Sleeptimer";
@@ -371,16 +371,16 @@ std::string CNeutrinoAPI::timerEventRepeat2Str(CTimerd::CTimerEventRepeat rep)
 		result = "einmal";
 		break;
 	case CTimerd::TIMERREPEAT_DAILY:
-		result = "t&auml;glich";
+		result = "t&#xE4;glich";
 		break;
 	case CTimerd::TIMERREPEAT_WEEKLY:
-		result = "w&ouml;chentlich";
+		result = "w&#xF6;chentlich";
 		break;
 	case CTimerd::TIMERREPEAT_BIWEEKLY:
-		result = "2-w&ouml;chentlich";
+		result = "2-w&#xF6;chentlich";
 		break;
 	case CTimerd::TIMERREPEAT_FOURWEEKLY:
-		result = "4-w&ouml;chentlich";
+		result = "4-w&#xF6;chentlich";
 		break;
 	case CTimerd::TIMERREPEAT_MONTHLY:
 		result = "monatlich";

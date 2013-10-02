@@ -38,11 +38,13 @@ private:
 	void SendBouquet(CyhookHandler *hh,int BouquetNr);
 	void SendChannelList(CyhookHandler *hh);
 	void SendTimers(CyhookHandler *hh);
+	void SendTimersXML(CyhookHandler *hh);
 
 	// subs
 	friend class CNeutrinoWebserver; // for timer /fb/ compatibility
 	void doModifyTimer(CyhookHandler *hh);
 	void doNewTimer(CyhookHandler *hh);
+	void _SendTime(CyhookHandler *hh, struct tm *Time, int digits);
 
 	//yweb
 	void YWeb_SendVideoStreamingPids(CyhookHandler *hh, int apid_no);
@@ -110,7 +112,7 @@ public:
 
 	// virtual functions for HookHandler/Hook
 	virtual std::string getHookName(void) {return std::string("mod_ControlAPI");}
-	virtual std::string 	getHookVersion(void) {return std::string("$Revision: 1.8 $");}
+	virtual std::string 	getHookVersion(void) {return std::string("$Revision: 1.9 $");}
 	virtual THandleStatus Hook_SendResponse(CyhookHandler *hh);
 	virtual THandleStatus Hook_PrepareResponse(CyhookHandler *hh);
 };

@@ -169,7 +169,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"vcroutput", 		&CControlAPI::VCROutputCGI,	"text/plain"},
 	{"scartmode", 		&CControlAPI::ScartModeCGI,	"text/plain"},
 	// timer
-	{"timer", 		&CControlAPI::TimerCGI,		"text/plain"},
+	{"timer", 		&CControlAPI::TimerCGI,		""},
 	// bouquet editing
 	{"setbouquet", 		&CControlAPI::setBouquetCGI,	"text/plain"},
 	{"savebouquet",		&CControlAPI::saveBouquetCGI,	"text/plain"},
@@ -251,6 +251,7 @@ void CControlAPI::TimerCGI(CyhookHandler *hh)
 	{
 		if (!hh->ParamList.empty() && hh->ParamList["format"].empty())
 		{
+			hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
 			if (hh->ParamList["action"] == "new")
 				doNewTimer(hh);
 			else if (hh->ParamList["action"] == "modify")
@@ -275,7 +276,12 @@ void CControlAPI::TimerCGI(CyhookHandler *hh)
 
 		}
 		else
-			SendTimers(hh);
+		{
+			if (hh->ParamList["format"] == "xml")
+				SendTimersXML(hh);
+			else
+				SendTimers(hh);
+		}
 	}
 	else
 		hh->SendError();
@@ -1662,6 +1668,8 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 	NeutrinoAPI->Timerd->getTimerList(timerlist);
 	CTimerd::TimerList::iterator timer = timerlist.begin();
 
+	hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
+
 	for(; timer != timerlist.end();timer++)
 	{
 		// Add Data
@@ -1715,6 +1723,227 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 				(int)timer->stopTime,
 				zAddData);
 	}
+}
+
+//-----------------------------------------------------------------------------
+void CControlAPI::_SendTime(CyhookHandler *hh, struct tm *Time, int digits)
+{
+	char zTime[25] = {0};
+	char zDate[25] = {0};
+	strftime(zTime, 20, "%H:%M", Time);
+	strftime(zDate, 20, "%d.%m.%Y", Time);
+	hh->printf("\t\t\t\t\t<text>%s %s</text>\n", zDate, zTime);
+	hh->printf("\t\t\t\t\t<date>%s</date>\n", zDate);
+	hh->printf("\t\t\t\t\t<time>%s</time>\n", zTime);
+	hh->printf("\t\t\t\t\t<digits>%d</digits>\n", digits);
+	hh->printf("\t\t\t\t\t<day>%d</day>\n", Time->tm_mday);
+	hh->printf("\t\t\t\t\t<month>%d</month>\n", Time->tm_mon + 1);
+	hh->printf("\t\t\t\t\t<year>%d</year>\n", Time->tm_year + 1900);
+	hh->printf("\t\t\t\t\t<hour>%d</hour>\n", Time->tm_hour);
+	hh->printf("\t\t\t\t\t<min>%d</min>\n", Time->tm_min);
+}
+
+//-----------------------------------------------------------------------------
+void CControlAPI::SendTimersXML(CyhookHandler *hh)
+{
+	// Init local timer iterator
+	CTimerd::TimerList timerlist;			// List of timers
+	NeutrinoAPI->Timerd->getTimerList(timerlist);
+	sort(timerlist.begin(), timerlist.end());		// sort timer
+	CTimerd::TimerList::iterator timer = timerlist.begin();
+
+//	std::string xml_response = "";
+	hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
+	hh->WriteLn("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
+	hh->WriteLn("<timer>");
+
+	// general timer configuration
+	hh->WriteLn("\t<config>");
+
+	// Look for Recording Safety Timers too
+	int pre = 0, post = 0;
+	NeutrinoAPI->Timerd->getRecordingSafety(pre, post);
+//	hh->printf("\t\t\t<recording_safety>%d</recording_safety>\n", (int)timer->recordingSafety);
+	hh->printf("\t\t\t<pre_delay>%d</pre_delay>\n", pre);
+	hh->printf("\t\t\t<post_delay>%d</post_delay>\n", post);
+	hh->WriteLn("\t</config>");
+
+	// start timer list
+	hh->WriteLn("\t<timer_list>");
+
+	for(; timer != timerlist.end(); ++timer)
+	{
+		hh->WriteLn("\t\t<timer>");
+		hh->printf("\t\t\t<type>%s</type>\n", (NeutrinoAPI->timerEventType2Str(timer->eventType)).c_str());
+		hh->printf("\t\t\t<id>%d</id>\n", timer->eventID);
+		hh->printf("\t\t\t<state>%d</state>\n", (int)timer->eventState);
+		hh->printf("\t\t\t<type_number>%d</type_number>\n", (int)timer->eventType);
+
+		// alarmtime
+		hh->WriteLn("\t\t\t<alarm>");
+
+		struct tm *alarmTime = localtime(&(timer->alarmTime));
+		hh->WriteLn("\t\t\t\t<normal>");
+		_SendTime(hh, alarmTime, (int)timer->alarmTime);
+		hh->WriteLn("\t\t\t\t</normal>");
+
+		time_t real_alarmTimeT = timer->alarmTime - pre;
+		struct tm *safetyAlarmTime = localtime(&real_alarmTimeT);
+		hh->WriteLn("\t\t\t\t<safety>");
+		_SendTime(hh, safetyAlarmTime, (int)real_alarmTimeT);
+		hh->WriteLn("\t\t\t\t</safety>");
+
+		hh->WriteLn("\t\t\t</alarm>");
+
+		// announcetime
+		hh->WriteLn("\t\t\t<announce>");
+		struct tm *announceTime = localtime(&(timer->announceTime));
+		hh->WriteLn("\t\t\t\t<normal>");
+		_SendTime(hh, announceTime, (int)timer->announceTime);
+		hh->WriteLn("\t\t\t\t</normal>");
+
+		time_t real_announceTimeT = timer->announceTime - pre;
+		struct tm *safetyAnnounceTime = localtime(&real_announceTimeT);
+		hh->WriteLn("\t\t\t\t<safety>");
+		_SendTime(hh, safetyAnnounceTime, (int)real_announceTimeT);
+		hh->WriteLn("\t\t\t\t</safety>");
+
+		hh->WriteLn("\t\t\t</announce>");
+
+		// stoptime
+		if (timer->stopTime > 0)
+		{
+			hh->WriteLn("\t\t\t<stop>");
+			struct tm *stopTime = localtime(&(timer->stopTime));
+			hh->WriteLn("\t\t\t\t<normal>");
+			_SendTime(hh, stopTime, (int)timer->stopTime);
+			hh->WriteLn("\t\t\t\t</normal>");
+
+			time_t real_stopTimeT = timer->stopTime - post;
+			struct tm *safetyStopTime = localtime(&real_stopTimeT);
+			hh->WriteLn("\t\t\t\t<safety>");
+			_SendTime(hh, safetyStopTime, (int)real_stopTimeT);
+			hh->WriteLn("\t\t\t\t</safety>");
+
+			hh->WriteLn("\t\t\t</stop>");
+		}
+
+		// repeat
+		std::string zRep = NeutrinoAPI->timerEventRepeat2Str(timer->eventRepeat);
+		std::string zRepCount;
+		if (timer->eventRepeat == CTimerd::TIMERREPEAT_ONCE)
+			zRepCount = "-";
+		else
+			zRepCount = (timer->repeatCount == 0) ? "&#x221E;" : string_printf("%dx",timer->repeatCount);
+		hh->WriteLn("\t\t\t<repeat>");
+		hh->printf("\t\t\t\t<count>%s</count>\n", zRepCount.c_str());
+		hh->printf("\t\t\t\t<number>%d</number>\n", (int)timer->eventRepeat);
+		hh->printf("\t\t\t\t<text>%s</text>\n", zRep.c_str());
+		char weekdays[8]= {0};
+		NeutrinoAPI->Timerd->setWeekdaysToStr(timer->eventRepeat, weekdays);
+		hh->printf("\t\t\t\t<weekdays>%s</weekdays>\n", weekdays);
+		hh->WriteLn("\t\t\t</repeat>");
+
+		// channel infos
+		std::string channel_name = ZapitTools::UTF8_to_Latin1(NeutrinoAPI->Zapit->getChannelName(timer->channel_id).c_str());
+		if (channel_name.empty())
+			channel_name = NeutrinoAPI->Zapit->isChannelTVChannel(timer->channel_id) ? "Unbekannter TV-Kanal" : "Unbekannter Radiokanal";
+
+		// epg title
+		std::string title = timer->epgTitle;
+		if (timer->epgID != 0)
+		{
+			CEPGData epgdata;
+			if (NeutrinoAPI->Sectionsd->getEPGid(timer->epgID, timer->epg_starttime, &epgdata))
+				title = epgdata.title;
+		}
+
+		// timer specific data
+		switch (timer->eventType)
+		{
+		case CTimerd::TIMER_NEXTPROGRAM :
+			{
+				hh->printf("\t\t\t<channel_id>" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "</channel_id>\n", timer->channel_id);
+				hh->printf("\t\t\t<channel_name><![CDATA[%s]]></channel_name>\n", channel_name.c_str());
+				hh->printf("\t\t\t<title><![CDATA[%s]]></title>\n", title.c_str());
+			}
+			break;
+		case CTimerd::TIMER_ZAPTO :
+			{
+				hh->printf("\t\t\t<channel_id>" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "</channel_id>\n", timer->channel_id);
+				hh->printf("\t\t\t<channel_name><![CDATA[%s]]></channel_name>\n", channel_name.c_str());
+				hh->printf("\t\t\t<title><![CDATA[%s]]></title>\n", title.c_str());
+			}
+			break;
+		case CTimerd::TIMER_RECORD :
+			{
+				hh->printf("\t\t\t<channel_id>" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "</channel_id>\n", timer->channel_id);
+				hh->printf("\t\t\t<channel_name><![CDATA[%s]]></channel_name>\n", channel_name.c_str());
+				hh->printf("\t\t\t<title><![CDATA[%s]]></title>\n", title.c_str());
+
+				// audio
+				if (timer->apids != TIMERD_APIDS_CONF)
+				{
+					hh->WriteLn("\t\t\t<audio>");
+					hh->WriteLn("\t\t\t\t<apids_conf>false</apids_conf>");
+					if (timer->apids & TIMERD_APIDS_STD)
+						hh->WriteLn("\t\t\t\t<apids_std>true</apids_std>");
+					else
+						hh->WriteLn("\t\t\t\t<apids_std>false</apids_std>");
+					if (timer->apids & TIMERD_APIDS_ALT)
+						hh->WriteLn("\t\t\t\t<apids_alt>true</apids_alt>");
+					else
+						hh->WriteLn("\t\t\t\t<apids_alt>false</apids_alt>");
+					if (timer->apids & TIMERD_APIDS_AC3)
+						hh->WriteLn("\t\t\t\t<apids_ac3>true</apids_ac3>");
+					else
+						hh->WriteLn("\t\t\t\t<apids_ac3>false</apids_ac3>");
+					hh->WriteLn("\t\t\t</audio>");
+				}
+				else
+				{
+					hh->WriteLn("\t\t\t<audio>");
+					hh->WriteLn("\t\t\t\t<apids_conf>true</apids_conf>");
+					hh->WriteLn("\t\t\t\t<apids_std>false</apids_std>");
+					hh->WriteLn("\t\t\t\t<apids_alt>false</apids_alt>");
+					hh->WriteLn("\t\t\t\t<apids_ac3>false</apids_ac3>");
+					hh->WriteLn("\t\t\t</audio>");
+				}
+
+				hh->printf("\t\t\t<recording_dir>%s</recording_dir>\n", timer->recordingDir);
+				hh->printf("\t\t\t<epg_id>%d</epg_id>\n", (int)timer->epgID);
+			}
+			break;
+		case CTimerd::TIMER_STANDBY :
+			{
+				hh->printf("\t\t\t<status>%s</status>\n", (timer->standby_on)? "on" : "off");
+			}
+			break;
+		case CTimerd::TIMER_REMIND :
+			{
+				std::string _message;
+				_message = std::string(timer->message).substr(0, 20);
+				hh->printf("\t\t\t<message><![CDATA[%s]]></message>\n", _message.c_str());
+			}
+			break;
+		case CTimerd::TIMER_EXEC_PLUGIN :
+			{
+				hh->printf("\t\t\t<plugin>%s</plugin>\n", timer->pluginName);
+			}
+			break;
+		case CTimerd::TIMER_SLEEPTIMER :
+			{}
+			break;
+		case CTimerd::TIMER_IMMEDIATE_RECORD :
+			{}
+			break;
+		default:
+			{}
+		}
+		hh->WriteLn("\t\t</timer>");
+	}
+	hh->WriteLn("\t</timer_list>");
+	hh->WriteLn("</timer>");
 }
 
 //-----------------------------------------------------------------------------
