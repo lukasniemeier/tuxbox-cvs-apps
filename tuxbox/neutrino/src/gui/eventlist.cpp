@@ -353,7 +353,8 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 			if (showfollow)
 				continue;
 
-			unsigned long long selected_id = evtlist[selected].eventID;
+			event_id_t current_event_id = (current_event > -1) ? evtlist[current_event].eventID : 0;
+			event_id_t selected_id = evtlist[selected].eventID;
 			if(sort_mode==0)
 			{
 				sort_mode++;
@@ -363,6 +364,15 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 			{
 				sort_mode=0;
 				sort(evtlist.begin(),evtlist.end(),sortByDateTime);
+			}
+			// find current
+			if (current_event > -1)
+			{
+				for (current_event = 0; current_event < (int)evtlist.size(); current_event++)
+				{
+					if (evtlist[current_event].eventID == current_event_id)
+						break;
+				}
 			}
 			// find selected
 			for ( selected=0 ; selected < evtlist.size(); selected++ )
