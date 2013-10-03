@@ -1228,8 +1228,7 @@ int CMenuSeparator::paint(bool /*selected*/)
 	}
 	if ((type & STRING))
 	{
-		const char * l_text;
-		l_text = getString();
+		const char * l_text = getString();
 	
 		if (text != NONEXISTANT_LOCALE || strlen(l_text) != 0)
 		{
