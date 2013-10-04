@@ -354,7 +354,9 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 				continue;
 
 			event_id_t current_event_id = (current_event > -1) ? evtlist[current_event].eventID : 0;
+			time_t current_event_start_time = (current_event > -1) ? evtlist[current_event].startTime : 0;
 			event_id_t selected_id = evtlist[selected].eventID;
+			time_t selected_start_time = evtlist[selected].startTime;
 			if(sort_mode==0)
 			{
 				sort_mode++;
@@ -370,14 +372,16 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 			{
 				for (current_event = 0; current_event < (int)evtlist.size(); current_event++)
 				{
-					if (evtlist[current_event].eventID == current_event_id)
+					if (evtlist[current_event].eventID == current_event_id &&
+					    evtlist[current_event].startTime == current_event_start_time)
 						break;
 				}
 			}
 			// find selected
 			for ( selected=0 ; selected < evtlist.size(); selected++ )
 			{
-				if ( evtlist[selected].eventID == selected_id )
+				if (evtlist[selected].eventID == selected_id &&
+				    evtlist[selected].startTime == selected_start_time)
 					break;
 			}
 			oldselected=selected;
