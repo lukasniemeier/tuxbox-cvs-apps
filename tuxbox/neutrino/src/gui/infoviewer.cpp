@@ -198,12 +198,12 @@ void CInfoViewer::showSatfind()
 		sprintf (percent, "ber %d%%", ber);
 		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 270, BoxEndY+ 25, BoxEndX- ChanInfoX- 270, percent, COL_INFOBAR_PLUS_0);
 
-		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 350, BoxEndY+ 25, BoxEndX- ChanInfoX- 350, freq, COL_INFOBAR_PLUS_0);
+		g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(ChanInfoX+ 345, BoxEndY+ 25, BoxEndX- ChanInfoX- 345, freq, COL_INFOBAR_PLUS_0);
 
 		if (satpos != 0 && (g_info.delivery_system == DVB_S))
 		{
 			sprintf (pos, "%d.%d%c", satpos < 0 ? -satpos / 10 : satpos / 10, satpos < 0 ? -satpos % 10 : satpos % 10, satpos < 0 ? 'W' : 'E');
-			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(BoxEndX- 60, BoxEndY+ 25, 60, pos, COL_INFOBAR_PLUS_0);
+			g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(BoxEndX- 55, BoxEndY+ 25, 55, pos, COL_INFOBAR_PLUS_0);
 		}
 	}
 }
