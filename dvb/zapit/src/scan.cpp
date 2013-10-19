@@ -280,7 +280,7 @@ int get_sdts(const t_satellite_position satellite_position, const char * const f
 {
 	uint32_t TsidOnid;
 
-	for (stiterator tI = transponders.begin(); tI != transponders.end(); tI++)
+	for (stiterator tI = transponders.begin(); tI != transponders.end(); ++tI)
 		if (GET_SATELLITEPOSITION_FROM_TRANSPONDER_ID(tI->first) == satellite_position)
 		{
 			if (scan_should_be_aborted)
@@ -494,7 +494,7 @@ bool write_provider(FILE *fd, const char * const frontendType, const char * cons
 	t_satellite_position satellite_position = getSatellitePosition(provider_name);
 
 	/* channels */
-	for (stiterator tI = transponders.begin(); tI != transponders.end(); tI++)
+	for (stiterator tI = transponders.begin(); tI != transponders.end(); ++tI)
 	{
 		if (GET_SATELLITEPOSITION_FROM_TRANSPONDER_ID(tI->first) == satellite_position)
 		{
@@ -616,11 +616,11 @@ void scan_provider(xmlNodePtr search, const char * const providerName, uint8_t d
 					++cI;
 			}
 			stiterator tmp = tI;
-			tI++;
+			++tI;
 			transponders.erase(tmp);
 		}
 		else
-			tI++;
+			++tI;
 	}
 
 	xmlNodePtr transponder = NULL;
@@ -946,7 +946,7 @@ int scan_transponder(TP_params *TP)
 	else
 	{
 		/* channels */
-		for (stiterator tI = transponders.begin(); tI != transponders.end(); tI++)
+		for (stiterator tI = transponders.begin(); tI != transponders.end(); ++tI)
 			write_transponder(fd, CREATE_TRANSPONDER_ID_FROM_FREQUENCY_SATELLITEPOSITION_ORIGINALNETWORK_TRANSPORTSTREAM_ID(GET_FREQUENCY_FROM_TRANSPONDER_ID(tI->first), GET_SATELLITEPOSITION_FROM_TRANSPONDER_ID(tI->first), tI->second.original_network_id, tI->second.transport_stream_id), tI->second);
 		fprintf(fd, "\t</%s>\n", frontendType);
 		allchans.clear();

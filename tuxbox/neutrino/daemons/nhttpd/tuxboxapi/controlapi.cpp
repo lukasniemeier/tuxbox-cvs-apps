@@ -203,7 +203,7 @@ void CControlAPI::Execute(CyhookHandler *hh)
 	{
 		dprintf("Execute CGI : %s\n",filename.c_str());
 		for(CStringList::iterator it = hh->ParamList.begin() ;
-			 it != hh->ParamList.end() ; it++)
+			 it != hh->ParamList.end() ; ++it)
 				dprintf("  Parameter %s : %s\n",it->first.c_str(), it->second.c_str());
 	}
 
@@ -1015,7 +1015,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 				//hh->printf("%u %s\n", (NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, NeutrinoAPI->BouquetList[i].name);
 				bouquet = NeutrinoAPI->GetBouquet((NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, mode);
 				CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
-				for (unsigned int j = 0; channel != bouquet->end() && actual == 0; channel++,j++)
+				for (unsigned int j = 0; channel != bouquet->end() && actual == 0; ++channel, j++)
 				{
 					if(channel->channel_id == NeutrinoAPI->Zapit->getCurrentServiceID())
 						actual=i+1;
@@ -1032,7 +1032,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 			bouquet = NeutrinoAPI->GetBouquet(atoi(hh->ParamList["bouquet"].c_str()), mode);
 			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 
-			for (unsigned int i = 0; channel != bouquet->end(); channel++,i++)
+			for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
 				hh->printf("<channel>\n\t<number>%u</number>\n\t<id>"
 					PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 					"</id>\n\t<name><![CDATA[%s]]></name>\n</channel>\n",
@@ -1046,7 +1046,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 			bouquet = NeutrinoAPI->GetBouquet(atoi(hh->ParamList["bouquet"].c_str()), mode);
 			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 
-			for (unsigned int i = 0; channel != bouquet->end(); channel++,i++)
+			for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
 				hh->printf("%u "
 					PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 					" %s\n",
@@ -1077,7 +1077,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 		hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
 		CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(CZapitClient::MODE_CURRENT);
 		CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
-		for(; channel != channellist->end();channel++)
+		for(; channel != channellist->end(); ++channel)
 		{
 			event = NeutrinoAPI->ChannelListEvents[channel->channel_id];
 			if (event)
@@ -1095,7 +1095,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 		{
 			CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(CZapitClient::MODE_CURRENT);
 			CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
-			for(; channel != channellist->end();channel++)
+			for(; channel != channellist->end(); ++channel)
 			{
 				event = NeutrinoAPI->ChannelListEvents[channel->channel_id];
 				if(event)
@@ -1148,7 +1148,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 			       &channel_id);
 			NeutrinoAPI->eList = NeutrinoAPI->Sectionsd->getEventsServiceKey(channel_id);
 			CChannelEventList::iterator eventIterator;
-			for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); eventIterator++)
+			for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator)
 			{
 				CShortEPGData epg;
 				if (NeutrinoAPI->Sectionsd->getEPGidShort(eventIterator->eventID,&epg))
@@ -1210,7 +1210,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 				stoptime = atol( hh->ParamList["stoptime"].c_str() );
 			int i=0;
 			CChannelEventList::iterator eventIterator;
-			for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); eventIterator++, i++)
+			for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator, i++)
 			{
 				if( (max != -1 && i >= max) || ( stoptime != -1 && eventIterator->startTime >= stoptime))
 					break;
@@ -1508,7 +1508,7 @@ void CControlAPI::SendEventList(CyhookHandler *hh, t_channel_id channel_id)
 	NeutrinoAPI->eList = NeutrinoAPI->Sectionsd->getEventsServiceKey(channel_id);
 	CChannelEventList::iterator eventIterator;
 
-	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); eventIterator++, pos++)
+	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator, pos++)
 		hh->printf("%llu %ld %d %s\n", eventIterator->eventID, eventIterator->startTime, eventIterator->duration, eventIterator->description.c_str());
 }
 
@@ -1518,7 +1518,7 @@ void CControlAPI::SendChannelList(CyhookHandler *hh)
 	CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(CZapitClient::MODE_CURRENT);
 	CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
 
-	for(; channel != channellist->end();channel++)
+	for(; channel != channellist->end(); ++channel)
 		hh->printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 				" %s\n",
 				channel->channel_id,
@@ -1618,7 +1618,7 @@ void CControlAPI::SendAllCurrentVAPid(CyhookHandler *hh)
 	}
 	else
 	{
-		for (CZapitClient::APIDList::iterator it = pids.APIDs.begin(); it!=pids.APIDs.end(); it++)
+		for (CZapitClient::APIDList::iterator it = pids.APIDs.begin(); it!=pids.APIDs.end(); ++it)
 		{
 			if(!(init_iso))
 			{
@@ -1670,7 +1670,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 
 	hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
 
-	for(; timer != timerlist.end();timer++)
+	for(; timer != timerlist.end(); ++timer)
 	{
 		// Add Data
 		char zAddData[22+1] = { 0 };
@@ -2297,7 +2297,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 				real_alarmTimeT -= pre;
 			}
 
-			for(; timer != timerlist.end();timer++)
+			for(; timer != timerlist.end(); ++timer)
 				if(timer->alarmTime == real_alarmTimeT)
 				{
 					NeutrinoAPI->Timerd->removeTimerEvent(timer->eventID);
@@ -2410,7 +2410,7 @@ void CControlAPI::changeBouquetCGI(CyhookHandler *hh)
 		CZapitClient::BouquetChannelList BChannelList;
 		NeutrinoAPI->Zapit->getBouquetChannels(selected - 1, BChannelList, CZapitClient::MODE_CURRENT);
 		CZapitClient::BouquetChannelList::iterator channels = BChannelList.begin();
-		for(; channels != BChannelList.end();channels++)
+		for(; channels != BChannelList.end(); ++channels)
 		{
 			NeutrinoAPI->Zapit->removeChannelFromBouquet(selected - 1, channels->channel_id);
 		}

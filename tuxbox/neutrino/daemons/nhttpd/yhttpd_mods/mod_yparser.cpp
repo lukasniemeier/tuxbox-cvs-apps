@@ -116,7 +116,7 @@ void CyParser::Execute(CyhookHandler *hh)
 	{
 		dprintf("Execute CGI : %s\n",filename.c_str());
 		for(CStringList::iterator it = hh->ParamList.begin() ;
-			 it != hh->ParamList.end() ; it++)
+			 it != hh->ParamList.end() ; ++it)
 				dprintf("  Parameter %s : %s\n",it->first.c_str(), it->second.c_str());
 	}
 
@@ -211,7 +211,7 @@ void CyParser::cgi_server_config(CyhookHandler *hh)
 	// Cofig file
 	yresult += string_printf("<table border=\"1\">\n");
 	CStringList::iterator i = (hh->WebserverConfigList).begin();
-	for ( ; i!= (hh->WebserverConfigList).end(); i++ )
+	for ( ; i!= (hh->WebserverConfigList).end(); ++i )
 	{
 		if( ((*i).first) != "mod_auth.username" && ((*i).first) != "mod_auth.password")
 			yresult += string_printf("<tr><td>%s</td><td>%s</td></tr>\n", ((*i).first).c_str(), ((*i).second).c_str());
@@ -221,7 +221,7 @@ void CyParser::cgi_server_config(CyhookHandler *hh)
 	yresult += string_printf("<br/><b>Hooks (Compiled)</b><br/>\n");
 	yresult += string_printf("<table border=\"1\">\n");
 	THookList::iterator j = hh->HookList.begin();
-	for ( ; j!= hh->HookList.end(); j++ )
+	for ( ; j!= hh->HookList.end(); ++j )
 	{
 		yresult += string_printf("<tr><td>%s</td><td>%s</td></tr>\n", ((*j)->getHookName()).c_str(), ((*j)->getHookVersion()).c_str());
 	}
