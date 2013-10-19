@@ -1033,12 +1033,65 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 
 			for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
-				hh->printf("<channel>\n\t<number>%u</number>\n\t<id>"
+			{
+				hh->WriteLn("<channel>");
+				hh->printf("\t<number>%u</number>\n\t<id>"
 					PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
-					"</id>\n\t<name><![CDATA[%s]]></name>\n</channel>\n",
+					"</id>\n\t<name><![CDATA[%s]]></name>\n",
 					channel->nr,
 					channel->channel_id,
 					channel->name);
+
+				if (!(hh->ParamList["epg"].empty()))
+				{
+					hh->Write("\t<isActiveChannel>");
+					hh->Write((channel->channel_id == NeutrinoAPI->Zapit->getCurrentServiceID()) ? "true" : "false");
+					hh->WriteLn("</isActiveChannel>");
+
+					CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
+					bool has_current_next = NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(channel->channel_id, currentNextInfo);
+					if (has_current_next)
+					{
+						std::string timestr;
+						if (currentNextInfo.flags & CSectionsdClient::epgflags::has_current)
+						{
+							timestr = timeString(currentNextInfo.current_zeit.startzeit);
+							int percentage = 100;
+							if (currentNextInfo.current_zeit.dauer > 0)
+								percentage = 100 * (time(NULL) - currentNextInfo.current_zeit.startzeit) / currentNextInfo.current_zeit.dauer;
+							hh->WriteLn("\t<firstEPG>");
+							hh->printf("\t\t<id>%llu</id>\n"
+								"\t\t<startTime>%s</startTime>\n"
+								"\t\t<description><![CDATA[%s]]></description>\n"
+								"\t\t<timeElapsed>%d</timeElapsed>\n"
+								"\t\t<timeTotal>%d</timeTotal>\n"
+								"\t\t<percentage>%d</percentage>\n",
+								currentNextInfo.current_uniqueKey,
+								timestr.c_str(),
+								currentNextInfo.current_name.c_str(),
+								(time(NULL) - currentNextInfo.current_zeit.startzeit) / 60,
+								currentNextInfo.current_zeit.dauer / 60,
+								percentage);
+							hh->WriteLn("\t</firstEPG>");
+						}
+						if (currentNextInfo.flags & CSectionsdClient::epgflags::has_next)
+						{
+							timestr = timeString(currentNextInfo.next_zeit.startzeit);
+							hh->WriteLn("\t<secondEPG>");
+							hh->printf("\t\t<id>%llu</id>\n"
+								"\t\t<startTime>%s</startTime>\n"
+								"\t\t<description><![CDATA[%s]]></description>\n"
+								"\t\t<timeTotal>%d</timeTotal>\n",
+								currentNextInfo.next_uniqueKey,
+								timestr.c_str(),
+								currentNextInfo.next_name.c_str(),
+								currentNextInfo.next_zeit.dauer / 60);
+							hh->WriteLn("\t</secondEPG>");
+						}
+					}
+				}
+				hh->WriteLn("</channel>");
+			}
 			hh->WriteLn("</bouquetlist>");
 		}
 		else
