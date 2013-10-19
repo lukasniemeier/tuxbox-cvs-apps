@@ -129,6 +129,8 @@ void CInfoViewer::start()
 	ChanWidth = 4* g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getRenderWidth(widest_number) + 10;
 	ChanHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER]->getHeight()*9/8;
 
+	ProgressBarHeight = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() - 4;
+
 	aspectRatio = g_Controld->getAspectRatio();
 	
 	time_height = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME]->getHeight()+5;
@@ -1612,7 +1614,6 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 	{
 		int pb_p = pb_pos;
 		int pb_w = 112;
-		int pb_h = g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight() - 4;
 		if (pb_p > pb_w)
 			pb_p = pb_w;
 /*
@@ -1634,7 +1635,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 		CProgressBar pb(false);
 */
 		CProgressBar pb(true, -1, -1, 100, 0, 0, true);
-		pb.paintProgressBar(BoxEndX - pb_w - SHADOW_OFFSET, ChanNameY - (pb_h + 10) , pb_w, pb_h, pb_p, pb_w, 
+		pb.paintProgressBar(BoxEndX - pb_w - SHADOW_OFFSET, ChanNameY - (ProgressBarHeight + 10), pb_w, ProgressBarHeight, pb_p, pb_w,
 				    0, 0, g_settings.progressbar_color ? COL_INFOBAR_SHADOW_PLUS_0 : COL_INFOBAR_PLUS_0, COL_INFOBAR_SHADOW_PLUS_0, "", COL_INFOBAR);
 	}
 
@@ -1858,10 +1859,13 @@ void CInfoViewer::killTitle()
 	if (is_visible )
 	{
 		is_visible = false;
+		int top = ChanNameY - (ProgressBarHeight + 10);  // vertical pos of progressbar
+		if (BoxStartY < top)
+			top = BoxStartY;
 		int bottom = BoxEndY + SHADOW_OFFSET;
 		if (showButtonBar)
 			bottom += InfoHeightY_Info;
-		frameBuffer->paintBackgroundBox(BoxStartX, BoxStartY, BoxEndX+ SHADOW_OFFSET, bottom);
+		frameBuffer->paintBackgroundBox(BoxStartX, top, BoxEndX + SHADOW_OFFSET, bottom);
 #ifdef ENABLE_RADIOTEXT
 		if (g_settings.radiotext_enable && g_Radiotext) {
 			g_Radiotext->S_RtOsd = g_Radiotext->haveRadiotext() ? 1 : 0;

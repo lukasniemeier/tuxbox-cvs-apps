@@ -86,6 +86,8 @@ class CInfoViewer
 	int		ChanHeight;
 	int		ChanInfoX;
 
+	int		ProgressBarHeight;
+
 	CSectionsdClient::CurrentNextInfo info_CurrentNext;
 	CSectionsdClient::CurrentNextInfo oldinfo;
 	t_channel_id   channel_id;
