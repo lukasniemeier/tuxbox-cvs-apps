@@ -38,7 +38,8 @@
 #include <neutrino.h>
 
 #include <gui/widget/icons.h>
-#include "gui/widget/stringinput.h"
+#include <gui/widget/stringinput.h>
+#include <gui/widget/stringinput_ext.h>
 
 #include <driver/screen_max.h>
 
@@ -202,6 +203,9 @@ int CMiscMenue::showMenue()
 	//shutdown count
 	CStringInput miscSettings_shutdown_count(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, g_settings.shutdown_count, 3, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT1, LOCALE_MISCSETTINGS_SHUTDOWN_COUNT_HINT2, "0123456789 ", this);
 	CMenuForwarder *m4 = new CMenuForwarder(LOCALE_MISCSETTINGS_SHUTDOWN_COUNT, !g_settings.shutdown_real, g_settings.shutdown_count, &miscSettings_shutdown_count);
+	//sleeptimer minutes
+	CIntInput miscSettings_sleeptimer_min(LOCALE_MISCSETTINGS_SLEEPTIMER_MIN, (int&)g_settings.sleeptimer_min, 3, LOCALE_MISCSETTINGS_SLEEPTIMER_MIN_HINT1, LOCALE_MISCSETTINGS_SLEEPTIMER_MIN_HINT2);
+	CMenuForwarder *m6 = new CMenuForwarder(LOCALE_MISCSETTINGS_SLEEPTIMER_MIN, true, miscSettings_sleeptimer_min.getValue(), &miscSettings_sleeptimer_min);
 #ifndef HAVE_TRIPLEDRAGON
 	//standby save power
 	CMenuOptionChooser *m3 = new CMenuOptionChooser(LOCALE_MISCSETTINGS_STANDBY_SAVE_POWER, &g_settings.standby_save_power, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, !g_settings.shutdown_real);
@@ -224,6 +228,7 @@ int CMiscMenue::showMenue()
 	misc_menue_energy->addItem(m4);
 	misc_menue_energy->addItem(m1);
 	misc_menue_energy->addItem(m5);
+	misc_menue_energy->addItem(m6);
 
 
 	//epg settings

@@ -402,6 +402,7 @@ int CNeutrinoApp::loadSetup()
 #endif
 	g_settings.standby_off_with		= configfile.getInt32("standby_off_with" , STANDBY_OFF_WITH_POWER );
 	strcpy(g_settings.shutdown_count, configfile.getString("shutdown_count","0").c_str());
+	g_settings.sleeptimer_min		= configfile.getInt32("sleeptimer_min", 0);
 	g_settings.volumebar_disp_pos		= configfile.getInt32("volumebar_disp_pos" , VOLUMEBAR_DISP_POS_DEFAULT_CENTER );
 	g_settings.infobar_sat_display		= configfile.getBool("infobar_sat_display"       , true );
 	g_settings.infobar_subchan_disp_pos	= configfile.getInt32("infobar_subchan_disp_pos" , CInfoViewer::SUBCHAN_DISP_POS_INFOBAR );
@@ -998,6 +999,7 @@ void CNeutrinoApp::saveSetup()
 	configfile.setBool("shutdown_real_rcdelay"     , g_settings.shutdown_real_rcdelay);
 	configfile.setInt32("standby_off_with"         , g_settings.standby_off_with);
 	configfile.setString("shutdown_count"          , g_settings.shutdown_count);
+	configfile.setInt32("sleeptimer_min"           , g_settings.sleeptimer_min);
 	configfile.setInt32("volumebar_disp_pos" , g_settings.volumebar_disp_pos);
 	configfile.setBool("infobar_sat_display"       , g_settings.infobar_sat_display);
 	configfile.setInt32("infobar_subchan_disp_pos" , g_settings.infobar_subchan_disp_pos);

@@ -774,6 +774,9 @@ miscsettings.shutdown_count_hint1 time (in minutes) to switch from standby
 miscsettings.shutdown_count_hint2 to deep standby (0 = off).
 miscsettings.shutdown_real Standby
 miscsettings.shutdown_real_rcdelay Delayed Shutdown
+miscsettings.sleeptimer_min Sleeptimer default
+miscsettings.sleeptimer_min_hint1 Shutdown time in min. (0 = EPG)
+miscsettings.sleeptimer_min_hint2 The dbox2 will shutdown after this time.
 miscsettings.standby_save_power Standby power save mode (exp.)
 miscsettings.startmode Startmode
 miscsettings.startmode_restore Restore last mode
@@ -1358,7 +1361,7 @@ settings.pos_top_right top right
 shutdown.recoding_query dBox is currently recording. Really shutdown?
 shutdowntimer.announce Box will shutdown in 1 min.\nCancel Shutdown?
 sleeptimerbox.announce Sleeptimer in 1 minute. Cancel?
-sleeptimerbox.hint1 Shutdown time in min. (000=off)
+sleeptimerbox.hint1 Shutdown time in min. (000 = off)
 sleeptimerbox.hint2 The dbox2 will shutdown after this time.
 sleeptimerbox.title Sleeptimer
 streamfeatures.head Features
