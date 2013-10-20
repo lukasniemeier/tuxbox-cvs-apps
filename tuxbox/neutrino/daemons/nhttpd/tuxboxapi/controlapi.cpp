@@ -1056,9 +1056,12 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 						if (currentNextInfo.flags & CSectionsdClient::epgflags::has_current)
 						{
 							timestr = timeString(currentNextInfo.current_zeit.startzeit);
+							time_t now = time(NULL);
 							int percentage = 100;
 							if (currentNextInfo.current_zeit.dauer > 0)
-								percentage = 100 * (time(NULL) - currentNextInfo.current_zeit.startzeit) / currentNextInfo.current_zeit.dauer;
+								percentage = (now > currentNextInfo.current_zeit.startzeit) ?
+									100 * (now - currentNextInfo.current_zeit.startzeit) / currentNextInfo.current_zeit.dauer :
+									0;
 							hh->WriteLn("\t<firstEPG>");
 							hh->printf("\t\t<id>%llu</id>\n"
 								"\t\t<startTime>%s</startTime>\n"
@@ -1069,7 +1072,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 								currentNextInfo.current_uniqueKey,
 								timestr.c_str(),
 								currentNextInfo.current_name.c_str(),
-								(time(NULL) - currentNextInfo.current_zeit.startzeit) / 60,
+								(now - currentNextInfo.current_zeit.startzeit) / 60,
 								currentNextInfo.current_zeit.dauer / 60,
 								percentage);
 							hh->WriteLn("\t</firstEPG>");
