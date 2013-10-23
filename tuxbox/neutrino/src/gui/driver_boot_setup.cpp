@@ -128,6 +128,7 @@ int CDriverBootSetup::showSetup()
 	CMenuWidget * dbs = new CMenuWidget(menue_title, menue_icon, width);
 	dbs->setPreselected(selected);
 
+	int misc_option[DRIVER_SETTING_FILES_COUNT];
 	bool item_enabled[DRIVER_SETTING_FILES_COUNT];
 
 #ifdef HAVE_DBOX_HARDWARE
@@ -142,10 +143,10 @@ int CDriverBootSetup::showSetup()
 		if (fd)
 		{
 			fclose(fd);
-			g_settings.misc_option[i] = 1;
+			misc_option[i] = 1;
 		}
 		else
-			g_settings.misc_option[i] = 0;
+			misc_option[i] = 0;
 		
 		if (!strcmp(driver_setting_files[i].filename, "/var/etc/.philips_rc_patch") && (g_info.box_Type == CControld::TUXBOX_MAKER_NOKIA)) // useful for Philips RC and sometimes for Sagem RC
 			item_enabled[i] = false;
@@ -160,7 +161,7 @@ int CDriverBootSetup::showSetup()
 		{
 			CTouchFileNotifier * touchFileNotifier = new CTouchFileNotifier(driver_setting_files[i].filename);
 			toDelete.push_back(touchFileNotifier);
-			oj_switches[i] = new CMenuOptionChooser(driver_setting_files[i].name, &(g_settings.misc_option[i]), driver_setting_files[i].options, 2, true, touchFileNotifier);
+			oj_switches[i] = new CMenuOptionChooser(driver_setting_files[i].name, &(misc_option[i]), driver_setting_files[i].options, 2, true, touchFileNotifier);
 		}
 	}
 

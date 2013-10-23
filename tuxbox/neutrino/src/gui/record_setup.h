@@ -41,6 +41,14 @@ class CRecordSetup : public CMenuTarget, CChangeObserver
 	private:
 		int width, selected;
 
+		char record_safety_time_before[3];
+		char record_safety_time_after[3];
+		char zapto_safety_time_before[3];
+
+		int recording_audio_pids_std;
+		int recording_audio_pids_alt;
+		int recording_audio_pids_ac3;
+
 		int showRecordSetup();
 
 	public:	

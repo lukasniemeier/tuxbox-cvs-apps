@@ -56,9 +56,6 @@ struct SNeutrinoSettings
 	char shutdown_count[4];
 	int sleeptimer_min;
 	int volumebar_disp_pos;
-	char record_safety_time_before[3];
-	char record_safety_time_after[3];
-	char zapto_safety_time_before[3];
 	int infobar_sat_display;
 	int infobar_subchan_disp_pos;
 	int misc_spts;
@@ -201,8 +198,6 @@ struct SNeutrinoSettings
 	char network_nfs_username[NETWORK_NFS_NR_OF_ENTRIES][31];
 	char network_nfs_password[NETWORK_NFS_NR_OF_ENTRIES][31];
 
-	char network_nfs_recordingdir[100];
-
 	//personalization
 	int personalize_pinstatus;
 	int personalize_bluebutton;
@@ -268,9 +263,6 @@ struct SNeutrinoSettings
 	int  recording_use_o_sync;
 	int  recording_use_fdatasync;
 	unsigned char recording_audio_pids_default;
-	int recording_audio_pids_std;
-	int recording_audio_pids_alt;
-	int recording_audio_pids_ac3;
 	int  recording_stream_vtxt_pid;
 	int  recording_stream_subtitle_pid;
 	int recording_ringbuffers;
@@ -440,9 +432,6 @@ struct SNeutrinoSettings
 #endif
 
 // #define MISC_SETTING_SPTS_MODE 0
-
-	// driver settings
-	int misc_option[DRIVER_SETTING_FILES_COUNT];
 
 	// pictureviewer
 	char   picviewer_slide_time[3];
