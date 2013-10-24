@@ -1136,11 +1136,11 @@ int CEventFinderMenu::exec(CMenuTarget* parent, const std::string &actionkey)
 	if(parent != NULL)
 		parent->hide();
 
-	if(actionkey =="")
+	if(actionkey == "")
 	{
 		res = showMenu();
 	}
-	else if(actionkey =="3")
+	else if(actionkey == "select_channel")
 	{
 		// get channel id / bouquet id
 		if(*m_search_list == EventList::SEARCH_LIST_CHANNEL)
@@ -1170,7 +1170,7 @@ int CEventFinderMenu::exec(CMenuTarget* parent, const std::string &actionkey)
 			}
 		}
 	}
-	else if(actionkey =="5")
+	else if(actionkey == "start_search")
 	{
 		*m_event = true;
 		res = menu_return::RETURN_EXIT;
@@ -1206,11 +1206,11 @@ int CEventFinderMenu::showMenu(void)
 	
 	CStringInputSMS stringInput(LOCALE_EVENTFINDER_KEYWORD, m_search_keyword, 20, false, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
 	
-	CMenuForwarder* mf0 		= new CMenuForwarder(LOCALE_EVENTFINDER_KEYWORD, true, *m_search_keyword, &stringInput, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
-	CMenuOptionChooser* mo0 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST, m_search_list, SEARCH_LIST_OPTIONS, SEARCH_LIST_OPTION_COUNT, true, this, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
-	m_search_channelname_mf		= new CMenuForwarder("", *m_search_list != EventList::SEARCH_LIST_ALL, m_search_channelname, this, "3", CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3);
-	CMenuOptionChooser* mo1 	= new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_EPG, m_search_epg_item, SEARCH_EPG_OPTIONS, SEARCH_EPG_OPTION_COUNT, true, NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4);
-	CMenuForwarder* mf1	= new CMenuForwarder(LOCALE_EVENTFINDER_START_SEARCH, true, NULL, this, "5", CRCInput::RC_5, NEUTRINO_ICON_BUTTON_5);
+	CMenuForwarder* mf0 = new CMenuForwarder(LOCALE_EVENTFINDER_KEYWORD, true, *m_search_keyword, &stringInput, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuOptionChooser* mo0 = new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_LIST, m_search_list, SEARCH_LIST_OPTIONS, SEARCH_LIST_OPTION_COUNT, true, this, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
+	m_search_channelname_mf = new CMenuForwarder("", *m_search_list != EventList::SEARCH_LIST_ALL, m_search_channelname, this, "select_channel", CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
+	CMenuOptionChooser* mo1 = new CMenuOptionChooser(LOCALE_EVENTFINDER_SEARCH_WITHIN_EPG, m_search_epg_item, SEARCH_EPG_OPTIONS, SEARCH_EPG_OPTION_COUNT, true, NULL, CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3);
+	CMenuForwarder* mf1 = new CMenuForwarder(LOCALE_EVENTFINDER_START_SEARCH, true, NULL, this, "start_search", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
 	
 	CMenuWidget searchMenu(LOCALE_EVENTFINDER_HEAD, NEUTRINO_ICON_FEATURES, 450);
 
