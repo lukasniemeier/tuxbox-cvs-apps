@@ -831,6 +831,7 @@ void  EventList::showFunctionBar (bool show)
 	CKeyHelper keyhelper;
 	neutrino_msg_t dummy = CRCInput::RC_nokey;
 	const char * icon = NULL;
+	std::string number_icons[5];
 	std::string btncaption;	
 
 	bx = x + 5;
@@ -853,7 +854,14 @@ void  EventList::showFunctionBar (bool show)
 	if ((g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) &&
 		(g_settings.key_channelList_addrecord != CRCInput::RC_nokey))
 	{
-		keyhelper.get(&dummy, &icon, g_settings.key_channelList_addrecord);
+		if (CRCInput::isNumeric(g_settings.key_channelList_addrecord))
+		{
+			number_icons[0] = CRCInput::getKeyName(g_settings.key_channelList_addrecord);
+			number_icons[0] += ".raw";
+			icon = number_icons[0].c_str();
+		}
+		else
+			keyhelper.get(&dummy, &icon, g_settings.key_channelList_addrecord);
 		EventListButtons[0].button = icon;
 
 		if(is_timer & EventList::TIMER_RECORD )
@@ -878,7 +886,14 @@ void  EventList::showFunctionBar (bool show)
 	// Button: Event Search
 	if (!showfollow && g_settings.key_channelList_search != CRCInput::RC_nokey)
 	{
-		keyhelper.get(&dummy, &icon, g_settings.key_channelList_search);
+		if (CRCInput::isNumeric(g_settings.key_channelList_search))
+		{
+			number_icons[1] = CRCInput::getKeyName(g_settings.key_channelList_search);
+			number_icons[1] += ".raw";
+			icon = number_icons[1].c_str();
+		}
+		else
+			keyhelper.get(&dummy, &icon, g_settings.key_channelList_search);
 		EventListButtons[1].button = icon;
 		
 		btncaption = g_Locale->getText(LOCALE_EVENTFINDER_SEARCH);
@@ -894,7 +909,14 @@ void  EventList::showFunctionBar (bool show)
 	// Button: Timer Channelswitch
 	if (g_settings.key_channelList_addremind != CRCInput::RC_nokey)
 	{
-		keyhelper.get(&dummy, &icon, g_settings.key_channelList_addremind);
+		if (CRCInput::isNumeric(g_settings.key_channelList_addremind))
+		{
+			number_icons[2] = CRCInput::getKeyName(g_settings.key_channelList_addremind);
+			number_icons[2] += ".raw";
+			icon = number_icons[2].c_str();
+		}
+		else
+			keyhelper.get(&dummy, &icon, g_settings.key_channelList_addremind);
 		EventListButtons[2].button = icon;
 
 		if(is_timer & EventList::TIMER_ZAPTO)
@@ -919,7 +941,14 @@ void  EventList::showFunctionBar (bool show)
 	// Button: Event Re-Sort
 	if (!showfollow && g_settings.key_channelList_sort != CRCInput::RC_nokey)
 	{
-		keyhelper.get(&dummy, &icon, g_settings.key_channelList_sort);
+		if (CRCInput::isNumeric(g_settings.key_channelList_sort))
+		{
+			number_icons[3] = CRCInput::getKeyName(g_settings.key_channelList_sort);
+			number_icons[3] += ".raw";
+			icon = number_icons[3].c_str();
+		}
+		else
+			keyhelper.get(&dummy, &icon, g_settings.key_channelList_sort);
 		EventListButtons[3].button = icon;
 		
 		btncaption =  g_Locale->getText(LOCALE_EVENTLISTBAR_EVENTSORT);
@@ -935,7 +964,14 @@ void  EventList::showFunctionBar (bool show)
 	// Button: Event Reload/Refresh
 	if (!showfollow && !m_showSearchResults && g_settings.key_channelList_reload != CRCInput::RC_nokey)
 	{
-		keyhelper.get(&dummy, &icon, g_settings.key_channelList_reload);
+		if (CRCInput::isNumeric(g_settings.key_channelList_reload))
+		{
+			number_icons[4] = CRCInput::getKeyName(g_settings.key_channelList_reload);
+			number_icons[4] += ".raw";
+			icon = number_icons[4].c_str();
+		}
+		else
+			keyhelper.get(&dummy, &icon, g_settings.key_channelList_reload);
 		EventListButtons[4].button = icon;
 
 		// paint 5th button

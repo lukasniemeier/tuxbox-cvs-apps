@@ -86,23 +86,23 @@ class CKeyHelper
 			int button = -1;
 			if(prefered_key == CRCInput::RC_red)
 				button = 0;
-			if(prefered_key == CRCInput::RC_green)
+			else if(prefered_key == CRCInput::RC_green)
 				button = 1;
-			if(prefered_key == CRCInput::RC_yellow)
+			else if(prefered_key == CRCInput::RC_yellow)
 				button = 2;
-			if(prefered_key == CRCInput::RC_blue)
+			else if(prefered_key == CRCInput::RC_blue)
 				button = 3;
-			if(prefered_key == CRCInput::RC_setup)
+			else if(prefered_key == CRCInput::RC_setup)
 				button = 4;
-			if(prefered_key == CRCInput::RC_help)
+			else if(prefered_key == CRCInput::RC_help)
 				button = 5;
-			if(prefered_key == CRCInput::RC_plus)
+			else if(prefered_key == CRCInput::RC_plus)
 				button = 6;
-			if(prefered_key == CRCInput::RC_minus)
+			else if(prefered_key == CRCInput::RC_minus)
 				button = 7;	
-			if(prefered_key == CRCInput::RC_left)
+			else if(prefered_key == CRCInput::RC_left)
 				button = 8;
-			if(prefered_key == CRCInput::RC_right)
+			else if(prefered_key == CRCInput::RC_right)
 				button = 9;
 		
 			if((button >= 0) && (button < BUTTONMAX) && (color_key_used[button] == true)) {
