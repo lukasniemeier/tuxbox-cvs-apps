@@ -21,6 +21,7 @@
 //
 
 #include "SIlanguage.hpp"
+#include "global.h"
 
 #include <string>
 #include <vector>

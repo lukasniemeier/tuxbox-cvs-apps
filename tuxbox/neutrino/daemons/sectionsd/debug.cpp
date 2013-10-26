@@ -20,16 +20,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  */
+
+#include "global.h"
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
+
 
 bool debug = false;
 
 void printdate_ms(FILE *f) {
 	timeval now;
 	gettimeofday(&now, NULL);
-	struct tm *tm = localtime(&now.tv_sec);
+	struct tm lt;
+	localtime_r(&now.tv_sec, &lt);
 	/* use strftime for that? */
-	fprintf(f, "%02d:%02d:%02d.%03ld ", tm->tm_hour, tm->tm_min, tm->tm_sec, now.tv_usec/1000);
+	fprintf(f, "%02d:%02d:%02d.%03ld ", lt.tm_hour, lt.tm_min, lt.tm_sec, now.tv_usec/1000);
 }

@@ -23,6 +23,8 @@
 //
 //
 
+#include <dmxapi.h>
+#include "global.h"
 #include <assert.h>
 #include <stdio.h>
 #include <time.h>
@@ -43,7 +45,7 @@
 #include "SIbouquets.hpp"
 #include "SInetworks.hpp"
 #include "SIsections.hpp"
-#include <dmxapi.h>
+
 
 const std::string languangeOFF = "OFF";
 

@@ -26,6 +26,7 @@
 #include <dmx.h>
 #include <dmxapi.h>
 #include <debug.h>
+#include "global.h"
 
 #include <endian.h>
 #include <errno.h>
@@ -37,6 +38,7 @@
 #include <string>
 #include <cstring>
 #include <map>
+
 
 /*
 #define DEBUG_MUTEX 1

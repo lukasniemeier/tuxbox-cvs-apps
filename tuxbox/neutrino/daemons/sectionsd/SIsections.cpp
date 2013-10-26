@@ -23,6 +23,8 @@
 //
 //
 
+#include <dmxapi.h>
+#include "global.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -39,7 +41,7 @@
 #include "SIbouquets.hpp"
 #include "SInetworks.hpp"
 #include "SIsections.hpp"
-#include <dmxapi.h>
+
 #include <zapit/dvbstring.h>
 #ifdef ENABLE_FREESATEPG
 #include "FreesatTables.hpp"

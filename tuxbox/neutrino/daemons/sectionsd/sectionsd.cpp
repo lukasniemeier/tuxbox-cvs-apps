@@ -30,6 +30,7 @@
 #include <malloc.h>
 #include <dmx.h>
 #include <dmxapi.h>
+#include "global.h"
 #include <debug.h>
 
 #include <sys/socket.h>
@@ -2443,12 +2444,12 @@ static void sendAllEvents(int connfd, t_channel_id serviceUniqueKey, bool oldFor
 #define MAX_SIZE_STRTIME	50
 							char strZeit[MAX_SIZE_STRTIME];
 							char strZeit2[MAX_SIZE_STRTIME];
-							struct tm *tmZeit;
-	
-							tmZeit = localtime(&(t->startzeit));
+							struct tm tmZeit;
+
+							localtime_r(&t->startzeit, &tmZeit);
 							count += snprintf(strZeit, MAX_SIZE_STRTIME, "%012llx ", (*e)->uniqueKey());
 							count += snprintf(strZeit2, MAX_SIZE_STRTIME, "%02d.%02d %02d:%02d %u ",
-									tmZeit->tm_mday, tmZeit->tm_mon + 1, tmZeit->tm_hour, tmZeit->tm_min, (*e)->times.begin()->dauer / 60);
+									tmZeit.tm_mday, tmZeit.tm_mon + 1, tmZeit.tm_hour, tmZeit.tm_min, (*e)->times.begin()->dauer / 60);
 							count += (*e)->getName().length() + 1;
 	
 							if (count < MAX_SIZE_EVENTLIST) {
@@ -2594,6 +2595,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 
 #define MAX_SIZE_STATI	2024
 	char stati[MAX_SIZE_STATI];
+	char tbuf[26];
 
 	snprintf(stati, MAX_SIZE_STATI,
 		"$Id: sectionsd.cpp,v 1.346 2013/03/20 22:40:00 GetAway Exp $\n"
@@ -2617,7 +2619,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 		""
 #endif
 		,
-		ctime(&zeit),
+		ctime_r(&zeit, tbuf),
 		secondsToCache / (60*60L), secondsExtendedTextCache / (60*60L), oldEventsAre / 60, anzServices, anzNVODservices, anzEvents, anzNVODevents, anzMetaServices,
 		//    resourceUsage.ru_maxrss, resourceUsage.ru_ixrss, resourceUsage.ru_idrss, resourceUsage.ru_isrss,
 		speicherinfo.uordblks, speicherinfo.uordblks / 1024,
@@ -3464,7 +3466,8 @@ static void commandGetNextEPG(int connfd, char *data, const unsigned dataLength)
 
 	time_t *starttime = (time_t *)(data + 8);
 
-	dprintf("Request of next epg for 0x%llx %s", *uniqueEventKey, ctime(starttime));
+	char tbuf[26];
+	dprintf("Request of next epg for 0x%llx %s", *uniqueEventKey, ctime_r(starttime, tbuf));
 
 	readLockEvents();
 
@@ -3562,8 +3565,9 @@ static void commandGetEPGPrevNext(int connfd, char *data, const unsigned dataLen
 	SItime next_zeit(0, 0);
 	SIevent prev_evt;
 	SIevent next_evt;
+	char tbuf[26];
 
-	dprintf("Request of Prev/Next EPG for 0x%llx %s", *uniqueEventKey, ctime(starttime));
+	dprintf("Request of Prev/Next EPG for 0x%llx %s", *uniqueEventKey, ctime_r(starttime, tbuf));
 
 	readLockEvents();
 
@@ -3933,8 +3937,9 @@ static void commandGetNextShort(int connfd, char *data, const unsigned dataLengt
 
 	time_t *starttime = (time_t *)(data + 8);
 	SItime zeit(*starttime, 0);
+	char tbuf[26];
 
-	dprintf("Request of next short for 0x%llx %s", *uniqueEventKey, ctime(starttime));
+	dprintf("Request of next short for 0x%llx %s", *uniqueEventKey, ctime_r(starttime, tbuf));
 
 	readLockEvents();
 
@@ -6775,6 +6780,7 @@ static void *timeThread(void *)
 	struct timeval now;
 	bool time_ntp = false;
 	bool success = true;
+	long long timediff;
 
 	try
 	{
@@ -6785,6 +6791,7 @@ static void *timeThread(void *)
 
 		while(1)
 		{
+			timediff = 0;
 			if (bTimeCorrect == true){		// sectionsd started with parameter "-tc"
 				if (first_time == true) {	// only do this once!
 					time_t actTime;
@@ -6813,6 +6820,7 @@ static void *timeThread(void *)
 			}
 			else if (scanning && dvb_time_update)
 			{
+				xcprintf("[%sThread] getting DVB time ...", "time");
 				success = getUTC(&UTC, first_time); // for first time, get TDT, then TOT
 				if (success)
 				{
@@ -6830,11 +6838,14 @@ static void *timeThread(void *)
 						}
 					}
 
-					time_t actTime;
-					struct tm *tmTime;
-					actTime=time(NULL);
-					tmTime = localtime(&actTime);
-					xprintf("[%sThread] - %02d.%02d.%04d %02d:%02d:%02d, tim: %s", "time", tmTime->tm_mday, tmTime->tm_mon+1, tmTime->tm_year+1900, tmTime->tm_hour, tmTime->tm_min, tmTime->tm_sec, ctime(&tim));
+					struct tm tmTime;
+					time_t actTime = time(NULL);
+					localtime_r(&actTime, &tmTime);
+					struct timeval lt;
+					gettimeofday(&lt, NULL);
+					timediff = (long long)tim * 1000000LL - (lt.tv_usec + lt.tv_sec * 1000000LL);
+					char tbuf[26];
+					xprintf("[%sThread] timediff %lld, current: %02d.%02d.%04d %02d:%02d:%02d, dvb: %s", "time", timediff, tmTime.tm_mday, tmTime.tm_mon+1, tmTime.tm_year+1900, tmTime.tm_hour, tmTime.tm_min, tmTime.tm_sec, ctime_r(&tim, tbuf));
 					pthread_mutex_lock(&timeIsSetMutex);
 					timeset = true;
 					time_ntp= false;

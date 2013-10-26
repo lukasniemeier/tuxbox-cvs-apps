@@ -349,7 +349,8 @@ class SItime {
         (startzeit != t.startzeit);
     }
     void dump(void) const {
-      printf("Startzeit: %s", ctime(&startzeit));
+      char tbuf[26];
+      printf("Startzeit: %s", ctime_r(&startzeit, tbuf));
       printf("Dauer: %02u:%02u:%02u (%umin, %us)\n", dauer/3600, (dauer%3600)/60, dauer%60, dauer/60, dauer);
     }
     int saveXML(FILE *file) const { // saves the time
@@ -362,7 +363,7 @@ class SItime {
       fprintf(file, "\t\t\t\t\t<date>%02d.%02d.%04d</date>\n", zeit->tm_mday, zeit->tm_mon+1, zeit->tm_year+1900);
       fprintf(file, "\t\t\t\t\t<duration>%u</duration>\n", dauer);
       */
-      fprintf(file, "\t\t\t<time start_time=\"%u\" duration=\"%u\"/>\n", startzeit, dauer);
+      fprintf(file, "\t\t\t<time start_time=\"%u\" duration=\"%u\"/>\n", (unsigned int)startzeit, dauer);
       return 0;
     }
     time_t startzeit;  // lokale Zeit, 0 -> time shifted (cinedoms)

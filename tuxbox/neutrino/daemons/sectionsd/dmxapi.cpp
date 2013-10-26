@@ -21,7 +21,7 @@
  *
  */
 
-
+#include "global.h"
 #include <dmxapi.h>
 
 #include <stdio.h>         /* perror      */
@@ -184,11 +184,13 @@ bool getUTC(UTC_t * const UTC, const bool TDT)
 				cc[3] = 0;
 				memcpy(cc, to->country_code, 3);
 				time_t t = changeUTCtoCtime(&b2[2+6],0);
+				char tbuf[26];
+
 				xprintf("getUTC(TOT): len=%d cc=%s reg_id=%d "
 					"pol=%d offs=%04x new=%04x when=%s",
 					b2[1], cc, to->country_region_id,
 					to->local_time_offset_polarity, htons(to->local_time_offset),
-					htons(to->next_time_offset), ctime(&t));
+					htons(to->next_time_offset), ctime_r(&t, tbuf));
 			} else {
 				xprintf("getUTC(TOT): descriptor != 0x58: 0x%02x\n", b2[0]);
 			}

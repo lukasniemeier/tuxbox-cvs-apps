@@ -24,6 +24,7 @@
 
 //#define READ_PRESENT_INFOS
 
+#include "global.h"
 #include <stdio.h>
 #include <time.h>
 
