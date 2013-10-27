@@ -618,6 +618,11 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 				timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_CHANLIST]);
 			}
 		}
+		else if (msg == CRCInput::RC_setup)
+		{
+			loop = false;
+			res = menu_return::RETURN_EXIT_ALL;
+		}
 		else
 		{
 			if ( CNeutrinoApp::getInstance()->handleMsg( msg, data ) & messages_return::cancel_all )

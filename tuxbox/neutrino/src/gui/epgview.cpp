@@ -844,6 +844,11 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 					loop = false;
 					break;
 
+				case CRCInput::RC_setup:
+					loop = false;
+					res = menu_return::RETURN_EXIT_ALL;
+					break;
+
 				default:
 					// konfigurierbare Keys handlen...
 					if (msg == g_settings.key_channelList_cancel)
