@@ -249,6 +249,7 @@ void CStringInput::keyLeftPressed()
 			selected=size-1;
 		paintChar(osel);
 		paintChar(selected);
+		CLCD::getInstance()->showMenuText(1, value, selected+1);
 	}
 }
 
@@ -262,6 +263,7 @@ void CStringInput::keyRightPressed()
 			selected=0;
 		paintChar(osel);
 		paintChar(selected);
+		CLCD::getInstance()->showMenuText(1, value, selected+1);
 	}
 }
 
