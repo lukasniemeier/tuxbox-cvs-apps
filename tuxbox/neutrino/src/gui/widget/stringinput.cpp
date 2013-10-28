@@ -629,6 +629,7 @@ void CStringInputSMS::keyUpPressed()
 		selected = 0;
 		paintChar(lastselected);
 		paintChar(selected);
+		CLCD::getInstance()->showMenuText(1, value, selected+1);
 	}
 }
 
@@ -652,6 +653,7 @@ void CStringInputSMS::keyDownPressed()
 
 	paintChar(lastselected);
 	paintChar(selected);
+	CLCD::getInstance()->showMenuText(1, value, selected+1);
 }
 
 void CStringInputSMS::keyLeftPressed()
