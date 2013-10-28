@@ -1308,29 +1308,31 @@ void CRCInput::getMsg_us(neutrino_msg_t *msg, neutrino_msg_data_t *data, unsigne
 							{
 								gettimeofday(&tv, NULL);
 								long long timeOld = tv.tv_usec + tv.tv_sec * 1000000LL;
+								long long timediff;
 
 								time_t dvbtime = *((time_t*)p);
 
 								if (dvbtime) {
+									timediff = (long long)dvbtime * 1000000LL - timeOld;
 									printf("[neutrino] timeset event. ");
-									time_t difftime = dvbtime - tv.tv_sec;
-									if (abs(difftime) > 120)
+									time_t diff_time = dvbtime - tv.tv_sec;
+									if (abs(diff_time) > 120)
 									{
-										printf("difference is %ld s, stepping...\n", difftime);
+										printf("difference is %ld s, stepping...\n", diff_time);
 										tv.tv_sec = dvbtime;
 										tv.tv_usec = 0;
 										if (settimeofday(&tv, NULL) < 0)
 											perror("[neutrino] settimeofday");
 									}
-									else if (difftime != 0)
+									else if (diff_time != 0)
 									{
 										struct timeval oldd;
-										tv.tv_sec = difftime;
-										tv.tv_usec = 0;
+										tv.tv_sec = timediff / 1000000LL;
+										tv.tv_usec = timediff % 1000000LL;
 										if (adjtime(&tv, &oldd))
 											perror("adjtime");
-										long long t = oldd.tv_sec * 1000000LL + oldd.tv_usec;
-										printf("difference is %ld s, using adjtime(). oldd: %lld us\n", difftime, t);
+										printf("difference is %ld s (< 120s), using adjtime(%d, %d). oldd(%d, %d)\n", diff_time,
+											(int)tv.tv_sec, (int)tv.tv_usec, (int)oldd.tv_sec, (int)oldd.tv_usec);
 									}
 									else
 										printf("difference is 0 s, nothing to do...\n");
