@@ -635,7 +635,7 @@ void CTimerList::paintItem(int pos)
 				sprintf(srepeatcount,"00");
 			else
 				sprintf(srepeatcount,"%ux",timer.repeatCount);
-			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width+(real_width-10-time_width-140)/2, ypos+fheight, (real_width-10-time_width)/2-5, srepeatcount, color, fheight, true); // UTF-8
+			g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width+(real_width-10-time_width-110)/2, ypos+fheight, (real_width-10-time_width)/2-5, srepeatcount, color, fheight, true); // UTF-8
 		}
 		g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x+10+time_width+(real_width-10-time_width)/2, ypos+fheight, (real_width-10-time_width)/2-5, convertTimerType2String(timer.eventType), color, fheight, true); // UTF-8
 		std::string zAddData("");
