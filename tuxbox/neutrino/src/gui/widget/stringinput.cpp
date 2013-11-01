@@ -78,10 +78,6 @@ CStringInput::CStringInput(const neutrino_locale_t Name, std::string* Value, int
 	name =  Name;
 	value = new char[Size+1];
 	value[Size] = '\0';
-	if (ValueIsUtf8)
-		strncpy(value, ZapitTools::UTF8_to_Latin1(Value->c_str()).c_str(), Size);
-	else
-		strncpy(value, Value->c_str(), Size);
 	valueString = Value;
 	valueStringIsUtf8 = ValueIsUtf8;
 	size = Size;
@@ -305,6 +301,14 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 
 	if (parent)
 		parent->hide();
+
+	if (valueString != NULL)
+	{
+		if (valueStringIsUtf8)
+			strncpy(value, ZapitTools::UTF8_to_Latin1(valueString->c_str()).c_str(), size);
+		else
+			strncpy(value, valueString->c_str(), size);
+	}
 
 	for(int count=strlen(value)-1;count<size-1;count++)
 		strcat(value, " ");
