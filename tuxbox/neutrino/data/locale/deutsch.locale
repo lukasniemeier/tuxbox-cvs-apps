@@ -1019,9 +1019,9 @@ networkmenu.ntptitle Zeitsynchronisation
 networkmenu.reset_settings_now Sollen die vorherigen Einstellungen \nwieder hergestellt werden?
 networkmenu.samba Sambaserver
 networkmenu.setupnow Netzwerkeinstellungen jetzt zuweisen
-networkmenu.setuponstartup Beim Starten Netzwerk setzen
+networkmenu.setuponstartup Netzwerk beim Start aktivieren
 networkmenu.setupsaved Änderungen wurden gespeichert, aber noch \nnicht zugewiesen. Diese werden erst \nnach einem Neustart wirksam!
-networkmenu.show aktive Netzwerkeinstellungen zeigen
+networkmenu.show Aktive Netzwerkeinstellungen anzeigen
 networkmenu.test Netzwerk testen
 nfs.alreadymounted Verzeichnis bereits gemountet.
 nfs.automount Beim Start mounten
@@ -1340,7 +1340,7 @@ servicemenu.reload_hint Kanallisten werden neu geladen,\nbitte warten...
 servicemenu.restart Neutrino neu starten
 servicemenu.restart_failed Neustart von Neutrino schlug fehl.
 servicemenu.restart_hint Neutrino wird neu gestartet...
-servicemenu.restart_refused_recording Aufnahme läuft. Restart nicht möglich.
+servicemenu.restart_refused_recording Aufnahme läuft. Neustart nicht möglich.
 servicemenu.scanmodes Scan-Modi
 servicemenu.scants Kanalsuche
 servicemenu.ucodecheck UCodes überprüfen
