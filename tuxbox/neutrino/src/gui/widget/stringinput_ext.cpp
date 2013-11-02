@@ -294,7 +294,7 @@ void CExtendedInput::paint()
 CExtendedInput_Item_Char::CExtendedInput_Item_Char(const std::string & Chars, bool Selectable )
 {
 	frameBuffer = CFrameBuffer::getInstance();
-	idx = 20;
+	idx = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth("M") + 1;
 	idy = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	allowedChars = Chars;
 	selectable = Selectable;

@@ -48,6 +48,7 @@ class CStringInput : public CMenuTarget
 		int x;
 		int y;
 		int width;
+		int cwidth;
 		int height;
 		int hheight; // head font height
 		int hiconheight;

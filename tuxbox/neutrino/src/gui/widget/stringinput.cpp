@@ -104,7 +104,8 @@ CStringInput::~CStringInput()
 
 void CStringInput::init()
 {
-	width = (size*20)+40;
+	cwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth("M") + 1;
+	width = (size * cwidth) + 40;
 
 	if (width<420)
 		width = 420;
@@ -496,7 +497,7 @@ void CStringInput::paint()
 
 void CStringInput::paintChar(int pos, const char c)
 {
-	const int xs = 20;
+	int xs = cwidth;
 	int ys = mheight;
 	int xpos = x+ 20+ pos* xs;
 	int ypos = y+ hheight+ 25;
