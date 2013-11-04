@@ -2477,7 +2477,7 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 					{
 						channelList->zapTo(bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->getKey(nNewChannel)-1);
 					}
-					else if(nNewChannel == -1)
+					else
 					{
 						bouquetList->adjustToChannel(channelList->getActiveChannelNumber());
 					}
