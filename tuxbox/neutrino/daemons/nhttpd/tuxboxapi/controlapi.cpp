@@ -1063,7 +1063,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 									100 * (now - currentNextInfo.current_zeit.startzeit) / currentNextInfo.current_zeit.dauer :
 									0;
 							hh->WriteLn("\t<firstEPG>");
-							hh->printf("\t\t<id>%llu</id>\n"
+							hh->printf("\t\t<eventid>%llu</eventid>\n"
 								"\t\t<startTime>%s</startTime>\n"
 								"\t\t<description><![CDATA[%s]]></description>\n"
 								"\t\t<timeElapsed>%d</timeElapsed>\n"
@@ -1081,7 +1081,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 						{
 							timestr = timeString(currentNextInfo.next_zeit.startzeit);
 							hh->WriteLn("\t<secondEPG>");
-							hh->printf("\t\t<id>%llu</id>\n"
+							hh->printf("\t\t<eventid>%llu</eventid>\n"
 								"\t\t<startTime>%s</startTime>\n"
 								"\t\t<description><![CDATA[%s]]></description>\n"
 								"\t\t<timeTotal>%d</timeTotal>\n",
