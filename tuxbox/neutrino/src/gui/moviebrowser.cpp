@@ -444,6 +444,7 @@ void CMovieBrowser::init(void)
 	m_textTitle = g_Locale->getText(LOCALE_MOVIEBROWSER_HEAD);
 	
 	m_currentStartPos = 0;
+	m_playstate = CMoviePlayerGui::STOPPED;
 	
 	m_movieSelectionHandler = NULL;
 	m_currentBrowserSelection = 0;
@@ -899,7 +900,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 	else if(actionKey == "run")
 	{
 		if(parent) parent->hide ();
-		exec(NULL);
+		exec(NULL, CMoviePlayerGui::STOPPED);
 	}
 	else if(actionKey == "book_clear_all")
 	{
@@ -919,7 +920,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
      return returnval;
 }
 
-int CMovieBrowser::exec(const char* path)
+int CMovieBrowser::exec(const char* path, const int playstate)
 {
 	bool res = false;
 
@@ -951,6 +952,8 @@ int CMovieBrowser::exec(const char* path)
 	else
 		m_selectedDir = "/";
 	
+	m_playstate = playstate;
+
 	if(paint() == false)
 		return res;// paint failed due to less memory , exit 
 
@@ -1107,8 +1110,8 @@ int CMovieBrowser::exec(const char* path)
 
 	saveSettings(&m_settings);	// might be better done in ~CMovieBrowser, but for any reason this does not work if MB is killed by neutrino shutdown
 	
-	// make stale if we should reload the next time, but not if movie has to be played
-	if(m_vMovieInfo.empty() || (m_settings.reload == true && res == false))
+	// make stale if we should reload the next time, but not if movie has to be played or is playing
+	if(m_vMovieInfo.empty() || (m_settings.reload == true && res == false && m_playstate == CMoviePlayerGui::STOPPED))
 	{
 		TRACE("[mb] force reload next time\r\n");
 		fileInfoStale();
@@ -1646,11 +1649,14 @@ void CMovieBrowser::refreshTitle(void)
 								0, 
 								true); // UTF-8
 
-	int iconw, iconh;
-	CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
-	m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, 
-								m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - iconw - 12, 
-								m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
+	if(m_playstate == CMoviePlayerGui::STOPPED)
+	{
+		int iconw, iconh;
+		CFrameBuffer::getInstance()->getIconSize(NEUTRINO_ICON_BUTTON_DBOX, &iconw, &iconh);
+		m_pcWindow->paintIcon(NEUTRINO_ICON_BUTTON_DBOX, 
+									m_cBoxFrameTitleRel.iX + m_cBoxFrameTitleRel.iWidth - iconw - 12, 
+									m_cBoxFrameTitleRel.iY + m_cBoxFrameTitleRel.iHeight / 2 - iconh / 2);
+	}
 }
 
 /************************************************************************
@@ -1817,8 +1823,11 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_blue) 
 	{
-		loadMovies();
-		refresh();
+		if(m_playstate == CMoviePlayerGui::STOPPED)
+		{
+			loadMovies();
+			refresh();
+		}
 	}
 	else if (msg == CRCInput::RC_red ) 
 	{
@@ -1858,7 +1867,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_setup) 
 	{
-		if(m_movieSelectionHandler != NULL)
+		if(m_playstate == CMoviePlayerGui::STOPPED && m_movieSelectionHandler != NULL)
 			showMenu(m_movieSelectionHandler);
 	}
 #ifdef MOVEMANAGER	
@@ -3179,7 +3188,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 /**  main menu ******************************************************/
 	CMovieHelp* movieHelp = new CMovieHelp();
 #ifdef ENABLE_GUI_MOUNT
-	CNFSSmallMenu* nfs =    new CNFSSmallMenu();
+	//CNFSSmallMenu* nfs = new CNFSSmallMenu();
 #endif
 
 	CMenuWidget mainMenu(LOCALE_MOVIEBROWSER_MENU_MAIN_HEAD, NEUTRINO_ICON_STREAMING);
@@ -3240,7 +3249,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 
 	delete movieHelp;
 #ifdef ENABLE_GUI_MOUNT
-	delete nfs;
+	//delete nfs;
 #endif
 	
 	//restart_mb_timeout = 1;

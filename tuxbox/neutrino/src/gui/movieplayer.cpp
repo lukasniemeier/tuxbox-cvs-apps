@@ -3404,7 +3404,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 			if(isMovieBrowser == true)
 			{
 				// start the moviebrowser instead of the filebrowser
-				if(CMovieBrowser::getInstance()->exec(Path_local.c_str()))
+				if(CMovieBrowser::getInstance()->exec(Path_local.c_str(), g_playstate))
 				{
 					// get the current path and file name 
 					Path_local = CMovieBrowser::getInstance()->getCurrentDir(); 

@@ -252,6 +252,7 @@ class CMovieBrowser : public CMenuTarget
 
 		MI_MOVIE_INFO* m_movieSelectionHandler;
 		int m_currentStartPos;
+		int m_playstate;
 		std::string m_selectedDir;
 		MB_FOCUS m_windowFocus;
 
@@ -283,7 +284,7 @@ class CMovieBrowser : public CMenuTarget
 		CMovieBrowser(const char* path); //P1 
 		CMovieBrowser(); //P1 
 		~CMovieBrowser(); //P1 
-		int exec(const char* path); //P1 
+		int exec(const char* path, const int playstate); //P1 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
 		std::string getCurrentDir(void); //P1 for FileBrowser compatibility
 		CFile* getSelectedFile(void); //P1 for FileBrowser compatibility
