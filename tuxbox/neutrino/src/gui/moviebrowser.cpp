@@ -1104,9 +1104,13 @@ int CMovieBrowser::exec(const char* path, const int playstate)
 	hide();
 	//TRACE(" return %d\r\n",res);
 	
- 	m_prevBrowserSelection = m_currentBrowserSelection;
-	m_prevRecordSelection = m_currentRecordSelection;
-	m_prevPlaySelection = m_currentPlaySelection;
+	// save current selection if movie has to be played or is not playing
+	if (res == true || m_playstate == CMoviePlayerGui::STOPPED)
+	{
+	 	m_prevBrowserSelection = m_currentBrowserSelection;
+		m_prevRecordSelection = m_currentRecordSelection;
+		m_prevPlaySelection = m_currentPlaySelection;
+	}
 
 	saveSettings(&m_settings);	// might be better done in ~CMovieBrowser, but for any reason this does not work if MB is killed by neutrino shutdown
 	
