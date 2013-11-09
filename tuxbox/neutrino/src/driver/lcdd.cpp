@@ -7,7 +7,7 @@
 	Homepage: http://dbox.cyberphoria.org/
 
 	Copyright (C) 2008 Novell, Inc. Author: Stefan Seyfried
-		  (C) 2009 Stefan Seyfried
+		  (C) 2009-2013 Stefan Seyfried
 
 	License: GPL
 
@@ -53,7 +53,6 @@
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 
 CLCD::CLCD()
-	: configfile('\t')
 {
 #ifdef LCD_UPDATE
 	m_fileList = NULL;

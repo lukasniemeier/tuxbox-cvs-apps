@@ -26,7 +26,6 @@
 #ifndef __shutdown_count__
 #define __shutdown_count__
 
-#include <configfile.h>
 #include <pthread.h>
 
 class SHTDCNT
@@ -35,7 +34,6 @@ class SHTDCNT
 
 		pthread_t			thrTime;
 		unsigned int	shutdown_cnt;
-		CConfigFile			configfile;
 
 		void shutdown_counter();
 		SHTDCNT();

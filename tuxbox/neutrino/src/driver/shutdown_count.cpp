@@ -37,7 +37,6 @@
 
 
 SHTDCNT::SHTDCNT()
-	: configfile('\t')
 {
 }
 
