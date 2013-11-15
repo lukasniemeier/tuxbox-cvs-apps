@@ -33,6 +33,7 @@
 #include <cstring>
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 CConfigFile::CConfigFile(const char p_delimiter, const bool p_saveDefaults)
 {

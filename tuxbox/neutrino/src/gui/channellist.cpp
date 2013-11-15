@@ -64,6 +64,8 @@
 #include <daemonc/remotecontrol.h>
 #include <zapit/client/zapittools.h>
 
+#include <algorithm>
+
 extern CBouquetList * bouquetList;       /* neutrino.cpp */
 extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 extern CZapitClient::SatelliteList satList;
