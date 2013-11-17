@@ -698,14 +698,16 @@ void CLCD::showVolume(const char vol, const bool perform_update)
 
 void CLCD::showPercentOver(const unsigned char perc, const bool perform_update, const MODES m)
 {
-	if (mode != m)
+	bool tsmode = (CNeutrinoApp::getInstance()->getMode() == NeutrinoMessages::mode_ts);
+	if (m == MODE_TVRADIO && tsmode || m == MODE_MOVIE && !tsmode)
 		return;
 
-	int left, top, width, height = 5;
-	bool draw = true;
 	percentOver = perc;
 	if (mode == MODE_TVRADIO || mode == MODE_MOVIE)
 	{
+		int left, top, width, height = 5;
+		bool draw = true;
+
 		if (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME] == STATUSLINE_PLAYTIME)
 		{
 			left = 12; top = 55; width = 60;
