@@ -21,6 +21,7 @@
 
 #include "menu.h"
 
+#include <cstdio>
 #include <stdarg.h>
 
 //#define TEST
