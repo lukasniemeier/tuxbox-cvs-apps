@@ -791,9 +791,9 @@ motorcontrol.goto_reference_position Goto Reference Position
 motorcontrol.head Motor-Setup
 motorcontrol.increase_motor_position Increase Motor Position (a)
 motorcontrol.increase_step_size Increase Step Size (c)
-motorcontrol.installer_menue Installer Menue
+motorcontrol.installer_menue Installer Menu
 motorcontrol.not_defined Not Defined
-motorcontrol.rc_menuehead RC-Menue
+motorcontrol.rc_menuehead RC-Menu
 motorcontrol.re_calculate_positions (Re)-Calculate Positions
 motorcontrol.set_east_soft_limit Set East (soft) Limit
 motorcontrol.set_west_soft_limit Set West (soft) Limit
@@ -804,7 +804,7 @@ motorcontrol.step_drive_motor_halt Halt Motor
 motorcontrol.step_drive_motor_west Step/Drive Motor West (b,c)
 motorcontrol.store_motor_position Store Motor Position
 motorcontrol.switch_step_drive_mode Switch Step/Drive Mode (b)
-motorcontrol.user_menue User Menue
+motorcontrol.user_menue User Menu
 moviebrowser.book_clear_all Clear all
 moviebrowser.book_head Bookmarks
 moviebrowser.book_lastmoviestop Last play stop:
