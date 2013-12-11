@@ -1119,8 +1119,31 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 //-----------------------------------------------------------------------------
 void CControlAPI::GetBouquetsCGI(CyhookHandler *hh)
 {
-	for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size();i++)
-		hh->printf("%u %s\n", (NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, NeutrinoAPI->BouquetList[i].name);
+	int mode = CZapitClient::MODE_ALL;
+	if (!hh->ParamList["mode"].empty())
+	{
+		if (hh->ParamList["mode"].compare("current") == 0)
+			mode = CZapitClient::MODE_CURRENT;
+		else if (hh->ParamList["mode"].compare("TV") == 0)
+			mode = CZapitClient::MODE_TV;
+		else if (hh->ParamList["mode"].compare("RADIO") == 0)
+			mode = CZapitClient::MODE_RADIO;
+	}
+
+	bool show_hidden = true;
+	if (!hh->ParamList["showhidden"].empty() && hh->ParamList["showhidden"] == "false")
+		show_hidden = false;
+
+	unsigned int bouquet_nr;
+	for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size(); i++)
+	{
+		bouquet_nr = (NeutrinoAPI->BouquetList[i].bouquet_nr) + 1;
+		if ((show_hidden || !NeutrinoAPI->BouquetList[i].hidden) &&
+		    (mode == CZapitClient::MODE_ALL || !NeutrinoAPI->GetBouquet(bouquet_nr, mode)->empty()))
+		{
+			hh->printf("%u %s\n", bouquet_nr, NeutrinoAPI->BouquetList[i].name);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
