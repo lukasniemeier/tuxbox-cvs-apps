@@ -991,7 +991,6 @@ void CControlAPI::ChannellistCGI(CyhookHandler *hh)
 void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 {
 	CZapitClient::BouquetChannelList *bouquet;
-	CZapitClient::BouquetList blist;
 
 	if (!(hh->ParamList.empty()))
 	{
@@ -1001,24 +1000,25 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 		{
 			if (hh->ParamList["mode"].compare("TV") == 0)
 				mode = CZapitClient::MODE_TV;
-			if (hh->ParamList["mode"].compare("RADIO") == 0)
+			else if (hh->ParamList["mode"].compare("RADIO") == 0)
 				mode = CZapitClient::MODE_RADIO;
 		}
 
 		// Get Bouquet Number. First matching current channel
 		if (hh->ParamList["1"] == "actual")
 		{
-			int actual=0;
+			int actual = 0;
+			t_channel_id current_channel_id = NeutrinoAPI->Zapit->getCurrentServiceID();
 			//easier?
-			for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size() && actual == 0;i++)
+			for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size() && actual == 0; i++)
 			{
 				//hh->printf("%u %s\n", (NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, NeutrinoAPI->BouquetList[i].name);
 				bouquet = NeutrinoAPI->GetBouquet((NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, mode);
 				CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 				for (unsigned int j = 0; channel != bouquet->end() && actual == 0; ++channel, j++)
 				{
-					if(channel->channel_id == NeutrinoAPI->Zapit->getCurrentServiceID())
-						actual=i+1;
+					if (channel->channel_id == current_channel_id)
+						actual = i + 1;
 				}
 			}
 			hh->printf("%d",actual);
@@ -1030,6 +1030,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 			hh->printf("<bouquet>\n\t<bnumber>%s</bnumber>\n</bouquet>\n",hh->ParamList["bouquet"].c_str());
 
 			bouquet = NeutrinoAPI->GetBouquet(atoi(hh->ParamList["bouquet"].c_str()), mode);
+			t_channel_id current_channel_id = NeutrinoAPI->Zapit->getCurrentServiceID();
 			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 
 			for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
@@ -1045,7 +1046,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 				if (!(hh->ParamList["epg"].empty()))
 				{
 					hh->Write("\t<isActiveChannel>");
-					hh->Write((channel->channel_id == NeutrinoAPI->Zapit->getCurrentServiceID()) ? "true" : "false");
+					hh->Write((channel->channel_id == current_channel_id) ? "true" : "false");
 					hh->WriteLn("</isActiveChannel>");
 
 					CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
