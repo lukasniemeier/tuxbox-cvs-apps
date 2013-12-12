@@ -239,17 +239,18 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_templatelist(CyhookHandler *
 std::string  CNeutrinoYParser::func_get_actual_bouquet_number(CyhookHandler */*hh*/, std::string /*para*/)
 {
 	CZapitClient::BouquetChannelList *bouquet;
-	int actual=0;
+	int actual = 0;
 	int mode = CZapitClient::MODE_CURRENT;
+	t_channel_id current_channel_id = NeutrinoAPI->Zapit->getCurrentServiceID();
 
-	for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size() && actual == 0;i++)
+	for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size() && actual == 0; i++)
 	{
 		bouquet = NeutrinoAPI->GetBouquet((NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, mode);
 		CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 		for (unsigned int j = 0; channel != bouquet->end() && actual == 0; ++channel, j++)
 		{
-			if(channel->channel_id == NeutrinoAPI->Zapit->getCurrentServiceID())
-				actual=i+1;
+			if (channel->channel_id == current_channel_id)
+				actual = i + 1;
 		}
 	}
 	return std::string(itoa(actual));
@@ -261,7 +262,6 @@ std::string  CNeutrinoYParser::func_get_actual_bouquet_number(CyhookHandler */*h
 std::string  CNeutrinoYParser::func_get_channels_as_dropdown(CyhookHandler */*hh*/, std::string para)
 {
 	CZapitClient::BouquetChannelList *bouquet;
-	CZapitClient::BouquetList blist;
 	std::string abouquet, achannel_id, yresult, sel, sid;
 	
 	int bnumber = 1;
