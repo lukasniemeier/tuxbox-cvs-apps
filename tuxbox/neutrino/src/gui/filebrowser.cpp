@@ -1048,7 +1048,17 @@ bool CFileBrowser::exec(const char * const dirname)
 						}
 						else
 						{
-							filelist[selected].Marked = true;
+							bool has_selected = false;
+							for (unsigned int i = 0; i < filelist.size(); i++)
+							{
+								if (filelist[i].Marked)
+								{
+									has_selected = true;
+									break;
+								}
+							}
+							if (!has_selected)
+								filelist[selected].Marked = true;
 							loop = false;
 							res = true;
 						}
@@ -1232,8 +1242,10 @@ void CFileBrowser::paintItem(unsigned int pos)
 
 		if ( actual_file->Name.length() > 0 )
 		{
+			std::string FileName = FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName());
+
 			if (liststart+pos==selected)
-				CLCD::getInstance()->showMenuText(0, FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName()).c_str(), -1, true); // UTF-8
+				CLCD::getInstance()->showMenuText(0, FileName.c_str(), -1, true); // UTF-8
 
 			switch(actual_file->getType())
 			{
@@ -1260,7 +1272,6 @@ void CFileBrowser::paintItem(unsigned int pos)
 			frameBuffer->paintIcon(fileicon, x+5 , ypos + (fheight-16) / 2 );
 
 			char f_name[256];
-			std::string FileName = FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName());
 			unsigned int i = FileName.length();
 			sprintf(f_name, "%s", FileName.c_str());
 
