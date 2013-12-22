@@ -445,6 +445,7 @@ favorites.finalhint \nVersehentlich hinzugefügte Kanäle können mit\nder Bouqu
 favorites.menueadd Kanal Favoriten hinzufügen
 favorites.nobouquets Favoriten sind nur mit aktivierten Bouquets möglich.
 filebrowser.delete Löschen
+filebrowser.delete_marked_files Sollen die markierten Dateien gelöscht werden?
 filebrowser.denydirectoryleave Startverzeichnis absolut
 filebrowser.dodelete1 Soll
 filebrowser.dodelete2 gelöscht werden?

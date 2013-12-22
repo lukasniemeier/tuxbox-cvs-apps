@@ -183,6 +183,7 @@ class CFileBrowser
 		void paintHead();
 		void paintFoot();
 		void updateSelection(unsigned int newpos);
+		void deleteFile(unsigned int pos);
 		void recursiveDelete(const char* file);
 
 	protected:

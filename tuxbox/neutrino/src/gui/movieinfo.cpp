@@ -99,7 +99,7 @@ bool CMovieInfo::convertTs2XmlName(char* char_filename,int size)
 bool CMovieInfo::convertTs2XmlName(std::string* filename)
 {
 //TRACE("[mi]->convertTs2XmlName\r\n");
-	int bytes = filename->find(".ts");
+	int bytes = filename->rfind(".ts");
 	bool result = false;
 
 	if(bytes != -1)
@@ -120,7 +120,7 @@ bool CMovieInfo::convertTs2XmlName(std::string* filename)
 	}
 	else // not a TS file, return!!!!!
 	{
-		TRACE("not a TS file: %s\n ",filename->c_str());
+		//TRACE("not a TS file: %s\n", filename->c_str());
 	}
 
 	return(result);
@@ -1180,8 +1180,7 @@ bool CMovieInfo::loadFile_std(CFile& file,char* buffer, int buffer_size)
    int fd = open(file.Name.c_str(), O_RDONLY); 
     if (fd == -1) // cannot open file, return!!!!! 
     { 
-   		//TRACE( "[mi] !open:%s\r\n" ,file.getFileName().c_str());
-   		TRACE("!");
+   		TRACE("[mi] cannot open: %s\r\n", file.getFileName().c_str());
 		return(false); 
     } 
  
@@ -1191,8 +1190,7 @@ bool CMovieInfo::loadFile_std(CFile& file,char* buffer, int buffer_size)
     if(bytes <= 0) // cannot read file into buffer, return!!!! 
     { 
 		close(fd);
-   		//TRACE( "[mi] !read:%s\r\n" ,file.getFileName().c_str() );
-   		TRACE("#");
+   		TRACE("[mi] cannot read: %s\r\n", file.getFileName().c_str());
  		return(false); 
     } 
 	close(fd);
@@ -1250,8 +1248,7 @@ bool CMovieInfo::saveFile_std(const CFile& file, const char* text, const int tex
 	}
 	else
 	{
-		//TRACE("[mi] ERROR: cannot open\r\n");
-		TRACE("?");
+		TRACE("[mi] ERROR: cannot open\r\n");
 	}
  	return(result);
 }

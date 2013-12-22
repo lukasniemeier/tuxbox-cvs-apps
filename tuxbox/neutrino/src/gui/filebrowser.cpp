@@ -36,6 +36,8 @@
 /* include <config.h> before <gui/filebrowser.h> to enable 64 bit file offsets */
 #include <gui/filebrowser.h>
 
+#include <gui/movieinfo.h>
+
 #include <gui/widget/buttons.h>
 #include <gui/widget/icons.h>
 #include <gui/widget/messagebox.h>
@@ -975,6 +977,35 @@ bool CFileBrowser::exec(const char * const dirname)
 		}
 		else if ( msg == CRCInput::RC_spkr && strncmp(Path.c_str(), VLC_URI, strlen(VLC_URI)) != 0) //Not in vlc mode
 		{
+			// delete marked files
+			if (Multi_Select)
+			{
+				bool has_selected = false;
+				for (unsigned int i = 0; i < filelist.size(); i++)
+				{
+					if (filelist[i].Marked)
+					{
+						has_selected = true;
+						break;
+					}
+				}
+				if (has_selected)
+				{
+					if (ShowLocalizedMessage(LOCALE_FILEBROWSER_DELETE, LOCALE_FILEBROWSER_DELETE_MARKED_FILES,
+							CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo) == CMessageBox::mbrYes)
+					{
+						for (unsigned int i = 0; i < filelist.size(); i++)
+						{
+							if (filelist[i].Marked)
+								deleteFile(i);
+						}
+						ChangeDir(Path);
+					}
+					continue; // do not delete selected file if files are marked
+				}
+			}
+
+			// delete selected file
 			if(".." !=(filelist[selected].getFileName().substr(0,2))) // do not delete that
 			{
 				std::stringstream _msg;
@@ -989,13 +1020,8 @@ bool CFileBrowser::exec(const char * const dirname)
 				_msg << " " << g_Locale->getText(LOCALE_FILEBROWSER_DODELETE2);
 				if (ShowMsgUTF(LOCALE_FILEBROWSER_DELETE, _msg.str(), CMessageBox::mbrNo, CMessageBox::mbYes|CMessageBox::mbNo)==CMessageBox::mbrYes)
 				{
-					recursiveDelete(filelist[selected].Name.c_str());
-					if(".ts" ==(filelist[selected].getFileName().substr(filelist[selected].getFileName().length()-3,filelist[selected].getFileName().length())))//if bla.ts
-					{
-						recursiveDelete((filelist[selected].Name.substr(0,filelist[selected].Name.length()-7)+".xml").c_str());//remove bla.xml von bla.ts
-					}
+					deleteFile(selected);
 					ChangeDir(Path);
-
 				}
 			}
 		}
@@ -1520,6 +1546,17 @@ void CFileBrowser::SMSInput(const neutrino_msg_t msg)
 		}
 	}
 	updateSelection(i);
+}
+
+//------------------------------------------------------------------------
+
+void CFileBrowser::deleteFile(unsigned int pos)
+{
+	CMovieInfo mi;
+	std::string filename = filelist[pos].Name;
+	recursiveDelete(filename.c_str());
+	if (mi.convertTs2XmlName(&filename))
+		recursiveDelete(filename.c_str());
 }
 
 //------------------------------------------------------------------------

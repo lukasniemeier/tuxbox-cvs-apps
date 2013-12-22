@@ -445,6 +445,7 @@ favorites.finalhint \nUse the bouqueteditor to modify your favorites.\n
 favorites.menueadd add channel to favorites
 favorites.nobouquets Favorites are available with activated Bouquets only.
 filebrowser.delete Delete
+filebrowser.delete_marked_files Delete marked files?
 filebrowser.denydirectoryleave Absolute Start Directory
 filebrowser.dodelete1 Delete
 filebrowser.dodelete2 ?
