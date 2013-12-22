@@ -71,8 +71,9 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 			{
 				for (pos = events.begin(); pos != events.end(); ++pos)
 				{
-					printf("ID: %u type: %u\n",pos->second->eventID,pos->second->eventType);
-					if(pos->second->eventType == CTimerd::TIMER_SLEEPTIMER)
+					dprintf("ID: %u type: %u\n", pos->second->eventID, pos->second->eventType);
+					if (pos->second->eventType == CTimerd::TIMER_SLEEPTIMER &&
+					    pos->second->eventState != CTimerd::TIMERSTATE_TERMINATED)
 					{
 						rspGetSleeptimer.eventID = pos->second->eventID;
 						break;
