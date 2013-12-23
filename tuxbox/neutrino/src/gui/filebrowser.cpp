@@ -981,7 +981,8 @@ bool CFileBrowser::exec(const char * const dirname)
 			if (Multi_Select)
 			{
 				bool has_selected = false;
-				for (unsigned int i = 0; i < filelist.size(); i++)
+				unsigned int i = 0;
+				for (; i < filelist.size(); i++)
 				{
 					if (filelist[i].Marked)
 					{
@@ -994,7 +995,7 @@ bool CFileBrowser::exec(const char * const dirname)
 					if (ShowLocalizedMessage(LOCALE_FILEBROWSER_DELETE, LOCALE_FILEBROWSER_DELETE_MARKED_FILES,
 							CMessageBox::mbrNo, CMessageBox::mbYes | CMessageBox::mbNo) == CMessageBox::mbrYes)
 					{
-						for (unsigned int i = 0; i < filelist.size(); i++)
+						for (; i < filelist.size(); i++)
 						{
 							if (filelist[i].Marked)
 								deleteFile(i);
