@@ -189,58 +189,46 @@ public:
 class CTimerListApidNotifier : public CChangeObserver
 {
 private:
-	int* o_dflt;
 	int* o_std;
 	int* o_alt;
 	int* o_ac3;
-	CMenuItem* m_dflt;
 	CMenuItem* m_std;
 	CMenuItem* m_alt;
 	CMenuItem* m_ac3;
 public:
-	CTimerListApidNotifier( int* o1, int* o2, int* o3, int* o4)
+	CTimerListApidNotifier(int* o1, int* o2, int* o3)
 	{
-		o_dflt=o1;
-		o_std=o2;
-		o_alt=o3;
-		o_ac3=o4;
+		o_std = o1;
+		o_alt = o2;
+		o_ac3 = o3;
 	}
 
-	void setItems(CMenuItem* m1, CMenuItem* m2, CMenuItem* m3, CMenuItem* m4)
+	void setItems(CMenuItem* m1, CMenuItem* m2, CMenuItem* m3)
 	{
-		m_dflt=m1;
-		m_std=m2;
-		m_alt=m3;
-		m_ac3=m4;
+		m_std = m1;
+		m_alt = m2;
+		m_ac3 = m3;
 	}
 
-	bool changeNotify(const neutrino_locale_t OptionName, void *)
+	bool changeNotify(const neutrino_locale_t, void * Data)
 	{
-		if(ARE_LOCALES_EQUAL(OptionName, LOCALE_TIMERLIST_APIDS_DFLT))
+		if (*(int*)(Data) == 0)
 		{
-			if(*o_dflt==0)
-			{
-				m_std->setActive(true);
-				m_alt->setActive(true);
-				m_ac3->setActive(true);
-			}
-			else
-			{
-				*o_std=0;
-				*o_alt=0;
-				*o_ac3=0;
-				m_std->setActive(false);
-				m_alt->setActive(false);
-				m_ac3->setActive(false);
-			}
+			*o_std = 0;
+			*o_alt = 0;
+			*o_ac3 = 0;
+			m_std->setActive(true);
+			m_alt->setActive(true);
+			m_ac3->setActive(true);
 		}
 		else
 		{
-			if(*o_std || *o_alt || *o_ac3)
-			{
-				*o_dflt=0;
-				m_dflt->paint();
-			}
+			*o_std = (g_settings.recording_audio_pids_default & TIMERD_APIDS_STD) ? 1 : 0;
+			*o_alt = (g_settings.recording_audio_pids_default & TIMERD_APIDS_ALT) ? 1 : 0;
+			*o_ac3 = (g_settings.recording_audio_pids_default & TIMERD_APIDS_AC3) ? 1 : 0;
+			m_std->setActive(false);
+			m_alt->setActive(false);
+			m_ac3->setActive(false);
 		}
 		return false;
 	}
@@ -276,8 +264,9 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 			if (timer_apids_dflt)
 				timerlist[selected].apids = TIMERD_APIDS_CONF;
 			else
-				timerlist[selected].apids = (timer_apids_std * TIMERD_APIDS_STD) | (timer_apids_ac3 * TIMERD_APIDS_AC3) |
-					(timer_apids_alt * TIMERD_APIDS_ALT);
+				timerlist[selected].apids = (timer_apids_std * TIMERD_APIDS_STD) |
+							(timer_apids_alt * TIMERD_APIDS_ALT) |
+							(timer_apids_ac3 * TIMERD_APIDS_AC3);
 			Timer->modifyTimerAPid(timerlist[selected].eventID,timerlist[selected].apids);
 			Timer->modifyRecordTimerEvent(timerlist[selected].eventID, timerlist[selected].announceTime,
 						      timerlist[selected].alarmTime,
@@ -985,21 +974,30 @@ int CTimerList::modifyTimer()
 	timerSettings.addItem(m6);
 
 	CMenuWidget timerSettings_apids(LOCALE_TIMERLIST_APIDS, NEUTRINO_ICON_TIMER, width);
-	CTimerListApidNotifier apid_notifier(&timer_apids_dflt, &timer_apids_std, &timer_apids_ac3, &timer_apids_alt);
-	timer_apids_dflt = (timer->apids == 0) ? 1 : 0 ;
-	timer_apids_std = (timer->apids & TIMERD_APIDS_STD) ? 1 : 0 ;
-	timer_apids_ac3 = (timer->apids & TIMERD_APIDS_AC3) ? 1 : 0 ;
-	timer_apids_alt = (timer->apids & TIMERD_APIDS_ALT) ? 1 : 0 ;
+	CTimerListApidNotifier apid_notifier(&timer_apids_std, &timer_apids_alt, &timer_apids_ac3);
+	timer_apids_dflt = (timer->apids == TIMERD_APIDS_CONF) ? 1 : 0;
+	if (timer_apids_dflt)
+	{
+		timer_apids_std = (g_settings.recording_audio_pids_default & TIMERD_APIDS_STD) ? 1 : 0;
+		timer_apids_alt = (g_settings.recording_audio_pids_default & TIMERD_APIDS_ALT) ? 1 : 0;
+		timer_apids_ac3 = (g_settings.recording_audio_pids_default & TIMERD_APIDS_AC3) ? 1 : 0;
+	}
+	else
+	{
+		timer_apids_std = (timer->apids & TIMERD_APIDS_STD) ? 1 : 0;
+		timer_apids_alt = (timer->apids & TIMERD_APIDS_ALT) ? 1 : 0;
+		timer_apids_ac3 = (timer->apids & TIMERD_APIDS_AC3) ? 1 : 0;
+	}
 	timerSettings_apids.addIntroItems();
 	CMenuOptionChooser* ma1 = new CMenuOptionChooser(LOCALE_TIMERLIST_APIDS_DFLT, &timer_apids_dflt, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &apid_notifier);
 	timerSettings_apids.addItem(ma1);
-	CMenuOptionChooser* ma2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_STD, &timer_apids_std, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &apid_notifier);
+	CMenuOptionChooser* ma2 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_STD, &timer_apids_std, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, !timer_apids_dflt);
 	timerSettings_apids.addItem(ma2);
-	CMenuOptionChooser* ma3 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_ALT, &timer_apids_alt, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &apid_notifier);
+	CMenuOptionChooser* ma3 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_ALT, &timer_apids_alt, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, !timer_apids_dflt);
 	timerSettings_apids.addItem(ma3);
-	CMenuOptionChooser* ma4 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_AC3, &timer_apids_ac3, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, true, &apid_notifier);
+	CMenuOptionChooser* ma4 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_APIDS_AC3, &timer_apids_ac3, MESSAGEBOX_NO_YES_OPTIONS, MESSAGEBOX_NO_YES_OPTION_COUNT, !timer_apids_dflt);
 	timerSettings_apids.addItem(ma4);
-	apid_notifier.setItems(ma1,ma2,ma3,ma4);
+	apid_notifier.setItems(ma2, ma3, ma4);
 	if(timer->eventType ==  CTimerd::TIMER_RECORD)
 	{  
 		timerSettings.addItem( new CMenuForwarder(LOCALE_TIMERLIST_APIDS, true, NULL, &timerSettings_apids ));
