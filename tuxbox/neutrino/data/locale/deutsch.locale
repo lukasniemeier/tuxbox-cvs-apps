@@ -1180,7 +1180,7 @@ recdirchooser.server_down SERVER AUS
 recdirchooser.user_dir Anderes Verzeichnis
 recordingmenu.apids Voreinstellung für Tonspuren
 recordingmenu.apids_ac3 AC3 Tonspuren aufnehmen
-recordingmenu.apids_alt Alternative Tonspuren aufn.
+recordingmenu.apids_alt Alternative Tonspuren aufnehmen
 recordingmenu.apids_std Standard Tonspur aufnehmen
 recordingmenu.choose_direct_rec_dir Verzeichnisauswahl anzeigen
 recordingmenu.defdir Aufnahmeverzeichnis
@@ -1429,7 +1429,7 @@ timerbar.channelswitch Umschalten
 timerbar.recordevent Aufnehmen
 timerlist.alarmtime Alarmzeit
 timerlist.apids Tonspuren
-timerlist.apids_dflt Voreingestellte Tonspuren aufn.
+timerlist.apids_dflt Voreingestellte Tonspuren aufnehmen
 timerlist.bouquetselect Bouquet wählen
 timerlist.channel Kanal
 timerlist.channelselect Kanal wählen
