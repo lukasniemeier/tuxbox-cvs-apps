@@ -36,13 +36,15 @@ class CNeutrinoAPI
 	CEventServer		*EventServer;
 
 	// complete channellists
-	CZapitClient::BouquetChannelList RadioChannelList,TVChannelList;
+	CZapitClient::BouquetChannelList RadioChannelList, TVChannelList, AllChannelList;
 	// events of actual channel
 	std::map<unsigned, CChannelEvent *> ChannelListEvents;
 	// List of available tv bouquets
 	std::map<int, CZapitClient::BouquetChannelList> TVBouquetsList;
 	// List of available radio bouquets
 	std::map<int, CZapitClient::BouquetChannelList> RadioBouquetsList;
+	// List of all available bouquets
+	std::map<int, CZapitClient::BouquetChannelList> AllBouquetsList;
 	// List of bouquets
 	CZapitClient::BouquetList BouquetList;
 

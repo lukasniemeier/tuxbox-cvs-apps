@@ -1002,6 +1002,8 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 				mode = CZapitClient::MODE_TV;
 			else if (hh->ParamList["mode"].compare("RADIO") == 0)
 				mode = CZapitClient::MODE_RADIO;
+			else if (hh->ParamList["mode"].compare("all") == 0)
+				mode = CZapitClient::MODE_ALL;
 		}
 
 		// Get Bouquet Number. First matching current channel

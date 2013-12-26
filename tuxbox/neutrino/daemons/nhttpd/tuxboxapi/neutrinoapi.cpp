@@ -259,14 +259,9 @@ bool CNeutrinoAPI::GetChannelEvents(void)
 
 std::string CNeutrinoAPI::GetServiceName(t_channel_id channel_id)
 {
-	unsigned int i;
-
-	for (i = 0; i < TVChannelList.size(); i++)
-		if (TVChannelList[i].channel_id == channel_id)
-			return TVChannelList[i].name;
-	for (i = 0; i < RadioChannelList.size(); i++)
-		if (RadioChannelList[i].channel_id == channel_id)
-			return RadioChannelList[i].name;
+	for (unsigned int i = 0; i < AllChannelList.size(); i++)
+		if (AllChannelList[i].channel_id == channel_id)
+			return AllChannelList[i].name;
 	return "";
 }
 
@@ -283,8 +278,9 @@ CZapitClient::BouquetChannelList *CNeutrinoAPI::GetBouquet(unsigned int BouquetN
 	
 	if (mode == CZapitClient::MODE_TV)
 		return &TVBouquetsList[BouquetNr];
-	else
+	else if (mode == CZapitClient::MODE_RADIO)
 		return &RadioBouquetsList[BouquetNr];
+	return &AllBouquetsList[BouquetNr];
 }
 
 //-------------------------------------------------------------------------
@@ -300,8 +296,9 @@ CZapitClient::BouquetChannelList *CNeutrinoAPI::GetChannelList(int Mode)
 	
 	if (mode == CZapitClient::MODE_TV)
 		return &TVChannelList;
-	else
+	else if (mode == CZapitClient::MODE_RADIO)
 		return &RadioChannelList;
+	return &AllChannelList;
 }
 
 //-------------------------------------------------------------------------
@@ -312,6 +309,9 @@ void CNeutrinoAPI::UpdateBouquet(unsigned int BouquetNr)
 	RadioBouquetsList[BouquetNr].clear();
 	Zapit->getBouquetChannels(BouquetNr - 1, TVBouquetsList[BouquetNr], CZapitClient::MODE_TV);
 	Zapit->getBouquetChannels(BouquetNr - 1, RadioBouquetsList[BouquetNr], CZapitClient::MODE_RADIO);
+	AllBouquetsList[BouquetNr] = TVBouquetsList[BouquetNr];
+	AllBouquetsList[BouquetNr].insert(AllBouquetsList[BouquetNr].end(),
+		RadioBouquetsList[BouquetNr].begin(), RadioBouquetsList[BouquetNr].end());
 }
 
 //-------------------------------------------------------------------------
@@ -322,6 +322,8 @@ void CNeutrinoAPI::UpdateChannelList(void)
 	RadioChannelList.clear();
 	Zapit->getChannels(RadioChannelList, CZapitClient::MODE_RADIO);
 	Zapit->getChannels(TVChannelList, CZapitClient::MODE_TV);
+	AllChannelList = TVChannelList;
+	AllChannelList.insert(AllChannelList.end(), RadioChannelList.begin(), RadioChannelList.end());
 }
 
 //-------------------------------------------------------------------------
