@@ -123,8 +123,6 @@ GENRE.TRAVEL_HOBBIES.5 cuisine
 GENRE.TRAVEL_HOBBIES.6 publicité/shopping
 GENRE.TRAVEL_HOBBIES.7 jardinage
 GENRE.UNKNOWN inconnu
-apids.hint_1 Entrer APIDs à streamer
-apids.hint_2 en notation hex séparé par ' '
 apidselector.head Sélectionner language
 audiomenu.PCMOffset diminuer le Volume PCM
 audiomenu.analogout sortie Analogique

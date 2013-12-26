@@ -85,8 +85,6 @@ GENRE.TRAVEL_HOBBIES.5 gotowanie
 GENRE.TRAVEL_HOBBIES.6 reklama/zakupy
 GENRE.TRAVEL_HOBBIES.7 ogrodnictwo
 GENRE.UNKNOWN Nieznany
-apids.hint_1 Podaj APIDy do odbioru w
-apids.hint_2 formacie hex rozdzielone przez ' '
 apidselector.head Wybór Jezyka
 audiomenu.PCMOffset Regulacja dzwieku PCM
 audiomenu.analogout wyjscie analogowe

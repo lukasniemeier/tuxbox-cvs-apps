@@ -117,8 +117,6 @@ GENRE.TRAVEL_HOBBIES.5 koken
 GENRE.TRAVEL_HOBBIES.6 adverteren/shopping
 GENRE.TRAVEL_HOBBIES.7 tuinieren
 GENRE.UNKNOWN Onbekend
-apids.hint_1 Geef de te streamen APIDs in
-apids.hint_2 in hex-weergave scheiden met ' '
 apidselector.head Kies taal
 audiomenu.PCMOffset Volume Decrease PCM
 audiomenu.analogout Analoge uitgang

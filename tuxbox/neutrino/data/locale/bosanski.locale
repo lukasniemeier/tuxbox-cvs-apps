@@ -85,8 +85,6 @@ GENRE.TRAVEL_HOBBIES.5 kuhanje
 GENRE.TRAVEL_HOBBIES.6 kupovina
 GENRE.TRAVEL_HOBBIES.7 vrt
 GENRE.UNKNOWN nepoznato
-apids.hint_1 Utipkajte heksadecimalne apids
-apids.hint_2 za streaming razdvojene sa ' '.
 apidselector.head izbor jezika
 audiomenu.PCMOffset smanjivanje glasnoce pcm
 audiomenu.analogout analogni izlaz

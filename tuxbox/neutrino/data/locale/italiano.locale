@@ -85,8 +85,6 @@ GENRE.TRAVEL_HOBBIES.5 Cucina
 GENRE.TRAVEL_HOBBIES.6 Shopping
 GENRE.TRAVEL_HOBBIES.7 Giardinaggio
 GENRE.UNKNOWN Sconosciuto
-apids.hint_1 Inoltrare i dati APIDs per Streamen,
-apids.hint_2 Diviso con ' ' in Formato hexadecimale
 apidselector.head Selezione Lingua
 audiomenu.PCMOffset Abbassamento Volume PCM
 audiomenu.analogout Uscita-Analogica

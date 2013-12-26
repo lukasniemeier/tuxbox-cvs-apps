@@ -124,8 +124,6 @@ GENRE.TRAVEL_HOBBIES.5 Μαγειρική
 GENRE.TRAVEL_HOBBIES.6 Αγορά 
 GENRE.TRAVEL_HOBBIES.7 Κήπος
 GENRE.UNKNOWN Αγνώριστη κατηγορια
-apids.hint_1 Εισάγεται τα APIDs για το STREAM,
-apids.hint_2 Χωρισμένο κατευθείαν ' 'σε δεκαεξαδικό τύπο
 apidselector.head Επιλογή γλωσσάς
 audiomenu.PCMOffset Ρυθμίσεις ένταση PCM
 audiomenu.analogout Αναλογική έξοδος

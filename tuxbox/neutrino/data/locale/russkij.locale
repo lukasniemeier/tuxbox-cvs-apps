@@ -123,8 +123,6 @@ GENRE.TRAVEL_HOBBIES.5 кухня
 GENRE.TRAVEL_HOBBIES.6 реклама/покупки
 GENRE.TRAVEL_HOBBIES.7 садоводство
 GENRE.UNKNOWN определить нельзя
-apids.hint_1 Введите APIDs потока
-apids.hint_2 в hex, разделяйте ' '
 apidselector.head Выбор языка 
 audiomenu.PCMOffset Уменьшение громкости PCM
 audiomenu.analogout Аналоговый выход

@@ -124,8 +124,6 @@ GENRE.TRAVEL_HOBBIES.5 ruoka
 GENRE.TRAVEL_HOBBIES.6 ostos-tv
 GENRE.TRAVEL_HOBBIES.7 puutarha
 GENRE.UNKNOWN tuntematon
-apids.hint_1 Syötä streamattavat audio PIDit
-apids.hint_2 heksalukuina välilyönneillä erotettuna
 apidselector.head Valitse kieli
 audiomenu.PCMOffset PCM äänen vaimennus
 audiomenu.analogout Analoginen lähtö

@@ -157,8 +157,6 @@ const char * locale_real_names[] =
 	"GENRE.TRAVEL_HOBBIES.6",
 	"GENRE.TRAVEL_HOBBIES.7",
 	"GENRE.UNKNOWN",
-	"apids.hint_1",
-	"apids.hint_2",
 	"apidselector.head",
 	"audiomenu.PCMOffset",
 	"audiomenu.analogout",

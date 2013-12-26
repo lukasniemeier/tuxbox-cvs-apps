@@ -124,8 +124,6 @@ GENRE.TRAVEL_HOBBIES.5 matlagning
 GENRE.TRAVEL_HOBBIES.6 reklam/shopping
 GENRE.TRAVEL_HOBBIES.7 trädgård
 GENRE.UNKNOWN unknown
-apids.hint_1 Ange APIDs som ska streamas
-apids.hint_2 i hexadec separerade med ' '
 apidselector.head Välj språk
 audiomenu.PCMOffset Sänk volymen (PCM)
 audiomenu.analogout Analog utgång

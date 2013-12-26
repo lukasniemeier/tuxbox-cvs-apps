@@ -130,8 +130,6 @@ GENRE.TRAVEL_HOBBIES.5 cooking
 GENRE.TRAVEL_HOBBIES.6 advertisement/shopping
 GENRE.TRAVEL_HOBBIES.7 gardening
 GENRE.UNKNOWN unknown
-apids.hint_1 Enter APIDs to be streamed
-apids.hint_2 in hex notation seperated by ' '
 apidselector.head Select language
 audiomenu.PCMOffset Volume Decrease PCM
 audiomenu.analogout Analog Output

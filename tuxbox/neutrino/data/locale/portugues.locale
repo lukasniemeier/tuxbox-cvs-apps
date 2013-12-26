@@ -123,8 +123,6 @@ GENRE.TRAVEL_HOBBIES.5 cozinha
 GENRE.TRAVEL_HOBBIES.6 shopping
 GENRE.TRAVEL_HOBBIES.7 jardinagem
 GENRE.UNKNOWN desconhecido
-apids.hint_1 Adicionar APIDs para serem "streamed"
-apids.hint_2 em notação haxadecimal separada por ' '
 apidselector.head Seleccionar língua
 audiomenu.PCMOffset Descer o volume usando PCM
 audiomenu.analogout Saída Analógica
