@@ -135,6 +135,8 @@ void CStringInput::init()
 
 	x = getScreenStartX(width);
 	y = getScreenStartY(height);
+
+	smstimer = 0;
 }
 
 void CStringInput::NormalKeyPressed(const neutrino_msg_t key)
@@ -336,13 +338,15 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 		if (msg <= CRCInput::RC_MaxRC)
 		{
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
+			if (!(msg & CRCInput::RC_Release))
+				g_RCInput->killTimer(smstimer);
 		}
 
 		if (msg_repeatok == CRCInput::RC_left)
 		{
 			keyLeftPressed();
 		}
-		else if (msg_repeatok == CRCInput::RC_right)
+		else if ((msg_repeatok == CRCInput::RC_right) || (msg == NeutrinoMessages::EVT_TIMER && data == smstimer))
 		{
 			keyRightPressed();
 		}
@@ -591,6 +595,7 @@ void CStringInputSMS::NormalKeyPressed(const neutrino_msg_t key)
 		value[selected] = Chars[numericvalue][keyCounter];
 		last_digit = numericvalue;
 		paintChar(selected);
+		smstimer = g_RCInput->addTimer(2*1000*1000);
 	}
 	else
 	{
@@ -613,9 +618,9 @@ void CStringInputSMS::keyRedPressed()		// switch between lower & uppercase
 	    ((value[selected] | 32) == '\xFC') || ((value[selected] | 32) == '\xDF'))    // 0xFC == ü, 0xDF == ß
 	{
 		value[selected] ^= 32;
+		paintChar(selected);
 	}
-
-	paintChar(selected);
+	smstimer = g_RCInput->addTimer(2*1000*1000);
 }
 
 void CStringInputSMS::keyYellowPressed()		// clear all

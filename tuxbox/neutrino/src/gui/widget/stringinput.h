@@ -56,6 +56,8 @@ class CStringInput : public CMenuTarget
 		int mheight; // menu font height
 		int iheight;
 
+		uint smstimer;
+
 		neutrino_locale_t name;
 		neutrino_locale_t hint_1, hint_2;
 		std::string iconfile;
