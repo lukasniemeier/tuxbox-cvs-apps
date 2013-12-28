@@ -72,6 +72,7 @@ class CMenuTarget
 		virtual ~CMenuTarget(){}
 		virtual void hide(){}
 		virtual int exec(CMenuTarget* parent, const std::string & actionKey) = 0;
+		virtual const char * getTargetValue() { return NULL; }
 };
 
 
