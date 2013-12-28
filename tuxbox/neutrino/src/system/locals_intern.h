@@ -25,7 +25,6 @@
 const char * locale_real_names[] =
 {
 	"INTERNAL ERROR - PLEASE REPORT",
-	"AUDIOSelectMenue.head",
 	"EPGMenu.epgplus",
 	"EPGMenu.eventinfo",
 	"EPGMenu.eventlist",

@@ -1,4 +1,3 @@
-AUDIOSelectMenue.head Audio-Auswahl
 EPGMenu.epgplus Vorschau Komplettübersicht
 EPGMenu.eventinfo Info zur Sendung
 EPGMenu.eventlist Vorschau
@@ -130,7 +129,7 @@ GENRE.TRAVEL_HOBBIES.5 Kochen
 GENRE.TRAVEL_HOBBIES.6 Einkauf
 GENRE.TRAVEL_HOBBIES.7 Garten
 GENRE.UNKNOWN Unbekannt
-apidselector.head Sprachauswahl
+apidselector.head Audio-Auswahl
 audiomenu.PCMOffset Lautstärkeabsenkung PCM
 audiomenu.analogout Analog-Ausgang
 audiomenu.audio_left_right_selectable in Tonwahl wählbar

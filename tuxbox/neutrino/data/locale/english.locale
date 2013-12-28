@@ -1,4 +1,3 @@
-AUDIOSelectMenue.head Audio Selection
 EPGMenu.epgplus Eventlist overview
 EPGMenu.eventinfo Event-Info
 EPGMenu.eventlist Eventlist current program
@@ -130,7 +129,7 @@ GENRE.TRAVEL_HOBBIES.5 cooking
 GENRE.TRAVEL_HOBBIES.6 advertisement/shopping
 GENRE.TRAVEL_HOBBIES.7 gardening
 GENRE.UNKNOWN unknown
-apidselector.head Select language
+apidselector.head Audio Selection
 audiomenu.PCMOffset Volume Decrease PCM
 audiomenu.analogout Analog Output
 audiomenu.audio_left_right_selectable Selectable in Audio

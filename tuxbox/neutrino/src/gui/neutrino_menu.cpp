@@ -614,7 +614,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 					if (tmpAudioSelectMenuHandler == NULL)
 						tmpAudioSelectMenuHandler = new CAudioSelectMenuHandler();
 					keyhelper.get(&key,&icon);
-					menu_item = new CMenuForwarder(LOCALE_AUDIOSELECTMENUE_HEAD, true, NULL, tmpAudioSelectMenuHandler, "-1", key,icon);
+					menu_item = new CMenuForwarder(LOCALE_APIDSELECTOR_HEAD, true, NULL, tmpAudioSelectMenuHandler, "-1", key,icon);
 					menu->addItem(menu_item, false);
 				}
 				break;
