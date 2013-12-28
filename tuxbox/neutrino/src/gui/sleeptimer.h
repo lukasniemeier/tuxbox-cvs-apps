@@ -29,11 +29,13 @@ class CSleepTimerWidget: public CMenuTarget, CChangeObserver
 {
  private:
 	int shutdown_min;
+	std::string shutdown_min_string;
 	char value[16];
 
  public:
 	int exec(CMenuTarget* parent, const std::string & actionKey);
 	bool changeNotify(const neutrino_locale_t, void *);
+	const char * getTargetValue();
 };
 
 #endif

@@ -110,3 +110,21 @@ bool CSleepTimerWidget::changeNotify(const neutrino_locale_t, void *)
 	}
 	return false;
 }
+
+const char * CSleepTimerWidget::getTargetValue()
+{
+#if 0 // socket communication too slow, so sleeptimer item in main menu is painted very slow :-(
+	shutdown_min = g_Timerd->getSleepTimerRemaining();
+#else
+	shutdown_min = 0;
+#endif
+	if (shutdown_min > 0)
+	{
+		sprintf(value, "%d", shutdown_min);
+		shutdown_min_string = value;
+		shutdown_min_string += " ";
+		shutdown_min_string += g_Locale->getText(LOCALE_WORD_MINUTES_SHORT);
+		return shutdown_min_string.c_str();
+	}
+	return NULL;
+}

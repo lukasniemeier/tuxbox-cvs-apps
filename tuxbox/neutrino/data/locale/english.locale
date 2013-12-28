@@ -1553,6 +1553,7 @@ videomenu.videosignal_svideo S-Video
 videomenu.videosignal_yuv_c YUV + CVBS
 videomenu.videosignal_yuv_v YUV + VBS
 word.from from
+word.minutes_short min.
 zapit.scantype scan for services
 zapit.scantype.all all services
 zapit.scantype.radio only radio
