@@ -338,8 +338,11 @@ int CStringInput::exec( CMenuTarget* parent, const std::string & )
 		if (msg <= CRCInput::RC_MaxRC)
 		{
 			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_MENU]);
-			if (!(msg & CRCInput::RC_Release))
+			if (!(msg & CRCInput::RC_Release) && smstimer != 0)
+			{
 				g_RCInput->killTimer(smstimer);
+				smstimer = 0;
+			}
 		}
 
 		if (msg_repeatok == CRCInput::RC_left)
@@ -676,6 +679,7 @@ void CStringInputSMS::keyRightPressed()
 {
 	last_digit = -1;
 	CStringInput::keyRightPressed();
+	smstimer = 0;
 }
 
 const struct button_label CStringInputSMSButtons[2] =
