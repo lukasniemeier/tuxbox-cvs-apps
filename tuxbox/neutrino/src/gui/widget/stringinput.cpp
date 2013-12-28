@@ -143,15 +143,17 @@ void CStringInput::NormalKeyPressed(const neutrino_msg_t key)
 {
 	if (CRCInput::isNumeric(key))
 	{
-		value[selected] = validchars[CRCInput::getNumericValue(key)];
-
-		if (selected < (size - 1))
+		int numericvalue = CRCInput::getNumericValue(key);
+		if (numericvalue < (int)strlen(validchars))
 		{
-			selected++;
-			paintChar(selected - 1);
+			value[selected] = validchars[numericvalue];
+			if (selected < (size - 1))
+			{
+				selected++;
+				paintChar(selected - 1);
+			}
+			paintChar(selected);
 		}
-
-		paintChar(selected);
 	}
 }
 
@@ -176,13 +178,11 @@ void CStringInput::keyRedPressed()
 	if (strchr(validchars, ' ') != NULL)
 	{
 		value[selected] = ' ';
-
 		if (selected < (size - 1))
 		{
 			selected++;
 			paintChar(selected - 1);
 		}
-
 		paintChar(selected);
 	}
 }
