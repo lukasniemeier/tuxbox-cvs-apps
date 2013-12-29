@@ -776,11 +776,13 @@ bool CFileBrowser::exec(const char * const dirname)
 		neutrino_msg_t msg_repeatok = msg & ~CRCInput::RC_Repeat;
 
 		if ( msg <= CRCInput::RC_MaxRC )
-			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_FILEBROWSER]);
-
-		if(!CRCInput::isNumeric(msg))
 		{
-			m_SMSKeyInput.resetOldKey();
+			timeoutEnd = CRCInput::calcTimeoutEnd(g_settings.timing[SNeutrinoSettings::TIMING_FILEBROWSER]);
+			if (!CRCInput::isNumeric(msg_repeatok & ~CRCInput::RC_Release) && m_SMSKeyInput.getOldKey() != 0)
+			{
+				m_SMSKeyInput.resetOldKey();
+				paintFoot();
+			}
 		}
 
 		if (msg == CRCInput::RC_yellow)
@@ -1019,7 +1021,10 @@ bool CFileBrowser::exec(const char * const dirname)
 		else if (CRCInput::isNumeric(msg_repeatok))
 		{
 			if (!(filelist.empty()))
+			{
 				SMSInput(msg_repeatok);
+				paintFoot();
+			}
 		}
 		else
 		{
@@ -1392,8 +1397,7 @@ void CFileBrowser::paintFoot()
 			char cKey[2] = {m_SMSKeyInput.getOldKey(), 0};
 			cKey[0] = toupper(cKey[0]);
 			int len = fnt_small->getRenderWidth(cKey);
-			fnt_small->RenderString(x + width - 10 - len, by2 + foheight, len, cKey, COL_MENUHEAD);
-
+			fnt_small->RenderString(x + width - 10 - len, by2 + foheight - 6, len, cKey, COL_MENUHEAD);
 		}
 	}
 }
