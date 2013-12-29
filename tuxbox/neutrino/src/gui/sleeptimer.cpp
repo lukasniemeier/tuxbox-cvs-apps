@@ -105,7 +105,7 @@ bool CSleepTimerWidget::changeNotify(const neutrino_locale_t, void *)
 		else							// set the sleeptimer to actual time + shutdown mins and announce 1 min before
 		{
 			time_t now = time(NULL);
-			g_Timerd->setSleeptimer(now + (shutdown_min - 1) * 60, now + shutdown_min * 60, 0);
+			g_Timerd->setSleeptimer(now + (shutdown_min - 1) * 60, now + shutdown_min * 60);
 		}
 	}
 	return false;

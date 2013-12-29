@@ -1153,7 +1153,6 @@ void CFileBrowser::paintItem(unsigned int pos)
 		color   = COL_MENUCONTENTSELECTED;
 		bgcolor = COL_MENUCONTENTSELECTED_PLUS_0;
 		c_rad_small = RADIUS_SMALL;
-// 		paintFoot();
 	}
 	else
 	{
@@ -1369,25 +1368,23 @@ void CFileBrowser::paintFoot()
 	{
 		int by = y + height - 2 * (foheight - 2);
 
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, by, ButtonWidth, Multi_Select ? 3 : 2, FileBrowserButtons, 3 * ButtonWidth);
+		//red, green and yellow button
+		::paintButtons(frameBuffer, fnt_small, g_Locale, x + 10, by, ButtonWidth, Multi_Select ? 3 : 2, FileBrowserButtons, 3 * ButtonWidth);
 
 		//Blue-Button
 		if (Filter != NULL)
-			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + (3 * ButtonWidth), by, ButtonWidth, 1, &(FileBrowserFilterButton[use_filter?0:1]));
+			::paintButtons(frameBuffer, fnt_small, g_Locale, x + 10 + (3 * ButtonWidth), by, ButtonWidth, 1, &(FileBrowserFilterButton[use_filter ? 0 : 1]));
 
 		//OK-Button
-		if ( (filelist[selected].getType() != CFile::FILE_UNKNOWN) || (S_ISDIR(filelist[selected].Mode)) )
-		{
-			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, by2, ButtonWidth, 1, FileBrowserOKButton);
-		}
+		::paintButtons(frameBuffer, fnt_small, g_Locale, x + 10, by2, ButtonWidth, 1, FileBrowserOKButton);
 
 		//?-Button
 		FileBrowserHelpButton[0].locale = sortByNames[g_settings.filebrowser_sortmethod];
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + (1 * ButtonWidth), by2, ButtonWidth, 1, FileBrowserHelpButton);
+		::paintButtons(frameBuffer, fnt_small, g_Locale, x + 10 + (1 * ButtonWidth), by2, ButtonWidth, 1, FileBrowserHelpButton);
 
 		//Mute-Button
 		if (strncmp(Path.c_str(), VLC_URI, strlen(VLC_URI)) != 0) { //Not in vlc mode
-			::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + (2 * ButtonWidth), by2, ButtonWidth, 1, FileBrowserDeleteButton);
+			::paintButtons(frameBuffer, fnt_small, g_Locale, x + 10 + (2 * ButtonWidth), by2, ButtonWidth, 1, FileBrowserDeleteButton);
 		}
 
 		if (m_SMSKeyInput.getOldKey() != 0)
