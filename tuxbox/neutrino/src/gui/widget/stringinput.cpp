@@ -50,6 +50,8 @@
 #include <global.h>
 #include <neutrino.h>
 
+#define SMS_TIMEOUT (2 * 1000 * 1000)
+
 
 CStringInput::CStringInput(const neutrino_locale_t Name, char* Value, int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, const char * const Valid_Chars, CChangeObserver* Observ, const char * const Icon)
 {
@@ -598,7 +600,7 @@ void CStringInputSMS::NormalKeyPressed(const neutrino_msg_t key)
 		value[selected] = Chars[numericvalue][keyCounter];
 		last_digit = numericvalue;
 		paintChar(selected);
-		smstimer = g_RCInput->addTimer(2*1000*1000);
+		smstimer = g_RCInput->addTimer(SMS_TIMEOUT);
 	}
 	else
 	{
@@ -623,7 +625,7 @@ void CStringInputSMS::keyRedPressed()		// switch between lower & uppercase
 		value[selected] ^= 32;
 		paintChar(selected);
 	}
-	smstimer = g_RCInput->addTimer(2*1000*1000);
+	smstimer = g_RCInput->addTimer(SMS_TIMEOUT);
 }
 
 void CStringInputSMS::keyYellowPressed()		// clear all
