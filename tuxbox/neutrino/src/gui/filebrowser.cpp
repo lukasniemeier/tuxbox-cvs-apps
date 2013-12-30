@@ -763,6 +763,7 @@ bool CFileBrowser::exec(const char * const dirname)
 	paintHead();
 	ChangeDir(name, selection);
 	//paint();
+	m_SMSKeyInput.resetOldKey();
 	paintFoot();
 
 	int oldselected = selected;
