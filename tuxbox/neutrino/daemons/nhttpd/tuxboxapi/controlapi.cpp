@@ -1779,7 +1779,7 @@ void CControlAPI::SendTimers(CyhookHandler *hh)
 		case CTimerd::TIMER_RECORD:
 			if (!send_id)
 			{
-				strncpy(zAddData, NeutrinoAPI->Zapit->getChannelName(timer->channel_id).c_str(), 22);
+				strncpy(zAddData, NeutrinoAPI->GetServiceName(timer->channel_id).c_str(), 22);
 
 				if (zAddData[0] == 0)
 					strcpy(zAddData, NeutrinoAPI->Zapit->isChannelTVChannel(timer->channel_id) ? "Unbekannter TV-Kanal" : "Unbekannter Radiokanal");
@@ -1938,7 +1938,7 @@ void CControlAPI::SendTimersXML(CyhookHandler *hh)
 		hh->WriteLn("\t\t\t</repeat>");
 
 		// channel infos
-		std::string channel_name = ZapitTools::UTF8_to_Latin1(NeutrinoAPI->Zapit->getChannelName(timer->channel_id).c_str());
+		std::string channel_name = NeutrinoAPI->GetServiceName(timer->channel_id);
 		if (channel_name.empty())
 			channel_name = NeutrinoAPI->Zapit->isChannelTVChannel(timer->channel_id) ? "Unbekannter TV-Kanal" : "Unbekannter Radiokanal";
 
