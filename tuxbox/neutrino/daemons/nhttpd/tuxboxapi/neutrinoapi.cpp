@@ -278,7 +278,7 @@ CZapitClient::BouquetChannelList *CNeutrinoAPI::GetBouquet(unsigned int BouquetN
 	
 	if (mode == CZapitClient::MODE_TV)
 		return &TVBouquetsList[BouquetNr];
-	else if (mode == CZapitClient::MODE_RADIO)
+	if (mode == CZapitClient::MODE_RADIO)
 		return &RadioBouquetsList[BouquetNr];
 	return &AllBouquetsList[BouquetNr];
 }
@@ -296,7 +296,7 @@ CZapitClient::BouquetChannelList *CNeutrinoAPI::GetChannelList(int Mode)
 	
 	if (mode == CZapitClient::MODE_TV)
 		return &TVChannelList;
-	else if (mode == CZapitClient::MODE_RADIO)
+	if (mode == CZapitClient::MODE_RADIO)
 		return &RadioChannelList;
 	return &AllChannelList;
 }

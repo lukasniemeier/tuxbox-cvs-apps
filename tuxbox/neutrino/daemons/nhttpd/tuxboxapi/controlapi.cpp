@@ -1597,7 +1597,18 @@ void CControlAPI::SendEventList(CyhookHandler *hh, t_channel_id channel_id)
 //-----------------------------------------------------------------------------
 void CControlAPI::SendChannelList(CyhookHandler *hh)
 {
-	CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(CZapitClient::MODE_CURRENT);
+	int mode = CZapitClient::MODE_CURRENT;
+	if (!hh->ParamList["mode"].empty())
+	{
+		if (hh->ParamList["mode"].compare("TV") == 0)
+			mode = CZapitClient::MODE_TV;
+		else if (hh->ParamList["mode"].compare("RADIO") == 0)
+			mode = CZapitClient::MODE_RADIO;
+		else if (hh->ParamList["mode"].compare("all") == 0)
+			mode = CZapitClient::MODE_ALL;
+	}
+
+	CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(mode);
 	CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
 
 	for(; channel != channellist->end(); ++channel)

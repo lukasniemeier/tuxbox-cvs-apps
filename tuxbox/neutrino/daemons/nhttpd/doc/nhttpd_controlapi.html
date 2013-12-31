@@ -210,10 +210,10 @@
 <div class="title1"><a name="channellist"></a>1. Die Kanalliste</div>
 <div class="URL">Handler: http://dbox/control/channellist</div>
 <br>
-<b>Parameter:</b> keine<br>
+<b>Parameter:</b> optional: mode=<b>current</b>|TV|RADIO|all<br>
 <b>Rueckgabe:</b><br>
 <br>
-Es wird die gesamte Kanalliste von Neutrino zurueckgegeben.<br>
+Es wird nur die TV-, nur die Radio- oder die gesamte Kanalliste zurueckgegeben.<br>
 Jede Zeile wird von einem Enter (\n) von der Naechsten getrennt.<br>
 Eine Zeile enthaelt ein Programm.<br>
 <br>
@@ -988,7 +988,7 @@ Beispiel:<br>
 <div class="title1"><a name="getbouquets"></a>15. Bouquetlist abfragen</div>
 <div class="URL">Handler: http://dbox/control/getbouquets</div>
 <br>
-<b>Parameter:</b> mode=current|TV|RADIO|all, showhidden=true|false<br>
+<b>Parameter:</b> optional: mode=current|TV|RADIO|<b>all</b>, showhidden=<b>true</b>|false<br>
 <b>Rückgabe:</b><br>
 <br>
 Es werden nur TV-, nur Radio- oder alle Bouquets zurückgeliefert.<br>
@@ -1006,8 +1006,8 @@ Beispiel:<br>
 <div class="title1"><a name="getbouquet"></a>16. Bouquet abfragen</div>
 <div class="URL">Handler: http://dbox/control/getbouquet</div>
 <br>
-<b>Parameter:</b> bouquet=Bouquet Nr. und mode=current|TV|RADIO|all oder
-actual und mode=current|TV|RADIO|all, optional: xml=true<br>
+<b>Parameter:</b> bouquet=Bouquet Nr. und mode=<b>current</b>|TV|RADIO|all oder
+actual und mode=<b>current</b>|TV|RADIO|all, optional: xml=true<br>
 <b>Rueckgabe:</b><br>
 <br>
 Es werden alle Sender des Bouquets zurueckgeliefert. Wird actual mit<br>
