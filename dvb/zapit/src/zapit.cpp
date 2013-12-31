@@ -2412,7 +2412,10 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 		if (it == allchans.end())
 			response.name[0] = 0;
 		else
-			strncpy(response.name, it->second.getName().c_str(), 30);
+		{
+			strncpy(response.name, it->second.getName().c_str(), 29);
+			response.name[29] = '\0'; // so string is zero terminated
+		}
 
 		CBasicServer::send_data(connfd, &response, sizeof(response));
 		break;
@@ -2426,12 +2429,11 @@ bool parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 		CBouquetManager::ChannelIterator cit = ((msg.mode & RADIO_MODE) ? bouquetManager->radioChannelsBegin() : bouquetManager->tvChannelsBegin()).FindChannelNr(msg.channel);
 		if (cit.EndOfChannels())
-		{
 			response.name[0] = 0;
-		}
 		else
 		{
-			strncpy(response.name, (*cit)->getName().c_str(), 30);
+			strncpy(response.name, (*cit)->getName().c_str(), 29);
+			response.name[29] = '\0'; // so string is zero terminated
 		}
 
 		CBasicServer::send_data(connfd, &response, sizeof(response));
@@ -2633,7 +2635,7 @@ void sendBouquets(int connfd, const bool emptyBouquetsToo, const CZapitClient::c
 			      ((wantedMode & TV_MODE)    && (bouquetManager->Bouquets[i]->recModeTVSize   (cc->getTransponderId()) > 0)))))
 			{
 				msgBouquet.bouquet_nr = i;
-				strncpy(msgBouquet.name, bouquetManager->Bouquets[i]->Name.c_str(), 30);
+				strncpy(msgBouquet.name, bouquetManager->Bouquets[i]->Name.c_str(), 29);
 				msgBouquet.name[29]   = '\0'; // so string is zero terminated -> no need to strncopy in neutrino
 				msgBouquet.locked     = bouquetManager->Bouquets[i]->bLocked;
 				msgBouquet.hidden     = bouquetManager->Bouquets[i]->bHidden;
@@ -2686,8 +2688,8 @@ void internalSendChannels(int connfd, ChannelList* channels, const unsigned int 
 			continue;
 
 		CZapitClient::responseGetBouquetChannels response;
-		strncpy(response.name, ((*channels)[i]->getName()).c_str(), 30);
-		response.name[29]   = '\0'; // so string is zero terminated
+		strncpy(response.name, ((*channels)[i]->getName()).c_str(), 29);
+		response.name[29] = '\0'; // so string is zero terminated
 		response.satellitePosition = (*channels)[i]->getSatellitePosition();
 		response.channel_id = (*channels)[i]->getChannelID();
 		response.nr = first_channel_nr + i;
