@@ -47,8 +47,8 @@ public:
 	eEPGSelector(const eServiceReferenceDVB &service);
 	eEPGSelector(eString SearchString); // EPG Search :-)
 	inline ~eEPGSelector(){};
-	Signal3<bool, eEPGSelector*, eServiceReference*, EITEvent *> addEventToTimerList;
-	Signal3<bool, eEPGSelector*, eServiceReference*, EITEvent *> removeEventFromTimerList;
+	sigc::signal<bool, eEPGSelector*, eServiceReference*, EITEvent *> addEventToTimerList;
+	sigc::signal<bool, eEPGSelector*, eServiceReference*, EITEvent *> removeEventFromTimerList;
 	eString getEPGSearchName() { return EPGSearchName; }
 };
 

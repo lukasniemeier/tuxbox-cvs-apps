@@ -41,7 +41,7 @@ public:
 	static eServiceHandlerExternal *getInstance() { return instance; }
 };
 
-class ePlayerThread: public eThread, public Object
+class ePlayerThread: public eThread, public sigc::trackable
 {
 	eFixedMessagePump<int> message;
 	eString command;

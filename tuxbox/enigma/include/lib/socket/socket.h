@@ -15,7 +15,7 @@
 #include <libsig_comp.h>
 #include <lib/base/buffer.h>
 
-class eSocket: public Object
+class eSocket: public sigc::trackable
 {
 private:
 	int issocket;
@@ -53,12 +53,12 @@ public:
 			Listening, Connection, Closing };
 	int state();
 	
-	Signal0<void> connectionClosed_;
-	Signal0<void> connected_;
-	Signal0<void> readyRead_;
-	Signal0<void> hangup;
-	Signal1<void,int> bytesWritten_;
-	Signal1<void,int> error_;
+	sigc::signal<void> connectionClosed_;
+	sigc::signal<void> connected_;
+	sigc::signal<void> readyRead_;
+	sigc::signal<void> hangup;
+	sigc::signal<void,int> bytesWritten_;
+	sigc::signal<void,int> error_;
 };
 
 class eUnixDomainSocket: public eSocket

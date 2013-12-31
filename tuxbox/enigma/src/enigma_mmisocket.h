@@ -10,7 +10,7 @@
 #include <enigma_main.h>
 #include <enigma_setup.h>
 
-class eSocketMMIHandler: public Object
+class eSocketMMIHandler: public sigc::trackable
 {
 	int listenfd, connfd, clilen;
 	struct sockaddr_un servaddr;
@@ -25,7 +25,7 @@ class eSocketMMIHandler: public Object
 	void init_eSocketMMIHandler();
 public:
 	const char *getName() const { return name; }
-	Signal2<void, const char*, int> mmi_progress;
+	sigc::signal<void, const char*, int> mmi_progress;
 	int send_to_mmisock( void *, size_t );
 	eSocketMMIHandler();
 	~eSocketMMIHandler();

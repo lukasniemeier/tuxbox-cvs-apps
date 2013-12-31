@@ -130,7 +130,7 @@ class eHTTPDownload: public eHTTPDataSource
 	eString filename;
 public:
 	eHTTPDownload(eHTTPConnection *c, const char *filename);
-	Signal2<void,int,int> progress; // received, total (-1 for unknown)
+	sigc::signal<void,int,int> progress; // received, total (-1 for unknown)
 	~eHTTPDownload();
 	void haveData(void *data, int len);
 };

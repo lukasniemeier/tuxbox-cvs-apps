@@ -240,7 +240,7 @@ eString getTag(int mode, int submode)
 	return tag;
 }
 
-struct getContent: public Object
+struct getContent: public sigc::trackable
 {
 	int mode;
 	int subm;
@@ -250,7 +250,7 @@ struct getContent: public Object
 	getContent(int mode, int subm, const eServiceReference &service, eString &result, bool listCont)
 		:mode(mode), subm(subm), result(result), iface(eServiceInterface::getInstance()), listCont(listCont)
 	{
-		Signal1<void, const eServiceReference&> cbSignal;
+		sigc::signal<void, const eServiceReference&> cbSignal;
 		CONNECT(cbSignal, getContent::addToString);
 		iface->enterDirectory(service, cbSignal);
 		iface->leaveDirectory(service);

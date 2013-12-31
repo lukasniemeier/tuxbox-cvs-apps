@@ -6,7 +6,7 @@
 #include <lib/dvb/si.h>
 #include <lib/dvb/dvb.h>
 
-class eStreamWatchdog: public Object
+class eStreamWatchdog: public sigc::trackable
 {
 	eSocketNotifier* sn;
 	int handle;
@@ -22,8 +22,8 @@ public:
 	~eStreamWatchdog();
 	static eStreamWatchdog *getInstance();
 	int isAnamorph();
-	Signal1<void, int> AspectRatioChanged;
-	Signal1<void, int> VCRActivityChanged;
+	sigc::signal<void, int> AspectRatioChanged;
+	sigc::signal<void, int> VCRActivityChanged;
 };
 
 #endif

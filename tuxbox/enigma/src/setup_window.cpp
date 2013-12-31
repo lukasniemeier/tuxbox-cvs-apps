@@ -22,7 +22,7 @@
 
 #include <setup_window.h>
 
-Signal2<void,eSetupWindow*,int*> eSetupWindow::setupHook;
+sigc::signal<void,eSetupWindow*,int*> eSetupWindow::setupHook;
 
 eSetupWindow::eSetupWindow( const char *title, int entries, int width )
 	:eListBoxWindow<eListBoxEntryMenu>(title, entries, width, true)

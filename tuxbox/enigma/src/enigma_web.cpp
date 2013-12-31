@@ -49,7 +49,7 @@ static eString web_root(eString request, eString dirpath, eString opts, eHTTPCon
 	return ret;
 }
 
-class eServiceToXml: public Object
+class eServiceToXml: public sigc::trackable
 {
 	eString &result;
 	eServiceInterface &iface;
@@ -134,14 +134,14 @@ static eString xml_services(eString request, eString dirpath, eString opt, eHTTP
 	
 	eServiceToXml conv(res, *iface);
 
-	Signal1<void,const eServiceReference&> signal;
-	signal.connect(slot(conv, &eServiceToXml::addEntry));
+	sigc::signal<void,const eServiceReference&> Signal;
+	Signal.connect(sigc::mem_fun(conv, &eServiceToXml::addEntry));
 
 	res=xmlversion;
 	res+=xmlstylesheet("services");
 	res+="<services>\n";
 
-	iface->enterDirectory(current_service, signal);
+	iface->enterDirectory(current_service, Signal);
 	iface->leaveDirectory(current_service);
 	
 	res+="</services>\n";
@@ -149,7 +149,7 @@ static eString xml_services(eString request, eString dirpath, eString opt, eHTTP
 	return res;
 }
 
-class eHTTPLog: public eHTTPDataSource, public Object
+class eHTTPLog: public eHTTPDataSource, public sigc::trackable
 {
 	int mask, format;
 	int ok, last;
@@ -263,7 +263,7 @@ eHTTPDataSource *eHTTPLogResolver::getDataSource(eString request, eString path, 
 
 extern eString filter_string(eString string);
 
-class ERCServiceHandle: public Object
+class ERCServiceHandle: public sigc::trackable
 {
 	eString &result, search;
 	eServiceInterface &iface;
@@ -306,10 +306,10 @@ static eString erc_services(eString request, eString dirpath, eString opt, eHTTP
 	
 	ERCServiceHandle conv(res, *iface, opts["name"]);
 	
-	Signal1<void,const eServiceReference&> signal;
-	signal.connect(slot(conv, &ERCServiceHandle::addEntry));
+	sigc::signal<void,const eServiceReference&> Signal;
+	Signal.connect(sigc::mem_fun(conv, &ERCServiceHandle::addEntry));
 	
-	iface->enterDirectory(all_services, signal);
+	iface->enterDirectory(all_services, Signal);
 	iface->leaveDirectory(all_services);
 	
 	return res;

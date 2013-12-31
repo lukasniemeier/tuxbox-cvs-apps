@@ -158,7 +158,7 @@ class NVODStream: public eListBoxEntryTextStream
 	void EITready(int error);
 	int validate();
 	void selfDestroy();
-	Signal0<void> ready;
+	sigc::signal<void> ready;
 	bool operator<( const eListBoxEntry& e ) const
 	{
 		return begTime < ((NVODStream&)e).begTime;
@@ -174,7 +174,7 @@ class eNVODSelector: public eListBoxWindow<NVODStream>
 {
 	int count;
 	void selected(NVODStream *);
-	Signal0<void> clearEntrys;
+	sigc::signal<void> clearEntrys;
 	void readyCallBack();
 public:
 	eNVODSelector();
@@ -255,7 +255,7 @@ class eSubServiceSelector
 	void quickZapPressed();
 	void init_eSubServiceSelector(bool showbuttons);
 public:
-	Signal2<void, eServiceReference*, int> addToUserBouquet;
+	sigc::signal<void, eServiceReference*, int> addToUserBouquet;
 	bool quickzapmode();
 	void prev();
 	void next();
@@ -391,7 +391,7 @@ private:
 	eTimer *snrTimer;
 /* SNR,AGC,BER DISPLAY */
 
-	Connection doubleklickTimerConnection;
+	sigc::connection doubleklickTimerConnection;
 
 	int cur_start, cur_duration, cur_event_id;
 	eString cur_event_text;

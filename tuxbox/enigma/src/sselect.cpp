@@ -599,8 +599,8 @@ void eServiceSelector::fillServiceList(const eServiceReference &_ref)
 	eServiceInterface *iface=eServiceInterface::getInstance();
 	ASSERT(iface);
 
-	Signal1<void,const eServiceReference&> signal;
-	CONNECT(signal, eServiceSelector::addService);
+	sigc::signal<void,const eServiceReference&> Signal;
+	CONNECT(Signal, eServiceSelector::addService);
 
 	serviceentryflags=eListBoxEntryService::flagShowNumber;
 	if (ref.data[0] == -6 && eZapMain::getInstance()->getMode() != eZapMain::modeFile)
@@ -615,7 +615,7 @@ void eServiceSelector::fillServiceList(const eServiceReference &_ref)
 		eServiceReference bla(eServiceReference::idDVB,
 				eServiceReference::flagDirectory|eServiceReference::shouldSort,
 				-2, mask, 0xFFFFFFFF );
-		iface->enterDirectory(bla, signal);
+		iface->enterDirectory(bla, Signal);
 		iface->leaveDirectory(bla);
 		services->sort();
 	}
@@ -623,7 +623,7 @@ void eServiceSelector::fillServiceList(const eServiceReference &_ref)
 	{
 		if (ref.type == eServicePlaylistHandler::ID) // playlists have own numbers
 			serviceentryflags|=eListBoxEntryService::flagOwnNumber;
-		iface->enterDirectory(ref, signal);
+		iface->enterDirectory(ref, Signal);
 		iface->leaveDirectory(ref);	// we have a copy.
 	}
 
@@ -686,12 +686,12 @@ void eServiceSelector::fillBouquetList( const eServiceReference& _ref)
 	eServiceInterface *iface=eServiceInterface::getInstance();
 	ASSERT(iface);
 	
-	Signal1<void,const eServiceReference&> signal;
-	CONNECT(signal, eServiceSelector::addBouquet );
+	sigc::signal<void,const eServiceReference&> Signal;
+	CONNECT(Signal, eServiceSelector::addBouquet );
 	
 	eServiceReference ref=_ref;
 	
-	iface->enterDirectory(ref, signal);
+	iface->enterDirectory(ref, Signal);
 	iface->leaveDirectory(ref);	// we have a copy.
 
 	if (ref.flags & eServiceReference::shouldSort)
@@ -1096,7 +1096,7 @@ void eServiceSelector::updateCi()
 		ci->update((const eServiceReferenceDVB&)selected);
 }
 
-void eServiceSelector::forEachServiceRef( Signal1<void,const eServiceReference&> callback, bool fromBeg )
+void eServiceSelector::forEachServiceRef( sigc::signal<void,const eServiceReference&> callback, bool fromBeg )
 {
 	eListBoxEntryService *safe = services->getCurrent(),
 											 *p, *beg;
@@ -2172,7 +2172,7 @@ void eFileSelector::init_eFileSelector(eString startPath)
 		enterDirectory(startDirRef);
 		tmp = tmp.substr(pos+1);
 	}
-	getRoot.connect( slot( *this, &eFileSelector::getDirRoot) );
+	getRoot.connect( sigc::mem_fun( *this, &eFileSelector::getDirRoot) );
 	setStyle(eServiceSelector::styleSingleColumn);
 }
 

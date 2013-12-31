@@ -58,7 +58,7 @@ void eZapScan::init_eZapScan()
 	{
 		CONNECT((new eListBoxEntryMenu(&list, _("Signalfind"), eString().sprintf("(%d) %s", ++entry, _("open the signalfinder"))))->selected, eZapScan::sel_satfind);
 		(new eListBoxEntryCheck(&list, _("Disable 5V"), "/elitedvb/DVB/config/disable_5V", _("disable 5V for passive terrerstrial antennas")))
-			->selected.connect( slot(*eFrontend::getInstance(), &eFrontend::setTerrestrialAntennaVoltage) );
+			->selected.connect( sigc::mem_fun(*eFrontend::getInstance(), &eFrontend::setTerrestrialAntennaVoltage) );
 	}
 	if ( eSystemInfo::getInstance()->getFEType() != eSystemInfo::feCable )
 		new eListBoxEntryMenuSeparator(&list, eSkin::getActive()->queryImage("listbox.separator"), 0, true );

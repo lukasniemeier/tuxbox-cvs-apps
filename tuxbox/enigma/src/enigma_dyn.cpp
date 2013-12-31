@@ -949,7 +949,7 @@ void genHTMLServicesList(std::list <myService> &myList, eString &serviceRefList,
 	serviceList = serviceList.left(serviceList.length() - 2);
 }
 
-class eWebNavigatorListDirectory2: public Object
+class eWebNavigatorListDirectory2: public sigc::trackable
 {
 	std::list <myService> &myList;
 	eString path;
@@ -1067,9 +1067,9 @@ eString getZapContent(eString path, int depth, bool addEPG, bool sortList, bool 
 		// first pass thru is to get all user bouquets
 		myList.clear();
 		eWebNavigatorListDirectory2 navlist(myList, path, *iface, addEPG, forceAll, addSatPos);
-		Signal1<void, const eServiceReference&> signal;
-		signal.connect(slot(navlist, &eWebNavigatorListDirectory2::addEntry));
-		iface->enterDirectory(current_service, signal);
+		sigc::signal<void, const eServiceReference&> Signal;
+		Signal.connect(sigc::mem_fun(navlist, &eWebNavigatorListDirectory2::addEntry));
+		iface->enterDirectory(current_service, Signal);
 //		eDebug("entered");
 		iface->leaveDirectory(current_service);
 //		eDebug("exited");
@@ -1095,10 +1095,10 @@ eString getZapContent(eString path, int depth, bool addEPG, bool sortList, bool 
 
 					myList2.clear();
 					eWebNavigatorListDirectory2 navlist(myList2, path, *iface, addEPG, forceAll, addSatPos);
-					Signal1<void, const eServiceReference&> signal;
-					signal.connect(slot(navlist, &eWebNavigatorListDirectory2::addEntry));
+					sigc::signal<void, const eServiceReference&> Signal;
+					Signal.connect(sigc::mem_fun(navlist, &eWebNavigatorListDirectory2::addEntry));
 
-					iface->enterDirectory(current_service, signal);
+					iface->enterDirectory(current_service, Signal);
 //					eDebug("entered");
 					iface->leaveDirectory(current_service);
 //					eDebug("exited");

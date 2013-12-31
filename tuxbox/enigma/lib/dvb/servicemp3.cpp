@@ -532,7 +532,7 @@ void eMP3Decoder::checkFlow(int last)
 		int samples=0;
 		if (last || (i >= audiodecoder->getMinimumFramelength()))
 		{
-			Signal1<void, unsigned int> callback;
+			sigc::signal<void, unsigned int> callback;
 			CONNECT(callback, eMP3Decoder::newAudioStreamIdFound);
 			singleLock s(lock); // protect access on all eIOBuffer
 			samples=audiodecoder->decodeMore(last, 16384, &callback);

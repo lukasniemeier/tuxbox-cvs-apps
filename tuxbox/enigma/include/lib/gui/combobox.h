@@ -23,8 +23,8 @@ public:
 	~eComboBox();
 	void setOpenWidth( int w ) { listbox.resize( eSize(w, listbox.getSize().height()) ); }
 	enum	{		OK = 0,		ERROR=1,		E_ALLREADY_SELECTED = 2,		E_COULDNT_FIND = 4,		E_INVALID_ENTRY = 8	};
-	Signal1< void, eListBoxEntryText* > selchanged;	
-	Signal2< void, eComboBox*, eListBoxEntryText* > selchanged_id;
+	sigc::signal< void, eListBoxEntryText* > selchanged;	
+	sigc::signal< void, eComboBox*, eListBoxEntryText* > selchanged_id;
 	enum { /*flagVCenter=64 in eLabel*/ flagSorted=128, flagShowEntryHelp=256 };
 	eComboBox(eWidget* parent, int OpenEntries=5, eLabel* desc=0, int takefocus=1, const char *deco="eComboBox" );
 	void takeEntry( eListBoxEntryText* );

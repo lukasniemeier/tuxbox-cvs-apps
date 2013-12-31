@@ -146,13 +146,13 @@ static eString getMute()
 	return result.str();
 }
 
-struct countDVBServices: public Object
+struct countDVBServices: public sigc::trackable
 {
 	int &count;
 	countDVBServices(const eServiceReference &bouquetRef, int &count)
 		:count(count)
 	{
-		Signal1<void, const eServiceReference&> cbSignal;
+		sigc::signal<void, const eServiceReference&> cbSignal;
 		CONNECT(cbSignal, countDVBServices::countFunction);
 		eServiceInterface::getInstance()->enterDirectory(bouquetRef, cbSignal);
 		eServiceInterface::getInstance()->leaveDirectory(bouquetRef);
@@ -172,7 +172,7 @@ struct countDVBServices: public Object
 	}
 };
 
-class eWebNavigatorListDirectory: public Object
+class eWebNavigatorListDirectory: public sigc::trackable
 {
 	eString &result;
 	eString path;
@@ -256,10 +256,10 @@ eString getPDAZapContent(eString path)
 	else
 	{
 		eWebNavigatorListDirectory navlist(result, path, *iface);
-		Signal1<void, const eServiceReference&> signal;
-		signal.connect(slot(navlist, &eWebNavigatorListDirectory::addEntry));
+		sigc::signal<void, const eServiceReference&> Signal;
+		Signal.connect(sigc::mem_fun(navlist, &eWebNavigatorListDirectory::addEntry));
 		result += "<table width=\"100%\" cellspacing=\"2\" cellpadding=\"1\" border=\"0\">\n";
-		iface->enterDirectory(current_service, signal);
+		iface->enterDirectory(current_service, Signal);
 		result += "</table>\n";
 //		eDebug("entered");
 		iface->leaveDirectory(current_service);

@@ -21,7 +21,7 @@ class eHTTPLogResolver;
 
 extern eWidget *currentFocus;
 
-class eZap: public eApplication, public Object
+class eZap: public eApplication, public sigc::trackable
 {
 	eHotplug hotplug;
 	static eZap *instance;

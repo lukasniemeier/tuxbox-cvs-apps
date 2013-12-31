@@ -638,7 +638,7 @@ static eString getTransponderServices(eString request, eString dirpath, eString 
 	return "E: no DVB service is running.. or this is a playback";
 }
 
-struct listContent: public Object
+struct listContent: public sigc::trackable
 {
 	eString &result;
 	eServiceInterface *iface;
@@ -647,7 +647,7 @@ struct listContent: public Object
 	listContent(const eServiceReference &service, eServiceReference &bouquet, eString &result, bool listCont)
 		:result(result), iface(eServiceInterface::getInstance()), listCont(listCont), bouquet(bouquet)
 	{
-		Signal1<void, const eServiceReference&> cbSignal;
+		sigc::signal<void, const eServiceReference&> cbSignal;
 		CONNECT(cbSignal, listContent::addToString);
 		iface->enterDirectory(service, cbSignal);
 		iface->leaveDirectory(service);

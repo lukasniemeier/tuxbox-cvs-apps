@@ -29,7 +29,7 @@ class eHTTPDynPathResolver;
 void ezapFlashInitializeDyn(eHTTPDynPathResolver *dyn_resolver, bool lockWeb);
 eString getConfigFlashMgr(void);
 
-class eFlashOperationsHandler: public eMainloop, private eThread, public Object
+class eFlashOperationsHandler: public eMainloop, private eThread, public sigc::trackable
 {
 	eString progressMessage1, progressMessage2;
 	int progressComplete;

@@ -835,7 +835,7 @@ protected:
 	int addNetwork(tpPacket &p, XMLTreeNode *node, int type);
 };
 
-class eTransponderList: public existNetworks, public Object
+class eTransponderList: public existNetworks, public sigc::trackable
 {
 public:
 	enum { SDT_SCAN_FREE, SDT_SCAN, SDT_SCAN_FINISHED, PAT_SCAN };
@@ -853,7 +853,7 @@ private:
 	eServiceReferenceDVB newService;
 	ePtrList<SDTEntry>::const_iterator curSDTEntry;
 	ePtrList<PATEntry>::const_iterator curPATEntry;
-	Signal0<void> *callback;
+	sigc::signal<void> *callback;
 	std::set<eServiceID> newServiceIds;
 	std::set<eServiceID> checkedServiceIds;
 	int sdtscanstate;
@@ -894,11 +894,11 @@ public:
 	eTransponder &createTransponder(eDVBNamespace dvb_namespace,eTransportStreamID transport_stream_id, eOriginalNetworkID original_network_id);
 	eServiceDVB &createService(const eServiceReferenceDVB &service, int service_number=-1, bool *newService=0);
 	eServiceDVB &createSubService(const eServiceReferenceDVB &service, bool *newService=0);
-	void startHandleSDT(const SDT *sdt, eDVBNamespace dvb_namespace, eOriginalNetworkID onid=-1, eTransportStreamID tsid=-1, Signal0<void> *callback=0, int sdtscanstate=SDT_SCAN );
-	void handleSDT(const SDT *sdt, eDVBNamespace dvb_namespace, eOriginalNetworkID onid=-1, eTransportStreamID tsid=-1, Signal0<void> *callback=0 );
-	Signal1<void, eTransponder*> transponder_added;
-	Signal2<void, const eServiceReferenceDVB &, bool> service_found;
-	Signal1<void, const eServiceReferenceDVB &> service_removed;
+	void startHandleSDT(const SDT *sdt, eDVBNamespace dvb_namespace, eOriginalNetworkID onid=-1, eTransportStreamID tsid=-1, sigc::signal<void> *callback=0, int sdtscanstate=SDT_SCAN );
+	void handleSDT(const SDT *sdt, eDVBNamespace dvb_namespace, eOriginalNetworkID onid=-1, eTransportStreamID tsid=-1, sigc::signal<void> *callback=0 );
+	sigc::signal<void, eTransponder*> transponder_added;
+	sigc::signal<void, const eServiceReferenceDVB &, bool> service_found;
+	sigc::signal<void, const eServiceReferenceDVB &> service_removed;
 
 	eTransponder *searchTransponder(const eTransponder &);
 	eTransponder *searchTS(eDVBNamespace dvbnamespace, eTransportStreamID transport_stream_id, eOriginalNetworkID original_network_id);

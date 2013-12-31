@@ -72,7 +72,7 @@ public:
 /** \brief The main widget class. All widgets inherit this class.
  * eWidget handles focus management.
  */
-class eWidget: public Object
+class eWidget: public sigc::trackable
 {
 	enum
 	{
@@ -115,9 +115,9 @@ public:
 	 * used from a existing statusbar.
 	 * \sa eWidget::focusChanged
 	 */
-	Signal1<void, const eWidget*> focusChanged;
-	static Signal2< void, ePtrList<eAction>*, int > showHelp;
-	static Signal1<void, const eWidget*> globalFocusChanged;
+	sigc::signal<void, const eWidget*> focusChanged;
+	static sigc::signal< void, ePtrList<eAction>*, int > showHelp;
+	static sigc::signal<void, const eWidget*> globalFocusChanged;
 protected:
 	ePtrList<eAction> actionHelpList;
 	int helpID;

@@ -69,7 +69,7 @@ void eZapEPG::init_eZapEPG()
 	addActionToHelpList( &i_epgSelectorActions->addSwitchTimerEvent );
 	addActionToHelpList( &i_epgSelectorActions->removeTimerEvent );
 
-	Signal1<void,const eServiceReference& > callback;
+	sigc::signal<void,const eServiceReference& > callback;
 	CONNECT( callback, eZapEPG::addToList );
 	eZap::getInstance()->getServiceSelector()->forEachServiceRef( callback, false );
 	curS = curE = services.begin();

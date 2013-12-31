@@ -54,7 +54,7 @@ struct ConfigItem {
 	eString icon;
 };
 
-class Fetcher: public Object
+class Fetcher: public sigc::trackable
 {	eString tempPath;
 
 	eHTTPConnection * connectionP;
@@ -66,15 +66,15 @@ class Fetcher: public Object
 	
 	int timerExpired;
 public:
-	Signal1<void,int> downloadDone;
-	Signal1<void,int> downloadTimeout;
+	sigc::signal<void,int> downloadDone;
+	sigc::signal<void,int> downloadTimeout;
 	void fetch();
 	Fetcher(eString url);
 	eString url;
 	eTimer timeout;
 };
 
-class ConfigParser: public Object
+class ConfigParser: public sigc::trackable
 {	
 public:
 	std::list<ConfigItem> configItems;

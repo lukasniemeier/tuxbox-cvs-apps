@@ -109,7 +109,7 @@ public:
  * "switchService" which can be called almost 
  * stateless from everywhere...
  */
-class eDVB: public Object
+class eDVB: public sigc::trackable
 {
 	static eDVB *instance;
 	void init_eDVB();
@@ -129,10 +129,10 @@ public:
 	eAUTable<BAT> tBAT;
 	EIT *parentEIT;
 
-	Signal2<void, EIT*, int> gotEIT;
-	Signal1<void, SDT*> gotSDT;
-	Signal1<void, PMT*> gotPMT;
-	Signal1<void, int> gotContentPid;
+	sigc::signal<void, EIT*, int> gotEIT;
+	sigc::signal<void, SDT*> gotSDT;
+	sigc::signal<void, PMT*> gotPMT;
+	sigc::signal<void, int> gotContentPid;
 
 	// use from external classes to get PMT/EIT/SDT ... for refcounting
 	PMT *getPMT();
@@ -176,18 +176,18 @@ public:
 	const eDVBState &getState() const { return state; }
 	void setState(const eDVBState &newstate) { /*emit*/ stateChanged(state=newstate); }
 	void event(const eDVBEvent &event);
-	Signal1<void, const eDVBState&> stateChanged;
-	Signal1<void, const eDVBEvent&> eventOccured;
+	sigc::signal<void, const eDVBState&> stateChanged;
+	sigc::signal<void, const eDVBEvent&> eventOccured;
 
-	Signal1<void, bool> scrambled;
-	Signal0<void> serviceListChanged;
-	Signal0<void> bouquetListChanged;
-	Signal1<void, const eServiceReferenceDVB &> leaveService;
-	Signal1<void, const eServiceReferenceDVB &> enterService;
-	Signal1<void, eTransponder*> leaveTransponder;
-	Signal1<void, eTransponder*> enterTransponder;
-	Signal2<void, eTransponder*, int> switchedTransponder;
-	Signal2<void, const eServiceReferenceDVB &, int> switchedService;
+	sigc::signal<void, bool> scrambled;
+	sigc::signal<void> serviceListChanged;
+	sigc::signal<void> bouquetListChanged;
+	sigc::signal<void, const eServiceReferenceDVB &> leaveService;
+	sigc::signal<void, const eServiceReferenceDVB &> enterService;
+	sigc::signal<void, eTransponder*> leaveTransponder;
+	sigc::signal<void, eTransponder*> enterTransponder;
+	sigc::signal<void, eTransponder*, int> switchedTransponder;
+	sigc::signal<void, const eServiceReferenceDVB &, int> switchedService;
 
 /////////////////////////Scan and Service Controller////////////////////////////
 public:
@@ -216,7 +216,7 @@ public:
 
 	/* container for settings */
 	eDVBSettings *settings;
-	Signal0<void> timeUpdated;
+	sigc::signal<void> timeUpdated;
 	int time_difference;
 };
 

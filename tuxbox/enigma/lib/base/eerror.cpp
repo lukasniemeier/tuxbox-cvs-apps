@@ -74,7 +74,7 @@ pthread_mutex_t signalLock =
 
 int infatal=0;
 
-Signal2<void, int, const eString&> logOutput;
+sigc::signal<void, int, const eString&> logOutput;
 int logOutputConsole=1;
 
 void eFatal(const char* fmt, ...)

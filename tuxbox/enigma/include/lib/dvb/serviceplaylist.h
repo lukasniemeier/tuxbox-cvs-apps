@@ -129,7 +129,7 @@ public:
 	~eServicePlaylistHandler();
 
 		// service list functions
-	void enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback);
+	void enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback);
 	void leaveDirectory(const eServiceReference &dir);
 
 	eService *addRef(const eServiceReference &service);

@@ -21,7 +21,7 @@ public:
 	void setIncrement( int i );
 	void setValue( int i );
 	int getValue();
-	Signal1<void, int> changed;
+	sigc::signal<void, int> changed;
 	eSlider( eWidget *parent, const eWidget *descr=0, int min=0, int max=99 );
 };
 

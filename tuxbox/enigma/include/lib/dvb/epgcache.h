@@ -267,7 +267,7 @@ class ePrivateContent: public eSection
 };
 #endif
 
-class eEPGCache: public eMainloop, private eThread, public Object
+class eEPGCache: public eMainloop, private eThread, public sigc::trackable
 {
 public:
 #ifdef ENABLE_MHW_EPG
@@ -417,8 +417,8 @@ public:
 	bool CheckBouquets(uniqueEPGKey &key);
 	inline void ClearCache() { flushEPG(); }
 
-	Signal1<void, bool> EPGAvail;
-	Signal0<void> EPGUpdated;
+	sigc::signal<void, bool> EPGAvail;
+	sigc::signal<void> EPGUpdated;
 };
 
 inline const std::list<NVODReferenceEntry>* eEPGCache::getNVODRefList(const eServiceReferenceDVB &service)

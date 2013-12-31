@@ -39,8 +39,8 @@ public:
 	static void unpack(__u32 l, int *t);
 	static void pack(__u32 &l, int *t);
 	void invalidateNum();
-	Signal1<void, int*> selected;
-	Signal0<void> numberChanged;
+	sigc::signal<void, int*> selected;
+	sigc::signal<void> numberChanged;
 	eNumber(eWidget *parent, int len, int min, int max, int maxdigits, int *init, int isactive=0, eWidget* descr=0, int grabfocus=1, const char* deco="eNumber" );
 	~eNumber();
 	int getNumber(int f) { if ((f>=0) && (f<len)) return number[f]; return -1; }

@@ -116,7 +116,7 @@ public:
 	void EPGUpdated();
 	int eventHandler(const eWidgetEvent &event);
 	virtual void setKeyDescriptions(bool editMode=false);
-	void forEachServiceRef( Signal1<void,const eServiceReference&>, bool );
+	void forEachServiceRef( sigc::signal<void,const eServiceReference&>, bool );
 	int movemode;
 	int editMode;
 	int plockmode;
@@ -128,28 +128,28 @@ public:
 	~eServiceSelector();
 
 	enum { listAll, listSatellites, listProvider, listBouquets };
-	Signal2<eServicePath,int,int> getRoot;
-	Signal2<int,eServiceReference,int> getFirstBouquetServiceNum;
+	sigc::signal<eServicePath,int,int> getRoot;
+	sigc::signal<int,eServiceReference,int> getFirstBouquetServiceNum;
 
-	Signal1<void,const eServiceReference &> addServiceToPlaylist; // add service to the Playlist
-	Signal2<void,eServiceReference*,int> addServiceToUserBouquet;  // add current service to selected User Bouquet
+	sigc::signal<void,const eServiceReference &> addServiceToPlaylist; // add service to the Playlist
+	sigc::signal<void,eServiceReference*,int> addServiceToUserBouquet;  // add current service to selected User Bouquet
 
-	Signal1<void,int> setMode;        // set TV, Radio or File
+	sigc::signal<void,int> setMode;        // set TV, Radio or File
 
-	Signal1<void,eServiceSelector*>	removeServiceFromUserBouquet, // remove service from selected User Bouquet
+	sigc::signal<void,eServiceSelector*>	removeServiceFromUserBouquet, // remove service from selected User Bouquet
 																	showMenu, // shows the contextmenu
 																	toggleStyle, // switch service selector style
 																	renameService, renameBouquet,
 																	deletePressed, newMarkerPressed,
 																	copyToBouquetList;
 
-	Signal3<void,
+	sigc::signal<void,
 		const eServiceReference &, 		// path
 		const eServiceReference &, 		// service to move
 		const eServiceReference &			// service AFTER moved service
 		> moveEntry;
 
-	Signal1<void,eServiceReferenceDVB>showEPGList;
+	sigc::signal<void,eServiceReferenceDVB>showEPGList;
 
 	const eServicePath &getPath() { return path; }
 	void setPath(const eServicePath &path, const eServiceReference &select=eServiceReference());

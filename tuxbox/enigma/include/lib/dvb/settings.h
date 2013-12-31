@@ -6,7 +6,7 @@
 
 class eDVB;
 
-class eDVBSettings: public Object
+class eDVBSettings: public sigc::trackable
 {
 	eDVB &dvb;
 	std::map<eString, eBouquet*> bouquet_name_map;

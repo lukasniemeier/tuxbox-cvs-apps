@@ -16,7 +16,7 @@ struct queue_data
 	int len;
 };
 
-class eConsoleAppContainer: public Object
+class eConsoleAppContainer: public sigc::trackable
 {
 	int fd[3];
 	int pid;
@@ -36,9 +36,9 @@ public:
 	void sendCtrlC();
 	void write( const char *data, int len );
 	bool running() { return (fd[0]!=-1) && (fd[1]!=-1) && (fd[2]!=-1); }
-	Signal1<void, eString> dataAvail;
-	Signal1<void,int> dataSent;
-	Signal1<void,int> appClosed;
+	sigc::signal<void, eString> dataAvail;
+	sigc::signal<void,int> dataSent;
+	sigc::signal<void,int> appClosed;
 };
 
 #endif // __LIB_BASE_CONSOLE_H__

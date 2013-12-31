@@ -2724,8 +2724,8 @@ void eTimerEditView::showServiceSelector()
 	sel.setLCD(LCDTitle, LCDElement);
 #endif
 	hide();
-	sel.getFirstBouquetServiceNum.connect( slot( *eZapMain::getInstance(), &eZapMain::getFirstBouquetServiceNum) );
-	sel.getRoot.connect( slot( *eZapMain::getInstance(), &eZapMain::getRoot) );
+	sel.getFirstBouquetServiceNum.connect( sigc::mem_fun( *eZapMain::getInstance(), &eZapMain::getFirstBouquetServiceNum) );
+	sel.getRoot.connect( sigc::mem_fun( *eZapMain::getInstance(), &eZapMain::getRoot) );
 	sel.setPath(eServiceReference(eServiceReference::idDVB,
 				eServiceReference::flagDirectory|eServiceReference::shouldSort,
 				-2, (1<<4)|(1<<1), 0xFFFFFFFF ),eServiceReference() );

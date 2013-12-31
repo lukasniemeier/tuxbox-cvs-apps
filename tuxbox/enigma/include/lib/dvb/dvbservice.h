@@ -112,9 +112,9 @@ public:
 };
 
 class eDVBServiceController
-	:public eDVBController, public eDVBCaPMTClient, public Object
+	:public eDVBController, public eDVBCaPMTClient, public sigc::trackable
 {
-	Signal0<void> freeCheckFinishedCallback;
+	sigc::signal<void> freeCheckFinishedCallback;
 	void freeCheckFinished();
 // for linkage handling
 	eServiceReferenceDVB parentservice,prevservice;

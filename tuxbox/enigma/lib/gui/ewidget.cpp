@@ -24,8 +24,8 @@
 extern eWidget *currentFocus;
 
 eWidget *eWidget::root;
-Signal2< void, ePtrList<eAction>*, int >eWidget::showHelp;
-Signal1< void, const eWidget*>eWidget::globalFocusChanged;
+sigc::signal< void, ePtrList<eAction>*, int >eWidget::showHelp;
+sigc::signal< void, const eWidget*>eWidget::globalFocusChanged;
 eWidget::actionMapList eWidget::globalActions;
 
 eWidget::eWidget(eWidget *_parent, int takefocus)

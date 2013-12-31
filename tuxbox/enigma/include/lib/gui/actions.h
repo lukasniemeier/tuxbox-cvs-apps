@@ -62,7 +62,7 @@ public:
 		keys[style].insert(key);
 	}
 	eAction* setDescription(char *desc) { description = desc; return this;}
-	Signal0<void> handler;
+	sigc::signal<void> handler;
 
 //	keylist &getKeyList();
 	int containsKey(const eRCKey &key, const eString& style ) const;

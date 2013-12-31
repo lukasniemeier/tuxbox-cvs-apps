@@ -191,7 +191,7 @@ eDemux::~eDemux()
 	delete [] sheader;
 }
 
-int eMPEGDemux::decodeMore(int last, int maxsamples, Signal1<void,unsigned int>*newastreamid)
+int eMPEGDemux::decodeMore(int last, int maxsamples, sigc::signal<void,unsigned int>*newastreamid)
 {
 //	eDebug("decodeMore");
 	int written=0;
@@ -613,7 +613,7 @@ finish:
 	return written;
 }
 
-int ePVADemux::decodeMore(int last, int maxsamples, Signal1<void,unsigned int>*newastreamid )
+int ePVADemux::decodeMore(int last, int maxsamples, sigc::signal<void,unsigned int>*newastreamid )
 {
 //	eDebug("decodeMore");
 	int written=0;

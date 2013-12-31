@@ -77,7 +77,7 @@ class PMT;
 class SDT;
 class PMTEntry;
 
-class eServiceHandler: public Object
+class eServiceHandler: public sigc::trackable
 {
 protected:
 	int id;
@@ -145,10 +145,10 @@ public:
 			// simple "info" functions..
 	virtual eString getInfo(int id); // 0: status, 1+2 upper/lower line :)
 
-	Signal1<void, const eServiceEvent &> serviceEvent;
+	sigc::signal<void, const eServiceEvent &> serviceEvent;
 
 		// service list functions
-	virtual void enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback);
+	virtual void enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback);
 	virtual void leaveDirectory(const eServiceReference &dir);
 
 	virtual eService *addRef(const eServiceReference &service);
@@ -157,13 +157,13 @@ public:
 
 class eService;
 
-class eServiceInterface: public Object
+class eServiceInterface: public sigc::trackable
 {
 	eServiceHandler *currentServiceHandler;
 	std::map<int,eServiceHandler*> handlers;
 	int switchServiceHandler(int id, int workaround=0);
 	
-	SigC::Connection conn;
+	sigc::connection conn;
 	void handleServiceEvent(const eServiceEvent &event);
 	
 	static eServiceInterface *instance;
@@ -180,7 +180,7 @@ public:
 	int play(const eServiceReference &service, int workaround );
 
 		// service related functions
-	Signal1<void,const eServiceEvent &> serviceEvent;
+	sigc::signal<void,const eServiceEvent &> serviceEvent;
 
 	eServiceHandler *getService()
 	{
@@ -192,7 +192,7 @@ public:
 	eServiceReference service;
 		
 		// service list functions
-	void enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback);
+	void enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback);
 	void leaveDirectory(const eServiceReference &dir);
 	
 		// stuff for modifiying ...

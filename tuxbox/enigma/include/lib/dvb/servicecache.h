@@ -41,7 +41,7 @@ private:
 public:
 	eServiceCacheBase(){};
 	virtual ~eServiceCacheBase(){};
-	void enterDirectory(const eServiceReference &parent, Signal1<void, const eServiceReference&> &callback);
+	void enterDirectory(const eServiceReference &parent, sigc::signal<void, const eServiceReference&> &callback);
 	void leaveDirectory(const eServiceReference &parent);
 	void addPersistentService(const eServiceReference &serviceref, eService *service);
 	eService *addRef(const eServiceReference &serviceref);

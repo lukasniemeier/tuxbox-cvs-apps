@@ -10,7 +10,7 @@ protected:
 	int eventHandler(const eWidgetEvent &event);
 public:
 	eListBox<eListBoxEntryMenu>* getList() { return &list; }
-	static Signal2<void,eSetupWindow*,int*> setupHook;
+	static sigc::signal<void,eSetupWindow*,int*> setupHook;
 	eSetupWindow( const char *titlemm, int entries, int width );
 };
 

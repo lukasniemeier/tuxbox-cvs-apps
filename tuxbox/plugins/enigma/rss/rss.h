@@ -57,7 +57,7 @@ struct ConfigItem {
 	eString url;
 };
 
-class Fetcher : public Object
+class Fetcher : public sigc::trackable
 {	eString tempPath;
 	eHTTPConnection * connectionP;
 	eHTTPDataSource * dataSinkP;
@@ -68,11 +68,11 @@ class Fetcher : public Object
 	eHTTPDataSource * createDownloadSink(eHTTPConnection *conn);	
 
 public:
-	Signal1<void,int> downloadDone;
+	sigc::signal<void,int> downloadDone;
 	void fetch(eString url);
 };
 
-class RSSParser : public Object
+class RSSParser : public sigc::trackable
 {	void getEmbeddedHtml(XMLTreeNode *i, eString &desc);
 
 public:
@@ -81,7 +81,7 @@ public:
 	void save(NewsItem i);
 };
 
-class ConfigParser : public Object
+class ConfigParser : public sigc::trackable
 {	
 
 public:

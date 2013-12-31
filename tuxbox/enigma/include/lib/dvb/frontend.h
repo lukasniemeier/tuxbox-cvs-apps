@@ -71,7 +71,7 @@ struct eSecCmdSequence
  *
  * A frontend is something like a tuner. You can tune to a transponder (or channel, as called with DVB-C).
  */
-class eFrontend: public Object
+class eFrontend: public sigc::trackable
 {
 	int type,
 			fd,
@@ -99,7 +99,7 @@ class eFrontend: public Object
 				checkRotorLockTimer, checkLockTimer, updateTransponderTimer;
 	eSocketNotifier *sn;
 	int tries, noRotorCmd, wasLoopthrough, lostlockcount;
-	Signal1<void, eTransponder*> tpChanged;
+	sigc::signal<void, eTransponder*> tpChanged;
 // ROTOR INPUTPOWER
 	timeval rotorTimeout;
 	int idlePowerInput;
@@ -139,9 +139,9 @@ public:
 	void enableRotor() { noRotorCmd = 0, lastRotorCmd=-1; }  // rotor cmd is sent when tune
 	int sendDiSEqCCmd( int addr, int cmd, eString params="", int frame=0xE0 );
 
-	Signal1<void, int> s_RotorRunning;
-	Signal0<void> s_RotorStopped, s_RotorTimeout;
-	Signal2<void, eTransponder*, int> tunedIn;
+	sigc::signal<void, int> s_RotorRunning;
+	sigc::signal<void> s_RotorStopped, s_RotorTimeout;
+	sigc::signal<void, eTransponder*, int> tunedIn;
 	~eFrontend();
 
 	static int open(int type)

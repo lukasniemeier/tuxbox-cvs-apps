@@ -41,7 +41,7 @@ public:
 	eString getTimeshiftPath();
 };
 
-class eDVRPlayerThread: public eThread, public eMainloop, public Object
+class eDVRPlayerThread: public eThread, public eMainloop, public sigc::trackable
 {
 	eServiceHandlerDVB *handler;
 	eIOBuffer buffer;
@@ -199,7 +199,7 @@ public:
 	void addFile(void *node, const eString &filename);
 #endif
 
-	void enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback);
+	void enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback);
 	void leaveDirectory(const eServiceReference &dir);
 
 	eService *addRef(const eServiceReference &service);

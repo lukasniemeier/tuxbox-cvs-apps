@@ -116,7 +116,7 @@ static eString getAfterEvent(int type)
 	return result;
 }
 
-class eWebNavigatorSearchService: public Object
+class eWebNavigatorSearchService: public sigc::trackable
 {
 	eString &result;
 	eString searched_service;
@@ -408,9 +408,9 @@ static eString addTVBrowserTimerEvent(eString request, eString dirpath, eString 
 			-2, -1, 0xFFFFFFFF);
 
 		eWebNavigatorSearchService navlist(result1, channel, *iface);
-		Signal1<void, const eServiceReference&> signal;
-		signal.connect(slot(navlist, &eWebNavigatorSearchService::addEntry));
-		iface->enterDirectory(all_services, signal);
+		sigc::signal<void, const eServiceReference&> Signal;
+		Signal.connect(sigc::mem_fun(navlist, &eWebNavigatorSearchService::addEntry));
+		iface->enterDirectory(all_services, Signal);
 		eDebug("entered");
 		iface->leaveDirectory(all_services);
 		eDebug("exited");

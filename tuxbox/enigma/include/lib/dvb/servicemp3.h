@@ -27,11 +27,11 @@ public:
 	eHTTPStream(eHTTPConnection *c, eIOBuffer &buffer);
 	~eHTTPStream();
 	void haveData(void *data, int len);
-	Signal0<void> dataAvailable;
-	Signal1<void,eString> metaDataUpdated;
+	sigc::signal<void> dataAvailable;
+	sigc::signal<void,eString> metaDataUpdated;
 };
 
-class eMP3Decoder: public eThread, public eMainloop, public Object
+class eMP3Decoder: public eThread, public eMainloop, public sigc::trackable
 {
 	eServiceHandlerMP3 *handler;
 	eAudioDecoder *audiodecoder;

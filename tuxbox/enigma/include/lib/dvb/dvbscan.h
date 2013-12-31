@@ -42,7 +42,7 @@ public:
 	eDVBScanState(int state): eDVBState(state) { }
 };
 
-class eDVBScanController: public eDVBController, public Object
+class eDVBScanController: public eDVBController, public sigc::trackable
 {
 	int flags;
 	
@@ -65,7 +65,7 @@ class eDVBScanController: public eDVBController, public Object
 	void handleSDT(const SDT *sdt);
 
 	void freeCheckFinished();
-	Signal0<void> freeCheckFinishedCallback;
+	sigc::signal<void> freeCheckFinishedCallback;
 	void init_eDVBScanController(eDVB &dvb);
 public:
 	bool abort();

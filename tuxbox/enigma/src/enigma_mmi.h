@@ -55,7 +55,7 @@ protected:
 	eIOBuffer buffer;
 	eFixedMessagePump<eMMIMsg> mmi_messages;
 	eWidget *open;
-	Connection conn;
+	sigc::connection conn;
 	eLabel *lText;
 	eTimer responseTimer, delayTimer, closeTimer;
 	const char *scheduledData;

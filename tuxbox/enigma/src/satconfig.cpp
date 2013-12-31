@@ -921,8 +921,8 @@ void eLNBSetup::init_eLNBSetup(eWidget* lcdTitle, eWidget* lcdElement )
 	mp.addPage(LNBPage);
 	mp.addPage(DiSEqCPage);
 // here we can not use the Makro CONNECT ... slot (*this, .... is here not okay..
-	LNBPage->lnb_list->selchanged.connect( slot( *LNBPage, &eLNBPage::lnbChanged) );
-	LNBPage->lnb_list->selchanged.connect( slot( *DiSEqCPage, &eDiSEqCPage::lnbChanged) );
+	LNBPage->lnb_list->selchanged.connect( sigc::mem_fun( *LNBPage, &eLNBPage::lnbChanged) );
+	LNBPage->lnb_list->selchanged.connect( sigc::mem_fun( *DiSEqCPage, &eDiSEqCPage::lnbChanged) );
 //	CONNECT( DiSEqCPage->next->selected, eLNBSetup::onNext );
 	CONNECT( LNBPage->next->selected, eLNBSetup::onNext );
 	CONNECT( DiSEqCPage->prev->selected, eLNBSetup::onPrev );  

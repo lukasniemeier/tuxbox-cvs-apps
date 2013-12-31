@@ -8,7 +8,7 @@
 
 class RassInteractivemode;
 
-class RDSTextDecoder : public Object
+class RDSTextDecoder : public sigc::trackable
 {
 	RassInteractivemode *m_interactive;
 	int wasVisible;
@@ -28,7 +28,7 @@ class RDSTextDecoder : public Object
 public:
 	RDSTextDecoder();
 	~RDSTextDecoder();
-	Signal1<void, eString> textReady;
+	sigc::signal<void, eString> textReady;
 	int qdarmvi_show,interactive_avail;
 	void clear_service();
 	void rass_interactive();

@@ -12,7 +12,7 @@ class eServiceFileHandler: public eServiceHandler
 	eServiceReference result;
 public:
 
-	Signal2<void,void*,const eString &> fileHandlers, directoryHandlers;
+	sigc::signal<void,void*,const eString &> fileHandlers, directoryHandlers;
 	void addReference(void *node, const eServiceReference &ref);
 	
 	static eServiceFileHandler *getInstance() { return instance; }
@@ -23,7 +23,7 @@ public:
 	~eServiceFileHandler();
 
 		// service list functions
-	void enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback);
+	void enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback);
 	void leaveDirectory(const eServiceReference &dir);
 
 	int deleteService(const eServiceReference &dir, const eServiceReference &ref);

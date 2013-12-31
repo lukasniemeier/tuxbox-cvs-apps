@@ -26,7 +26,7 @@ eServiceStructureHandler::~eServiceStructureHandler()
 	eServiceInterface::getInstance()->unregisterHandler(id);
 }
 
-void eServiceStructureHandler::enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback)
+void eServiceStructureHandler::enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback)
 {
 	cache.enterDirectory(dir, callback);
 }

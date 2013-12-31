@@ -64,7 +64,7 @@ eAudioDecoderOgg::~eAudioDecoderOgg()
 	ov_clear(&vf);
 }
 
-int eAudioDecoderOgg::decodeMore(int last, int maxsamples, Signal1<void, unsigned int> *)
+int eAudioDecoderOgg::decodeMore(int last, int maxsamples, sigc::signal<void, unsigned int> *)
 {
 //eDebug ("[OGG]decodeMore:%d,%d,%d",last,maxsamples,input.size());
 	int written = 0;

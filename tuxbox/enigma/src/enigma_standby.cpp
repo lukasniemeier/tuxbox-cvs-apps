@@ -31,7 +31,7 @@ eAutoInitP0<enigmaStandbyActions> i_enigmaStandbyActions(eAutoInitNumbers::actio
 
 eZapStandby* eZapStandby::instance=0;
 
-Signal0<void> eZapStandby::enterStandby, 
+sigc::signal<void> eZapStandby::enterStandby, 
 							eZapStandby::leaveStandby,
 							eZapStandby::RCWakeUp;
 

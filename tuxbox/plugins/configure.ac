@@ -26,7 +26,7 @@ TUXBOX_APPS_LIB_CONFIG(FREETYPE,freetype-config)
 TUXBOX_APPS_LIB_PKGCONFIG(PNG,libpng)
 
 # needed by enigma-demo
-TUXBOX_APPS_LIB_PKGCONFIG(SIGC,sigc++-1.2)
+TUXBOX_APPS_LIB_PKGCONFIG(SIGC,sigc++-2.0)
 if test "$BOXTYPE" = "dbox2"; then
 TUXBOX_APPS_LIB_PKGCONFIG(TUXBOX,tuxbox)
 fi

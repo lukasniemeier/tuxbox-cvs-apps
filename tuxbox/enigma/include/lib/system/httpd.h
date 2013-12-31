@@ -87,8 +87,8 @@ private:
 	void destruct();
 	void init_eHTTPConnection();
 public:
-	Signal1<void,int> transferDone;
-	Signal1<eHTTPDataSource*,eHTTPConnection*> createDataSource;
+	sigc::signal<void,int> transferDone;
+	sigc::signal<eHTTPDataSource*,eHTTPConnection*> createDataSource;
 	enum
 	{
 		/*

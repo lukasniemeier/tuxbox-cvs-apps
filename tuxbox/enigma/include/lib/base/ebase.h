@@ -162,7 +162,7 @@ public:
 	eSocketNotifier(eMainloop *context, int fd, int req, bool startnow=true);
 	~eSocketNotifier();
 
-	Signal1<void, int> activated;
+	sigc::signal<void, int> activated;
 
 	void start();
 	void stop();
@@ -198,7 +198,7 @@ public:
 	eTimer(eMainloop *context): context(*context), bActive(false) { }
 	~eTimer() { if (bActive) stop(); }
 
-	Signal0<void> timeout;
+	sigc::signal<void> timeout;
 	void activate();
 
 	bool isActive() { return bActive; }

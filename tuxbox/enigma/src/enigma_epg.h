@@ -33,7 +33,7 @@ class eZapEPG: public eWidget
 		void gotFocus();
 		void lostFocus();
 	public:
-		Signal0<void> redrawed;
+		sigc::signal<void> redrawed;
 		struct serviceentry *service;
 		static gPixmap *inTimer;
 		static gPixmap *inTimerRec;

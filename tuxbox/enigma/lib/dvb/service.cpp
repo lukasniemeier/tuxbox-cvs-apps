@@ -88,7 +88,7 @@ void eServiceHandler::setAudioStream( unsigned int )
 {
 }
 
-void eServiceHandler::enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback)
+void eServiceHandler::enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback)
 {
 	(void)dir;
 	(void)callback;
@@ -224,7 +224,7 @@ int eServiceInterface::stop(int workaround)
 	return res;
 }
 
-void eServiceInterface::enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback)
+void eServiceInterface::enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback)
 {
 	int pLockActive = eConfig::getInstance()->pLockActive();
 	if ( dir.isLocked() && pLockActive && !checkPin( eConfig::getInstance()->getParentalPin(), _("parental") ) )

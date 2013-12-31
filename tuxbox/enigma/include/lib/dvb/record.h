@@ -32,7 +32,7 @@
  * \todo Howto disable this warning?
  */
 
-class eDVBRecorder: private eThread, public Object
+class eDVBRecorder: private eThread, public sigc::trackable
 {
 	enum { stateRunning = 1, stateStopped = 0, stateError = 2 }state;
 	struct eDVBRecorderMessage
@@ -174,7 +174,7 @@ public:
 	void validatePIDs();
 
 	enum { recWriteError };
-	Signal1<void,int> recMessage;
+	sigc::signal<void,int> recMessage;
 	eServiceReferenceDVB recRef;
 	bool scrambled;
 	void SetSlice(int slice);

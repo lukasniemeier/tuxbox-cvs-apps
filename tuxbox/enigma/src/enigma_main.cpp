@@ -469,7 +469,7 @@ void eNVODSelector::add(eDVBNamespace dvb_namespace, NVODReferenceEntry *ref)
 	count++;
 	NVODStream *nvod = new NVODStream(&list, dvb_namespace, ref, type);
 	CONNECT( nvod->ready, eNVODSelector::readyCallBack );
-	clearEntrys.connect( slot( *nvod, &NVODStream::selfDestroy) );
+	clearEntrys.connect( sigc::mem_fun( *nvod, &NVODStream::selfDestroy) );
 }
 
 struct selectCurVideoStream
@@ -704,7 +704,7 @@ void ePSAudioSelector::init_ePSAudioSelector()
 	new eListBoxEntryText(m_stereo_mono, _("   Left Mono  >"), (void*) 0, (int)eTextPara::dirCenter );
 	new eListBoxEntryText(m_stereo_mono, _("<  Stereo  >"), (void*) 1, (int)eTextPara::dirCenter );
 	new eListBoxEntryText(m_stereo_mono, _("<  Right Mono  "), (void*) 2, (int)eTextPara::dirCenter );
-	m_stereo_mono->selchanged.connect( slot( AudioChannelSelectionChanged ) );
+	m_stereo_mono->selchanged.connect( sigc::ptr_fun( AudioChannelSelectionChanged ) );
 	ePoint p(0,40);
 	list.move(m_stereo_mono->getPosition()+p);
 
@@ -1005,7 +1005,7 @@ void eAudioSelector::init_eAudioSelector()
 	new eListBoxEntryText(m_stereo_mono, _("   Left Mono  >"), (void*) 0, (int)eTextPara::dirCenter );
 	new eListBoxEntryText(m_stereo_mono, _("<  Stereo  >"), (void*) 1, (int)eTextPara::dirCenter );
 	new eListBoxEntryText(m_stereo_mono, _("<  Right Mono  "), (void*) 2, (int)eTextPara::dirCenter );
-	m_stereo_mono->selchanged.connect( slot( AudioChannelSelectionChanged ) );
+	m_stereo_mono->selchanged.connect( sigc::ptr_fun( AudioChannelSelectionChanged ) );
 	ePoint p(0,40);
 	list.move(m_stereo_mono->getPosition()+p);
 	list.resize(eSize(getClientSize().width()-20, getClientSize().height()-120));
@@ -4644,12 +4644,12 @@ void eZapMain::copyProviderToBouquets(eServiceSelector *sel)
 			break;
 	}
 
-	Signal1<void,const eServiceReference&> signal;
-	CONNECT(signal, eZapMain::addServiceToCurUserBouquet);
+	sigc::signal<void,const eServiceReference&> Signal;
+	CONNECT(Signal, eZapMain::addServiceToCurUserBouquet);
 
 	eServicePath safe = sel->getPath();
 	sel->enterDirectory(ref);
-	sel->forEachServiceRef(signal, true);
+	sel->forEachServiceRef(Signal, true);
 	sel->setPath( safe, ref );
 
 	currentSelectedUserBouquet->save();
@@ -5121,9 +5121,9 @@ void eZapMain::addService(const eServiceReference &service)
 	{
 //		eDebug("recursive add");
 		entered_playlistmode=1;
-		Signal1<void,const eServiceReference&> signal;
-		CONNECT( signal, eZapMain::addService);
-		eServiceInterface::getInstance()->enterDirectory(service, signal);
+		sigc::signal<void,const eServiceReference&> Signal;
+		CONNECT( Signal, eZapMain::addService);
+		eServiceInterface::getInstance()->enterDirectory(service, Signal);
 		eServiceInterface::getInstance()->leaveDirectory(service);
 	}
 	else

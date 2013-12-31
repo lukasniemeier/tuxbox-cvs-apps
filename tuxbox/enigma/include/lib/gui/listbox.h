@@ -100,8 +100,8 @@ class eListBox: public eListBoxBase
 		/*emit*/ selchanged((T*)entry);
 	}
 public:
-	Signal1<void, T*> selected;
-	Signal1<void, T*> selchanged;
+	sigc::signal<void, T*> selected;
+	sigc::signal<void, T*> selchanged;
 	eListBox(eWidget *parent, const eWidget* descr=0, int takefocus=1 )
 		:eListBoxBase( parent, descr, takefocus, T::getEntryHeight() )
 	{
@@ -166,8 +166,8 @@ class eListBoxExt: public eListBoxBaseExt
 		/*emit*/ selchanged((T*)entry);
 	}
 public:
-	Signal1<void, T*> selected;
-	Signal1<void, T*> selchanged;
+	sigc::signal<void, T*> selected;
+	sigc::signal<void, T*> selchanged;
 	eListBoxExt(eWidget *parent, const eWidget* descr=0, int takefocus=1 )
 		:eListBoxBaseExt( parent, descr, takefocus, T::getEntryHeight() )
 	{
@@ -201,7 +201,7 @@ public:
 	}
 };
 
-class eListBoxEntry: public Object
+class eListBoxEntry: public sigc::trackable
 {
 	friend class eListBox<eListBoxEntry>;
 protected:
@@ -370,19 +370,21 @@ class eListBoxEntryMenu: public eListBoxEntryText
 {
 	friend class eListBox<eListBoxEntryMenu>;
 public:
-	Signal0<void> selected;
+	sigc::signal<void> selected;
 
 	eListBoxEntryMenu(eListBox<eListBoxEntryMenu>* lb, const char* txt, const eString &hlptxt="", int align=0, void *key = NULL, int keytype = value )
 		:eListBoxEntryText((eListBox<eListBoxEntryText>*)lb, txt, key, align, hlptxt, keytype)
 	{
-		if (listbox)
+		if (listbox) {
 			CONNECT(listbox->selected, eListBoxEntryMenu::LBSelected);
+		}
 	}
 	eListBoxEntryMenu(eListBox<eListBoxEntryMenu>* lb, const eString &txt, const eString &hlptxt="", int align=0, void *key = NULL, int keytype = value )
 		:eListBoxEntryText((eListBox<eListBoxEntryText>*)lb, txt, key, align, hlptxt, keytype)
 	{
-		if (listbox)
+		if (listbox) {
 			CONNECT(listbox->selected, eListBoxEntryMenu::LBSelected);
+		}
 	}
 	
 	virtual void LBSelected(eListBoxEntry* t)
@@ -419,7 +421,7 @@ class eListBoxEntryCheck: public eListBoxEntryMenu
 	int checked;
 	void LBSelected(eListBoxEntry* t);
 public:
-	Signal1<void,bool> selected;
+	sigc::signal<void,bool> selected;
 	eListBoxEntryCheck( eListBox<eListBoxEntryMenu> *lb, const char* text, const char* regkey, const eString& hlptxt="" );
 	const eString& redraw(gPainter *rc, const eRect& rect, gColor coActiveB, gColor coActiveF, gColor coNormalB, gColor coNormalF, int state );
 };

@@ -32,7 +32,7 @@ public:
  * Automatically creates a eSocketNotifier and gives you a callback.
  */
 template<class T>
-class eFixedMessagePump: private eMessagePump, public Object
+class eFixedMessagePump: private eMessagePump, public sigc::trackable
 {
 	eSocketNotifier *sn;
 	void do_recv(int)
@@ -42,7 +42,8 @@ class eFixedMessagePump: private eMessagePump, public Object
 		/*emit*/ recv_msg(msg);
 	}
 public:
-	Signal1<void,const T&> recv_msg;
+	sigc::signal<void, const T&> recv_msg;
+
 	void send(const T &msg)
 	{
 		eMessagePump::send(&msg, sizeof(msg));

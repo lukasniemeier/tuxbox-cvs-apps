@@ -28,7 +28,7 @@ void eFatal(const char* fmt, ...);
 
 enum { lvlDebug=1, lvlWarning=2, lvlFatal=4 };
 
-extern Signal2<void, int, const eString&> logOutput;
+extern sigc::signal<void, int, const eString&> logOutput;
 extern int logOutputConsole;
 
 #ifdef ASSERT

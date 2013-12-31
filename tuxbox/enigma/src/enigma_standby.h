@@ -17,7 +17,7 @@ public:
 	void renewSleep();
 	void wakeUp(int norezap);
 	static eZapStandby *getInstance() { return instance; }
-	static Signal0<void> enterStandby, leaveStandby, RCWakeUp;
+	static sigc::signal<void> enterStandby, leaveStandby, RCWakeUp;
 	eZapStandby();
 	~eZapStandby()
 	{

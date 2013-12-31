@@ -46,7 +46,7 @@ public:
 	void extractSequenceHeader( unsigned char *buf, unsigned int len );
 	eDemux(eIOBuffer &input, eIOBuffer &video, eIOBuffer &audio, int fd, int sourcefd);
 	~eDemux();
-	virtual int decodeMore(int last, int maxsamples, Signal1<void, unsigned int>*newastreamid=0 )=0; // returns number of samples(!) written to IOBuffer (out)
+	virtual int decodeMore(int last, int maxsamples, sigc::signal<void, unsigned int>*newastreamid=0 )=0; // returns number of samples(!) written to IOBuffer (out)
 	void resync(); // clear (secondary) decoder buffers
 	int getMinimumFramelength();
 	int getAverageBitrate();
@@ -60,7 +60,7 @@ public:
 	eMPEGDemux(eIOBuffer &input, eIOBuffer &video, eIOBuffer &audio, int fd, int sourcefd)
 		:eDemux(input, video, audio, fd, sourcefd)
 	{}
-	int decodeMore(int last, int maxsamples, Signal1<void, unsigned int>*newastreamid=0 ); // returns number of samples(!) written to IOBuffer (out)
+	int decodeMore(int last, int maxsamples, sigc::signal<void, unsigned int>*newastreamid=0 ); // returns number of samples(!) written to IOBuffer (out)
 };
 
 // PVA demuxer.
@@ -70,7 +70,7 @@ public:
 	ePVADemux(eIOBuffer &input, eIOBuffer &video, eIOBuffer &audio, int fd, int sourcefd)
 		:eDemux(input, video, audio, fd, sourcefd)
 	{}
-	int decodeMore(int last, int maxsamples, Signal1<void, unsigned int>*newastreamid=0 ); // returns number of samples(!) written to IOBuffer (out)
+	int decodeMore(int last, int maxsamples, sigc::signal<void, unsigned int>*newastreamid=0 ); // returns number of samples(!) written to IOBuffer (out)
 };
 
 #endif

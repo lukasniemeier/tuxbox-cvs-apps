@@ -119,7 +119,7 @@ static eString admin2(eString command)
 	return "<?xml version=\"1.0\"?><!DOCTYPE wml PUBLIC \"-//WAPFORUM//DTD WML 1.1//EN\" \"http://www.wapforum.org/DTD/wml_1.1.xml\"><wml><card title=\"Info\"><p>Command " + command + " initiated.</p></card></wml>";
 }
 
-class eWapNavigatorListDirectory: public Object
+class eWapNavigatorListDirectory: public sigc::trackable
 {
 	eString &result;
 	eString origpath;
@@ -182,9 +182,9 @@ static eString getWapZapContent(eString path)
 
 		// first pass thru is to get all user bouquets
 		eWapNavigatorListDirectory navlist(result, path, tpath, *iface);
-		Signal1<void, const eServiceReference&> signal;
-		signal.connect(slot(navlist, &eWapNavigatorListDirectory::addEntry));
-		iface->enterDirectory(current_service, signal);
+		sigc::signal<void, const eServiceReference&> Signal;
+		Signal.connect(sigc::mem_fun(navlist, &eWapNavigatorListDirectory::addEntry));
+		iface->enterDirectory(current_service, Signal);
 		eDebug("entered");
 		iface->leaveDirectory(current_service);
 		eDebug("exited");

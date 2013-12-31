@@ -1,7 +1,7 @@
 #include <lib/dvb/servicecache.h>
 #include <lib/system/econfig.h>
 
-void eServiceCacheBase::enterDirectory(const eServiceReference &parent, Signal1<void, const eServiceReference&> &callback)
+void eServiceCacheBase::enterDirectory(const eServiceReference &parent, sigc::signal<void, const eServiceReference&> &callback)
 {
 //  int pLockActive = eConfig::getInstance()->pLockActive();
 	std::map<eServiceReference,eNode>::iterator i=cache.find(parent);

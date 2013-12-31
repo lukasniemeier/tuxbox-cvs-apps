@@ -11,7 +11,7 @@ class eStatusBar : public eLabel
 
 	int setProperty(const eString &, const eString &);
 	void initialize();
-	Connection conn;
+	sigc::connection conn;
 	void init_eStatusBar();
 public:
 	enum

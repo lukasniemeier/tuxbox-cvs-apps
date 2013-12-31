@@ -7,7 +7,7 @@
 #include <lib/gui/ewindow.h>
 #include <lib/socket/socket.h>
 
-class ENgrab: public Object
+class ENgrab: public sigc::trackable
 {
 	eString sendStr;
 	eString startxml( const char * descr=0 );

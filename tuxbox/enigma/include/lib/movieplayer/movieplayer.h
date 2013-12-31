@@ -38,7 +38,7 @@ struct player_value
 	short AC3;
 };
 
-class eMoviePlayer: public eMainloop, private eThread, public Object
+class eMoviePlayer: public eMainloop, private eThread, public sigc::trackable
 {
 	struct Message
 	{

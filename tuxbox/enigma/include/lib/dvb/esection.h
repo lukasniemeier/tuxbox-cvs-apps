@@ -35,7 +35,7 @@ public:
 	int read(__u8 *data);
 };
 
-class eSection: public Object
+class eSection: public sigc::trackable
 {
 	eMainloop *context;
 	eSectionReader reader;
@@ -78,7 +78,7 @@ class eTable: public eSection
 protected:
 	virtual int data(__u8 *data)=0;
 public:
-	Signal1<void, int> tableReady;
+	sigc::signal<void, int> tableReady;
 	eTable(int pid, int tableid, int tableidext=-1, int version=-1);
 	eTable(int pid, int tableid, int tableidmask, int tableidext, int version);
 	eTable();
@@ -89,13 +89,13 @@ public:
 	int ready;
 };
 
-class eAUGTable: public Object
+class eAUGTable: public sigc::trackable
 {
 protected:
 	eString dmxdev;
 	void slotTableReady(int);
 public:
-	Signal1<void, int> tableReady;
+	sigc::signal<void, int> tableReady;
 	virtual void getNext(int err)=0;
 };
 

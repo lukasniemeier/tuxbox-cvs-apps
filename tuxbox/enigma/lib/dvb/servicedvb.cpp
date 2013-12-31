@@ -1395,11 +1395,11 @@ void eServiceHandlerDVB::addFile(void *node, const eString &filename)
 
 struct eServiceHandlerDVB_addService
 {
-	Signal1<void,const eServiceReference&> &callback;
+	sigc::signal<void,const eServiceReference&> &callback;
 	int type;
 	int DVBNamespace;
 	bool onlyNew;
-	eServiceHandlerDVB_addService(Signal1<void,const eServiceReference&> &callback, int type, int DVBNamespace, bool onlyNew=false)
+	eServiceHandlerDVB_addService(sigc::signal<void,const eServiceReference&> &callback, int type, int DVBNamespace, bool onlyNew=false)
 	: callback(callback), type(type), DVBNamespace(DVBNamespace), onlyNew(onlyNew)
 	{
 	}
@@ -1440,7 +1440,7 @@ struct eServiceHandlerDVB_addService
 	}
 };
 
-void eServiceHandlerDVB::enterDirectory(const eServiceReference &ref, Signal1<void,const eServiceReference&> &callback)
+void eServiceHandlerDVB::enterDirectory(const eServiceReference &ref, sigc::signal<void,const eServiceReference&> &callback)
 {
 	switch (ref.type)
 	{

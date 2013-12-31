@@ -325,7 +325,7 @@ void eServicePlaylistHandler::removeRef(const eServiceReference &service)
 	return eServiceFileHandler::getInstance()->removeRef(service);
 }
 
-void eServicePlaylistHandler::enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback)
+void eServicePlaylistHandler::enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback)
 {
 	if (dir.type == id)  // for playlists in other playlists..
 	{

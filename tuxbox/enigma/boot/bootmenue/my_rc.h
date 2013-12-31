@@ -68,7 +68,7 @@ class RcInput
 	static void* ThreadBu(void*);
 public:
 	static RcInput *getInstance();
-	Signal1<void,unsigned short> selected;
+	sigc::signal<void,unsigned short> selected;
 	RcInput();
 	~RcInput();
 };

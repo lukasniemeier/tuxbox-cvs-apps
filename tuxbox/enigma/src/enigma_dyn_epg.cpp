@@ -287,7 +287,7 @@ eString getEITC(eString result, eString format)
 
 #define CHANNELWIDTH 200
 
-class eMEPG: public Object
+class eMEPG: public sigc::trackable
 {
 	int d_min;
 	eString multiEPG;
@@ -507,7 +507,7 @@ public:
 		,tableWidth((end - start) / 60 * d_min + channelWidth)
 		,channelWidth((pdaScreen == 0) ? CHANNELWIDTH : CHANNELWIDTH / 2)
 	{
-		Signal1<void, const eServiceReference&> cbSignal;
+		sigc::signal<void, const eServiceReference&> cbSignal;
 		CONNECT(cbSignal, eMEPG::getcurepg);
 		eServiceInterface::getInstance()->enterDirectory(bouquetRef, cbSignal);
 		eServiceInterface::getInstance()->leaveDirectory(bouquetRef);

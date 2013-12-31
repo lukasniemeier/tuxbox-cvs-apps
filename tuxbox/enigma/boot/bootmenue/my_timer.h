@@ -15,7 +15,7 @@ class CTimer
 	static void* ThreadTimer(void*);
 public:
 	static CTimer *getInstance();
-	Signal0<void>selected;
+	sigc::signal<void>selected;
 	static void start(int val);
 	~CTimer();
 };

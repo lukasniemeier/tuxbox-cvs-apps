@@ -39,7 +39,7 @@ void tsSelectType::init_tsSelectType()
 	if ( eSystemInfo::getInstance()->getFEType() == eSystemInfo::feTerrestrial )
 	{
 		check=new eListBoxEntryCheck(list, _("Disable 5V"), "/elitedvb/DVB/config/disable_5V", _("disable 5V for passive terrerstrial antennas"));
-		check->selected.connect( slot(*eFrontend::getInstance(), &eFrontend::setTerrestrialAntennaVoltage) );
+		check->selected.connect( sigc::mem_fun(*eFrontend::getInstance(), &eFrontend::setTerrestrialAntennaVoltage) );
 		new eListBoxEntryMenuSeparator(list, eSkin::getActive()->queryImage("listbox.separator"), 0, true );
 	}
 	new eListBoxEntryMenuItem(list, _("Automatic Transponder Scan"), (void*)2, 0, _("open automatic transponder scan") );

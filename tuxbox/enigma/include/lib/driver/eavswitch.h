@@ -47,7 +47,7 @@ protected:
 public:
 	eAVSwitch();
 	~eAVSwitch();
-	Signal2<void, int, int> volumeChanged;
+	sigc::signal<void, int, int> volumeChanged;
 
 	static eAVSwitch *getInstance();
 	int getVolume() { return volume; }

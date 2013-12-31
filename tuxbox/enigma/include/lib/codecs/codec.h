@@ -20,7 +20,7 @@ public:
 	eAudioDecoder();
 	virtual ~eAudioDecoder();
 
-	virtual int decodeMore(int last, int maxsamples, Signal1<void,unsigned int>*cb=0)=0; // returns number of samples(!) written to IOBuffer (out)
+	virtual int decodeMore(int last, int maxsamples, sigc::signal<void,unsigned int>*cb=0)=0; // returns number of samples(!) written to IOBuffer (out)
 	virtual void resync()=0; // clear (secondary) decoder buffers
 
 	struct pcmSettings

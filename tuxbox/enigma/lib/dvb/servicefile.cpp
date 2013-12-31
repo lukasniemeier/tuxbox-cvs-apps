@@ -143,7 +143,7 @@ eService *eServiceFileHandler::createService(const eServiceReference &node)
 	return handler->createService(node);
 }
 
-void eServiceFileHandler::enterDirectory(const eServiceReference &dir, Signal1<void,const eServiceReference&> &callback)
+void eServiceFileHandler::enterDirectory(const eServiceReference &dir, sigc::signal<void,const eServiceReference&> &callback)
 {
 	cache.enterDirectory(dir, callback);
 }

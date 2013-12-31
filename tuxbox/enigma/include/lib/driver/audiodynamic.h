@@ -1,7 +1,7 @@
 #ifndef __lib_driver_audiodynamic_h
 #define __lib_driver_audiodynamic_h
 
-class eAudioDynamicCompression: public Object
+class eAudioDynamicCompression: public sigc::trackable
 {
 	struct arg_s
 	{

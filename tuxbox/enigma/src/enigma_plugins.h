@@ -79,7 +79,7 @@ public:
 	static int getFileExtensionPlugins(std::vector<FileExtensionScriptInfo> &list);
 };
 
-class ePluginThread: public eThread, public Object
+class ePluginThread: public eThread, public sigc::trackable
 {
 public:
 	static PluginParam *first, *tmp;

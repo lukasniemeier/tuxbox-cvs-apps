@@ -26,7 +26,7 @@ public:
 	
 	void resync();
 	int getMinimumFramelength();
-	int decodeMore(int last, int maxsamples, Signal1<void, unsigned int>*cb=0);
+	int decodeMore(int last, int maxsamples, sigc::signal<void, unsigned int>*cb=0);
 	int getAverageBitrate();
 };
 

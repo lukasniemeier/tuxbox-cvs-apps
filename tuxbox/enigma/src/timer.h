@@ -13,7 +13,7 @@ class eButton;
 class eComboBox;
 class eCheckbox;
 
-class eTimerManager: public Object
+class eTimerManager: public sigc::trackable
 {
 	static eTimerManager *instance;
 	FILE *logfile;
@@ -33,7 +33,7 @@ class eTimerManager: public Object
 
 // for multiple use timer and connection objects..
 	eTimer timer;
-	Connection conn, conn2;
+	sigc::connection conn, conn2;
 
 // the timerlist self...
 	ePlaylist *timerlist;

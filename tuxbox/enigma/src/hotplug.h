@@ -6,7 +6,7 @@
 #include <lib/base/ebase.h>
 #include <lib/base/estring.h>
 
-class eHotplug: public Object
+class eHotplug: public sigc::trackable
 {
 	int listenfd, connfd, clilen;
 	struct sockaddr_un servaddr;

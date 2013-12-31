@@ -16,7 +16,7 @@ private:
 	bool swapTxtPixmap;
 	void init_eCheckbox(int checked);
 public:
-	Signal1<void, int> checked;
+	sigc::signal<void, int> checked;
 	eCheckbox(eWidget *parent, int checked=0, int takefocus=1, bool swapTxtPixmap=false, const char *deco="eCheckBox" );
 	~eCheckbox();
 	void setCheck(int c);

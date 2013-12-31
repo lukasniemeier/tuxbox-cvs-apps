@@ -959,7 +959,7 @@ void eTransponderList::leaveTransponder( eTransponder* )
 	this->callback=0;
 }
 
-void eTransponderList::startHandleSDT(const SDT *sdt, eDVBNamespace dvbnamespace, eOriginalNetworkID onid, eTransportStreamID tsid, Signal0<void> *callback, int startstate )
+void eTransponderList::startHandleSDT(const SDT *sdt, eDVBNamespace dvbnamespace, eOriginalNetworkID onid, eTransportStreamID tsid, sigc::signal<void> *callback, int startstate )
 {
 	sdtscanstate=startstate;
 	leaveTransponder(0);
@@ -969,7 +969,7 @@ void eTransponderList::startHandleSDT(const SDT *sdt, eDVBNamespace dvbnamespace
 	handleSDT(sdt, dvbnamespace, onid, tsid, callback );
 }
 
-void eTransponderList::handleSDT(const SDT *sdt, eDVBNamespace dvbnamespace, eOriginalNetworkID onid, eTransportStreamID tsid, Signal0<void> *callback )
+void eTransponderList::handleSDT(const SDT *sdt, eDVBNamespace dvbnamespace, eOriginalNetworkID onid, eTransportStreamID tsid, sigc::signal<void> *callback )
 {
 	if ( sdt )
 	{
@@ -1101,7 +1101,7 @@ void eTransponderList::handleSDT(const SDT *sdt, eDVBNamespace dvbnamespace, eOr
 		delete pmt;
 		pmt=0;
 
-		Signal0<void> &cb = *this->callback;
+		sigc::signal<void> &cb = *this->callback;
 
 		this->callback = 0;
 		/*emit*/ cb();

@@ -73,7 +73,7 @@ struct _lpduQueueHeader
 
 #define CIServiceMap std::map<int, std::list<tempPMT_t> >
 
-class eDVBCI: private eThread, public eMainloop, public Object
+class eDVBCI: private eThread, public eMainloop, public sigc::trackable
 {
 	static int instance_count;
 	std::priority_queue<queueData> sendqueue;
@@ -193,7 +193,7 @@ public:
 	~eDVBCI();
 	
 	void thread();
-	Signal1<void, const char*> ci_progress;
-	Signal2<void, const char*, int> ci_mmi_progress;
+	sigc::signal<void, const char*> ci_progress;
+	sigc::signal<void, const char*, int> ci_mmi_progress;
 };
 #endif

@@ -34,7 +34,7 @@ public:
 	{
 		deliveryCable=1, deliverySatellite=2, deliveryTerrestrial=4, flagNoSat=8, flagNoInv=16
 	};
-	Signal0<void> updated;
+	sigc::signal<void> updated;
 	eTransponderWidget(eWidget *parent, int edit, int type);
 	int load();
 	int setTransponder(const eTransponder *transponder);

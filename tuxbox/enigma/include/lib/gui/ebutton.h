@@ -32,8 +32,8 @@ public:
 	 *
 	 * This signals is emitted when OK is pressed.
 	 */
-	Signal0<void> selected;
-	Signal1<void, eButton*> selected_id;
+	sigc::signal<void> selected;
+	sigc::signal<void, eButton*> selected_id;
 };
 
 #endif
