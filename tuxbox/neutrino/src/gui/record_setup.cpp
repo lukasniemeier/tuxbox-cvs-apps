@@ -284,6 +284,7 @@ int CRecordSetup::showRecordSetup()
 	CMenuOptionChooser* oj14 = new CMenuOptionChooser(LOCALE_RECORDINGMENU_GEN_PSI, &g_settings.recording_gen_psi, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 
 	CMenuOptionNumberChooser* oj15 = new CMenuOptionNumberChooser(LOCALE_RECORDINGMENU_MAX_RECTIME, &g_settings.recording_max_rectime, true, 1, 8);
+	oj15->setNumberFormat("%d " + std::string(g_Locale->getText(LOCALE_WORD_HOURS_SHORT)));
 
 	CStringInput recordingSettings_filenameTemplate(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, &g_settings.recording_filename_template_default, 21, false, LOCALE_RECORDINGMENU_FILENAME_TEMPLATE_HINT, LOCALE_IPSETUP_HINT_2, "%/-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ");
 	CMenuForwarder* mf11 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILENAME_TEMPLATE, true, g_settings.recording_filename_template_default, &recordingSettings_filenameTemplate);

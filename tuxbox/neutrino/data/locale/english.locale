@@ -1191,7 +1191,7 @@ recordingmenu.filesettings Direct Recording Settings
 recordingmenu.gen_psi Insert PSI in TS
 recordingmenu.head Recording Settings
 recordingmenu.help Recording devices:\n--------------------------\nserver:\nusing streaming software on a PC\n\n(analog) vcr:\nusing the vcr outlet\n\ndirect (file):\ndirectly into an NFS mounted directory\nor onto an internal hard drive\nTS: use spts mode\nPES: do not use spts mode\n\n\nMax. file size:\n---------------------\nNFS V2: 2 GB (2048 MB)\nNFS V3: almost unlimited (0 MB)\nFAT: 2 GB (2048 MB)\nFAT32: 4 GB (4096 MB)
-recordingmenu.max_rectime Max. recording time (hours)
+recordingmenu.max_rectime Max. instant recording time
 recordingmenu.no_scart Switch to SCART
 recordingmenu.off off
 recordingmenu.record_in_spts_mode Use spts mode
@@ -1553,6 +1553,7 @@ videomenu.videosignal_svideo S-Video
 videomenu.videosignal_yuv_c YUV + CVBS
 videomenu.videosignal_yuv_v YUV + VBS
 word.from from
+word.hours_short hr.
 word.minutes_short min.
 zapit.scantype scan for services
 zapit.scantype.all all services

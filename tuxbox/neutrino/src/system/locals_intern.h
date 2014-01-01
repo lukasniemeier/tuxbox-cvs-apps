@@ -1580,6 +1580,7 @@ const char * locale_real_names[] =
 	"videomenu.videosignal_yuv_c",
 	"videomenu.videosignal_yuv_v",
 	"word.from",
+	"word.hours_short",
 	"word.minutes_short",
 	"zapit.scantype",
 	"zapit.scantype.all",
