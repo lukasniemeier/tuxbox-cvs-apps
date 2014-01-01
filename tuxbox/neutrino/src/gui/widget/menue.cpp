@@ -750,6 +750,13 @@ CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name,
 
 	directKey            = DirectKey;
 	iconName             = IconName;
+
+	numberFormat         = "%d";
+}
+
+void CMenuOptionNumberChooser::setNumberFormat(const std::string &format)
+{
+	numberFormat = format;
 }
 
 int CMenuOptionNumberChooser::getHeight(void) const
@@ -774,10 +781,10 @@ int CMenuOptionNumberChooser::paint(bool selected)
 	int height = getHeight();
 
 	const char * l_option;
-	char option_value[11];
+	char option_value[21];
 	if ((localized_value_name == NONEXISTANT_LOCALE) || ((*optionValue) != localized_value))
 	{
-		sprintf(option_value, "%d", ((*optionValue) + display_offset));
+		snprintf(option_value, 21, numberFormat.c_str(), ((*optionValue) + display_offset));
 		l_option = option_value;
 	}
 	else
