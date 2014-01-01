@@ -1257,7 +1257,7 @@ void CDriveSetup::showHddSetupSub()
 
 		#ifdef ENABLE_NFSSERVER
 			//prepare option host input
-			nfs_host_ip[i] = new CIPInput(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP , d_settings.drive_partition_nfs_host_ip[current_device][i], LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
+			nfs_host_ip[i] = new CIPInput(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP , d_settings.drive_partition_nfs_host_ip[current_device][i]);
 	
 			//prepare option nfs	
 			nfs_host_ip_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP, d_settings.drive_partition_nfs[current_device][i], d_settings.drive_partition_nfs_host_ip[current_device][i], nfs_host_ip[i], NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1 );

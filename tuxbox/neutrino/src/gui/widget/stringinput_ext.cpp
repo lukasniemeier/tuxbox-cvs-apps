@@ -66,10 +66,12 @@ CExtendedInput::CExtendedInput(const neutrino_locale_t Name, char* Value, const 
 	width = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(name), true) + 20; // UTF-8
 	height = hheight+ mheight+ 20;
 
-	//	if (hint_1 != NULL)
+	if (hint_1 != NONEXISTANT_LOCALE)
+	{
 		height += iheight;
-		//	if (hint_2 != NULL)
-		height += iheight;
+		if (hint_2 != NONEXISTANT_LOCALE)
+			height += iheight;
+	}
 
 	x = getScreenStartX(width);
 	y = getScreenStartY(height);
@@ -111,10 +113,12 @@ void CExtendedInput::calculateDialog()
 
 	hintPosY = y + height -10;
 
-	//	if (hint_1 != NULL)
+	if (hint_1 != NONEXISTANT_LOCALE)
+	{
 		height += iheight;
-		//	if (hint_2 != NULL)
-		height += iheight;
+		if (hint_2 != NONEXISTANT_LOCALE)
+			height += iheight;
+	}
 
 	x = getScreenStartX(width);
 	y = getScreenStartY(height);
@@ -273,10 +277,10 @@ void CExtendedInput::paint()
 
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 10, y + hheight + 2, width - 10, g_Locale->getText(name), COL_MENUHEAD, 0, true); // UTF-8
 
-	//	if (hint_1 != NULL)
+	if (hint_1 != NONEXISTANT_LOCALE)
 	{
 		g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->RenderString(x+ 20, hintPosY, width- 20, g_Locale->getText(hint_1), COL_MENUCONTENT, 0, true); // UTF-8
-		//		if (hint_2 != NULL)
+		if (hint_2 != NONEXISTANT_LOCALE)
 			g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->RenderString(x+ 20, hintPosY + iheight, width- 20, g_Locale->getText(hint_2), COL_MENUCONTENT, 0, true); // UTF-8
 	}
 

@@ -120,7 +120,7 @@ int CPictureViewerSetup::showPictureViewerSetup()
 
 	picviewsetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_DEFDIR, true, g_settings.picviewer_picturedir, this, "picturedir"));
 
-	CIPInput picViewSettings_DecServerIP(LOCALE_PICTUREVIEWER_DECODE_SERVER_IP, g_settings.picviewer_decode_server_ip, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
+	CIPInput picViewSettings_DecServerIP(LOCALE_PICTUREVIEWER_DECODE_SERVER_IP, g_settings.picviewer_decode_server_ip);
 	picviewsetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_DECODE_SERVER_IP, true, g_settings.picviewer_decode_server_ip, &picViewSettings_DecServerIP));
 
 	CStringInput picViewSettings_DecServerPort(LOCALE_PICTUREVIEWER_DECODE_SERVER_PORT, g_settings.picviewer_decode_server_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "0123456789 ");

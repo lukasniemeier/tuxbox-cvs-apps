@@ -139,7 +139,7 @@ int CRecordSetup::showRecordSetup()
 	recordingSettings->setPreselected(selected);
 
 	//prepare input record server ip
-	CIPInput recordingSettings_server_ip(LOCALE_RECORDINGMENU_SERVER_IP, g_settings.recording_server_ip, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
+	CIPInput recordingSettings_server_ip(LOCALE_RECORDINGMENU_SERVER_IP, g_settings.recording_server_ip);
 	//input record server ip
 	CMenuForwarder * mf1 = new CMenuForwarder(LOCALE_RECORDINGMENU_SERVER_IP, (g_settings.recording_type == RECORDING_SERVER), g_settings.recording_server_ip, &recordingSettings_server_ip);
 
@@ -149,7 +149,7 @@ int CRecordSetup::showRecordSetup()
 	CMenuForwarder * mf2 = new CMenuForwarder(LOCALE_RECORDINGMENU_SERVER_PORT, (g_settings.recording_type == RECORDING_SERVER), g_settings.recording_server_port, &recordingSettings_server_port);
 
 	//prepare input record server mac address
-	CMACInput recordingSettings_server_mac(LOCALE_RECORDINGMENU_SERVER_MAC,  g_settings.recording_server_mac, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
+	CMACInput recordingSettings_server_mac(LOCALE_RECORDINGMENU_SERVER_MAC, g_settings.recording_server_mac);
 	//input record server mac address
 	CMenuForwarder * mf3 = new CMenuForwarder(LOCALE_RECORDINGMENU_SERVER_MAC, ((g_settings.recording_type == RECORDING_SERVER) && g_settings.recording_server_wakeup==1), g_settings.recording_server_mac, &recordingSettings_server_mac);
 

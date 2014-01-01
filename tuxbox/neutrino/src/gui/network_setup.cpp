@@ -169,10 +169,10 @@ int CNetworkSetup::showNetworkSetup()
 	
 		//prepare input entries
 		CIPInput networkSettings_NetworkIP  (LOCALE_NETWORKMENU_IPADDRESS , network_address   , LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, this);
-		CIPInput networkSettings_NetMask    (LOCALE_NETWORKMENU_NETMASK   , network_netmask   , LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
-		CIPInput networkSettings_Broadcast  (LOCALE_NETWORKMENU_BROADCAST , network_broadcast , LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
-		CIPInput networkSettings_Gateway    (LOCALE_NETWORKMENU_GATEWAY   , network_gateway   , LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
-		CIPInput networkSettings_NameServer (LOCALE_NETWORKMENU_NAMESERVER, network_nameserver, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2);
+		CIPInput networkSettings_NetMask    (LOCALE_NETWORKMENU_NETMASK   , network_netmask   );
+		CIPInput networkSettings_Broadcast  (LOCALE_NETWORKMENU_BROADCAST , network_broadcast );
+		CIPInput networkSettings_Gateway    (LOCALE_NETWORKMENU_GATEWAY   , network_gateway   );
+		CIPInput networkSettings_NameServer (LOCALE_NETWORKMENU_NAMESERVER, network_nameserver);
 	
 
 		//auto start
@@ -320,12 +320,12 @@ bool CNetworkSetup::checkForIP()
 
 	if (!network_dhcp && network_address.empty()) //no ip definied
 	{
-        ShowLocalizedMessage(LOCALE_MAINSETTINGS_NETWORK,
-                             LOCALE_NETWORKMENU_ERROR_NO_ADDRESS,
-                             CMessageBox::mbrBack,
-                             CMessageBox::mbBack,
-                             NEUTRINO_ICON_ERROR,
-                             width);
+		ShowLocalizedMessage(LOCALE_MAINSETTINGS_NETWORK,
+		                     LOCALE_NETWORKMENU_ERROR_NO_ADDRESS,
+		                     CMessageBox::mbrBack,
+		                     CMessageBox::mbBack,
+		                     NEUTRINO_ICON_ERROR,
+		                     width);
 		ret = false;
 	}
 

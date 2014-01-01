@@ -327,7 +327,7 @@ int CScanSetup::showScanService()
 		extUnicableSettings = new CMenuWidget(LOCALE_SATSETUP_UNICABLE_SETTINGS, NEUTRINO_ICON_SETTINGS);
 		extUnicableSettings->addIntroItems();
 		CMenuOptionNumberChooser *uniscr = new CMenuOptionNumberChooser(LOCALE_SATSETUP_UNICABLE_SCR, (int *)&scanSettings.uni_scr, true, 0, 7);
-		uniqrg = new CIntInput(LOCALE_SATSETUP_UNICABLE_QRG, (int &)scanSettings.uni_qrg, 4, LOCALE_GENERIC_EMPTY, LOCALE_GENERIC_EMPTY, NULL);
+		uniqrg = new CIntInput(LOCALE_SATSETUP_UNICABLE_QRG, (int &)scanSettings.uni_qrg, 4);
 		extUnicableSettings->addItem(uniscr);
 		extUnicableSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_UNICABLE_QRG, true, uniqrg->getValue(), uniqrg));
 		CMenuForwarder* ojExtUnicableSettings = new CMenuForwarder(LOCALE_SATSETUP_UNICABLE, (scanSettings.diseqcMode == DISEQC_UNICABLE), NULL, extUnicableSettings, NULL, CRCInput::RC_3);
