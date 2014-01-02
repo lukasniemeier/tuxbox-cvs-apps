@@ -614,8 +614,8 @@ void CTimeInput::onAfterExec()
 }
 //-----------------------------#################################-------------------------------------------------------
 
-CIntInput::CIntInput(const neutrino_locale_t Name, int& Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ)
-	: CExtendedInput(Name, myValueStringInput, Hint_1, Hint_2, Observ)
+CIntInput::CIntInput(const neutrino_locale_t Name, int& Value, const unsigned int Size, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ, bool* Cancel)
+	: CExtendedInput(Name, myValueStringInput, Hint_1, Hint_2, Observ, Cancel)
 {
 	myValue = &Value;
 

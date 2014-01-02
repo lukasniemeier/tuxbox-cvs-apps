@@ -47,6 +47,7 @@
 #include <gui/color.h>
 
 #include <gui/widget/stringinput.h>
+#include <gui/widget/stringinput_ext.h>
 
 #include <global.h>
 #include <neutrino.h>
@@ -732,7 +733,7 @@ void CMenuWidget::addIntroItems(neutrino_locale_t subhead_text, neutrino_locale_
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------
-CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName)
+CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool NumericInput)
 {
 	optionName           = name;
 	active               = Active;
@@ -752,6 +753,7 @@ CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name,
 	directKey            = DirectKey;
 	iconName             = IconName;
 
+	numeric_input        = NumericInput;
 	numberFormat         = "%d";
 }
 
@@ -765,18 +767,44 @@ int CMenuOptionNumberChooser::getHeight(void) const
 	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 }
 
-int CMenuOptionNumberChooser::exec(CMenuTarget*)
+int CMenuOptionNumberChooser::exec(CMenuTarget* parent)
 {
+	bool optionValueNotChanged = false;
 	bool wantsRepaint = false;
 	int ret = menu_return::RETURN_NONE;
 
-	if (((*optionValue) >= upper_bound) || ((*optionValue) < lower_bound))
-		*optionValue = lower_bound;
+	if (numeric_input)
+	{
+		int size = 0;
+		int b = lower_bound;
+		if (b < 0)
+		{
+			size++;
+			b = -b;
+		}
+		if (b < upper_bound)
+			b = upper_bound;
+		for (; b; b /= 10, size++);
+		CIntInput cii(optionName, *optionValue, size, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, NULL, &optionValueNotChanged);
+		ret = cii.exec(parent, "");
+		if (!optionValueNotChanged)
+		{
+			if (*optionValue > upper_bound)
+				*optionValue = upper_bound;
+			else if (*optionValue < lower_bound)
+				*optionValue = lower_bound;
+		}
+	}
 	else
-		(*optionValue)++;
-	paint(true);
+	{
+		if (((*optionValue) >= upper_bound) || ((*optionValue) < lower_bound))
+			*optionValue = lower_bound;
+		else
+			(*optionValue)++;
+		paint(true);
+	}
 
-	if (observ)
+	if (observ && !optionValueNotChanged)
 		wantsRepaint = observ->changeNotify(optionName, optionValue);
 
 	if (wantsRepaint)
