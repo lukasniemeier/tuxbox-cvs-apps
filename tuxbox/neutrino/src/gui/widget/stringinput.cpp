@@ -128,11 +128,21 @@ void CStringInput::init()
 	iheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getHeight();
 
 	height = hheight+ mheight+ 50;
+
 	if (hint_1 != NONEXISTANT_LOCALE)
 	{
+		neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getRenderWidth(g_Locale->getText(hint_1), true); // UTF-8
+		if (neededWidth + 40 > width)
+			width = neededWidth + 40;
 		height += iheight;
+
 		if (hint_2 != NONEXISTANT_LOCALE)
+		{
+			neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getRenderWidth(g_Locale->getText(hint_2), true); // UTF-8
+			if (neededWidth + 40 > width)
+				width = neededWidth + 40;
 			height += iheight;
+		}
 	}
 
 	x = getScreenStartX(width);

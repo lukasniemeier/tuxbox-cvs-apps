@@ -115,9 +115,18 @@ void CExtendedInput::calculateDialog()
 
 	if (hint_1 != NONEXISTANT_LOCALE)
 	{
+		maxX = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getRenderWidth(g_Locale->getText(hint_1), true); // UTF-8
+		if (maxX + 40 > width)
+			width = maxX + 40;
 		height += iheight;
+
 		if (hint_2 != NONEXISTANT_LOCALE)
+		{
+			maxX = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getRenderWidth(g_Locale->getText(hint_2), true); // UTF-8
+			if (maxX + 40 > width)
+				width = maxX + 40;
 			height += iheight;
+		}
 	}
 
 	x = getScreenStartX(width);
