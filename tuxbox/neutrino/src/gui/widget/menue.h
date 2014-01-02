@@ -207,6 +207,7 @@ class CAbstractMenuOptionChooser : public CMenuItem
  protected:
 	neutrino_locale_t optionName;
 	int *             optionValue;
+	CChangeObserver * observ;
 
 	bool isSelectable(void) const
 		{
@@ -229,7 +230,7 @@ class CMenuOptionNumberChooser : public CAbstractMenuOptionChooser
 	std::string        numberFormat;
 
  public:
-	CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset = 0, const int special_value = 0, const neutrino_locale_t special_value_name = NONEXISTANT_LOCALE, const char * non_localized_name = NULL, const neutrino_msg_t DirectKey = CRCInput::RC_nokey, const std::string & IconName = "");
+	CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset = 0, const int special_value = 0, const neutrino_locale_t special_value_name = NONEXISTANT_LOCALE, const char * non_localized_name = NULL, CChangeObserver * const Observ = NULL, const neutrino_msg_t DirectKey = CRCInput::RC_nokey, const std::string & IconName = "");
 	
 	void setNumberFormat(const std::string &format);
 	int paint(bool selected);
@@ -250,8 +251,7 @@ class CMenuOptionChooser : public CAbstractMenuOptionChooser
  private:
 	const struct keyval * options;
 	unsigned              number_of_options;
-	CChangeObserver *     observ;
-	std::string optionNameString;
+	std::string           optionNameString;
 	bool                  pulldown;
 
  public:

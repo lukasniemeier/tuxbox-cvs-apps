@@ -732,7 +732,7 @@ void CMenuWidget::addIntroItems(neutrino_locale_t subhead_text, neutrino_locale_
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------
-CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name, const neutrino_msg_t DirectKey, const std::string & IconName)
+CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name, int * const OptionValue, const bool Active, const int min_value, const int max_value, const int print_offset, const int special_value, const neutrino_locale_t special_value_name, const char * non_localized_name, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName)
 {
 	optionName           = name;
 	active               = Active;
@@ -748,6 +748,7 @@ CMenuOptionNumberChooser::CMenuOptionNumberChooser(const neutrino_locale_t name,
 
 	optionString         = non_localized_name;
 
+	observ               = Observ;
 	directKey            = DirectKey;
 	iconName             = IconName;
 
@@ -766,14 +767,22 @@ int CMenuOptionNumberChooser::getHeight(void) const
 
 int CMenuOptionNumberChooser::exec(CMenuTarget*)
 {
+	bool wantsRepaint = false;
+	int ret = menu_return::RETURN_NONE;
+
 	if (((*optionValue) >= upper_bound) || ((*optionValue) < lower_bound))
 		*optionValue = lower_bound;
 	else
 		(*optionValue)++;
-
 	paint(true);
 
-	return menu_return::RETURN_NONE;
+	if (observ)
+		wantsRepaint = observ->changeNotify(optionName, optionValue);
+
+	if (wantsRepaint)
+		ret = menu_return::RETURN_REPAINT;
+
+	return ret;
 }
 
 int CMenuOptionNumberChooser::paint(bool selected)

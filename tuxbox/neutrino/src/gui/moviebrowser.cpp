@@ -3056,7 +3056,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_INFO1,          true, movie_info->epgInfo1,      &epgUserInput,NULL, CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3));
 	movieInfoMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_INFO_GENRE_MAJOR, &movie_info->genreMajor, GENRE_ALL, GENRE_ALL_COUNT, true, NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4, true));
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
-	movieInfoMenu.addItem( new CMenuOptionNumberChooser(LOCALE_MOVIEBROWSER_INFO_QUALITY, &movie_info->quality, true, 0, 3, 0, 0, NONEXISTANT_LOCALE, NULL, CRCInput::RC_5, NEUTRINO_ICON_BUTTON_5));
+	movieInfoMenu.addItem( new CMenuOptionNumberChooser(LOCALE_MOVIEBROWSER_INFO_QUALITY, &movie_info->quality, true, 0, 3, 0, 0, NONEXISTANT_LOCALE, NULL, NULL, CRCInput::RC_5, NEUTRINO_ICON_BUTTON_5));
 	movieInfoMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_INFO_PARENTAL_LOCKAGE, &movie_info->parentalLockAge, MESSAGEBOX_PARENTAL_LOCKAGE_OPTIONS, MESSAGEBOX_PARENTAL_LOCKAGE_OPTION_COUNT, true,NULL,         CRCInput::RC_6, NEUTRINO_ICON_BUTTON_6 ));
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_PRODYEAR,       true, yearUserIntInput.getValue(),      &yearUserIntInput,NULL,           CRCInput::RC_7, NEUTRINO_ICON_BUTTON_7));
 	movieInfoMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_PRODCOUNTRY,    true, movie_info->productionCountry,         &countryUserInput,NULL,      CRCInput::RC_8, NEUTRINO_ICON_BUTTON_8));
