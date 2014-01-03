@@ -109,9 +109,6 @@ void CStringInput::init()
 	cwidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getRenderWidth("M") + 1;
 	width = (size * cwidth) + 40;
 
-	if (width<420)
-		width = 420;
-
 	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(name), true); // UTF-8
 	if (!iconfile.empty())
 	{
