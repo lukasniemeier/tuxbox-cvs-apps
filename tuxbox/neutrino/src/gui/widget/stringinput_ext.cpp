@@ -63,18 +63,7 @@ CExtendedInput::CExtendedInput(const neutrino_locale_t Name, char* Value, const 
 	mheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 	iheight = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_INFO]->getHeight();
 
-	width = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(name), true) + 20; // UTF-8
-	height = hheight+ mheight+ 20;
-
-	if (hint_1 != NONEXISTANT_LOCALE)
-	{
-		height += iheight;
-		if (hint_2 != NONEXISTANT_LOCALE)
-			height += iheight;
-	}
-
-	x = getScreenStartX(width);
-	y = getScreenStartY(height);
+	calculateDialog();
 }
 
 CExtendedInput::~CExtendedInput()
@@ -96,6 +85,10 @@ void CExtendedInput::calculateDialog()
 	int maxX = 0;
 	int maxY = 0;
 	selectedChar = -1;
+
+	width = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(g_Locale->getText(name), true) + 20; // UTF-8
+	height = hheight + mheight + 20;
+
 	for(unsigned int i=0; i<inputFields.size();i++)
 	{
 		inputFields[i]->init( ix, iy);
@@ -111,7 +104,7 @@ void CExtendedInput::calculateDialog()
 	width = (width > maxX+40) ? width : maxX+40;
 	height = (height > maxY+hheight+mheight) ? height : maxY+hheight+mheight;
 
-	hintPosY = y + height -10;
+	hintPosY = height + iheight;
 
 	if (hint_1 != NONEXISTANT_LOCALE)
 	{
@@ -127,10 +120,14 @@ void CExtendedInput::calculateDialog()
 				width = maxX + 40;
 			height += iheight;
 		}
+
+		height += 10;
 	}
 
 	x = getScreenStartX(width);
 	y = getScreenStartY(height);
+
+	hintPosY += y;
 }
 
 
@@ -411,7 +408,6 @@ CIPInput::CIPInput(const neutrino_locale_t Name, std::string & Value, const neut
 	: CExtendedInput(Name, IP, Hint_1, Hint_2, Observ)
 {
 	ip = &Value;
-	frameBuffer = CFrameBuffer::getInstance();
 	addInputField( new CExtendedInput_Item_Char("012") );
 	addInputField( new CExtendedInput_Item_Char("0123456789") );
 	addInputField( new CExtendedInput_Item_Char("0123456789") );
@@ -468,7 +464,6 @@ CDateInput::CDateInput(const neutrino_locale_t Name, time_t* Time, const neutrin
 				tmTime->tm_year+1900,
 				tmTime->tm_hour, tmTime->tm_min);
 	
-	frameBuffer = CFrameBuffer::getInstance();
 	addInputField( new CExtendedInput_Item_Char("0123") );
 	addInputField( new CExtendedInput_Item_Char("0123456789") );
 	addInputField( new CExtendedInput_Item_Char(".",false) );
@@ -546,7 +541,6 @@ void CDateInput::onAfterExec()
 CMACInput::CMACInput(const neutrino_locale_t Name, char* Value, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ)
 	: CExtendedInput(Name, Value, Hint_1, Hint_2, Observ)
 {
-	frameBuffer = CFrameBuffer::getInstance();
 	addInputField( new CExtendedInput_Item_Char("0123456789ABCDEF") );
 	addInputField( new CExtendedInput_Item_Char("0123456789ABCDEF") );
 	addInputField( new CExtendedInput_Item_Spacer(20) );
@@ -595,7 +589,6 @@ void CMACInput::onAfterExec()
 CTimeInput::CTimeInput(const neutrino_locale_t Name, char* Value, const neutrino_locale_t Hint_1, const neutrino_locale_t Hint_2, CChangeObserver* Observ, bool* Cancel)
 	: CExtendedInput(Name, Value, Hint_1, Hint_2, Observ, Cancel)
 {
-	frameBuffer = CFrameBuffer::getInstance();
 	addInputField( new CExtendedInput_Item_Char("=+-") );
 	addInputField( new CExtendedInput_Item_Spacer(20) );
 	addInputField( new CExtendedInput_Item_Char("0123456789") );
@@ -641,7 +634,6 @@ CIntInput::CIntInput(const neutrino_locale_t Name, int& Value, const unsigned in
 		sprintf(myValueStringOutput,"%*d",m_size,*myValue);
 	}
 
-	frameBuffer = CFrameBuffer::getInstance();
 	for (unsigned int i=0;i<Size;i++)
 	{
 		addInputField( new CExtendedInput_Item_Char("0123456789 ") );
