@@ -355,8 +355,8 @@ int CScanSetup::showScanService()
 		CZapitClient::SatelliteList providerList;
 		g_Zapit->getScanSatelliteList(providerList);
 
-		// sat/provider selector
-		CMenuOptionStringChooser * ojProv = new CMenuOptionStringChooser(LOCALE_CABLESETUP_PROVIDER, (char*)&scanSettings.satNameNoDiseqc, true, NULL, CRCInput::RC_nokey, "", true);
+		//cable provider selector
+		CMenuOptionStringChooser * ojProv = new CMenuOptionStringChooser(LOCALE_CABLESETUP_PROVIDER, (char*)&scanSettings.satNameNoDiseqc, true, NULL, CRCInput::RC_nokey, "", true, true);
 
 		bool sfound = false;
 		for (CZapitClient::SatelliteList::iterator it = providerList.begin(); it != providerList.end(); ++it) {
