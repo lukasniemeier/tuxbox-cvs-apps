@@ -844,11 +844,10 @@ int CMenuOptionNumberChooser::paint(bool selected)
 
 
 
-CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown)
+CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown, bool OptionsSort)
 {
 	optionNameString  = g_Locale->getText(OptionName);
 	optionName        = OptionName;
-	options           = Options;
 	active            = Active;
 	optionValue       = OptionValue;
 	number_of_options = Number_Of_Options;
@@ -856,13 +855,15 @@ CMenuOptionChooser::CMenuOptionChooser(const neutrino_locale_t OptionName, int *
 	directKey         = DirectKey;
 	iconName          = IconName;
 	pulldown          = Pulldown;
+	optionsSort       = OptionsSort;
+	for (unsigned int i = 0; i < number_of_options; i++)
+		options.push_back(&Options[i]);
 }
 
-CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown)
+CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const OptionValue, const struct keyval * const Options, const unsigned Number_Of_Options, const bool Active, CChangeObserver * const Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown, bool OptionsSort)
 {
 	optionNameString  = OptionName;
 	optionName        = NONEXISTANT_LOCALE;
-	options           = Options;
 	active            = Active;
 	optionValue       = OptionValue;
 	number_of_options = Number_Of_Options;
@@ -870,6 +871,9 @@ CMenuOptionChooser::CMenuOptionChooser(const char* OptionName, int * const Optio
 	directKey         = DirectKey;
 	iconName          = IconName;
 	pulldown          = Pulldown;
+	optionsSort       = OptionsSort;
+	for (unsigned int i = 0; i < number_of_options; i++)
+		options.push_back(&Options[i]);
 }
 
 int CMenuOptionChooser::getHeight(void) const
@@ -887,12 +891,19 @@ int CMenuOptionChooser::getOptionValue(void) const
 	return *optionValue;
 }
 
+static bool sortByOptionValue(const CMenuOptionChooser::keyval * a, const CMenuOptionChooser::keyval * b)
+{
+	return (strcasecmp(g_Locale->getText(a->value), g_Locale->getText(b->value)) < 0);
+}
 
 int CMenuOptionChooser::exec(CMenuTarget* parent)
 {
 	bool optionValueChanged = true;
 	bool wantsRepaint = false;
 	int ret = menu_return::RETURN_NONE;
+
+	if (optionsSort)
+		sort(options.begin(), options.end(), sortByOptionValue);
 
 	if (pulldown)
 	{
@@ -904,16 +915,16 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 		for(unsigned int count = 0; count < number_of_options; count++)
 		{
 			bool selected = false;
-			if (options[count].key == (*optionValue))
+			if (options[count]->key == (*optionValue))
 				selected = true;
 			sprintf(cnt, "%d", count);
-			CMenuForwarder *mn_option = new CMenuForwarder(options[count].value, true, NULL, selector, cnt);
+			CMenuForwarder *mn_option = new CMenuForwarder(options[count]->value, true, NULL, selector, cnt);
 			mn_option->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true /*for selected item*/);
 			menu->addItem(mn_option, selected);
 		}
 		ret = menu->exec(parent, "");
 		if (select >= 0)
-			*optionValue = options[select].key;
+			*optionValue = options[select]->key;
 		else
 			optionValueChanged = false;
 		delete menu;
@@ -925,15 +936,15 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 		unsigned int count;
 		for(count = 0; count < number_of_options; count++)
 		{
-			if (options[count].key == (*optionValue))
+			if (options[count]->key == (*optionValue))
 			{
-				*optionValue = options[(count+1) % number_of_options].key;
+				*optionValue = options[(count+1) % number_of_options]->key;
 				break;
 			}
 		}
 		// if options are removed optionValue may not exist anymore -> use 1st available option
 		if ((count == number_of_options) && number_of_options)
-			*optionValue = options[0].key;
+			*optionValue = options[0]->key;
 		paint(true);
 	}
 
@@ -953,9 +964,9 @@ int CMenuOptionChooser::paint( bool selected )
 	neutrino_locale_t option = NONEXISTANT_LOCALE;
 	for(unsigned int count = 0 ; count < number_of_options; count++)
 	{
-		if (options[count].key == *optionValue)
+		if (options[count]->key == *optionValue)
 		{
-			option = options[count].value;
+			option = options[count]->value;
 			break;
 		}
 	}
@@ -976,7 +987,7 @@ int CMenuOptionChooser::paint( bool selected )
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
-CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t OptionName, char* OptionValue, bool Active, CChangeObserver* Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown)
+CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t OptionName, char* OptionValue, bool Active, CChangeObserver* Observ, const neutrino_msg_t DirectKey, const std::string & IconName, bool Pulldown, bool OptionsSort)
 {
 	optionName  = OptionName;
 	active      = Active;
@@ -985,6 +996,7 @@ CMenuOptionStringChooser::CMenuOptionStringChooser(const neutrino_locale_t Optio
 	directKey   = DirectKey;
 	iconName    = IconName;
 	pulldown    = Pulldown;
+	optionsSort = OptionsSort;
 }
 
 int CMenuOptionStringChooser::getHeight(void) const
@@ -1007,11 +1019,19 @@ void CMenuOptionStringChooser::addOption(const char * const value)
 	options.push_back(std::string(value));
 }
 
+static bool sortByOptionStringValue(const std::string & a, const std::string & b)
+{
+	return (strcasecmp(a.c_str(), b.c_str()) < 0);
+}
+
 int CMenuOptionStringChooser::exec(CMenuTarget* parent)
 {
 	bool optionValueChanged = true;
 	bool wantsRepaint = false;
 	int ret = menu_return::RETURN_NONE;
+
+	if (optionsSort)
+		sort(options.begin(), options.end(), sortByOptionStringValue);
 
 	if (pulldown)
 	{
