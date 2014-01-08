@@ -199,7 +199,7 @@ typedef struct
 }MB_SETTINGS;
 
 // Priorities for Developmemt: P1: critical feature, P2: important feature, P3: for next release, P4: looks nice, lets see
-class CMovieBrowser : public CMenuTarget
+class CMovieBrowser : public CMenuTarget, CChangeObserver
 {
 	public: // Variables /////////////////////////////////////////////////
 		int Multi_Select;    // for FileBrowser compatibility, not used in MovieBrowser
@@ -233,7 +233,7 @@ class CMovieBrowser : public CMenuTarget
 		std::vector<MI_MOVIE_INFO*> m_vHandleRecordList;
 		std::vector<MI_MOVIE_INFO*> m_vHandlePlayList;
 		std::vector<std::string> m_dirNames;
-//		std::vector<std::string> m_serienames;
+		std::vector<std::string> m_serienames;
 		std::vector<MI_MOVIE_INFO*> m_vHandleSerienames;
 
 		unsigned int m_currentBrowserSelection;
@@ -286,6 +286,7 @@ class CMovieBrowser : public CMenuTarget
 		~CMovieBrowser(); //P1 
 		int exec(const char* path, const int playstate); //P1 
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+		bool changeNotify(const neutrino_locale_t OptionName, void *);
 		std::string getCurrentDir(void); //P1 for FileBrowser compatibility
 		CFile* getSelectedFile(void); //P1 for FileBrowser compatibility
 		MI_MOVIE_BOOKMARKS* getCurrentMovieBookmark(void){if(m_movieSelectionHandler == NULL) return NULL; return(&(m_movieSelectionHandler->bookmarks));};

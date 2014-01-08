@@ -1129,7 +1129,17 @@ int CMovieBrowser::exec(const char* path, const int playstate)
 		
 	return (res);
 }
+/************************************************************************
 
+************************************************************************/
+bool CMovieBrowser::changeNotify(const neutrino_locale_t OptionName, void *)
+{
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_MOVIEBROWSER_EDIT_SERIE))
+	{
+		m_seriename_stale = true;
+	}
+	return false;
+}
 /************************************************************************
 
 ************************************************************************/
@@ -3012,15 +3022,21 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 
 /********************************************************************/
 /**  serie******************************************************/
-	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, true, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ");
+	CStringInputSMS serieUserInput(LOCALE_MOVIEBROWSER_EDIT_SERIE, &movie_info->serieName, 20, true, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, "abcdefghijklmnopqrstuvwxyz\xE4\xF6\xFC\xDF""0123456789-_/()<>=.,:!?\\'\"& ", this);
 
 	CMenuWidget serieMenu(LOCALE_MOVIEBROWSER_INFO_HEAD, NEUTRINO_ICON_STREAMING);
 	serieMenu.addIntroItems(LOCALE_MOVIEBROWSER_SERIE_HEAD);
 	serieMenu.addItem( new CMenuForwarder(LOCALE_MOVIEBROWSER_SERIE_NAME,   true, movie_info->serieName,&serieUserInput));
 	if (!m_vHandleSerienames.empty())
-		serieMenu.addItem(GenericMenuSeparatorLine);
+	{
+		m_serienames.clear();
+		serieMenu.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEBROWSER_SERIE_EXISTINGNAME));
+	}
 	for(unsigned int i=0; i < m_vHandleSerienames.size(); i++)
-		serieMenu.addItem( new CMenuSelector(m_vHandleSerienames[i]->serieName.c_str(), true,  movie_info->serieName));
+	{
+		m_serienames.push_back(m_vHandleSerienames[i]->serieName);
+		serieMenu.addItem( new CMenuSelector(m_serienames.back().c_str(), true,  movie_info->serieName));
+	}
 
     /********************************************************************/
     /**  update movie info  ******************************************************/
