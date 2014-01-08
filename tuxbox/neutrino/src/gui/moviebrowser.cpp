@@ -235,8 +235,6 @@ const int m_defaultRowWidth[MB_INFO_MAX_NUMBER+1] =
 //------------------------------------------------------------------------
 // sorting
 //------------------------------------------------------------------------
-#define FILEBROWSER_NUMBER_OF_SORT_VARIANTS 5
-
 bool sortDirection = 0;
 
 bool compare_to_lower(const char a, const char b)
@@ -253,7 +251,15 @@ bool sortByTitle (const MI_MOVIE_INFO* a, const MI_MOVIE_INFO* b)
 		return false;
 	return a->file.Time < b->file.Time;
 }
-bool sortByGenre (const MI_MOVIE_INFO* a, const MI_MOVIE_INFO* b)
+bool sortBySerie (const MI_MOVIE_INFO* a, const MI_MOVIE_INFO* b)
+{
+	if (std::lexicographical_compare(a->serieName.begin(), a->serieName.end(), b->serieName.begin(), b->serieName.end(), compare_to_lower))
+		return true;
+	if (std::lexicographical_compare(b->serieName.begin(), b->serieName.end(), a->serieName.begin(), a->serieName.end(), compare_to_lower))
+		return false;
+	return sortByTitle(a,b);
+}
+bool sortByInfo1 (const MI_MOVIE_INFO* a, const MI_MOVIE_INFO* b)
 {
 	if (std::lexicographical_compare(a->epgInfo1.begin(), a->epgInfo1.end(), b->epgInfo1.begin(), b->epgInfo1.end(), compare_to_lower))
 		return true;
@@ -326,8 +332,8 @@ bool (* const sortBy[MB_INFO_MAX_NUMBER+1])(const MI_MOVIE_INFO* a, const MI_MOV
 	&sortByFileName ,	//MB_INFO_FILENAME		= 0,
 	&sortByDir, 		//MB_INFO_FILEPATH		= 1,
 	&sortByTitle, 		//MB_INFO_TITLE			= 2,
-	NULL, 				//MB_INFO_SERIE 		= 3,
-	&sortByGenre, 		//MB_INFO_INFO1			= 4,
+	&sortBySerie,		//MB_INFO_SERIE 		= 3,
+	&sortByInfo1, 		//MB_INFO_INFO1			= 4,
 	NULL, 				//MB_INFO_MAJOR_GENRE 	= 5,
 	NULL, 				//MB_INFO_MINOR_GENRE 	= 6,
 	NULL, 				//MB_INFO_INFO2 			= 7,
@@ -1354,6 +1360,11 @@ void CMovieBrowser::refreshLCD(void)
 /************************************************************************
 
 ************************************************************************/
+static bool sortByAlpha(const std::string & a, const std::string & b)
+{
+	return (strcasecmp(a.c_str(), b.c_str()) < 0);
+}
+
 void CMovieBrowser::refreshFilterList(void)
 {
 	TRACE("[mb]->refreshFilterList %d\r\n",m_settings.filter.item);
@@ -1386,9 +1397,9 @@ void CMovieBrowser::refreshFilterList(void)
 	}
 	else
 	{
-		std::string tmp = g_Locale->getText(LOCALE_MENU_BACK);
-		m_FilterLines.lineArray[0].push_back(tmp);
-		
+		string_item = g_Locale->getText(LOCALE_MENU_BACK);
+		m_FilterLines.lineArray[0].push_back(string_item);
+
 		if(m_settings.filter.item == MB_INFO_FILEPATH)
 		{
 			for(unsigned int i =0 ; i < m_dirNames.size() ;i++)
@@ -1409,19 +1420,21 @@ void CMovieBrowser::refreshFilterList(void)
 				if(found == false)
 					m_FilterLines.lineArray[0].push_back(m_vMovieInfo[i].epgInfo1);
 			}
+			sort(m_FilterLines.lineArray[0].begin() + 1, m_FilterLines.lineArray[0].end(), sortByAlpha);
 		}
 		else if(m_settings.filter.item == MB_INFO_INFO2)
 		{
-			std::string tmp2 = "->Eingabe";
-			m_FilterLines.lineArray[0].push_back(tmp2);
+			string_item = "->Eingabe";
+			m_FilterLines.lineArray[0].push_back(string_item);
 		}
 		else if(m_settings.filter.item == MB_INFO_MAJOR_GENRE)
 		{
 			for(int i = 0; i < GENRE_ALL_COUNT; i++)
 			{
-				std::string tmp2 = g_Locale->getText(GENRE_ALL[i].value);
-				m_FilterLines.lineArray[0].push_back(tmp2);
+				string_item = g_Locale->getText(GENRE_ALL[i].value);
+				m_FilterLines.lineArray[0].push_back(string_item);
 			}
+			sort(m_FilterLines.lineArray[0].begin() + 1, m_FilterLines.lineArray[0].end(), sortByAlpha);
 		}
 		else if(m_settings.filter.item == MB_INFO_SERIE)
 		{
@@ -2811,8 +2824,15 @@ void CMovieBrowser::updateFilterSelection(void)
 	}
 	else if(m_settings.filter.item == MB_INFO_MAJOR_GENRE)
 	{
-		m_settings.filter.optionString = g_Locale->getText(GENRE_ALL[selected_line].value);
-		m_settings.filter.optionVar = GENRE_ALL[selected_line].key;
+		m_settings.filter.optionString = m_FilterLines.lineArray[0][selected_line+1];
+		for(int i = 0; i < GENRE_ALL_COUNT; i++)
+		{
+			if(strcmp(m_settings.filter.optionString.c_str(), g_Locale->getText(GENRE_ALL[i].value)) == 0)
+			{
+				m_settings.filter.optionVar = GENRE_ALL[i].key;
+				break;
+			}
+		}
 	}
 	else if(m_settings.filter.item == MB_INFO_SERIE)
 	{
@@ -3577,7 +3597,7 @@ void CMovieBrowser::updateSerienames(void)
 		}
 	}
 	TRACE("[mb]->updateSerienames: %d\r\n",m_vHandleSerienames.size());
-	// TODO sort(m_serienames.begin(), m_serienames.end(), my_alphasort);
+	sort(m_vHandleSerienames.begin(), m_vHandleSerienames.end(), sortBySerie);
 	m_seriename_stale = false;
 }	
 
