@@ -2195,6 +2195,8 @@ void CMovieBrowser::onDeleteFile(MI_MOVIE_INFO& movieSelectionHandler)
 			hintBox.hide();
 			g_RCInput->clearRCMsg();
 
+			if (!movieSelectionHandler.serieName.empty())
+				m_seriename_stale = true;
 			m_vMovieInfo.erase( (std::vector<MI_MOVIE_INFO>::iterator)&movieSelectionHandler);
 			updateSerienames();
 			refreshBrowserList();
