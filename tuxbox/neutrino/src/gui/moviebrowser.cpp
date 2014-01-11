@@ -2195,7 +2195,7 @@ void CMovieBrowser::onDeleteFile(MI_MOVIE_INFO& movieSelectionHandler)
 			hintBox.hide();
 			g_RCInput->clearRCMsg();
 
-			if (!movieSelectionHandler.serieName.empty())
+			if (!m_vHandleSerienames.empty())
 				m_seriename_stale = true;
 			m_vMovieInfo.erase( (std::vector<MI_MOVIE_INFO>::iterator)&movieSelectionHandler);
 			updateSerienames();
@@ -3108,6 +3108,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 
 	int returnval = movieInfoMenu.exec(NULL,"");
 
+	updateSerienames();
 	for(int i =0 ; i < MI_MOVIE_BOOK_USER_MAX && i < MAX_NUMBER_OF_BOOKMARK_ITEMS; i++ )
 	{
 		delete pBookNameInput[i] ;
