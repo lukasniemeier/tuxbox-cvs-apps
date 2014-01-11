@@ -138,6 +138,8 @@ audiomenu.avs avs
 audiomenu.avs_control Volume Steuerung
 audiomenu.dolbydigital Dolby Digital Default
 audiomenu.head Audio-Einstellungen
+audiomenu.initial_volume Anfangslautstärke
+audiomenu.initial_volume_restore Letzte Lautstärke
 audiomenu.lirc lirc
 audiomenu.monoleft mono links
 audiomenu.monoright mono rechts

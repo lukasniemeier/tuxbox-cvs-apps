@@ -138,6 +138,8 @@ audiomenu.avs avs
 audiomenu.avs_control Volume Control
 audiomenu.dolbydigital Dolby Digital as Default
 audiomenu.head Audio Settings
+audiomenu.initial_volume Initial volume
+audiomenu.initial_volume_restore Restore last volume
 audiomenu.lirc lirc
 audiomenu.monoleft mono left
 audiomenu.monoright mono right

@@ -98,6 +98,7 @@ struct SNeutrinoSettings
 	int audio_AnalogMode;
 	int audio_DolbyDigital;
 	int audio_avs_Control;
+	int audio_initial_volume;
 	char audio_step[3];
 	char audio_PCMOffset[3];
 

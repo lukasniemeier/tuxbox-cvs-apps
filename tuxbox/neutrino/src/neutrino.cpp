@@ -427,6 +427,7 @@ int CNeutrinoApp::loadSetup()
 	//audio
 	g_settings.audio_AnalogMode 		= configfile.getInt32( "audio_AnalogMode"        , 0 );
 	g_settings.audio_DolbyDigital		= configfile.getBool("audio_DolbyDigital"        , false);
+	g_settings.audio_initial_volume		= configfile.getInt32( "audio_initial_volume"    , 0 );
 #ifdef HAVE_DBOX_HARDWARE
 	g_settings.audio_avs_Control 		= configfile.getInt32( "audio_avs_Control", CControld::TYPE_AVS );
 	strcpy( g_settings.audio_step,		configfile.getString( "audio_step" , "5" ).c_str() );
@@ -1024,6 +1025,7 @@ void CNeutrinoApp::saveSetup()
 	//audio
 	configfile.setInt32( "audio_AnalogMode" , g_settings.audio_AnalogMode);
 	configfile.setBool("audio_DolbyDigital" , g_settings.audio_DolbyDigital);
+	configfile.setInt32( "audio_initial_volume" , g_settings.audio_initial_volume);
 	configfile.setInt32( "audio_avs_Control", g_settings.audio_avs_Control);
 	configfile.setString( "audio_PCMOffset" , g_settings.audio_PCMOffset);
 	configfile.setString( "audio_step"	, g_settings.audio_step);
@@ -2145,7 +2147,11 @@ int CNeutrinoApp::run(int argc, char **argv)
 		g_Zapit->setStandby(false);
 
 	int loadSettingsErg = loadSetup();
-	
+
+	// init volume
+	if (obeyStartMode && g_settings.audio_initial_volume > 0)
+		g_Controld->setVolume(g_settings.audio_initial_volume, (CControld::volume_type)g_settings.audio_avs_Control);
+
 	/* load locales before setting up any fonts to determine whether we need a true unicode font */
 	bool display_language_selection;
 	loadLocale_ret = g_Locale->loadLocale(g_settings.language);

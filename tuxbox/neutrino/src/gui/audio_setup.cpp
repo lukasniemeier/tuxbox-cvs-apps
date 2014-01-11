@@ -168,6 +168,11 @@ int CAudioSetup::showAudioSetup()
 	CMenuForwarder *as = new CMenuForwarder(LOCALE_AUDIOMENU_VOLUMEBAR_AUDIOSTEPS, true, g_settings.audio_step, &audio_step);
 	audioSettings->addItem(as);
 
+	// initial volume
+	CMenuOptionNumberChooser *iv = new CMenuOptionNumberChooser(LOCALE_AUDIOMENU_INITIAL_VOLUME, &g_settings.audio_initial_volume, true, 0, 100, 0, 0, LOCALE_AUDIOMENU_INITIAL_VOLUME_RESTORE, NULL, NULL, CRCInput::RC_nokey, "", true);
+	iv->setNumberFormat("%d%%");
+	audioSettings->addItem(iv);
+
 	int res = audioSettings->exec(NULL, "");
 	selected = audioSettings->getSelected();
 	delete audioSettings;

@@ -165,6 +165,8 @@ const char * locale_real_names[] =
 	"audiomenu.avs_control",
 	"audiomenu.dolbydigital",
 	"audiomenu.head",
+	"audiomenu.initial_volume",
+	"audiomenu.initial_volume_restore",
 	"audiomenu.lirc",
 	"audiomenu.monoleft",
 	"audiomenu.monoright",
