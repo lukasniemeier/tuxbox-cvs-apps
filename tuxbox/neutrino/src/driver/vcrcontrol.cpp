@@ -434,8 +434,8 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 
 std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channel_id channel_id,
 								  const event_id_t epgid, const time_t epg_time,
-								  unsigned char apids, const bool save_vtxt_pid,
-								  const bool save_sub_pids)
+								  const std::string& epgTitle, unsigned char apids,
+								  const bool save_vtxt_pid, const bool save_sub_pids)
 {
 	std::string extMessage;
 	CMovieInfo cMovieInfo;
@@ -453,7 +453,7 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	else
 		movieInfo.epgChannel = tmpstring;
 
-	tmpstring = "not available";
+	tmpstring = (epgTitle.empty()) ? "not available" : Latin1_to_UTF8(epgTitle);
 	if (epgid != 0)
 	{
 //#define SHORT_EPG
@@ -468,7 +468,10 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 		}
 #else
 		CEPGData epgdata;
-		if (g_Sectionsd->getEPGid(epgid, epg_time, &epgdata))
+		bool has_epgdata = g_Sectionsd->getEPGid(epgid, epg_time, &epgdata);
+		if (!has_epgdata && epgTitle.empty())
+			has_epgdata = g_Sectionsd->getActualEPGServiceKey(channel_id, &epgdata);
+		if (has_epgdata)
 		{
 #warning fixme sectionsd should deliver data in UTF-8 format
 			tmpstring = Latin1_to_UTF8(epgdata.title);
@@ -587,7 +590,7 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 	extMessage += "</channelname>\n\t\t<epgtitle>";
 	
 //		CSectionsdClient::responseGetCurrentNextInfoChannelID current_next;
-	tmpstring = "not available";
+	tmpstring = (epgTitle.empty()) ? "not available" : Latin1_to_UTF8(epgTitle);
 	if (epgid != 0)
 	{
 		CShortEPGData epgdata;
@@ -598,14 +601,6 @@ std::string CVCRControl::CFileAndServerDevice::getCommandString(const CVCRComman
 			info1 = Latin1_to_UTF8(epgdata.info1);
 			info2 = Latin1_to_UTF8(epgdata.info2);
 		}
-		else if (!epgTitle.empty())
-		{
-			tmpstring = epgTitle;
-		}
-	}
-	else if (!epgTitle.empty())
-	{
-		tmpstring = epgTitle;
 	}
 	extMessage += ZapitTools::UTF8_to_UTF8XML(tmpstring.c_str());
 	
@@ -900,7 +895,7 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	} else
 	{
 		error_msg = ::start_recording(filename,
-					      getMovieInfoString(channel_id, epgid, epg_time, apids, save_vtxt_pid, save_sub_pids).c_str(),
+					      getMovieInfoString(channel_id, epgid, epg_time, epgTitle, apids, save_vtxt_pid, save_sub_pids).c_str(),
 					      mode,
 					      Use_O_Sync,
 					      Use_Fdatasync,
