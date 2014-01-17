@@ -648,11 +648,9 @@ void CTimerManager::loadRecordingSafety()
 		/* set defaults if no configuration file exists */
 		dprintf("%s not found\n", config_file_name);
 	}
-	else
-	{
-		m_extraTimeStart = config.getInt32 ("EXTRA_TIME_START",0);
-		m_extraTimeEnd  = config.getInt32 ("EXTRA_TIME_END",0);
-	}
+
+	m_extraTimeStart = config.getInt32("EXTRA_TIME_START", 0);
+	m_extraTimeEnd = config.getInt32("EXTRA_TIME_END", 0);
 }
 // -------------------------------------------------------------------------------------
 void CTimerManager::loadZaptoSafety()
@@ -664,10 +662,8 @@ void CTimerManager::loadZaptoSafety()
 		/* set defaults if no configuration file exists */
 		dprintf("%s not found\n", config_file_name);
 	}
-	else
-	{
-		m_zaptoExtraTimeStart = config.getInt32 ("ZAPTO_EXTRA_TIME_START",0);
-	}
+
+	m_zaptoExtraTimeStart = config.getInt32("ZAPTO_EXTRA_TIME_START", 0);
 }
 // -------------------------------------------------------------------------------------
 void CTimerManager::saveEventsToConfig()
