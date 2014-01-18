@@ -469,8 +469,12 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 #else
 		CEPGData epgdata;
 		bool has_epgdata = g_Sectionsd->getEPGid(epgid, epg_time, &epgdata);
-		if (!has_epgdata && epgTitle.empty())
+		if (!has_epgdata)
+		{
 			has_epgdata = g_Sectionsd->getActualEPGServiceKey(channel_id, &epgdata);
+			if (has_epgdata && !epgTitle.empty() && epgTitle != epgdata.title)
+				has_epgdata = false;
+		}
 		if (has_epgdata)
 		{
 #warning fixme sectionsd should deliver data in UTF-8 format
