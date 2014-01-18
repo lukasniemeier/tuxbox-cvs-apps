@@ -441,6 +441,7 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	CMovieInfo cMovieInfo;
 	MI_MOVIE_INFO movieInfo;
 	std::string info1, info2;
+	event_id_t epg_id = epgid;
 
 	cMovieInfo.clearMovieInfo(&movieInfo);
 	CZapitClient::responseGetPIDs pids;
@@ -454,12 +455,12 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 		movieInfo.epgChannel = tmpstring;
 
 	tmpstring = (epgTitle.empty()) ? "not available" : Latin1_to_UTF8(epgTitle);
-	if (epgid != 0)
+	if (epg_id != 0)
 	{
 //#define SHORT_EPG
 #ifdef SHORT_EPG
 		CShortEPGData epgdata;
-		if (g_Sectionsd->getEPGidShort(epgid, &epgdata))
+		if (g_Sectionsd->getEPGidShort(epg_id, &epgdata))
 		{
 #warning fixme sectionsd should deliver data in UTF-8 format
 			tmpstring = Latin1_to_UTF8(epgdata.title);
@@ -468,12 +469,14 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 		}
 #else
 		CEPGData epgdata;
-		bool has_epgdata = g_Sectionsd->getEPGid(epgid, epg_time, &epgdata);
+		bool has_epgdata = g_Sectionsd->getEPGid(epg_id, epg_time, &epgdata);
 		if (!has_epgdata)
 		{
 			has_epgdata = g_Sectionsd->getActualEPGServiceKey(channel_id, &epgdata);
 			if (has_epgdata && !epgTitle.empty() && epgTitle != epgdata.title)
 				has_epgdata = false;
+			if (has_epgdata)
+				epg_id = epgdata.eventID;
 		}
 		if (has_epgdata)
 		{
@@ -496,13 +499,13 @@ std::string CVCRControl::CFileAndServerDevice::getMovieInfoString(const t_channe
 	movieInfo.epgId = 		channel_id;
 	movieInfo.epgInfo1 = 	info1;
 	movieInfo.epgInfo2 = 	info2;
-	movieInfo.epgEpgId =  	epgid ;
+	movieInfo.epgEpgId =  	epg_id;
 	movieInfo.epgMode = 	g_Zapit->getMode();
 	movieInfo.epgVideoPid = si.vpid;
 
 	EPG_AUDIO_PIDS audio_pids;
 	// super hack :-), der einfachste weg an die apid descriptions ranzukommen
-	g_RemoteControl->current_EPGid = epgid;
+	g_RemoteControl->current_EPGid = epg_id;
 	g_RemoteControl->current_PIDs = pids;
 	g_RemoteControl->processAPIDnames();
 	APIDList apid_list;
