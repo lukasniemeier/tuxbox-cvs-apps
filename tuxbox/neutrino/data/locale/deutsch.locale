@@ -1432,7 +1432,6 @@ timerlist.apids_dflt Voreingestellte Tonspuren aufnehmen
 timerlist.bouquetselect Bouquet wählen
 timerlist.channel Kanal
 timerlist.channelselect Kanal wählen
-timerlist.close Schließen
 timerlist.delete Löschen
 timerlist.menumodify Timer bearbeiten
 timerlist.menunew Neuer Timer
@@ -1471,6 +1470,7 @@ timerlist.repeatcount Wiederholungen
 timerlist.repeatcount.help1 Anzahl der Timerausführungen
 timerlist.repeatcount.help2 0 für unbegrenzte Anzahl
 timerlist.save Timer speichern
+timerlist.skip Aussetzen
 timerlist.standby SB Modus
 timerlist.standby.off Aufwachen aus Standby
 timerlist.standby.on Auf Standby gehen

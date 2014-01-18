@@ -515,7 +515,11 @@ int CTimerList::show()
 		{
 			update=true;
 		}
-		else if ( msg == CRCInput::RC_blue || CRCInput::isNumeric(msg) )
+		else if (msg == CRCInput::RC_blue && !timerlist.empty())
+		{
+			update = skipTimer();
+		}
+		else if (CRCInput::isNumeric(msg))
 		{
 			//Ignore
 		}
@@ -751,8 +755,8 @@ const struct button_label TimerListButtons[5] =
 	{ NEUTRINO_ICON_BUTTON_RED   , LOCALE_TIMERLIST_DELETE },
 	{ NEUTRINO_ICON_BUTTON_GREEN , LOCALE_TIMERLIST_NEW    },
 	{ NEUTRINO_ICON_BUTTON_YELLOW, LOCALE_TIMERLIST_RELOAD },
-	{ NEUTRINO_ICON_BUTTON_HOME  , LOCALE_TIMERLIST_CLOSE  },
-	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_TIMERLIST_MODIFY }
+	{ NEUTRINO_ICON_BUTTON_OKAY  , LOCALE_TIMERLIST_MODIFY },
+	{ NEUTRINO_ICON_BUTTON_BLUE  , LOCALE_TIMERLIST_SKIP   }
 };
 
 void CTimerList::paintFoot()
@@ -761,9 +765,13 @@ void CTimerList::paintFoot()
 	int ButtonWidth = (width - 20) / 5;
 	frameBuffer->paintBoxRel(x, y_foot, width, footHeight, COL_INFOBAR_SHADOW_PLUS_1, RADIUS_MID, CORNER_BOTTOM);
 	if (timerlist.empty())
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + ButtonWidth, y_foot, ButtonWidth, 3, &(TimerListButtons[1]));
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10 + ButtonWidth, y_foot, ButtonWidth, 2, &(TimerListButtons[1]));
 	else
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y_foot, ButtonWidth, 5, TimerListButtons);
+	{
+		CTimerd::responseGetTimer* timer = &timerlist[selected];
+		unsigned int buttonsCount = (timer->eventRepeat != CTimerd::TIMERREPEAT_ONCE && timer->repeatCount != 1) ? 5 : 4;
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 10, y_foot, ButtonWidth, buttonsCount, TimerListButtons);
+	}
 }
 
 void CTimerList::paint()
@@ -810,6 +818,8 @@ void CTimerList::updateSelection(unsigned int newpos)
 			paintItem(prev_selected - liststart);
 			paintItem(selected - liststart);
 		}
+
+		paintFoot();
 	}
 }
 
@@ -1151,6 +1161,89 @@ int CTimerList::newTimer()
 		delete toDelete[count];
 
 	return ret;
+}
+
+bool CTimerList::skipTimer()
+{
+	CTimerd::responseGetTimer* timer = &timerlist[selected];
+	if (timer->eventRepeat != CTimerd::TIMERREPEAT_ONCE && timer->repeatCount != 1)
+	{
+		struct tm *t = localtime(&timer->alarmTime);
+		int isdst1 = t->tm_isdst;
+		switch (timer->eventRepeat)
+		{
+			case CTimerd::TIMERREPEAT_DAILY:
+				t->tm_mday++;
+				break;
+			case CTimerd::TIMERREPEAT_WEEKLY:
+				t->tm_mday += 7;
+				break;
+			case CTimerd::TIMERREPEAT_BIWEEKLY:
+				t->tm_mday += 14;
+				break;
+			case CTimerd::TIMERREPEAT_FOURWEEKLY:
+				t->tm_mday += 28;
+				break;
+			case CTimerd::TIMERREPEAT_MONTHLY:
+				t->tm_mon++;
+				break;
+			default:
+				if (timer->eventRepeat >= CTimerd::TIMERREPEAT_WEEKDAYS)
+				{
+					int weekdays = ((int)timer->eventRepeat) >> 9;
+					if (weekdays > 0)
+					{
+						bool weekday_arr[7];
+						weekday_arr[0] = ((weekdays & 0x40) > 0); //So
+						weekday_arr[1] = ((weekdays & 0x1)  > 0); //Mo
+						weekday_arr[2] = ((weekdays & 0x2)  > 0); //Di
+						weekday_arr[3] = ((weekdays & 0x4)  > 0); //Mi
+						weekday_arr[4] = ((weekdays & 0x8)  > 0); //Do
+						weekday_arr[5] = ((weekdays & 0x10) > 0); //Fr
+						weekday_arr[6] = ((weekdays & 0x20) > 0); //Sa
+						struct tm *t2 = localtime(&timer->alarmTime);
+						int day = 1;
+						for (; !weekday_arr[(t2->tm_wday + day) % 7]; day++);
+						t2->tm_mday += day;
+					}
+				}
+		}
+		time_t diff = mktime(t) - timer->alarmTime;
+		timer->alarmTime += diff;
+		t = localtime(&timer->alarmTime);
+		int isdst2 = t->tm_isdst;
+		if (isdst2 > isdst1) //change from winter to summer
+		{
+			diff -= 3600;
+			timer->alarmTime -= 3600;
+		}
+		else if (isdst1 > isdst2) //change from summer to winter
+		{
+			diff += 3600;
+			timer->alarmTime += 3600;
+		}
+		if (timer->announceTime > 0)
+			timer->announceTime += diff;
+		if (timer->stopTime > 0)
+			timer->stopTime += diff;
+		if (timer->repeatCount > 0)
+			timer->repeatCount--;
+
+		if (timer->eventType == CTimerd::TIMER_RECORD)
+		{
+			Timer->modifyRecordTimerEvent(timer->eventID, timer->announceTime, timer->alarmTime,
+						timer->stopTime, timer->eventRepeat, timer->repeatCount, timer->recordingDir);
+		}
+		else
+		{
+			Timer->modifyTimerEvent(timer->eventID, timer->announceTime, timer->alarmTime,
+						timer->stopTime, timer->eventRepeat, timer->repeatCount);
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 bool askUserOnTimerConflict(time_t announceTime, time_t stopTime)

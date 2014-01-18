@@ -84,6 +84,7 @@ class CTimerList : public CMenuTarget
 		void updateSelection(unsigned int newpos);
 		int modifyTimer();
 		int newTimer();
+		bool skipTimer();
 
 	public:
 		CTimerList();
