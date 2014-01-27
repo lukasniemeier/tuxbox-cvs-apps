@@ -42,8 +42,6 @@ class SHTDCNT
 
 	public:
 
-		void setlcdparameter(void);
-
 		static SHTDCNT* getInstance();
 		void init();
 };

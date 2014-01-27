@@ -62,6 +62,7 @@ void* SHTDCNT::TimeThread(void *)
 
 void SHTDCNT::init()
 {
+	shutdown_cnt = atoi(g_settings.shutdown_count) * 60;
 	if (pthread_create (&thrTime, NULL, TimeThread, NULL) != 0 )
 	{
 		perror("[SHTDCNT]: pthread_create(TimeThread)");
