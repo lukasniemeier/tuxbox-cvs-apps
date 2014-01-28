@@ -241,7 +241,7 @@ bool CNeutrinoAPI::GetStreamInfo(int bitInfo[10])
 
 bool CNeutrinoAPI::GetChannelEvents(void)
 {
-	eList = Sectionsd->getChannelEvents();
+	eList = Sectionsd->getChannelEvents(Zapit->getMode() != CZapitClient::MODE_RADIO);
 	CChannelEventList::iterator eventIterator;
 
 	ChannelListEvents.clear();
