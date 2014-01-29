@@ -1409,8 +1409,8 @@ void CControlAPI::ZaptoCGI(CyhookHandler *hh)
 			t_channel_id current_channel = NeutrinoAPI->Zapit->getCurrentServiceID();
 			CSectionsdClient::LinkageDescriptorList desc;
 			CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
-			NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
-			if (NeutrinoAPI->Sectionsd->getLinkageDescriptorsUniqueKey(currentNextInfo.current_uniqueKey,desc))
+			bool has_current_next = NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
+			if (has_current_next && NeutrinoAPI->Sectionsd->getLinkageDescriptorsUniqueKey(currentNextInfo.current_uniqueKey, desc))
 			{
 				for(unsigned int i=0;i< desc.size();i++)
 				{
@@ -1677,8 +1677,8 @@ void CControlAPI::SendAllCurrentVAPid(CyhookHandler *hh)
 
 	t_channel_id current_channel = NeutrinoAPI->Zapit->getCurrentServiceID();
 	CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
-	NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
-	if (NeutrinoAPI->Sectionsd->getComponentTagsUniqueKey(currentNextInfo.current_uniqueKey,tags))
+	bool has_current_next = NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
+	if (has_current_next && NeutrinoAPI->Sectionsd->getComponentTagsUniqueKey(currentNextInfo.current_uniqueKey, tags))
 	{
 		for (unsigned short j=0; j< pids.APIDs.size(); j++)
 		{
