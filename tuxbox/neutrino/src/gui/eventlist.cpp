@@ -438,7 +438,7 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 										     evtlist[selected].startTime - (ANNOUNCETIME + 120),
 										     TIMERD_APIDS_CONF, true, recDir,false) == -1)
 						{
-							if(askUserOnTimerConflict(evtlist[selected].startTime,
+							if(askUserOnTimerConflict(evtlist[selected].startTime - (ANNOUNCETIME + 120),
 										  evtlist[selected].startTime + evtlist[selected].duration))
 							{
 //								Timer.addRecordTimerEvent(channel_id,
