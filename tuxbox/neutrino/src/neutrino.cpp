@@ -3046,10 +3046,10 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 
 				if (eventinfo->epgID != 0)
 				{
-					CEPGData epgdata;
+					CShortEPGData epgdata;
 #warning fixme sectionsd should deliver data in UTF-8 format
 					zAddData += " :\n";
-					if (g_Sectionsd->getEPGid(eventinfo->epgID, eventinfo->epg_starttime, &epgdata))
+					if (g_Sectionsd->getEPGidShort(eventinfo->epgID, &epgdata))
 						zAddData += Latin1_to_UTF8(epgdata.title);
 					else if (strlen(eventinfo->epgTitle) != 0)
 						zAddData += Latin1_to_UTF8(eventinfo->epgTitle);
@@ -3120,10 +3120,10 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 
 				if (eventinfo->epgID != 0)
 				{
-					CEPGData epgdata;
+					CShortEPGData epgdata;
 #warning fixme sectionsd should deliver data in UTF-8 format
 					zAddData += " :\n";
-					if (g_Sectionsd->getEPGid(eventinfo->epgID, eventinfo->epg_starttime, &epgdata))
+					if (g_Sectionsd->getEPGidShort(eventinfo->epgID, &epgdata))
 						zAddData += Latin1_to_UTF8(epgdata.title);
 					else if (strlen(eventinfo->epgTitle) != 0)
 						zAddData += Latin1_to_UTF8(eventinfo->epgTitle);

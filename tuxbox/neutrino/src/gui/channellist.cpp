@@ -1717,7 +1717,7 @@ void CChannelList::showdescription(int index)
 {
 	ffheight = g_Font[eventFont]->getHeight();
 	CChannelEvent *p_event = &chanlist[index]->currentEvent;
-	g_Sectionsd->getEPGid(p_event->eventID, p_event->startTime, &epgData);
+	g_Sectionsd->getEPGidShort(p_event->eventID, &epgData);
 
 #warning fixme sectionsd should deliver data in UTF-8 format
 	if (!(epgData.info2.empty()))

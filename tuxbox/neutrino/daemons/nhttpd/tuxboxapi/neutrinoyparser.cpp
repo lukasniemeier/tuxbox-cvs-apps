@@ -806,8 +806,8 @@ std::string  CNeutrinoYParser::func_get_timer_list(CyhookHandler */*hh*/, std::s
 				}
 				if(timer->epgID!=0)
 				{
-					CEPGData epgdata;
-					if (NeutrinoAPI->Sectionsd->getEPGid(timer->epgID, timer->epg_starttime, &epgdata))
+					CShortEPGData epgdata;
+					if (NeutrinoAPI->Sectionsd->getEPGidShort(timer->epgID, &epgdata))
 						sAddData+="<br/>" + epgdata.title;
 					else
 						sAddData+=std::string("<br/>")+timer->epgTitle;

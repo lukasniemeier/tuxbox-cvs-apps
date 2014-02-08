@@ -664,8 +664,8 @@ void CTimerList::paintItem(int pos)
 					}
 					if(timer.epgID!=0)
 					{
-						CEPGData epgdata;
-						if (g_Sectionsd->getEPGid(timer.epgID, timer.epg_starttime, &epgdata))
+						CShortEPGData epgdata;
+						if (g_Sectionsd->getEPGidShort(timer.epgID, &epgdata))
 						{
 #warning fixme sectionsd should deliver data in UTF-8 format
 							zAddData += " : ";
@@ -1288,9 +1288,9 @@ bool askUserOnTimerConflict(time_t announceTime, time_t stopTime)
 		timerbuf += CTimerList::convertChannelId2String(it->channel_id); // UTF-8
 		if(it->epgID != 0)
 		{
-			CEPGData epgdata;
+			CShortEPGData epgdata;
 			timerbuf += ": ";
-			if (g_Sectionsd->getEPGid(it->epgID, it->epg_starttime, &epgdata))
+			if (g_Sectionsd->getEPGidShort(it->epgID, &epgdata))
 			{
 #warning fixme sectionsd should deliver data in UTF-8 format
 				timerbuf += Latin1_to_UTF8(epgdata.title);

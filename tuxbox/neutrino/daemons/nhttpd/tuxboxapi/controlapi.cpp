@@ -1946,8 +1946,8 @@ void CControlAPI::SendTimersXML(CyhookHandler *hh)
 		std::string title = timer->epgTitle;
 		if (timer->epgID != 0)
 		{
-			CEPGData epgdata;
-			if (NeutrinoAPI->Sectionsd->getEPGid(timer->epgID, timer->epg_starttime, &epgdata))
+			CShortEPGData epgdata;
+			if (NeutrinoAPI->Sectionsd->getEPGidShort(timer->epgID, &epgdata))
 				title = epgdata.title;
 		}
 

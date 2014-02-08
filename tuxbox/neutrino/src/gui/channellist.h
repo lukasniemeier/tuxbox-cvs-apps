@@ -103,7 +103,7 @@ class CChannelList
 		int			infozone_width;
 		int			infozone_height;
 
-		CEPGData		epgData;
+		CShortEPGData epgData;
 		bool historyMode;
 		bool usedInBouquet;
 		bool displayNext;
