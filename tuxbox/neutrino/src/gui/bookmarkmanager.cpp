@@ -240,12 +240,11 @@ const CBookmark * CBookmarkManager::getBookmark(CMenuTarget* parent)
 	
 	height = h_max(576, 50);
 	listmaxshow = (height-theight-footHeight-0)/(fheight*2);
-	height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	if(bookmarks.size() < listmaxshow)
 	{
 		listmaxshow=bookmarks.size();
-		height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	}
+	height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	if (!bookmarks.empty() && selected==bookmarks.size())
 	{
 		selected=bookmarks.size()-1;

@@ -401,12 +401,11 @@ void CTimerList::updateEvents(void)
 	width = w_max(600, 50);
 	height = h_max(576, 50);
 	listmaxshow = (height-theight-footHeight-0)/(fheight*2);
-	height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	if(timerlist.size() < listmaxshow)
 	{
 		listmaxshow=timerlist.size();
-		height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	}
+	height = theight+footHeight+0+listmaxshow*fheight*2;	// recalc height
 	if (!timerlist.empty() && selected >= timerlist.size())
 	{
 		selected=timerlist.size()-1;

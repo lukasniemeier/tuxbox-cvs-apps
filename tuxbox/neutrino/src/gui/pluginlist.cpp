@@ -289,6 +289,8 @@ void CPluginList::paint()
 	fheight = fheight1 + fheight2 + 2;
 	//
 	listmaxshow = (height-theight-0)/fheight;
+	if (pluginlist.size() < listmaxshow)
+		listmaxshow = pluginlist.size();
 	height = theight+0+listmaxshow*fheight; // recalc height
 	sb_width = (pluginlist.size() > listmaxshow) ? 15 : 0;
 	x = getScreenStartX(width + sb_width);
