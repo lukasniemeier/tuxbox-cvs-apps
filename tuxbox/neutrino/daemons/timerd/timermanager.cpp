@@ -298,12 +298,22 @@ bool CTimerManager::stopEvent(int ev_ID)
 }
 
 //------------------------------------------------------------
+int CTimerManager::lockEvents()
+{
+	return pthread_mutex_lock(&tm_eventsMutex);
+}
+
+//------------------------------------------------------------
+int CTimerManager::unlockEvents()
+{
+	return pthread_mutex_unlock(&tm_eventsMutex);
+}
+
+//------------------------------------------------------------
 bool CTimerManager::listEvents(CTimerEventMap &Events)
 {
 	if(!&Events)
 		return false;
-
-	pthread_mutex_lock(&tm_eventsMutex);
 
 	Events.clear();
 	for (CTimerEventMap::iterator pos = events.begin(); pos != events.end(); ++pos)
@@ -311,7 +321,6 @@ bool CTimerManager::listEvents(CTimerEventMap &Events)
 		pos->second->Refresh();
 		Events[pos->second->eventID] = pos->second;
 	}
-	pthread_mutex_unlock(&tm_eventsMutex);
 	return true;
 }
 //------------------------------------------------------------
