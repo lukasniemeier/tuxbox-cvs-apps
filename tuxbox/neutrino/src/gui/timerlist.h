@@ -74,8 +74,6 @@ class CTimerList : public CMenuTarget
 		int 			x;
 		int 			y;
 
-		int skipEventID;
-
 		void paintItem(int pos);
 		void paint();
 		void paintHead();

@@ -242,7 +242,6 @@ CTimerList::CTimerList()
 	selected = 0;
 	liststart = 0;
 	Timer = new CTimerdClient();
-	skipEventID=0;
 }
 
 CTimerList::~CTimerList()
@@ -386,16 +385,6 @@ int CTimerList::exec(CMenuTarget* parent, const std::string & actionKey)
 void CTimerList::updateEvents(void)
 {
 	Timer->getTimerList (timerlist);
-	//Remove last deleted event from List
-	CTimerd::TimerList::iterator timer = timerlist.begin();
-	for(; timer != timerlist.end(); ++timer)
-	{
-		if(timer->eventID==skipEventID)
-		{
-			timerlist.erase(timer);
-			break;
-		}
-	}
 	sort(timerlist.begin(), timerlist.end());
 
 	width = w_max(600, 50);
@@ -497,7 +486,6 @@ int CTimerList::show()
 		else if((msg == CRCInput::RC_red) && !(timerlist.empty()))
 		{
 			Timer->removeTimerEvent(timerlist[selected].eventID);
-			skipEventID=timerlist[selected].eventID;
 			update=true;
 		}
 		else if(msg==CRCInput::RC_green)
