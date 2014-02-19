@@ -176,7 +176,7 @@ void CNeutrinoAPI::ZapToSubService(const char * const target)
 		Sectionsd->setServiceChanged(channel_id, false);
 }
 //-------------------------------------------------------------------------
-t_channel_id CNeutrinoAPI::ChannelNameToChannelId(std::string search_channel_name)
+t_channel_id CNeutrinoAPI::ChannelNameToChannelId(const std::string& search_channel_name)
 {
 	t_channel_id channel_id = (t_channel_id)-1;
 	CStringArray channel_names = ySplitStringVector(search_channel_name, ",");

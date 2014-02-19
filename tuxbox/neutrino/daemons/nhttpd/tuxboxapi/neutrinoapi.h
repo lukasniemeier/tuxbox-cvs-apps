@@ -67,7 +67,7 @@ class CNeutrinoAPI
 	void ZapTo          (const char * const target);
 	void ZapToSubService(const char * const target);
 	void ZapToChannelId (t_channel_id channel_id);
-	t_channel_id ChannelNameToChannelId(std::string search_channel_name);
+	t_channel_id ChannelNameToChannelId(const std::string& search_channel_name);
 
 	void UpdateBouquet(unsigned int BouquetNr);
 	void UpdateChannelList(void);

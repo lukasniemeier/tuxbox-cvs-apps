@@ -138,6 +138,8 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"getmode", 		&CControlAPI::GetModeCGI,	"text/plain"},
 	{"setmode", 		&CControlAPI::SetModeCGI,	"text/plain"},
 	{"epg", 		&CControlAPI::EpgCGI,		""},
+	{"epgsearch",		&CControlAPI::EpgSearchTXTCGI,	""},
+	{"epgsearchxml",	&CControlAPI::EpgSearchXMLCGI,	""},
 	{"zapto", 		&CControlAPI::ZaptoCGI,		"text/plain"},
 	{"getonidsid", 		&CControlAPI::GetChannel_IDCGI,	"text/plain"},
 	// boxcontrol - system
@@ -1170,6 +1172,10 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 						event->description.c_str());
 		}
 	}
+	else if (!hh->ParamList["search"].empty())
+	{
+		SendFoundEvents(hh, !hh->ParamList["xml"].empty());
+	}
 	else if (hh->ParamList["xml"].empty())
 	{
 		hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
@@ -1255,7 +1261,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 	//	xml=true&channelid=<channel_id>|channelname=<channel name>[&details=true][&max=<max items>][&stoptime=<long:stop time>]
 	//	details=true : Show EPG Info1 and info2
 	//	stoptime : show only items until stoptime reached
-	else if (!(hh->ParamList["xml"].empty()))
+	else
 	{
 		hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
 
@@ -1269,7 +1275,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 		}
 		else if (!(hh->ParamList["channelname"].empty()))
 		{
-			channel_id = NeutrinoAPI->ChannelNameToChannelId( hh->ParamList["channelname"].c_str() );
+			channel_id = NeutrinoAPI->ChannelNameToChannelId(hh->ParamList["channelname"]);
 		}
 		if(channel_id != (t_channel_id)-1)
 		{
@@ -1330,6 +1336,18 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 			hh->WriteLn("</epglist>");
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+void CControlAPI::EpgSearchTXTCGI(CyhookHandler *hh)
+{
+	SendFoundEvents(hh);
+}
+
+//-----------------------------------------------------------------------------
+void CControlAPI::EpgSearchXMLCGI(CyhookHandler *hh)
+{
+	SendFoundEvents(hh, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -1592,6 +1610,134 @@ void CControlAPI::SendEventList(CyhookHandler *hh, t_channel_id channel_id)
 
 	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator, pos++)
 		hh->printf("%llu %ld %d %s\n", eventIterator->eventID, eventIterator->startTime, eventIterator->duration, eventIterator->description.c_str());
+}
+
+//-----------------------------------------------------------------------------
+inline static bool sortByDateTime(const CChannelEvent& a, const CChannelEvent& b)
+{
+	return a.startTime < b.startTime;
+}
+
+void CControlAPI::SendFoundEvents(CyhookHandler *hh, bool xml_format)
+{
+	if (!hh->ParamList.empty())
+	{
+		std::string search_keyword = (hh->ParamList["search"].empty()) ? hh->ParamList["1"] : hh->ParamList["search"];
+
+		int search_epg_item = 5 /*EventList::SEARCH_EPG_ALL*/;
+		if (!hh->ParamList["epgitem"].empty())
+		{
+			if (hh->ParamList["epgitem"] == "title")
+				search_epg_item = 1 /*EventList::SEARCH_EPG_TITLE*/;
+			else if (hh->ParamList["epgitem"] == "info1")
+				search_epg_item = 2 /*EventList::SEARCH_EPG_INFO1*/;
+			else if (hh->ParamList["epgitem"] == "info2")
+				search_epg_item = 3 /*EventList::SEARCH_EPG_INFO2*/;
+		}
+
+		int mode = CZapitClient::MODE_CURRENT;
+		if (!hh->ParamList["mode"].empty())
+		{
+			if (hh->ParamList["mode"].compare("TV") == 0)
+				mode = CZapitClient::MODE_TV;
+			else if (hh->ParamList["mode"].compare("RADIO") == 0)
+				mode = CZapitClient::MODE_RADIO;
+			else if (hh->ParamList["mode"].compare("all") == 0)
+				mode = CZapitClient::MODE_ALL;
+		}
+
+		NeutrinoAPI->eList.clear();
+		if (!hh->ParamList["channelid"].empty())
+		{
+			t_channel_id channel_id;
+			sscanf(hh->ParamList["channelid"].c_str(), SCANF_CHANNEL_ID_TYPE, &channel_id);
+			NeutrinoAPI->Sectionsd->getEventsServiceKeySearchAdd(NeutrinoAPI->eList, channel_id, search_epg_item, search_keyword);
+		}
+		else if (!hh->ParamList["channelname"].empty())
+		{
+			t_channel_id channel_id = NeutrinoAPI->ChannelNameToChannelId(hh->ParamList["channelname"]);
+			if (channel_id != (t_channel_id)-1)
+				NeutrinoAPI->Sectionsd->getEventsServiceKeySearchAdd(NeutrinoAPI->eList, channel_id, search_epg_item, search_keyword);
+		}
+		else if (!hh->ParamList["bouquet"].empty())
+		{
+			CZapitClient::BouquetChannelList *bouquet = NeutrinoAPI->GetBouquet(atoi(hh->ParamList["bouquet"].c_str()), mode);
+			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
+			for (; channel != bouquet->end(); ++channel)
+				NeutrinoAPI->Sectionsd->getEventsServiceKeySearchAdd(NeutrinoAPI->eList, channel->channel_id, search_epg_item, search_keyword);
+		}
+		else
+		{
+			CZapitClient::BouquetChannelList *channellist = NeutrinoAPI->GetChannelList(mode);
+			CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
+			std::vector<t_channel_id> v;
+			for (; channel != channellist->end(); ++channel)
+				v.push_back(channel->channel_id);
+			sort(v.begin(), v.end());
+			std::vector<t_channel_id>::iterator last_it = unique(v.begin(), v.end());
+			std::vector<t_channel_id>::iterator it = v.begin();
+			for (; it != last_it; ++it)
+				NeutrinoAPI->Sectionsd->getEventsServiceKeySearchAdd(NeutrinoAPI->eList, *it, search_epg_item, search_keyword);
+		}
+		sort(NeutrinoAPI->eList.begin(), NeutrinoAPI->eList.end(), sortByDateTime);
+
+		if (xml_format)
+		{
+			hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
+			hh->WriteLn("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
+			hh->WriteLn("<neutrino commandversion=\"1\">");
+		}
+		else
+			hh->SetHeader(HTTP_OK, "text/plain; charset=iso-8859-1");
+
+		CShortEPGData epg;
+		char tmpstr[24];
+		CChannelEventList::iterator eventIterator;
+		for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator)
+		{
+			if (NeutrinoAPI->Sectionsd->getEPGidShort(eventIterator->eventID, &epg))
+			{
+				struct tm *tmStartZeit = localtime(&eventIterator->startTime);
+				if (xml_format)
+				{
+					hh->WriteLn("\t<epgsearch>");
+					hh->printf("\t\t<channelname><![CDATA[%s]]></channelname>\n", NeutrinoAPI->GetServiceName(eventIterator->get_channel_id()).c_str());
+					hh->printf("\t\t<epgtitle><![CDATA[%s]]></epgtitle>\n", epg.title.c_str());
+					hh->printf("\t\t<info1><![CDATA[%s]]></info1>\n", epg.info1.c_str());
+					hh->printf("\t\t<info2><![CDATA[%s]]></info2>\n", epg.info2.c_str());
+					strftime(tmpstr, sizeof(tmpstr), "%Y-%m-%d", tmStartZeit);
+					hh->printf("\t\t<date>%s</date>\n", tmpstr);
+					strftime(tmpstr, sizeof(tmpstr), "%H:%M", tmStartZeit);
+					hh->printf("\t\t<time>%s</time>\n", tmpstr);
+					hh->printf("\t\t<duration>%d</duration>\n", eventIterator->duration);
+					hh->printf("\t\t<channel_id>" PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS "</channel_id>\n", eventIterator->get_channel_id());
+					hh->printf("\t\t<eventid>%ld</eventid>\n", eventIterator->eventID);
+					hh->WriteLn("\t</epgsearch>");
+				}
+				else
+				{
+					std::string datetime_str;
+					strftime(tmpstr, sizeof(tmpstr), "%Y-%m-%d %H:%M", tmStartZeit);
+					datetime_str = tmpstr;
+					snprintf(tmpstr, sizeof(tmpstr), " [%d min]", eventIterator->duration / 60);
+					datetime_str += tmpstr;
+					hh->WriteLn(datetime_str);
+					hh->WriteLn(NeutrinoAPI->GetServiceName(eventIterator->get_channel_id()));
+					hh->WriteLn(epg.title);
+					if (!epg.info1.empty())
+						hh->WriteLn(epg.info1);
+					if (!epg.info2.empty())
+						hh->WriteLn(epg.info2);
+					hh->WriteLn("----------------------------------------------------------");
+				}
+			}
+		}
+
+		if (xml_format)
+			hh->WriteLn("</neutrino>");
+	}
+	else
+		hh->SendError();
 }
 
 //-----------------------------------------------------------------------------

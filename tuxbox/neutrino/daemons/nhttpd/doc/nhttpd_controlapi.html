@@ -195,7 +195,7 @@
 		http://dbox/control/updatebouquet</a></td>
 	</tr>
 	<tr>
-		<td>42. <a href="#build_live_url">Live-URL für Streamin erzeugen</a></td>
+		<td>42. <a href="#build_live_url">Live-URL für Streaming erzeugen</a></td>
 		<td><a href="http://dbox/control/build_live_url">
 		http://dbox/control/build_live_url</a></td>
 	</tr>
@@ -400,6 +400,77 @@ gebrochen, mehrere Rippen geprellt. Katja Metz versorgt ihn mit dem
 Nötigsten.]]&gt;&lt;/info2&gt;<br>
 &lt;/prog&gt;<br>
 &lt;/epglist&gt;<br>
+</div>
+<b>Parameter:</b><br>
+search=&lt;keyword&gt;<br>
+[&amp;xml=true]<br>
+[&amp;channelid=&lt;channel id&gt;|channelname=&lt;channel name&gt;|bouquet=&lt;bouquet nr&gt;]<br>
+[&amp;mode=<b>current</b>|TV|RADIO|all]<br>
+[&amp;epgitem=title|info1|info2|<b>all</b>]<br>
+<br>
+<b>Rückgabe:</b><br>
+Liefert zu allen Kanälen, zum angegebenen Kanal (Kanal-ID oder Kanalname)<br>
+oder zu einem bestimmten Bouquet die EPG-Einträge als Text- oder XML-Liste<br>
+zurück, die den Suchbegriff im Titel, in Info1 oder in Info2 enthalten.<br>
+<div class="example">
+Beispiel:<br>
+<br>
+&gt;&gt;&gt;http://dbox/control/epg?search=zapping&amp;channelname=Sky%20Cinema<br>
+<br>
+2014-02-19 20:10 [5 min]<br>
+Sky Cinema<br>
+Zapping<br>
+Sehen Sie bei &quot;Zapping&quot; exklusiv die größten Pannen und Peinlichkeiten des deutschen Fernsehens tagesaktuell, brandheiß und unkommentiert zusammengefasst.<br>
+----------------------------------------------------------<br>
+2014-02-20 10:00 [50 min]<br>
+Sky Cinema<br>
+Zapping - Die Show<br>
+Grimme-Preisträger Oliver Kalkofe führt durch die 45-minütige &quot;Zapping&quot;-Sondersendung zum Jahresende. Mit dabei: Moderator Jan Hahn und weitere Gäste.<br>
+----------------------------------------------------------<br>
+2014-02-20 20:10 [5 min]<br>
+Sky Cinema<br>
+Zapping<br>
+----------------------------------------------------------<br>
+<br>
+<br>
+&gt;&gt;&gt;http://dbox/control/epg?search=zapping&amp;xml=true&amp;channelname=Sky%20Cinema<br>
+<br>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
+&lt;neutrino commandversion=&quot;1&quot;&gt;<br>
+&nbsp;&nbsp;&lt;epgsearch&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channelname&gt;&lt;![CDATA[Sky Cinema]]&gt;&lt;/channelname&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;epgtitle&gt;&lt;![CDATA[Zapping]]&gt;&lt;/epgtitle&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;info1&gt;&lt;![CDATA[]]&gt;&lt;/info1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;info2&gt;&lt;![CDATA[Sehen Sie bei &quot;Zapping&quot; exklusiv die größten Pannen und Peinlichkeiten des deutschen Fernsehens tagesaktuell, brandheiß und unkommentiert zusammengefasst.]]&gt;&lt;/info2&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;date&gt;2014-02-19&lt;/date&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;time&gt;20:10&lt;/time&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;duration&gt;300&lt;/duration&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel_id&gt;20085000a&lt;/channel_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;eventid&gt;131205&lt;/eventid&gt;<br>
+&nbsp;&nbsp;&lt;/epgsearch&gt;<br>
+&nbsp;&nbsp;&lt;epgsearch&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channelname&gt;&lt;![CDATA[Sky Cinema]]&gt;&lt;/channelname&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;epgtitle&gt;&lt;![CDATA[Zapping - Die Show]]&gt;&lt;/epgtitle&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;info1&gt;&lt;![CDATA[]]&gt;&lt;/info1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;info2&gt;&lt;![CDATA[Grimme-Preisträger Oliver Kalkofe führt durch die 45-minütige &quot;Zapping&quot;-Sondersendung zum Jahresende. Mit dabei: Moderator Jan Hahn und weitere Gäste.]]&gt;&lt;/info2&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;date&gt;2014-02-20&lt;/date&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;time&gt;10:00&lt;/time&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;duration&gt;3000&lt;/duration&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel_id&gt;20085000a&lt;/channel_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;eventid&gt;131205&lt;/eventid&gt;<br>
+&nbsp;&nbsp;&lt;/epgsearch&gt;<br>
+&nbsp;&nbsp;&lt;epgsearch&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channelname&gt;&lt;![CDATA[Sky Cinema]]&gt;&lt;/channelname&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;epgtitle&gt;&lt;![CDATA[Zapping]]&gt;&lt;/epgtitle&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;info1&gt;&lt;![CDATA[]]&gt;&lt;/info1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;info2&gt;&lt;![CDATA[]]&gt;&lt;/info2&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;date&gt;2014-02-20&lt;/date&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;time&gt;20:10&lt;/time&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;duration&gt;300&lt;/duration&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel_id&gt;20085000a&lt;/channel_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;eventid&gt;131205&lt;/eventid&gt;<br>
+&nbsp;&nbsp;&lt;/epgsearch&gt;<br>
+&lt;/neutrino&gt;<br>
 </div>
 
 <!-- ----------------------------------------------------------- -->

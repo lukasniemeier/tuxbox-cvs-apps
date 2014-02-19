@@ -30,6 +30,7 @@ private:
 
 	// send functions for ExecuteCGI (controld api)
 	void SendEventList(CyhookHandler *hh,t_channel_id channel_id);
+	void SendFoundEvents(CyhookHandler *hh, bool xml_format = false);
 	void SendcurrentVAPid(CyhookHandler *hh);
 	void SendAllCurrentVAPid(CyhookHandler *hh);
 	void SendSettings(CyhookHandler *hh);
@@ -75,6 +76,8 @@ private:
 	void GetBouquetCGI(CyhookHandler *hh);
 	void GetBouquetsCGI(CyhookHandler *hh);
 	void EpgCGI(CyhookHandler *hh);
+	void EpgSearchTXTCGI(CyhookHandler *hh);
+	void EpgSearchXMLCGI(CyhookHandler *hh);
 	void VersionCGI(CyhookHandler *hh);
 	void ZaptoCGI(CyhookHandler *hh);
 	void StartPluginCGI(CyhookHandler *hh);
@@ -112,7 +115,7 @@ public:
 
 	// virtual functions for HookHandler/Hook
 	virtual std::string getHookName(void) {return std::string("mod_ControlAPI");}
-	virtual std::string 	getHookVersion(void) {return std::string("$Revision: 1.9 $");}
+	virtual std::string 	getHookVersion(void) {return std::string("$Revision: 1.10 $");}
 	virtual THandleStatus Hook_SendResponse(CyhookHandler *hh);
 	virtual THandleStatus Hook_PrepareResponse(CyhookHandler *hh);
 };
