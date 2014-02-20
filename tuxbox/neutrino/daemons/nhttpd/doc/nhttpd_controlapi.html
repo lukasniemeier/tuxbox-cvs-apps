@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="STYLESHEET" type="text/css" href="yhttpd.css"/>
+<link rel="STYLESHEET" type="text/css" href="yhttpd.css">
 <title>ControlAPI</title>
 </head>
 <body>
@@ -10,7 +10,7 @@
 
 <h1>control-API Dokumentation</h1><hr>
 <br>
-<b>API-Aufrufe</b><table border="0">
+<b>API-Aufrufe</b><table border="0" summary="API-Aufrufe">
 	<tr>
 		<td>1. <a href="#channellist">Die Kanalliste </a> </td>
 		<td><a href="http://dbox/control/channellist">http://dbox/control/channellist</a></td>
@@ -41,7 +41,7 @@
 	</tr>
 	<tr>
 		<td>8. <a href="#getmode">Radio/TV Mode Abfrage</a></td>
-		<td>http://dbox/control/getmode</td>
+		<td><a href="http://dbox/control/getmode">http://dbox/control/getmode</a></td>
 	</tr>
 	<tr>
 		<td>9. <a href="#getdate">Datum von der Box abfragen</a></td>
@@ -204,9 +204,9 @@
 		<td>&nbsp;</td>
 	</tr>
 </table>
-<p>
+<br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="channellist"></a>1. Die Kanalliste</div>
 <div class="URL">Handler: http://dbox/control/channellist</div>
 <br>
@@ -232,8 +232,8 @@ Beispiel:<br>
 16d66 ZDF<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
-<div class="title1">2. <a name="epg"></a>EPG-Abfrage</div>
+<!-- *********************************************************** -->
+<div class="title1"><a name="epg"></a>2. EPG-Abfrage</div>
 <div class="URL">Handler: http://dbox/control/epg</div>
 <br>
 <b>Parameter:</b> keine<br>
@@ -363,7 +363,7 @@ stoptime für die Uhrzeit bis zu der Angaben gemacht werden sollen, begrenzt
 werden.<br>
 <div class="example">
 Beispiel:<br>
-&gt;&gt;&gt;http://192.168.0.15/control/epg?xml=true&amp;channelid=44d00016dca&amp;details=true&amp;max=2<br>
+&gt;&gt;&gt;http://dbox/control/epg?xml=true&amp;channelid=44d00016dca&amp;details=true&amp;max=2<br>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
 &lt;epglist&gt;<br>
 &lt;channel_id&gt;44d00016dca&lt;/channel_id&gt;<br>
@@ -473,7 +473,7 @@ Zapping<br>
 &lt;/neutrino&gt;<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="shutdown"></a>3. Die DBox herunterfahren</div>
 <div class="URL">Handler: http://dbox/control/shutdown</div>
 <br>
@@ -491,7 +491,7 @@ Beispiel:<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="standby"></a>4. Standby Mode</div>
 <div class="URL">Handler: http://dbox/control/standby</div>
 <br>
@@ -532,9 +532,8 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/standby<br>
 on<br>
 </div>
-<p>
-<!-- ----------------------------------------------------------- -->
-</p>
+
+<!-- *********************************************************** -->
 <div class="title1"><a name="volume"></a>5. Lautstärke-Steuerung</div>
 <div class="URL">Handler: http://dbox/control/volume</div>
 <br>
@@ -609,7 +608,8 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/volume?status<br>
 1<br>
 </div>
-<!-- ----------------------------------------------------------- -->
+
+<!-- *********************************************************** -->
 <div class="title1"><a name="zapto"></a>6. Programm umschalten</div>
 <div class="URL">Handler: http://dbox/control/zapto</div>
 <br>
@@ -802,8 +802,7 @@ Beispiel:<br>
 ok <br>
 </div>
 
-
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="setmode"></a>7. Radio/TV, Record Mode</div>
 <div class="URL">Handler: http://dbox/control/setmode</div>
 <br>
@@ -864,7 +863,7 @@ ok<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getmode"></a>8. Radio/TV Mode Abfrage</div>
 <div class="URL">Handler: http://dbox/control/getmode</div>
 <br>
@@ -879,7 +878,7 @@ Beispiel:<br>
 tv<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getdate"></a>9. Datum von der Box abfragen</div>
 <div class="URL">Handler: http://dbox/control/getdate</div>
 <br>
@@ -896,7 +895,7 @@ Beispiel:<br>
 11.01.2002<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="gettime"></a>10. Zeit von der Box abfragen</div>
 <div class="URL">Handler: http://dbox/control/gettime</div>
 <br>
@@ -925,7 +924,7 @@ Beispiel:<br>
 1046804654<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="info"></a>11. Allgemeine Informationen abfragen</div>
 <div class="URL">Handler: http://dbox/control/info</div>
 <br>
@@ -992,7 +991,7 @@ Beispiel:<br>
 2.2.1<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getonidsid"></a>12. Aktuellen Kanal abfragen</div>
 <div class="URL">Handler: http://dbox/control/getonidsid</div>
 <br>
@@ -1013,7 +1012,7 @@ Beispiel:<br>
 44d00016dca<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getservicesxml"></a>13. services.xml lesen</div>
 <div class="URL">Handler: http://dbox/control/getservicesxml</div>
 <br>
@@ -1034,7 +1033,7 @@ Beispiel:<br>
 ...<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getbouquetsxml"></a>14. bouquets.xml auslesen</div>
 <div class="URL">Handler: http://dbox/control/getbouquetsxml</div>
 <br>
@@ -1055,7 +1054,7 @@ Beispiel:<br>
 ...<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getbouquets"></a>15. Bouquetlist abfragen</div>
 <div class="URL">Handler: http://dbox/control/getbouquets</div>
 <br>
@@ -1073,7 +1072,7 @@ Beispiel:<br>
 5 ZDFvision<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="getbouquet"></a>16. Bouquet abfragen</div>
 <div class="URL">Handler: http://dbox/control/getbouquet</div>
 <br>
@@ -1096,7 +1095,7 @@ Beispiel:<br>
 <br>
 Wird xml=1 angegeben, dann wird die Liste im XML-Format zurückgegeben:<br>
 Beispiel:<br>
-&gt;&gt;&gt;http://192.168.0.15/control/getbouquet?bouquet=3&amp;xml=true<br>
+&gt;&gt;&gt;http://dbox/control/getbouquet?bouquet=3&amp;xml=true<br>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
 &lt;bouquetlist&gt;<br>
 &lt;bouquet&gt;<br>
@@ -1115,7 +1114,7 @@ Beispiel:<br>
 &lt;/bouquetlist&gt;<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="message"></a>17. Open popup window</div>
 <div class="URL">Handler: http://dbox/control/message</div>
 <br>
@@ -1157,7 +1156,7 @@ UTF-8 help sponsored by google:<br>
 http://www.google.com/search?q=%C3%A4%20%C3%B6%20%C3%BC%20%C3%84%20%C3%96%20%C3%9C%20%C3%9F&amp;ie=UTF-8&amp;oe=UTF-8<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1">17. Popup-Fenster oeffnen</div>
 <div class="URL">Handler: http://dbox/control/message</div>
 <br>
@@ -1181,7 +1180,7 @@ Beispiele:<br>
 öffnet ein Message-Fenster auf dem Fernseher, in dem &quot;Hallo Welt&quot; steht<br>
 </div>
 KDE Konqueror Benutzer koennen folgendes Verfahren benutzen:<br>
-------------------------------------------------------------<br>
+***********************************************************-<br>
 Mit Hilfe von &quot;Settings -&gt; Web Shortcuts -&gt; Add&quot; einen neuen Search<br>
 Provider hinzufuegen. z.B.:<br>
 - Search Provider Name: DBox Popup<br>
@@ -1199,8 +1198,7 @@ Google's UTF-8 Tutorial:<br>
 http://www.google.com/search?q=%C3%A4%20%C3%B6%20%C3%BC%20%C3%84%20%C3%96%20%C3%9C%20%C3%9F&amp;ie=UTF-8&amp;oe=UTF-8<br>
 <br>
 
-
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="timer"></a>18. Timerd Interface</div>
 <div class="URL">Handler: http://dbox/control/timer</div>
 <br>
@@ -1225,7 +1223,7 @@ eventID eventType eventRepeat repcount announceTime alarmTime stopTime data<br>
 8 = EXEC_PLUGIN<br>
 <br>
 siehe dazu auch:<br>
-<a href="http://cvs.tuxbox.org/cgi-bin/viewcvs.cgi/*checkout*/tuxbox/apps/tuxbox/neutrino/daemons/timerd/doku.html?rev=1.3&content-type=text/plain">http://cvs.tuxbox.org/cgi-bin/viewcvs.cgi/*checkout*/tuxbox/apps/tuxbox/neutrino/daemons/timerd/doku.html?rev=1.3&amp;content-type=text/plain</a><br>
+<a href="http://cvs.tuxbox.org/cgi-bin/viewcvs.cgi/*checkout*/tuxbox/apps/tuxbox/neutrino/daemons/timerd/doku.html?rev=1.3&amp;content-type=text/plain">http://cvs.tuxbox.org/cgi-bin/viewcvs.cgi/*checkout*/tuxbox/apps/tuxbox/neutrino/daemons/timerd/doku.html?rev=1.3&amp;content-type=text/plain</a><br>
 <br>
 <i>eventRepeat</i> ist die Angabe der timerwiderholung, die kann sein:<br>
 <br>
@@ -1353,7 +1351,7 @@ ok<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="lcd"></a>19. LCD Interface</div>
 <div class="URL">Handler: http://dbox/control/lcd</div>
 <br>
@@ -1461,9 +1459,9 @@ wget -O /tmp/nhttpd.res 'http://localhost/control/lcd?lock=0'<br>
 ausgeführt werden.<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
-<div class="URL"><div class="title1"><a name="exec"></a>20. Shellscript ausführen</div>
-Handler: http://dbox/cgi-bin/exec</div>
+<!-- *********************************************************** -->
+<div class="title1"><a name="exec"></a>20. Shellscript ausführen</div>
+<div class="URL">Handler: http://dbox/cgi-bin/exec</div>
 <br>
 <b>Parameter:</b> &lt;Scriptname&gt; (ohne .sh!)<br>
 <b>Rückgabe: </b>Ausgabe des Scripts<br>
@@ -1478,7 +1476,7 @@ wird. In newsticker.list muss dann der Aufruf folgendermassen aussehen:<br>
 http://dbox/cgi-bin/exec?buli<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="system"></a>21. System-/Treiberfunktionen</div>
 <div class="URL">Handler: http://dbox/control/system</div>
 <br>
@@ -1544,7 +1542,7 @@ http://dbox/control/system?setAViAExtPlayBack=spts<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="rc"></a>21. Fernbedienung</div>
 <div class="URL">Handler: http://dbox/control/rc</div>
 <br>
@@ -1569,7 +1567,7 @@ http://dbox/control/rc?unlock<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="reboot"></a>23. Die DBox neu starten</div>
 <div class="URL">Handler: http://dbox/control/reboot</div>
 <br>
@@ -1588,7 +1586,7 @@ Beispiel:<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="settings"></a>24. Einige Einstellungen lesen</div>
 <div class="URL">Handler: http://dbox/control/settings</div>
 <br>
@@ -1597,7 +1595,7 @@ ok<br>
 Videooutputs und Videoformats.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="version"></a>25. Die /.versions-File lesen</div>
 <div class="URL">Handler: http://dbox/control/version</div>
 <br>
@@ -1607,7 +1605,7 @@ Videooutputs und Videoformats.<br>
 Die gleiche Funktionalität bietet http://dbox/control/info?version.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="startplugin"></a>26. Plugin ausführen</div>
 <div class="URL">Handler: http://dbox/control/startplugin</div>
 <br>
@@ -1622,7 +1620,7 @@ Beispiel:<br>
 ok<br>
 </div>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="yweb"></a>27. Support für yweb</div>
 <div class="URL">Handler: http://dbox/control/yweb</div>
 <br>
@@ -1633,7 +1631,7 @@ Supportfunktionen für yweb. Es wird empfohlen, diese nicht<br>
 ausserhalb von yweb zu benutzen.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="aspectratio"></a>28. Aspektratio lesen</div>
 <div class="URL">Handler: http://dbox/control/aspectratio</div>
 <br>
@@ -1641,7 +1639,7 @@ ausserhalb von yweb zu benutzen.<br>
 <b>Rückgabe:</b> 4:3/16:9<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="videoformat"></a>29. Videoformat lesen/setzen</div>
 <div class="URL">Handler: http://dbox/control/videoformat</div>
 <br>
@@ -1654,7 +1652,7 @@ ausserhalb von yweb zu benutzen.<br>
 Setzt aktuelles Videoformat.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="videooutput"></a>30. Videooutput lesen/setzen</div>
 <div class="URL">Handler: http://dbox/control/videooutput</div>
 <br>
@@ -1667,9 +1665,9 @@ Setzt aktuelles Videoformat.<br>
 Setzt Videooutputtyp. <br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="vcroutput"></a>31. VCR-output lesen/setzen</div>
-vHandler: http://dbox/control/vcroutput</div>
+<div class="URL">Handler: http://dbox/control/vcroutput</div>
 <br>
 <b>Parameter:</b> keine/status<br>
 <b>Rückgabe:</b> CVBS/S-Video<br>
@@ -1681,7 +1679,7 @@ Setzt VCRoutputtyp. S-Video ist möglich nur bei Videooutput CVBS<br>
 und S-Video.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="scartmode"></a>32. Scartmode lesen/setzen</div>
 <div class="URL">Handler: http://dbox/control/scartmode</div>
 <br>
@@ -1694,7 +1692,7 @@ und S-Video.<br>
 Schaltet Scartmode ein oder aus.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="rcem"></a>33. Fernbedienungstasten emulieren</div>
 <div class="URL">Handler: http://dbox/control/rcem</div>
 <br>
@@ -1726,7 +1724,7 @@ ok<br>
 </div>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="setbouquet"></a>34. Bouquet-Editor: Attribute setzen</div>
 <div class="URL">Handler: http://dbox/control/setbouquet</div>
 <br>
@@ -1745,7 +1743,7 @@ ok<br>
 &nbsp;</div>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="savebouquet"></a>35. Bouquet-Editor: Bouquet-Liste
 	speichern</div>
 <div class="URL">Handler: http://dbox/control/savebouquet</div>
@@ -1760,7 +1758,7 @@ ok<br>
 &nbsp;</div>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="movebouquet"></a>36. Bouquet-Editor: Bouquet verschieben</div>
 <div class="URL">Handler: http://dbox/control/movebouquet</div>
 <br>
@@ -1779,7 +1777,7 @@ ok<br>
 &nbsp;</div>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="deletebouquet"></a>37. Bouquet-Editor: Bouquet löschen</div>
 <div class="URL">Handler: http://dbox/control/deletebouquet</div>
 <br>
@@ -1796,12 +1794,9 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/deletebouquet?selected=2<br>
 ok<br>
 &nbsp;</div>
-&nbsp;</p>
-
-
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="addbouquet"></a>38. Bouquet-Editor: Bouquet hinzufügen</div>
 <div class="URL">Handler: http://dbox/control/addbouquet</div>
 <br>
@@ -1817,11 +1812,9 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/addbouquet?name=neuer%20sender<br>
 ok<br>
 &nbsp;</div>
-
-
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="renamebouquet"></a>39. Bouquet-Editor: Bouquet umbenennen</div>
 <div class="URL">Handler: http://dbox/control/renamebouquet</div>
 <br>
@@ -1839,7 +1832,7 @@ ok<br>
 &nbsp;</div>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="changebouquet"></a>40. Bouquet-Editor: Bouquet Channels
 	ändern</div>
 <div class="URL">Handler: http://dbox/control/changebouquet</div>
@@ -1860,7 +1853,7 @@ ok<br>
 &nbsp;</div>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="updatebouquet"></a>41. Bouquet-Editor: Bouquet Channels
 	aktualisieren</div>
 <div class="URL">Handler: http://dbox/control/updatebouquet</div>
@@ -1868,15 +1861,15 @@ ok<br>
 <b>Parameter:</b><br>
 <b>Rückgabe</b>: ok<br>
 <br>
-&nbsp;</div>
+Aktualisiert Bouquet Channels.<br>
 <br>
 
-<!-- ----------------------------------------------------------- -->
+<!-- *********************************************************** -->
 <div class="title1"><a name="build_live_url"></a>42. URL für Live-Streaming (VLC) erstellen
 	ändern</div>
 <div class="URL">Handler: http://dbox/control/build_live_url</div>
 <br>
-<b>Parameter:</b> [audio_no=&lt;audio-track&gt;][&host=&lt;dbox-ip&gt;][&vlc_link=true]<br>
+<b>Parameter:</b> [audio_no=&lt;audio-track&gt;][&amp;host=&lt;dbox-ip&gt;][&amp;vlc_link=true]<br>
 <b>Rückgabe</b>: live-URL oder redirection Link auf vlc.m3u-Datei<br>
 <br>
 Es wird für den aktuellen Sender eine Live-URL erzeugt. Sie dient für den Streaming-Aufruf von VLC. <br>
@@ -1887,7 +1880,6 @@ Beispiel:<br>
 http://192.168.0.15:31339/0,0x0069,0x03ff,0x0400<br>
 &nbsp;</div>
 <br>
-
 
 
 </body>
