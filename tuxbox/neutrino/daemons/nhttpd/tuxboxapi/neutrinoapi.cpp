@@ -180,7 +180,7 @@ t_channel_id CNeutrinoAPI::ChannelNameToChannelId(const std::string& search_chan
 {
 	t_channel_id channel_id = (t_channel_id)-1;
 	CStringArray channel_names = ySplitStringVector(search_channel_name, ",");
-	CZapitClient::BouquetChannelList *channellist = GetChannelList(CZapitClient::MODE_CURRENT);
+	CZapitClient::BouquetChannelList *channellist = GetChannelList(CZapitClient::MODE_ALL);
 	CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
 	for(; channel != channellist->end(); ++channel)
 	{
