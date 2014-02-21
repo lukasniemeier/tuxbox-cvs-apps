@@ -363,38 +363,38 @@ stoptime für die Uhrzeit bis zu der Angaben gemacht werden sollen, begrenzt
 werden.<br>
 <div class="example">
 Beispiel:<br>
+<br>
 &gt;&gt;&gt;http://dbox/control/epg?xml=true&amp;channelid=44d00016dca&amp;details=true&amp;max=2<br>
+<br>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
 &lt;epglist&gt;<br>
 &lt;channel_id&gt;44d00016dca&lt;/channel_id&gt;<br>
 &lt;channel_name&gt;&lt;![CDATA[Das Erste]]&gt;&lt;/channel_name&gt;<br>
 &lt;prog&gt;<br>
-&lt;eventid&gt;309903955495411052&lt;/eventid&gt;<br>
-&lt;eventid_hex&gt;44d00016dcadd6c&lt;/eventid_hex&gt;<br>
-&lt;start_sec&gt;1148314800&lt;/start_sec&gt;<br>
-&lt;start_t&gt;18:20&lt;/start_t&gt;<br>
-&lt;date&gt;02.10.2006&lt;/date&gt;<br>
-&lt;stop_sec&gt;1148316600&lt;/stop_sec&gt;<br>
-&lt;stop_t&gt;18:50&lt;/stop_t&gt;<br>
-&lt;duration_min&gt;30&lt;/duration_min&gt;<br>
-&lt;description&gt;&lt;![CDATA[Marienhof]]&gt;&lt;/description&gt;<br>
-&lt;info1&gt;&lt;![CDATA[(Folge 2868)]]&gt;&lt;/info1&gt;<br>
-&lt;info2&gt;&lt;![CDATA[Sülo verachtet Constanze wegen ihrer Intrige. Luigi plündert das
+&nbsp;&nbsp;&lt;eventid&gt;309903955495411052&lt;/eventid&gt;<br>
+&nbsp;&nbsp;&lt;eventid_hex&gt;44d00016dcadd6c&lt;/eventid_hex&gt;<br>
+&nbsp;&nbsp;&lt;start_sec&gt;1148314800&lt;/start_sec&gt;<br>
+&nbsp;&nbsp;&lt;start_t&gt;18:20&lt;/start_t&gt;<br>
+&nbsp;&nbsp;&lt;date&gt;02.10.2006&lt;/date&gt;<br>
+&nbsp;&nbsp;&lt;stop_sec&gt;1148316600&lt;/stop_sec&gt;<br>
+&nbsp;&nbsp;&lt;stop_t&gt;18:50&lt;/stop_t&gt;<br>
+&nbsp;&nbsp;&lt;duration_min&gt;30&lt;/duration_min&gt;<br>
+&nbsp;&nbsp;&lt;description&gt;&lt;![CDATA[Marienhof]]&gt;&lt;/description&gt;<br>
+&nbsp;&nbsp;&lt;info1&gt;&lt;![CDATA[(Folge 2868)]]&gt;&lt;/info1&gt;<br>
+&nbsp;&nbsp;&lt;info2&gt;&lt;![CDATA[Sülo verachtet Constanze wegen ihrer Intrige. Luigi plündert das
 Konto und haut ab. Jessy will Carlos über ihre Chats aufklären.]]&gt;&lt;/info2&gt;<br>
 &lt;/prog&gt;<br>
 &lt;prog&gt;<br>
-<br>
-&lt;eventid&gt;309903955495411054&lt;/eventid&gt;<br>
-&lt;eventid_hex&gt;44d00016dcadd6e&lt;/eventid_hex&gt;<br>
-&lt;start_sec&gt;1148316600&lt;/start_sec&gt;<br>
-&lt;start_t&gt;18:50&lt;/start_t&gt;<br>
-&lt;stop_sec&gt;1148320200&lt;/stop_sec&gt;<br>
-&lt;stop_t&gt;19:50&lt;/stop_t&gt;<br>
-<br>
-&lt;duration_min&gt;60&lt;/duration_min&gt;<br>
-&lt;description&gt;&lt;![CDATA[Großstadtrevier]]&gt;&lt;/description&gt;<br>
-&lt;info1&gt;&lt;![CDATA[239. Fenstergespenster]]&gt;&lt;/info1&gt;<br>
-&lt;info2&gt;&lt;![CDATA[Pech für Dirk Matthies: Da steigt er auf eine Leiter, weil ihn
+&nbsp;&nbsp;&lt;eventid&gt;309903955495411054&lt;/eventid&gt;<br>
+&nbsp;&nbsp;&lt;eventid_hex&gt;44d00016dcadd6e&lt;/eventid_hex&gt;<br>
+&nbsp;&nbsp;&lt;start_sec&gt;1148316600&lt;/start_sec&gt;<br>
+&nbsp;&nbsp;&lt;start_t&gt;18:50&lt;/start_t&gt;<br>
+&nbsp;&nbsp;&lt;stop_sec&gt;1148320200&lt;/stop_sec&gt;<br>
+&nbsp;&nbsp;&lt;stop_t&gt;19:50&lt;/stop_t&gt;<br>
+&nbsp;&nbsp;&lt;duration_min&gt;60&lt;/duration_min&gt;<br>
+&nbsp;&nbsp;&lt;description&gt;&lt;![CDATA[Großstadtrevier]]&gt;&lt;/description&gt;<br>
+&nbsp;&nbsp;&lt;info1&gt;&lt;![CDATA[239. Fenstergespenster]]&gt;&lt;/info1&gt;<br>
+&nbsp;&nbsp;&lt;info2&gt;&lt;![CDATA[Pech für Dirk Matthies: Da steigt er auf eine Leiter, weil ihn
 mal der Putzfimmel überkommt, und - knacks! - bricht eine Sprosse. Das Bein ist
 gebrochen, mehrere Rippen geprellt. Katja Metz versorgt ihn mit dem
 Nötigsten.]]&gt;&lt;/info2&gt;<br>
@@ -1025,11 +1025,12 @@ zurückgegeben.<br>
 Beispiel:<br>
 <br>
 &gt;&gt;&gt;http://dbox/control/getservicesxml<br>
+<br>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
-&lt;ZAPIT&gt;<br>
-&lt;cable&gt;<br>
-&lt;transponder transportID=&quot;00001&quot; networkID=&quot;0&quot;&gt;<br>
-&lt;cable frequency=&quot;04020&quot; symbolRate=&quot;06900&quot; fec=&quot;0&quot; polarity=&quot;0&quot;/&gt;<br>
+&lt;zapit&gt;<br>
+&nbsp;&nbsp;&lt;cable&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;transponder transportID=&quot;00001&quot; networkID=&quot;0&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;cable frequency=&quot;04020&quot; symbolRate=&quot;06900&quot; fec=&quot;0&quot; polarity=&quot;0&quot;/&gt;<br>
 ...<br>
 </div>
 
@@ -1048,9 +1049,9 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/getbouquetsxml<br>
 <br>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
-&lt;ZAPIT&gt;<br>
-&lt;Bouquet name=&quot;beispielbouquet&quot; hidden=&quot;0&quot; locked=&quot;0&quot;&gt;<br>
-&lt;channel serviceID=&quot;6d67&quot; name=&quot;3sat&quot; onid=&quot;0001&quot;/&gt;<br>
+&lt;zapit&gt;<br>
+&nbsp;&nbsp;&lt;Bouquet name=&quot;beispielbouquet&quot; hidden=&quot;0&quot; locked=&quot;0&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel serviceID=&quot;6d67&quot; name=&quot;3sat&quot; onid=&quot;0001&quot;/&gt;<br>
 ...<br>
 </div>
 
@@ -1086,6 +1087,7 @@ Sender als erstes enthält. <br>
 Nummer_des_Kanals channel_id Name_des_Senders<br>
 <div class="example">
 Beispiel:<br>
+<br>
 &gt;&gt;&gt;http://dbox/control/getbouquet?bouquet=2&amp;mode=TV<br>
 20 12ee3 RTL Television<br>
 21 85002e SAT.1<br>
@@ -1093,23 +1095,25 @@ Beispiel:<br>
 23 12ef4 RTL2<br>
 24 12f1c VOX<br>
 <br>
+<br>
 Wird xml=1 angegeben, dann wird die Liste im XML-Format zurückgegeben:<br>
-Beispiel:<br>
+<br>
 &gt;&gt;&gt;http://dbox/control/getbouquet?bouquet=3&amp;xml=true<br>
+<br>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
 &lt;bouquetlist&gt;<br>
 &lt;bouquet&gt;<br>
-&lt;bnumber&gt;3&lt;/bnumber&gt;<br>
+&nbsp;&nbsp;&lt;bnumber&gt;3&lt;/bnumber&gt;<br>
 &lt;/bouquet&gt;<br>
 &lt;channel&gt;<br>
-&lt;number&gt;33&lt;/number&gt;<br>
-&lt;id&gt;44d00016dca&lt;/id&gt;<br>
-&lt;name&gt;&lt;![CDATA[Das Erste]]&gt;&lt;/name&gt;<br>
+&nbsp;&nbsp;&lt;number&gt;33&lt;/number&gt;<br>
+&nbsp;&nbsp;&lt;id&gt;44d00016dca&lt;/id&gt;<br>
+&nbsp;&nbsp;&lt;name&gt;&lt;![CDATA[Das Erste]]&gt;&lt;/name&gt;<br>
 &lt;/channel&gt;<br>
 &lt;channel&gt;<br>
-&lt;number&gt;34&lt;/number&gt;<br>
-&lt;id&gt;44d00016dcd&lt;/id&gt;<br>
-&lt;name&gt;&lt;![CDATA[arte]]&gt;&lt;/name&gt;<br>
+&nbsp;&nbsp;&lt;number&gt;34&lt;/number&gt;<br>
+&nbsp;&nbsp;&lt;id&gt;44d00016dcd&lt;/id&gt;<br>
+&nbsp;&nbsp;&lt;name&gt;&lt;![CDATA[arte]]&gt;&lt;/name&gt;<br>
 &lt;/channel&gt;<br>
 &lt;/bouquetlist&gt;<br>
 </div>
@@ -1556,6 +1560,7 @@ Beispiel:<br>
 <br>
 &gt;&gt;&gt;http://dbox/control/timer?action=new&amp;alarm=1034309576&amp;stop=1034284376&amp;announce=1034309576&amp;type=1&amp;rep=1&amp;channel_id=16dcb<br>
 ok<br>
+<br>
 &gt;&gt;&gt;http://dbox/control/timer?action=new&amp;alDate=24.01.2006&amp;alTime=20.00&amp;stTime=20.15&amp;channel_name=Das%20Erste&amp;update=1<br>
 ok<br>
 </div>
@@ -1696,6 +1701,7 @@ http://dbox/cgi-bin/exec?buli<br>
 1 = Iec aktiviert<br>
 <div class="example">
 Beispiel:<br>
+<br>
 http://dbox/control/system?getAViAExtIec<br>
 1<br>
 </div>
