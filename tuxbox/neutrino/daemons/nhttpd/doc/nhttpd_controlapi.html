@@ -786,7 +786,6 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/zapto?16dcb<br>
 ok <br>
 </div>
-
 <b>Parameter:</b> channel_name oder channel_names (Ein oder mehrere durch Komma
 getrente Sendernamen; URI encoded)<br>
 <b>Rueckgabe:</b><br>
@@ -840,7 +839,6 @@ Beispiel:<br>
 &gt;&gt;&gt;http://dbox/control/setmode?tv<br>
 ok<br>
 </div>
-
 <br>
 <b>Parameter:</b> record<br>
 <b>Rückgabe:</b><br>
@@ -1026,11 +1024,11 @@ Beispiel:<br>
 <br>
 &gt;&gt;&gt;http://dbox/control/getservicesxml<br>
 <br>
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br>
 &lt;zapit&gt;<br>
-&nbsp;&nbsp;&lt;cable&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;transponder transportID=&quot;00001&quot; networkID=&quot;0&quot;&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;cable frequency=&quot;04020&quot; symbolRate=&quot;06900&quot; fec=&quot;0&quot; polarity=&quot;0&quot;/&gt;<br>
+&nbsp;&nbsp;&lt;cable name=&quot;provider&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;transponder id=&quot;0437&quot; onid=&quot;0001&quot; frequency=&quot;450000000&quot; inversion=&quot;2&quot; symbol_rate=&quot;6900000&quot; fec_inner=&quot;0&quot; modulation=&quot;5&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel service_id=&quot;6d67&quot; name=&quot;3sat&quot; service_type=&quot;01&quot;/&gt;<br>
 ...<br>
 </div>
 
@@ -1048,10 +1046,10 @@ Beispiel:<br>
 <br>
 &gt;&gt;&gt;http://dbox/control/getbouquetsxml<br>
 <br>
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;<br>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br>
 &lt;zapit&gt;<br>
-&nbsp;&nbsp;&lt;Bouquet name=&quot;beispielbouquet&quot; hidden=&quot;0&quot; locked=&quot;0&quot;&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel serviceID=&quot;6d67&quot; name=&quot;3sat&quot; onid=&quot;0001&quot;/&gt;<br>
+&nbsp;&nbsp;&lt;Bouquet type=&quot;0&quot; bouquet_id=&quot;0000&quot; name=&quot;beispielbouquet&quot; hidden=&quot;0&quot; locked=&quot;0&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;channel serviceID=&quot;6d67&quot; name=&quot;3sat&quot; tsid=&quot;0437&quot; onid=&quot;0001&quot;/&gt;<br>
 ...<br>
 </div>
 
@@ -2092,7 +2090,7 @@ Es wird für den aktuellen Sender eine Live-URL erzeugt. Sie dient für den Stream
 Beispiel:<br>
 <br>
 &gt;&gt;&gt;http://dbox/control/build_live_url<br>
-http://192.168.0.15:31339/0,0x0069,0x03ff,0x0400<br>
+http://dbox:31339/0,0x0069,0x03ff,0x0400<br>
 &nbsp;</div>
 <br>
 
