@@ -195,6 +195,8 @@ t_channel_id CNeutrinoAPI::ChannelNameToChannelId(const std::string& search_chan
 				break;
 			}
 		}
+		if(channel_id != (t_channel_id)-1)
+			break;
 	}
 	return channel_id;
 }
