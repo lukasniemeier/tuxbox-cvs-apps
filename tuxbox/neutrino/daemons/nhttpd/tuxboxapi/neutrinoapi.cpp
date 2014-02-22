@@ -158,7 +158,13 @@ void CNeutrinoAPI::ZapToChannelId(t_channel_id channel_id)
 		//printf("Kanal ist aktuell\n");
 		return;
 	}
-	
+
+	int mode = Zapit->getMode();
+	bool isTVChannel = Zapit->isChannelTVChannel(channel_id);
+	if (!isTVChannel && mode != CZapitClient::MODE_RADIO ||
+	    isTVChannel && mode != CZapitClient::MODE_TV)
+		return;
+
 	if (Zapit->zapTo_serviceID(channel_id) != CZapitClient::ZAP_INVALID_PARAM)
 		Sectionsd->setServiceChanged(channel_id, false);
 }
