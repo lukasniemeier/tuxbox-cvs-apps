@@ -68,7 +68,7 @@ Existiert die Datei /var/tuxbox/config/sleep.lirc so werden die darin enthaltene
 lirc-Kommandos gesendet (z.B. zum Auschalten des TV). Dazu muss lirc gestartet 
 und konfiguriert sein (siehe VCR Recording doku).
 Syntax der sleep.lirc Datei (pro Zeile ein Kommando, es sind mehrere Kommandos möglich):
-<PRE><device_name> <ir_code> (<dauer_in_ms>)
+<pre>&lt;device_name&gt; &lt;ir_code&gt; (&lt;dauer_in_ms&gt;)
 device_name: Name der Fernsteuerung im lirc-config file
 ir_code: Name der Taste im lirc-config file
 dauer_in_ms: Dauer in ms (1/1000 sec), die das Signal gesendet werden soll, optional, 
@@ -78,7 +78,8 @@ Bsp.: sony_tv standby 500
 <br>
 <b>REMINDER </b>(Erinnerung)<b>:</b><br>
 Dieser Timer blendet einen frei wählbaren Hinweistext auf dem Bildschirm
-ein. Ein Zeilenvorschub kann mittels des Zeichens "/" erreicht werden.
+ein. Ein Zeilenvorschub kann mittels des Zeichens "/" erreicht werden.<br>
+<br>
 <b>EXEC_PLUGIN </b>(Erinnerung)<b>:</b><br>
 Mit diesem Timer ist es möglich, ein Plugin ausführen zu lassen. Im Webinterface muss z.Zt. der Name
 von Hand eingegeben werden, er entspricht dem Dateinamen des Plugins ohne Erweiterung.<br>
