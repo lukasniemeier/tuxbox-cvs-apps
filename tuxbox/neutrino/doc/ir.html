@@ -12,23 +12,23 @@
 
 <br>
 <B>Setup</B><BR>
-<DL>
+<UL>
 <LI>Von <a href="http://www.lirc.org/remotes/" target="_blank">http://www.lirc.org/remotes/</a>
 eine zur Fernbedienung passende Datei ziehen und diese als 
 /var/tuxbox/config/lirc/lircd.conf in die Box packen.<br>
 Sollte keine zur Fernbedienung passende Datei dabei sein, kann man sie auch 
 selber erstellen, in dem man die Codes aufnimmt. Siehe
-<a href="http://www.lirc.org/" target="_blank">http://www.lirc.org/</a><br>
+<a href="http://www.lirc.org/" target="_blank">http://www.lirc.org/</a></LI>
 <LI>Die Dateien aus record.lirc, stop.lirc, sleep.lirc, sbon.lirc, sboff.lirc, 
 volplus.lirc, volminus.lirc, mute.lirc in /var/tuxbox/config/lirc anlegen 
 (bzw. nur die Dateien f&uuml;r die gew&uuml;schten Funktionalit&auml;ten).
 <a href="#syntax">Syntax</a> und <a href="#bedeutung">Bedeutung</a>
-siehe unten.<br>
-<LI>Box neu starten<br>
-<br>
+siehe unten.</LI>
+<LI>Box neu starten</LI>
+</UL>
 Bei Fragen oder Problemen: <a HREF="https://tuxbox.org/forum/viewforum.php?f=2" target="_blank">Neutrino Forum</a> oder im #dbox2 Channel<br>
 <p>
-<B><a name="syntax">Syntax der Lirc-Kommando Dateien:</B><BR>
+<B><a name="syntax"></a>Syntax der Lirc-Kommando Dateien:</B><BR>
 Es können in einer Kommando-Datei beliebig viele Befehle der Form<BR>
 <PRE>&lt;device&gt; &lt;command&gt; (&lt;duration&gt;)
   oder
@@ -41,7 +41,7 @@ Wenn nicht angegeben wird das Signal genau ein mal gesendet.
 Werte zwischen 50ms und 500ms sind ein guter Anfang<BR>
 Das <b>wait</b> Kommando erzeugt eine Pause der angegeben Zeit in ms.<BR>
 <P>
-<a name="bedeutung">Folgende Neutrino-Aktionen k&ouml;nnen mit IR-Signalen
+<a name="bedeutung"></a>Folgende Neutrino-Aktionen k&ouml;nnen mit IR-Signalen
 versehen werden:<br>
 (ist die entsprechende Kommando-Datei vorhanden, werden die Kommandos gesendet,
 existiert die Datei nicht, passiert nichts.)
