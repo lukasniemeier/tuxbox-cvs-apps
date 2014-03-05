@@ -53,6 +53,7 @@
 #include <neutrino.h>
 
 #include <cctype>
+#include <algorithm>
 
 /* the following generic menu items are integrated into multiple menus at the same time */
 CMenuSeparator CGenericMenuSeparator;
@@ -184,11 +185,13 @@ void CMenuItem::paintItemButton(const bool select_mode, const int &item_height, 
 	}
 #endif
 
-	if  (selected && offx > 0)
+	if (selected && offx > 0)
+	{
 		if (!selected_iconName.empty())
 			icon_name = selected_iconName;
 		else if (icon_name.empty() && !CRCInput::isNumeric(directKey))
 			icon_name = icon_Name;
+	}
 	
 	//paint icon
 	//get data for marker icon
