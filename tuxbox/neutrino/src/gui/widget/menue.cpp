@@ -716,17 +716,16 @@ void CMenuWidget::addIntroItems(neutrino_locale_t subhead_text, neutrino_locale_
 
 	addItem(GenericMenuSeparator);
 
-	if (buttontype != BTN_TYPE_NO)
+	switch (buttontype)
 	{
-		switch (buttontype)
-		{
-			case BTN_TYPE_BACK:
-				addItem(GenericMenuBack);
-				break;
-			case BTN_TYPE_CANCEL:
-				addItem(GenericMenuCancel);
-				break;
-		}
+		case BTN_TYPE_BACK:
+			addItem(GenericMenuBack);
+			break;
+		case BTN_TYPE_CANCEL:
+			addItem(GenericMenuCancel);
+			break;
+		default:
+			break;
 	}
 
 	if (section_text != NONEXISTANT_LOCALE)
@@ -1194,14 +1193,9 @@ void CMenuForwarder::setText(const char * const Text)
 
 int CMenuForwarder::exec(CMenuTarget* parent)
 {
-	if(jumpTarget)
-	{
+	if (jumpTarget)
 		return jumpTarget->exec(parent, actionKey);
-	}
-	else
-	{
-		return menu_return::RETURN_EXIT;
-	}
+	return menu_return::RETURN_EXIT;
 }
 
 const char * CMenuForwarder::getOption(void)
@@ -1254,16 +1248,14 @@ int CMenuSeparator::getHeight(void) const
 {
 	if (separator_text.empty() && text == NONEXISTANT_LOCALE)
 		return 10;
-	else
-		return  g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
+	return g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->getHeight();
 }
 
 const char * CMenuSeparator::getString(void)
 {
 	if (!separator_text.empty())
 		return separator_text.c_str();
-	else	
-		return g_Locale->getText(text);
+	return g_Locale->getText(text);
 }
 
 void CMenuSeparator::setString(const std::string& s_text)
