@@ -1019,7 +1019,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 				//hh->printf("%u %s\n", (NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, NeutrinoAPI->BouquetList[i].name);
 				bouquet = NeutrinoAPI->GetBouquet((NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, mode);
 				CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
-				for (unsigned int j = 0; channel != bouquet->end() && actual == 0; ++channel, j++)
+				for (; channel != bouquet->end() && actual == 0; ++channel)
 				{
 					if (channel->channel_id == current_channel_id)
 						actual = i + 1;
@@ -1037,7 +1037,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 			t_channel_id current_channel_id = NeutrinoAPI->Zapit->getCurrentServiceID();
 			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 
-			for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
+			for (; channel != bouquet->end(); ++channel)
 			{
 				hh->WriteLn("<channel>");
 				hh->printf("\t<number>%u</number>\n\t<id>"
@@ -1107,7 +1107,7 @@ void CControlAPI::GetBouquetCGI(CyhookHandler *hh)
 			bouquet = NeutrinoAPI->GetBouquet(atoi(hh->ParamList["bouquet"].c_str()), mode);
 			CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 
-			for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
+			for (; channel != bouquet->end(); ++channel)
 				hh->printf("%u "
 					PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS
 					" %s\n",
@@ -1603,12 +1603,10 @@ void CControlAPI::LCDAction(CyhookHandler *hh)
 //-------------------------------------------------------------------------
 void CControlAPI::SendEventList(CyhookHandler *hh, t_channel_id channel_id)
 {
-	int pos;
-
 	NeutrinoAPI->eList = NeutrinoAPI->Sectionsd->getEventsServiceKey(channel_id);
 	CChannelEventList::iterator eventIterator;
 
-	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator, pos++)
+	for (eventIterator = NeutrinoAPI->eList.begin(); eventIterator != NeutrinoAPI->eList.end(); ++eventIterator)
 		hh->printf("%llu %ld %d %s\n", eventIterator->eventID, eventIterator->startTime, eventIterator->duration, eventIterator->description.c_str());
 }
 

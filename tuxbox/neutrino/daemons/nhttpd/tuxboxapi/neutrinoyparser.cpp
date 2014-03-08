@@ -197,7 +197,7 @@ std::string  CNeutrinoYParser::func_mount_set_values(CyhookHandler *hh, std::str
 //-------------------------------------------------------------------------
 std::string  CNeutrinoYParser::func_get_bouquets_as_dropdown(CyhookHandler */*hh*/, std::string para)
 {
-	std::string ynr, yresult, sel, nr_str, do_show_hidden;
+	std::string yresult, sel, nr_str, do_show_hidden;
 	unsigned int nr=1;
 	
 	ySplitString(para," ",nr_str, do_show_hidden);
@@ -247,7 +247,7 @@ std::string  CNeutrinoYParser::func_get_actual_bouquet_number(CyhookHandler */*h
 	{
 		bouquet = NeutrinoAPI->GetBouquet((NeutrinoAPI->BouquetList[i].bouquet_nr) + 1, mode);
 		CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
-		for (unsigned int j = 0; channel != bouquet->end() && actual == 0; ++channel, j++)
+		for (; channel != bouquet->end() && actual == 0; ++channel)
 		{
 			if (channel->channel_id == current_channel_id)
 				actual = i + 1;
@@ -277,7 +277,7 @@ std::string  CNeutrinoYParser::func_get_channels_as_dropdown(CyhookHandler */*hh
 		CZapitClient::BouquetChannelList::iterator channel = bouquet->begin();
 		CEPGData epg;
 		
-		for (unsigned int i = 0; channel != bouquet->end(); ++channel, i++)
+		for (; channel != bouquet->end(); ++channel)
 		{	
 			sid = string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS,channel->channel_id);
 			sel = (sid == achannel_id) ? "selected=\"selected\"" : "";
@@ -322,8 +322,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 	CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
 	for (; channel != channellist->end(); ++channel)
 	{
-		CChannelEvent *event;
-		event = NeutrinoAPI->ChannelListEvents[channel->channel_id];
+		CChannelEvent *event = NeutrinoAPI->ChannelListEvents[channel->channel_id];
 		
 		classname = (i++ & 1) ? 'a' : 'b';
 		if (channel->channel_id == current_channel)
@@ -602,7 +601,7 @@ std::string  CNeutrinoYParser::func_get_audio_pids_as_dropdown(CyhookHandler */*
 //-------------------------------------------------------------------------
 std::string  CNeutrinoYParser::func_unmount_get_list(CyhookHandler */*hh*/, std::string /*para*/)
 {
-	std::string ysel, ymount, ylocal_dir, yfstype, ynr, yresult, mounts;
+	std::string ysel, ymount, ylocal_dir, yfstype, yresult, mounts;
 	
 	std::ifstream in;
 	in.open("/proc/mounts", std::ifstream::in);
@@ -800,7 +799,6 @@ std::string  CNeutrinoYParser::func_get_timer_list(CyhookHandler */*hh*/, std::s
 					{
 						sAddData += separator;
 						sAddData += "AC3";
-						separator = "/";
 					}
 					sAddData += ')';
 				}
