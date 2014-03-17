@@ -42,6 +42,8 @@
 #include <driver/encoding.h>
 #include <driver/stream2file.h>
 
+#include <system/helper.h>
+
 #include <gui/widget/messagebox.h>
 
 #ifdef ENABLE_LIRC
@@ -842,57 +844,25 @@ bool CVCRControl::CFileDevice::Record(const t_channel_id channel_id, int mode, c
 	{
 		expandedTemplate = std::string(basename(FilenameTemplate.c_str()));
 	}
-	std::string::size_type searchPos = std::string::npos;
-	std::string::size_type startAt = 0;
-	size_t dataLength = 0;
 	char buf[256];
 	buf[255] = '\0';
 
 	appendChannelName(buf,255,channel_id);
-	dataLength = strlen(buf);
-	while ((searchPos = expandedTemplate.find("%C",startAt)) != std::string::npos) {
-		expandedTemplate.erase(searchPos,2);
-		expandedTemplate.insert(searchPos,buf);
-		startAt = searchPos + dataLength;
-	}
+	StrSearchReplace(expandedTemplate, "%C", buf);
 
-	startAt = 0;
 	appendEPGTitle(buf, 255, epgid, epgTitle);
-	dataLength = strlen(buf);
-	while ((searchPos = expandedTemplate.find("%T",startAt)) != std::string::npos) {
-		expandedTemplate.erase(searchPos,2);
-		expandedTemplate.insert(searchPos,buf);
-		startAt = searchPos + dataLength;
-	}
+	StrSearchReplace(expandedTemplate, "%T", buf);
 
-	startAt = 0;
 	appendEPGInfo(buf, 255, epgid);
-	dataLength = strlen(buf);
-	while ((searchPos = expandedTemplate.find("%I",startAt)) != std::string::npos) {
-		expandedTemplate.erase(searchPos,2);
-		expandedTemplate.insert(searchPos,buf);
-		startAt = searchPos + dataLength;
-	}
+	StrSearchReplace(expandedTemplate, "%I", buf);
 
 	strftime(buf,11,"%Y-%m-%d",localtime(&t));
-	dataLength = strlen(buf);
-	startAt = 0;
-	while ((searchPos = expandedTemplate.find("%d",startAt)) != std::string::npos) {
-		expandedTemplate.erase(searchPos,2);
-		expandedTemplate.insert(searchPos,buf);
-		startAt = searchPos + dataLength;
-	}
+	StrSearchReplace(expandedTemplate, "%d", buf);
 	
 	strftime(buf,7,"%H%M%S",localtime(&t));
-	dataLength = strlen(buf);
-	startAt = 0;
-	while ((searchPos = expandedTemplate.find("%t",startAt)) != std::string::npos) {
-		expandedTemplate.erase(searchPos,2);
-		expandedTemplate.insert(searchPos,buf);
-		startAt = searchPos + dataLength;
-	}
+	StrSearchReplace(expandedTemplate, "%t", buf);
+
 	//printf("[CFileDevice] filename: %s, expandedTemplate: %s\n",filename,expandedTemplate.c_str());
-	
 	strncpy(&(filename[pos]),expandedTemplate.c_str(),511-pos);
 
 	stream2file_error_msg_t error_msg;

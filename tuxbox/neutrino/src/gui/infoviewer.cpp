@@ -55,7 +55,6 @@ extern CRemoteControl * g_RemoteControl; /* neutrino.cpp */
 #include <algorithm>
 #include <string>
 #include <system/settings.h>
-#include <system/helper.h>
 
 #include <time.h>
 #include <sys/param.h>
