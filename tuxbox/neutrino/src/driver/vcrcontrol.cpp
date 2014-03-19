@@ -917,12 +917,12 @@ void CVCRControl::CFileDevice::appendEPGInfo(char *buf, unsigned int size, const
 	else
 		epgInfo = "";
 
-	if (!(epgInfo.empty()) && epgInfo.size() < size)
+	if (!epgInfo.empty())
 	{
 #warning fixme sectionsd should deliver data in UTF-8 format
 //				strcpy(&(filename[pos]), Latin1_to_UTF8(epgdata.title).c_str());
 // all characters with code >= 128 will be discarded anyway
-		strcpy(buf, epgInfo.c_str());
+		strncpy(buf, epgInfo.c_str(), size); // buf already terminated correctly in CFileDevice::Record(...)
 		char * p_act = buf;
 		do {
 			p_act += strspn(p_act, FILENAME_ALLOWED_CHARS);
@@ -946,12 +946,12 @@ void CVCRControl::CFileDevice::appendEPGTitle(char *buf, unsigned int size, cons
 	else
 		epgTitle = epgTitleTimer;
 
-	if (!(epgTitle.empty()) && epgTitle.size() < size)
+	if (!epgTitle.empty())
 	{
 #warning fixme sectionsd should deliver data in UTF-8 format
 //				strcpy(&(filename[pos]), Latin1_to_UTF8(epgdata.title).c_str());
 // all characters with code >= 128 will be discarded anyway
-		strcpy(buf, epgTitle.c_str());
+		strncpy(buf, epgTitle.c_str(), size); // buf already terminated correctly in CFileDevice::Record(...)
 		char * p_act = buf;
 		do {
 			p_act += strspn(p_act, FILENAME_ALLOWED_CHARS);
@@ -967,9 +967,9 @@ void CVCRControl::CFileDevice::appendChannelName(char *buf, unsigned int size, c
 	if (size > 0)
 		buf[0] = '\0';
 	std::string ext_channel_name = g_Zapit->getChannelName(channel_id);
-	if (ext_channel_name.size() < size)
+	if (!ext_channel_name.empty())
 	{
-		strcpy(buf, UTF8_TO_FILESYSTEM_ENCODING(ext_channel_name.c_str()));
+		strncpy(buf, UTF8_TO_FILESYSTEM_ENCODING(ext_channel_name.c_str()), size); // buf already terminated correctly in CFileDevice::Record(...)
 		
 		char * p_act = buf;
 		do {
