@@ -48,7 +48,7 @@ char rstr[512],tstr[512], *format, *estr;
 int epos=-1,cpos=0,kpos=0,cnt,first=1,hex=0;
 char kcod[10][13]={"0 _.:,;$@()#","1-+*/", "2abcä", "3def", "4ghi", "5jkl", "6mnoö", "7pqrs", "8tuvü", "9wxyz"};
 char hcod[10][13]={"0","1", "2abc", "3def", "4", "5", "6", "7", "8", "9"};
-static unsigned rc,sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={'ä','ö','ü','Ä','Ö','Ü','ß','°'};
+extern unsigned rc;
 extern int radius;
 char INST_FILE[]="/tmp/rc.locked";
 int instance=0;

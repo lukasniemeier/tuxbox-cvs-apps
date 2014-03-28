@@ -36,7 +36,9 @@
 #define NCF_FILE 	"/var/tuxbox/config/neutrino.conf"
 #define ECF_FILE	"/var/tuxbox/config/engima/config"
 #define BUFSIZE 	1024
-#define I_VERSION	1.38
+#define I_VERSION	1.39
+
+#define FONT "/share/fonts/pakenham.ttf"
 
 void TrimString(char *strg);
 
@@ -45,11 +47,10 @@ char *buffer=NULL;
 // Misc
 char NOMEM[]="input <Out of memory>\n";
 char TMP_FILE[]="/tmp/input.tmp";
-unsigned char FONT[]= "/share/fonts/pakenham.ttf";
 unsigned char *lfb = 0, *lbb = 0, *obb = 0;
 unsigned char nstr[512]="";
 unsigned char *trstr;
-static unsigned rc,sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={'ä','ö','ü','Ä','Ö','Ü','ß','°'};
+unsigned char rc,sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={'ä','ö','ü','Ä','Ö','Ü','ß','°'};
 int radius;
 
 static void quit_signal(int sig)
@@ -65,7 +66,7 @@ FILE *nfh;
 char tstr [512], *cfptr=NULL;
 int rv=-1,styp=0;
 
-	if((((nfh=fopen(NCF_FILE,"r"))!=NULL)&&(styp=1))||(((nfh=fopen(ECF_FILE,"r"))!=NULL))&&(styp=2))
+	if( ( ((nfh=fopen(NCF_FILE,"r"))!=NULL) && (styp=1) ) || ( ((nfh=fopen(ECF_FILE,"r"))!=NULL) && (styp=2) ) )
 	{
 		tstr[0]=0;
 
@@ -426,7 +427,7 @@ unsigned int alpha;
 		}
 
 		use_kerning = FT_HAS_KERNING(face);
-		desc.face_id = (char*)FONT;
+		desc.face_id = FONT;
 		desc.flags = FT_LOAD_MONOCHROME;
 	//init backbuffer
 

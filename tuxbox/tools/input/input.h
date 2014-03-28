@@ -19,9 +19,9 @@
  *
 */
 
-#ifndef __MSGBOX_H__
+#ifndef __INPUT_H__
 
-#define __MSGBOX_H__
+#define __INPUT_H__
 
 #include <errno.h>
 #include <fcntl.h>
@@ -43,7 +43,6 @@
 #include "color.h"
 //freetype stuff
 
-extern unsigned char FONT[64];
 
 enum {LEFT, CENTER, RIGHT};
 enum {SMALL, MED, BIG};
@@ -91,7 +90,7 @@ struct fb_fix_screeninfo fix_screeninfo;
 struct fb_var_screeninfo var_screeninfo;
 
 int startx, starty, sx, ex, sy, ey;
-static unsigned sc[8], tc[8];
+extern unsigned char sc[8], tc[8];
 extern char *butmsg[3];
 extern int buttons,selection;
 
