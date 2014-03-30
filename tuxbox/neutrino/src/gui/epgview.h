@@ -52,6 +52,14 @@
 class CEpgData
 {
 	private:
+		enum
+		{
+			EPG_INFO2,
+			SCREENING_AFTER,
+			SCREENING_BEFORE,
+			EPG_INFO1
+		};
+
 		CFrameBuffer		*frameBuffer;
 		CChannelEventList	evtlist;
 		CChannelEventList	followlist;
@@ -69,7 +77,7 @@ class CEpgData
 		time_t 			next_zeit;
 
 		int			ox, oy, sx, sy, toph, sb;
-		int			emptyLineCount, info1_lines;
+		int			emptyLineCount;
 		int         		textCount;
 		typedef std::pair<std::string,int> epg_pair;
 		std::vector<epg_pair> epgText;
@@ -81,8 +89,8 @@ class CEpgData
 
 		void GetEPGData(const t_channel_id channel_id, unsigned long long id, time_t* startzeit );
 		void GetPrevNextEPGData( unsigned long long id, time_t* startzeit );
-		void addTextToArray( const std::string & text, int screening );
-		void processTextToArray(std::string text, int screening = 0);
+		void addTextToArray( const std::string & text, int flag );
+		void processTextToArray(std::string text, int flag = EPG_INFO2);
 		void showText( int startPos, int ypos );
 		bool hasFollowScreenings(const t_channel_id channel_id, const std::string & title, const time_t startzeit);
 		void FollowScreenings(const time_t startzeit);

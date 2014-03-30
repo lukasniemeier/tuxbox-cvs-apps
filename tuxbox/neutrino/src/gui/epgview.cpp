@@ -145,7 +145,7 @@ void CEpgData::start()
 	toph = topboxheight;
 }
 
-void CEpgData::addTextToArray(const std::string & text, int screening) // UTF-8
+void CEpgData::addTextToArray(const std::string & text, int flag) // UTF-8
 {
 	//printf("line: >%s<\n", text.c_str() );
 	if (text==" ")
@@ -153,17 +153,17 @@ void CEpgData::addTextToArray(const std::string & text, int screening) // UTF-8
 		emptyLineCount ++;
 		if(emptyLineCount<2)
 		{
-			epgText.push_back(epg_pair(text, screening));
+			epgText.push_back(epg_pair(text, flag));
 		}
 	}
 	else
 	{
 		emptyLineCount = 0;
-		epgText.push_back(epg_pair(text, screening));
+		epgText.push_back(epg_pair(text, flag));
 	}
 }
 
-void CEpgData::processTextToArray(std::string text, int screening) // UTF-8
+void CEpgData::processTextToArray(std::string text, int flag) // UTF-8
 {
 	std::string	aktLine = "";
 	std::string	aktWord = "";
@@ -190,7 +190,7 @@ void CEpgData::processTextToArray(std::string text, int screening) // UTF-8
 			
 				if(*text_=='\n')
 				{	//enter-handler
-					addTextToArray( aktLine, screening);
+					addTextToArray( aktLine, flag);
 					aktLine = "";
 					aktWidth= 0;
 				}	
@@ -198,7 +198,7 @@ void CEpgData::processTextToArray(std::string text, int screening) // UTF-8
 			}
 			else
 			{//new line needed
-				addTextToArray( aktLine, screening);
+				addTextToArray( aktLine, flag);
 				aktLine = aktWord;
 				aktWidth = aktWordWidth;
 				aktWord = "";
@@ -215,7 +215,7 @@ void CEpgData::processTextToArray(std::string text, int screening) // UTF-8
 		text_++;
 	}
 	//add the rest
-	addTextToArray( aktLine + aktWord, screening );
+	addTextToArray( aktLine + aktWord, flag );
 }
 
 void CEpgData::showText( int startPos, int ypos )
@@ -239,7 +239,7 @@ void CEpgData::showText( int startPos, int ypos )
 	frameBuffer->paintBoxRel(sx, y, ox- 15, sb, COL_MENUCONTENT_PLUS_0); // background of the text box
 	for(int i = startPos; i < textSize && i < startPos + medlinecount; i++, y += medlineheight)
 	{
-		if(epgText[i].second){
+		if(epgText[i].second == SCREENING_AFTER || epgText[i].second == SCREENING_BEFORE){
 			std::string::size_type pos1 = epgText[i].first.find_first_not_of(tok, 0);
 			std::string::size_type pos2 = epgText[i].first.find_first_of(tok, pos1);
 			while( pos2 != string::npos || pos1 != string::npos ){
@@ -254,7 +254,10 @@ void CEpgData::showText( int startPos, int ypos )
 					offset += digi;
 					break;
 				}
-				g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10+offset, y+medlineheight, ox- 15- 15, epgText[i].first.substr(pos1, pos2 - pos1), (epgText[i].second==2)? COL_MENUCONTENTINACTIVE: COL_MENUCONTENT, 0, true); // UTF-8
+				g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10+offset, y+medlineheight, ox- 15- 15,
+						epgText[i].first.substr(pos1, pos2 - pos1),
+						(epgText[i].second == SCREENING_BEFORE) ? COL_MENUCONTENTINACTIVE : COL_MENUCONTENT,
+						0, true); // UTF-8
 				count++;
 				pos1 = epgText[i].first.find_first_not_of(tok, pos2);
 				pos2 = epgText[i].first.find_first_of(tok, pos1);
@@ -263,7 +266,8 @@ void CEpgData::showText( int startPos, int ypos )
 			count = 0;
 		}
 		else{
-			g_Font[( i< info1_lines ) ?SNeutrinoSettings::FONT_TYPE_EPG_INFO1:SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10, y+medlineheight, ox- 15- 15, epgText[i].first, COL_MENUCONTENT, 0, true); // UTF-8
+			int font_type = (epgText[i].second == EPG_INFO1) ? SNeutrinoSettings::FONT_TYPE_EPG_INFO1 : SNeutrinoSettings::FONT_TYPE_EPG_INFO2;
+			g_Font[font_type]->RenderString(sx+10, y+medlineheight, ox- 15- 15, epgText[i].first, COL_MENUCONTENT, 0, true); // UTF-8
 		}
 	}
 
@@ -529,14 +533,12 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 			}
 		}
 		if (false == bHide) {
-			processTextToArray(Latin1_to_UTF8(epgData.info1));
+			processTextToArray(Latin1_to_UTF8(epgData.info1), EPG_INFO1);
 		}
 	}
 
-	info1_lines = epgText.size();
-
 	//scan epg-data - sort to list
-	if ((epgData.info2.empty()) && (info1_lines == 0))
+	if (epgData.info2.empty() && epgText.empty())
 		processTextToArray(g_Locale->getText(LOCALE_EPGVIEWER_NODETAILED)); // UTF-8
 	else
 		processTextToArray(Latin1_to_UTF8(strEpisode + epgData.info2));
@@ -970,7 +972,7 @@ void CEpgData::FollowScreenings(const time_t startzeit)
 	CChannelEventList::iterator e;
 	struct  tm		*tmStartZeit;
 	std::string		screening_dates, screening_nodual;
-	int 			flag = 1;
+	int 			flag = SCREENING_AFTER;
 	char			tmpstr[256] = {0};
 
 	screening_dates = screening_nodual = "";
@@ -990,7 +992,7 @@ void CEpgData::FollowScreenings(const time_t startzeit)
 		strftime(tmpstr, sizeof(tmpstr), ". %H:%M ", tmStartZeit );
 		screening_dates += tmpstr;
 
-		flag = (e->startTime <= startzeit) ? 2 : 1;
+		flag = (e->startTime <= startzeit) ? SCREENING_BEFORE : SCREENING_AFTER;
 
 		if (screening_dates != screening_nodual){
 			screening_nodual=screening_dates;
