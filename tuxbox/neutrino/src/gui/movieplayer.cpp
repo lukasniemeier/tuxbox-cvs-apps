@@ -1166,7 +1166,7 @@ PlayStreamThread (void *mrl)
 
 					// pause VLC
 					httpres = sendGetRequest(pauseurl, response);
-					CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PAUSE);
+					CLCD::getInstance()->setMoviePlaymode(CLCD::PLAYMODE_PAUSE);
 
 					while(g_playstate == CMoviePlayerGui::PAUSE)
 					{
@@ -1177,7 +1177,7 @@ PlayStreamThread (void *mrl)
 
 					// unpause VLC
 					httpres = sendGetRequest(unpauseurl, response);
-					CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PLAY);
+					CLCD::getInstance()->setMoviePlaymode(CLCD::PLAYMODE_PLAY);
 					break;
 				case CMoviePlayerGui::SKIP:
 					{
@@ -1348,26 +1348,26 @@ void updateLcd(const std::string & big, const std::string & small)
 {
 	static int   l_playstate = -1;
 	std::string  lcd_small = small;
-	CLCD::AUDIOMODES playmode;
+	CLCD::PLAYMODES playmode;
 
 	if(l_playstate == g_playstate) return;
 
 	switch(g_playstate)
 	{
 		case CMoviePlayerGui::PAUSE:
-			playmode = CLCD::AUDIO_MODE_PAUSE;
+			playmode = CLCD::PLAYMODE_PAUSE;
 			break;
 
 		case CMoviePlayerGui::REW:
-			playmode = CLCD::AUDIO_MODE_REV;
+			playmode = CLCD::PLAYMODE_REV;
 			break;
 
 		case CMoviePlayerGui::FF:
-			playmode = CLCD::AUDIO_MODE_FF;
+			playmode = CLCD::PLAYMODE_FF;
 			break;
 
 		default:
-			playmode = CLCD::AUDIO_MODE_PLAY;
+			playmode = CLCD::PLAYMODE_PLAY;
 			break;
 	}
 	StrSearchReplace(lcd_small, "_", " ");
@@ -2299,7 +2299,7 @@ static void mp_checkEvent(MP_CTX *ctx)
 
 			//-- Freeze AV --
 			mp_freezeAV(ctx);
-			CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PAUSE);
+			CLCD::getInstance()->setMoviePlaymode(CLCD::PLAYMODE_PAUSE);
 
 			fprintf(stderr, "[mp] pause\n");
 			while(g_playstate == CMoviePlayerGui::PAUSE)	usleep(10000);
@@ -2310,7 +2310,7 @@ static void mp_checkEvent(MP_CTX *ctx)
 			//-- but demuxer will be started later.     --
 			//-- (refilling of input buffer not needed) --
 			mp_unfreezeAV(ctx);
-			CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PLAY);
+			CLCD::getInstance()->setMoviePlaymode(CLCD::PLAYMODE_PLAY);
 			break;
 
 		//-- next item of program/play-list   --

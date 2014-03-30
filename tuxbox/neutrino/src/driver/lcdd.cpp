@@ -570,7 +570,7 @@ void CLCD::setEPGTitle(const std::string title)
 	showServicename("", false);
 }
 
-void CLCD::setMoviePlaymode(const AUDIOMODES playmode)
+void CLCD::setMoviePlaymode(const PLAYMODES playmode)
 {
 	movie_playmode = playmode;
 
@@ -809,12 +809,12 @@ void CLCD::showAudioTrack(const std::string & artist, const std::string & title,
 
 }
 
-void CLCD::showAudioPlayMode(AUDIOMODES m)
+void CLCD::showAudioPlayMode(const PLAYMODES m)
 {
 	display.draw_fill_rect (-1,51,10,62, CLCDDisplay::PIXEL_OFF);
 	switch(m)
 	{
-		case AUDIO_MODE_PLAY:
+		case PLAYMODE_PLAY:
 			{
 				int x=3,y=53;
 				display.draw_line(x  ,y  ,x  ,y+8, CLCDDisplay::PIXEL_ON);
@@ -824,16 +824,16 @@ void CLCD::showAudioPlayMode(AUDIOMODES m)
 				display.draw_line(x+4,y+4,x+4,y+4, CLCDDisplay::PIXEL_ON);
 				break;
 			}
-		case AUDIO_MODE_STOP:
+		case PLAYMODE_STOP:
 			display.draw_fill_rect (1, 53, 8 ,61, CLCDDisplay::PIXEL_ON);
 			break;
-		case AUDIO_MODE_PAUSE:
+		case PLAYMODE_PAUSE:
 			display.draw_line(1,54,1,60, CLCDDisplay::PIXEL_ON);
 			display.draw_line(2,54,2,60, CLCDDisplay::PIXEL_ON);
 			display.draw_line(6,54,6,60, CLCDDisplay::PIXEL_ON);
 			display.draw_line(7,54,7,60, CLCDDisplay::PIXEL_ON);
 			break;
-		case AUDIO_MODE_FF:
+		case PLAYMODE_FF:
 			{
 				int x=2,y=55;
 				display.draw_line(x   ,y   , x  , y+4, CLCDDisplay::PIXEL_ON);
@@ -844,7 +844,7 @@ void CLCD::showAudioPlayMode(AUDIOMODES m)
 				display.draw_line(x+5 ,y+2 , x+5, y+2, CLCDDisplay::PIXEL_ON);
 			}
 			break;
-		case AUDIO_MODE_REV:
+		case PLAYMODE_REV:
 			{
 				int x=2,y=55;
 				display.draw_line(x   ,y+2 , x  , y+2, CLCDDisplay::PIXEL_ON);
@@ -930,7 +930,7 @@ void CLCD::setMode(const MODES m, const char * const title)
 		display.load_screen(&(background[BACKGROUND_LCD]));
 		display.draw_fill_rect(0, 14, LCD_COLS, 48, CLCDDisplay::PIXEL_OFF);
 		
-		showAudioPlayMode(AUDIO_MODE_STOP);
+		showAudioPlayMode(PLAYMODE_STOP);
 		showVolume(volume, false);
 		showclock = true;
 		showTime();      /* "showclock = true;" implies that "showTime();" does a "displayUpdate();" */

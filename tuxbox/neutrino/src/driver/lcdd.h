@@ -71,13 +71,13 @@ class CLCD
 			MODE_INFOBOX
 #endif // LCD_UPDATE
 		};
-		enum AUDIOMODES
+		enum PLAYMODES
 		{
-			AUDIO_MODE_PLAY,
-			AUDIO_MODE_STOP,
-			AUDIO_MODE_FF,
-			AUDIO_MODE_PAUSE,
-			AUDIO_MODE_REV
+			PLAYMODE_PLAY,
+			PLAYMODE_STOP,
+			PLAYMODE_FF,
+			PLAYMODE_PAUSE,
+			PLAYMODE_REV
 		};
 		enum STATUSLINE
 		{
@@ -119,7 +119,7 @@ class CLCD
 		raw_display_t                   background[LCD_NUMBER_OF_BACKGROUNDS];
 
 		MODES				mode;
-		AUDIOMODES			movie_playmode;
+		PLAYMODES			movie_playmode;
 
 		std::string			servicename;
 		std::string			epg_title;
@@ -159,7 +159,7 @@ class CLCD
 
 		void showServicename(const std::string name, const bool perform_wakeup = true); // UTF-8
 		void setEPGTitle(const std::string title);
-		void setMoviePlaymode(const AUDIOMODES playmode);
+		void setMoviePlaymode(const PLAYMODES playmode);
 		void setMovieInfo(const std::string big, const std::string small);
 		void setMovieAudio(const bool is_ac3);
 		std::string getMenutitle() { return menutitle; };
@@ -170,7 +170,7 @@ class CLCD
 		void showPercentOver(const unsigned char perc, const bool perform_update = true, const MODES m = MODE_TVRADIO);
 		void showMenuText(const int position, const char * text, const int highlight = -1, const bool utf_encoded = false);
 		void showAudioTrack(const std::string & artist, const std::string & title, const std::string & album);
-		void showAudioPlayMode(AUDIOMODES m=AUDIO_MODE_PLAY);
+		void showAudioPlayMode(const PLAYMODES m = PLAYMODE_PLAY);
 		void showAudioProgress(const char perc, bool isMuted);
 		void setBrightness(int);
 		int getBrightness();

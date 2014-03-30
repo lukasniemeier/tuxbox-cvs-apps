@@ -2212,7 +2212,7 @@ OutputThread(void *arg)
 		switch (g_playstate)
 		{
 			case CMoviePlayerGui::PAUSE:
-				CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PAUSE);
+				CLCD::getInstance()->setMoviePlaymode(CLCD::PLAYMODE_PAUSE);
 #ifdef HAVE_TRIPLEDRAGON
 				ioctl(adec, AUDIO_STOP);
 				ioctl(dmxa, DMX_STOP);
@@ -2253,7 +2253,7 @@ OutputThread(void *arg)
 					perror("AUDIO_SET_MUTE");
 #endif
 #endif
-				CLCD::getInstance()->setMoviePlaymode(CLCD::AUDIO_MODE_PLAY);
+				CLCD::getInstance()->setMoviePlaymode(CLCD::PLAYMODE_PLAY);
 				break;
 			case CMoviePlayerGui::SKIP:
 				DBG("requesting buffer reset\n");
@@ -2479,7 +2479,7 @@ void updateLcd(const std::string &big, const std::string &small)
 {
 	static int  l_playstate = -1;
 	std::string lcd_small = small;
-	CLCD::AUDIOMODES playmode;
+	CLCD::PLAYMODES playmode;
 
 	if (l_playstate == g_playstate)
 		return;
@@ -2487,10 +2487,10 @@ void updateLcd(const std::string &big, const std::string &small)
 	switch (g_playstate)
 	{
 	case CMoviePlayerGui::PAUSE:
-		playmode = CLCD::AUDIO_MODE_PAUSE;
+		playmode = CLCD::PLAYMODE_PAUSE;
 		break;
 	default:
-		playmode = CLCD::AUDIO_MODE_PLAY;
+		playmode = CLCD::PLAYMODE_PLAY;
 		break;
 	}
 	StrSearchReplace(lcd_small, "_", " ");
