@@ -125,10 +125,11 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
  * GetStringLen
  ******************************************************************************/
 
-int GetStringLen(int sx, unsigned char *string)
+int GetStringLen(int sx, char *string)
 {
 int i, found;
-int stringlen = 0;
+int stringlen = 0, min_length = 0;
+int count = 1, count_tilde = 0;
 
 	//reset kerning
 
@@ -145,6 +146,7 @@ int stringlen = 0;
 			else
 			{
 				string++;
+				count_tilde++;
 				if(*string=='t')
 				{
 					stringlen=desc.width+TABULATOR*((int)(stringlen/TABULATOR)+1);
@@ -157,6 +159,9 @@ int stringlen = 0;
 						{
 							string+=3;
 							stringlen=i-sx;
+							if (count_tilde == 1 && count == 1) {
+								min_length = ex-startx-2*i-10;
+							}
 						}
 					}
 					else
@@ -174,9 +179,9 @@ int stringlen = 0;
 				}
 			}				
 			string++;
+			count++;
 		}
-
-	return stringlen;
+		return ((stringlen > min_length) ? stringlen : min_length);
 }
 
 /******************************************************************************
@@ -261,7 +266,7 @@ int RenderString(char *string, int sx, int sy, int maxwidth, int layout, int siz
 							if(sscanf(rptr+1,"%3d",&i)==1)
 							{
 								rptr+=3;
-								sx=i;
+								sx=(i<sx) ? sx : i;
 							}
 						break;
 					}

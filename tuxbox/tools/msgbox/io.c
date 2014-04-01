@@ -26,7 +26,7 @@
 int rc_last_key=-1;
 int lastval=-1;
 int RCTranslate(int code);
-extern int rc;
+extern unsigned int rc;
 time_t t1,t2;
 clock_t tk1=0, tk2;
 

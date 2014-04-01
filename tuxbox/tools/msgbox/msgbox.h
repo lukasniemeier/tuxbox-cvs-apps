@@ -50,7 +50,6 @@
 #define MAX_BUTTONS 16
 #define BUFSIZE 	4095
 
-extern unsigned char FONT[64];
 
 enum {LEFT, CENTER, RIGHT};
 enum {SMALL, MED, BIG};
@@ -187,7 +186,7 @@ struct fb_fix_screeninfo fix_screeninfo;
 struct fb_var_screeninfo var_screeninfo;
 
 int startx, starty, sx, ex, sy, ey, debounce, rblock;
-extern unsigned sc[8], tc[8];
+extern unsigned char sc[8], tc[8];
 extern char *butmsg[MAX_BUTTONS];
 extern int buttons,selection;
 extern int instance;

@@ -33,7 +33,9 @@
 #include <dbox/fb.h>
 #endif
 
-#define M_VERSION 1.70
+#define M_VERSION 1.71
+
+#define FONT    	"/share/fonts/pakenham.ttf"
 
 #define NCF_FILE 	"/var/tuxbox/config/neutrino.conf"
 #define ECF_FILE	"/var/tuxbox/config/enigma/config"
@@ -57,14 +59,14 @@ int rbutt[16],hide=0,radius=0;
 //static void ShowInfo(void);
 
 // Misc
-char NOMEM[]="msgbox <Out of memory>\n";
+const char NOMEM[]="msgbox <Out of memory>\n";
 char TMP_FILE[64]="/tmp/msgbox.tmp";
-unsigned char FONT[64]= "/share/fonts/pakenham.ttf";
 unsigned char *lfb = 0, *lbb = 0, *obb = 0, *hbb = 0, *ibb = 0;
 unsigned char nstr[BUFSIZE]="";
 unsigned char *trstr;
-unsigned rc,sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={0xE4,0xF6,0xFC,0xC4,0xD6,0xDC,0xDF,0xB0};
-char INST_FILE[]="/tmp/rc.locked";
+unsigned char sc[8]={'a','o','u','A','O','U','z','d'}, tc[8]={0xE4,0xF6,0xFC,0xC4,0xD6,0xDC,0xDF,0xB0};
+unsigned int rc;
+const char INST_FILE[]="/tmp/rc.locked";
 int instance=0;
 
 int get_instance(void)
@@ -111,7 +113,7 @@ FILE *nfh;
 char tstr [512], *cfptr=NULL;
 int rv=-1,styp=0;
 
-	if((((nfh=fopen(NCF_FILE,"r"))!=NULL)&&(styp=1))||(((nfh=fopen(ECF_FILE,"r"))!=NULL))&&(styp=2))
+	if ( ( ((nfh=fopen(NCF_FILE,"r"))!=NULL) && (styp=1) ) || ( ((nfh=fopen(ECF_FILE,"r"))!=NULL) && (styp=2) ) )
 	{
 		tstr[0]=0;
 

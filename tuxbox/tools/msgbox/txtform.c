@@ -71,7 +71,7 @@ int just, color=CMCT;
 					case 'l': just=LEFT; break;
 					case 'r': just=RIGHT; break;
 					case 'c': just=CENTER; break;
-					case 's':
+					case 's': // vert. line
 						RenderBox(xs, ys-cs/3, xs+xw, ys-cs/3+1, FILL, COL_MENUCONTENT_PLUS_3);
 						RenderBox(xs, ys-cs/3+1, xs+xw, ys-cs/3+2, FILL, COL_MENUCONTENT_PLUS_1);
 						break;
@@ -98,7 +98,7 @@ int just, color=CMCT;
 			{
 				if(strlen(rstr))
 				{
-					slen=GetStringLen(xs,rstr);
+					slen=GetStringLen(xs,rstr)-10;
 					if(slen>*x)
 					{
 						*x=slen;
