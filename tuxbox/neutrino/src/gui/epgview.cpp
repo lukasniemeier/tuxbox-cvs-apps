@@ -139,7 +139,7 @@ void CEpgData::start()
 	oy -= buttonheight;
 	/* this is the text box height - and the height of the scroll bar */
 	sb = oy - topboxheight - botboxheight;
-	medlineheight = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight();
+	medlineheight = std::max(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight(), g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getHeight());
 	medlinecount  = sb / medlineheight;
 
 	toph = topboxheight;
@@ -165,9 +165,10 @@ void CEpgData::addTextToArray(const std::string & text, int flag) // UTF-8
 
 void CEpgData::processTextToArray(std::string text, int flag) // UTF-8
 {
+	Font* fnt_epg = g_Font[(flag == EPG_INFO1) ? SNeutrinoSettings::FONT_TYPE_EPG_INFO1 : SNeutrinoSettings::FONT_TYPE_EPG_INFO2];
 	std::string	aktLine = "";
 	std::string	aktWord = "";
-	int	aktWidth = 0;
+	int	aktWidth = 0, aktWordWidth = 0;
 	text += ' ';
 	char* text_= (char*) text.c_str();
 
@@ -182,7 +183,7 @@ void CEpgData::processTextToArray(std::string text, int flag) // UTF-8
 				aktWord += *text_;
 
 			// check the wordwidth - add to this line if size ok
-			int aktWordWidth = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getRenderWidth(aktWord, true);
+			aktWordWidth = fnt_epg->getRenderWidth(aktWord, true);
 			if((aktWordWidth+aktWidth)<=(ox- 15- 15))
 			{//space ok, add
 				aktWidth += aktWordWidth;
@@ -221,7 +222,7 @@ void CEpgData::processTextToArray(std::string text, int flag) // UTF-8
 void CEpgData::showText( int startPos, int ypos )
 {
 	// recalculate
-	medlineheight = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight();
+	medlineheight = std::max(g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO1]->getHeight(), g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->getHeight());
 	medlinecount = sb / medlineheight;
 
 	int textSize = epgText.size();
@@ -254,7 +255,7 @@ void CEpgData::showText( int startPos, int ypos )
 					offset += digi;
 					break;
 				}
-				g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10+offset, y+medlineheight, ox- 15- 15,
+				g_Font[SNeutrinoSettings::FONT_TYPE_EPG_INFO2]->RenderString(sx+10+offset, y+medlineheight, ox- 15- 15- offset,
 						epgText[i].first.substr(pos1, pos2 - pos1),
 						(epgText[i].second == SCREENING_BEFORE) ? COL_MENUCONTENTINACTIVE : COL_MENUCONTENT,
 						0, true); // UTF-8

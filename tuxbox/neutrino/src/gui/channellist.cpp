@@ -1758,7 +1758,7 @@ void CChannelList::processTextToArray(std::string text) // UTF-8
 {
 	std::string	aktLine = "";
 	std::string	aktWord = "";
-	int	aktWidth = 0;
+	int	aktWidth = 0, aktWordWidth = 0;
 	text += ' ';
 	char* text_= (char*) text.c_str();
 
@@ -1769,7 +1769,7 @@ void CChannelList::processTextToArray(std::string text) // UTF-8
 			if (*text_!='\n')
 				aktWord += *text_;
 
-			int aktWordWidth = g_Font[eventFont]->getRenderWidth(aktWord, true);
+			aktWordWidth = g_Font[eventFont]->getRenderWidth(aktWord, true);
 			if ((aktWordWidth+aktWidth)<=(infozone_width - 20))
 			{//space ok, add
 				aktWidth += aktWordWidth;
