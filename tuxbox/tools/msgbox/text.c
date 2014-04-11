@@ -127,7 +127,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
 
 int GetStringLen(int sx, char *string)
 {
-int i, found;
+unsigned int i = 0;
 int stringlen = 0, min_length = 0;
 int count = 1, count_tilde = 0;
 
@@ -158,7 +158,7 @@ int count = 1, count_tilde = 0;
 						if(sscanf(string+1,"%3d",&i)==1)
 						{
 							string+=3;
-							stringlen=i-sx;
+							stringlen = i - ((sx < 20) ? 20 : sx);
 							if (count_tilde == 1 && count == 1) {
 								min_length = ex-startx-2*i-10;
 							}
@@ -166,8 +166,8 @@ int count = 1, count_tilde = 0;
 					}
 					else
 					{
-						found=0;
-						for(i=0; i<sizeof(sc) && !found; i++)
+						int found=0;
+						for(i=0; i<sizeof(sc)/sizeof(sc[0]) && !found; i++)
 						{
 							if(*string==sc[i])
 							{
@@ -190,8 +190,9 @@ int count = 1, count_tilde = 0;
 
 int RenderString(char *string, int sx, int sy, int maxwidth, int layout, int size, int color)
 {
-	int stringlen, ex, charwidth,i,found;
-	char rstr[BUFSIZE], *rptr=rstr, rc;
+	int stringlen = 0, ex = 0, charwidth = 0, found = 0;
+	unsigned int i = 0;
+	char rstr[BUFSIZE]={0}, *rptr=rstr, rc=' ';
 	int varcolor=color;
 
 	//set size
@@ -236,7 +237,7 @@ int RenderString(char *string, int sx, int sy, int maxwidth, int layout, int siz
 				++rptr;
 				rc=*rptr;
 				found=0;
-				for(i=0; i<sizeof(sc) && !found; i++)
+				for(i=0; i<sizeof(sc)/sizeof(sc[0]) && !found; i++)
 				{
 					if(rc==sc[i])
 					{

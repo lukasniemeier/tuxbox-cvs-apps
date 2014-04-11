@@ -187,7 +187,7 @@ struct fb_var_screeninfo var_screeninfo;
 
 int startx, starty, sx, ex, sy, ey, debounce, rblock;
 extern unsigned char sc[8], tc[8];
-extern char *butmsg[MAX_BUTTONS];
+char *butmsg[MAX_BUTTONS];
 extern int buttons,selection;
 extern int instance;
 int get_instance(void);

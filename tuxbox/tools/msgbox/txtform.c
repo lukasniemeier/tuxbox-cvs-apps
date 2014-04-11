@@ -37,13 +37,13 @@
 int fh_txt_trans(const char *name, int xs, int xw, int ys, int dy, int cs, int line, int *cut, int *x, int *y, int plot)
 {
 char tstr[BUFSIZE],rstr[BUFSIZE],*tptr;
-int loop=1, j, first, slen, cnt=0;
+int loop=1, j, slen, cnt=0;
 FILE *fh;
 int just, color=CMCT;
 
 	if(!(fh=fopen(name,"rb")))	return(FH_ERROR_FILE);
 
-	first=(line==0);
+//	first=(line==0);
 	*x=0;
 	*y=0;
 	while((loop>0) && (fgets(tstr, sizeof(tstr), fh)))
@@ -87,18 +87,18 @@ int just, color=CMCT;
 				if(loop>=line)
 				{
 					RenderString(rstr, xs, ys, xw, just, cs, color);
-					if(strlen(rstr))
+/*					if(strlen(rstr))
 					{
 						first=0;
 					}
-					ys+=dy;
+*/					ys+=dy;
 				}
 			}
 			else
 			{
 				if(strlen(rstr))
 				{
-					slen=GetStringLen(xs,rstr)-10;
+					slen=GetStringLen(xs,rstr)+10;
 					if(slen>*x)
 					{
 						*x=slen;

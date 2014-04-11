@@ -33,7 +33,7 @@
 #include <dbox/fb.h>
 #endif
 
-#define M_VERSION 1.71
+#define M_VERSION 1.72
 
 #define FONT    	"/share/fonts/pakenham.ttf"
 
@@ -53,7 +53,6 @@ struct fb_cmap oldcmap = {0, 256, ord, ogn, obl, otr};
 
 char *line_buffer=NULL, *title=NULL;
 int size=36, type=0, timeout=0, refresh=3, flash=0, selection=0, tbuttons=0, buttons=0, bpline=3, echo=0, absolute=0, mute=1, header=1, cyclic=1;
-char *butmsg[16];
 int rbutt[16],hide=0,radius=0;
 
 //static void ShowInfo(void);
@@ -84,10 +83,9 @@ int rval=0;
 
 void put_instance(int pval)
 {
-FILE *fh;
-
 	if(pval)
 	{
+		FILE *fh;
 		if((fh=fopen(INST_FILE,"w"))!=NULL)
 		{
 			fputc(pval,fh);
@@ -110,13 +108,11 @@ static void quit_signal(int sig)
 int Read_Neutrino_Cfg(char *entry)
 {
 FILE *nfh;
-char tstr [512], *cfptr=NULL;
 int rv=-1,styp=0;
 
 	if ( ( ((nfh=fopen(NCF_FILE,"r"))!=NULL) && (styp=1) ) || ( ((nfh=fopen(ECF_FILE,"r"))!=NULL) && (styp=2) ) )
 	{
-		tstr[0]=0;
-
+		char tstr[512]={0}, *cfptr=NULL;
 		while((!feof(nfh)) && ((strstr(tstr,entry)==NULL) || ((cfptr=strchr(tstr,'='))==NULL)))
 		{
 			fgets(tstr,500,nfh);
@@ -296,7 +292,7 @@ int i,bx,by,x1,y1,rv=-1,run=1,line=0,action=1,cut,itmp,btns=buttons,lbtns=(butto
 				printf("msgbox <invalid Text-Format>\n");
 				return -1;
 			}
-			x1+=10;
+			//x1+=10;
 
 			dy=0.8*(double)size;
 			if(pxw<x1)
@@ -465,12 +461,12 @@ void ShowUsage(void)
 
 int main (int argc, char **argv)
 {
-int index,index2,tv,found=0;
+int index=0 ,index2,tv=0,found=0;
 int dloop=1, rcc=-1, flsh=0, cupd=0;
-char rstr[BUFSIZE], *rptr, *aptr;
-time_t tm1,tm2;
+char rstr[BUFSIZE]={0}, *rptr=NULL, *aptr=NULL;
+time_t tm1=0,tm2=0;
 unsigned int alpha;
-clock_t tk1=0;
+//clock_t tk1=0;
 FILE *fh;
 
 		if(argc<2)
@@ -986,7 +982,7 @@ return 0;
 	
 	time(&tm1);
 	tm2=tm1;
-	tk1=clock()/(CLOCKS_PER_SEC/1000);
+//	tk1=clock()/(CLOCKS_PER_SEC/1000);
 #ifdef HAVE_DREAMBOX_HARDWARE
 	ClearKeys();
 #endif	
@@ -1097,9 +1093,6 @@ return 0;
 	//cleanup
 
 	// clear Display
-//	memset(lbb, TRANSP, var_screeninfo.xres*var_screeninfo.yres);
-//	memcpy(lfb, lbb, var_screeninfo.xres*var_screeninfo.yres);
-	
 	memcpy(lfb, obb, var_screeninfo.xres*var_screeninfo.yres);
 	munmap(lfb, fix_screeninfo.smem_len);
 #ifdef HAVE_DBOX_HARDWARE
