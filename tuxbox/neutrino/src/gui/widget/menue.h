@@ -322,7 +322,6 @@ class CMenuWidget : public CMenuTarget
 		virtual bool updateSelection(int pos);
 
 	public:
-		CMenuWidget();
 		CMenuWidget(const neutrino_locale_t Name, const std::string & Icon = "", const int mwidth = 400, const int mheight = 576);
 		CMenuWidget(const char* Name, const std::string & Icon = "", const int mwidth = 400, const int mheight = 576);
 		~CMenuWidget();

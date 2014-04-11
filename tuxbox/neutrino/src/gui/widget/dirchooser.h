@@ -41,7 +41,7 @@ extern unsigned int getFreeDiscSpaceGB(const char * dir);
 extern int getFirstFreeRecDirNr(int min_free_gb);
 
 #define MAX_ALLOWED_PATHS 2
-class CDirChooser : public CMenuWidget
+class CDirChooser : public CMenuTarget
 {
 	private:
 		std::string* dirPath;

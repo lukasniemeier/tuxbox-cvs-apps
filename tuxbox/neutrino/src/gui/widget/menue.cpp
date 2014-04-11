@@ -244,15 +244,6 @@ void CMenuItem::paintItemButton(const bool select_mode, const int &item_height, 
 	}
 }
 
-CMenuWidget::CMenuWidget()
-{
-	name = NONEXISTANT_LOCALE;
-	nameString = g_Locale->getText(NONEXISTANT_LOCALE);
-	iconfile="";
-	selected=-1;
-	iconOffset= 0;
-}
-
 
 CMenuWidget::CMenuWidget(const neutrino_locale_t Name, const std::string & Icon, const int mwidth, const int mheight)
 {
