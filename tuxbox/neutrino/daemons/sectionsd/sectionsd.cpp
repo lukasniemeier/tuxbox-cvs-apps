@@ -876,7 +876,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		}
 		unlockEvents();
 
-		while (! to_delete.empty())
+		while (!to_delete.empty())
 		{
 			deleteEvent(to_delete.back());
 			to_delete.pop_back();
@@ -900,7 +900,7 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 					back = true;
 			}
 			else
-				printf("[sectionsd] addevent: times.size != 1, please report\n");
+				dprintf("[sectionsd] addevent: times.size != 1, please report\n");
 
 			if (back)
 			{
@@ -916,8 +916,9 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 				unlockMessaging();
 			}
 
+			event_id_t uniqueKey = (*lastEvent)->uniqueKey();
 			unlockEvents();	
-			deleteEvent((*lastEvent)->uniqueKey());
+			deleteEvent(uniqueKey);
 		}
 		else
 			unlockEvents();
@@ -1059,8 +1060,10 @@ static void addNVODevent(const SIevent &evt)
 		  --lastEvent;
 		}
 		unlockMessaging();
+
+		event_id_t uniqueKey = (*lastEvent)->uniqueKey();
 		unlockEvents();
-		deleteEvent((*lastEvent)->uniqueKey());
+		deleteEvent(uniqueKey);
 	}
 	else
 		unlockEvents();
@@ -1175,6 +1178,7 @@ xmlNodePtr FindTransponder(xmlNodePtr provider, const t_original_network_id onid
 static void removeOldEvents(const long seconds)
 {
 	bool goodtimefound;
+	std::vector<event_id_t> to_delete;
 
 	// Alte events loeschen
 	time_t zeit = time(NULL);
@@ -1184,7 +1188,6 @@ static void removeOldEvents(const long seconds)
 	MySIeventsOrderFirstEndTimeServiceIDEventUniqueKey::iterator e = mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.begin();
 
 	while ((e != mySIeventsOrderFirstEndTimeServiceIDEventUniqueKey.end()) && (!messaging_zap_detected)) {
-		unlockEvents();
 		goodtimefound = false;
 		for (SItimes::iterator t = (*e)->times.begin(); t != (*e)->times.end(); ++t) {
 			if (t->startzeit + (long)t->dauer >= zeit - seconds) {
@@ -1195,13 +1198,17 @@ static void removeOldEvents(const long seconds)
 		}
 
 		if (false == goodtimefound)
-			deleteEvent((*(e++))->uniqueKey());
-		else
-			++e;
-		readLockEvents();
+			to_delete.push_back((*e)->uniqueKey());
+		++e;
 	}	
 	unlockEvents();
-	
+
+	while (!to_delete.empty())
+	{
+		deleteEvent(to_delete.back());
+		to_delete.pop_back();
+	}
+
 	return;
 }
 
@@ -1209,6 +1216,7 @@ static void removeWasteEvents()
 {
 	bool haslinkage;
 	bool validevent;
+	std::vector<event_id_t> to_delete;
 	xmlDocPtr service_parser = parseXmlFile(SERVICES_XML);
 
 	xmlNodePtr services_tp;
@@ -1224,7 +1232,6 @@ static void removeWasteEvents()
 	MySIeventsOrderUniqueKey::iterator e = mySIeventsOrderUniqueKey.begin();
 
 	while ((e != mySIeventsOrderUniqueKey.end()) && (!messaging_zap_detected)) {
-		unlockEvents();
 		validevent = true;
 		haslinkage = false;
 		if ((last_original_network_id == e->second->original_network_id) && 
@@ -1281,12 +1288,16 @@ static void removeWasteEvents()
 		}
 
 		if (!validevent)
-			deleteEvent((e++)->first);
-		else
-			++e;
-		readLockEvents();
+			to_delete.push_back(e->first);
+		++e;
 	}
 	unlockEvents();
+
+	while (!to_delete.empty())
+	{
+		deleteEvent(to_delete.back());
+		to_delete.pop_back();
+	}
 
 	xmlFreeDoc(service_parser);
 	return;
