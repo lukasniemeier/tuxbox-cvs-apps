@@ -3359,7 +3359,6 @@ void CMoviePlayerGui::PlayFile (int parental)
 									}
 	
 									TRACE("[mp]  do jump %d sec\r\n",g_jumpseconds);
-									FileTime.hide();
 									loop = false; // do no further bookmark checks
 								}
 							}
@@ -3722,9 +3721,13 @@ void CMoviePlayerGui::PlayFile (int parental)
 
 		//-- filetime display --
 		//----------------------
-		if(FileTime.IsVisible() && g_playstate == CMoviePlayerGui::PLAY)
+		if(g_playstate == CMoviePlayerGui::PLAY)
 		{
 			FileTime.update();
+		}
+		else if(g_playstate == CMoviePlayerGui::JPOS || g_playstate == CMoviePlayerGui::JF || g_playstate == CMoviePlayerGui::JB)
+		{
+			FileTime.hide();
 		}
 
 		//-- check RC code --
@@ -3975,14 +3978,12 @@ void CMoviePlayerGui::PlayFile (int parental)
 			case CRCInput::RC_left:
 				g_jumpseconds = -15;
 				g_playstate   = CMoviePlayerGui::JB;
-				FileTime.hide();
 				break;
 
 				//-- jump 1/4 minute forward --
 			case CRCInput::RC_right:
 				g_jumpseconds = 15;
 				g_playstate   = CMoviePlayerGui::JF;
-				FileTime.hide();
 				break;
 
 				//-- resync A/V --
@@ -4008,28 +4009,24 @@ void CMoviePlayerGui::PlayFile (int parental)
 			case CRCInput::RC_1:
 				g_jumpseconds = -60;
 				g_playstate   = CMoviePlayerGui::JB;
-				FileTime.hide();
 				break;
 
 				//-- jump to start --
 			case CRCInput::RC_2:
 				g_jumpseconds = 0;
 				g_playstate   = CMoviePlayerGui::JPOS;
-				FileTime.hide();
 				break;
 
 				//-- jump 1 minute forward --
 			case CRCInput::RC_3:
 				g_jumpseconds = 60;
 				g_playstate   = CMoviePlayerGui::JF;
-				FileTime.hide();
 				break;
 
 				//-- jump 5 minutes back --
 			case CRCInput::RC_4:
 				g_jumpseconds = -5 * 60;
 				g_playstate = CMoviePlayerGui::JB;
-				FileTime.hide();
 				break;
 
 				//-- jump via gui --
@@ -4061,7 +4058,6 @@ void CMoviePlayerGui::PlayFile (int parental)
 							g_playstate = CMoviePlayerGui::JB;
 						}
 						printf("Jump %d\n",g_jumpseconds);
-						FileTime.hide();
 					}
 				}
 				break;
@@ -4070,28 +4066,24 @@ void CMoviePlayerGui::PlayFile (int parental)
 			case CRCInput::RC_6:
 				g_jumpseconds = 5 * 60;
 				g_playstate   = CMoviePlayerGui::JF;
-				FileTime.hide();
 				break;
 
 				//-- jump 10 minutes back -- 
 			case CRCInput::RC_7:
 				g_jumpseconds = -10 * 60;
 				g_playstate   = CMoviePlayerGui::JB;
-				FileTime.hide();
 				break;
 
 				//-- jump to end --
 			case CRCInput::RC_8:
 				g_jumpseconds = PF_JMP_END;  // dirty hack 2
 				g_playstate = CMoviePlayerGui::JPOS;
-				FileTime.hide();
 				break;
 
 				//-- jump 10 minutes forward --
 			case CRCInput::RC_9:
 				g_jumpseconds = 10 * 60;
 				g_playstate   = CMoviePlayerGui::JF;
-				FileTime.hide();
 				break;
 
 				//-- select previous item (in playlist) --
@@ -4380,7 +4372,7 @@ CMoviePlayerGui::PlayStream (int streamtype)
 		}
 
 		g_RCInput->getMsg (&msg, &data, 10);	// 1 secs..
-		if(StreamTime.IsVisible() && g_playstate == CMoviePlayerGui::PLAY)
+		if(g_playstate == CMoviePlayerGui::PLAY)
 		{
 			StreamTime.update();
 		}
@@ -4388,6 +4380,7 @@ CMoviePlayerGui::PlayStream (int streamtype)
 		{
 			if(g_playstate >= CMoviePlayerGui::PLAY)
 			{
+				StreamTime.hide();
 				g_playstate = CMoviePlayerGui::STOPPED;
 				aborted = true;
 				if (cdDvd) {
@@ -4439,37 +4432,31 @@ CMoviePlayerGui::PlayStream (int streamtype)
 		{
 			skipvalue = "-00:01:00";
 			g_playstate = CMoviePlayerGui::SKIP;
-			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_3)
 		{
 			skipvalue = "+00:01:00";
 			g_playstate = CMoviePlayerGui::SKIP;
-			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_4)
 		{
 			skipvalue = "-00:05:00";
 			g_playstate = CMoviePlayerGui::SKIP;
-			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_6)
 		{
 			skipvalue = "+00:05:00";
 			g_playstate = CMoviePlayerGui::SKIP;
-			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_7)
 		{
 			skipvalue = "-00:10:00";
 			g_playstate = CMoviePlayerGui::SKIP;
-			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_9)
 		{
 			skipvalue = "+00:10:00";
 			g_playstate = CMoviePlayerGui::SKIP;
-			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_down || msg == CRCInput::RC_5)
 		{
@@ -4484,7 +4471,6 @@ CMoviePlayerGui::PlayStream (int streamtype)
 				if(skipvalue[0]== '=')
 					skipvalue = skipvalue.substr(1);
 				g_playstate = CMoviePlayerGui::SKIP;
-				StreamTime.hide();
 			}
 		}
 		else if(msg == CRCInput::RC_setup)
@@ -4588,6 +4574,10 @@ CMoviePlayerGui::PlayStream (int streamtype)
 			if(CNeutrinoApp::getInstance()->handleMsg(msg, data) & messages_return::cancel_all)
 		{
 			exit = true;
+		}
+		if(g_playstate == CMoviePlayerGui::SKIP)
+		{
+			StreamTime.hide();
 		}
 	}
 	while (true);

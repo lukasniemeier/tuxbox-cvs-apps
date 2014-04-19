@@ -91,6 +91,9 @@ void CTimeOSD::update()
 
 void CTimeOSD::hide()
 {
-	frameBuffer->paintBackgroundBoxRel(m_xend - m_width -20, m_y - 10 , m_width + 40, m_height + 20);
-	visible=false;
+	if(visible)
+	{
+		frameBuffer->paintBackgroundBoxRel(m_xend - m_width -20, m_y - 10 , m_width + 40, m_height + 20);
+		visible=false;
+	}
 }
