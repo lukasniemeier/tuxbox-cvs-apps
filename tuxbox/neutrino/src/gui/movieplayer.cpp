@@ -4086,11 +4086,12 @@ void CMoviePlayerGui::PlayFile (int parental)
 				g_playstate   = CMoviePlayerGui::JF;
 				break;
 
-				//-- select previous item (in playlist) --
+				//-- select previous or next item (in playlist) --
 			case CRCInput::RC_up:
+			case CRCInput::RC_down:
 				if(isMovieBrowser == true)
 				{
-					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondoffset, true);
+					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondoffset, msg == CRCInput::RC_up);
 					if(new_pos_sec >= 0)
 					{
 						g_jumpseconds = new_pos_sec;
@@ -4100,25 +4101,7 @@ void CMoviePlayerGui::PlayFile (int parental)
 				else
 				{
 				    g_playstate = CMoviePlayerGui::ITEMSELECT;
-				    g_itno      = -2;
-				}
-				break;
-
-				//-- select next item (in playlist) --
-			case CRCInput::RC_down:
-				if(isMovieBrowser == true)
-				{
-					int new_pos_sec = get_next_movie_info_bookmark_pos_sec(p_movie_info, g_fileposition / g_secondoffset, false);
-					if(new_pos_sec >= 0)
-					{
-						g_jumpseconds = new_pos_sec ;
-						g_playstate   = CMoviePlayerGui::JPOS;
-					}
-				}
-				else
-				{
-				    g_playstate = CMoviePlayerGui::ITEMSELECT;
-				    g_itno      = -1;
+				    g_itno      = (msg == CRCInput::RC_up) ? -2 : -1;
 				}
 				break;
 
@@ -4236,17 +4219,17 @@ CMoviePlayerGui::PlayStream (int streamtype)
 	do
 	{
 		if (g_playstate == CMoviePlayerGui::STOPPED && !cdDvd) {
-		if(selected + 1 < _filelist.size() && !aborted) {
-			selected++;
-			filename = _filelist[selected].Name.c_str();
-			sel_filename = _filelist[selected].getFileName();
-			//printf ("[movieplayer.cpp] sel_filename: %s\n", filename);
-			int namepos = _filelist[selected].Name.rfind("vlc://");
-			std::string mrl_str = _filelist[selected].Name.substr(namepos + 6);
-                	char *tmp = curl_escape (mrl_str.c_str (), 0);
-                	strncpy (mrl, tmp, sizeof (mrl) - 1);
-                	curl_free (tmp);
-			printf ("[movieplayer.cpp] Generated FILE MRL: %s\n", mrl);
+			if(selected + 1 < _filelist.size() && !aborted) {
+				selected++;
+				filename = _filelist[selected].Name.c_str();
+				sel_filename = _filelist[selected].getFileName();
+				//printf ("[movieplayer.cpp] sel_filename: %s\n", filename);
+				int namepos = _filelist[selected].Name.rfind("vlc://");
+				std::string mrl_str = _filelist[selected].Name.substr(namepos + 6);
+				char *tmp = curl_escape (mrl_str.c_str (), 0);
+				strncpy (mrl, tmp, sizeof (mrl) - 1);
+				curl_free (tmp);
+				printf ("[movieplayer.cpp] Generated FILE MRL: %s\n", mrl);
 
 				update_info = true;
 				start_play = true;
@@ -4254,8 +4237,6 @@ CMoviePlayerGui::PlayStream (int streamtype)
 				open_filebrowser = true;
 				aborted = false;
 			}
-
-
 		}
 		
 		if(exit)
@@ -4401,7 +4382,8 @@ CMoviePlayerGui::PlayStream (int streamtype)
 		}
 		else if(msg == CRCInput::RC_green || msg == CRCInput::RC_0)
 		{
-			if(g_playstate == CMoviePlayerGui::PLAY) g_playstate = CMoviePlayerGui::RESYNC;
+			if(g_playstate == CMoviePlayerGui::PLAY)
+				g_playstate = CMoviePlayerGui::RESYNC;
 			StreamTime.hide();
 		}
 		else if(msg == CRCInput::RC_blue)
@@ -4520,28 +4502,20 @@ CMoviePlayerGui::PlayStream (int streamtype)
 			static CMovieBrowser mb;
 			mb.showHelpVLC();
 		}
-		else if(msg == CRCInput::RC_left)
+		else if(msg == CRCInput::RC_left || msg == CRCInput::RC_right)
 		{
-			if(!_filelist.empty() && selected > 0 && g_playstate == CMoviePlayerGui::PLAY) {
-				selected--;
-				filename = _filelist[selected].Name.c_str();
-				sel_filename = _filelist[selected].getFileName();
-				//printf ("[movieplayer.cpp] sel_filename: %s\n", filename);
-				int namepos = _filelist[selected].Name.rfind("vlc://");
-				std::string mrl_str = _filelist[selected].Name.substr(namepos + 6);
-				char *tmp = curl_escape (mrl_str.c_str (), 0);
-				strncpy (mrl, tmp, sizeof (mrl) - 1);
-				curl_free (tmp);
-				printf ("[movieplayer.cpp] Generated FILE MRL: %s\n", mrl);
-
-				update_info = true;
-				start_play = true;
+			unsigned int new_selected = selected;
+			if(!_filelist.empty() && g_playstate == CMoviePlayerGui::PLAY)
+			{
+				if(msg == CRCInput::RC_left && selected > 0)
+					new_selected--;
+				else if(msg == CRCInput::RC_right && selected + 1 < _filelist.size())
+					new_selected++;
 			}
-		}
-		else if(msg == CRCInput::RC_right)
-		{
-			if(!_filelist.empty() && selected + 1 < _filelist.size() && g_playstate == CMoviePlayerGui::PLAY) {
-				selected++;
+
+			if(selected != new_selected)
+			{
+				selected = new_selected;
 				filename = _filelist[selected].Name.c_str();
 				sel_filename = _filelist[selected].getFileName();
 				//printf ("[movieplayer.cpp] sel_filename: %s\n", filename);
