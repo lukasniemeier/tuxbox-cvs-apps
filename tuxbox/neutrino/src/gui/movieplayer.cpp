@@ -4237,6 +4237,7 @@ CMoviePlayerGui::PlayStream (int streamtype)
 				open_filebrowser = true;
 				aborted = false;
 			}
+			StreamTime.hide();
 		}
 		
 		if(exit)
@@ -4526,6 +4527,7 @@ CMoviePlayerGui::PlayStream (int streamtype)
 				curl_free (tmp);
 				printf ("[movieplayer.cpp] Generated FILE MRL: %s\n", mrl);
 
+				StreamTime.hide();
 				update_info = true;
 				start_play = true;
 			}

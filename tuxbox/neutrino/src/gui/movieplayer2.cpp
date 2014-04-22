@@ -2822,11 +2822,14 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					mrl_str = filelist[selected].Name;
 				INFO ("Generated FILE MRL: %s\n", mrl_str.c_str());
 
+				if (stream) // stream time is only counting seconds...
+					StreamTime.hide();
 				update_info = true;
 				start_play = true;
 			}
 			else
 			{
+				StreamTime.hide();
 				open_filebrowser = true;
 				aborted = false;
 			}
@@ -3327,7 +3330,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 			if (g_playstate == CMoviePlayerGui::PLAY)
 				g_playstate = CMoviePlayerGui::SOFTRESET;
 				// g_playstate = CMoviePlayerGui::RESYNC;
-			if (stream)
+			if (stream) // stream time is only counting seconds...
 				StreamTime.hide();
 		}
 		else if (msg == CRCInput::RC_blue)
@@ -3547,6 +3550,9 @@ CMoviePlayerGui::PlayStream(int streamtype)
 					else
 						mrl_str = filelist[selected].Name;
 					INFO("Generated FILE MRL: %s\n", mrl_str.c_str());
+
+					if (stream) // stream time is only counting seconds...
+						StreamTime.hide();
 					update_info = true;
 					start_play = true;
 				}
