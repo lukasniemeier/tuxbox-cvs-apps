@@ -439,6 +439,7 @@ int CAudioPlayerGui::show()
 			paint();
 		}
 		g_RCInput->getMsg(&msg, &data, 10); // 1 sec timeout to update play/stop state display
+		neutrino_msg_t msg_repeatok = msg & ~CRCInput::RC_Repeat;
 
 		if( msg == CRCInput::RC_timeout  || msg == NeutrinoMessages::EVT_TIMER)
 		{
@@ -524,20 +525,13 @@ int CAudioPlayerGui::show()
 				}
 			}
 		}
-		else if((msg &~ CRCInput::RC_Repeat) == CRCInput::RC_up)
+		else if(msg_repeatok == CRCInput::RC_up || msg_repeatok == CRCInput::RC_down)
 		{
 			if(m_show_playlist && !m_playlist.empty() )
 			{
 				int prevselected = m_selected;
-				if(m_selected == 0)
-				{
-					m_selected = m_playlist.size()-1;
-				}
-				else
-				{
-					m_selected--;
-				}
-				paintItem(prevselected - m_liststart);
+				int direction = (msg_repeatok == CRCInput::RC_up) ? -1 : 1;
+				m_selected = (m_selected + m_playlist.size() + direction) % m_playlist.size();
 				unsigned int oldliststart = m_liststart;
 				m_liststart = (m_selected/m_listmaxshow)*m_listmaxshow;
 				if(oldliststart != m_liststart)
@@ -546,25 +540,7 @@ int CAudioPlayerGui::show()
 				}
 				else
 				{
-					paintItem(m_selected - m_liststart);
-				}
-			}
-		}
-		else if((msg &~ CRCInput::RC_Repeat) == CRCInput::RC_down)
-		{
-			if(m_show_playlist && !m_playlist.empty() )
-			{
-				int prevselected = m_selected;
-				m_selected = (m_selected + 1) % m_playlist.size();
-				paintItem(prevselected - m_liststart);
-				unsigned int oldliststart = m_liststart;
-				m_liststart = (m_selected/m_listmaxshow)*m_listmaxshow;
-				if(oldliststart != m_liststart)
-				{
-					update = true;
-				}
-				else
-				{
+					paintItem(prevselected - m_liststart);
 					paintItem(m_selected - m_liststart);
 				}
 			}
