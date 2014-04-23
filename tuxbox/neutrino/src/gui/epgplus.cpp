@@ -958,18 +958,23 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 				refreshAll = true;
 				break;
 			}
-			if (msg == g_settings.key_channelList_pagedown || msg == CRCInput::RC_yellow)
+			if (msg == g_settings.key_channelList_pageup || msg == CRCInput::RC_green ||
+			    msg == g_settings.key_channelList_pagedown || msg == CRCInput::RC_yellow)
 			{
 				if (!channelList->isEmpty())
 				{
+					int direction = (msg == g_settings.key_channelList_pageup || msg == CRCInput::RC_green) ? -1 : 1;
+
 					switch (currentSwapMode)
 					{
 						case SwapMode_ByPage:
 						{
 							int selectedChannelEntryIndex = selectedChannelEntry->index;
-							selectedChannelEntryIndex    += maxNumberOfDisplayableEntries;
+							selectedChannelEntryIndex    += maxNumberOfDisplayableEntries * direction;
 
-							if (selectedChannelEntryIndex > channelList->getSize() - 1)
+							if (selectedChannelEntryIndex < 0)
+								selectedChannelEntryIndex = channelList->getSize() - 1;
+							else if (selectedChannelEntryIndex > channelList->getSize() - 1)
 								selectedChannelEntryIndex = 0;
 
 							createChannelEntries(selectedChannelEntryIndex);
@@ -983,60 +988,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 #ifdef DEBUG_
 							std::cout << "ViewMode_Bouquets " << currentBouquetNumber << std::endl;
 #endif
-							++currentBouquetNumber;
-
-							if (currentBouquetNumber == bouquetList->Bouquets.size())
-								currentBouquetNumber = 0;
-
-							CBouquet* bouquet = bouquetList->Bouquets[currentBouquetNumber];
-#ifdef DEBUG_
-							std::cout << "bouquet->unique_key " << bouquet->unique_key << " " << bouquet->channelList->getName() << std::endl;
-#endif
-							if (!bouquet->channelList->isEmpty())
-							{
-								// select first channel of bouquet
-#ifdef DEBUG_
-								std::cout << "(*bouquet->channelList)[0]->number " << (*bouquet->channelList)[0]->number << std::endl;
-#endif
-								bouquetList->activateBouquet(currentBouquetNumber);
-								channelListStartIndex = (*bouquet->channelList)[0]->number - 1;
-								createChannelEntries(channelListStartIndex);
-								paint();
-							}
-							break;
-						}
-					}
-				}
-			}
-			else if (msg == g_settings.key_channelList_pageup || msg == CRCInput::RC_green)
-			{
-				if (!channelList->isEmpty())
-				{
-					switch (currentSwapMode)
-					{
-						case SwapMode_ByPage:
-						{
-							int selectedChannelEntryIndex = selectedChannelEntry->index;
-							selectedChannelEntryIndex    -= maxNumberOfDisplayableEntries;
-
-							if (selectedChannelEntryIndex < 0)
-								selectedChannelEntryIndex = channelList->getSize() - 1;
-
-							createChannelEntries(selectedChannelEntryIndex);
-							paint();
-							break;
-						}
-
-						case SwapMode_ByBouquet:
-						{
-							unsigned int currentBouquetNumber = bouquetList->getActiveBouquetNumber();
-#ifdef DEBUG_
-							std::cout << "ViewMode_Bouquets " << currentBouquetNumber << std::endl;
-#endif
-							--currentBouquetNumber;
-
-							if (currentBouquetNumber == unsigned(-1))
-								currentBouquetNumber = bouquetList->Bouquets.size() - 1;
+							currentBouquetNumber = (currentBouquetNumber + bouquetList->Bouquets.size() + direction) % bouquetList->Bouquets.size();
 
 							CBouquet* bouquet = bouquetList->Bouquets[currentBouquetNumber];
 #ifdef DEBUG_
