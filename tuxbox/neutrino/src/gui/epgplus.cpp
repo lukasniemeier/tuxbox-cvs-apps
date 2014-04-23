@@ -1135,51 +1135,14 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 					paint();
 				}
 			}
-			else if (msg_repeatok == CRCInput::RC_up)
+			else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == CRCInput::RC_down)
 			{
 				if (!channelList->isEmpty()) {
-#ifdef DEBUG_
-					std::cout << "RC_up" << std::endl;
-#endif
 					int selectedChannelEntryIndex     = selectedChannelEntry->index;
 					int prevSelectedChannelEntryIndex = selectedChannelEntryIndex;
 
-					--selectedChannelEntryIndex;
-					if (selectedChannelEntryIndex < 0)
-					{
-#ifdef DEBUG_
-						std::cout << "this->selectedChannelEntry->index < 0" << std::endl;
-#endif
-						selectedChannelEntryIndex = channelList->getSize() - 1;
-					}
-
-					int oldChannelListStartIndex = channelListStartIndex;
-					channelListStartIndex = (selectedChannelEntryIndex / maxNumberOfDisplayableEntries) * maxNumberOfDisplayableEntries;
-
-					if (oldChannelListStartIndex != channelListStartIndex)
-					{
-#ifdef DEBUG_
-						std::cout << "oldChannelListStartIndex != this->channelListStartIndex" << std::endl;
-#endif
-						createChannelEntries(selectedChannelEntryIndex);
-						paint();
-						g_RCInput->clearRCMsg();
-					}
-					else
-					{
-						selectedChannelEntry = displayedChannelEntries[selectedChannelEntryIndex - channelListStartIndex];
-						paintChannelEntry(prevSelectedChannelEntryIndex - channelListStartIndex);
-						paintChannelEntry(selectedChannelEntryIndex     - channelListStartIndex);
-					}
-				}
-			}
-			else if (msg_repeatok == CRCInput::RC_down)
-			{
-				if (!channelList->isEmpty()) {
-					int selectedChannelEntryIndex     = selectedChannelEntry->index;
-					int prevSelectedChannelEntryIndex = selectedChannelEntry->index;
-
-					selectedChannelEntryIndex = (selectedChannelEntryIndex + 1) % channelList->getSize();
+					int direction = (msg_repeatok == CRCInput::RC_up) ? -1 : 1;
+					selectedChannelEntryIndex = (selectedChannelEntryIndex + channelList->getSize() + direction) % channelList->getSize();
 
 					int oldChannelListStartIndex = channelListStartIndex;
 					channelListStartIndex = (selectedChannelEntryIndex / maxNumberOfDisplayableEntries) * maxNumberOfDisplayableEntries;
@@ -1194,7 +1157,7 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 					{
 						selectedChannelEntry = displayedChannelEntries[selectedChannelEntryIndex - channelListStartIndex];
 						paintChannelEntry(prevSelectedChannelEntryIndex - channelListStartIndex);
-						paintChannelEntry(selectedChannelEntry->index - channelListStartIndex);
+						paintChannelEntry(selectedChannelEntryIndex - channelListStartIndex);
 					}
 				}
 			}
