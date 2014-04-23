@@ -296,18 +296,13 @@ int CPictureViewerGui::show()
 				}
 			}
 		}
-		else if (msg_repeatok == CRCInput::RC_up)
+		else if (msg_repeatok == CRCInput::RC_up || msg_repeatok == CRCInput::RC_down)
 		{
 			if ((m_state == MENU) && (!playlist.empty()))
 			{
 				int prevselected = selected;
-				if (selected == 0)
-				{
-					selected = playlist.size() - 1;
-				}
-				else
-					selected--;
-				paintItem(prevselected - liststart);
+				int direction = (msg_repeatok == CRCInput::RC_up) ? -1 : 1;
+				selected = (selected + playlist.size() + direction) % playlist.size();
 				unsigned int oldliststart = liststart;
 				liststart = (selected / listmaxshow) * listmaxshow;
 				if (oldliststart != liststart)
@@ -316,25 +311,7 @@ int CPictureViewerGui::show()
 				}
 				else
 				{
-					paintItem(selected - liststart);
-				}
-			}
-		}
-		else if (msg_repeatok == CRCInput::RC_down)
-		{
-			if ((m_state == MENU) && (!playlist.empty()))
-			{
-				int prevselected = selected;
-				selected = (selected + 1) %playlist.size();
-				paintItem(prevselected - liststart);
-				unsigned int oldliststart = liststart;
-				liststart = (selected / listmaxshow) * listmaxshow;
-				if(oldliststart != liststart)
-				{
-					update = true;
-				}
-				else
-					{
+					paintItem(prevselected - liststart);
 					paintItem(selected - liststart);
 				}
 			}
