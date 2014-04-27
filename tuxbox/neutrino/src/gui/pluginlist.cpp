@@ -57,16 +57,6 @@
 #include <driver/screen_max.h>
 
 #include <zapit/client/zapittools.h>
-
-/* for alexW images with old drivers: 
- * #define USE_VBI_INTERFACE 1
- */
-
-#ifdef USE_VBI_INTERFACE
- #define AVIA_VBI_START_VTXT	1
- #define AVIA_VBI_STOP_VTXT	2 
-#endif
-
 #include <daemonc/remotecontrol.h>
 
 CPluginList::CPluginList(const neutrino_locale_t Name, const uint listtype)

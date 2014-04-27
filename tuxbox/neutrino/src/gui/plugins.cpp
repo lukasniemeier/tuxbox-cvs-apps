@@ -51,16 +51,6 @@
 #include <neutrino.h>
 
 #include <zapit/client/zapittools.h>
-
-/* for alexW images with old drivers:
- * #define USE_VBI_INTERFACE 1
- */
-
-#ifdef USE_VBI_INTERFACE
- #define AVIA_VBI_START_VTXT	1
- #define AVIA_VBI_STOP_VTXT	2
-#endif
-
 #include <daemonc/remotecontrol.h>
 
 #define PLUGINDIR_MNT "/mnt/plugins"
@@ -409,14 +399,7 @@ void CPlugins::startPlugin(int number, int param, int param2)
 	if (plugin_list[number].vtxtpid)
 	{
 		vtpid = g_RemoteControl->current_PIDs.PIDs.vtxtpid;
-#ifdef USE_VBI_INTERFACE
-		int fd = open("/dev/dbox/vbi0", O_RDWR);
-		if (fd > 0)
-		{
-			ioctl(fd, AVIA_VBI_STOP_VTXT, 0);
-			close(fd);
-		}
-#endif
+
 		if(param>0)
 			vtpid=param;
 		startparam = makeParam(P_ID_VTXTPID, vtpid, startparam);
@@ -529,22 +512,6 @@ void CPlugins::startPlugin(int number, int param, int param2)
 			frameBuffer->paletteSet();
 			frameBuffer->paintBackgroundBox(0,0,720,576);
 		}
-
-#ifdef USE_VBI_INTERFACE
-		if (plugin_list[number].vtxtpid)
-		{
-			if (vtpid != 0)
-			{
-				// versuche, den gtx/enx_vbi wieder zu starten
-				int fd = open("/dev/dbox/vbi0", O_RDWR);
-				if (fd > 0)
-				{
-					ioctl(fd, AVIA_VBI_START_VTXT, vtpid);
-					close(fd);
-				}
-			}
-		}
-#endif
 	}
 
 	/* unload shared libs */
