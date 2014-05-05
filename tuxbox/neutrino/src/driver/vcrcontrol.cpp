@@ -362,8 +362,10 @@ void CVCRControl::CFileAndServerDevice::RestoreNeutrino(void)
 		g_Sectionsd->setServiceChanged(g_RemoteControl->current_channel_id, false);
 	}
 
-	// alten mode wieder herstellen (ausser wen zwischenzeitlich auf oder aus sb geschalten wurde)
+	// alten mode wiederherstellen (ausser wenn zwischenzeitlich auf oder aus standby oder SCART geschaltet wurde)
 	if(CNeutrinoApp::getInstance()->getMode() != last_mode && 
+	   CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_scart &&
+	   last_mode != NeutrinoMessages::mode_scart &&
 	   CNeutrinoApp::getInstance()->getMode() != NeutrinoMessages::mode_standby &&
 	   last_mode != NeutrinoMessages::mode_standby)
 		g_RCInput->postMsg( NeutrinoMessages::CHANGEMODE , last_mode);
@@ -392,12 +394,15 @@ void CVCRControl::CFileAndServerDevice::CutBackNeutrino(const t_channel_id chann
 	if (channel_id != 0) // wenn ein channel angegeben ist
 	{
 		last_mode = CNeutrinoApp::getInstance()->getMode();
-		if (mode != last_mode && (last_mode != NeutrinoMessages::mode_standby || mode != CNeutrinoApp::getInstance()->getLastMode()))
+		if (mode != last_mode && (mode != CNeutrinoApp::getInstance()->getLastMode() ||
+		    last_mode != NeutrinoMessages::mode_standby && last_mode != NeutrinoMessages::mode_scart))
 		{
 			CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , mode | NeutrinoMessages::norezap );
 			// Wenn wir im Standby waren, dann brauchen wir f�rs streamen nicht aufwachen...
 			if(last_mode == NeutrinoMessages::mode_standby)
 				CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , NeutrinoMessages::mode_standby);
+			else if(last_mode == NeutrinoMessages::mode_scart) // possibly switch back to SCART mode
+				CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::VCR_ON, 0 );
 		}
 		if(g_Zapit->getCurrentServiceID() != channel_id)	// und momentan noch nicht getuned ist
 		{
