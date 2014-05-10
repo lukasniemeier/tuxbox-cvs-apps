@@ -211,6 +211,9 @@ void CInfoViewer::showSatfind()
 
 void CInfoViewer::paintTime( bool show_dot, bool firstPaint )
 {
+	if (!gotTime)
+		gotTime = g_Sectionsd->getIsTimeSet();
+
 	if ( gotTime )
 	{
 	    ChanNameY = BoxStartY + (ChanHeight>>1)   + SHADOW_OFFSET; //oberkante schatten?
@@ -357,6 +360,9 @@ void CInfoViewer::showMovieTitle(const int _playstate, const std::string &title,
 	BoxEndX   = g_settings.screen_EndX - 20;
 	BoxStartY = g_settings.screen_EndY - 20 - InfoHeightY - InfoHeightY_Info;
 	BoxEndY   = g_settings.screen_EndY - 20 - InfoHeightY_Info;
+
+	if (!gotTime)
+		gotTime = g_Sectionsd->getIsTimeSet();
 
 	if (fadeIn)
 	{
