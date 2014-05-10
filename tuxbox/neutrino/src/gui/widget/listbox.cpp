@@ -30,6 +30,7 @@
 #include <global.h>
 #include <neutrino.h>
 
+#include <gui/widget/buttons.h>
 #include <gui/widget/icons.h>
 #include <driver/screen_max.h>
 
@@ -83,25 +84,21 @@ void CListBox::paintHead()
 	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + 10, y + theight + 2, width, caption.c_str(), COL_MENUHEAD);
 }
 
+const struct button_label CListBoxButtons[4] =
+{
+	{ NEUTRINO_ICON_BUTTON_OKAY , LOCALE_TIMERLIST_MODIFY     },
+	{ NEUTRINO_ICON_BUTTON_GREEN, LOCALE_BOUQUETEDITOR_ADD    },
+	{ NEUTRINO_ICON_BUTTON_RED  , LOCALE_BOUQUETEDITOR_DELETE },
+	{ NEUTRINO_ICON_BUTTON_HOME , LOCALE_BOUQUETEDITOR_RETURN }
+};
+
 void CListBox::paintFoot()
 {
 	int y_foot = y + height - ButtonHeight;
-	int y_text = y + height - 2;
-	int ButtonWidth = width / 4;
+	int ButtonWidth = (width - 16) / 4;
 	frameBuffer->paintBoxRel(x, y_foot, width, ButtonHeight, COL_MENUHEAD_PLUS_0);
 	frameBuffer->paintHLine(x, x+width,  y, COL_INFOBAR_SHADOW_PLUS_0);
-
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_OKAY, x + width - 4 * ButtonWidth + 8, y_foot + 1);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 4 * ButtonWidth + 38, y_text, width, "edit", COL_INFOBAR);
-
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_GREEN, x + width - 3 * ButtonWidth + 8, y_foot + 4);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 3 * ButtonWidth + 29, y_text, width - 26, "add", COL_INFOBAR);
-
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_RED, x + width - 2 * ButtonWidth + 8, y_foot + 4);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - 2 * ButtonWidth + 29, y_text, width - 26, "remove", COL_INFOBAR);
-
-	frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HOME, x + width - ButtonWidth + 8, y_foot + 1);
-	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->RenderString(x + width - ButtonWidth + 38, y_text, width, "ready", COL_INFOBAR);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL], g_Locale, x + 8, y_foot + 2, ButtonWidth, 4, CListBoxButtons, 0, false, COL_MENUHEAD_PLUS_0);
 }
 
 void CListBox::paintItem(int pos)
