@@ -1723,11 +1723,11 @@ void CInfoViewer::show_Data(bool calledFromEvent)
 	{
 		int seit = (abs(jetzt - info_CurrentNext.current_zeit.startzeit) + 30) / 60;
 		int rest = (info_CurrentNext.current_zeit.dauer / 60) - seit;
-		if (jetzt < info_CurrentNext.current_zeit.startzeit)
-		{
-			progressbarPos = 0;
+		progressbarPos = 0;
+		if (!gotTime)
+			sprintf((char*)&runningRest, "%d min", info_CurrentNext.current_zeit.dauer / 60);
+		else if (jetzt < info_CurrentNext.current_zeit.startzeit)
 			sprintf((char*)&runningRest, "in %d min", seit);
-		}
 		else
 		{
 			progressbarPos = (jetzt - info_CurrentNext.current_zeit.startzeit) * 112 / info_CurrentNext.current_zeit.dauer;
