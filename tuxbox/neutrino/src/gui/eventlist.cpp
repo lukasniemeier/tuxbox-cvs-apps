@@ -121,11 +121,7 @@ void EventList::init()
 	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_HELP, &iconw, &iconh);
 	theight  = std::max(iconh, g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_TITLE]->getHeight());
 	fheight1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE]->getHeight();
-	{
-		int h1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->getHeight();
-		int h2 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->getHeight();
-		fheight2 = (h1 > h2) ? h1 : h2;
-	}
+	fheight2 = std::max(g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->getHeight(), g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->getHeight());
 	fheight = fheight1 + fheight2 + 2;
 	fwidth1 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->getRenderWidth("DDD, 00:00,  ");
 	fwidth2 = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->getRenderWidth("[999 min] ");
@@ -698,8 +694,8 @@ void EventList::paintItem(unsigned int pos)
 		}
 
 		// 1st line
-		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->RenderString(x+5,         ypos+ fheight1+3, fwidth1+5,            datetime1_str, color, 0, true); // UTF-8
-		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->RenderString(x+5+fwidth1, ypos+ fheight1+3, width-fwidth1-10- 20, datetime2_str, color, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->RenderString(x+5,         ypos+ fheight2+3, fwidth1+5,            datetime1_str, color, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->RenderString(x+5+fwidth1, ypos+ fheight2+3, width-fwidth1-10- 20, datetime2_str, color, 0, true); // UTF-8
 
 		int seit = (evtlist[curpos].startTime - time(NULL)) / 60;
 		if ( (seit> 0) && (seit<100) && (duration_str.length()!=0) )
@@ -708,13 +704,14 @@ void EventList::paintItem(unsigned int pos)
 			sprintf((char*) &beginnt, "in %d min", seit);
 			int w = g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->getRenderWidth(beginnt) + 10;
 
-			g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->RenderString(x+width-fwidth2-5- 20- w, ypos+ fheight1+3, fwidth2, beginnt, color);
+			g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->RenderString(x+width-fwidth2-5- 20- w, ypos+ fheight2+3, w, beginnt, color);
 		}
-		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->RenderString(x+width-fwidth2-5- 20, ypos+ fheight1+3, fwidth2, duration_str, color, 0, true); // UTF-8
+		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMSMALL]->RenderString(x+width-fwidth2-5- 20, ypos+ fheight2+3, fwidth2, duration_str, color, 0, true); // UTF-8
 		// 2nd line
 		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_ITEMLARGE]->RenderString(x+ 20, ypos+ fheight, width- 25- 20, evtlist[curpos].description, color);
 		
 		unsigned char is_timer = isTimer(evtlist[curpos].startTime,evtlist[curpos].duration,evtlist[curpos].get_channel_id());
+		ypos -= 3;
 
 		if(is_timer == (EventList::CONFLICT<<4))
 		{
