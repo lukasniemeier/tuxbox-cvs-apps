@@ -369,6 +369,8 @@ void CFileBrowser::ChangeDir(const std::string & filename, int selection)
 	{
 		newpath += '/';
 	}
+
+	bool filelistWasEmpty = filelist.empty();
 	filelist.clear();
 	Path = newpath;
 	name = newpath;
@@ -397,8 +399,11 @@ void CFileBrowser::ChangeDir(const std::string & filename, int selection)
 	selected = 0;
 	if ((selection != -1) && (selection < (int)filelist.size()))
 		selected = selection;
+
 	paintHead();
 	paint();
+	if (filelistWasEmpty != filelist.empty())
+		paintFoot();
 }
 
 //------------------------------------------------------------------------
@@ -761,9 +766,9 @@ bool CFileBrowser::exec(const char * const dirname)
 		selection = selected;
 
 	paintHead();
+	m_SMSKeyInput.resetOldKey();
 	ChangeDir(name, selection);
 	//paint();
-	m_SMSKeyInput.resetOldKey();
 	paintFoot();
 
 	int oldselected = selected;
