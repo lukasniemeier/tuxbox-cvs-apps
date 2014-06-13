@@ -128,10 +128,11 @@ void CEpgData::start()
 	ox = w_max (720, 70);
 	oy = h_max (576, 50);
 
+	frameBuffer->getIconSize(NEUTRINO_ICON_BUTTON_LEFT, &boticonwidth, &boticonheight);
 	topheight     = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_TITLE]->getHeight();
 	topboxheight  = topheight + 6;
 	botheight     = g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->getHeight();
-	botboxheight  = botheight + 6;
+	botboxheight  = std::max(botheight, boticonheight) + 6;
 	buttonheight  = std::max(16, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL]->getHeight()) + BUTTONBAR_FONT_OFFSET;
 
 	sx = getScreenStartX (ox);
@@ -654,16 +655,13 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	}
 
 	GetPrevNextEPGData( epgData.eventID, &epgData.epg_times.startzeit );
-	if ((prev_id != 0) && !call_fromfollowlist)
+	if (!call_fromfollowlist)
 	{
-		frameBuffer->paintBoxRel(sx+ 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ 10, sy+ oy- 3, widthr, "<", COL_MENUCONTENT + 3);
-	}
-
-	if ((next_id != 0) && !call_fromfollowlist)
-	{
-		frameBuffer->paintBoxRel(sx+ ox- botboxheight+ 8- 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_3);
-		g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ ox- botboxheight+ 8, sy+ oy- 3, widthr, ">", COL_MENUCONTENT + 3);
+		int iy = sy + oy - botboxheight/2 - boticonheight/2;
+		if (prev_id != 0)
+			frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_LEFT, sx + 6, iy);
+		if (next_id != 0)
+			frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_RIGHT, sx + ox - boticonwidth - 6, iy);
 	}
 
 	if ( doLoop )
@@ -688,9 +686,6 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 				case CRCInput::RC_left:
 					if ((prev_id != 0) && !call_fromfollowlist)
 					{
-						frameBuffer->paintBoxRel(sx+ 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_1);
-						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ 10, sy+ oy- 3, widthr, "<", COL_MENUCONTENT + 1);
-
 						show(channel_id, prev_id, &prev_zeit, false);
 						showPos=0;
 					}
@@ -699,9 +694,6 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 				case CRCInput::RC_right:
 					if ((next_id != 0) && !call_fromfollowlist)
 					{
-						frameBuffer->paintBoxRel(sx+ ox- botboxheight+ 8- 5, sy+ oy- botboxheight+ 4, botboxheight- 8, botboxheight- 8,  COL_MENUCONTENT_PLUS_1);
-						g_Font[SNeutrinoSettings::FONT_TYPE_EPG_DATE]->RenderString(sx+ ox- botboxheight+ 8, sy+ oy- 3, widthr, ">", COL_MENUCONTENT + 1);
-
 						show(channel_id, next_id, &next_zeit, false);
 						showPos=0;
 					}
@@ -1016,7 +1008,7 @@ const struct button_label epgviewButtons[3] =
 
 void CEpgData::showTimerEventBar(bool _show)
 {
-	int ButtonWidth = (ox - 16) / 4; // 4 cells
+	int ButtonWidth = (ox - 12) / 4; // 4 cells
 	int by = sy + oy + 2;
 
 	// hide only?
@@ -1030,14 +1022,14 @@ void CEpgData::showTimerEventBar(bool _show)
 
 	// Button: Timer Record & Channelswitch
 	if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8, by, ButtonWidth, 1, &epgviewButtons[0]);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 6, by, ButtonWidth, 1, &epgviewButtons[0]);
 
 	// Button: Timer Channelswitch
-	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
+	::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 6 + ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[1]);
 
 	// Button: more screenings
 	if (!followlist.empty() && !call_fromfollowlist)
-		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 8 + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2], 2 * ButtonWidth - 2 * (ICON_LARGE_WIDTH + 2) - 4);
+		::paintButtons(frameBuffer, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL],	g_Locale, sx + 6 + 2 * ButtonWidth, by, ButtonWidth, 1, &epgviewButtons[2], 2 * ButtonWidth - 2 * (ICON_LARGE_WIDTH + 2) - 4);
 }
 
 

@@ -83,6 +83,7 @@ class CEpgData
 		std::vector<epg_pair> epgText;
 		int			topheight,topboxheight;
 		int			botheight,botboxheight;
+		int			boticonwidth,boticonheight;
 		int			buttonheight;
 		int			medlineheight,medlinecount;
 		bool			bigFonts;
