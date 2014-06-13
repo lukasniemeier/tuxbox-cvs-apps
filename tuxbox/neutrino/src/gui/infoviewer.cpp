@@ -1856,7 +1856,7 @@ void CInfoViewer::showInfoFile()
 
 	// text
 	g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO]->RenderString(
-		xStart + RADIUS_SMALL, BoxStartY + height, xEnd - xStart - RADIUS_SMALL*2, (std::string)infotext, COL_INFOBAR, height, false);
+		xStart + RADIUS_SMALL, BoxStartY + height, xEnd - xStart - RADIUS_SMALL*2, infotext, COL_INFOBAR, height);
 }
 
 void CInfoViewer::killTitle()

@@ -554,7 +554,7 @@ void CMenuWidget::paint()
 
 	height = h_max(wanted_height, 0);
 
-	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(nameString.c_str(), true); // UTF-8
+	int neededWidth = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getRenderWidth(nameString, true); // UTF-8
 	if (neededWidth > width - 48)
 		width = w_max(neededWidth + 49, 0);
 
@@ -622,7 +622,7 @@ void CMenuWidget::paint()
 
 	if (!iconfile.empty())
 		frameBuffer->paintIcon(iconfile, x + 8, y + hheight / 2 - hiconheight / 2);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + hiconoffset + 10, y + hheight + 2, width - hiconoffset - 10, nameString.c_str(), COL_MENUHEAD, 0, true); // UTF-8
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x + hiconoffset + 10, y + hheight + 2, width - hiconoffset - 10, nameString, COL_MENUHEAD, 0, true); // UTF-8
 
 	item_start_y = y+hheight;
 	paintItems();

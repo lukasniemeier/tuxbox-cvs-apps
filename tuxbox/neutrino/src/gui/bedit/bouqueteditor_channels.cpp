@@ -128,7 +128,7 @@ void CBEChannelWidget::paint()
 void CBEChannelWidget::paintHead()
 {
 	frameBuffer->paintBoxRel(x,y, width,theight+0, COL_MENUHEAD_PLUS_0, RADIUS_MID, CORNER_TOP);
-	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width, caption.c_str() , COL_MENUHEAD);
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->RenderString(x+10,y+theight+2, width, caption, COL_MENUHEAD);
 }
 
 const struct button_label CBEChannelWidgetButtons[4] =

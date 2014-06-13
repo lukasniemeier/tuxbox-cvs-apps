@@ -295,7 +295,7 @@ void CImageInfo::paintLicense(int y_startposition)
 	int fh = ssheight+12;
 	for (int i = 0; i<13; i++) // paint all lines
 		{
-			g_Font[font_small_text]->RenderString(xpos,  y_startposition, width-10, LLine[i].c_str(), COL_MENUCONTENT, 0, true);
+			g_Font[font_small_text]->RenderString(xpos,  y_startposition, width-10, LLine[i], COL_MENUCONTENT, 0, true);
 			y_startposition += (fh >>1);
 		}
 
