@@ -69,12 +69,13 @@ bool sortById (const CChannelEvent& a, const CChannelEvent& b)
 	return a.eventID < b.eventID ;
 }
 #endif
-bool sortByDescription (const CChannelEvent& a, const CChannelEvent& b)
+static bool sortByDescription (const CChannelEvent& a, const CChannelEvent& b)
 {
-	if(a.description == b.description)
+	int i = strcasecmp(a.description.c_str(), b.description.c_str());
+	if (i == 0)
 		return a.startTime < b.startTime;
 	else
-		return a.description < b.description ;
+		return (i < 0);
 }
 static bool sortByDateTime (const CChannelEvent& a, const CChannelEvent& b)
 {
