@@ -205,6 +205,10 @@ int32_t CConfigFile::getInt32(const std::string & key, const int32_t defaultVal)
 		}
 	}
 
+	if (configData[key] == "false")
+		return 0;
+	if (configData[key] == "true")
+		return 1;
 	return atoi(configData[key].c_str());
 }
 
@@ -227,6 +231,10 @@ int64_t CConfigFile::getInt64(const std::string & key, const int64_t defaultVal)
 		}
 	}
 
+	if (configData[key] == "false")
+		return 0;
+	if (configData[key] == "true")
+		return 1;
 	return atoll(configData[key].c_str());
 }
 
