@@ -33,7 +33,7 @@
 #include <dbox/fb.h>
 #endif
 
-#define M_VERSION 1.72
+#define M_VERSION 1.80
 
 #define FONT    	"/share/fonts/pakenham.ttf"
 
