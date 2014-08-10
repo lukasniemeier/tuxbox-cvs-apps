@@ -43,10 +43,10 @@
 #include "lcd.h"
 #include "color.h"
 
-#define P_VERSION 3.64
+#define P_VERSION 3.65
 #define S_VERSION ""
 
-char CONVERT_LIST[]="/var/tuxbox/config/tuxwetter/convert.list";
+const char CONVERT_LIST[]="/var/tuxbox/config/tuxwetter/convert.list";
 #define CFG_FILE 	"/var/tuxbox/config/tuxwetter/tuxwetter.conf"
 #define MCF_FILE 	"/var/tuxbox/config/tuxwetter/tuxwetter.mcfg"
 #define TIME_FILE	"/var/tuxbox/config/tuxwetter/swisstime"
@@ -137,7 +137,7 @@ int Get_Menu();
 void ShowInfo(MENU *m);
 
 // Misc
-char NOMEM[]="Tuxwetter <Out of memory>\n";
+const char NOMEM[]="Tuxwetter <Out of memory>\n";
 unsigned char FONT[64]= "/share/fonts/pakenham.ttf";
 unsigned char *lfb = 0, *lbb = 0;
 int intype=0, show_icons=0, gmodeon=0, ctmo=0, metric=1, loadalways=0, radius=0;
@@ -150,8 +150,8 @@ unsigned char nstr[BUFSIZE]="";
 unsigned char *trstr;
 unsigned char *htmstr;
 unsigned char *proxyadress=NULL, *proxyuserpwd=NULL;
-char INST_FILE[]="/tmp/rc.locked";
-char LCDL_FILE[]="/tmp/lcd.locked";
+const char INST_FILE[]="/tmp/rc.locked";
+const char LCDL_FILE[]="/tmp/lcd.locked";
 int instance=0;
 
 int get_instance(void)
@@ -2436,20 +2436,20 @@ int col1=40,sy=70,dy=26;
 	{
 		fclose(tfh);
 
-		RenderString("X", 0, 34, 619, LEFT, 32, CMCT);
+		RenderString("X", 0, 34, 619, LEFT, 29, CMCT);
 		if(fh_php_getsize(name, plain, &x1, &y1))
 		{
 			printf("Tuxwetter <invalid PHP-Format>\n");
 			return -1;
 		}
-		cs=32.0*((double)(619-1.5*(double)col1)/(double)x1);
-		if(cs>32)
+		cs=FSIZE_MED*((double)(619-1.6*(double)col1)/(double)x1);
+		if(cs>FSIZE_MED-2)
 		{
-			cs=32;
-		}		
+			cs=FSIZE_MED-2;
+		}
 
-		dy=0.8*(double)cs;
-		
+		dy=1.1*(double)cs;
+
 		while(run)
 		{
 			//frame layout
@@ -2642,7 +2642,7 @@ long flength=0;
 												}
 												if(!dontsave)
 												{
-													if((*pt4==' ') && (flength>60))
+													if((*pt4==' ') && (flength>55))
 													{
 														fprintf(fh2,"\n<br>");
 														flength=0;
@@ -3277,7 +3277,7 @@ PLISTENTRY pl=&epl;
 														cnt=0;
 														fprintf(fh2,"<br>");
 														while(*pt1)
-														{	
+														{
 															if(*pt1==' ' && cnt>50) //old 40
 															{
 																fprintf(fh2,"\n<br>");

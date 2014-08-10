@@ -126,7 +126,7 @@
 #	define PRE_HMID		71
 #endif
 
-int  parser		(char *,char *, int, int, int);
+int  parser		(char *, const char *, int, int, int);
 int  prs_get_prev_count 	(void);
 /*void prs_get_act_int (int what, char *out);
 void prs_get_act_loc (int what, char *out);
@@ -140,7 +140,7 @@ int  prs_get_dbl (int i, int what, int nacht, char *out);
 int  prs_get_time(int i, int what, char *out, int metric);
 int  prs_get_dtime(int i, int what, char *out, int metric);
 int  prs_get_dwday(int i, int what, char *out);
-char *prs_translate(char *trans, char *tfile);
+char *prs_translate(char *trans, const char *tfile);
 
 #endif // __wxparser__
 

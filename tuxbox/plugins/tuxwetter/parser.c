@@ -88,7 +88,7 @@ FILE *fh;
 	}
 }
 
-char  *prs_translate(char *trans, char *tfile)
+char  *prs_translate(char *trans, const char *tfile)
 {
 char *sptr;
 int i,found=0;
@@ -314,7 +314,7 @@ int prs_get_dwday(int i, int what, char *out)
 
 //*** XML File ***
 
-int parser(char *citycode, char *trans, int metric, int inet, int ctmo)
+int parser(char *citycode, const char *trans, int metric, int inet, int ctmo)
 {
 	int  rec=0, flag=0;
 	int cc=0, bc=1, exit_ind=-1;

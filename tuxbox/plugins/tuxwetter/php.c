@@ -81,7 +81,14 @@ FILE *fh;
 						}
 						else
 						{
-							if((*(tptr+1)!='#') && (strstr(tptr,"uml;")!=(tptr+2)) && (strstr(tptr,"nbsp;")!=(tptr+1)) && (strstr(tptr,"gt;")!=(tptr+1)) && (strstr(tptr,"lt;")!=(tptr+1)) && (strstr(tptr,"quot;")!=(tptr+1)) && (strstr(tptr,"zlig;")!=(tptr+2)))
+							if ((*(tptr+1) != '#') &&
+								(strstr(tptr,"uml;") != (tptr+2)) &&
+								(strstr(tptr,"nbsp;")!= (tptr+1)) &&
+								(strstr(tptr,"gt;")  != (tptr+1)) &&
+								(strstr(tptr,"lt;")  != (tptr+1)) &&
+								(strstr(tptr,"amp;") != (tptr+1)) &&
+								(strstr(tptr,"quot;")!= (tptr+1)) &&
+								(strstr(tptr,"zlig;")!= (tptr+2)))
 							{
 								rstr[j++]=*tptr++;
 							}
@@ -91,7 +98,14 @@ FILE *fh;
 								cc=' ';
 								switch (*tptr)
 								{
-									case 'a': cc='ä'; break;
+									case 'a': 
+										if((tptr=strchr(tptr+1,'m'))!=NULL) {
+											cc='&';
+										}
+										else {
+											cc='ä';
+										}
+										break;								
 									case 'A': cc='Ä'; break;
 									case 'o': cc='ö'; break;
 									case 'O': cc='Ö'; break;
@@ -164,11 +178,11 @@ FILE *fh;
 					*cut=(sy>=500);
 					if(line)
 					{
-						RenderString("<<", 0, fy, sx, CENTER, 56, CMHT);
+						RenderString("<<", 0, fy+10, sx, CENTER, 56, CMHT);
 					}
 					if(*cut)
 					{
-						RenderString(">>", 0, sy-dy, sx, CENTER, 56, CMHT);
+						RenderString(">>", 0, sy-dy+10, sx, CENTER, 56, CMHT);
 					}
 				}
 			}
