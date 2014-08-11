@@ -86,10 +86,9 @@ void CWebserverConnection::HandleConnection()
 		if(string_tolower(Request.HeaderList["Connection"]) == "close" 
 			|| (httprotocol != "HTTP/1.1" && string_tolower(Request.HeaderList["Connection"]) != "keep-alive")
 			|| !Webserver->CheckKeepAliveAllowedByIP(sock->get_client_ip()))
-			keep_alive = false;
-#else
-		keep_alive = false;
 #endif
+			keep_alive = false;
+
 		// Send a response
 		Response.SendResponse();
 

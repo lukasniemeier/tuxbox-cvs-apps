@@ -243,7 +243,7 @@ std::string CyhookHandler::BuildHeader(bool cache)
 		}
 	// print Status-line
 	result = string_printf(HTTP_PROTOCOL " %d %s\r\nContent-Type: %s\r\n",httpStatus, responseString, ResponseMimeType.c_str());
-	log_level_printf(2,"Respose: HTTP/1.1 %d %s\r\nContent-Type: %s\r\n",httpStatus, responseString, ResponseMimeType.c_str());
+	log_level_printf(2,"Response: HTTP/1.1 %d %s\r\nContent-Type: %s\r\n",httpStatus, responseString, ResponseMimeType.c_str());
 
 	switch (httpStatus)
 	{
@@ -282,10 +282,8 @@ std::string CyhookHandler::BuildHeader(bool cache)
 			if(keep_alive)
 				result += "Connection: keep-alive\r\n";
 			else
-				result += "Connection: close\r\n";
-#else
-			result += "Connection: close\r\n";
 #endif
+				result += "Connection: close\r\n";
 			// gzipped ?
 			if(UrlData["fileext"] == "gz")
 				result += "Content-Encoding: gzip\r\n";
