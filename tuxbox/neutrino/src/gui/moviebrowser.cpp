@@ -1330,12 +1330,13 @@ CFile* CMovieBrowser::getSelectedFile(void)
 void CMovieBrowser::refreshMovieInfo(void)
 {
 	//TRACE("[mb]->refreshMovieInfo \r\n");
-	if (m_vMovieInfo.empty()) return;
-	if (m_movieSelectionHandler == NULL)
+
+	if (m_vMovieInfo.empty() || m_movieSelectionHandler == NULL)
 	{
-		// There is no selected element, clear LCD
+		// There is no selected element, clear info box
 		std::string emptytext = " ";
-		m_pcInfo->setText(&emptytext);
+		if (m_pcInfo)
+			m_pcInfo->setText(&emptytext);
 	}
 	else
 	{
@@ -1351,10 +1352,8 @@ void CMovieBrowser::refreshMovieInfo(void)
 ************************************************************************/
 void CMovieBrowser::refreshLCD(void)
 {
-	if (m_vMovieInfo.empty()) return;
-
 	CLCD * lcd = CLCD::getInstance();
-	if(m_movieSelectionHandler == NULL)
+	if (m_vMovieInfo.empty() || m_movieSelectionHandler == NULL)
 	{
 		// There is no selected element, clear LCD
 		lcd->showMenuText(0, " ", -1, true); // UTF-8
@@ -1387,7 +1386,11 @@ void CMovieBrowser::refreshFilterList(void)
 	m_FilterLines.lineHeader[0]= "";
 
 	if (m_vMovieInfo.empty()) 
+	{
+		if (m_pcFilter)
+			m_pcFilter->setLines(&m_FilterLines);
 		return; // exit here if nothing else is to do
+	}
 
 	if(m_settings.filter.item == MB_INFO_MAX_NUMBER)
 	{
@@ -1477,7 +1480,12 @@ void CMovieBrowser::refreshLastPlayList(void) //P2
 	m_vHandlePlayList.clear();
 
 	if (m_vMovieInfo.empty()) 
+	{
+		m_currentPlaySelection = 0;
+		if (m_pcLastPlay)
+			m_pcLastPlay->setLines(&m_playListLines);
 		return; // exit here if nothing else is to do
+	}
 
 	MI_MOVIE_INFO* movie_handle;
 	// prepare Browser list for sorting and filtering
@@ -1535,7 +1543,12 @@ void CMovieBrowser::refreshLastRecordList(void) //P2
 	m_vHandleRecordList.clear();
 
 	if (m_vMovieInfo.empty()) 
+	{
+		m_currentRecordSelection = 0;
+		if (m_pcLastRecord)
+			m_pcLastRecord->setLines(&m_recordListLines);
 		return; // exit here if nothing else is to do
+	}
 
 	MI_MOVIE_INFO* movie_handle;
 	// prepare Browser list for sorting and filtering
@@ -1597,7 +1610,8 @@ void CMovieBrowser::refreshBrowserList(void) //P1
 	{
 		m_currentBrowserSelection = 0;
 		m_movieSelectionHandler = NULL;
-		//m_pcBrowser->setLines(&m_browserListLines);
+		if (m_pcBrowser)
+			m_pcBrowser->setLines(&m_browserListLines);
 		return; // exit here if nothing else is to do
 	}
 	
