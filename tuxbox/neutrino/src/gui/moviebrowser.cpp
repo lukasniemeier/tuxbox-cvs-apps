@@ -442,7 +442,8 @@ void CMovieBrowser::init(void)
 	m_pcLastPlay = NULL;
 	m_pcLastRecord = NULL;
 	m_pcInfo = NULL;
-	
+	m_pcFilter = NULL;
+
 	m_windowFocus = MB_FOCUS_BROWSER;
 
 	initFonts();
