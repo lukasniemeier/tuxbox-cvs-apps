@@ -51,15 +51,19 @@ int HTTP_downloadFile(char *URL, char *downloadTarget, int showprogress, int tmo
 	CURLcode res=-1;
 	char *pt1,*pt2,*pt3=NULL,*tstr=NULL,*surl=URL,myself[25];
 	FILE *headerfile,*netfile;
-	int i=strlen(URL);
+	int i=strlen(URL),y;
+
+	for(y=0; y<4; y++) // change HTTP to lower case
+		URL[y]=tolower(URL[y]);
+
 	while(i)
+	{
+		if(URL[i] <= ' ')
 		{
-			if(URL[i] <= ' ')
-			{
-				URL[i]=0;
-			}
-			--i;
+			URL[i]=0;
 		}
+		--i;
+	}
 	headerfile = fopen(downloadTarget, "w");
 	if (!headerfile)
 		return res;
