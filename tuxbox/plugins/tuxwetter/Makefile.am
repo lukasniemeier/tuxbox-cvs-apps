@@ -11,7 +11,7 @@ tuxwetter_LDADD = \
 	@CURL_LIBS@ \
 	@PNG_LIBS@ \
 	-ljpeg \
-	-lungif
+	-lgif
 
 bin_PROGRAMS = tuxwetter
 
