@@ -50,7 +50,6 @@
   printfe("%s " format, __func__, ## __VA_ARGS__)
 
 static int
-   ImageNum = 0,
     InterlacedFlag = FALSE,
     InterlacedOffset[] = { 0, 4, 2, 1 }, /* The way Interlaced image should. */
     InterlacedJumps[] = { 8, 8, 4, 2 };    /* be read - offsets and jumps... */

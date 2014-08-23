@@ -68,15 +68,13 @@ inline void m_rend_gif_decodecolormap(unsigned char *cmb,unsigned char *rgbb,Col
 int fh_gif_load(const char *name,unsigned char *buffer,int x,int y)
 {
 	int err = 0;
-	int px,py,i,fby,fbx,fbl,ibxs;
-	int eheight,j;
+	int px,py,i,j,ibxs;
 	unsigned char *fbptr;
 	unsigned char *lb;
 	unsigned char *slb;
 	GifFileType *gft;
 	GifByteType *extension;
 	int extcode;
-	int spid;
 	GifRecordType rt;
 	ColorMapObject *cmap;
 	int cmaps;
@@ -144,18 +142,11 @@ int fh_gif_load(const char *name,unsigned char *buffer,int x,int y)
 int fh_gif_getsize(const char *name,int *x,int *y, int wanted_width, int wanted_height)
 {
 	int err = 0;
-	int px,py,i,fby,fbx,fbl,ibxs;
-	int eheight,j;
-	char *fbptr;
-	char *lb;
-	char *slb;
+	int px,py;
 	GifFileType *gft;
 	GifByteType *extension;
 	int extcode;
-	int spid;
 	GifRecordType rt;
-	ColorMapObject *cmap;
-	int cmaps;
 
 	gft=DGifOpenFileName(name, &err);
 	if(gft==NULL) gflush;

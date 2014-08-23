@@ -145,10 +145,10 @@ char city_code[30] = "";
 char city_name[50] = "";
 unsigned int alpha=0x0202;
 int show_splash=1;
-unsigned char lastpicture[BUFSIZE]="";
-unsigned char nstr[BUFSIZE]="";
-unsigned char *trstr;
-unsigned char *htmstr;
+char lastpicture[BUFSIZE]="";
+char nstr[BUFSIZE]="";
+char *trstr;
+char *htmstr;
 unsigned char *proxyadress=NULL, *proxyuserpwd=NULL;
 const char INST_FILE[]="/tmp/rc.locked";
 const char LCDL_FILE[]="/tmp/lcd.locked";
@@ -2277,7 +2277,7 @@ int show_gif(char *name, int xstart, int ystart, int xsize, int ysize, int wait,
 FILE *tfh;
 int x1,y1,rcg,count,cloop,rv=-1;
 int imx,imy,dxo,dyo,dxp,dyp;
-unsigned char *buffer=NULL, fname[512];
+char *buffer=NULL, fname[512];
 
 	if((tfh=fopen(name,"r"))!=NULL)
 	{
