@@ -98,14 +98,14 @@ FILE *fh;
 								cc=' ';
 								switch (*tptr)
 								{
-									case 'a': 
-										if((tptr=strchr(tptr+1,'m'))!=NULL) {
+									case 'a':
+										if (strncmp(tptr,"amp;",4)==0) {
 											cc='&';
 										}
 										else {
 											cc='ä';
 										}
-										break;								
+										break;
 									case 'A': cc='Ä'; break;
 									case 'o': cc='ö'; break;
 									case 'O': cc='Ö'; break;
