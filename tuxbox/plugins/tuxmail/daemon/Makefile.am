@@ -2,4 +2,4 @@ bin_PROGRAMS = tuxmaild
 
 tuxmaild_SOURCES = tuxmaild.c
 
-tuxmaild_LDADD = -lpthread
+tuxmaild_LDADD = -lpthread -lssl -lcrypto

@@ -201,6 +201,14 @@ void ReadConf()
 					sscanf(ptr + 7, "%s", maildb[index-'0'].inbox);
 				}
 			}
+			else if ( ( ptr = strstr ( line_buffer, "SSL" ) ) && ( * ( ptr+4 ) == '=' ) )
+			{
+				char index = * ( ptr+3 );
+				if ( ( index >= '0' ) && ( index <= '9' ) )
+				{
+					sscanf ( ptr + 5, "%d", &maildb[index-'0'].ssl );
+				}
+			}
 		}
 
 		fclose(fd_conf);
@@ -287,6 +295,7 @@ int WriteConf()
 		fprintf(fd_conf, "SUSER%d=%s\n", loop, maildb[loop].suser);
 		fprintf(fd_conf, "SPASS%d=%s\n", loop, maildb[loop].spass);
 		fprintf(fd_conf, "INBOX%d=%s\n", loop, maildb[loop].inbox);
+		fprintf(fd_conf, "SSL%d=%d\n", loop, maildb[loop].ssl );
 		if(!maildb[loop + 1].user[0])
 		{
 			break;
@@ -1459,7 +1468,7 @@ void PaintSmtpMailHeader( int nEditDirectStyle , int nConfigPage)
 			RenderString(linebuffer, 2*BORDERSIZE+380, BORDERSIZE+3*FONTHEIGHT_SMALL-6  , VIEWX-4*BORDERSIZE, LEFT, NORMAL, WHITE);			
 				
 			int i;
-			for( i=2; i<14; i++)
+			for( i=2; i<15; i++)
 			{
 				switch( i )
 				{
@@ -1515,6 +1524,13 @@ void PaintSmtpMailHeader( int nEditDirectStyle , int nConfigPage)
 						strcpy(linebuffer, "INBOX:"); 
 						strcpy(szInfo[i],maildb[nConfigPage].inbox);
 						break; 
+					case 14:
+						strcpy(linebuffer, "SSL" );
+						sprintf(szInfo[i],"%d",maildb[nConfigPage].ssl);
+						break;
+					default:
+						linebuffer[0]='\0';
+						szInfo[i][0]='\0';
 				}
 				RenderString( linebuffer, 2*BORDERSIZE, BORDERSIZE+(2+i)*FONTHEIGHT_SMALL  , VIEWX-4*BORDERSIZE, LEFT, SMALL, ORANGE);
 			}
@@ -1527,7 +1543,7 @@ void PaintSmtpMailHeader( int nEditDirectStyle , int nConfigPage)
 			if( nConfigPage == 10 )
 			{
 				int i;
-				for( i=2; i<13; i++)
+				for( i=2; i<14; i++)
 				{
 					switch( i )
 					{
@@ -1574,7 +1590,9 @@ void PaintSmtpMailHeader( int nEditDirectStyle , int nConfigPage)
 						case 12: 
 							strcpy(linebuffer, "TYPEFLAG:"); 
 							sprintf(szInfo[i],"%d",typeflag);
-							break; 
+							break;
+							linebuffer[0]='\0';
+							szInfo[i][0]='\0';
 					}
 					RenderString( linebuffer, 2*BORDERSIZE, BORDERSIZE+(2+i)*FONTHEIGHT_SMALL  , VIEWX-4*BORDERSIZE, LEFT, SMALL, ORANGE);
 				}
@@ -1582,7 +1600,7 @@ void PaintSmtpMailHeader( int nEditDirectStyle , int nConfigPage)
 			else
 			{
 				int i;
-				for( i=2; i<12; i++)
+				for( i=2; i<14; i++)
 				{
 					switch( i )
 					{
@@ -1660,7 +1678,7 @@ void SaveConfigMailBox(int nConfigPage)
 	if( nConfigPage < 10 )
 	{				
 		int i;
-		for( i=2; i<14; i++)
+		for( i=2; i<15; i++)
 		{
 			switch( i )
 			{
@@ -1708,6 +1726,17 @@ void SaveConfigMailBox(int nConfigPage)
 				case 13: 
 					strncpy(maildb[nConfigPage].inbox,szInfo[i],63);
 					break; 
+				case 14:
+					maildb[nConfigPage].ssl=atoi ( szInfo[i] );
+					if ( maildb[nConfigPage].ssl < 0 )
+					{
+						maildb[nConfigPage].ssl = 0;
+					}
+					if ( maildb[nConfigPage].ssl > 1 )
+					{
+						maildb[nConfigPage].ssl = 1;
+					}
+					break;
 			}
 		}
 	}
@@ -3730,7 +3759,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.56 $";
+	char cvs_revision[] = "$Revision: 1.56A $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;
@@ -3738,7 +3767,7 @@ void plugin_exec(PluginParam *par)
 	// show versioninfo
 
 		sscanf(cvs_revision, "%*s %s", versioninfo_p);
-		printf("TuxMail %s\n", versioninfo_p);
+		printf("TuxMail (with SSL support) %s\n", versioninfo_p);
 
 	// get params
 
@@ -4273,7 +4302,7 @@ void plugin_exec(PluginParam *par)
 					{
 						fclose(fopen(RUNFILE, "w"));
 #ifdef OE
-		        symlink("../init.d/tuxmail", OE_START);
+						symlink("../init.d/tuxmail", OE_START);
 						symlink("../init.d/tuxmail", OE_KILL0);
 						symlink("../init.d/tuxmail", OE_KILL6);
 #endif

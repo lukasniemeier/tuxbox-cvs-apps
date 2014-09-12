@@ -370,6 +370,7 @@ struct
 	char suser[64];
 	char spass[64];
 	char inbox[64];
+	int ssl;
 	struct mi mailinfo[MAXMAIL];
 
 }maildb[10];
