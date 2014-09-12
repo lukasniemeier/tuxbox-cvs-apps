@@ -52,12 +52,15 @@ class CThemes : public CMenuTarget
 		void saveFile(char* themename);
 		void readThemes(CMenuWidget &);
 		void rememberOldTheme(bool remember);
+		void setupDefaultColors();
 
 	public:
 		CThemes(const neutrino_locale_t title = LOCALE_COLORTHEMEMENU_HEAD2, const char * const IconName = NEUTRINO_ICON_COLORS);
 		~CThemes();
-		void setupDefaultColors();
 		int exec(CMenuTarget* parent, const std::string & actionKey);
+
+		static void getColors(CConfigFile &configfile);
+		static void setColors(CConfigFile &configfile);
 };
 
 #endif
