@@ -36,7 +36,7 @@
 #define NCF_FILE 	"/var/tuxbox/config/neutrino.conf"
 #define ECF_FILE	"/var/tuxbox/config/engima/config"
 #define BUFSIZE 	1024
-#define I_VERSION	1.39
+#define I_VERSION	1.40
 
 #define FONT "/share/fonts/pakenham.ttf"
 
