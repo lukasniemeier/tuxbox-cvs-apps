@@ -70,6 +70,16 @@ CFile::CFile()
 {
 }
 
+bool CFile::isDir(void)
+{
+	return S_ISDIR(Mode);
+}
+
+bool CFile::isReg(void)
+{
+	return S_ISREG(Mode);
+}
+
 CFile::FileType CFile::getType(void) const
 {
 	if(S_ISDIR(Mode))

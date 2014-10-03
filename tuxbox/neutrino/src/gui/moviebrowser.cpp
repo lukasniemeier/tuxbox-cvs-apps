@@ -2587,7 +2587,7 @@ bool CMovieBrowser::loadTsFileNamesFromDir(const std::string & dirname)
 		m_movieInfo.clearMovieInfo(&movieInfo); // refresh structure
 		for(unsigned int i = 0; i < flist.size(); i++)
 		{
-			if( S_ISDIR(flist[i].Mode)) 
+			if (flist[i].isDir())
 			{
 				flist[i].Name += '/';
 				//TRACE("[mb] Dir: '%s'\r\n",movieInfo.file.Name.c_str());

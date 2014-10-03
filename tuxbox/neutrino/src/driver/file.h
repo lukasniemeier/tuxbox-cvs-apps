@@ -70,6 +70,9 @@ public:
 	std::string	getFileName(void) const;
 	std::string	getPath(void) const;
 
+	bool		isDir(void);
+	bool		isReg(void);
+
 	CFile();
 	off_t Size;
 	std::string Name;

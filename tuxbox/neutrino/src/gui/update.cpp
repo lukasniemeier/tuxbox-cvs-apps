@@ -308,7 +308,7 @@ bool CFlashUpdate::checkVersion4Update()
 		UpdatesBrowser.ChangeDir(gTmpPath);
 		for (CFileList::iterator file = UpdatesBrowser.filelist.begin(); file != UpdatesBrowser.filelist.end(); ++file)
 		{
-			if (!(S_ISDIR(file->Mode)))
+			if (!file->isDir())
 			{
 				if (CFileSelected == NULL)
 					CFileSelected = &(*file);
