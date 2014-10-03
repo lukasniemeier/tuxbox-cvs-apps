@@ -3302,10 +3302,12 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 	bool sep_added = false;
 	
 	if(m_movieSelectionHandler == NULL) return(result);
-	
-	char start_pos[13]; snprintf(start_pos, 12,"%3d min",m_movieSelectionHandler->bookmarks.start/60); 
-	char play_pos[13]; 	snprintf(play_pos, 12,"%3d min",m_movieSelectionHandler->bookmarks.lastPlayStop/60); 
-	
+
+	char start_pos[13];
+	snprintf(start_pos, 13, "%3d %s", m_movieSelectionHandler->bookmarks.start / 60, g_Locale->getText(LOCALE_WORD_MINUTES_SHORT));
+	char play_pos[13];
+	snprintf(play_pos, 13, "%3d %s", m_movieSelectionHandler->bookmarks.lastPlayStop / 60, g_Locale->getText(LOCALE_WORD_MINUTES_SHORT));
+
 	char book[MI_MOVIE_BOOK_USER_MAX][20];
 	char menu_nr_str[5];
 
@@ -3352,8 +3354,8 @@ int CMovieBrowser::showStartPosSelectionMenu(void) // P2
 				position[menu_nr] = m_movieSelectionHandler->bookmarks.user[i].pos;
 			else
 				position[menu_nr] = m_movieSelectionHandler->bookmarks.user[i].pos + m_movieSelectionHandler->bookmarks.user[i].length;
-				
-			snprintf(book[i], 19,"%5d min",position[menu_nr]/60);
+
+			snprintf(book[i], 20, "%5d %s", position[menu_nr] / 60, g_Locale->getText(LOCALE_WORD_MINUTES_SHORT));
 			sprintf(menu_nr_str, "%d", menu_nr);
 			startPosItem = new CMenuForwarder(m_movieSelectionHandler->bookmarks.user[i].name.c_str(), true, book[i], &startPosChanger, menu_nr_str);
 			startPosItem->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
