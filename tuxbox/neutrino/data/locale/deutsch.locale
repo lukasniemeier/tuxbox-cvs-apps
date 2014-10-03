@@ -458,8 +458,8 @@ filebrowser.scan Durchsuche Verzeichnisse
 filebrowser.select Auswählen
 filebrowser.showrights Dateirechte anzeigen
 filebrowser.sort.date (Datum)
-filebrowser.sort.name (Dateiname)
-filebrowser.sort.namedirsfirst (Dateiname2)
+filebrowser.sort.name (Name)
+filebrowser.sort.namedirsfirst (Verz., Datei)
 filebrowser.sort.size (Größe)
 filebrowser.sort.type (Typ)
 filesystem.is.utf8 Dateisystem
