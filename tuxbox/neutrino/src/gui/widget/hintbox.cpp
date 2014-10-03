@@ -122,11 +122,7 @@ CHintBox::CHintBox(const neutrino_locale_t Caption, const char * const Text, con
 
 CHintBox::~CHintBox(void)
 {
-	if (window != NULL)
-	{
-		delete window;
-		window = NULL;
-	}
+	hide();
 	free(message);
 }
 

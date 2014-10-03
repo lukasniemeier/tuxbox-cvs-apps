@@ -74,11 +74,7 @@ CHintBoxExt::CHintBoxExt(const neutrino_locale_t Caption, ContentLines& lines, c
 
 CHintBoxExt::~CHintBoxExt(void)
 {
-	if (m_window != NULL)
-	{
-		delete m_window;
-		m_window = NULL;
-	}
+	hide();
 	if (m_message != NULL) {
 		free(m_message);
 
