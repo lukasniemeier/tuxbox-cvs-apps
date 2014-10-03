@@ -412,10 +412,14 @@ class CMovieHelp : public CMenuTarget
 // CLass to verifiy a menu was selected by the user. There might be better ways to do so.
 class CSelectedMenu : public CMenuTarget
 {
+	private:
+		std::string value_string;
 	public:
 		bool selected;
-		CSelectedMenu(void){selected = false;};
+		int* value;
+		CSelectedMenu(void){selected = false; value = NULL;};
 inline	int exec(CMenuTarget* /*parent*/, const std::string & /*actionKey*/){selected = true; return menu_return::RETURN_EXIT;};
+		const char * getTargetValue();
 };
 
 

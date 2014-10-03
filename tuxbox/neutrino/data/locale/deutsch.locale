@@ -807,7 +807,7 @@ motorcontrol.switch_step_drive_mode Switch Step/Drive Mode (b)
 motorcontrol.user_menue Benutzermenü
 moviebrowser.book_clear_all Lösche alle
 moviebrowser.book_head Markierungen
-moviebrowser.book_lastmoviestop letzter Wiedergabestop:
+moviebrowser.book_lastmoviestop Letzter Wiedergabestopp:
 moviebrowser.book_movieend Filmende:
 moviebrowser.book_moviestart Filmanfang:
 moviebrowser.book_name Name:
@@ -815,7 +815,7 @@ moviebrowser.book_new Neue Markierung
 moviebrowser.book_position Position:
 moviebrowser.book_type Sprung (<0 zurück, >0 vor):
 moviebrowser.book_type_backward Wiederholung
-moviebrowser.book_type_forward überspringen
+moviebrowser.book_type_forward Überspringen
 moviebrowser.browser_frame_high Anzeigehöhe oberes Fenster [Punkte]
 moviebrowser.browser_row_head Spalten Einstellungen
 moviebrowser.browser_row_item Spalteninfo
@@ -954,7 +954,7 @@ movieplayer.pleasewait Bitte warten Sie.\nDie Verbindung zum Streamingserver wir
 movieplayer.plugin Plugin
 movieplayer.resync Resync
 movieplayer.toomanybookmarks Sie haben bereits zu viele Bookmarks angelegt.\nEs muß erst ein anderes gelöscht werden.
-movieplayer.tshelp1 Stop
+movieplayer.tshelp1 Stopp
 movieplayer.tshelp10 ca. 10 Minuten zurück
 movieplayer.tshelp11 ca. 10 Minuten vor
 movieplayer.tshelp12 Hilfe: http://www.giggo.de/dbox2/movieplayer.html
@@ -979,7 +979,7 @@ movieplayer.tshelp9 ca. 5 Minuten vor
 movieplayer.tsplayback TS Abspielen
 movieplayer.tsplayback_pc TS Abspielen mit PIN
 movieplayer.vcdplayback (S)VCD
-movieplayer.vlchelp1 Stop
+movieplayer.vlchelp1 Stopp
 movieplayer.vlchelp10 ca. 10 Minuten zurück
 movieplayer.vlchelp11 ca. 10 Minuten vor
 movieplayer.vlchelp12 Hilfe: http://www.giggo.de/dbox2/movieplayer.html

@@ -3214,18 +3214,19 @@ void CMoviePlayerGui::PlayFile (int parental)
 	new_bookmark.length = 0;
 
 	// very dirty usage of the menue, but it works and I already spent to much time with it, feel free to make it better ;-)
-	#define BOOKMARK_START_MENU_MAX_ITEMS 6
+	#define BOOKMARK_START_MENU_MAX_ITEMS 7
 	CSelectedMenu cSelectedMenuBookStart[BOOKMARK_START_MENU_MAX_ITEMS];
 
 	CMenuWidget bookStartMenu(LOCALE_MOVIEBROWSER_BOOK_NEW, NEUTRINO_ICON_STREAMING);
 	bookStartMenu.addItem(GenericMenuSeparator);
-	bookStartMenu.addItem( new CMenuForwarder (LOCALE_MOVIEPLAYER_HEAD, 	true,NULL,&cSelectedMenuBookStart[0]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_HEAD, true, NULL, &cSelectedMenuBookStart[0]));
 	bookStartMenu.addItem(GenericMenuSeparatorLine);
-	bookStartMenu.addItem( new CMenuForwarder (LOCALE_MOVIEBROWSER_HEAD, 	true,NULL,&cSelectedMenuBookStart[1]));
-	bookStartMenu.addItem( new CMenuForwarder (LOCALE_MOVIEBROWSER_BOOK_TYPE_FORWARD, 	true,NULL,&cSelectedMenuBookStart[2]));
-	bookStartMenu.addItem( new CMenuForwarder (LOCALE_MOVIEBROWSER_BOOK_TYPE_BACKWARD, 	true,NULL,&cSelectedMenuBookStart[3]));
-	bookStartMenu.addItem( new CMenuForwarder (LOCALE_MOVIEBROWSER_BOOK_MOVIESTART, 		true,NULL,&cSelectedMenuBookStart[4]));
-	bookStartMenu.addItem( new CMenuForwarder (LOCALE_MOVIEBROWSER_BOOK_MOVIEEND, 		true,NULL,&cSelectedMenuBookStart[5]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, &cSelectedMenuBookStart[1]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE_FORWARD, true, NULL, &cSelectedMenuBookStart[2]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_TYPE_BACKWARD, true, NULL, &cSelectedMenuBookStart[3]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIESTART, true, NULL, &cSelectedMenuBookStart[4]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_MOVIEEND, true, NULL, &cSelectedMenuBookStart[5]));
+	bookStartMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_LASTMOVIESTOP, false, NULL, &cSelectedMenuBookStart[6]));
 #endif /* ENABLE_MOVIEBROWSER */
 
 	CTimeOSD    FileTime;
@@ -3425,6 +3426,20 @@ void CMoviePlayerGui::PlayFile (int parental)
 
 						// get the movie info handle (to be used for e.g. bookmark handling)
 						p_movie_info = CMovieBrowser::getInstance()->getCurrentMovieInfo();
+
+						// get bookmark handles for bookmark menu
+						if (p_movie_info)
+						{
+							cSelectedMenuBookStart[4].value = &(p_movie_info->bookmarks.start);
+							cSelectedMenuBookStart[5].value = &(p_movie_info->bookmarks.end);
+							cSelectedMenuBookStart[6].value = &(p_movie_info->bookmarks.lastPlayStop);
+						}
+						else
+						{
+							cSelectedMenuBookStart[4].value = NULL;
+							cSelectedMenuBookStart[5].value = NULL;
+							cSelectedMenuBookStart[6].value = NULL;
+						}
 
 						// get the start position for the movie
 						int currentStartPos = CMovieBrowser::getInstance()->getCurrentStartPos();
