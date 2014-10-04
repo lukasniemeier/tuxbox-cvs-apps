@@ -560,7 +560,7 @@ void CMovieBrowser::initGlobalSettings(void)
 	m_settings.sorting.item 	=  MB_INFO_TITLE;
 
 	m_settings.filter.item = MB_INFO_MAX_NUMBER;
-	m_settings.filter.optionString = "-";
+	m_settings.filter.optionString = "---";
 	m_settings.filter.optionVar = 0;
 	
 	m_settings.parentalLockAge = MI_PARENTAL_OVER18;
@@ -731,7 +731,7 @@ bool CMovieBrowser::loadSettings(MB_SETTINGS* settings)
 		settings->sorting.direction = (MB_DIRECTION)configfile.getInt32("mb_sorting_direction", MB_DIRECTION_UP);
 		
 		settings->filter.item = (MB_INFO_ITEM)configfile.getInt32("mb_filter_item", MB_INFO_INFO1);
-		settings->filter.optionString = configfile.getString("mb_filter_optionString", "-");
+		settings->filter.optionString = configfile.getString("mb_filter_optionString", "---");
 		settings->filter.optionVar = configfile.getInt32("mb_filter_optionVar", 0);
 		
 		settings->parentalLockAge = (MI_PARENTAL_LOCKAGE)configfile.getInt32("mb_parentalLockAge", MI_PARENTAL_OVER18);
@@ -2120,7 +2120,7 @@ bool CMovieBrowser::onButtonPressFilterList(neutrino_msg_t msg)
 			if(selected_line == 0)
 			{
 				m_settings.filter.item = MB_INFO_MAX_NUMBER;
-				m_settings.filter.optionString = "-";
+				m_settings.filter.optionString = "---";
 				m_settings.filter.optionVar = 0;
 				refreshFilterList();
 				m_pcFilter->setSelectedLine(0);
