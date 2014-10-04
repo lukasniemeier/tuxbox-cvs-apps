@@ -3697,11 +3697,16 @@ const char * CSelectedMenu::getTargetValue()
 {
 	if (value)
 	{
-		char tmp[16];
-		sprintf(tmp, "%d", *value / 60);
-		value_string = tmp;
-		value_string += " ";
-		value_string += g_Locale->getText(LOCALE_WORD_MINUTES_SHORT);
+		if (*value > 0)
+		{
+			char tmp[16];
+			sprintf(tmp, "%d", *value / 60);
+			value_string = tmp;
+			value_string += " ";
+			value_string += g_Locale->getText(LOCALE_WORD_MINUTES_SHORT);
+		}
+		else
+			value_string = "---";
 		return value_string.c_str();
 	}
 	return NULL;
