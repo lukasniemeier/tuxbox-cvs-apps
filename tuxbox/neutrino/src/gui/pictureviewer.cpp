@@ -65,6 +65,7 @@
 #include <gui/widget/stringinput.h>
 
 #include <system/settings.h>
+#include <system/helper.h>
 
 #include <algorithm>
 #include <sys/stat.h>
@@ -118,7 +119,6 @@ CPictureViewerGui::~CPictureViewerGui()
 //------------------------------------------------------------------------
 int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/)
 {
-	struct stat sFileInfo;
 	selected = 0;
 	width = w_max (710, 30);
 	height = h_max (570, 0);
@@ -151,13 +151,10 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 		parent->hide();
 	}
 
-	if ( stat(PICTUREVIEWER_START_SCRIPT, &sFileInfo) == 0 )
-	{
-		puts("[pictureviewer.cpp] executing " PICTUREVIEWER_START_SCRIPT ".");
-		if (system(PICTUREVIEWER_START_SCRIPT) != 0)
-			perror("Datei " PICTUREVIEWER_START_SCRIPT " fehlt.Bitte erstellen, wenn gebraucht.\nFile " PICTUREVIEWER_START_SCRIPT " not found. Please create if needed.\n");
-	}
-		
+	puts("[pictureviewer.cpp] executing " PICTUREVIEWER_START_SCRIPT ".");
+	if (my_system(PICTUREVIEWER_START_SCRIPT) != 0)
+		perror(PICTUREVIEWER_START_SCRIPT " failed");
+
 	// tell neutrino we're in pic_mode
 	CNeutrinoApp::getInstance()->handleMsg( NeutrinoMessages::CHANGEMODE , NeutrinoMessages::mode_pic );
 	// remember last mode
@@ -177,12 +174,9 @@ int CPictureViewerGui::exec(CMenuTarget* parent, const std::string & /*actionKey
 	// free picviewer mem
 	m_viewer->Cleanup();
 
-	if ( stat(PICTUREVIEWER_END_SCRIPT, &sFileInfo) == 0)
-	{
-		puts("[pictureviewer.cpp] executing " PICTUREVIEWER_END_SCRIPT ".");
-		if (system(PICTUREVIEWER_END_SCRIPT) != 0)
-			perror("Datei " PICTUREVIEWER_END_SCRIPT " fehlt.Bitte erstellen, wenn gebraucht.\nFile " PICTUREVIEWER_END_SCRIPT " not found. Please create if needed.\n");
-	}
+	puts("[pictureviewer.cpp] executing " PICTUREVIEWER_END_SCRIPT ".");
+	if (my_system(PICTUREVIEWER_END_SCRIPT) != 0)
+		perror(PICTUREVIEWER_END_SCRIPT " failed");
 
 	// Start Sectionsd
 	g_Sectionsd->setPauseScanning(false);

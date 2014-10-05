@@ -315,7 +315,6 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		void SendSectionsdConfig(void);
 		void setupRecordingDevice(void);
 
-		bool execute_start_file(const char *filename, const bool blocking = true, const bool verbose = false);
 		int execute_sys_command(const char *command);
 		CConfigFile* getConfigFile() {return &configfile;};
 		

@@ -24,6 +24,12 @@
 */
 
 
+#include <errno.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <stdarg.h>
+
 #include "helper.h"
 
 void StrSearchReplace( std::string &s, const std::string &to_find, const std::string& repl_with )
@@ -39,4 +45,78 @@ void StrSearchReplace( std::string &s, const std::string &to_find, const std::st
 		s.insert(location,repl_with);
 		location = s.find(to_find, location);
 	}
+}
+
+bool file_exists(const char *filename)
+{
+	struct stat stat_buf;
+	if(::stat(filename, &stat_buf) == 0)
+	{
+		return true;
+	} else
+	{
+		return false;
+	}
+}
+
+//use for script with full path
+int my_system(const char * cmd)
+{
+	if (!file_exists(cmd))
+		return -1;
+
+	return my_system(1, cmd);
+}
+
+int my_system(int argc, const char *arg, ...)
+{
+	int i = 0, ret = 0, childExit = 0;
+#define ARGV_MAX 64
+	/* static right now but could be made dynamic if necessary */
+	int argv_max = ARGV_MAX;
+	const char *argv[ARGV_MAX];
+	va_list args;
+	argv[0] = arg;
+	va_start(args, arg);
+
+	while(++i < argc)
+	{
+		if (i == argv_max)
+		{
+			fprintf(stderr, "my_system: too many arguments!\n");
+			return -1;
+		}
+		argv[i] = va_arg(args, const char *);
+	}
+	argv[i] = NULL; /* sentinel */
+	//fprintf(stderr,"%s:", __func__);for(i=0;argv[i];i++)fprintf(stderr," '%s'",argv[i]);fprintf(stderr,"\n");
+
+	pid_t pid;
+	int maxfd = getdtablesize();// sysconf(_SC_OPEN_MAX);
+	switch (pid = vfork())
+	{
+		case -1: /* can't vfork */
+			perror("vfork");
+			ret = -errno;
+			break;
+		case 0: /* child process */
+			for(i = 3; i < maxfd; i++)
+				close(i);
+			if (setsid() == -1)
+				perror("my_system setsid");
+			if (execvp(argv[0], (char * const *)argv))
+			{
+				ret = -errno;
+				if (errno != ENOENT) /* don't complain if argv[0] only does not exist */
+					fprintf(stderr, "ERROR: my_system \"%s\": %m\n", argv[0]);
+			}
+			_exit(ret); // terminate c h i l d proces s only
+		default: /* parent returns to calling process */
+			waitpid(pid, &childExit, 0);
+			if (WEXITSTATUS(childExit) != 0)
+				ret = (signed char)WEXITSTATUS(childExit);
+			break;
+	}
+	va_end(args);
+	return ret;
 }

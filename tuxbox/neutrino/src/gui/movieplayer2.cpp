@@ -427,7 +427,8 @@ CMoviePlayerGui::exec(CMenuTarget *parent, const std::string &actionKey)
 	CHintBox *startBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, "Starte Movieplayer...");
 	startBox->paint();
 	INFO("executing %s\n", MOVIEPLAYER_START_SCRIPT);
-	system(MOVIEPLAYER_START_SCRIPT);
+	if (my_system(MOVIEPLAYER_START_SCRIPT) != 0)
+		perror(MOVIEPLAYER_START_SCRIPT " failed");
 	startBox->hide();
 	delete startBox;
 
@@ -531,7 +532,8 @@ CMoviePlayerGui::exec(CMenuTarget *parent, const std::string &actionKey)
 	}
 
 	INFO("executing %s\n", MOVIEPLAYER_END_SCRIPT);
-	system(MOVIEPLAYER_END_SCRIPT);
+	if (my_system(MOVIEPLAYER_END_SCRIPT) != 0)
+		perror(MOVIEPLAYER_END_SCRIPT " failed");
 
 	// Start sectionsd if stopped or restarted
 	if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_STOP)

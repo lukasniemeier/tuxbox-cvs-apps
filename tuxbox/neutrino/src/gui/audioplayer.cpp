@@ -68,6 +68,7 @@
 #include <gui/widget/stringinput_ext.h>
 
 #include <system/settings.h>
+#include <system/helper.h>
 #include <xmltree/xmlinterface.h>
 
 #ifdef ENABLE_LIRC
@@ -317,9 +318,9 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 	irs.Send();
 #endif
 
-	puts("[audioplayer.cpp] executing " AUDIOPLAYER_START_SCRIPT "."); 
-	if (system(AUDIOPLAYER_START_SCRIPT) != 0) 
-		perror("Datei " AUDIOPLAYER_START_SCRIPT " fehlt.Bitte erstellen, wenn gebraucht.\nFile " AUDIOPLAYER_START_SCRIPT " not found. Please create if needed.\n");
+	puts("[audioplayer.cpp] executing " AUDIOPLAYER_START_SCRIPT ".");
+	if (my_system(AUDIOPLAYER_START_SCRIPT) != 0)
+		perror(AUDIOPLAYER_START_SCRIPT " failed");
 
 #ifdef HAVE_DBOX_HARDWARE
 	// disable iec aka digi out
@@ -357,9 +358,9 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &)
 	irs2.Send();
 #endif
 
-	puts("[audioplayer.cpp] executing " AUDIOPLAYER_END_SCRIPT "."); 
-	if (system(AUDIOPLAYER_END_SCRIPT) != 0) 
-		perror("Datei " AUDIOPLAYER_END_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " AUDIOPLAYER_END_SCRIPT " not found. Please create if needed.\n");
+	puts("[audioplayer.cpp] executing " AUDIOPLAYER_END_SCRIPT ".");
+	if (my_system(AUDIOPLAYER_END_SCRIPT) != 0)
+		perror(AUDIOPLAYER_END_SCRIPT " failed");
 
 	// Start Sectionsd
 	g_Sectionsd->setPauseScanning(false);

@@ -519,17 +519,6 @@ void setvideooutput(CControld::video_format format, bool bSaveSettings)
 }
 #endif
 
-void execute_start_file(const char *filename)
-{
-	struct stat statbuf;
-	if (stat(filename, &statbuf) == 0) {
-		printf("[controld] executing %s\n", filename);
-		int result = system(filename);
-		if (result)
-			printf("[controld] %s failed with return code = %d\n", filename, result);
-	}
-}
-
 #ifdef HAVE_DBOX_HARDWARE
 void routeVideo(int v1, int a1,
 		int v2, int a2,

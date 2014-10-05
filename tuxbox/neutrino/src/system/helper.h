@@ -29,4 +29,9 @@
 
 void StrSearchReplace( std::string &s, const std::string &to_find, const std::string& repl_with );
 
+int my_system(const char * cmd);
+int my_system(int argc, const char *arg, ...); /* argc is number of arguments including command */
+
+bool file_exists(const char *filename);
+
 #endif

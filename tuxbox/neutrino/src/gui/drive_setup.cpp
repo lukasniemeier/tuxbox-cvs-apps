@@ -58,6 +58,7 @@ TODO:
 #include <zapit/client/zapittools.h>
 
 #include <system/debug.h>
+#include <system/helper.h>
 
 #include <fstream>
 #include <iostream>
@@ -1696,8 +1697,8 @@ bool CDriveSetup::unmountPartition(const int& device_num /*MASTER||SLAVE||MMCARD
 	char user_script[64];
 	snprintf(user_script, 64, "%s/before_unmount_%d_%d.sh", CONFIGDIR, device_num, part_number);
 	user_script[63] = '\0'; /* ensure termination... */
-	if((access(user_script, F_OK) ==0))
-		CNeutrinoApp::getInstance()->execute_start_file(user_script);
+	if (my_system(user_script) != 0)
+		perror(user_script);
 
 	if((access(partname.c_str(), R_OK) !=0) || (!isActivePartition(partname))) // exit if no available
 	{ 
@@ -4380,8 +4381,8 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 				d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
 
 				//executing user script if available after swapon
-				if((access(user_script, F_OK) ==0)) 
-					CNeutrinoApp::getInstance()->execute_start_file(user_script);
+				if (my_system(user_script) != 0)
+					perror(user_script);
 
 				return true;
 			}
@@ -4396,8 +4397,8 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
 				d_settings.drive_partition_mountpoint[device_num][part_number] = "none";
 
 				//executing user script if available after swapon
-				if((access(user_script, F_OK) ==0)) 
-					CNeutrinoApp::getInstance()->execute_start_file(user_script);
+				if (my_system(user_script) != 0)
+					perror(user_script);
 
 				return true;
 			}
@@ -4487,8 +4488,8 @@ bool CDriveSetup::mountPartition(const int& device_num /*MASTER||SLAVE*/, const 
  	}
 	
 	//executing user script if available after mounting
-	if((access(user_script, F_OK) ==0)) 
-		CNeutrinoApp::getInstance()->execute_start_file(user_script);
+	if (my_system(user_script) != 0)
+		perror(user_script);
 
 	return true;
 }

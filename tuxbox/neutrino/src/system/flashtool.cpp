@@ -24,6 +24,7 @@
 #endif
 
 #include <system/flashtool.h>
+#include <system/helper.h>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -45,6 +46,7 @@
 #include <global.h>
 
 #define LOCAL_MOUNT_DIR   "/tmp/checkimage"
+#define FLASHTOOL_START_SCRIPT CONFIGDIR "/flash.start"
 
 CFlashTool::CFlashTool()
 {
@@ -263,6 +265,10 @@ bool CFlashTool::erase(int globalProgressEnd)
 		close(fd);
 		return false;
 	}
+
+	puts("[flashtool.cpp] executing " FLASHTOOL_START_SCRIPT ".");
+	if (my_system(FLASHTOOL_START_SCRIPT) != 0)
+		perror(FLASHTOOL_START_SCRIPT " failed");
 
 	if(statusViewer)
 	{

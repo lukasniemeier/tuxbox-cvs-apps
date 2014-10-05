@@ -455,8 +455,8 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 	}
 
 	puts("[movieplayer.cpp] executing " MOVIEPLAYER_START_SCRIPT ".");
-	if (system(MOVIEPLAYER_START_SCRIPT) != 0)
-	perror("Datei " MOVIEPLAYER_START_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " MOVIEPLAYER_START_SCRIPT " not found. Please create if needed.\n");
+	if (my_system(MOVIEPLAYER_START_SCRIPT) != 0)
+		perror(MOVIEPLAYER_START_SCRIPT " failed");
 
 	// Stop or restart sectionsd according to configuration
 	if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_STOP)
@@ -555,8 +555,8 @@ CMoviePlayerGui::exec (CMenuTarget * parent, const std::string & actionKey)
 	}
 	
 	puts("[movieplayer.cpp] executing " MOVIEPLAYER_END_SCRIPT ".");
-	if (system(MOVIEPLAYER_END_SCRIPT) != 0)
-	perror("Datei " MOVIEPLAYER_END_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " MOVIEPLAYER_END_SCRIPT " not found. Please create if needed.\n");
+	if (my_system(MOVIEPLAYER_END_SCRIPT) != 0)
+		perror(MOVIEPLAYER_END_SCRIPT " failed");
 
 	// Start sectionsd if stopped or restarted
 	if (g_settings.streaming_stopsectionsd == CNeutrinoApp::SECTIONSD_STOP)

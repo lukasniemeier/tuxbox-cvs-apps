@@ -63,6 +63,7 @@
 #include <gui/widget/stringinput_ext.h>
 
 #include <system/settings.h>
+#include <system/helper.h>
 
 #ifdef ENABLE_LIRC
 #include <irsend/irsend.h>
@@ -201,9 +202,9 @@ int CEsoundGui::exec(CMenuTarget* parent, const std::string &)
 	irs.Send();
 #endif
 
-	puts("[esound.cpp] executing " ESOUNDSERVER_START_SCRIPT "."); 
-	if (system(ESOUNDSERVER_START_SCRIPT) != 0) 
-		perror("Datei " ESOUNDSERVER_START_SCRIPT " fehlt.Bitte erstellen, wenn gebraucht.\nFile " ESOUNDSERVER_START_SCRIPT " not found. Please create if needed.\n");
+	puts("[esound.cpp] executing " ESOUNDSERVER_START_SCRIPT ".");
+	if (my_system(ESOUNDSERVER_START_SCRIPT) != 0)
+		perror(ESOUNDSERVER_START_SCRIPT " failed");
 
 #ifdef HAVE_DBOX_HARDWARE
 	// disable iec aka digi out
@@ -247,9 +248,9 @@ int CEsoundGui::exec(CMenuTarget* parent, const std::string &)
 	irs2.Send();
 #endif
 
-	puts("[esound.cpp] executing " ESOUNDSERVER_END_SCRIPT "."); 
-	if (system(ESOUNDSERVER_END_SCRIPT) != 0) 
-		perror("Datei " ESOUNDSERVER_END_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " ESOUNDSERVER_END_SCRIPT " not found. Please create if needed.\n");
+	puts("[esound.cpp] executing " ESOUNDSERVER_END_SCRIPT ".");
+	if (my_system(ESOUNDSERVER_END_SCRIPT) != 0)
+		perror(ESOUNDSERVER_END_SCRIPT " failed");
 
 	// Start Sectionsd
 	g_Sectionsd->setPauseScanning(false);

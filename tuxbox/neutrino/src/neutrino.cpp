@@ -113,6 +113,7 @@
 #include <system/settings.h>
 #include <system/debug.h>
 #include <system/flashtool.h>
+#include <system/helper.h>
 #ifdef ENABLE_GUI_MOUNT
 #include <system/fsmounter.h>
 #endif
@@ -144,7 +145,7 @@ CVCRControl::CDevice * recordingdevice = NULL;
 #define NEUTRINO_ZAPTO_TIMER_SCRIPT	CONFIGDIR "/zapto.timer"
 #define NEUTRINO_RECORDING_TIMER_SCRIPT CONFIGDIR "/recording.timer"
 #define NEUTRINO_RECORDING_START_SCRIPT CONFIGDIR "/recording.start"
-#define NEUTRINO_RECORDING_ENDED_SCRIPT CONFIGDIR "/recording.end"
+#define NEUTRINO_RECORDING_END_SCRIPT CONFIGDIR "/recording.end"
 #define NEUTRINO_ENTER_STANDBY_SCRIPT   CONFIGDIR "/standby.on"
 #define NEUTRINO_LEAVE_STANDBY_SCRIPT   CONFIGDIR "/standby.off"
 #define NEUTRINO_INIT_END_SCRIPT	CONFIGDIR "/init.end"
@@ -171,30 +172,6 @@ static void initGlobals(void)
 #endif
 	g_Locale        = new CLocaleManager;
 	g_PluginList    = NULL;
-}
-
-bool CNeutrinoApp::execute_start_file(const char *filename, const bool blocking, const bool verbose)
-/* returns true if execution of a script was successfully */
-{
-	std::string command = filename;
-	struct stat statbuf;
-	if (stat(filename, &statbuf) == 0) {
-		if (false == blocking)
-			command += " &";
-		if (verbose)
-			printf("[neutrino] executing %s\n", command.c_str());
-		int result = system(command.c_str());
-		if (result !=0 ) {
-			printf("[neutrino] %s failed with return code = %d...\n", filename, WEXITSTATUS(result));
-			return false;
-		}
-	}
-	else 
-	{
-		printf("[neutrino] no file %s was found\n", filename);
-		return false;
-	}
-	return true;
 }
 
 int CNeutrinoApp::execute_sys_command(const char *command)
@@ -1740,7 +1717,9 @@ bool CNeutrinoApp::doGuiRecord(char * preselectedDir, bool addTimer, char * file
 	{
 		if(recordingstatus == 1)
 		{
-			execute_start_file(NEUTRINO_RECORDING_START_SCRIPT);
+			puts("[neutrino.cpp] executing " NEUTRINO_RECORDING_START_SCRIPT ".");
+			if (my_system(NEUTRINO_RECORDING_START_SCRIPT) != 0)
+				perror(NEUTRINO_RECORDING_START_SCRIPT " failed");
 
 			eventinfo.channel_id = g_Zapit->getCurrentServiceID();
 			CEPGData epgData;
@@ -2251,7 +2230,9 @@ int CNeutrinoApp::run(int argc, char **argv)
 	// shutdown counter
 	SHTDCNT::getInstance()->init();
 
-	execute_start_file(NEUTRINO_INIT_END_SCRIPT, false);
+	puts("[neutrino.cpp] executing " NEUTRINO_INIT_END_SCRIPT ".");
+	if (my_system(NEUTRINO_INIT_END_SCRIPT) != 0)
+		perror(NEUTRINO_INIT_END_SCRIPT " failed");
 
 	RealRun(CPersonalizeGui::getInstance()->getWidget(0)/**main**/);
 
@@ -2831,7 +2812,10 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 				standbyAfterRecord = true;
 				standbyMode(false);
 			}
-			execute_start_file(NEUTRINO_RECORDING_START_SCRIPT);
+			puts("[neutrino.cpp] executing " NEUTRINO_RECORDING_START_SCRIPT ".");
+			if (my_system(NEUTRINO_RECORDING_START_SCRIPT) != 0)
+				perror(NEUTRINO_RECORDING_START_SCRIPT " failed");
+
 			/* set nextRecordingInfo to current event (replace other scheduled recording if available) */
 
 			/*
@@ -2871,7 +2855,9 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 
 				if (recordingstatus == 0)
 				{
-					execute_start_file(NEUTRINO_RECORDING_ENDED_SCRIPT);
+					puts("[neutrino.cpp] executing " NEUTRINO_RECORDING_END_SCRIPT ".");
+					if (my_system(NEUTRINO_RECORDING_END_SCRIPT) != 0)
+						perror(NEUTRINO_RECORDING_END_SCRIPT " failed");
 				}
 			}
 			else if(nextRecordingInfo!=NULL)
@@ -2932,7 +2918,11 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 		else if( msg == NeutrinoMessages::ANNOUNCE_ZAPTO)
 		{
 			CTimerd::RecordingInfo * eventinfo = (CTimerd::RecordingInfo *) data;
-			execute_start_file(NEUTRINO_ZAPTO_TIMER_SCRIPT);
+
+			puts("[neutrino.cpp] executing " NEUTRINO_ZAPTO_TIMER_SCRIPT ".");
+			if (my_system(NEUTRINO_ZAPTO_TIMER_SCRIPT) != 0)
+				perror(NEUTRINO_ZAPTO_TIMER_SCRIPT " failed");
+
 			if( mode == mode_standby )
 			{
 				// WAKEUP
@@ -2979,12 +2969,13 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 				standbyAfterRecord = true;
 				standbyMode(false);
 			}
-			execute_start_file(NEUTRINO_RECORDING_TIMER_SCRIPT);
+			puts("[neutrino.cpp] executing " NEUTRINO_RECORDING_TIMER_SCRIPT ".");
+			if (my_system(NEUTRINO_RECORDING_TIMER_SCRIPT) != 0)
+				perror(NEUTRINO_RECORDING_TIMER_SCRIPT " failed");
+
 			if( g_settings.recording_server_wakeup )
 			{
-				std::string command = "ether-wake ";
-				command += g_settings.recording_server_mac;
-				if(system(command.c_str()) != 0)
+				if (my_system(2, "ether-wake", g_settings.recording_server_mac) != 0)
 					perror("ether-wake failed");
 			}
 			if (g_settings.recording_type == RECORDING_FILE)
@@ -2995,9 +2986,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t m, neutrino_msg_data_t data)
 					if (strcmp(g_settings.network_nfs_local_dir[i],recDir) == 0)
 					{
 						printf("[neutrino] waking up %s (%s)\n",g_settings.network_nfs_ip[i].c_str(),recDir);
-						std::string command = "ether-wake ";
-						command += g_settings.network_nfs_mac[i];
-						if(system(command.c_str()) != 0)
+						if (my_system(2, "ether-wake", g_settings.network_nfs_mac[i]) != 0)
 							perror("ether-wake failed");
 						break;
 					}
@@ -3750,7 +3739,9 @@ void CNeutrinoApp::standbyMode( bool bOnOff )
 		CLCD::getInstance()->setMode(CLCD::MODE_STANDBY);
 		g_Controld->videoPowerDown(true);
 
-		execute_start_file(NEUTRINO_ENTER_STANDBY_SCRIPT);
+		puts("[neutrino.cpp] executing " NEUTRINO_ENTER_STANDBY_SCRIPT ".");
+		if (my_system(NEUTRINO_ENTER_STANDBY_SCRIPT) != 0)
+			perror(NEUTRINO_ENTER_STANDBY_SCRIPT " failed");
 
 		if (g_settings.standby_save_power)
 		{
@@ -3799,7 +3790,9 @@ void CNeutrinoApp::standbyMode( bool bOnOff )
 		}
 		g_Controld->videoPowerDown(false);
 
-		execute_start_file(NEUTRINO_LEAVE_STANDBY_SCRIPT);
+		puts("[neutrino.cpp] executing " NEUTRINO_LEAVE_STANDBY_SCRIPT ".");
+		if (my_system(NEUTRINO_LEAVE_STANDBY_SCRIPT) != 0)
+			perror(NEUTRINO_LEAVE_STANDBY_SCRIPT " failed");
 
 #ifdef ENABLE_LIRC
 		if (!standbyAfterRecord)

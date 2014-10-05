@@ -48,6 +48,7 @@
 
 #include "gui/widget/hintbox.h"
 #include <system/settings.h>
+#include <system/helper.h>
 
 #include <global.h>
 #include <neutrino.h>
@@ -145,8 +146,8 @@ printf("[neutrino] TP_scan %d TP_freq %s TP_rate %s TP_fec %d TP_pol %d TP_mod %
 		g_Controld->setVideoFormat(g_settings.video_backgroundFormat);
 
 	puts("[scan.cpp] executing " SCAN_START_SCRIPT ".");
-	if (system(SCAN_START_SCRIPT) != 0)
-		perror("Datei " SCAN_START_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " SCAN_START_SCRIPT " not found. Please create if needed.\n");
+	if (my_system(SCAN_START_SCRIPT) != 0)
+		perror(SCAN_START_SCRIPT " failed");
 
 	g_Sectionsd->Restart();
 	g_Sectionsd->RegisterNeutrino();
@@ -216,8 +217,8 @@ printf("[neutrino] TP_scan %d TP_freq %s TP_rate %s TP_fec %d TP_pol %d TP_mod %
 	hide();
 
 	puts("[scan.cpp] executing " SCAN_END_SCRIPT ".");
-	if (system(SCAN_END_SCRIPT) != 0)
-		perror("Datei " SCAN_END_SCRIPT " fehlt. Bitte erstellen, wenn gebraucht.\nFile " SCAN_END_SCRIPT " not found. Please create if needed.\n");
+	if (my_system(SCAN_END_SCRIPT) != 0)
+		perror(SCAN_END_SCRIPT " failed");
 
 	g_Sectionsd->setPauseScanning(false);
 
