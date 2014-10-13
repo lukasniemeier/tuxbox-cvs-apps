@@ -459,10 +459,7 @@ CDateInput::CDateInput(const neutrino_locale_t Name, time_t* Time, const neutrin
 {
 	time=Time;
 	value= new char[20];
-	struct tm *tmTime = localtime(time);
-	snprintf(value, 20, "%02d.%02d.%04d %02d:%02d", tmTime->tm_mday, tmTime->tm_mon+1,
-				tmTime->tm_year+1900,
-				tmTime->tm_hour, tmTime->tm_min);
+	onBeforeExec();
 	
 	addInputField( new CExtendedInput_Item_Char("0123") );
 	addInputField( new CExtendedInput_Item_Char("0123456789") );
@@ -567,7 +564,7 @@ void CMACInput::onBeforeExec()
 	if (value[0] == 0) /* strcmp(value, "") == 0 */
 	{
 		strcpy(value, "00:00:00:00:00:00");
-		printf("[neutrino] value-before(2): %s\n", value);
+		//printf("[neutrino] value-before(2): %s\n", value);
 		return;
 	}
 	int _mac[6];
@@ -625,16 +622,9 @@ CIntInput::CIntInput(const neutrino_locale_t Name, int& Value, const unsigned in
 		m_size = Size;
 	else
 		m_size = MAX_CINTINPUT_SIZE-1;
- 	if (*myValue == 0)
- 	{
-		sprintf(myValueStringInput,"%-7d",0);
-		sprintf(myValueStringOutput,"%7d",0);
- 	} else {
-		sprintf(myValueStringInput,"%-*d",m_size,*myValue);
-		sprintf(myValueStringOutput,"%*d",m_size,*myValue);
-	}
+	onBeforeExec();
 
-	for (unsigned int i=0;i<Size;i++)
+	for (unsigned int i=0;i<m_size;i++)
 	{
 		addInputField( new CExtendedInput_Item_Char("0123456789 ") );
 	}
@@ -644,14 +634,8 @@ CIntInput::CIntInput(const neutrino_locale_t Name, int& Value, const unsigned in
 
 void CIntInput::onBeforeExec()
 {
- 	if (*myValue == 0)
- 	{
-		sprintf(myValueStringInput,"%-7d",0);
-		sprintf(myValueStringOutput,"%7d",0);
- 	} else {
-		sprintf(myValueStringInput,"%-*d",m_size,*myValue);
-		sprintf(myValueStringOutput,"%*d",m_size,*myValue);
-	}
+	sprintf(myValueStringInput,"%-*d",m_size,*myValue);
+	sprintf(myValueStringOutput,"%d",*myValue);
 }
 
 void CIntInput::onAfterExec()
