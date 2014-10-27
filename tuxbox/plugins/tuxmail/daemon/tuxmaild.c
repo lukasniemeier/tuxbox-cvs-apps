@@ -1539,6 +1539,8 @@ int SendPOPCommand(int command, char *param, int ssl)
 						ERR_print_errors_fp (stderr);
 						return 0;
 					}
+					SSL_CTX_set_options(c->sslContext, SSL_OP_NO_SSLv2);
+					SSL_CTX_set_options(c->sslContext, SSL_OP_NO_SSLv3);
 
 					c->sslHandle = SSL_new (c->sslContext);
 					if (c->sslHandle == NULL) {
@@ -2058,6 +2060,8 @@ int SendIMAPCommand(int command, char *param, char *param2, int ssl)
 						ERR_print_errors_fp (stderr);
 						return 0;
 					}
+					SSL_CTX_set_options(c->sslContext, SSL_OP_NO_SSLv2);
+					SSL_CTX_set_options(c->sslContext, SSL_OP_NO_SSLv3);
 
 					c->sslHandle = SSL_new (c->sslContext);
 					if (c->sslHandle == NULL) {
@@ -2689,6 +2693,8 @@ int SendSMTPCommand(int command, char *param, int ssl)
 						ERR_print_errors_fp (stderr);
 						return 0;
 					}
+					SSL_CTX_set_options(c->sslContext, SSL_OP_NO_SSLv2);
+					SSL_CTX_set_options(c->sslContext, SSL_OP_NO_SSLv3);
 
 					c->sslHandle = SSL_new (c->sslContext);
 					if (c->sslHandle == NULL) {
@@ -4794,7 +4800,7 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.51A $";
+	char cvs_revision[] = "$Revision: 1.51B $";
 	int param, nodelay = 0, account, mailstatus, unread_mailstatus;
 	pthread_t thread_id;
 	void *thread_result = 0;
