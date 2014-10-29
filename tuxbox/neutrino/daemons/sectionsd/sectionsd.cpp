@@ -2617,7 +2617,8 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 		"%sCurrent time: %s"
 		"Hours to cache: %ld\n"
 		"Hours to cache extended text: %ld\n"
-		"Events are old %ldmin after their end time\n"
+		"Events to cache: %u\n"
+		"Events are old %ld min after their end time\n"
 		"Number of cached services: %u\n"
 		"Number of cached nvod-services: %u\n"
 		"Number of cached events: %u\n"
@@ -2635,7 +2636,7 @@ static void commandDumpStatusInformation(int connfd, char* /*data*/, const unsig
 #endif
 		,
 		ctime_r(&zeit, tbuf),
-		secondsToCache / (60*60L), secondsExtendedTextCache / (60*60L), oldEventsAre / 60, anzServices, anzNVODservices, anzEvents, anzNVODevents, anzMetaServices,
+		secondsToCache / (60*60L), secondsExtendedTextCache / (60*60L), max_events, oldEventsAre / 60, anzServices, anzNVODservices, anzEvents, anzNVODevents, anzMetaServices,
 		//    resourceUsage.ru_maxrss, resourceUsage.ru_ixrss, resourceUsage.ru_idrss, resourceUsage.ru_isrss,
 		speicherinfo.uordblks, speicherinfo.uordblks / 1024,
 		speicherinfo.arena, speicherinfo.arena / 1024
