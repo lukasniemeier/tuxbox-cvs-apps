@@ -185,7 +185,7 @@ int CThemes::Show()
 	int res = themes.exec(NULL, "");
 	selected = themes.getSelected();
 
-	if (file_name.length() > 0) {
+	if (!file_name.empty()) {
 		saveFile((char*)((std::string)USERDIR + file_name + FILE_SUFFIX).c_str());
 	}
 

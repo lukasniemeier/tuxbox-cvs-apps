@@ -699,7 +699,7 @@ void EventList::paintItem(unsigned int pos)
 		g_Font[SNeutrinoSettings::FONT_TYPE_EVENTLIST_DATETIME]->RenderString(x+5+fwidth1, ypos+ fheight2+3, width-fwidth1-10- 20, datetime2_str, color, 0, true); // UTF-8
 
 		int seit = (evtlist[curpos].startTime - time(NULL)) / 60;
-		if ( (seit> 0) && (seit<100) && (duration_str.length()!=0) )
+		if ((seit > 0) && (seit < 100) && !duration_str.empty())
 		{
 			char beginnt[100];
 			sprintf((char*) &beginnt, "in %d min", seit);

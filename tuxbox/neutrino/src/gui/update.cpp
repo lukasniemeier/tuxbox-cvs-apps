@@ -152,7 +152,7 @@ bool CFlashUpdate::selectHttpImage(void)
 	while (urlFile >> url)
 	{
 		// add update url from .version if exists, then seek back to start
-		if (updateURL.length() > 0 && !update_prefix_tried)
+		if (!updateURL.empty() && !update_prefix_tried)
 		{
 			url = updateURL + url;
 			urlFile.seekg(0, std::ios::beg);

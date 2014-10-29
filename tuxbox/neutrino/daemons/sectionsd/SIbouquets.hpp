@@ -122,7 +122,7 @@ public:
 		printf("Transport-Stream-ID: %hu\n", transport_stream_id);
 		printf("Service-ID: %hu\n", service_id);
 		printf("Service-Typ: %hhu\n", serviceTyp);
-		if(bouquetName.length())
+		if (!bouquetName.empty())
 			printf("Bouquet-Name: %s\n", bouquetName.c_str());
 	}
 };

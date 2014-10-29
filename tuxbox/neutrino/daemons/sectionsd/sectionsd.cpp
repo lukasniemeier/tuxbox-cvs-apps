@@ -787,12 +787,12 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		si->second->itemDescription = evt.itemDescription;
 		si->second->item = evt.item;
 		si->second->vps = evt.vps;
-		if ((evt.getExtendedText().length() > 0) &&
+		if (!evt.getExtendedText().empty() &&
 				(evt.times.begin()->startzeit < zeit + secondsExtendedTextCache))
 			si->second->setExtendedText("OFF",evt.getExtendedText().c_str());
-		if (evt.getText().length() > 0)
+		if (!evt.getText().empty())
 			si->second->setText("OFF",evt.getText().c_str());
-		if (evt.getName().length() > 0)
+		if (!evt.getName().empty())
 			si->second->setName("OFF",evt.getName().c_str());
 	}
 	else {
@@ -2418,7 +2418,8 @@ static void sendAllEvents(int connfd, t_channel_id serviceUniqueKey, bool oldFor
 		readLockEvents();
 		int serviceIDfound = 0;
 
-		if (search_text.length()) std::transform(search_text.begin(), search_text.end(), search_text.begin(), tolower);
+		if (!search_text.empty())
+			std::transform(search_text.begin(), search_text.end(), search_text.begin(), tolower);
 		for (MySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey::iterator e = mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.begin(); e != mySIeventsOrderServiceUniqueKeyFirstStartTimeEventUniqueKey.end(); ++e)
 		{
 			if ((*e)->get_channel_id() == serviceUniqueKey)
@@ -6102,7 +6103,7 @@ static void write_bouquet_xml_node(FILE *fd, t_bouquet_id bouquet_id)
 
 	MySIbouquetsOrderUniqueKey::iterator s = mySIbouquetsOrderUniqueKey.begin();
 	while ((!found) && (s != mySIbouquetsOrderUniqueKey.end())) {
-		if ((s->second->bouquet_id == bouquet_id) && (s->second->bouquetName.length() != 0))
+		if ((s->second->bouquet_id == bouquet_id) && !s->second->bouquetName.empty())
 			found = true;
 		else
 			s++;

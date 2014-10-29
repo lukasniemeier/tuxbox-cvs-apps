@@ -62,7 +62,7 @@ void SIlanguage::filter(const std::map<std::string, std::string>& s, int max, st
 		}
 	}
 
-	if (retval.length() == 0) {
+	if (retval.empty()) {
 		// return all available languages
 		if (s.begin() != s.end()) {
 			for (std::map<std::string, std::string>::const_iterator it = s.begin() ;

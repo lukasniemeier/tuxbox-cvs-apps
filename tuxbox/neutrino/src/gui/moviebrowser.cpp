@@ -954,7 +954,7 @@ int CMovieBrowser::exec(const char* path, const int playstate)
 
 	if (path != NULL)
 		m_selectedDir = path;
-	else if(g_settings.streaming_moviedir.length() > 0)
+	else if (!g_settings.streaming_moviedir.empty())
 		m_selectedDir = g_settings.streaming_moviedir;
 	else
 		m_selectedDir = "/";
@@ -2891,7 +2891,7 @@ bool CMovieBrowser::addDir(std::string& dirname, int* used)
 	newdir.name = dirname;
 
 	if(newdir.name.rfind('/') != newdir.name.length()-1 ||
-	  newdir.name.length() == 0 ||
+		newdir.name.empty() ||
 		newdir.name == VLC_URI)
 	{
 		newdir.name += '/';

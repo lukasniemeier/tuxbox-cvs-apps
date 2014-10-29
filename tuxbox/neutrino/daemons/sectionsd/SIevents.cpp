@@ -162,7 +162,7 @@ int SIevent::saveXML2(FILE *file) const
 		i = langName.begin() ;
 		i != langName.end() ;
 		++i) {
-		if (i->second.length()) {
+		if (!i->second.empty()) {
 			fprintf(file, "\t\t\t<name lang=\"%s\" string=\"", i->first.c_str());
 			saveStringToXMLfile(file, i->second.c_str());
 			fprintf(file, "\"/>\n");
@@ -172,18 +172,18 @@ int SIevent::saveXML2(FILE *file) const
 		i = langText.begin() ;
 		i != langText.end() ;
 		++i) {
-		if (i->second.length()) {
+		if (!i->second.empty()) {
 			fprintf(file, "\t\t\t<text lang=\"%s\" string=\"", i->first.c_str());
 			saveStringToXMLfile(file, i->second.c_str());
 			fprintf(file, "\"/>\n");
 		}
 	}
-	if(item.length()) {
+	if (!item.empty()) {
 		fprintf(file, "\t\t\t<item string=\"");
 		saveStringToXMLfile(file, item.c_str());
 		fprintf(file, "\"/>\n");
 	}
-	if(itemDescription.length()) {
+	if (!itemDescription.empty()) {
 		fprintf(file, "\t\t\t<item_description string=\"");
 		saveStringToXMLfile(file, itemDescription.c_str());
 		fprintf(file, "\"/>\n");
@@ -192,7 +192,7 @@ int SIevent::saveXML2(FILE *file) const
 		i = langExtendedText.begin() ;
 		i != langExtendedText.end() ;
 		++i) {
-		if (i->second.length()) {
+		if (!i->second.empty()) {
 			fprintf(file, "\t\t\t<extended_text lang=\"%s\" string=\"", i->first.c_str());
 			saveStringToXMLfile(file, i->second.c_str());
 			fprintf(file, "\"/>\n");
@@ -291,9 +291,9 @@ void SIevent::dump(void) const
 	if (service_id)
 		printf("Service-ID: %hu\n", service_id);
 	printf("Event-ID: %hu\n", eventID);
-	if(item.length())
+	if (!item.empty())
 		printf("Item: %s\n", item.c_str());
-	if(itemDescription.length())
+	if (!itemDescription.empty())
 	        printf("Item-Description: %s\n", itemDescription.c_str());
 
 	for (std::map<std::string, std::string>::const_iterator it = langName.begin() ;
@@ -306,13 +306,13 @@ void SIevent::dump(void) const
 	     it != langExtendedText.end() ; ++it)
 		printf("Extended-Text (%s): %s\n", it->first.c_str(), it->second.c_str());
 
-	if(contentClassification.length()) {
+	if (!contentClassification.empty()) {
 		printf("Content classification:");
 		for(unsigned i=0; i<contentClassification.length(); i++)
 			printf(" 0x%02hhx", contentClassification[i]);
 		printf("\n");
 	}
-	if(userClassification.length()) {
+	if (!userClassification.empty()) {
 		printf("User classification:");
 		for(unsigned i=0; i<userClassification.length(); i++)
 			printf(" 0x%02hhx", userClassification[i]);

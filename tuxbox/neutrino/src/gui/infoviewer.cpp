@@ -2094,7 +2094,7 @@ void CInfoViewer::showEpgInfo()   //message on event change
 		eventname = info_CurrentNext.current_name;
 		if (g_settings.infobar_show == EPGINFO_SIMPLE_MESSAGE)
 		{
-			if (eventname.length() != 0)
+			if (!eventname.empty())
  			{
 				std::string event = eventname + "\n" + g_Locale->getText(LOCALE_INFOVIEWER_MESSAGE_TO) + nextStart;
 				std::string event_message =  ZapitTools::Latin1_to_UTF8(event.c_str());

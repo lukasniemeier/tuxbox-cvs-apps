@@ -151,7 +151,7 @@ public:
 
 	void dump(void) const {
 		printf("Linakge Type: 0x%02hhx\n", linkageType);
-		if (name.length())
+		if (!name.empty())
 			printf("Name: %s\n", name.c_str());
 		printf("Transport Stream Id: 0x%04hhx\n", transportStreamId);
 		printf("Original Network Id: 0x%04hhx\n", originalNetworkId);
@@ -234,7 +234,7 @@ class SIcomponent {
         (component != c.component);
     }
     void dump(void) const {
-      if(component.length())
+      if (!component.empty())
         printf("Component: %s\n", component.c_str());
       printf("Stream Content: 0x%02hhx\n", streamContent);
       printf("Component type: 0x%02hhx\n", componentType);
@@ -494,8 +494,8 @@ struct saveSIeventXMLwithServiceName : public std::unary_function<SIevent, void>
   void operator() (const SIevent &e) {
     SIservices::iterator k=s->find(SIservice(e.service_id, e.original_network_id, e.transport_stream_id));
     if(k!=s->end()) {
-      if(k->serviceName.length())
-      e.saveXML(f, k->serviceName.c_str());
+      if(!k->serviceName.empty())
+        e.saveXML(f, k->serviceName.c_str());
     }
     else
       e.saveXML(f);

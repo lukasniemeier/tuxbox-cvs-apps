@@ -188,7 +188,7 @@ void CChannelList::updateEvents(void)
 		if (listmaxshow) {
 			for (uint count=0; (count<listmaxshow) && (liststart+count<chanlist.size()); count++){
 				// search only for channels whose current event is over
-				if (1 || /*(chanlist[liststart+count]->nextEvent.text.length() == 0) ||*/
+				if (1 || /*chanlist[liststart+count]->nextEvent.text.empty() ||*/
 					((long)(chanlist[liststart+count]->nextEvent.startTime) < atime))
 				{
 					CChannelEventList events = g_Sectionsd->getEventsServiceKey(chanlist[liststart+count]->channel_id);
@@ -213,7 +213,7 @@ void CChannelList::updateEvents(void)
 			if (p_requested_channels != NULL) {
 				for (uint count=0; (count<listmaxshow) && (liststart+count<chanlist.size()); count++){
 					// search only for channels whose current event is over
-					if ((chanlist[liststart+count]->currentEvent.text.length() == 0) ||
+					if (chanlist[liststart+count]->currentEvent.text.empty() ||
 						((long)(chanlist[liststart+count]->currentEvent.startTime + chanlist[liststart+count]->currentEvent.duration) < atime))
 					{
 						chanlist[liststart+count]->currentEvent = CChannelEvent(); // clear old event

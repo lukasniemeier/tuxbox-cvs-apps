@@ -346,7 +346,7 @@ CMoviePlayerGui::CMoviePlayerGui()
 	frameBuffer = CFrameBuffer::getInstance();
 	bookmarkmanager=0;
 
-	if(g_settings.streaming_moviedir.length() != 0)
+	if(!g_settings.streaming_moviedir.empty())
 		Path_local = g_settings.streaming_moviedir;
 	else
 		Path_local = "/";
@@ -718,7 +718,7 @@ int VlcGetStreamTime()
 	std::string response = "";
 	CURLcode httpres = sendGetRequest(positionurl, response);
 	//printf("[movieplayer.cpp] httpres=%d, response.length()=%d, stream_length = %s\n",httpres,response.length(),response.c_str());
-	if(httpres == 0 && response.length() > 0) {
+	if(httpres == 0 && !response.empty()) {
         xmlDocPtr answer_parser = parseXml(response.c_str());
         if (answer_parser != NULL) {
             xmlNodePtr element = xmlDocGetRootElement(answer_parser);
@@ -750,7 +750,7 @@ int VlcGetStreamLength()
 	std::string response = "";
 	CURLcode httpres = sendGetRequest(positionurl, response);
 	//printf("[movieplayer.cpp] httpres=%d, response.length()=%d, stream_length = %s\n",httpres,response.length(),response.c_str());
-	if(httpres == 0 && response.length() > 0) {
+	if(httpres == 0 && !response.empty()) {
         xmlDocPtr answer_parser = parseXml(response.c_str());
         if (answer_parser != NULL) {
             xmlNodePtr element = xmlDocGetRootElement(answer_parser);
@@ -2764,7 +2764,7 @@ void *mp_playFileMain(void *filename)
 		if(filename != NULL) //Only one file selected
 		{
 			fname = (const char *)filename;
-			if (fname.length()) {
+			if (!fname.empty()) {
 	    			//-- check for file type --
     				//-------------------------
     				if( mp_probe(fname.c_str(), ctx) )
@@ -4688,7 +4688,7 @@ void CMoviePlayerGui::showFileInfoVLC()
 	std::string response = "";
 	CURLcode httpres = sendGetRequest(url, response);
 	
-	if (httpres == 0 && response.length() > 0)
+	if (httpres == 0 && !response.empty())
 	{
 		xmlDocPtr answer_parser = parseXml(response.c_str());
 		if (answer_parser != NULL)

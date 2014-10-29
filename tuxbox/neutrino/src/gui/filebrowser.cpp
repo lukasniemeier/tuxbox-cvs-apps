@@ -365,7 +365,7 @@ void CFileBrowser::ChangeDir(const std::string & filename, int selection)
 	{
 		newpath=filename;
 	}
-	if(m_Mode != ModeSC && (newpath.rfind('/') != newpath.length()-1 || newpath.length() == 0))
+	if(m_Mode != ModeSC && (newpath.rfind('/') != newpath.length()-1 || newpath.empty()))
 	{
 		newpath += '/';
 	}
@@ -1195,7 +1195,7 @@ void CFileBrowser::paintItem(unsigned int pos)
 
 		frameBuffer->paintBoxRel(x,ypos, width- 15, fheight, bgcolor, c_rad_small);
 
-		if ( actual_file->Name.length() > 0 )
+		if (!actual_file->Name.empty())
 		{
 			std::string FileName = FILESYSTEM_ENCODING_TO_UTF8_STRING(actual_file->getFileName());
 
@@ -1419,7 +1419,7 @@ void CFileBrowser::paint()
 {
 	liststart = (selected/listmaxshow)*listmaxshow;
 
-//	if (filelist[0].Name.length() != 0)
+//	if (!filelist[0].Name.empty())
 //		frameBuffer->paintIcon(NEUTRINO_ICON_BUTTON_HELP, x+ width- 30, y+ 5 );
 	CLCD::getInstance()->setMode(CLCD::MODE_MENU_UTF8, g_Locale->getText(LOCALE_FILEBROWSER_HEAD));
 

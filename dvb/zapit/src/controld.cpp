@@ -273,7 +273,7 @@ void setup_tv_vcr(tv_vcr_format &v2, std::string &line) {
 
 void setup_scalar(switchvalue &s, std::string &str) {
   nuke_leading_whitespace(str);
-  if (str.length() > 0) { 
+  if (!str.empty()) {
     int n;
     sscanf(str.c_str(), "%d", &n);
     s = (switchvalue) n;

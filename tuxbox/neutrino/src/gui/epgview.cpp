@@ -593,7 +593,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 	}
 
 	// Show genre information
-	if (epgData.contentClassification.length()> 0)
+	if (!epgData.contentClassification.empty())
 		processTextToArray(std::string(g_Locale->getText(LOCALE_EPGVIEWER_GENRE)) + ": " + GetGenre(epgData.contentClassification[0])); // UTF-8
 //	processTextToArray( epgData.userClassification.c_str() );
 

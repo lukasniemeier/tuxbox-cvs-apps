@@ -215,13 +215,13 @@ void CImageInfo::paintSupport(int y_startposition)
 	clearContentBox();
 	
 	//paint comment lines only if present in /.version
-	if (comment1.length())
+	if (!comment1.empty())
 		 {
 			paintContent(font_info, xpos, y_startposition, comment1.c_str());
 			y_startposition += sheight; 
 		 }
 		 
-	if (comment2.length())
+	if (!comment2.empty())
 		{
 			paintContent(font_info, xpos, y_startposition,  comment2.c_str());
 			y_startposition += iheight+5; 
@@ -591,14 +591,14 @@ void CImageInfo::paint()
 
 	//paint creator, cvslevel, info, comment only if present in /.version
 	ypos += iheight;
-	if (creator.length())
+	if (!creator.empty())
 		{
 			paintLine(xpos    , font_info, g_Locale->getText(LOCALE_IMAGEINFO_CREATOR), COL_MENUCONTENTINACTIVE);
 			paintLine(xpos + x_offset_large, font_info, creator.c_str());
 		}
 		
 	ypos += iheight;
-	if (cvstime.length())
+	if (!cvstime.empty())
 		{
 			paintLine(xpos    , font_info, g_Locale->getText(LOCALE_IMAGEINFO_CVSLEVEL), COL_MENUCONTENTINACTIVE);
 			paintLine(xpos + x_offset_large, font_info, cvstime.c_str());

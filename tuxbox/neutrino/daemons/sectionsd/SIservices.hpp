@@ -180,9 +180,9 @@ public:
 		printf("Original-Network-ID: %hu\n", original_network_id);
 		printf("Service-ID: %hu\n", service_id);
 		printf("Service-Typ: %hhu\n", serviceTyp);
-		if(providerName.length())
+		if (!providerName.empty())
 			printf("Provider-Name: %s\n", providerName.c_str());
-		if(serviceName.length())
+		if (!serviceName.empty())
 			printf("Service-Name: %s\n", serviceName.c_str());
 		for_each(nvods.begin(), nvods.end(), printSInvodReference());
 		printf("\n");

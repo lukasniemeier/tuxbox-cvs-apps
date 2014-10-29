@@ -192,7 +192,7 @@ int CmodSendfile::OpenFile(CyhookHandler */*hh*/, std::string fullfilename)
 {
 	int  fd= -1;
 	std::string tmpstring;
-	if(fullfilename.length() > 0)
+	if (!fullfilename.empty())
 	{
 		fd = open( fullfilename.c_str(), O_RDONLY );
 		if (fd<=0)

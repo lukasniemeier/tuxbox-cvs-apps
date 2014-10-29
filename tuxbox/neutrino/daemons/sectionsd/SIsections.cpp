@@ -278,7 +278,7 @@ void SIsectionEIT::parseExtendedEventDescriptor(const char *buf, SIevent &e, uns
 		}
 		items+=1+*items;
 	}
-//  if (0 != e.itemDescription.length()) {
+//  if (!e.itemDescription.empty()) {
 //	printf("Item Description: %s\n", e.itemDescription.c_str());
 //	printf("Item: %s\n", e.item.c_str());
 //  }

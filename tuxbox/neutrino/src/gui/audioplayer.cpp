@@ -2787,7 +2787,7 @@ std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir,
 		const std::string& absFilename) {
 	std::string res = "";
 
-	int length = fromDir.length() < absFilename.length() ? fromDir.length() : absFilename.length();
+	int length = std::min(fromDir.length(), absFilename.length());
 	int lastSlash = 0;
 	// find common prefix for both paths
 	// fromDir:     /foo/bar/angle/1          (length: 16)

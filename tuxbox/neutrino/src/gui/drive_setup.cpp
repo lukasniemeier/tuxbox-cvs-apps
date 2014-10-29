@@ -912,7 +912,7 @@ string CDriveSetup::getPartEntryString(string& partname)
 		s_entry += char(32);
 		s_entry += s_size;
 
-	if (s_mountpoint.length() == 0) // no active partition mounted
+	if (s_mountpoint.empty()) // no active partition mounted
 		s_entry = g_Locale->getText(LOCALE_DRIVE_SETUP_PARTITION_NOT_ACTIVE);
 
 	if (!isActivePartition(p_name)) // no active partition found

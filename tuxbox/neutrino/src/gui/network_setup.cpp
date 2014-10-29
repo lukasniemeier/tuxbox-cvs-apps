@@ -476,7 +476,7 @@ void CNetworkSetup::testNetworkSettings()
 	testsite.replace( 0, testsite.find("www",0), "" );
 	
 	//use default testdomain if testsite missing
-	if (testsite.length() == 0)
+	if (testsite.empty())
 		testsite = defaultsite; 
 
 	if (networkConfig->inet_static) {
