@@ -858,7 +858,7 @@ int RenderChar(FT_ULong currentchar, int sx, int sy, int ex, int color)
  * GetStringLen
  ******************************************************************************/
 
-int GetStringLen(unsigned char *string)
+int GetStringLen(char *string)
 {
 	int stringlen = 0;
 
@@ -881,9 +881,12 @@ int GetStringLen(unsigned char *string)
  * RenderString
  ******************************************************************************/
 
-void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layout, int size, int color)
+void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int size, int color)
 {
 	int stringlen, ex, charwidth;
+	char rstr[256]={0}, *rptr=rstr;
+
+	strcpy(rstr,string);
 
 	// set size
 
@@ -933,15 +936,59 @@ void RenderString(unsigned char *string, int sx, int sy, int maxwidth, int layou
 
 		ex = sx + maxwidth;
 
-		while(*string != '\0')
+		while(*rptr != '\0')
 		{
-			if((charwidth = RenderChar(*string, sx, sy, ex, color)) == -1)
+			int uml = 0;
+			switch(*rptr)    /* skip Umlauts */
+			{
+				case '\xc4':
+				case '\xd6':
+				case '\xdc':
+				case '\xe4':
+				case '\xf6':
+				case '\xfc':
+				case '\xdf': uml=1; break;
+			}
+			if (uml == 0)
+			{
+				// UTF8_to_Latin1 encoding
+				if (((*rptr) & 0xf0) == 0xf0)      /* skip (can't be encoded in Latin1) */
+				{
+					rptr++;
+					if ((*rptr) == 0)
+						*rptr='\x3f'; // ? question mark
+					rptr++;
+					if ((*rptr) == 0)
+						*rptr='\x3f';
+					rptr++;
+					if ((*rptr) == 0)
+						*rptr='\x3f';
+				}
+				else if (((*rptr) & 0xe0) == 0xe0) /* skip (can't be encoded in Latin1) */
+				{
+					rptr++;
+					if ((*rptr) == 0)
+						*rptr='\x3f';
+					rptr++;
+					if ((*rptr) == 0)
+						*rptr='\x3f';
+				}
+				else if (((*rptr) & 0xc0) == 0xc0)
+				{
+					char c = (((*rptr) & 3) << 6);
+					rptr++;
+					if ((*rptr) == 0)
+						*rptr='\x3f';
+					*rptr = (c | ((*rptr) & 0x3f));
+				}
+			}
+			if((charwidth = RenderChar(*rptr, sx, sy, ex, color)) == -1)
 			{
 				return; /* string > maxwidth */
 			}
 
 			sx += charwidth;
-			string++;
+			rptr++;
 		}
 }
 
@@ -3759,7 +3806,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.56A $";
+	char cvs_revision[] = "$Revision: 1.56B $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;
