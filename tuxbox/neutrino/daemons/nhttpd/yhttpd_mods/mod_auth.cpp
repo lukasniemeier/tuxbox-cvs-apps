@@ -18,7 +18,7 @@ THandleStatus CmAuth::Hook_PrepareResponse(CyhookHandler *hh)
 	if(authenticate)
 	{
 		if( (hh->UrlData["clientaddr"]).find(IADDR_LOCAL)>0 &&
-		(no_auth_client == "" || 
+		(no_auth_client.empty() ||
 		(hh->UrlData["clientaddr"]).find(no_auth_client)>0)) 		// dont check local calls or calls from NoAuthClient
 		{
 			if (!CheckAuth(hh))
@@ -53,7 +53,7 @@ THandleStatus CmAuth::Hook_ReadConfig(CConfigFile *Config, CStringList &ConfigLi
 //-----------------------------------------------------------------------------
 bool CmAuth::CheckAuth(CyhookHandler *hh)
 {
-	if (hh->HeaderList["Authorization"] == "")
+	if (hh->HeaderList["Authorization"].empty())
 		return false;
 	std::string encodet = hh->HeaderList["Authorization"].substr(6,hh->HeaderList["Authorization"].length() - 6);
 	std::string decodet = decodeBase64(encodet.c_str());

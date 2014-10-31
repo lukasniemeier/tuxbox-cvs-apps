@@ -157,7 +157,7 @@ std::string  CNeutrinoYParser::func_mount_get_list(CyhookHandler */*hh*/, std::s
 		yip = Config->getString("network_nfs_ip_"+ynr,"");
 		ydir = Config->getString("network_nfs_dir_"+ynr,"");
 		ylocal_dir = Config->getString("network_nfs_local_dir_"+ynr,"");
-		if(ydir != "") 
+		if(!ydir.empty()) 
 			ydir="("+ydir+")";
 
 		yresult += string_printf("<input type='radio' name='R1' value='%d' %s />%d %s - %s %s %s<br/>",
@@ -201,7 +201,7 @@ std::string  CNeutrinoYParser::func_get_bouquets_as_dropdown(CyhookHandler */*hh
 	unsigned int nr=1;
 	
 	ySplitString(para," ",nr_str, do_show_hidden);
-	if(nr_str != "")
+	if(!nr_str.empty())
 		nr = atoi(nr_str.c_str());
 	
 	for (unsigned int i = 0; i < NeutrinoAPI->BouquetList.size();i++)
@@ -268,7 +268,7 @@ std::string  CNeutrinoYParser::func_get_channels_as_dropdown(CyhookHandler */*hh
 	int mode = CZapitClient::MODE_CURRENT;
 	
 	ySplitString(para," ",abouquet, achannel_id);
-	if(abouquet != "")
+	if(!abouquet.empty())
 		bnumber = atoi(abouquet.c_str());
 	
 	if(bnumber != 0) //Bouquet View
@@ -300,7 +300,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 	CZapitClient::BouquetChannelList *channellist;
 	
 	ySplitString(para," ",abnumber, tmp);
-	if(abnumber != "")
+	if(!abnumber.empty())
 		BouquetNr = atoi(abnumber.c_str());
 	if (BouquetNr > 0)
 		channellist = NeutrinoAPI->GetBouquet(BouquetNr, CZapitClient::MODE_CURRENT);
@@ -317,7 +317,7 @@ std::string CNeutrinoYParser::func_get_bouquets_with_epg(CyhookHandler *hh, std:
 	std::string timestr;
 	bool have_logos = false;
 	
-	if(hh->WebserverConfigList["TUXBOX_LOGOS_URL"] != "")
+	if(!hh->WebserverConfigList["TUXBOX_LOGOS_URL"].empty())
 		have_logos = true;
 	CZapitClient::BouquetChannelList::iterator channel = channellist->begin();
 	for (; channel != channellist->end(); ++channel)
@@ -482,7 +482,7 @@ std::string  CNeutrinoYParser::func_get_video_pids(CyhookHandler */*hh*/, std::s
 	int apid=0,apid_no=0,apid_idx=0;
 	pids.PIDs.vpid=0;
 	
-	if(para != "")
+	if(!para.empty())
 		apid_no = atoi(para.c_str());
 	NeutrinoAPI->Zapit->getPIDS(pids);
 
@@ -641,7 +641,7 @@ std::string  CNeutrinoYParser::func_get_partition_list(CyhookHandler */*hh*/, st
 		in >> ymtd >> dummy >> dummy; //format:  mtd# start end "name  "
 		in.getline(ytmp, 200); // Rest of line is the mtd description
 		yname = ytmp;
-		if((j>0) && (ymtd != ""))// iggnore first line
+		if((j>0) && !ymtd.empty())// iggnore first line
 		{
 			ysel = ((j==1) ? "checked=\"checked\"" : "");
 			yresult += string_printf("<input type='radio' name='R1' value='%d' %s title='%s' />%d %s<br/>",
@@ -860,7 +860,7 @@ std::string  CNeutrinoYParser::func_set_timer_form(CyhookHandler *hh, std::strin
 	if(cmd != "new")
 	{
 		// init timerid
-		if(stimerid != "")
+		if(!stimerid.empty())
 			timerId = (unsigned)atoi(stimerid.c_str());
 		
 		NeutrinoAPI->Timerd->getTimer(timer, timerId);
@@ -1004,7 +1004,7 @@ std::string  CNeutrinoYParser::func_bouquet_editor_main(CyhookHandler *hh, std::
 	if (hh->ParamList["saved"] == "1")
 		hh->ParamList["have_saved"]="true";
 
-	if (hh->ParamList["selected"] != "")
+	if (!hh->ParamList["selected"].empty())
 		selected = atoi(hh->ParamList["selected"].c_str());
 
 	// List of all bouquets

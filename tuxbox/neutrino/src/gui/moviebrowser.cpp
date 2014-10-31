@@ -1920,7 +1920,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 		source = m_movieSelectionHandler->file.Name;
 		CDirChooser dir(&dest,"/mnt/","/hdd");
 		dir.exec(NULL,"");   
-		if(dest != "")
+		if(!dest.empty())
 		{
 				dest += "/";
 				dest += m_movieSelectionHandler->file.getFileName();
@@ -1939,7 +1939,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 		source = m_movieSelectionHandler->file.Name;
 		CDirChooser dir(&dest,"/mnt/","/hdd");
 		dir.exec(NULL,"");   
-		if(dest != "")
+		if(!dest.empty())
 		{
 				dest += "/";
 				dest += m_movieSelectionHandler->file.getFileName();
@@ -2507,10 +2507,8 @@ void CMovieBrowser::updateDir(void)
 	// check if there is a record dir and if we should use it
 	for(int i = 0; i < MAX_RECORDING_DIR; i++)
 	{
-		if(g_settings.recording_dir[i] != "" )
-		{
+		if(!g_settings.recording_dir[i].empty())
 			addDir(g_settings.recording_dir[i],&m_settings.storageDirRecUsed[i]);
-		}
 	}
 	
 	for(int i = 0; i < MB_MAX_DIRS; i++)
@@ -3170,7 +3168,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 	CMenuOptionChooser* chooserRec[MAX_RECORDING_DIR];
 	for(i = 0; i < MAX_RECORDING_DIR; i++)
 	{
-		if(g_settings.recording_dir[i] != "" &&
+		if(!g_settings.recording_dir[i].empty() &&
 			g_settings.recording_dir[i] != g_settings.streaming_moviedir)
 		{
 		chooserRec[i] =   new CMenuOptionChooser(g_settings.recording_dir[i].c_str() , &m_settings.storageDirRecUsed[i]  , MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true);
@@ -3849,7 +3847,7 @@ int CDirMenu::exec(CMenuTarget* parent, const std::string & actionKey)
 {
     int returnval = menu_return::RETURN_REPAINT;
 
-	if(actionKey == "")
+	if(actionKey.empty())
 	{
 		if(parent)
 			parent->hide();

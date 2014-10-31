@@ -1756,7 +1756,7 @@ bool CNeutrinoApp::doGuiRecord(char * preselectedDir, bool addTimer, char * file
 					refreshGui = true;
 					recDir = recDirs.get_selected_dir();
 					//printf("dir : %s\n",recDir.c_str());
-					if( recDir != "")
+					if (!recDir.empty())
 					{
 						int nfs_nr = getNFSIDOfDir(recDir.c_str());
 						if(nfs_nr != -1)

@@ -221,7 +221,7 @@ bool Cyhttpd::Configure()
 		std::string groupname= ConfigList["server.group_name"];
 
 		// get user data
-		if(username != "")
+		if(!username.empty())
 		{
 			if((pwd = getpwnam(username.c_str())) == NULL)
 			{
@@ -230,7 +230,7 @@ bool Cyhttpd::Configure()
 			}
 		}
 		// get group data
-		if(groupname != "")
+		if(!groupname.empty())
 		{
 			if((grp = getgrnam(groupname.c_str())) == NULL)
 			{
@@ -259,7 +259,7 @@ bool Cyhttpd::Configure()
 		}
 #endif
 #ifdef Y_CONFIG_FEATURE_HTTPD_USER
-		if(username != "" && pwd != NULL && grp != NULL)
+		if(!username.empty() && pwd != NULL && grp != NULL)
 		{
 			log_level_printf(2, "set user and groups\n");
 
@@ -267,7 +267,7 @@ bool Cyhttpd::Configure()
 			setgid(grp->gr_gid);
 			setgroups(0, NULL);
 			// set user group
-			if(groupname != "")
+			if(!groupname.empty())
 				initgroups(username.c_str(), grp->gr_gid);
 			// set user
 			if(setuid(pwd->pw_uid) == -1)
@@ -433,11 +433,11 @@ void Cyhttpd::ReadConfig(void)
 			Config->setBool("webserver.threading", OrgConfig.getBool("THREADS", true));
 			Config->setInt32("WebsiteMain.port",OrgConfig.getInt32("Port", HTTPD_STANDARD_PORT));
 			Config->setString("WebsiteMain.directory", OrgConfig.getString("PrivatDocRoot", PRIVATEDOCUMENTROOT));
-			if(OrgConfig.getString("PublicDocRoot", "") != "")
+			if(!OrgConfig.getString("PublicDocRoot", "").empty())
 				Config->setString("WebsiteMain.override_directory", OrgConfig.getString("PublicDocRoot", PRIVATEDOCUMENTROOT));
-			if(OrgConfig.getString("HostedDocRoot", "") != "")
+			if(!OrgConfig.getString("HostedDocRoot", "").empty())
 				Config->setString("WebsiteMain.special_locations", "/hosted/="+OrgConfig.getString("HostedDocRoot", PRIVATEDOCUMENTROOT));
-			if(OrgConfig.getString("HostedDocRoot", "") != "")
+			if(!OrgConfig.getString("HostedDocRoot", "").empty())
 				Config->setString("Tuxbox.HostedDocumentRoot", OrgConfig.getString("HostedDocRoot", PRIVATEDOCUMENTROOT));
 			// mod_auth
 			Config->setString("mod_auth.username", OrgConfig.getString("AuthUser", AUTHUSER));

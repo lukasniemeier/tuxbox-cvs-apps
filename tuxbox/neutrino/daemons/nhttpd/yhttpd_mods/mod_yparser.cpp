@@ -52,7 +52,7 @@ CyParser::~CyParser(void)
 //-----------------------------------------------------------------------------
 void CyParser::init(CyhookHandler *hh)
 {
-	if(HTML_DIRS[0] == "")
+	if(HTML_DIRS[0].empty())
 	{
 		CyParser::HTML_DIRS[0]=hh->WebserverConfigList["PublicDocumentRoot"];
 		HTML_DIRS[1]=hh->WebserverConfigList["PrivatDocumentRoot"];
@@ -137,7 +137,7 @@ void CyParser::Execute(CyhookHandler *hh)
 	if(std::string(yCgiCallList[index].mime_type) == "")		// set by self
 		;
 	else if(std::string(yCgiCallList[index].mime_type) == "+xml")		// Parameter xml?
-		if (hh->ParamList["xml"] != "")
+		if (!hh->ParamList["xml"].empty())
 			hh->SetHeader(HTTP_OK, "text/xml");
 		else
 			hh->SetHeader(HTTP_OK, "text/plain");
@@ -167,14 +167,14 @@ void CyParser::cgi(CyhookHandler *hh)
 
 	if (!hh->ParamList.empty())
 	{
-		if (hh->ParamList["tmpl"] != "") // for GET and POST
+		if (!hh->ParamList["tmpl"].empty()) // for GET and POST
 			htmlfilename = hh->ParamList["tmpl"];
 		else
 			htmlfilename = hh->ParamList["1"];
-		if (hh->ParamList["debug"] != "") // switch debug on
+		if (!hh->ParamList["debug"].empty()) // switch debug on
 			ydebug = true;
 
-		if (hh->ParamList["execute"] != "") // execute done first!
+		if (!hh->ParamList["execute"].empty()) // execute done first!
 		{
 			ycmd = hh->ParamList["execute"];
 			ycmd = YPARSER_ESCAPE_START + ycmd + YPARSER_ESCAPE_END;
@@ -182,7 +182,7 @@ void CyParser::cgi(CyhookHandler *hh)
 			yresult = cgi_cmd_parsing(hh, ycmd, ydebug); // parsing engine
 		}
 		// parsing given file
-		if(htmlfilename != "")
+		if (!htmlfilename.empty())
 			yresult = cgi_file_parsing(hh, htmlfilename, ydebug);
 	}
 	else
@@ -243,9 +243,9 @@ void CyParser::ParseAndSendFile(CyhookHandler *hh)
 	hh->SetHeader(HTTP_OK, "text/html");
 	if (hh->Method == M_HEAD)
 		return;
-	if (hh->ParamList["debug"] != "")	// switch debug on
+	if (!hh->ParamList["debug"].empty())	// switch debug on
 		ydebug = true;
-	if (hh->ParamList["execute"] != "")	// execute done first!
+	if (!hh->ParamList["execute"].empty())	// execute done first!
 	{
 		ycmd = hh->ParamList["execute"];
 		ycmd = YPARSER_ESCAPE_START + ycmd + YPARSER_ESCAPE_END;
@@ -382,7 +382,7 @@ std::string  CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd)
 			if(ySplitString(ycmd_name,"~",if_value,if_then))
 			{
 				ySplitString(if_then,"~",if_then,if_else);
-				yresult = (if_value == "") ? if_then : if_else;
+				yresult = (if_value.empty()) ? if_then : if_else;
 			}
 		}
 		else if(ycmd_type == "if-equal")
@@ -451,7 +451,7 @@ std::string  CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd)
 			{
 				ySplitString(tmp,";",varname, ydefault);
 				yresult = YWeb_cgi_get_ini(hh, filename, varname, yaccess);
-				if(yresult == "" && ydefault != "")
+				if(yresult.empty() && !ydefault.empty())
 					yresult = ydefault;
 			}
 			else
@@ -525,7 +525,7 @@ std::string  CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd)
 		else
 			yresult = "ycgi-type unknown";
 	}
-	else if (hh->ParamList[ycmd] != "")
+	else if (!hh->ParamList[ycmd].empty())
 	{
 		if((hh->ParamList[ycmd]).find("script") == std::string::npos)
 			yresult = hh->ParamList[ycmd];
@@ -543,7 +543,7 @@ std::string  CyParser::YWeb_cgi_cmd(CyhookHandler *hh, std::string ycmd)
 std::string  CyParser::YWeb_cgi_get_ini(CyhookHandler */*hh*/, std::string filename, std::string varname, std::string yaccess)
 {
 	std::string result;
-	if((yaccess == "open") || (yaccess == ""))
+	if((yaccess == "open") || yaccess.empty())
 	{
 		yConfig->clear();
 		yConfig->loadConfig(filename);
@@ -559,13 +559,13 @@ std::string  CyParser::YWeb_cgi_get_ini(CyhookHandler */*hh*/, std::string filen
 void  CyParser::YWeb_cgi_set_ini(CyhookHandler */*hh*/, std::string filename, std::string varname, std::string varvalue, std::string yaccess)
 {
 	std::string result;
-	if((yaccess == "open") || (yaccess == ""))
+	if((yaccess == "open") || yaccess.empty())
 	{
 		yConfig->clear();
 		yConfig->loadConfig(filename);
 	}
 	yConfig->setString(varname, varvalue);
-	if((yaccess == "save") || (yaccess == ""))
+	if((yaccess == "save") || yaccess.empty())
 		yConfig->saveConfig(filename);
 }
 
@@ -767,7 +767,7 @@ std::string  CyParser::func_do_reload_httpd_config(CyhookHandler */*hh*/, std::s
 //-------------------------------------------------------------------------
 std::string  CyParser::func_change_httpd(CyhookHandler *hh, std::string para)
 {
-	if(para != "" && access(para.c_str(), 4) == 0)
+	if(!para.empty() && access(para.c_str(), 4) == 0)
 	{
 		hh->status = HANDLED_ABORT;
 		int err = execvp(para.c_str(), NULL); // no return if successful

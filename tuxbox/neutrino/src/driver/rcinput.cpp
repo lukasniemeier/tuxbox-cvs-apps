@@ -525,13 +525,13 @@ void CRCInput::load_conf(bool initialize) {
 						if (keyaction != CRCInput::RC_nokey)
 						{
 							if (debug_user_translate) {
-								if (data == "")
+								if (data.empty())
 								  printf("[rcinput] Binding %s[%c] -> %s\n", keyword.c_str(), modint2ch(modifier), argument.c_str());
 								else
 									printf("[rcinput] Binding %s[%c] -> %s(%s)\n", keyword.c_str(), modint2ch(modifier), action.c_str(), data.c_str());
 							}
 							user_translate_table[modifier][keycode] = (neutrino_msg_t) keyaction;
-							if (data != "")
+							if (!data.empty())
 							{
 								char *data_str = (char *) malloc((data.length()+1)*sizeof(char));
 								strcpy(data_str, data.c_str());

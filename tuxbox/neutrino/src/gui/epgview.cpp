@@ -501,7 +501,7 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 		text2 = epgData.title.substr(text1.length()+ 1, uint(-1) );
 	}
 
-	if (text2!="")
+	if (!text2.empty())
 		toph = 2* topboxheight;
 	else
 		toph = topboxheight;
@@ -740,13 +740,13 @@ int CEpgData::show(const t_channel_id channel_id, unsigned long long a_id, time_
 								recDir = recDirs.get_selected_dir();
 							}
 							
-							if ((recDir == "") && (RECORDING_FILE == g_settings.recording_type))
+							if (recDir.empty() && (RECORDING_FILE == g_settings.recording_type))
 							{
 								printf("set zapto timer failed, no record directory...\n");
 								ShowLocalizedMessage(LOCALE_TIMER_EVENTRECORD_TITLE, LOCALE_EPGLIST_ERROR_NO_RECORDDIR_MSG, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
 							}
 								
-							if ((recDir != "") || (RECORDING_FILE != g_settings.recording_type))
+							if (!recDir.empty() || (RECORDING_FILE != g_settings.recording_type))
 							{
 								if (timerdclient.addRecordTimerEvent(channel_id,
 												     epgData.epg_times.startzeit,

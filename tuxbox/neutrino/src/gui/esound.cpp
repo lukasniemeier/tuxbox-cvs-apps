@@ -137,7 +137,7 @@ int CEsoundGui::exec(CMenuTarget* parent, const std::string &)
 		}
 	}
 
-	if (tmp == "")
+	if (tmp.empty())
 	{
 		printf("[esound.cpp] %s in %s or %s not found, returning...", esound_start_script.c_str(), esound_start_path1.c_str(), esound_start_path2.c_str());
 		return menu_return::RETURN_EXIT_ALL;

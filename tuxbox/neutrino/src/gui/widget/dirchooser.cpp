@@ -234,7 +234,7 @@ int CRecDirChooser::exec(CMenuTarget* parent, const std::string & actionKey)
 	else if (strcmp(key, "dirChooser") == 0)
 	{
 		selectedDir = -1;
-		if(g_settings.recording_dir[0] != "")
+		if(!g_settings.recording_dir[0].empty())
 		{
 			dir = g_settings.recording_dir[0];
 		}
@@ -248,7 +248,7 @@ int CRecDirChooser::exec(CMenuTarget* parent, const std::string & actionKey)
 		{
 			dir = "";
 		}
-		if(dir == "" )
+		if(dir.empty())
 		{
 			result = menu_return::RETURN_REPAINT;
 		}
@@ -257,7 +257,7 @@ int CRecDirChooser::exec(CMenuTarget* parent, const std::string & actionKey)
 	{
 		dir = "";
 		result = CMenuWidget::exec(parent, actionKey);
-		if(dir != "")
+		if(!dir.empty())
 		{
 			if (localDir) 
 			{

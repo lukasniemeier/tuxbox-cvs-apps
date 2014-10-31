@@ -2753,7 +2753,7 @@ CMoviePlayerGui::PlayStream(int streamtype)
 	else if (streamtype == STREAMTYPE_LOCAL)
 	{
 		INFO("STREAMTYPE_LOCAL '%s'\n", startfilename.c_str());
-		if (startfilename != "")
+		if (!startfilename.empty())
 		{
 			CFile file;
 			struct stat s;

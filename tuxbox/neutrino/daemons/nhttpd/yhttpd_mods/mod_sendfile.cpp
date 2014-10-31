@@ -72,7 +72,7 @@ THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh)
 	int filed;
 	log_level_printf(4,"mod_sendfile prepare hook start url:%s\n",hh->UrlData["fullurl"].c_str());
 	std::string mime = sendfileTypes[hh->UrlData["fileext"]];
-	if(mime != "" || (hh->WebserverConfigList["mod_sendfile.sendAll"] == "true") && hh->UrlData["fileext"] != "yhtm")
+	if(!mime.empty() || (hh->WebserverConfigList["mod_sendfile.sendAll"] == "true") && hh->UrlData["fileext"] != "yhtm")
 	{
 		//TODO: Check allowed directories / actually in GetFileName
 		// build filename
@@ -94,7 +94,7 @@ THandleStatus CmodSendfile::Hook_PrepareResponse(CyhookHandler *hh)
 
 			// check If-Modified-Since
 			time_t if_modified_since = (time_t)-1;
-			if(hh->HeaderList["If-Modified-Since"] != "")
+			if(!hh->HeaderList["If-Modified-Since"].empty())
 			{
 				struct tm mod;
 				if(strptime(hh->HeaderList["If-Modified-Since"].c_str(), RFC1123FMT, &mod) != NULL)

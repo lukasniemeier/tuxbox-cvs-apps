@@ -1622,7 +1622,7 @@ int EpgPlus::MenuTargetAddRecordTimer::exec(CMenuTarget*, const std::string&)
 				epgPlus->paint();
 				recDir = recDirs.get_selected_dir();
 			}
-			if (recDir != "" || RECORDING_FILE != g_settings.recording_type)
+			if (!recDir.empty() || RECORDING_FILE != g_settings.recording_type)
 			{
 				if (timerdclient.addRecordTimerEvent(epgPlus->selectedChannelEntry->channel->channel_id,
 								     (*It)->channelEvent.startTime,

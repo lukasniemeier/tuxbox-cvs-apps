@@ -51,7 +51,7 @@ CControlAPI::CControlAPI(CNeutrinoAPI *_NeutrinoAPI)
 //-----------------------------------------------------------------------------
 void CControlAPI::init(CyhookHandler *hh)
 {
-	if(PLUGIN_DIRS[0] == "")
+	if(PLUGIN_DIRS[0].empty())
 	{	// given in nhttpd.conf
 		PLUGIN_DIRS[0]=hh->WebserverConfigList["PublicDocumentRoot"];
 		PLUGIN_DIRS[0].append("/scripts");
@@ -226,7 +226,7 @@ void CControlAPI::Execute(CyhookHandler *hh)
 	else if(std::string(yCgiCallList[index].mime_type) == "")	// decide in function
 		;
 	else if(std::string(yCgiCallList[index].mime_type) == "+xml")		// Parameter xml?
-		if (hh->ParamList["xml"] != "")
+		if (!hh->ParamList["xml"].empty())
 			hh->SetHeader(HTTP_OK, "text/xml; charset=iso-8859-1");
 		else
 			hh->SetHeader(HTTP_OK, "text/html; charset=iso-8859-1");
@@ -264,7 +264,7 @@ void CControlAPI::TimerCGI(CyhookHandler *hh)
 				NeutrinoAPI->Timerd->removeTimerEvent(removeId);
 				hh->SendOk();
 			}
-			else if(hh->ParamList["get"] != "")
+			else if(!hh->ParamList["get"].empty())
 			{
 				int pre=0,post=0;
 				NeutrinoAPI->Timerd->getRecordingSafety(pre,post);
@@ -807,11 +807,11 @@ void CControlAPI::RCEmCGI(CyhookHandler *hh)
   }
   unsigned int repeat = 1;
   unsigned int delay = 250;
-  if (hh->ParamList["delay"] != "")
+  if (!hh->ParamList["delay"].empty())
     delay = atoi(hh->ParamList["delay"].c_str());
-  if (hh->ParamList["duration"] != "")
+  if (!hh->ParamList["duration"].empty())
     repeat = atoi(hh->ParamList["duration"].c_str())*1000/delay;
-  if (hh->ParamList["repeat"] != "")
+  if (!hh->ParamList["repeat"].empty())
     repeat = atoi(hh->ParamList["repeat"].c_str());
 
   int evd = open(EVENTDEV, O_RDWR);
@@ -973,7 +973,7 @@ void CControlAPI::VolumeCGI(CyhookHandler *hh)
 	{
 		hh->Write((char *) (NeutrinoAPI->Controld->getMute() ? "1" : "0"));	//  mute
 	}
-	else if(hh->ParamList["1"]!="")
+	else if(!hh->ParamList["1"].empty())
 	{	//set volume
 		char vol = atol( hh->ParamList["1"].c_str() );
 		NeutrinoAPI->Controld->setVolume(vol);
@@ -1198,7 +1198,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 				}
 			}
 		}
-		else if (hh->ParamList["eventid"] != "")
+		else if (!hh->ParamList["eventid"].empty())
 		{
 			//special epg query
 			unsigned long long epgid;
@@ -1211,9 +1211,9 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 				hh->WriteLn(epg.info2);
 			}
 		}
-		else if (hh->ParamList["eventid2fsk"] != "")
+		else if (!hh->ParamList["eventid2fsk"].empty())
 		{
-			if (hh->ParamList["starttime"] != "")
+			if (!hh->ParamList["starttime"].empty())
 			{
 				unsigned long long epgid;
 				time_t starttime;
@@ -1442,7 +1442,7 @@ void CControlAPI::ZaptoCGI(CyhookHandler *hh)
 				}
 			}
 		}
-		else if (hh->ParamList["name"] != "")
+		else if (!hh->ParamList["name"].empty())
 		{
 			t_channel_id channel_id;
 			channel_id = NeutrinoAPI->ChannelNameToChannelId(hh->ParamList["name"]);
@@ -1472,7 +1472,7 @@ void CControlAPI::StartPluginCGI(CyhookHandler *hh)
 	std::string pluginname;
 	if (!(hh->ParamList.empty()))
 	{
-		if (hh->ParamList["name"] != "")
+		if (!hh->ParamList["name"].empty())
 		{
 			pluginname = hh->ParamList["name"];
 			//pluginname=decodeString(pluginname);
@@ -1517,21 +1517,21 @@ void CControlAPI::LCDAction(CyhookHandler *hh)
 		return;
 	}
 
-	if (hh->ParamList["lock"] != "")
+	if (!hh->ParamList["lock"].empty())
 		if(sscanf( hh->ParamList["lock"].c_str(), "%d", &tval))
 			NeutrinoAPI->LcdAPI->LockDisplay(tval);
 		else
 			error=1;
-	if (hh->ParamList["clear"] != "")
+	if (!hh->ParamList["clear"].empty())
 		if(sscanf( hh->ParamList["clear"].c_str(), "%d", &tval))
 			if(tval)
 				NeutrinoAPI->LcdAPI->Clear();
 		else
 			error=1;
-	if (hh->ParamList["png"] != "")
+	if (!hh->ParamList["png"].empty())
 		if(! NeutrinoAPI->LcdAPI->ShowPng((char*)hh->ParamList["png"].c_str()))
 			error=1;
-	if (hh->ParamList["raw"] != "")
+	if (!hh->ParamList["raw"].empty())
 	{
 		char *sptr=strdup((char*)hh->ParamList["raw"].c_str()),*pptr;
 		int loop=4;
@@ -1550,44 +1550,44 @@ void CControlAPI::LCDAction(CyhookHandler *hh)
 		if(sptr)
 			free(sptr);
 	}
-	if (hh->ParamList["line"] != "")
+	if (!hh->ParamList["line"].empty())
 		if(sscanf( hh->ParamList["line"].c_str(), "%d,%d,%d,%d,%d",&x1,&y1,&x2,&y2,&coll)==5)
 			NeutrinoAPI->LcdAPI->DrawLine(x1,y1,x2,y2,coll);
 		else
 			error=1;
-	if (hh->ParamList["rect"] != "")
+	if (!hh->ParamList["rect"].empty())
 		if(sscanf( hh->ParamList["rect"].c_str(), "%d,%d,%d,%d,%d,%d",&x1,&y1,&x2,&y2,&coll,&colf)==6)
 			NeutrinoAPI->LcdAPI->DrawRect(x1,y1,x2,y2,coll,colf);
 		else
 			error=1;
-	if (hh->ParamList["xpos"] != "")
+	if (!hh->ParamList["xpos"].empty())
 		if(sscanf( hh->ParamList["xpos"].c_str(), "%d", &tval))
 			xpos=tval;
 		else
 			error=1;
-	if (hh->ParamList["ypos"] != "")
+	if (!hh->ParamList["ypos"].empty())
 		if(sscanf( hh->ParamList["ypos"].c_str(), "%d", &tval))
 			ypos=tval;
 		else
 			error=1;
-	if (hh->ParamList["size"] != "")
+	if (!hh->ParamList["size"].empty())
 		if(sscanf( hh->ParamList["size"].c_str(), "%d", &tval))
 			size=tval;
 		else
 			error=1;
-	if (hh->ParamList["color"] != "")
+	if (!hh->ParamList["color"].empty())
 		if(sscanf( hh->ParamList["color"].c_str(), "%d", &tval))
 			color=tval;
 		else
 			error=1;
-	if (hh->ParamList["font"] != "")
+	if (!hh->ParamList["font"].empty())
 		if(sscanf( hh->ParamList["font"].c_str(), "%d", &tval) && tval>=0 && tval<3)
 			font=tval;
 		else
 			error=1;
-	if (hh->ParamList["text"] != "")
+	if (!hh->ParamList["text"].empty())
 		NeutrinoAPI->LcdAPI->DrawText(xpos, ypos, size, color, font, (char*)hh->ParamList["text"].c_str());
-	if (hh->ParamList["update"] != "")
+	if (!hh->ParamList["update"].empty())
 		if(sscanf( hh->ParamList["update"].c_str(), "%d", &tval))
 			if(tval)
 				NeutrinoAPI->LcdAPI->Update();
@@ -2194,7 +2194,7 @@ void CControlAPI::YWebCGI(CyhookHandler *hh)
 {
 	bool status=true;
 	int para;
-	if (hh->ParamList["video_stream_pids"] != "")
+	if (!hh->ParamList["video_stream_pids"].empty())
 	{
 		para=0;
 		sscanf( hh->ParamList["video_stream_pids"].c_str(), "%d", &para);
@@ -2221,7 +2221,7 @@ void CControlAPI::YWeb_SendVideoStreamingPids(CyhookHandler *hh, int apid_no)
 		apid_idx=apid_no;
 	if(!pids.APIDs.empty())
 		apid = pids.APIDs[apid_idx].pid;
-	if(hh->ParamList["no_commas"] != "")
+	if(!hh->ParamList["no_commas"].empty())
 	{
 		hh->printf("0x%04x 0x%04x 0x%04x",pids.PIDs.pmtpid,pids.PIDs.vpid,apid);
 		if (pids.PIDs.pcrpid != 0 && pids.PIDs.pcrpid != pids.PIDs.vpid)
@@ -2316,17 +2316,17 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 	int alHour=0;
 
 	// if alarm given then in parameters im time_t format
-	if(hh->ParamList["alarm"] != "")
+	if(!hh->ParamList["alarm"].empty())
 	{
 		alarmTimeT = atoi(hh->ParamList["alarm"].c_str());
-		if(hh->ParamList["stop"] != "")
+		if(!hh->ParamList["stop"].empty())
 			stopTimeT = atoi(hh->ParamList["stop"].c_str());
-		if(hh->ParamList["announce"] != "")
+		if(!hh->ParamList["announce"].empty())
 			announceTimeT = atoi(hh->ParamList["announce"].c_str());
 		else
 			announceTimeT = alarmTimeT;
 	}
-	else if(hh->ParamList["alDate"] != "") //given formatted
+	else if(!hh->ParamList["alDate"].empty()) //given formatted
 	{
 		// Alarm Date - Format exact! DD.MM.YYYY
 		tnull = time(NULL);
@@ -2339,7 +2339,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 		}
 
 		// Alarm Time - Format exact! HH:MM
-		if(hh->ParamList["alTime"] != "")
+		if(!hh->ParamList["alTime"].empty())
 			sscanf(hh->ParamList["alTime"].c_str(),"%2d.%2d",&(alarmTime->tm_hour), &(alarmTime->tm_min));
 		alHour = alarmTime->tm_hour;
 		correctTime(alarmTime);
@@ -2348,11 +2348,11 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 		struct tm *stopTime = localtime(&alarmTimeT);
 		stopTime->tm_sec = 0;
 		// Stop Time - Format exact! HH:MM
-		if(hh->ParamList["stTime"] != "")
+		if(!hh->ParamList["stTime"].empty())
 			sscanf(hh->ParamList["stTime"].c_str(),"%2d.%2d",&(stopTime->tm_hour), &(stopTime->tm_min));
 
 		// Stop Date - Format exact! DD.MM.YYYY
-		if(hh->ParamList["stDate"] != "")
+		if(!hh->ParamList["stDate"].empty())
 			if(sscanf(hh->ParamList["stDate"].c_str(),"%2d.%2d.%4d",&(stopTime->tm_mday), &(stopTime->tm_mon), &(stopTime->tm_year)) == 3)
 			{
 				stopTime->tm_mon -= 1;
@@ -2360,7 +2360,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 			}
 		correctTime(stopTime);
 		stopTimeT = mktime(stopTime);
-		if(hh->ParamList["stDate"] == "" && alHour > stopTime->tm_hour)
+		if(hh->ParamList["stDate"].empty() && alHour > stopTime->tm_hour)
 			stopTimeT += 24* 60 * 60; // add 1 Day
 	}
 	else	// alarm/stop time given in pieces
@@ -2368,15 +2368,15 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 		// alarm time
 		time_t now = time(NULL);
 		struct tm *alarmTime=localtime(&now);
-		if(hh->ParamList["ad"] != "")
+		if(!hh->ParamList["ad"].empty())
 			alarmTime->tm_mday = atoi(hh->ParamList["ad"].c_str());
-		if(hh->ParamList["amo"] != "")
+		if(!hh->ParamList["amo"].empty())
 			alarmTime->tm_mon = atoi(hh->ParamList["amo"].c_str())-1;
-		if(hh->ParamList["ay"] != "")
+		if(!hh->ParamList["ay"].empty())
 			alarmTime->tm_year = atoi(hh->ParamList["ay"].c_str())-1900;
-		if(hh->ParamList["ah"] != "")
+		if(!hh->ParamList["ah"].empty())
 			alarmTime->tm_hour = atoi(hh->ParamList["ah"].c_str());
-		if(hh->ParamList["ami"] != "")
+		if(!hh->ParamList["ami"].empty())
 			alarmTime->tm_min = atoi(hh->ParamList["ami"].c_str());
 		alarmTime->tm_sec = 0;
 		correctTime(alarmTime);
@@ -2385,15 +2385,15 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 
 		// stop time
 		struct tm *stopTime = alarmTime;
-		if(hh->ParamList["sd"] != "")
+		if(!hh->ParamList["sd"].empty())
 			stopTime->tm_mday = atoi(hh->ParamList["sd"].c_str());
-		if(hh->ParamList["smo"] != "")
+		if(!hh->ParamList["smo"].empty())
 			stopTime->tm_mon = atoi(hh->ParamList["smo"].c_str())-1;
-		if(hh->ParamList["sy"] != "")
+		if(!hh->ParamList["sy"].empty())
 			stopTime->tm_year = atoi(hh->ParamList["sy"].c_str())-1900;
-		if(hh->ParamList["sh"] != "")
+		if(!hh->ParamList["sh"].empty())
 			stopTime->tm_hour = atoi(hh->ParamList["sh"].c_str());
-		if(hh->ParamList["smi"] != "")
+		if(!hh->ParamList["smi"].empty())
 			stopTime->tm_min = atoi(hh->ParamList["smi"].c_str());
 		stopTime->tm_sec = 0;
 		correctTime(stopTime);
@@ -2404,22 +2404,22 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 		announceTimeT -= 60;
 
 	CTimerd::CTimerEventTypes type;
-	if(hh->ParamList["type"] != "")
+	if(!hh->ParamList["type"].empty())
 		type  = (CTimerd::CTimerEventTypes) atoi(hh->ParamList["type"].c_str());
 	else // default is: record
 		type = CTimerd::TIMER_RECORD;
 
 	// repeat
-	if(hh->ParamList["repcount"] != "")
+	if(!hh->ParamList["repcount"].empty())
 	{
 		repCount = atoi(hh->ParamList["repcount"].c_str());
 	}
 	CTimerd::CTimerEventRepeat rep;
-	if(hh->ParamList["rep"] != "")
+	if(!hh->ParamList["rep"].empty())
 		rep = (CTimerd::CTimerEventRepeat) atoi(hh->ParamList["rep"].c_str());
 	else // default: no repeat
 		rep = (CTimerd::CTimerEventRepeat)0;
-	if(((int)rep) >= ((int)CTimerd::TIMERREPEAT_WEEKDAYS) && hh->ParamList["wd"] != "")
+	if(((int)rep) >= ((int)CTimerd::TIMERREPEAT_WEEKDAYS) && !hh->ParamList["wd"].empty())
 		NeutrinoAPI->Timerd->getWeekdaysFromStr((int*)&rep, hh->ParamList["wd"].c_str());
 
 	// apids
@@ -2457,7 +2457,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 	eventinfo.recordingSafety = (hh->ParamList["rs"] == "1");
 
 	// channel by Id or name
-	if(hh->ParamList["channel_id"] != "")
+	if(!hh->ParamList["channel_id"].empty())
 		sscanf(hh->ParamList["channel_id"].c_str(),
 		SCANF_CHANNEL_ID_TYPE,
 		&eventinfo.channel_id);
@@ -2477,7 +2477,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 		data= &eventinfo;
 	else if (type==CTimerd::TIMER_RECORD)
 	{
-		if(_rec_dir == "")
+		if(_rec_dir.empty())
 		{
 			// get Default Recordingdir
 			CConfigFile *Config = new CConfigFile(',');
@@ -2508,7 +2508,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 	// update or add timer
 	if(hh->ParamList["update"]=="1")
 	{
-		if(hh->ParamList["id"] != "")
+		if(!hh->ParamList["id"].empty())
 		{
 			unsigned modyId = atoi(hh->ParamList["id"].c_str());
 			if(type == CTimerd::TIMER_RECORD)
@@ -2551,7 +2551,7 @@ void CControlAPI::doNewTimer(CyhookHandler *hh)
 //-------------------------------------------------------------------------
 void CControlAPI::setBouquetCGI(CyhookHandler *hh)
 {
-	if (hh->ParamList["selected"] != "") {
+	if (!hh->ParamList["selected"].empty()) {
 		int selected = atoi(hh->ParamList["selected"].c_str());
 		if(hh->ParamList["action"].compare("hide") == 0)
 			NeutrinoAPI->Zapit->setBouquetHidden(selected - 1,true);
@@ -2576,7 +2576,7 @@ void CControlAPI::saveBouquetCGI(CyhookHandler *hh)
 //-------------------------------------------------------------------------
 void CControlAPI::moveBouquetCGI(CyhookHandler *hh)
 {
-	if (hh->ParamList["selected"] != "" && (
+	if (!hh->ParamList["selected"].empty() && (
 		hh->ParamList["action"] == "up" ||
 		hh->ParamList["action"] == "down"))
 	{
@@ -2598,7 +2598,7 @@ void CControlAPI::deleteBouquetCGI(CyhookHandler *hh)
 {
 	int selected = -1;
 
-	if (hh->ParamList["selected"] != "") {
+	if (!hh->ParamList["selected"].empty()) {
 		selected = atoi(hh->ParamList["selected"].c_str());
 		NeutrinoAPI->Zapit->deleteBouquet(selected - 1);
 		hh->SendOk();
@@ -2624,9 +2624,9 @@ void CControlAPI::addBouquetCGI(CyhookHandler *hh)
 //-------------------------------------------------------------------------
 void CControlAPI::renameBouquetCGI(CyhookHandler *hh)
 {
-	if (hh->ParamList["selected"] != "")
+	if (!hh->ParamList["selected"].empty())
 	{
-		if (hh->ParamList["nameto"] != "")
+		if (!hh->ParamList["nameto"].empty())
 		{
 			if (NeutrinoAPI->Zapit->existsBouquet((hh->ParamList["nameto"]).c_str()) == -1)
 			{
@@ -2667,7 +2667,7 @@ void CControlAPI::changeBouquetCGI(CyhookHandler *hh)
 
 		NeutrinoAPI->Zapit->renumChannellist();
 		NeutrinoAPI->UpdateBouquets();
-		if(hh->ParamList["redirect"] != "")
+		if(!hh->ParamList["redirect"].empty())
 			hh->SendRewrite(hh->ParamList["redirect"]);
 		else
 			hh->SendOk();
@@ -2695,7 +2695,7 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 		int apid=0,apid_no=0,apid_idx=0;
 		pids.PIDs.vpid=0;
 
-		if(hh->ParamList["audio_no"] !="")
+		if(!hh->ParamList["audio_no"].empty())
 			apid_no = atoi(hh->ParamList["audio_no"].c_str());
 		NeutrinoAPI->Zapit->getPIDS(pids);
 
@@ -2722,14 +2722,14 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 		hh->SendError();
 	// build url
 	std::string url = "";
-	if(hh->ParamList["host"] !="")
+	if(!hh->ParamList["host"].empty())
 		url = "http://"+hh->ParamList["host"];
 	else
 		url = "http://"+hh->HeaderList["Host"];
 	url += (mode == CZapitClient::MODE_TV) ? ":31339/0," : ":31338/";
 	url += xpids;
 	// response url
-	if(hh->ParamList["vlc_link"] !="")
+	if(!hh->ParamList["vlc_link"].empty())
 	{
 		write_to_file("/tmp/vlc.m3u", url);
 		hh->SendRedirect("/tmp/vlc.m3u");

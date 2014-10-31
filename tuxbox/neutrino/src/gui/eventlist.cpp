@@ -419,13 +419,13 @@ int EventList::exec(const t_channel_id channel_id, const std::string& channelnam
 						recDir = recDirs.get_selected_dir();
 					}
 					
-					if ((recDir == "") && (RECORDING_FILE == g_settings.recording_type))
+					if (recDir.empty() && (RECORDING_FILE == g_settings.recording_type))
 					{
 						printf("set zapto timer failed, no record directory...\n");
 						ShowLocalizedMessage(LOCALE_TIMER_EVENTRECORD_TITLE, LOCALE_EPGLIST_ERROR_NO_RECORDDIR_MSG, CMessageBox::mbrBack, CMessageBox::mbBack, NEUTRINO_ICON_ERROR);
 					}
 
-					if ((recDir != "") || (RECORDING_FILE != g_settings.recording_type))
+					if (!recDir.empty() || (RECORDING_FILE != g_settings.recording_type))
 					{
 //						if (Timer.addRecordTimerEvent(channel_id,
 						if (Timer.addRecordTimerEvent(evtlist[selected].get_channel_id(),
@@ -1175,7 +1175,7 @@ int CEventFinderMenu::exec(CMenuTarget* parent, const std::string &actionkey)
 	if(parent != NULL)
 		parent->hide();
 
-	if(actionkey == "")
+	if(actionkey.empty())
 	{
 		res = showMenu();
 	}
