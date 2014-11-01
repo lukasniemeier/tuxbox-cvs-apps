@@ -829,7 +829,7 @@ int DecodeHeader(char *encodedstring)
 {
 	char *ptrS, *ptrE;
 
-	if((ptrS = strstr(encodedstring, "?B?")))
+	if((ptrS = strstr(encodedstring, "?B?")) || (ptrS = strstr(encodedstring, "?b?")))
 	{
 		ptrS += 3;
 
@@ -840,7 +840,7 @@ int DecodeHeader(char *encodedstring)
 			return ptrE+2 - encodedstring;
 		}
 	}
-	else if((ptrS = strstr(encodedstring, "?Q?")))
+	else if((ptrS = strstr(encodedstring, "?Q?")) || (ptrS = strstr(encodedstring, "?q?")))
 	{
 		ptrS += 3;
 
@@ -4800,7 +4800,7 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.51B $";
+	char cvs_revision[] = "$Revision: 1.51C $";
 	int param, nodelay = 0, account, mailstatus, unread_mailstatus;
 	pthread_t thread_id;
 	void *thread_result = 0;
