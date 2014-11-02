@@ -1428,7 +1428,8 @@ void CControlAPI::ZaptoCGI(CyhookHandler *hh)
 			CSectionsdClient::LinkageDescriptorList desc;
 			CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
 			bool has_current_next = NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
-			if (has_current_next && NeutrinoAPI->Sectionsd->getLinkageDescriptorsUniqueKey(currentNextInfo.current_uniqueKey, desc))
+			if (has_current_next && currentNextInfo.flags & CSectionsdClient::epgflags::current_has_linkagedescriptors &&
+			    NeutrinoAPI->Sectionsd->getLinkageDescriptorsUniqueKey(currentNextInfo.current_uniqueKey, desc))
 			{
 				for(unsigned int i=0;i< desc.size();i++)
 				{
@@ -1449,6 +1450,19 @@ void CControlAPI::ZaptoCGI(CyhookHandler *hh)
 			if(channel_id != (t_channel_id)-1)
 			{
 				NeutrinoAPI->ZapToChannelId(channel_id);
+				hh->SendOk();
+			}
+			else
+				hh->SendError();
+		}
+		else if (!hh->ParamList["subchannel"].empty())
+		{
+			t_channel_id current_channel = NeutrinoAPI->Zapit->getCurrentServiceID();
+			CSectionsdClient::responseGetCurrentNextInfoChannelID currentNextInfo;
+			bool has_current_next = NeutrinoAPI->Sectionsd->getCurrentNextServiceKey(current_channel, currentNextInfo);
+			if (has_current_next && currentNextInfo.flags & CSectionsdClient::epgflags::current_has_linkagedescriptors)
+			{
+				NeutrinoAPI->ZapToSubService(hh->ParamList["subchannel"].c_str());
 				hh->SendOk();
 			}
 			else
