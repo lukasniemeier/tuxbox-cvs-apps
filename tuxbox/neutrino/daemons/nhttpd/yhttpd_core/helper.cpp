@@ -92,7 +92,7 @@ std::string string_printf(const char *fmt, ...)
 // ySplitString: spit string "str" in two strings "left" and "right" at
 //	one of the chars in "delimiter" returns true if delimiter found
 //-------------------------------------------------------------------------
-bool ySplitString(std::string str, std::string delimiter, std::string& left, std::string& right)
+bool ySplitString(const std::string &str, const std::string &delimiter, std::string &left, std::string &right)
 {
 	std::string::size_type pos;
 	if ((pos = str.find_first_of(delimiter)) != std::string::npos)
@@ -111,7 +111,7 @@ bool ySplitString(std::string str, std::string delimiter, std::string& left, std
 // ySplitString: spit string "str" in two strings "left" and "right" at
 //	one of the chars in "delimiter" returns true if delimiter found
 //-------------------------------------------------------------------------
-bool ySplitStringExact(std::string str, std::string delimiter, std::string& left, std::string& right)
+bool ySplitStringExact(const std::string &str, const std::string &delimiter, std::string &left, std::string &right)
 {
 	std::string::size_type pos;
 	if ((pos = str.find(delimiter)) != std::string::npos)
@@ -130,7 +130,7 @@ bool ySplitStringExact(std::string str, std::string delimiter, std::string& left
 // ySplitStringRight: spit string "str" in two strings "left" and "right" at
 //	one of the chars in "delimiter" returns true if delimiter found
 //-------------------------------------------------------------------------
-bool ySplitStringLast(std::string str, std::string delimiter, std::string& left, std::string& right)
+bool ySplitStringLast(const std::string &str, const std::string &delimiter, std::string &left, std::string &right)
 {
 	std::string::size_type pos;
 	if ((pos = str.find_last_of(delimiter)) != std::string::npos)
@@ -148,7 +148,7 @@ bool ySplitStringLast(std::string str, std::string delimiter, std::string& left,
 //-------------------------------------------------------------------------
 // ySplitStringVector: spit string "str" and build vector of strings
 //-------------------------------------------------------------------------
-CStringArray ySplitStringVector(std::string str, std::string delimiter)
+CStringArray ySplitStringVector(const std::string &str, const std::string &delimiter)
 {
 	std::string left, right, rest;
 	bool found;
@@ -203,7 +203,7 @@ bool nocase_compare (char c1, char c2)
 //-----------------------------------------------------------------------------
 // Decode URLEncoded std::string
 //-----------------------------------------------------------------------------
-std::string decodeString(std::string encodedString)
+std::string decodeString(const std::string &encodedString)
 {
 	const char *string = encodedString.c_str();
 	unsigned int count=0;
@@ -239,7 +239,7 @@ std::string decodeString(std::string encodedString)
 //-----------------------------------------------------------------------------
 // HTMLEncode std::string
 //-----------------------------------------------------------------------------
-std::string encodeString(std::string decodedString)
+std::string encodeString(const std::string &decodedString)
 {
 	unsigned int len = sizeof(char) * decodedString.length()*5 + 1;
 	std::string result( len, '\0' ); 
@@ -279,7 +279,7 @@ std::string string_tolower(std::string str)
 //-----------------------------------------------------------------------------
 // write string to a file
 //-----------------------------------------------------------------------------
-bool write_to_file(std::string filename, std::string content)
+bool write_to_file(const std::string &filename, const std::string &content)
 {
 	FILE *fd = NULL;
 	if((fd = fopen(filename.c_str(),"w")) != NULL)				// open file
