@@ -1712,7 +1712,7 @@ int SendPOPCommand(int command, char *param, int ssl)
 
 				if(stringindex < sizeof(recv_buffer) - 4)
 				{
-					if((linelen < 100) || (command != TOP))		// restrict linelen
+					if((linelen < 256) || (command != TOP))		// restrict linelen
 					{
 						stringindex++;
 					} 
@@ -4800,7 +4800,7 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.51C $";
+	char cvs_revision[] = "$Revision: 1.52 $";
 	int param, nodelay = 0, account, mailstatus, unread_mailstatus;
 	pthread_t thread_id;
 	void *thread_result = 0;
