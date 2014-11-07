@@ -547,7 +547,7 @@ void ReadSpamList()
 	{
 		memset(spamfilter, 0, sizeof(spamfilter));
 
-		while(fgets(line_buffer, sizeof(line_buffer), fd_spam) && spam_entries < 100)
+		while(fgets(line_buffer, sizeof(line_buffer), fd_spam) && spam_entries < MAXSPAM)
 		{
 			if(sscanf(line_buffer, "%s", spamfilter[spam_entries].address) == 1)
 			{
@@ -4800,7 +4800,7 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.52 $";
+	char cvs_revision[] = "$Revision: 1.53 $";
 	int param, nodelay = 0, account, mailstatus, unread_mailstatus;
 	pthread_t thread_id;
 	void *thread_result = 0;

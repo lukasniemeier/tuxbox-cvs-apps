@@ -140,6 +140,7 @@ enum
 };
 
 #define MAXMAIL 100													// should be the same in tuxmail.h
+#define MAXSPAM 512
 
 // account database
 
@@ -171,7 +172,7 @@ struct
 {
 	char address[64];
 
-}spamfilter[100];
+}spamfilter[MAXSPAM];
 
 // waveheader
 
