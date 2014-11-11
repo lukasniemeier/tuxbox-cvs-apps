@@ -3211,9 +3211,10 @@ static void commandCurrentNextInfoChannelID(int connfd, char *data, const unsign
 					nextEvt = findNextSIeventForServiceUniqueKey(*uniqueServiceKey, zeitEvt2);
 				}
 
+#if 0
 				if (nextEvt.service_id != 0)
 				{
-					MySIeventsOrderUniqueKey::iterator eFirst = mySIeventsOrderUniqueKey.find(*uniqueServiceKey);
+					MySIeventsOrderUniqueKey::iterator eFirst = mySIeventsOrderUniqueKey.find(*uniqueServiceKey); // FIXME: why search for channel ID in a map of event IDs?
 
 					if (eFirst != mySIeventsOrderUniqueKey.end())
 					{
@@ -3227,11 +3228,12 @@ static void commandCurrentNextInfoChannelID(int connfd, char *data, const unsign
 							time_t azeit = time(NULL);
 
 							if (eFirst->second->times.begin()->startzeit < azeit &&
-							    eFirst->second->uniqueKey() == nextEvt.uniqueKey() - 1)
+							    eFirst->second->uniqueKey() == nextEvt.uniqueKey() - 1) // FIXME: why this?
 								flag |= CSectionsdClient::epgflags::has_no_current;
 						}
 					}
 				}
+#endif
 			}
 		}
 		if (nextEvt.service_id != 0)
