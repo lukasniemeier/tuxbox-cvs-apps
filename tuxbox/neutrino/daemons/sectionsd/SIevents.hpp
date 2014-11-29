@@ -89,6 +89,7 @@ struct descr_linkage_header {
 	unsigned linkage_type			: 8;
 } __attribute__ ((packed)) ;
 
+#ifdef ENABLE_PDC
 struct descr_pdc_header {
 	unsigned descriptor_tag			: 8;
 	unsigned descriptor_length		: 8;
@@ -96,6 +97,7 @@ struct descr_pdc_header {
 	unsigned pil1				: 8;
 	unsigned pil2				: 8;
 } __attribute__ ((packed)) ;
+#endif
 
 class SIlinkage {
 public:
@@ -401,7 +403,9 @@ public:
 		original_network_id = 0;
 		transport_stream_id = 0;
 		eventID    = 0;
+#ifdef ENABLE_PDC
 		vps = 0;
+#endif
 		table_id = 0xFF; /* 0xFF means "not set" */
 		running = 0;
 //      dauer=0;
@@ -443,7 +447,9 @@ public:
     SIparentalRatings ratings;
     SIlinkage_descs linkage_descs;
     SItimes times;
+#ifdef ENABLE_PDC
     time_t vps;
+#endif
     unsigned char table_id;
     // Der Operator zum sortieren
     bool operator < (const SIevent& e) const {

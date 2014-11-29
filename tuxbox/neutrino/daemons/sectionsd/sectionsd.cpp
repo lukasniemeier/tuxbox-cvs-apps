@@ -786,7 +786,9 @@ static void addEvent(const SIevent &evt, const time_t zeit, bool cn = false)
 		si->second->userClassification = evt.userClassification;
 		si->second->itemDescription = evt.itemDescription;
 		si->second->item = evt.item;
+#ifdef ENABLE_PDC
 		si->second->vps = evt.vps;
+#endif
 		if (!evt.getExtendedText().empty() &&
 				(evt.times.begin()->startzeit < zeit + secondsExtendedTextCache))
 			si->second->setExtendedText("OFF",evt.getExtendedText().c_str());

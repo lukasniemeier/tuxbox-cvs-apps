@@ -108,7 +108,9 @@ SIevent::SIevent(const SIevent &e)
 	ratings=e.ratings;
 	linkage_descs=e.linkage_descs;
 	running=e.running;
+#ifdef ENABLE_PDC
 	vps = e.vps;
+#endif
 	table_id = e.table_id;
 }
 

@@ -160,6 +160,7 @@ void SIsectionEIT::parseLinkageDescriptor(const char *buf, SIevent &e, unsigned 
 	}
 }
 
+#ifdef ENABLE_PDC
 void SIsectionEIT::parsePDCDescriptor(const char *buf, SIevent &e, unsigned maxlen)
 {
 	if (maxlen >= sizeof(struct descr_pdc_header))
@@ -183,6 +184,7 @@ void SIsectionEIT::parsePDCDescriptor(const char *buf, SIevent &e, unsigned maxl
 		// fprintf(stderr, "SIsectionEIT::parsePDCDescriptor: vps: %ld %s", e.vps, ctime(&e.vps));
 	}
 }
+#endif
 
 void SIsectionEIT::parseComponentDescriptor(const char *buf, SIevent &e, unsigned maxlen)
 {
@@ -476,8 +478,10 @@ void SIsectionEIT::parseDescriptors(const char *des, unsigned len, SIevent &e)
 			parseParentalRatingDescriptor((const char *)desc, e, len);
 		else if(desc->descriptor_tag==0x4A)
 			parseLinkageDescriptor((const char *)desc, e, len);
+#ifdef ENABLE_PDC
 		else if(desc->descriptor_tag==0x69)
 			parsePDCDescriptor((const char *)desc, e, len);
+#endif
 		if((unsigned)(desc->descriptor_length+2)>len)
 			break;
 		len-=desc->descriptor_length+2;
