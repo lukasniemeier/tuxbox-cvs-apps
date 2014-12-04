@@ -1082,6 +1082,7 @@ osdsettings.infobar_show Info bei EPG Änderung
 osdsettings.infobar_virtual_zap_mode Virtual Zap
 osdsettings.infoviewer.radiotext Radiotext
 osdsettings.infoviewer.subchan_disp_pos Unterkanalanzeige
+osdsettings.menu_numbers_as_icons Menü-Zahlen als Icons
 osdsettings.rounded_corners Eckendarstellung
 osdsettings.rounded_corners_off eckig
 osdsettings.rounded_corners_on abgerundet

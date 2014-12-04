@@ -186,6 +186,9 @@ struct SNeutrinoSettings
 	//corners
 	int rounded_corners;
 
+	//menu numbers
+	int	menu_numbers_as_icons;
+
 	//network
 #define NETWORK_NFS_NR_OF_ENTRIES 8
 	std::string network_nfs_ip[NETWORK_NFS_NR_OF_ENTRIES];

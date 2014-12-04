@@ -436,6 +436,15 @@ int CNeutrinoApp::loadSetup()
 	//corners
 	g_settings.rounded_corners = configfile.getBool("rounded_corners", true);
 
+	//menu numbers
+#ifndef HAVE_DBOX_HARDWARE
+	g_settings.menu_numbers_as_icons = configfile.getBool("menu_numbers_as_icons", true);
+#else
+	//we can paint number buttons in menus automatically without parameter, but it isn't a good idea for
+	//expensive menu painting with all possible numbers (like in mainmenu) on slower machines like dbox2.
+	g_settings.menu_numbers_as_icons = configfile.getBool("menu_numbers_as_icons", false);
+#endif
+
 	//network
 	char cfg_key[81];
 	for(int i=0 ; i < NETWORK_NFS_NR_OF_ENTRIES ; i++)
@@ -974,6 +983,9 @@ void CNeutrinoApp::saveSetup()
 
 	//corners
 	configfile.setBool( "rounded_corners", g_settings.rounded_corners );
+
+	//menu numbers
+	configfile.setBool( "menu_numbers_as_icons", g_settings.menu_numbers_as_icons );
 
 	//network
 	char cfg_key[81];

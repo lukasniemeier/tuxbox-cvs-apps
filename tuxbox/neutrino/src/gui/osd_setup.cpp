@@ -303,6 +303,8 @@ int COsdSetup::showOsdSetup()
  	CMenuOptionChooser* osd_mute_icon_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_SHOW_MUTE_ICON, &g_settings.show_mute_icon, SHOW_MUTE_ICON_OPTIONS, SHOW_MUTE_ICON_OPTIONS_COUNT, true);
 	//osd corner chooser
 	CMenuOptionChooser* osd_corners_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_ROUNDED_CORNERS, &g_settings.rounded_corners, COLORMENU_CORNERSETTINGS_TYPE_OPTIONS, COLORMENU_CORNERSETTINGS_TYPE_OPTION_COUNT, true, this);
+	//osd menu numbers
+	CMenuOptionChooser* osd_menu_numbers_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_MENU_NUMBERS_AS_ICONS, &g_settings.menu_numbers_as_icons, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 
 	//osd main settings, intros
 	osd_setup->addIntroItems(menue_title != LOCALE_MAINSETTINGS_OSD ? LOCALE_MAINSETTINGS_OSD : NONEXISTANT_LOCALE);
@@ -346,6 +348,7 @@ int COsdSetup::showOsdSetup()
 	osd_setup->addItem(osd_corners_ch); //corner style
 	osd_setup->addItem(osd_volumbarpos_ch);	//volumebar
 	osd_setup->addItem(osd_mute_icon_ch);	//mute icon
+	osd_setup->addItem(osd_menu_numbers_ch);	//menu numbers
 
 	int res = osd_setup->exec(NULL, "");
 	selected = osd_setup->getSelected();
@@ -761,7 +764,8 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t OptionName, void * 
 
 bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void *)
 {
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_ROUNDED_CORNERS))
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_ROUNDED_CORNERS) ||
+	    ARE_LOCALES_EQUAL(OptionName, LOCALE_OSDSETTINGS_MENU_NUMBERS_AS_ICONS))
 	{
 		osd_setup->hide();
 		return true;

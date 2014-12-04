@@ -1109,6 +1109,7 @@ const char * locale_real_names[] =
 	"osdsettings.infobar_virtual_zap_mode",
 	"osdsettings.infoviewer.radiotext",
 	"osdsettings.infoviewer.subchan_disp_pos",
+	"osdsettings.menu_numbers_as_icons",
 	"osdsettings.rounded_corners",
 	"osdsettings.rounded_corners_off",
 	"osdsettings.rounded_corners_on",

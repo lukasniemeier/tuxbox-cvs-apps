@@ -1082,6 +1082,7 @@ osdsettings.infobar_show EPG Info
 osdsettings.infobar_virtual_zap_mode Virtual Zap
 osdsettings.infoviewer.radiotext Radiotext
 osdsettings.infoviewer.subchan_disp_pos Subchannel Display
+osdsettings.menu_numbers_as_icons Menu numbers as icons
 osdsettings.rounded_corners Shape of corners
 osdsettings.rounded_corners_off angular
 osdsettings.rounded_corners_on rounded

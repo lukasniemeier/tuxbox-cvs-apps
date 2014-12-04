@@ -172,18 +172,13 @@ void CMenuItem::paintItemButton(const bool select_mode, const int &item_height, 
 	int icon_w = 0;
 	int icon_h = 0;
 
-//we can paint number buttons automaticly without parameter, but it isn't a good idea for expensive menue painting with all possible numbers (like in mainmenue)
-//on slower machine like dbox2.
-//if you want to do this nevertheless, remove or comment out the following #ifndef-lines
-#ifndef HAVE_DBOX_HARDWARE
-	if (icon_name.empty() && CRCInput::isNumeric(directKey))
+	if (icon_name.empty() && CRCInput::isNumeric(directKey) && g_settings.menu_numbers_as_icons)
 	{
 		char i_name[6]; /* X.raw +'\0' */
 		snprintf(i_name, 6, "%d.raw", CRCInput::getNumericValue(directKey));
 		i_name[5] = '\0'; /* even if snprintf truncated the string, ensure termination */
 		icon_name = i_name;
 	}
-#endif
 
 	if (selected && offx > 0)
 	{
