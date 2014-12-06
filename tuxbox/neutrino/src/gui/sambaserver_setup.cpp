@@ -126,11 +126,11 @@ int CSambaSetup::showSambaSetup()
 		g_settings.smb_setup_samba_on_off = ON;
 
 	CSambaOnOffNotifier smb_notifier(SAMBA_MARKER);
-	CMenuOptionChooser * sm_start = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_STAT, &g_settings.smb_setup_samba_on_off, SMB_YES_NO_OPTIONS, SMB_YES_NO_OPTION_COUNT, true, &smb_notifier, CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER);
+	CMenuOptionChooser * sm_start = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_STAT, &g_settings.smb_setup_samba_on_off, SMB_YES_NO_OPTIONS, SMB_YES_NO_OPTION_COUNT, true, &smb_notifier, CRCInput::RC_standby);
 
 	//workroup, domainname
 	CStringInputSMS sm_input_domain(LOCALE_SAMBASERVER_SETUP_WORKGROUP, &g_settings.smb_setup_samba_workgroup, 15, false, LOCALE_SAMBASERVER_SETUP_WORKGROUP_HINT1, LOCALE_SAMBASERVER_SETUP_WORKGROUP_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789_ ");
-	CMenuForwarder * sm_fw_domain = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_WORKGROUP, true, g_settings.smb_setup_samba_workgroup, &sm_input_domain, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuForwarder * sm_fw_domain = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_WORKGROUP, true, g_settings.smb_setup_samba_workgroup, &sm_input_domain, NULL, CRCInput::RC_green);
 
 	//address,interface
 	CMenuForwarder * sm_fw_interface = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_INTERFACE, false, interface);

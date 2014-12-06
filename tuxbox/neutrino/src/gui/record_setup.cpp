@@ -183,7 +183,7 @@ int CRecordSetup::showRecordSetup()
 	//timersettings submenue
 	CMenuWidget *timerRecordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_RECORDING, NEUTRINO_ICON_TIMER, width);
 	toDelete.push_back(timerRecordingSettings);
-	CMenuForwarder* mf15 = new CMenuForwarder(LOCALE_TIMERSETTINGS_SEPARATOR ,true, NULL, timerRecordingSettings, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+	CMenuForwarder* mf15 = new CMenuForwarder(LOCALE_TIMERSETTINGS_SEPARATOR ,true, NULL, timerRecordingSettings, NULL, CRCInput::RC_yellow);
 
 	//prepare time before
 	CStringInput timerSettings_record_safety_time_before(LOCALE_TIMERSETTINGS_RECORD_SAFETY_TIME_BEFORE, record_safety_time_before, 2, LOCALE_TIMERSETTINGS_RECORD_SAFETY_TIME_BEFORE_HINT_1, LOCALE_TIMERSETTINGS_RECORD_SAFETY_TIME_BEFORE_HINT_2,"0123456789 ", this);
@@ -203,7 +203,7 @@ int CRecordSetup::showRecordSetup()
 	// default recording audio pids
 	CMenuWidget *apidRecordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_RECORDING, NEUTRINO_ICON_AUDIO, width);
 	toDelete.push_back(apidRecordingSettings);
-	CMenuForwarder* mf13 = new CMenuForwarder(LOCALE_RECORDINGMENU_APIDS ,true, NULL, apidRecordingSettings, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+	CMenuForwarder* mf13 = new CMenuForwarder(LOCALE_RECORDINGMENU_APIDS, true, NULL, apidRecordingSettings, NULL, CRCInput::RC_blue);
 
 	recording_audio_pids_std = ( g_settings.recording_audio_pids_default & TIMERD_APIDS_STD ) ? 1 : 0 ;
 	recording_audio_pids_alt = ( g_settings.recording_audio_pids_default & TIMERD_APIDS_ALT ) ? 1 : 0 ;
@@ -264,7 +264,7 @@ int CRecordSetup::showRecordSetup()
 	// for direct recording
 	CMenuWidget *directRecordingSettings = new CMenuWidget(LOCALE_MAINSETTINGS_RECORDING, NEUTRINO_ICON_RECORDING, width);
 	toDelete.push_back(directRecordingSettings);
-	CMenuForwarder* mf7 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILESETTINGS,(g_settings.recording_type == RECORDING_FILE), NULL, directRecordingSettings, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuForwarder* mf7 = new CMenuForwarder(LOCALE_RECORDINGMENU_FILESETTINGS, (g_settings.recording_type == RECORDING_FILE), NULL, directRecordingSettings, NULL, CRCInput::RC_green);
 
 	CStringInput recordingSettings_splitsize(LOCALE_RECORDINGMENU_SPLITSIZE, g_settings.recording_splitsize_default, 6, LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, "0123456789 ");
 	CMenuForwarder* mf9 = new CMenuForwarder(LOCALE_RECORDINGMENU_SPLITSIZE, true, g_settings.recording_splitsize_default, &recordingSettings_splitsize);
@@ -301,8 +301,8 @@ int CRecordSetup::showRecordSetup()
 	//intros
 	recordingSettings->addIntroItems(LOCALE_MAINSETTINGS_RECORDING);
 
-	recordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_SETUPNOW, true, NULL, this, "recording", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-	recordingSettings->addItem(new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "help_recording", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
+	recordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_SETUPNOW, true, NULL, this, "recording", CRCInput::RC_red));
+	recordingSettings->addItem(new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "help_recording", CRCInput::RC_help));
 	recordingSettings->addItem(GenericMenuSeparatorLine);
 	recordingSettings->addItem( oj1); //recording type (off, server, vcr, direct) 
 	recordingSettings->addItem(GenericMenuSeparatorLine);
@@ -331,7 +331,7 @@ int CRecordSetup::showRecordSetup()
 	recordingSettings->addItem( mf13);//audio pid settings
 		//intros
 		directRecordingSettings->addIntroItems(LOCALE_RECORDINGMENU_FILESETTINGS);
-		directRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DEFDIR, true, NULL, dirMenu, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+		directRecordingSettings->addItem(new CMenuForwarder(LOCALE_RECORDINGMENU_DEFDIR, true, NULL, dirMenu, NULL, CRCInput::RC_red));
 		directRecordingSettings->addItem(oj10);
 		directRecordingSettings->addItem(oj15); //max. recording time
 		directRecordingSettings->addItem(mf11);

@@ -106,7 +106,7 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 #ifdef ENABLE_AUDIOPLAYER
 	// audioplayer
 	CAudioPlayerSetup* audioPlayerSetup = new CAudioPlayerSetup();
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, audioPlayerSetup, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINMENU_AUDIOPLAYER, true, NULL, audioPlayerSetup, NULL, CRCInput::RC_red));
 #endif
 #ifdef ENABLE_ESD
 	// esound
@@ -114,18 +114,18 @@ int CMediaPlayerSetup::showMediaPlayerSetup()
 	if (access("/bin/esd", X_OK) == 0 || access("/var/bin/esd", X_OK) == 0)
 	{
 		esdSetup = new CEsdSetup();
-		mediaSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, esdSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+		mediaSetup->addItem(new CMenuForwarder(LOCALE_ESOUND_NAME, true, NULL, esdSetup, NULL, CRCInput::RC_green));
 	}
 #endif
 #ifdef ENABLE_MOVIEPLAYER
 	// movieplayer
 	CMoviePlayerSetup* moviePlayerSetup = new CMoviePlayerSetup();
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_STREAMING, true, NULL, moviePlayerSetup, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	mediaSetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_STREAMING, true, NULL, moviePlayerSetup, NULL, CRCInput::RC_yellow));
 #endif
 #ifdef ENABLE_PICTUREVIEWER
 	// pictureviewer
 	CPictureViewerSetup* pictureViewerSetup = new CPictureViewerSetup();
-	mediaSetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, pictureViewerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	mediaSetup->addItem(new CMenuForwarder(LOCALE_PICTUREVIEWER_HEAD, true, NULL, pictureViewerSetup, NULL, CRCInput::RC_blue));
 #endif
 
 	int res = mediaSetup->exec(NULL, "");

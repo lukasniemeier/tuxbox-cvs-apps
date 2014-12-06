@@ -212,16 +212,16 @@ int CScanSetup::showScanService()
 	scansetup->setPreselected(selected);
 
 	//prepare scantype green
-	CMenuOptionChooser* ojScantype = new CMenuOptionChooser(LOCALE_ZAPIT_SCANTYPE, (int *)&scanSettings.scanType, SCANTS_ZAPIT_SCANTYPE, SCANTS_ZAPIT_SCANTYPE_COUNT, true, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuOptionChooser* ojScantype = new CMenuOptionChooser(LOCALE_ZAPIT_SCANTYPE, (int *)&scanSettings.scanType, SCANTS_ZAPIT_SCANTYPE, SCANTS_ZAPIT_SCANTYPE_COUNT, true, NULL, CRCInput::RC_green);
 
 	//prepare bouquet mode yellow
-	CMenuOptionChooser* ojBouquets = new CMenuOptionChooser(LOCALE_SCANTS_BOUQUET, (int *)&scanSettings.bouquetMode, SCANTS_BOUQUET_OPTIONS, SCANTS_BOUQUET_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+	CMenuOptionChooser* ojBouquets = new CMenuOptionChooser(LOCALE_SCANTS_BOUQUET, (int *)&scanSettings.bouquetMode, SCANTS_BOUQUET_OPTIONS, SCANTS_BOUQUET_OPTION_COUNT, true, NULL, CRCInput::RC_yellow);
 
 	// intros
 	scansetup->addIntroItems(LOCALE_SERVICEMENU_SCANTS);
 
 	//save button red
-	scansetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "save_action", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	scansetup->addItem(new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "save_action", CRCInput::RC_red));
 	scansetup->addItem(GenericMenuSeparatorLine);
 
 	//prepare sat-lnb-settings
@@ -285,7 +285,7 @@ int CScanSetup::showScanService()
 		extMotorSettings->addIntroItems();
 		
 		//save motorsettings red
-		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_SAVESETTINGSNOW, true, NULL, this, "save_action", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_SAVESETTINGSNOW, true, NULL, this, "save_action", CRCInput::RC_red));
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 
 		//motorspeed (how long to set wait timer for dish to travel to correct position) 
@@ -310,7 +310,7 @@ int CScanSetup::showScanService()
 		
 		//manual motor control
 		motorControl = new CMotorControl();
-		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_MOTORCONTROL, true, NULL, motorControl, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+		extMotorSettings->addItem(new CMenuForwarder(LOCALE_SATSETUP_MOTORCONTROL, true, NULL, motorControl, NULL, CRCInput::RC_green));
 		extMotorSettings->addItem(GenericMenuSeparatorLine);
 
 		//prepare motor control
@@ -405,7 +405,7 @@ int CScanSetup::showScanService()
 	scansetup->addItem(GenericMenuSeparatorLine);
 
 	CScanTs* scanTs = new CScanTs();
-	scansetup->addItem(new CMenuForwarder(LOCALE_SCANTS_STARTNOW, true, NULL, scanTs, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	scansetup->addItem(new CMenuForwarder(LOCALE_SCANTS_STARTNOW, true, NULL, scanTs, NULL, CRCInput::RC_blue));
 
 	int res = scansetup->exec(NULL, "");
 	selected = scansetup->getSelected();

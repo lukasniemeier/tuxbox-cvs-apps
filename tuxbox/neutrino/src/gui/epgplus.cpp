@@ -1033,9 +1033,9 @@ int EpgPlus::exec(CChannelList* _channelList, int selectedChannelIndex, CBouquet
 
 				CMenuWidget menuWidgetActions(LOCALE_EPGPLUS_ACTIONS, NEUTRINO_ICON_FEATURES, 400);
 				menuWidgetActions.addIntroItems(NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, CMenuWidget::BTN_TYPE_CANCEL);
-				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_RECORD     , true, NULL, &menuTargetAddRecordTimer, NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
-				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REFRESH_EPG, true, NULL, &menuTargetRefreshEpg    , NULL, CRCInput::RC_green , NEUTRINO_ICON_BUTTON_GREEN ), false);
-				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REMIND     , true, NULL, &menuTargetAddReminder   , NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
+				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_RECORD     , true, NULL, &menuTargetAddRecordTimer, NULL, CRCInput::RC_red   ));
+				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REFRESH_EPG, true, NULL, &menuTargetRefreshEpg    , NULL, CRCInput::RC_green ));
+				menuWidgetActions.addItem(new CMenuForwarder(LOCALE_EPGPLUS_REMIND     , true, NULL, &menuTargetAddReminder   , NULL, CRCInput::RC_yellow));
 
 				if (selectedChannelEntry)
 					menuWidgetActions.exec(NULL, "");
@@ -1682,7 +1682,7 @@ EpgPlus::MenuOptionChooserSwitchSwapMode::MenuOptionChooserSwitchSwapMode(EpgPlu
 	: CMenuOptionChooser(LOCALE_EPGPLUS_SWAP_MODE, (int*)(int)&_epgPlus->currentSwapMode,
 			     menuOptionChooserSwitchSwapModes,
 			     sizeof(menuOptionChooserSwitchSwapModes) / sizeof(CMenuOptionChooser::keyval),
-			     true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW)
+			     true, NULL, CRCInput::RC_yellow)
 {
 	epgPlus = _epgPlus;
 	oldSwapMode = _epgPlus->currentSwapMode;
@@ -1730,7 +1730,7 @@ EpgPlus::MenuOptionChooserSwitchViewMode::MenuOptionChooserSwitchViewMode(EpgPlu
 	: CMenuOptionChooser(LOCALE_EPGPLUS_VIEW_MODE, (int*)(int)&epgPlus->currentViewMode,
 			     menuOptionChooserSwitchViewModes,
 			     sizeof(menuOptionChooserSwitchViewModes) / sizeof(CMenuOptionChooser::keyval),
-			     true, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN)
+			     true, NULL, CRCInput::RC_green)
 {
 	oldTimingMenuSettings = g_settings.timing[SNeutrinoSettings::TIMING_MENU];
 }
@@ -1759,7 +1759,7 @@ struct CMenuOptionChooser::keyval menuOptionChooserSwitchFontsize[] =
 EpgPlus::MenuOptionChooserSwitchFontsize::MenuOptionChooserSwitchFontsize()
 	: CMenuOptionChooser(LOCALE_EPGPLUS_FONTSIZE, &switch_bigfont, menuOptionChooserSwitchFontsize,
 			     sizeof(menuOptionChooserSwitchFontsize) / sizeof(CMenuOptionChooser::keyval),
-			     true, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE)
+			     true, NULL, CRCInput::RC_blue)
 {
 	oldTimingMenuSettings = g_settings.timing[SNeutrinoSettings::TIMING_MENU];
 };
@@ -1880,10 +1880,10 @@ int EpgPlus::MenuWidgetSettings::exec(CMenuTarget* parent, const std::string & a
 {
 	Settings settings(this->epgPlus->settings);
 
-	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_SAVE_SETTINGS , true, NULL, new MenuTargetSaveSettings (this->epgPlus                        ), NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
-	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_RESET_SETTINGS, true, NULL, new MenuTargetResetSettings(this->epgPlus, &settings             ), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
-	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_EDIT_FONTS    , true, NULL, new MenuTargetFontSettings (this->epgPlus, &settings.fontSettings), NULL, CRCInput::RC_1                                  ), false);
-	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_EDIT_SIZES    , true, NULL, new MenuTargetSizeSettings (this->epgPlus, &settings.sizeSettings), NULL, CRCInput::RC_2                                  ), false);
+	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_SAVE_SETTINGS , true, NULL, new MenuTargetSaveSettings (this->epgPlus                        ), NULL, CRCInput::RC_red   ));
+	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_RESET_SETTINGS, true, NULL, new MenuTargetResetSettings(this->epgPlus, &settings             ), NULL, CRCInput::RC_yellow));
+	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_EDIT_FONTS    , true, NULL, new MenuTargetFontSettings (this->epgPlus, &settings.fontSettings), NULL, CRCInput::RC_1     ));
+	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_EDIT_SIZES    , true, NULL, new MenuTargetSizeSettings (this->epgPlus, &settings.sizeSettings), NULL, CRCInput::RC_2     ));
 
 	CMenuWidget::exec(parent, "");
 
@@ -2000,7 +2000,6 @@ EpgPlus::MenuWidgetFontSetting::MenuOptionChooserFontStyle::MenuOptionChooserFon
       , true
       , NULL
       , CRCInput::RC_yellow
-      , NEUTRINO_ICON_BUTTON_GREEN
       )
 {
   this->epgPlus     = epgPlus;
@@ -2045,11 +2044,11 @@ EpgPlus::MenuWidgetFontSetting::MenuWidgetFontSetting
 
 int EpgPlus::MenuWidgetFontSetting::exec(CMenuTarget* parent, const std::string & actionKey)
 {
-	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_SELECT_FONT_NAME, true, NULL, new MenuTargetSelectFontName(this->epgPlus, this->fontSetting), NULL, CRCInput::RC_red   , NEUTRINO_ICON_BUTTON_RED   ), false);
+	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_SELECT_FONT_NAME, true, NULL, new MenuTargetSelectFontName(this->epgPlus, this->fontSetting), NULL, CRCInput::RC_red   ));
 
 	this->addItem(new MenuOptionChooserFontStyle(this->epgPlus, this->fontSetting), false);
 
-	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_CHANGE_FONT_SIZE, true, NULL, new MenuTargetChangeFontSize(this->epgPlus, this->fontSetting), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), false);
+	this->addItem(new CMenuForwarder(LOCALE_EPGPLUS_CHANGE_FONT_SIZE, true, NULL, new MenuTargetChangeFontSize(this->epgPlus, this->fontSetting), NULL, CRCInput::RC_yellow));
 
 	return CMenuWidget::exec(parent, "");
 }

@@ -98,7 +98,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	softUpdate->addIntroItems(LOCALE_SERVICEMENU_UPDATE);
 
 	// experts-functions 
-	softUpdate->addItem( new CMenuForwarder(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, true, ""  , this     , "experts",CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS, true, NULL, this, "experts", CRCInput::RC_red));
 
 #ifndef DISABLE_INTERNET_UPDATE
 #ifndef HAVE_DREAMBOX_HARDWARE
@@ -114,7 +114,7 @@ int CSoftwareUpdate::showSoftwareUpdate()
 	// update check
 	CFlashUpdate* flashUpdate = new CFlashUpdate();
 	softUpdate->addItem(GenericMenuSeparatorLine);
-	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, flashUpdate, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	softUpdate->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_CHECKUPDATE, true, NULL, flashUpdate, NULL, CRCInput::RC_green));
 
 	int res = softUpdate->exec (NULL, "");
 	selected = softUpdate->getSelected();
@@ -133,13 +133,13 @@ int CSoftwareUpdate::showSoftwareUpdateExpert()
 	CMenuWidget* mtdexpert = new CMenuWidget(LOCALE_SERVICEMENU_UPDATE, NEUTRINO_ICON_UPDATE);
 	mtdexpert->addIntroItems(LOCALE_FLASHUPDATE_EXPERTFUNCTIONS);
 	
-	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_READFLASH    , true, NULL, fe, "readflash"       , CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_WRITEFLASH   , true, NULL, fe, "writeflash"      , CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_READFLASH, true, NULL, fe, "readflash", CRCInput::RC_red));
+	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_WRITEFLASH, true, NULL, fe, "writeflash", CRCInput::RC_green));
 
 	mtdexpert->addItem(GenericMenuSeparatorLine);
 
-	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_READFLASHMTD , true, NULL, fe, "readflashmtd"    , CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
-	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_WRITEFLASHMTD, true, NULL, fe, "writeflashmtd"   , CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_READFLASHMTD, true, NULL, fe, "readflashmtd", CRCInput::RC_yellow));
+	mtdexpert->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_WRITEFLASHMTD, true, NULL, fe, "writeflashmtd", CRCInput::RC_blue));
 
 #ifndef DISABLE_INTERNET_UPDATE
 	mtdexpert->addItem(GenericMenuSeparatorLine);

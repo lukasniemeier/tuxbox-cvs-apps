@@ -175,13 +175,13 @@ int CMiscMenue::showMenue()
 	misc_menue->addIntroItems(menue_title != LOCALE_MISCSETTINGS_HEAD ? LOCALE_MISCSETTINGS_HEAD : NONEXISTANT_LOCALE);
 
 	// general
-	misc_menue->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_RC_STANDBY_MODES,	true, NULL, misc_menue_energy, NULL,  CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));	
+	misc_menue->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_RC_STANDBY_MODES, true, NULL, misc_menue_energy, NULL,  CRCInput::RC_red));	
 	// epg settings
-	misc_menue->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, 		true, NULL, misc_menue_epg, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	misc_menue->addItem(new CMenuForwarder(LOCALE_MISCSETTINGS_EPG_HEAD, true, NULL, misc_menue_epg, NULL, CRCInput::RC_green));
 	// zapit settings
-	misc_menue->addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, 		true, NULL, misc_menue_zapit, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	misc_menue->addItem(new CMenuForwarder(LOCALE_ZAPITCONFIG_HEAD, true, NULL, misc_menue_zapit, NULL, CRCInput::RC_yellow));
 	// filebrowser
-	misc_menue->addItem(new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, 		true, NULL, misc_menue_filebrowser, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	misc_menue->addItem(new CMenuForwarder(LOCALE_FILEBROWSER_HEAD, true, NULL, misc_menue_filebrowser, NULL, CRCInput::RC_blue));
 
 	misc_menue->addItem(GenericMenuSeparatorLine);
 #ifndef TUXTXT_CFG_STANDALONE

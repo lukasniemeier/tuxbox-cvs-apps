@@ -157,19 +157,19 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(MENU_MAIN, GenericMenuSeparator, NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
 
 	//tv-mode
-	CMenuItem *tvswitch = new CMenuForwarder(LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuItem *tvswitch = new CMenuForwarder(LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red);
 	personalize->addItem(MENU_MAIN, tvswitch, &g_settings.personalize_tvmode, (g_settings.startmode == STARTMODE_TV || firstchannel.mode != 'r' ));
 	
 	//radio-mode
-	CMenuItem *radioswitch = new CMenuForwarder(LOCALE_MAINMENU_RADIOMODE, true, NULL, this, "radio", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuItem *radioswitch = new CMenuForwarder(LOCALE_MAINMENU_RADIOMODE, true, NULL, this, "radio", CRCInput::RC_green);
 	personalize->addItem(MENU_MAIN, radioswitch, &g_settings.personalize_radiomode, (g_settings.startmode == STARTMODE_RADIO || (!(g_settings.startmode == STARTMODE_TV) && firstchannel.mode == 'r')));
 
 	//scart
-	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SCARTMODE, true, NULL, this, "scart", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_scartmode);
+	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SCARTMODE, true, NULL, this, "scart", CRCInput::RC_yellow), &g_settings.personalize_scartmode);
 
 	//games
 	menuGamesIsVisible = g_PluginList->hasPlugin(CPlugins::P_TYPE_GAME);
-	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_GAMES, menuGamesIsVisible, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), "", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE),
+	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_GAMES, menuGamesIsVisible, NULL, new CPluginList(LOCALE_MAINMENU_GAMES,CPlugins::P_TYPE_GAME), NULL, CRCInput::RC_blue),
 		&g_settings.personalize_games, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ITEM_OPTION, &menuGamesIsVisible);
 
 	//separator
@@ -237,7 +237,7 @@ void CNeutrinoApp::InitMenuMain()
 	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_REBOOT, true, NULL, this, "reboot"), &g_settings.personalize_reboot);
 
 	// shutdown
-	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SHUTDOWN, true, NULL, this, "shutdown", CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER), &g_settings.personalize_shutdown);
+	personalize->addItem(MENU_MAIN, new CMenuForwarder(LOCALE_MAINMENU_SHUTDOWN, true, NULL, this, "shutdown", CRCInput::RC_standby), &g_settings.personalize_shutdown);
 }
 
 //settings menue
@@ -253,7 +253,7 @@ void CNeutrinoApp::InitMenuSettings()
 	personalize->addIntroItems(MENU_SETTINGS);
 	
 	// save
-	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "savesettings", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED), &g_settings.personalize_true);
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_SAVESETTINGSNOW, true, NULL, this, "savesettings", CRCInput::RC_red), &g_settings.personalize_true);
 	
 	// separator line
 	personalize->addItem(MENU_SETTINGS, GenericMenuSeparatorLine, NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
@@ -290,14 +290,14 @@ void CNeutrinoApp::InitMenuSettings()
 	
 	//blue (audioplayer, pictureviewer, esd, mediaplayer)
 #if defined(ENABLE_AUDIOPLAYER) || defined(ENABLE_PICTUREVIEWER) || defined(ENABLE_ESD) || defined(ENABLE_MOVIEPLAYER)
-	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MEDIAPLAYERSETTINGS_GENERAL, true, NULL, new CMediaPlayerSetup, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_mediaplayer);
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MEDIAPLAYERSETTINGS_GENERAL, true, NULL, new CMediaPlayerSetup, NULL, CRCInput::RC_blue), &g_settings.personalize_mediaplayer);
 #endif
 
 	//green (driver/boot settings)
-	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_DRIVER, true, NULL, new CDriverBootSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), &g_settings.personalize_driver);
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_DRIVER, true, NULL, new CDriverBootSetup(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_green), &g_settings.personalize_driver);
 	
 	//yellow (miscSettings)
-	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_misc);
+	personalize->addItem(MENU_SETTINGS, new CMenuForwarder(LOCALE_MAINSETTINGS_MISC, true, NULL, new CMiscMenue(LOCALE_MAINMENU_SETTINGS), NULL, CRCInput::RC_yellow), &g_settings.personalize_misc);
 	
 	//separator
  	personalize->addSeparator(MENU_SETTINGS);
@@ -325,10 +325,10 @@ void CNeutrinoApp::InitMenuService()
 	personalize->addIntroItems(MENU_SERVICE);
 
 	// bouquets
-	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_BOUQUETEDITOR_NAME, true, NULL, new CBEBouquetWidget(), NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED), &g_settings.personalize_bouqueteditor);
+	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_BOUQUETEDITOR_NAME, true, NULL, new CBEBouquetWidget(), NULL, CRCInput::RC_red), &g_settings.personalize_bouqueteditor);
 
 	// channel scan
-	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_SCANTS, true, NULL, new CScanSetup, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN), &g_settings.personalize_scants);
+	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_SCANTS, true, NULL, new CScanSetup, NULL, CRCInput::RC_green), &g_settings.personalize_scants);
 
 	// separator
 	personalize->addSeparator(MENU_SERVICE); 
@@ -357,13 +357,13 @@ void CNeutrinoApp::InitMenuService()
 	personalize->addSeparator(MENU_SERVICE); 
 
 	//yellow imageinfo
-	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfo(), NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW), &g_settings.personalize_imageinfo);
+	personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfo(), NULL, CRCInput::RC_yellow), &g_settings.personalize_imageinfo);
 
 	//softupdate
 	if(softupdate)
 	{
 		// blue software update
-		personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE), &g_settings.personalize_update, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+		personalize->addItem(MENU_SERVICE, new CMenuForwarder(LOCALE_SERVICEMENU_UPDATE, true, NULL, new CSoftwareUpdate(), NULL, CRCInput::RC_blue), &g_settings.personalize_update, false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
  	}
 
 }
@@ -668,7 +668,7 @@ bool CNeutrinoApp::showUserMenu(int button)
 		menu_items ++;
 		menu_key++;
 		// FYI: there is a memory leak with 'new CExperimentalSettingsMenuHandler()
-		menu_item = new CMenuForwarder(LOCALE_EXPERIMENTALSETTINGS, true, NULL, new CExperimentalSettingsMenuHandler(), "-1", CRCInput::convertDigitToKey(menu_key), "");
+		menu_item = new CMenuForwarder(LOCALE_EXPERIMENTALSETTINGS, true, NULL, new CExperimentalSettingsMenuHandler(), "-1", CRCInput::convertDigitToKey(menu_key));
 		menu->addItem(menu_item, false);
 #endif
 	}

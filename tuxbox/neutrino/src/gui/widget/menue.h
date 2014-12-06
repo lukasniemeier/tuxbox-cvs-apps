@@ -78,6 +78,9 @@ class CMenuTarget
 
 class CMenuItem
 {
+	private:
+		std::string getIconName();
+
 	protected:
 		int x, y, dx, offx;
 		bool used;

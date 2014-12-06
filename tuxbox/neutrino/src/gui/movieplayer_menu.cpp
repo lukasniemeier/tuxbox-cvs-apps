@@ -90,7 +90,7 @@ int CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addIntroItems();
 
 	//ts playback 
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, moviePlayerGui, "tsplayback", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK, true, NULL, moviePlayerGui, "tsplayback", CRCInput::RC_green));
 	//ts playback pin 
 	mpmenue->addItem(new CMenuForwarder(LOCALE_MOVIEPLAYER_TSPLAYBACK_PC, true, NULL, moviePlayerGui, "tsplayback_pc", CRCInput::RC_1));
 
@@ -114,24 +114,24 @@ int CMoviePlayerMenue::showMoviePlayerMenue()
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
 	//vlc file play
-	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "fileplayback", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "fileplayback", CRCInput::RC_red));
 	mpmenue->addItem(toNotify.back());
 	//vlc dvd play
-	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_DVDPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "dvdplayback", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_DVDPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "dvdplayback", CRCInput::RC_yellow));
 	mpmenue->addItem(toNotify.back());
 	//vlc vcd play
-	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_VCDPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "vcdplayback", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	toNotify.push_back(new CMenuForwarder(LOCALE_MOVIEPLAYER_VCDPLAYBACK, g_settings.streaming_type == 1, NULL, moviePlayerGui, "vcdplayback", CRCInput::RC_blue));
 	mpmenue->addItem(toNotify.back());
 
 	mpmenue->addItem(GenericMenuSeparatorLine);
 
 	//settings
-	mpmenue->addItem(new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, moviePlayerSetup, NULL, CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_MAINMENU_SETTINGS, true, NULL, moviePlayerSetup, NULL, CRCInput::RC_help));
 
 #ifdef ENABLE_GUI_MOUNT
 	//neutrino mount
 	CNFSSmallMenu* nfsSmallMenu = new CNFSSmallMenu();
-	mpmenue->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, nfsSmallMenu, NULL, CRCInput::RC_setup, NEUTRINO_ICON_BUTTON_DBOX));
+	mpmenue->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, nfsSmallMenu, NULL, CRCInput::RC_setup));
 #endif
 
 	int res = mpmenue->exec(NULL, "");

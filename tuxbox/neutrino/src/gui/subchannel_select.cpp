@@ -106,7 +106,7 @@ int CSubChannelSelectMenu::doMenu()
 		else
 		{
 			if (count == 0)
-				SubChannelSelector.addItem(new CMenuForwarder(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+				SubChannelSelector.addItem(new CMenuForwarder(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::RC_blue));
 			else
 				SubChannelSelector.addItem(new CMenuForwarder(Latin1_to_UTF8(e->subservice_name).c_str(), true, NULL, this, nvod_id, CRCInput::convertDigitToKey(count)), count == g_RemoteControl->selected_subchannel);
 		}
@@ -117,7 +117,7 @@ int CSubChannelSelectMenu::doMenu()
 	if (g_RemoteControl->are_subchannels)
 	{
 		SubChannelSelector.addItem(GenericMenuSeparatorLine);
-		SubChannelSelector.addItem(new CMenuOptionChooser(LOCALE_NVODSELECTOR_DIRECTORMODE, &g_RemoteControl->director_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+		SubChannelSelector.addItem(new CMenuOptionChooser(LOCALE_NVODSELECTOR_DIRECTORMODE, &g_RemoteControl->director_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, NULL, CRCInput::RC_yellow));
 	}
 
 	return SubChannelSelector.exec(NULL, "");

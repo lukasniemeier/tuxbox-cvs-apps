@@ -673,10 +673,10 @@ void CDriveSetup::showHddSetupMain()
 	m.setPreselected(selected_main);
 	
 	// apply
-	CMenuForwarder *m1 = new CMenuForwarder(LOCALE_DRIVE_SETUP_SAVESETTINGS, true, NULL, this, "apply", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *m1 = new CMenuForwarder(LOCALE_DRIVE_SETUP_SAVESETTINGS, true, NULL, this, "apply", CRCInput::RC_red);
 	
 	// help
-	CMenuForwarder *m_help = new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "show_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP);
+	CMenuForwarder *m_help = new CMenuForwarder(LOCALE_SETTINGS_HELP, true, NULL, this, "show_help", CRCInput::RC_help);
 	
 	// activate/deactivate ide interface
 	if (isIdeInterfaceActive()){
@@ -799,7 +799,7 @@ void CDriveSetup::showExtMenu(CMenuWidget *extsettings)
 	CMenuForwarder * fw_moduldir = new CMenuForwarder(LOCALE_DRIVE_SETUP_ADVANCED_SETTINGS_CUSTOM_MODULDIR, true, d_settings.drive_modul_dir, dirchooser_moduldir);
 
 	//extended settings: reset settings
-	CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *fw_reset = new CMenuForwarder(LOCALE_DRIVE_SETUP_RESET, true, NULL, this, "reset_drive_setup", CRCInput::RC_red);
 
 	//extended settings: filesystem format options
 	vector<CMenuForwarder*> v_fs_opts_items;
@@ -1009,10 +1009,10 @@ void CDriveSetup::showHddSetupSub()
 		add_swap_active = false;
 
 	//add swap
-	CMenuForwarder *swap_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_SWAP_PARTITION, add_swap_active, NULL, sub_add_swap, NULL/*"add_swap_partition"*/, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *swap_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_SWAP_PARTITION, add_swap_active, NULL, sub_add_swap, NULL/*"add_swap_partition"*/, CRCInput::RC_red);
 
 	//add part
-	CMenuForwarder *part_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION, add_activate, NULL, sub_add, NULL/*"add_partition"*/, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuForwarder *part_add = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION, add_activate, NULL, sub_add, NULL/*"add_partition"*/, CRCInput::RC_green);
 
 	//menue add: prepare subhead: add part
 	string add_subhead_txt = dev_name + " >> " + iToString(next_part_number+1) + ". " + g_Locale->getText(LOCALE_DRIVE_SETUP_HDD_ADD_PARTITION);
@@ -1046,7 +1046,7 @@ void CDriveSetup::showHddSetupSub()
 	CMenuSeparator *add_swap_subhead = new CMenuSeparator(CMenuSeparator::ALIGN_LEFT | CMenuSeparator::SUB_HEAD | CMenuSeparator::STRING);
 	add_swap_subhead->setString(add_swap_subhead_txt);
 
-	CMenuForwarder *make_swap = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_FORMAT_PARTITION, true, NULL, this, "make_swap", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *make_swap = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_FORMAT_PARTITION, true, NULL, this, "make_swap", CRCInput::RC_red);
 
 	//menue add: prepare start_cylinder for add partition
 	setStartCylinder();
@@ -1058,10 +1058,10 @@ void CDriveSetup::showHddSetupSub()
 	bool have_parts = haveActiveParts(current_device);
 	
 	//menue sub: prepare item: mount all partitions
- 	CMenuForwarder *mount_all =  new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NOW_DEVICE, (!have_mounts ? have_parts:false), NULL, this, "mount_device_partitions", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+ 	CMenuForwarder *mount_all =  new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NOW_DEVICE, (!have_mounts ? have_parts:false), NULL, this, "mount_device_partitions", CRCInput::RC_yellow);
 
 	//menue sub: prepare item: unmount all partitions
- 	CMenuForwarder *ummount_all =  new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_UNMOUNT_NOW_DEVICE, (have_mounts ? true:false), NULL, this, "unmount_device_partitions", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+ 	CMenuForwarder *ummount_all =  new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_UNMOUNT_NOW_DEVICE, (have_mounts ? true:false), NULL, this, "unmount_device_partitions", CRCInput::RC_blue);
 
 	//menue sub: prepare separator: partlist
 	CMenuSeparator *separator = new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_DRIVE_SETUP_HDD_EDIT_PARTITION);
@@ -1221,7 +1221,7 @@ void CDriveSetup::showHddSetupSub()
 		fw_cylinders[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CURRENT_CYLINDERS, false, ed_cylinders[i].c_str());
 
 		//enable/disable partition
-		activate[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_ACTIVATE, &d_settings.drive_partition_activ[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, true , NULL, CRCInput::RC_standby, NEUTRINO_ICON_BUTTON_POWER );
+		activate[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_ACTIVATE, &d_settings.drive_partition_activ[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, true, NULL, CRCInput::RC_standby);
 
 		//set mountstatus for enable/disable menue items
 		if (isMountedPartition(partname[i]) || isSwapPartition(partname[i]))
@@ -1251,7 +1251,7 @@ void CDriveSetup::showHddSetupSub()
 #if defined ENABLE_NFSSERVER || defined ENABLE_SAMBASERVER
 		bool share_chooser_activ = ((string)d_settings.drive_partition_fstype[current_device][i] == "swap" ? false : true);
 		//prepare submenue for server shares
-		part_srv_fw[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE, share_chooser_activ, NULL, part_srv_shares[i], NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
+		part_srv_fw[i] 	= new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_SERVER_SHARE, share_chooser_activ, NULL, part_srv_shares[i], NULL, CRCInput::RC_0);
 
 		//forwarder with current mountpoint as shared path
 		srv_path_fw[i] 	= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_PATH, false, d_settings.drive_partition_mountpoint[current_device][i]);
@@ -1261,20 +1261,20 @@ void CDriveSetup::showHddSetupSub()
 			nfs_host_ip[i] = new CIPInput(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP , d_settings.drive_partition_nfs_host_ip[current_device][i]);
 	
 			//prepare option nfs	
-			nfs_host_ip_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP, d_settings.drive_partition_nfs[current_device][i], d_settings.drive_partition_nfs_host_ip[current_device][i], nfs_host_ip[i], NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1 );
+			nfs_host_ip_fw[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_NFS_HOST_IP, d_settings.drive_partition_nfs[current_device][i], d_settings.drive_partition_nfs_host_ip[current_device][i], nfs_host_ip[i], NULL, CRCInput::RC_1);
 	
 			//prepare option nfs chooser
 			nfsHostNotifier[i] = new COnOffNotifier(); //enable disable entry for input nfs host ip
 			nfsHostNotifier[i]->addItem(nfs_host_ip_fw[i]);
-			nfs_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_NFS, &d_settings.drive_partition_nfs[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, share_chooser_activ, nfsHostNotifier[i], CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED  );		
+			nfs_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_NFS, &d_settings.drive_partition_nfs[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, share_chooser_activ, nfsHostNotifier[i], CRCInput::RC_red);
 		#endif /*ENABLE_NFSSERVER*/
 		
 		#ifdef ENABLE_SAMBASERVER
- 			srv_smb_globals[i]= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP,  d_settings.drive_partition_samba[current_device][i], NULL, new CSambaSetup(LOCALE_DRIVE_SETUP_HEAD, msg_icon), NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0);
+ 			srv_smb_globals[i]= new CMenuForwarder(LOCALE_SAMBASERVER_SETUP, d_settings.drive_partition_samba[current_device][i], NULL, new CSambaSetup(LOCALE_DRIVE_SETUP_HEAD, msg_icon), NULL, CRCInput::RC_0);
 
 			//prepare share name
 			smb_share_name_input[i] = new CStringInputSMS(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, &d_settings.drive_partition_samba_share_name[current_device][i], 20, false, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT1, LOCALE_SAMBASERVER_SETUP_SHARES_NAME_HINT2, "abcdefghijklmnopqrstuvwxyz0123456789!""\xA7$%&/()=?-_. ");
-			smb_share_name_fw[i] = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, d_settings.drive_partition_samba[current_device][i], d_settings.drive_partition_samba_share_name[current_device][i], smb_share_name_input[i], NULL, CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
+			smb_share_name_fw[i] = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_NAME, d_settings.drive_partition_samba[current_device][i], d_settings.drive_partition_samba_share_name[current_device][i], smb_share_name_input[i], NULL, CRCInput::RC_2);
 			
 			//prepare comment and set a default comment if no comment was found
 			if (d_settings.drive_partition_samba_share_comment[current_device][i].empty())
@@ -1282,10 +1282,10 @@ void CDriveSetup::showHddSetupSub()
 			smb_share_comment_fw[i] = new CMenuForwarder(LOCALE_SAMBASERVER_SETUP_SHARES_COMMENT, false, d_settings.drive_partition_samba_share_comment[current_device][i]);
 
 			//prepare option read only
-			smb_ro_chooser[i] = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_SHARES_RO, &d_settings.drive_partition_samba_ro[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, d_settings.drive_partition_samba[current_device][i], NULL, CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3 );
+			smb_ro_chooser[i] = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_SHARES_RO, &d_settings.drive_partition_samba_ro[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, d_settings.drive_partition_samba[current_device][i], NULL, CRCInput::RC_3);
 
 			//prepare option guest ok 
-			smb_public_chooser[i] = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_SHARES_PUBLIC, &d_settings.drive_partition_samba_public[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, d_settings.drive_partition_samba[current_device][i], NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4 );
+			smb_public_chooser[i] = new CMenuOptionChooser(LOCALE_SAMBASERVER_SETUP_SHARES_PUBLIC, &d_settings.drive_partition_samba_public[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, d_settings.drive_partition_samba[current_device][i], NULL, CRCInput::RC_4);
 
 			//prepare on off use
 			//only active if samba binaries are available or if no samba installed, show info message
@@ -1294,7 +1294,7 @@ void CDriveSetup::showHddSetupSub()
 			sambaNotifier[i]->addItem(smb_share_name_fw[i]);
 			sambaNotifier[i]->addItem(smb_ro_chooser[i]);
 			sambaNotifier[i]->addItem(smb_public_chooser[i]);
-			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, have_samba, sambaNotifier[i], CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN );	
+			smb_chooser[i] = new CMenuOptionChooser(LOCALE_DRIVE_SETUP_PARTITION_SAMBA, &d_settings.drive_partition_samba[current_device][i], OPTIONS_YES_NO_OPTIONS, OPTIONS_YES_NO_OPTION_COUNT, have_samba, sambaNotifier[i], CRCInput::RC_green);
 		#endif /*ENABLE_SAMBASERVER*/
 #endif /*ENABLE_NFSSERVER || definied ENABLE_SAMBASERVER*/
 
@@ -1320,11 +1320,11 @@ void CDriveSetup::showHddSetupSub()
 
 		//prepare make partition
 		ak_make_partition[i] = MAKE_PARTITION + iToString(i);
-		mkpart[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_FORMAT_PARTITION, true, NULL, this, ak_make_partition[i].c_str(), CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+		mkpart[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_HDD_FORMAT_PARTITION, true, NULL, this, ak_make_partition[i].c_str(), CRCInput::RC_red);
 
 		//prepare format partition
 		ak_format_partition[i] = FORMAT_PARTITION + iToString(i);
-		format_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_FORMAT, true, NULL, this, ak_format_partition[i].c_str(), CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+		format_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_FORMAT, true, NULL, this, ak_format_partition[i].c_str(), CRCInput::RC_red);
 
 		//prepare mount/unmount partition, swap caption and actionkey strings
 		if(is_mounted[i])
@@ -1337,15 +1337,15 @@ void CDriveSetup::showHddSetupSub()
 			ak_mount_umount_partition[i] = MOUNT_PARTITION + iToString(i);
 			locale_mount_umount[i] = LOCALE_DRIVE_SETUP_PARTITION_MOUNT_NOW;
 		}
-		mount_umount[i] = new CMenuForwarder(locale_mount_umount[i], true, NULL, this, ak_mount_umount_partition[i].c_str(), CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+		mount_umount[i] = new CMenuForwarder(locale_mount_umount[i], true, NULL, this, ak_mount_umount_partition[i].c_str(), CRCInput::RC_green);
 
 		//prepare delete partition
 		ak_delete_partition[i] = DELETE_PARTITION + iToString(i);
-		delete_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_DELETE, true, NULL, this, ak_delete_partition[i].c_str(), CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+		delete_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_DELETE, true, NULL, this, ak_delete_partition[i].c_str(), CRCInput::RC_yellow);
 
 		//prepare check partition
 		ak_check_partition[i] = CHECK_PARTITION + iToString(i);
-		check_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CHECK, true, NULL, this, ak_check_partition[i].c_str(), CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+		check_part[i] = new CMenuForwarder(LOCALE_DRIVE_SETUP_PARTITION_CHECK, true, NULL, this, ak_check_partition[i].c_str(), CRCInput::RC_blue);
 
 		//edit partition
 		part[i]->addItem(p_subhead[i]);			//subhead
@@ -1384,7 +1384,7 @@ void CDriveSetup::showHddSetupSub()
 		#ifdef ENABLE_SAMBASERVER
 			part_srv_shares[i]->addItem(srv_smb_sep);		//samba separator
 			if (!have_samba)
-				part_srv_shares[i]->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));//samba info
+				part_srv_shares[i]->addItem(new CMenuForwarder(LOCALE_MESSAGEBOX_INFO, true, NULL, this, "missing_samba", CRCInput::RC_help));//samba info
 			part_srv_shares[i]->addItem(smb_chooser[i]);		//samba on/off
 			//------------------------
 			part_srv_shares[i]->addItem(GenericMenuSeparatorLine);	//separator

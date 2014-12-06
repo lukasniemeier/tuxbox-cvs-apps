@@ -270,32 +270,32 @@ int COsdSetup::showOsdSetup()
 
 	// language
 	COsdLangSetup *osd_lang = new COsdLangSetup(menue_title);
-	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, osd_lang, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, osd_lang, NULL, CRCInput::RC_red);
 	
 	//osd color setup forwarder
-	CMenuForwarder *osd_setup_color_sub_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_HEAD, true, NULL, osd_setup_colors, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+	CMenuForwarder *osd_setup_color_sub_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_HEAD, true, NULL, osd_setup_colors, NULL, CRCInput::RC_green);
 		//osd menue colors forwarder
-		CMenuForwarder *osd_menucolor_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_MENUCOLORS, true, NULL, this, "show_menue_color_setup", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+		CMenuForwarder *osd_menucolor_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_MENUCOLORS, true, NULL, this, "show_menue_color_setup", CRCInput::RC_red);
 		//osd infobar setup forwarder
-		CMenuForwarder *osd_sbcolor_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_STATUSBAR, true, NULL, this, "show_infobar_color_setup", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN);
+		CMenuForwarder *osd_sbcolor_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_STATUSBAR, true, NULL, this, "show_infobar_color_setup", CRCInput::RC_green);
 		//osd themes setup forwarder
 		CThemes *osd_themes = new CThemes(menue_title);
-		CMenuForwarder *osd_themes_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_THEMESELECT, true, NULL, osd_themes, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+		CMenuForwarder *osd_themes_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_THEMESELECT, true, NULL, osd_themes, NULL, CRCInput::RC_yellow);
 		
 
 	//osd progressbar color
 	CMenuOptionChooser *osd_pbcolor_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_COLORMENU_PROGRESSBAR, &g_settings.progressbar_color, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	//osd fontsize setup
-	CMenuForwarder *osd_fontsize_fw = new CMenuForwarder(LOCALE_FONTMENU_HEAD, true, NULL, this, "show_fontsize_setup", CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW);
+	CMenuForwarder *osd_fontsize_fw = new CMenuForwarder(LOCALE_FONTMENU_HEAD, true, NULL, this, "show_fontsize_setup", CRCInput::RC_yellow);
 	//osd timeout setup forwarder
-	CMenuForwarder *osd_timeout_fw = new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL,  this, "show_timeout_setup", CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE);
+	CMenuForwarder *osd_timeout_fw = new CMenuForwarder(LOCALE_TIMING_HEAD, true, NULL,  this, "show_timeout_setup", CRCInput::RC_blue);
 	//osd screen setup
 	CScreenSetup *osd_screen = new CScreenSetup();
-	CMenuForwarder *osd_screen_fw = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, osd_screen, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1);
+	CMenuForwarder *osd_screen_fw = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, osd_screen, NULL, CRCInput::RC_1);
 	//osd infobar setup
-	CMenuForwarder *osd_infobar_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR, true, NULL, this, "show_infobar_setup", CRCInput::RC_2, NEUTRINO_ICON_BUTTON_2);
+	CMenuForwarder *osd_infobar_fw = new CMenuForwarder(LOCALE_OSDSETTINGS_INFOBAR, true, NULL, this, "show_infobar_setup", CRCInput::RC_2);
 	//osd channellist setup
-	CMenuForwarder *osd_chanlist_fw = new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLIST, true, NULL, this, "show_channellist_setup", CRCInput::RC_3, NEUTRINO_ICON_BUTTON_3);
+	CMenuForwarder *osd_chanlist_fw = new CMenuForwarder(LOCALE_MISCSETTINGS_CHANNELLIST, true, NULL, this, "show_channellist_setup", CRCInput::RC_3);
 
 	//osd volumbar position
  	CMenuOptionChooser* osd_volumbarpos_ch = new CMenuOptionChooser(LOCALE_OSDSETTINGS_VOLUMEBAR_DISP_POS, &g_settings.volumebar_disp_pos, VOLUMEBAR_DISP_POS_OPTIONS, VOLUMEBAR_DISP_POS_OPTIONS_COUNT, true);
@@ -337,7 +337,7 @@ int COsdSetup::showOsdSetup()
 	{
 		//GTX
 		osd_alpha = new CAlphaSetup(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA);
-		osd_setup->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA, true, NULL, osd_alpha, NULL, CRCInput::RC_4, NEUTRINO_ICON_BUTTON_4));
+		osd_setup->addItem(new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_GTX_ALPHA, true, NULL, osd_alpha, NULL, CRCInput::RC_4));
 	}
 #else 	
 	//Dream and TD
@@ -655,7 +655,7 @@ int COsdSetup::showOsdFontSizeSetup()
 	CFile font_file;
 	font_file.Name = g_settings.font_file;
 	font_file_name = font_file.getFileName();
-	CMenuForwarder *mf = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_FONT, true, font_file_name, this, "select_font", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *mf = new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_FONT, true, font_file_name, this, "select_font", CRCInput::RC_red);
 	fontSettings->addItem(mf);
 	fontSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FONTMENU_SIZES));
 

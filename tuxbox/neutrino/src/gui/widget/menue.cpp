@@ -168,17 +168,9 @@ void CMenuItem::paintItemButton(const bool select_mode, const int &item_height, 
 	int height = item_height;
 	bool icon_painted = false;
 
-	std::string icon_name = iconName;
+	std::string icon_name = getIconName();
 	int icon_w = 0;
 	int icon_h = 0;
-
-	if (icon_name.empty() && CRCInput::isNumeric(directKey) && g_settings.menu_numbers_as_icons)
-	{
-		char i_name[6]; /* X.raw +'\0' */
-		snprintf(i_name, 6, "%d.raw", CRCInput::getNumericValue(directKey));
-		i_name[5] = '\0'; /* even if snprintf truncated the string, ensure termination */
-		icon_name = i_name;
-	}
 
 	if (selected && offx > 0)
 	{
@@ -237,6 +229,53 @@ void CMenuItem::paintItemButton(const bool select_mode, const int &item_height, 
 		
 		frameBuffer->paintIcon(NEUTRINO_ICON_RIGHT_MARKER, icon_offset, y+ ((height/2- m_icon_h/2)) );
 	}
+}
+
+std::string CMenuItem::getIconName()
+{
+	std::string icon_name;
+
+	if (!iconName.empty())
+	{
+		icon_name = iconName;
+	}
+	else if (CRCInput::isNumeric(directKey))
+	{
+		if (g_settings.menu_numbers_as_icons)
+		{
+			icon_name = CRCInput::getKeyName(directKey);
+			icon_name += ".raw";
+		}
+	}
+	else
+	{
+		switch (directKey)
+		{
+			case CRCInput::RC_red:
+				icon_name = NEUTRINO_ICON_BUTTON_RED;
+				break;
+			case CRCInput::RC_green:
+				icon_name = NEUTRINO_ICON_BUTTON_GREEN;
+				break;
+			case CRCInput::RC_yellow:
+				icon_name = NEUTRINO_ICON_BUTTON_YELLOW;
+				break;
+			case CRCInput::RC_blue:
+				icon_name = NEUTRINO_ICON_BUTTON_BLUE;
+				break;
+			case CRCInput::RC_standby:
+				icon_name = NEUTRINO_ICON_BUTTON_POWER;
+				break;
+			case CRCInput::RC_setup:
+				icon_name = NEUTRINO_ICON_BUTTON_DBOX;
+				break;
+			case CRCInput::RC_help:
+				icon_name = NEUTRINO_ICON_BUTTON_HELP;
+				break;
+		}
+	}
+
+	return icon_name;
 }
 
 

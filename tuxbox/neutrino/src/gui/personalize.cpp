@@ -98,7 +98,7 @@
 	foo->addWidgets(widget_struct, count of available widgets);
 
 	//create a forwarder object:
-	CMenuItem *item = new CMenuForwarder(LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuItem *item = new CMenuForwarder(LOCALE_MAINMENU_TVMODE, true, NULL, this, "tv", CRCInput::RC_red);
 
 	//now you can add this to personalization
 	foo->addItem(&mn, tvswitch, &g_settings.personalize_tvmode);
@@ -295,13 +295,13 @@ int CPersonalizeGui::ShowPersonalizationMenu()
 	CUserMenuSetup* userMenuSetupBlue = new CUserMenuSetup(LOCALE_USERMENU_BUTTON_BLUE, SNeutrinoSettings::BUTTON_BLUE);
 
  	pMenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_USERMENU_HEAD));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_RED, true, NULL, userMenuSetupRed, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_GREEN, true, NULL, userMenuSetupGreen, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_YELLOW, true, NULL, userMenuSetupYellow, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
-	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_BLUE, true, NULL, userMenuSetupBlue, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_RED, true, NULL, userMenuSetupRed, NULL, CRCInput::RC_red));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_GREEN, true, NULL, userMenuSetupGreen, NULL, CRCInput::RC_green));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_YELLOW, true, NULL, userMenuSetupYellow, NULL, CRCInput::RC_yellow));
+	pMenu->addItem(new CMenuForwarder(LOCALE_USERMENU_BUTTON_BLUE, true, NULL, userMenuSetupBlue, NULL, CRCInput::RC_blue));
 
 	pMenu->addItem(GenericMenuSeparatorLine);
-	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
+	pMenu->addItem(new CMenuForwarder(LOCALE_PERSONALIZE_HELP, true, NULL, this, "personalize_help", CRCInput::RC_help));
 
 	int res = pMenu->exec(NULL, "");
 	selected = pMenu->getSelected();
@@ -564,7 +564,7 @@ void CPersonalizeGui::addPersonalizedItems()
 					fw->active = *v_item[i].item_active;
 
 				//get shortcut
-				if (fw->iconName.empty() && fw->active ) //if no icon is defined and item is active, allow to generate a shortcut, 
+				if (fw->active && (d_key == CRCInput::RC_nokey || CRCInput::isNumeric(d_key))) //if item is active and numeric or no key is assigned, allow to generate a shortcut
 				{
 					add_shortcut = true;
 					d_key = getShortcut(short_cut);

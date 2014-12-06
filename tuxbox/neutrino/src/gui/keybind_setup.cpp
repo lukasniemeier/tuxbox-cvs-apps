@@ -179,7 +179,7 @@ int CKeybindSetup::showSetup()
 
 	//remote control
 	CMenuWidget * ks_rc 		= new CMenuWidget(menue_title, menue_icon, width);
-	CMenuForwarder *ks_rc_fw 	= new CMenuForwarder(LOCALE_KEYBINDINGMENU, true, NULL, ks_rc, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+	CMenuForwarder *ks_rc_fw 	= new CMenuForwarder(LOCALE_KEYBINDINGMENU, true, NULL, ks_rc, NULL, CRCInput::RC_red);
 
 	CStringInput keySettings_repeat_genericblocker(LOCALE_KEYBINDINGMENU_REPEATBLOCKGENERIC, g_settings.repeat_genericblocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", this);
 	CStringInput keySettings_repeatBlocker(LOCALE_KEYBINDINGMENU_REPEATBLOCK, g_settings.repeat_blocker, 3, LOCALE_REPEATBLOCKER_HINT_1, LOCALE_REPEATBLOCKER_HINT_2, "0123456789 ", this);

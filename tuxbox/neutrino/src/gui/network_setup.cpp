@@ -165,7 +165,7 @@ int CNetworkSetup::showNetworkSetup()
 		networkSettings->setPreselected(selected);
 
 		//apply button
-		CMenuForwarder *m0 = new CMenuForwarder(LOCALE_NETWORKMENU_SETUPNOW, true, NULL, this, "networkapply", CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED);
+		CMenuForwarder *m0 = new CMenuForwarder(LOCALE_NETWORKMENU_SETUPNOW, true, NULL, this, "networkapply", CRCInput::RC_red);
 	
 		//prepare input entries
 		CIPInput networkSettings_NetworkIP  (LOCALE_NETWORKMENU_IPADDRESS , network_address   , LOCALE_IPSETUP_HINT_1, LOCALE_IPSETUP_HINT_2, this);
@@ -196,8 +196,8 @@ int CNetworkSetup::showNetworkSetup()
 	
 		networkSettings->addItem( m0 );
 	
-		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_TEST, true, NULL, this, "networktest", CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
-		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SHOW, true, NULL, this, "networkshow", CRCInput::RC_help, NEUTRINO_ICON_BUTTON_HELP));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_TEST, true, NULL, this, "networktest", CRCInput::RC_green));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SHOW, true, NULL, this, "networkshow", CRCInput::RC_help));
 		networkSettings->addItem(GenericMenuSeparatorLine);
 	
 		networkSettings->addItem(o1);
@@ -221,7 +221,7 @@ int CNetworkSetup::showNetworkSetup()
 		CStringInput networkSettings_NtpRefresh(LOCALE_NETWORKMENU_NTPREFRESH, &g_settings.network_ntprefresh, 3, false, LOCALE_NETWORKMENU_NTPREFRESH_HINT1, LOCALE_NETWORKMENU_NTPREFRESH_HINT2 , "0123456789 ", this);
 
 		CMenuWidget* ntp = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
-		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_NTPTITLE, true, NULL, ntp, NULL, CRCInput::RC_yellow, NEUTRINO_ICON_BUTTON_YELLOW));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_NTPTITLE, true, NULL, ntp, NULL, CRCInput::RC_yellow));
 		ntp->addIntroItems(LOCALE_NETWORKMENU_NTPTITLE);
 		CMenuOptionChooser *ntp1 = new CMenuOptionChooser(LOCALE_NETWORKMENU_NTPENABLE, &g_settings.network_ntpenable, OPTIONS_NTPENABLE_OPTIONS, OPTIONS_NTPENABLE_OPTION_COUNT, true, this);
 		CMenuForwarder *ntp2 = new CMenuForwarder(LOCALE_NETWORKMENU_NTPSERVER, true, g_settings.network_ntpserver, &networkSettings_NtpServer);
@@ -234,27 +234,27 @@ int CNetworkSetup::showNetworkSetup()
 
 	#ifdef ENABLE_GUI_MOUNT
 		CMenuWidget* networkmounts = new CMenuWidget(LOCALE_MAINSETTINGS_NETWORK, NEUTRINO_ICON_SETTINGS, width);
-		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, networkmounts, NULL, CRCInput::RC_blue, NEUTRINO_ICON_BUTTON_BLUE));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_MOUNT, true, NULL, networkmounts, NULL, CRCInput::RC_blue));
 		networkmounts->addIntroItems(LOCALE_NETWORKMENU_MOUNT);
 
 		CNFSMountGui* nfsMountGui = new CNFSMountGui();
-		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, nfsMountGui, NULL, CRCInput::RC_red, NEUTRINO_ICON_BUTTON_RED));
+		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_MOUNT, true, NULL, nfsMountGui, NULL, CRCInput::RC_red));
 
 		CNFSUmountGui* nfsUmountGui = new CNFSUmountGui();
-		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_UMOUNT, true, NULL, nfsUmountGui, NULL, CRCInput::RC_green, NEUTRINO_ICON_BUTTON_GREEN));
+		networkmounts->addItem(new CMenuForwarder(LOCALE_NFS_UMOUNT, true, NULL, nfsUmountGui, NULL, CRCInput::RC_green));
 	#endif
 
 	#ifndef DISABLE_INTERNET_UPDATE
 	#ifndef HAVE_DREAMBOX_HARDWARE
 		//proxyserver
 		CProxySetup* proxySetup = new CProxySetup(LOCALE_MAINSETTINGS_NETWORK);
-		networkSettings->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, proxySetup, NULL, CRCInput::RC_0, NEUTRINO_ICON_BUTTON_0));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_FLASHUPDATE_PROXYSERVER_SEP, true, NULL, proxySetup, NULL, CRCInput::RC_0));
  	#endif 
 	#endif
 
 	#if defined ENABLE_DRIVE_GUI && defined ENABLE_SAMBASERVER
 		CSambaSetup* sambaSetup = new CSambaSetup(LOCALE_MAINSETTINGS_NETWORK);
-		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SAMBA, true, NULL, sambaSetup, NULL, CRCInput::RC_1, NEUTRINO_ICON_BUTTON_1));
+		networkSettings->addItem(new CMenuForwarder(LOCALE_NETWORKMENU_SAMBA, true, NULL, sambaSetup, NULL, CRCInput::RC_1));
 	#endif
 
 		res = networkSettings->exec(NULL, "");
