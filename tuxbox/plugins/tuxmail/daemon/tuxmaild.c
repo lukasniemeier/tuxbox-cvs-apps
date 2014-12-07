@@ -1014,7 +1014,12 @@ void doOneChar( char c )
 		// normal, not in a tag, translation or special char    	
 		case cTrans :
 			{
-//				printf("U: (%c:%u) nTr:%u\r\n",c,c,nTr);
+//				printf("U: (%c:%u) nTr:%u\tCharInWord %d\n",c,c,nTr,nCharInWord);
+				if (nCharInWord >= (int)sizeof(sWord)) // prevent buffer overflow
+				{
+					nCharInWord = 0;
+					break;
+				}
 				if(nTr == 0)
 				{
 					sWord[nCharInWord++] = c;
@@ -1336,9 +1341,9 @@ void doOneChar( char c )
 				} 
 				else 
 				{ // we didn't find a conversion
-					char sTmp[300];
+					char sTmp[512];
 
-					sprintf(sTmp,"&%s%c",sSond,c);					
+					snprintf(sTmp, 512, "&%s%c", sSond, c);
 					int iLen = strlen(sTmp);
 					for( i = 0 ; i < iLen; i++)
 					{
@@ -1388,7 +1393,7 @@ void doOneChar( char c )
 
 void writeFOut( char *s)
 {
-	char sSond[255];
+	char sSond[512];
 
 	// paint a line ?
 	if( s[0] == '\n' ) 
@@ -1712,10 +1717,7 @@ int SendPOPCommand(int command, char *param, int ssl)
 
 				if(stringindex < sizeof(recv_buffer) - 4)
 				{
-					if((linelen < 256) || (command != TOP))		// restrict linelen
-					{
 						stringindex++;
-					} 
 				}
 				else
 				{
@@ -4830,8 +4832,8 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.54 $";
-	int param, nodelay = 0, account, mailstatus, unread_mailstatus;
+	char cvs_revision[] = "$Revision: 1.55 $";
+	int param = 0, nodelay = 0, account = 0, mailstatus = 0, unread_mailstatus = 0;
 	pthread_t thread_id;
 	void *thread_result = 0;
 
@@ -4866,18 +4868,17 @@ int main(int argc, char **argv)
 						return -1;
 					}
 					param++;
-					int account = atoi(argv[param]);
+					account = atoi(argv[param]);
 					param++;
 					FILE* pipeout;
-					pipeout = fopen(SMTPFILE,"w");
-					if(pipeout == NULL)
+					if ((pipeout = fopen(SMTPFILE,"w")) == NULL)
 					{
 						return -1;
 					}
 					FILE* pipein;
-					pipein = fopen(argv[param+1],"r");
-					if(pipeout == NULL)
+					if ((pipein = fopen(argv[param+1],"r")) == NULL)
 					{
+						fclose(pipeout);
 						fclose(pipeout);
 						return -1;
 					}

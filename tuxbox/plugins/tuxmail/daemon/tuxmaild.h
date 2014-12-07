@@ -68,7 +68,7 @@ int  nCRLF = 0;
 int  nLine = 1; 
 int  nRef  = 1;
 int   nHyp  = 0 ;
-char  sSond[355],sRef[355], sWord[85];
+char  sSond[512],sRef[512], sWord[85];
 static enum  t_state { cNorm, cInTag, cSond, cInComment, cTrans } state ;
 
 #define szsize 64
@@ -77,7 +77,7 @@ char *szTab[szsize] = {
   /*192 */ "Agrave"  ,   /*193 */ "Aacute"  ,
   /*194 */ "Acirc"   ,   /*195 */ "Atilde"  ,
   /*196 */ "Auml"    ,   /*197 */ "Aring"   ,
-  /*198 */ "Aelig"   ,   /*199 */ "Ccedil"  ,
+  /*198 */ "AElig"   ,   /*199 */ "Ccedil"  ,
   /*200 */ "Egrave"  ,   /*201 */ "Eacute"  ,
   /*202 */ "Ecirc"   ,   /*203 */ "Euml"    ,
   /*204 */ "Igrave"  ,   /*205 */ "Iacute"  ,
@@ -85,7 +85,7 @@ char *szTab[szsize] = {
   /*208 */ "ETH"     ,   /*209 */ "Ntilde"  ,
   /*210 */ "Ograve"  ,   /*211 */ "Oacute"  ,
   /*212 */ "Ocirc"   ,   /*213 */ "Otilde"  ,
-  /*214 */ "Ouml"    ,   /*215 */ "XXXXXX"  ,
+  /*214 */ "Ouml"    ,   /*215 */ "times"   ,
   /*216 */ "Oslash"  ,   /*217 */ "Ugrave"  ,
   /*218 */ "Uacute"  ,   /*219 */ "Ucirc"   ,
   /*220 */ "Uuml"    ,   /*221 */ "Yacute"  ,
@@ -101,25 +101,27 @@ char *szTab[szsize] = {
   /*240 */ "eth"     ,   /*241 */ "ntilde"  ,
   /*242 */ "ograve"  ,   /*243 */ "oacute"  ,
   /*244 */ "ocirc"   ,   /*245 */ "otilde"  ,
-  /*246 */ "ouml"    ,   /*247 */ "XXXXXX"  ,
+  /*246 */ "ouml"    ,   /*247 */ "divide"  ,
   /*248 */ "oslash"  ,   /*249 */ "ugrave"  ,
   /*250 */ "uacute"  ,   /*251 */ "ucirc"   ,
   /*252 */ "uuml"    ,   /*253 */ "yacute"  ,
   /*254 */ "thorn"   ,   /*255 */ "yuml"
 };
 
-#define ttsize  9
+#define ttsize  11
 
 char ttable[ttsize*3] = {
-	'F','C', 252,
-  	'D','F', 223,
-	'E','4', 228,
-	'F','6', 246,
-	'D','6', 214,
-	'3','D', '=',
-	'2','0',  20,
-	'0','D',  13,
-	13 , 10,  0
+	'C','4', 196, // Ä
+	'D','6', 214, // Ö
+	'D','C', 220, // Ü
+	'D','F', 223, // ß
+	'E','4', 228, // ä
+	'F','6', 246, // ö
+	'F','C', 252, // ü
+	'3','D',  61, // =
+	'2','0',  20, // DC4
+	'0','D',  13, // CR
+	13 , 10,   0
 };
 
 // functions
