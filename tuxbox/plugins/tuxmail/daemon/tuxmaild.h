@@ -214,7 +214,6 @@ connection *c;
 // some data
 
 char versioninfo[12];
-FILE *fd_pid;
 int slog = 0;
 int pid;
 int webport;
@@ -226,21 +225,19 @@ int video, typeflag;
 char online = 1;
 char mailread = 0;
 char inPOPCmd = 0;
-int accounts;
+int accounts = 0;
 int sock;
-int messages, deleted_messages;
+int messages = 0, deleted_messages = 0;
 int stringindex;
 int use_spamfilter, spam_entries, spam_detected;
 char uid[128];
 long v_uid;
 long m_uid;
-char imap;
 char header[1024];
 char timeinfo[22];
 char maildir[256];
 char security[80];
 int mailcache = 0;
-time_t tt;
 
 // lcd stuff
 

@@ -3134,11 +3134,11 @@ int SaveMail(int account, char* mailuid)
 {
 	int loop;
 	char mailnumber[12];
-	char imap1 = 0;
+	char imap = 0;
 	
 	if( account_db[account].imap[0] != '\0' )
 	{
-		imap1 = 1;
+		imap = 1;
 	}
 	
 	if((fd_mail = fopen(POP3FILE, "w")))
@@ -3148,7 +3148,7 @@ int SaveMail(int account, char* mailuid)
 
 	// get mail count
 
-		if( !imap1 )
+		if( !imap )
 		{
 			if(!SendPOPCommand(INIT, account_db[account].pop3, account_db[account].ssl))
 			{
@@ -3233,7 +3233,7 @@ int SaveMail(int account, char* mailuid)
 		{
 			sprintf(mailnumber, "%d", loop);
 
-			if( !imap1 )
+			if( !imap )
 			{
 				if(!SendPOPCommand(UIDL, mailnumber, account_db[account].ssl))
 				{
@@ -3263,7 +3263,7 @@ int SaveMail(int account, char* mailuid)
 			{
 				printf("TuxMailD <SaveFile idx(%u) uid(%s)>\n", loop,uid);
 
-				if( !imap1 )
+				if( !imap )
 				{ 
 					if(!SendPOPCommand(RETR, mailnumber, account_db[account].ssl))
 					{
@@ -3324,7 +3324,7 @@ int SaveMail(int account, char* mailuid)
 
 		fclose(fd_mail);
 		
-		if( !imap1 )
+		if( !imap )
 		{
 			SendPOPCommand(QUIT, "", account_db[account].ssl);
 		}
@@ -3448,15 +3448,19 @@ int ScanMail(char* mailfile,int account,char* mailnumber, FILE* fd_status)
 	{
 		return 0;
 	}
-	
+
+	FILE* fd_mail;
+	if ((fd_mail = fopen(mailfile, "r")) == NULL)
+	{
+		return 0;
+	}
+
 	int scancnt = 20;
 	char spam = 0;
-	FILE* fd_mail;
-	fd_mail = fopen(mailfile, "r");
 	char linebuffer[256];
-  int filesize;
-  char *known_uids = 0;
-	char *pointer;
+	int filesize = 0;
+	char *known_uids = 0;
+	char *pointer = 0;
   	
 	// scan the first x lines of th file for a spam-tag
 	do
@@ -3529,11 +3533,17 @@ int AddNewMailFile(int account, char *mailnumber, FILE *fd_status)
 	char idxfile[256];
 	char mailfile[256];
 	FILE *fd_mailidx;
-	
+	char imap = 0;
+
 	// if we do not store the mails
 	if( !mailcache )
 	{
 		return 0;
+	}
+
+	if( account_db[account].imap[0] != '\0' )
+	{
+		imap = 1;
 	}
 	
 	sprintf(idxfile,"%stuxmail.idx%u",maildir,account);
@@ -3667,25 +3677,27 @@ int CheckAccount(int account)
 {
 	int loop, minloop = 0;
 	FILE *fd_status, *fd_idx;
-	int filesize, skip_uid_check = 0;
+	int filesize = 0, skip_uid_check = 0;
 	char statusfile[] = "/tmp/tuxmail.?";
 	char *known_uids = 0, *ptr = 0;
 	char mailnumber[12];
 	int readmails = 0;
 	int knownmails = 0;
-
-	imap = 0;
+	char imap = 0;
 		
 	// timestamp
 
-	time(&tt);
+	time_t tt = time((time_t *)0);
 	strftime(timeinfo, 22, "%R", localtime(&tt));
 
 	// check if we should use an IMAP server
 	if( account_db[account].imap[0] != '\0' )
 	{
 		imap = 1;
+	}
 
+	if( imap )
+	{
 		// init connection to server
 		if(!SendIMAPCommand(INIT, account_db[account].imap, "", account_db[account].ssl))
 		{
@@ -4844,10 +4856,11 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.56 $";
+	char cvs_revision[] = "$Revision: 1.57 $";
 	int param = 0, nodelay = 0, account = 0, mailstatus = 0, unread_mailstatus = 0;
 	pthread_t thread_id;
 	void *thread_result = 0;
+	FILE *fd_pid;
 
 	// check commandline parameter
 
@@ -4951,7 +4964,7 @@ int main(int argc, char **argv)
 		
 		sscanf(cvs_revision, "%*s %s", versioninfo);
 
-		time(&tt);
+		time_t tt = time((time_t *)0);
 		strftime(timeinfo, 22, "%d.%m.%Y - %T", localtime(&tt));
 
 		switch(fork())
