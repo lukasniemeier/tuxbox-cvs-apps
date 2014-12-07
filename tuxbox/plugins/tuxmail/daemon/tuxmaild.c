@@ -1763,7 +1763,6 @@ int SendPOPCommand(int command, char *param, int ssl)
 				case TOP:
 
 					stringindex = 0;
-					headersize = strlen(recv_buffer);
 					memset(header, 0, sizeof(header));
 
 					if((ptr = strstr(recv_buffer, "\nDate:")))
@@ -1889,6 +1888,13 @@ int SendPOPCommand(int command, char *param, int ssl)
 							else
 							{
 								memcpy(&header[stringindex++], ptr++, 1);
+							}
+							if(*ptr == '\r' && (*(ptr + 2) == ' ' || *(ptr + 2) == 0x09)) // check multiline
+							{
+								if(*(ptr + 3) == '=' && *(ptr + 4) == '?')
+									ptr += 3;
+								else
+									ptr += 2;
 							}
 						}
 
@@ -2389,7 +2395,6 @@ int SendIMAPCommand(int command, char *param, char *param2, int ssl)
 				case FETCH:
 
 					stringindex = 0;
-					headersize = strlen(recv_buffer);
 					memset(header, 0, sizeof(header));
 
 					if((ptr = strstr(recv_buffer, "\nDate:")))
@@ -2515,6 +2520,13 @@ int SendIMAPCommand(int command, char *param, char *param2, int ssl)
 							else
 							{
 								memcpy(&header[stringindex++], ptr++, 1);
+							}
+							if(*ptr == '\r' && (*(ptr + 2) == ' ' || *(ptr + 2) == 0x09)) // check multiline
+							{
+								if(*(ptr + 3) == '=' && *(ptr + 4) == '?')
+									ptr += 3;
+								else
+									ptr += 2;
 							}
 						}
 						
@@ -4832,7 +4844,7 @@ void SigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-	char cvs_revision[] = "$Revision: 1.55 $";
+	char cvs_revision[] = "$Revision: 1.56 $";
 	int param = 0, nodelay = 0, account = 0, mailstatus = 0, unread_mailstatus = 0;
 	pthread_t thread_id;
 	void *thread_result = 0;

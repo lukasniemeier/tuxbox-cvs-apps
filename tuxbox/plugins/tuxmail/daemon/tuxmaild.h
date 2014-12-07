@@ -236,7 +236,6 @@ long v_uid;
 long m_uid;
 char imap;
 char header[1024];
-int headersize;
 char timeinfo[22];
 char maildir[256];
 char security[80];
