@@ -939,8 +939,22 @@ void RenderString(char *string, int sx, int sy, int maxwidth, int layout, int si
 		while(*rptr != '\0')
 		{
 			int uml = 0;
-			switch(*rptr)    /* skip Umlauts */
+			switch(*rptr)    /* skip Umlauts, EURO Hack */
 			{
+				case '\xe2':
+							if (*(rptr + 1) == '\x82' && *(rptr + 2) == '\xac') { // U+20AC
+								*(rptr)   = 'E';
+								*(rptr+1) = 'U';
+								*(rptr+2) = 'R';
+								uml=1;
+							}
+							else if (*(rptr + 1) == '\x80' && *(rptr + 2) == '\xa6') { // U+2026
+								*(rptr)   = '.';
+								*(rptr+1) = '.';
+								*(rptr+2) = '.';
+								uml=1;
+							}
+							break;
 				case '\xc4':
 				case '\xd6':
 				case '\xdc':
@@ -3806,7 +3820,7 @@ void SaveAndReloadDB(int iSave)
 
 void plugin_exec(PluginParam *par)
 {
-	char cvs_revision[] = "$Revision: 1.56B $";
+	char cvs_revision[] = "$Revision: 1.57 $";
 	int loop, account, mailindex;
 	FILE *fd_run;
 	FT_Error error;
