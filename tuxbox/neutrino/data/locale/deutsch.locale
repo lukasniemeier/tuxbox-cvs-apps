@@ -850,12 +850,12 @@ moviebrowser.hint_newbook_backward Neue Wiederholung\n 'blau' für Endposition
 moviebrowser.hint_newbook_forward Neuer Werbesprung\n 'blau' für Endposition
 moviebrowser.info_audio Audio
 moviebrowser.info_channel Kanal
-moviebrowser.info_filename Name
+moviebrowser.info_filename Dateiname
 moviebrowser.info_film_delete Film löschen
 moviebrowser.info_film_during Während der Filmwiedergabe:
 moviebrowser.info_film_reload Filminfos neu laden
 moviebrowser.info_genre_major Genre
-moviebrowser.info_genre_minor Genre
+moviebrowser.info_genre_minor Genre (untergeordnet)
 moviebrowser.info_head Film Informationen
 moviebrowser.info_head_update Inhalte in allen sichtbaren Filminfos speichern
 moviebrowser.info_info1 Info 1
@@ -879,7 +879,7 @@ moviebrowser.info_serie Serie
 moviebrowser.info_size Dateigröße (MB)
 moviebrowser.info_subtitles Untertitel
 moviebrowser.info_title Titel
-moviebrowser.info_videoformat Bild
+moviebrowser.info_videoformat Bildformat
 moviebrowser.last_play_max_items Zeilen 'zuletzt aufgenommen'
 moviebrowser.last_record_max_items Zeilen 'zuletzt gesehen'
 moviebrowser.load_default Lade Voreinstellung

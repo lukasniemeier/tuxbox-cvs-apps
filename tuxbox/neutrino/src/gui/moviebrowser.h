@@ -158,7 +158,7 @@ typedef struct
 	int* used;
 }MB_DIR;
 
-#define MB_MAX_ROWS 6
+#define MB_MAX_ROWS LF_MAX_ROWS
 #define MB_MAX_DIRS 5
 /* MB_SETTINGS to be stored in g_settings anytime ....*/
 typedef struct
