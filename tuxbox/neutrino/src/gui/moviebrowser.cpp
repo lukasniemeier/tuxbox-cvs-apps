@@ -3210,7 +3210,7 @@ bool CMovieBrowser::showMenu(MI_MOVIE_INFO* /*movie_info*/)
 	for(i=0; i<MB_MAX_ROWS; i++)
 	{
 		optionsMenuBrowser.addItem(GenericMenuSeparator);
-		optionsMenuBrowser.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_BROWSER_ROW_ITEM, (int*)(&m_settings.browserRowItem[i]), MESSAGEBOX_BROWSER_ROW_ITEM, MESSAGEBOX_BROWSER_ROW_ITEM_COUNT, true, NULL, CRCInput::RC_nokey, "", true));
+		optionsMenuBrowser.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_BROWSER_ROW_ITEM, (int*)(&m_settings.browserRowItem[i]), MESSAGEBOX_BROWSER_ROW_ITEM, MESSAGEBOX_BROWSER_ROW_ITEM_COUNT, true, NULL, CRCInput::convertDigitToKey(i+1), "", true));
 		optionsMenuBrowser.addItem( new CMenuOptionNumberChooser(LOCALE_MOVIEBROWSER_BROWSER_ROW_WIDTH, &m_settings.browserRowWidth[i], true, 10, 500, 0, 0, NONEXISTANT_LOCALE, NULL, NULL, CRCInput::RC_nokey, "", true));
 	}
 
