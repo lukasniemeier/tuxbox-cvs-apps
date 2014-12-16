@@ -107,7 +107,8 @@ int COsdLangSetup::showSetup()
 	int n;
 	//		printf("scanning locale dir now....(perhaps)\n");
 
-	const char *pfad[] = {DATADIR "/neutrino/locale","/var/tuxbox/config/locale"};
+	const char *pfad[] = {DATADIR "/neutrino/locale", CONFIGDIR "/locale"};
+	std::string locales = "|";
 
 	for(int p = 0;p < 2;p++)
 	{
@@ -125,9 +126,15 @@ int COsdLangSetup::showSetup()
 				if(pos != NULL)
 				{
 					*pos = '\0';
-					CMenuForwarder* oj = new CMenuForwarder(locale, true, "", this, locale);
-					oj->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
-					osdl_setup->addItem(oj, strcmp(g_settings.language, locale) == 0);
+					if(locales.find("|" + std::string(locale) + "|") == std::string::npos)
+					{
+						locales += locale;
+						locales += "|";
+
+						CMenuForwarder* oj = new CMenuForwarder(locale, true, NULL, this, locale);
+						oj->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
+						osdl_setup->addItem(oj, strcmp(g_settings.language, locale) == 0);
+					}
 				}
 				free(namelist[count]);
 			}

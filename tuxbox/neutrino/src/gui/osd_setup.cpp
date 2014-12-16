@@ -270,7 +270,7 @@ int COsdSetup::showOsdSetup()
 
 	// language
 	COsdLangSetup *osd_lang = new COsdLangSetup(menue_title);
-	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, NULL, osd_lang, NULL, CRCInput::RC_red);
+	CMenuForwarder *osd_lang_fw = new CMenuForwarder(LOCALE_MAINSETTINGS_LANGUAGE, true, g_settings.language, osd_lang, NULL, CRCInput::RC_red);
 	
 	//osd color setup forwarder
 	CMenuForwarder *osd_setup_color_sub_fw	= new CMenuForwarder(LOCALE_OSDSETTINGS_COLORMENU_HEAD, true, NULL, osd_setup_colors, NULL, CRCInput::RC_green);
