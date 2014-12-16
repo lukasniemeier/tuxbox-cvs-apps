@@ -988,6 +988,9 @@ int CMenuOptionChooser::paint( bool selected )
 {
 	int height = getHeight();
 
+	if (optionName != NONEXISTANT_LOCALE)
+		optionNameString = g_Locale->getText(optionName);
+
 	neutrino_locale_t option = NONEXISTANT_LOCALE;
 	for(unsigned int count = 0 ; count < number_of_options; count++)
 	{
