@@ -694,6 +694,8 @@ lcdmenu.statusline.both Lautstärke / Fortschritt
 lcdmenu.statusline.both_audio Laut. / Fort. / Audio
 lcdmenu.statusline.playtime Sendungsfortschritt
 lcdmenu.statusline.volume Lautstärke
+lirccontrol.desc Control your TV
+lirccontrol.head LIRC-Control
 listscroll.down Ab
 listscroll.exit Verlassen
 listscroll.up Auf

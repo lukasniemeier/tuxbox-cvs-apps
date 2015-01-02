@@ -643,6 +643,15 @@ bool CNeutrinoApp::showUserMenu(int button)
 				menu->addItem(menu_item, false);
 				break;
 
+			case SNeutrinoSettings::ITEM_LIRC_CONTROL:
+				menu_items++;
+				menu_prev = SNeutrinoSettings::ITEM_LIRC_CONTROL;
+				dummy = this->lircControlIsActive;
+				keyhelper.get(&key,&icon,CRCInput::RC_green);
+				menu_item = new CMenuOptionChooser(LOCALE_LIRCCONTROL_HEAD, &dummy, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this, key, icon );
+				menu->addItem(menu_item, false);
+				break;
+
 			default: 
 				printf("[neutrino] WARNING! menu wrong item!!\n");
 				break;

@@ -505,6 +505,7 @@ struct SNeutrinoSettings
 		ITEM_REMOTE = 14,
 		ITEM_FAVORITS = 15,
 		ITEM_TECHINFO = 16,
+		ITEM_LIRC_CONTROL = 17,
 		ITEM_MAX   // MUST be always the last in the list
 	} USER_ITEM;
 

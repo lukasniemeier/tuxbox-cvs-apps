@@ -721,6 +721,8 @@ const char * locale_real_names[] =
 	"lcdmenu.statusline.both_audio",
 	"lcdmenu.statusline.playtime",
 	"lcdmenu.statusline.volume",
+	"lirccontrol.desc",
+	"lirccontrol.head",
 	"listscroll.down",
 	"listscroll.exit",
 	"listscroll.up",

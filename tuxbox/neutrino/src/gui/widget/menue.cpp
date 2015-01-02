@@ -972,7 +972,10 @@ int CMenuOptionChooser::exec(CMenuTarget* parent)
 		// if options are removed optionValue may not exist anymore -> use 1st available option
 		if ((count == number_of_options) && number_of_options)
 			*optionValue = options[0]->key;
-		paint(true);
+		if (parent != NULL) 
+		{
+			paint(true);
+		}
 	}
 
 	if (observ && optionValueChanged)

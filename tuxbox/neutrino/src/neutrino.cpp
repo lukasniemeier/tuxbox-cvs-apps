@@ -228,6 +228,8 @@ CNeutrinoApp::CNeutrinoApp()
 	menuScriptsIsVisible = true;
 	memset(&font, 0, sizeof(neutrino_font_descr_struct));
 	memset(&lcd_font, 0, sizeof(lcd_font_descr_struct));
+
+	lircControlIsActive = false;
 }
 
 /*-------------------------------------------------------------------------------------
@@ -2338,188 +2340,14 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 
 		if( ( mode == mode_tv ) || ( ( mode == mode_radio ) ) )
 		{
-			if( msg == NeutrinoMessages::SHOW_EPG )
+			if (lircControlIsActive) 
 			{
-				// show EPG
-
-//				g_EpgData->show( channelList->getActiveChannel_ChannelID() );
-				g_EpgData->show( g_Zapit->getCurrentServiceID() );
-
+				handleLircMsg(msg, data, msg_repeatok, menu);
 			}
-			else if(msg == g_settings.key_tvradio_mode)
+			else 
 			{
-				if( mode == mode_tv )
-				{
-					radioMode();
-				}
-				else if( mode == mode_radio )
-				{
-					tvMode();
-				}
+				handleTvRadioMsg(msg, data, msg_repeatok, menu);
 			}
-			else if( msg == CRCInput::RC_setup )
-			{
-				menu.exec(NULL, "");
-			}
-			else if(msg == CRCInput::RC_ok)
-			{
-				int bouqMode = g_settings.bouquetlist_mode;
-
-				if((bouquetList!=NULL) && (bouquetList->Bouquets.empty()))
-				{
-					dprintf(DEBUG_DEBUG, "bouquets are empty\n");
-					bouqMode = bsmAllChannels;
-				}
-				if((bouquetList!=NULL) && (bouqMode == bsmBouquets))
-				{
-					bouquetList->exec(true);
-				}
-				else if((bouquetList!=NULL) && (bouqMode == bsmChannels))
-				{
-					int nNewChannel = bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->show();
-					if(nNewChannel>-1)
-					{
-						channelList->zapTo(bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->getKey(nNewChannel)-1);
-					}
-					else
-					{
-						bouquetList->adjustToChannel(channelList->getActiveChannelNumber());
-					}
-				}
-				else
-				{
-					dprintf(DEBUG_DEBUG, "using all channels\n");
-					channelList->exec();
-				}
-			}
-#if defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
-			// support for additional buttons on Dreambox Remote
-			else if( msg == CRCInput::RC_tv )
-			{
-				if( mode != mode_tv )
-				{
-					tvMode();
-				}
-			}
-			else if( msg == CRCInput::RC_radio )
-			{
-				if( mode != mode_radio )
-				{
-					radioMode();
-				}
-			}
-			else if( msg == CRCInput::RC_text )
-			{
-				g_PluginList->startPlugin("tuxtxt");
-			}
-			else if(msg == CRCInput::RC_timer)
-			{
-				Timerlist->exec(NULL, "");
-			}
-			else if( msg == CRCInput::RC_audio )
-			{
-				// audio channel selection
-				showUserMenu(SNeutrinoSettings::BUTTON_GREEN);
-			}
-			else if( msg == CRCInput::RC_video )
-			{
-				// nvod selection
-				showUserMenu(SNeutrinoSettings::BUTTON_YELLOW);
-			}
-#endif
-			else if( msg == CRCInput::RC_red )
-			{	// eventlist
-				if (g_settings.personalize_redbutton == 0)
-				{
-					// EventList Menu - Personalization Check
-					ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_PERSONALIZE_MENUDISABLEDHINT);
-				} else {
-					showUserMenu(SNeutrinoSettings::BUTTON_RED);  //USERMENU
-				}
-			}
-			else if( msg == CRCInput::RC_blue )
-			{	// streaminfo
-				if (g_RemoteControl->director_mode)
-				{
-					g_RemoteControl->setSubChannel(DIRECTORMODE_PORTAL); //Portal RC_blue
-					g_InfoViewer->showSubchan();
-				}				
-				else if (g_settings.personalize_bluebutton == 0)
-				{
-					// Features Menu - Personalization Check
-					ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_PERSONALIZE_MENUDISABLEDHINT);
-				}
-				else 
-					showUserMenu(SNeutrinoSettings::BUTTON_BLUE);
-			}
-			else if( msg == CRCInput::RC_green )
-			{
-				showUserMenu(SNeutrinoSettings::BUTTON_GREEN);
-				}
-			else if( msg == CRCInput::RC_yellow )
-			{       // NVODs
-				showUserMenu(SNeutrinoSettings::BUTTON_YELLOW);
-			}
-			else if (CRCInput::isNumeric(msg) && msg != CRCInput::RC_0 && g_RemoteControl->director_mode)
-			{
-				g_RemoteControl->setSubChannel(CRCInput::getNumericValue(msg));
-				g_InfoViewer->showSubchan();
-			}
-			else if(msg_repeatok == g_settings.key_quickzap_up || msg_repeatok == g_settings.key_quickzap_down)
-			{
-				//quickzap
-				channelList->quickZap(msg_repeatok);
-			}
-			else if( ( msg == CRCInput::RC_help ) ||
-						( msg == NeutrinoMessages::SHOW_INFOBAR ) )
-			{
-			         // turn on LCD display
-				CLCD::getInstance()->wake_up();
-				// show Infoviewer
-				g_InfoViewer->showTitle(channelList->getActiveChannelNumber(), channelList->getActiveChannelName(), channelList->getActiveSatellitePosition(), channelList->getActiveChannel_ChannelID()); // UTF-8
-			}
-			else if(msg_repeatok == g_settings.key_subchannel_up)
-			{
-				g_RemoteControl->subChannelUp();
-				g_InfoViewer->showSubchan();
-			}
-			else if(msg_repeatok == g_settings.key_subchannel_down)
-			{
-				g_RemoteControl->subChannelDown();
-				g_InfoViewer->showSubchan();
-			}
-			else if(msg == g_settings.key_subchannel_toggle && g_RemoteControl->director_mode)
-			{
-				g_RemoteControl->toggleSubChannel();
-				g_InfoViewer->showSubchan();
-			}
-			else if(msg == g_settings.key_zaphistory)
-			{
-				// Zap-History "Bouquet"
-				channelList->numericZap( msg );
-			}
-			else if(msg == g_settings.key_lastchannel)
-			{
-				// Quick Zap
-				channelList->numericZap( msg );
-			}
-			else if (CRCInput::isNumeric(msg))
-			{
-				//numeric zap
-				channelList->numericZap( msg );
-			}
-			else if (msg == CRCInput::RC_epg)
-			{
-				CEventListHandler elist;
-				elist.exec(NULL, "");
-			}
-			else
-			{     // turn on LCD display by kicking it
-				if (msg == CRCInput::RC_home)
-					CLCD::getInstance()->wake_up();
-				handleMsg(msg, data);
-			}
-
 		}
 		else
 		{
@@ -2562,6 +2390,277 @@ void CNeutrinoApp::RealRun(CMenuWidget &menu)
 				handleMsg(msg, data);
 			}
 		}
+	}
+}
+
+void CNeutrinoApp::setLircControlActive(bool isActive) 
+{
+	lircControlIsActive = isActive;
+
+	if (lircControlIsActive) 
+	{
+		puts("[neutrino.cpp] lirccontrol is active");
+	}
+	else
+	{
+		puts("[neutrino.cpp] lirccontrol is inactive");
+	}
+}
+
+#include <liblircdclient.h>
+
+int CNeutrinoApp::SendIrc(const std::string& command)
+{	
+	CLircdClient client;
+	if(!client.Connect())
+	{
+		puts("[neutrino.cpp] Disabling LircControl (Unable to use CLircdClient)");
+		setLircControlActive(false);
+		return -1;
+	}
+	int status = client.SendUsecs("TV", command, 100 * 1000);
+	client.Disconnect();
+	return status;
+}
+
+int CNeutrinoApp::handleLircMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, neutrino_msg_t &msg_repeatok, CMenuWidget &menu)
+{
+	std::string command;
+	if( msg == CRCInput::RC_setup || msg == CRCInput::RC_green )
+	{
+		setLircControlActive(false);
+	}
+	else if ( msg == CRCInput::RC_plus || msg_repeatok == CRCInput::RC_plus )
+	{
+		command = std::string("KEY_VOLUMEUP");
+	}
+	else if ( msg == CRCInput::RC_minus || msg_repeatok == CRCInput::RC_minus )
+	{
+		command = std::string("KEY_VOLUMEDOWN");
+	}
+	else if ( msg == CRCInput::RC_up || msg_repeatok == CRCInput::RC_up )
+	{
+		command = std::string("KEY_CHANNELUP");
+	}
+	else if ( msg == CRCInput::RC_down || msg_repeatok == CRCInput::RC_down )
+	{
+		command = std::string("KEY_CHANNELDOWN");
+	}
+	else if ( msg == CRCInput::RC_ok )
+	{
+		command = std::string("KEY_OK");
+	}
+	else if ( msg == CRCInput::RC_help )
+	{
+		command = std::string("KEY_INPUT");
+	}
+	else if ( msg == CRCInput::RC_spkr )
+	{
+		command = std::string("KEY_TEXT");
+	}
+	else
+	{     
+		// turn on LCD display by kicking it
+		if (msg == CRCInput::RC_home) 
+		{
+			CLCD::getInstance()->wake_up();
+		}
+		handleMsg(msg, data);
+	}
+
+	if (command.size() > 0)
+	{
+		int status = SendIrc(command);
+		if (status != 0)
+		{
+			puts("[neutrino.cpp] Error sending request to CLircdClient");
+		}
+	}
+
+	return 0;
+}
+
+int CNeutrinoApp::handleTvRadioMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, neutrino_msg_t &msg_repeatok, CMenuWidget &menu)
+{
+	if( msg == NeutrinoMessages::SHOW_EPG )
+	{
+		// show EPG
+		//g_EpgData->show( channelList->getActiveChannel_ChannelID() );
+		g_EpgData->show( g_Zapit->getCurrentServiceID() );
+
+	}
+	else if(msg == g_settings.key_tvradio_mode)
+	{
+		if( mode == mode_tv )
+		{
+			radioMode();
+		}
+		else if( mode == mode_radio )
+		{
+			tvMode();
+		}
+	}
+	else if( msg == CRCInput::RC_setup )
+	{
+		menu.exec(NULL, "");
+	}
+	else if(msg == CRCInput::RC_ok)
+	{
+		int bouqMode = g_settings.bouquetlist_mode;
+
+		if((bouquetList!=NULL) && (bouquetList->Bouquets.empty()))
+		{
+			dprintf(DEBUG_DEBUG, "bouquets are empty\n");
+			bouqMode = bsmAllChannels;
+		}
+		if((bouquetList!=NULL) && (bouqMode == bsmBouquets))
+		{
+			bouquetList->exec(true);
+		}
+		else if((bouquetList!=NULL) && (bouqMode == bsmChannels))
+		{
+			int nNewChannel = bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->show();
+			if(nNewChannel>-1)
+			{
+				channelList->zapTo(bouquetList->Bouquets[bouquetList->getActiveBouquetNumber()]->channelList->getKey(nNewChannel)-1);
+			}
+			else
+			{
+				bouquetList->adjustToChannel(channelList->getActiveChannelNumber());
+			}
+		}
+		else
+		{
+			dprintf(DEBUG_DEBUG, "using all channels\n");
+			channelList->exec();
+		}
+	}
+	#if defined HAVE_DREAMBOX_HARDWARE || defined HAVE_IPBOX_HARDWARE
+	// support for additional buttons on Dreambox Remote
+	else if( msg == CRCInput::RC_tv )
+	{
+		if( mode != mode_tv )
+		{
+			tvMode();
+		}
+	}
+	else if( msg == CRCInput::RC_radio )
+	{
+		if( mode != mode_radio )
+		{
+			radioMode();
+		}
+	}
+	else if( msg == CRCInput::RC_text )
+	{
+		g_PluginList->startPlugin("tuxtxt");
+	}
+	else if(msg == CRCInput::RC_timer)
+	{
+		Timerlist->exec(NULL, "");
+	}
+	else if( msg == CRCInput::RC_audio )
+	{
+		// audio channel selection
+		showUserMenu(SNeutrinoSettings::BUTTON_GREEN);
+	}
+	else if( msg == CRCInput::RC_video )
+	{
+		// nvod selection
+		showUserMenu(SNeutrinoSettings::BUTTON_YELLOW);
+	}
+	#endif
+	else if( msg == CRCInput::RC_red )
+	{	// eventlist
+		if (g_settings.personalize_redbutton == 0)
+		{
+			// EventList Menu - Personalization Check
+			ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_PERSONALIZE_MENUDISABLEDHINT);
+		} else {
+			showUserMenu(SNeutrinoSettings::BUTTON_RED);  //USERMENU
+		}
+	}
+	else if( msg == CRCInput::RC_blue )
+	{	// streaminfo
+		if (g_RemoteControl->director_mode)
+		{
+			g_RemoteControl->setSubChannel(DIRECTORMODE_PORTAL); //Portal RC_blue
+			g_InfoViewer->showSubchan();
+		}				
+		else if (g_settings.personalize_bluebutton == 0)
+		{
+			// Features Menu - Personalization Check
+			ShowLocalizedHint(LOCALE_MESSAGEBOX_INFO, LOCALE_PERSONALIZE_MENUDISABLEDHINT);
+		}
+		else 
+			showUserMenu(SNeutrinoSettings::BUTTON_BLUE);
+	}
+	else if( msg == CRCInput::RC_green )
+	{
+		showUserMenu(SNeutrinoSettings::BUTTON_GREEN);
+	}
+	else if( msg == CRCInput::RC_yellow )
+	{       // NVODs
+		showUserMenu(SNeutrinoSettings::BUTTON_YELLOW);
+	}
+	else if (CRCInput::isNumeric(msg) && msg != CRCInput::RC_0 && g_RemoteControl->director_mode)
+	{
+		g_RemoteControl->setSubChannel(CRCInput::getNumericValue(msg));
+		g_InfoViewer->showSubchan();
+	}
+	else if(msg_repeatok == g_settings.key_quickzap_up || msg_repeatok == g_settings.key_quickzap_down)
+	{
+		//quickzap
+		channelList->quickZap(msg_repeatok);
+	}
+	else if( ( msg == CRCInput::RC_help ) ||
+				( msg == NeutrinoMessages::SHOW_INFOBAR ) )
+	{
+	         // turn on LCD display
+		CLCD::getInstance()->wake_up();
+		// show Infoviewer
+		g_InfoViewer->showTitle(channelList->getActiveChannelNumber(), channelList->getActiveChannelName(), channelList->getActiveSatellitePosition(), channelList->getActiveChannel_ChannelID()); // UTF-8
+	}
+	else if(msg_repeatok == g_settings.key_subchannel_up)
+	{
+		g_RemoteControl->subChannelUp();
+		g_InfoViewer->showSubchan();
+	}
+	else if(msg_repeatok == g_settings.key_subchannel_down)
+	{
+		g_RemoteControl->subChannelDown();
+		g_InfoViewer->showSubchan();
+	}
+	else if(msg == g_settings.key_subchannel_toggle && g_RemoteControl->director_mode)
+	{
+		g_RemoteControl->toggleSubChannel();
+		g_InfoViewer->showSubchan();
+	}
+	else if(msg == g_settings.key_zaphistory)
+	{
+		// Zap-History "Bouquet"
+		channelList->numericZap( msg );
+	}
+	else if(msg == g_settings.key_lastchannel)
+	{
+		// Quick Zap
+		channelList->numericZap( msg );
+	}
+	else if (CRCInput::isNumeric(msg))
+	{
+		//numeric zap
+		channelList->numericZap( msg );
+	}
+	else if (msg == CRCInput::RC_epg)
+	{
+		CEventListHandler elist;
+		elist.exec(NULL, "");
+	}
+	else
+	{     // turn on LCD display by kicking it
+		if (msg == CRCInput::RC_home)
+			CLCD::getInstance()->wake_up();
+		handleMsg(msg, data);
 	}
 }
 
@@ -4139,6 +4238,7 @@ int CNeutrinoApp::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 **************************************************************************************/
 bool CNeutrinoApp::changeNotify(const neutrino_locale_t OptionName, void * Data)
 {
+	bool result = false;
 	if ((ARE_LOCALES_EQUAL(OptionName, LOCALE_MAINMENU_RECORDING_START)) || (ARE_LOCALES_EQUAL(OptionName, LOCALE_MAINMENU_RECORDING)))
 	{
 		return doGuiRecord(NULL,ARE_LOCALES_EQUAL(OptionName, LOCALE_MAINMENU_RECORDING));
@@ -4147,7 +4247,11 @@ bool CNeutrinoApp::changeNotify(const neutrino_locale_t OptionName, void * Data)
 	{
 		g_Sectionsd->setPauseScanning((*((int *)Data)) == 0);
 	}
-	return false;
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LIRCCONTROL_HEAD))
+	{
+		setLircControlActive(!lircControlIsActive);
+	}
+	return result;
 }
 
 /**************************************************************************************

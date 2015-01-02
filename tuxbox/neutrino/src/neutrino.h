@@ -237,6 +237,12 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 		bool				menuGamesIsVisible;
 		bool				menuScriptsIsVisible;
 
+		int handleTvRadioMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, neutrino_msg_t &msg_repeatok, CMenuWidget &menu);
+		int handleLircMsg(const neutrino_msg_t msg, neutrino_msg_data_t data, neutrino_msg_t &msg_repeatok, CMenuWidget &menu);
+		int SendIrc(const std::string& command);
+
+		void setLircControlActive(bool isActive);
+
 		// USERMENU
 		CTimerList			*Timerlist;
 		bool showUserMenu(int button);
@@ -317,6 +323,8 @@ class CNeutrinoApp : public CMenuTarget, CChangeObserver
 
 		int execute_sys_command(const char *command);
 		CConfigFile* getConfigFile() {return &configfile;};
+
+		bool lircControlIsActive;
 		
 };
 

@@ -81,7 +81,8 @@ const CMenuOptionChooser::keyval USERMENU_ITEM_OPTIONS[USERMENU_ITEM_OPTION_COUN
 	{SNeutrinoSettings::ITEM_TIMERLIST, LOCALE_TIMERLIST_NAME} ,
 	{SNeutrinoSettings::ITEM_REMOTE, LOCALE_RCLOCK_MENUEADD} ,
 	{SNeutrinoSettings::ITEM_FAVORITS, LOCALE_FAVORITES_MENUEADD} ,
-	{SNeutrinoSettings::ITEM_TECHINFO, LOCALE_EPGMENU_STREAMINFO}
+	{SNeutrinoSettings::ITEM_TECHINFO, LOCALE_EPGMENU_STREAMINFO} ,
+	{SNeutrinoSettings::ITEM_LIRC_CONTROL, LOCALE_LIRCCONTROL_HEAD}
 };
 
 int CUserMenuSetup::exec(CMenuTarget* parent, const std::string &)
